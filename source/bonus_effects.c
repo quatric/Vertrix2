@@ -2903,7 +2903,10 @@ finish:
 }
 
 const VertrixFieldFinish vertrix_field_finishes[VERTRIX_FIELD_FINISH_COUNT] = {
-    {0x455580, 0x4374e0, 0}, {0x455700, 0x42ebe0, 1}};
+    {0x455580, 0x4374e0, 0, 0},
+    {0x455700, 0x42ebe0, 1, 0},
+    {0x455970, 0x42ebe0, 1, 0},
+    {0x455a90, 0x42ebe0, 1, 0x42ebc0}};
 
 uint32_t vertrix_effect_field_finish(const VertrixEffectServices *services, uint32_t player,
                                      const VertrixFieldFinish *finish)
@@ -2926,6 +2929,10 @@ uint32_t vertrix_effect_field_finish(const VertrixEffectServices *services, uint
     if (field_tests(services, player, board))
     {
         ended = 1;
+        if (finish->before)
+        {
+            vertrix_call(services->calls, finish->before, board, HANDLER_FIELD, player, board, 0);
+        }
         vertrix_call(services->calls, finish->callee, board, HANDLER_FIELD, player, board, 0);
     }
     result = release_board(services, board, board_storage, board_size);
@@ -2942,4 +2949,28 @@ uint32_t vertrix_effect_field_finish(const VertrixEffectServices *services, uint
                                                 DWORD_WIDTH, 0))
                ? result
                : 0;
+}
+
+uint32_t vertrix_effect_field_finish_after(const VertrixEffectServices *services, uint32_t player,
+                                           uint32_t entry_edx)
+{
+    void *player_storage;
+    size_t player_size;
+    uint32_t board;
+    const VertrixCalls *calls;
+    if (!services || !services->calls ||
+        !resolve_object(services, player, &player_storage, &player_size) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_BOARD, DWORD_WIDTH, &board))
+    {
+        return 0;
+    }
+    calls = services->calls;
+    vertrix_call(calls, 0x4ac500, board, entry_edx, player, board, 0);
+    if (vertrix_call(calls, 0x4ac520, board, entry_edx, player, board, 0) == 1)
+    {
+        vertrix_call(calls, 0x4ac540, board, entry_edx, player, board, 0);
+        vertrix_call(calls, 0x4ac5b0, board, entry_edx, player, board, 0);
+        vertrix_call(calls, 0x437b70, board, entry_edx, player, board, 0);
+    }
+    return vertrix_effect_field_finish(services, player, &vertrix_field_finishes[1]);
 }

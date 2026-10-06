@@ -454,7 +454,8 @@ uint32_t vertrix_effect_armed_gate(const VertrixEffectServices *services, uint32
 uint32_t vertrix_effect_kinds_start(const VertrixEffectServices *services, uint32_t player,
                                     uint32_t entry_ebx, uint32_t frame);
 
-/* The handlers 0x455580 (bound by 0x455510) and 0x455700 (bound by 0x455670) (eax = player). When
+/* The handlers 0x455580 (bound by 0x455510), 0x455700 (bound by 0x455670), 0x455970 (identical to
+ * 0x455700) and 0x455a90 (as 0x455700 with 0x42ebc0 before the callee) (eax = player). When
  * 0x42eca0 and 0x42ecc0 are both non-zero the callee (0x4374e0, 0x42ebe0) runs on the board; slot
  * 1 of the board follows. In that case 0x43bbf0 (edx the token 0x452160), 0x4ac8f0 with the token
  * and 0x43bae0 with edx 1 run on the player, its +0x184 is cleared and, for 0x455700, the board's
@@ -464,11 +465,18 @@ typedef struct
     uint32_t routine;
     uint32_t callee;
     int clear_slide_flag;
+    uint32_t before; /* optional callee run on the board just before callee (0x455a90: 0x42ebc0) */
 } VertrixFieldFinish;
 
-#define VERTRIX_FIELD_FINISH_COUNT 2
+#define VERTRIX_FIELD_FINISH_COUNT 4
 extern const VertrixFieldFinish vertrix_field_finishes[VERTRIX_FIELD_FINISH_COUNT];
 
 uint32_t vertrix_effect_field_finish(const VertrixEffectServices *services, uint32_t player,
                                      const VertrixFieldFinish *finish);
+
+/* Original 0x455830 (eax = player; edx the caller's): the step bound by 0x455790. 0x4ac500 and
+ * 0x4ac520 on the board; result 1 adds 0x4ac540, 0x4ac5b0 and 0x437b70 (all with the caller's
+ * edx). Then the 0x455700 flow of vertrix_effect_field_finish runs. */
+uint32_t vertrix_effect_field_finish_after(const VertrixEffectServices *services, uint32_t player,
+                                           uint32_t entry_edx);
 #endif
