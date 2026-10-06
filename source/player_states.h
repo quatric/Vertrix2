@@ -117,4 +117,15 @@ uint32_t vertrix_state_attack_452440(const VertrixCalls *calls,
 uint32_t vertrix_state_advance_452770(const VertrixCalls *calls,
                                       const VertrixFactoryServices *services,
                                       const VertrixGlobals *globals, uint32_t player, uint32_t edx);
+
+/* Original 0x453050 (eax = player). The board (+0x15c) and the opponent's board (+0x15c of +0x3b0)
+ * are asked in turn with 0x42eca0, 0x42ecc0 (board, then the opponent's) and 0x42edf0 about the
+ * descriptor 0x44c860; a zero ends the check, a failing 0x42edf0 on 0x44c860 is rescued by one on
+ * 0x44c940. When everything holds, 0x42eb60 runs on the opponent's board if that one also takes
+ * 0x44c940, 0x42ebe0 runs on both boards and the flag is set. The board's virtual call follows,
+ * and a set flag ends with 0x43bbf0 on the player and the opponent and zeroes +0xb8c of both
+ * boards. */
+uint32_t vertrix_state_pair_453050(const VertrixCalls *calls,
+                                   const VertrixFactoryServices *services,
+                                   const VertrixGlobals *globals, uint32_t player);
 #endif

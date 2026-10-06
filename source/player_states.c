@@ -824,3 +824,106 @@ uint32_t vertrix_state_advance_452770(const VertrixCalls *calls,
     }
     return finish_edx(calls, services, globals, &regs, board);
 }
+
+enum
+{
+    PAIR_MARK = 0x44c860,
+    PAIR_SECOND_MARK = 0x44c940,
+    PAIR_ASK_FIRST = 0x42eca0,
+    PAIR_ASK_SECOND = 0x42ecc0,
+    PAIR_ASK_THIRD = 0x42edf0,
+    PAIR_REMOVE = 0x42eb60,
+    PAIR_DONE = 0x42ebe0,
+    PAIR_CLEAR_FIELD = 0xb8c
+};
+
+uint32_t vertrix_state_pair_453050(const VertrixCalls *calls,
+                                   const VertrixFactoryServices *services,
+                                   const VertrixGlobals *globals, uint32_t player)
+{
+    VertrixRegs regs;
+    uint32_t opponent;
+    uint32_t board;
+    uint32_t other;
+    uint32_t flag = 0;
+    if (!read_value(services, player, TAKE_OPPONENT, DWORD_WIDTH, &opponent) ||
+        !read_value(services, player, STATE_BOARD, DWORD_WIDTH, &board) ||
+        !read_value(services, opponent, STATE_BOARD, DWORD_WIDTH, &other))
+    {
+        return 0;
+    }
+    regs.ebx = board;
+    regs.ecx = other;
+    regs.edx = PAIR_MARK;
+    regs.eax = board;
+    vertrix_regs_call(calls, &regs, PAIR_ASK_FIRST);
+    if (regs.eax != 0)
+    {
+        regs.edx = PAIR_MARK;
+        regs.eax = board;
+        vertrix_regs_call(calls, &regs, PAIR_ASK_SECOND);
+    }
+    if (regs.eax != 0)
+    {
+        regs.edx = PAIR_MARK;
+        regs.eax = other;
+        vertrix_regs_call(calls, &regs, PAIR_ASK_FIRST);
+    }
+    if (regs.eax != 0)
+    {
+        regs.edx = PAIR_MARK;
+        regs.eax = other;
+        vertrix_regs_call(calls, &regs, PAIR_ASK_SECOND);
+    }
+    if (regs.eax != 0)
+    {
+        int ready;
+        regs.edx = PAIR_MARK;
+        regs.eax = other;
+        vertrix_regs_call(calls, &regs, PAIR_ASK_THIRD);
+        ready = regs.eax != 0;
+        if (!ready)
+        {
+            regs.edx = PAIR_SECOND_MARK;
+            regs.eax = other;
+            vertrix_regs_call(calls, &regs, PAIR_ASK_THIRD);
+            ready = regs.eax != 0;
+        }
+        if (ready)
+        {
+            regs.edx = PAIR_SECOND_MARK;
+            regs.eax = other;
+            vertrix_regs_call(calls, &regs, PAIR_ASK_THIRD);
+            if (regs.eax != 0)
+            {
+                regs.eax = other;
+                vertrix_regs_call(calls, &regs, PAIR_REMOVE);
+            }
+            regs.eax = board;
+            vertrix_regs_call(calls, &regs, PAIR_DONE);
+            regs.eax = other;
+            vertrix_regs_call(calls, &regs, PAIR_DONE);
+            flag = 1;
+        }
+    }
+    if (!read_value(services, board, STATE_BOARD_TABLE, DWORD_WIDTH, &regs.edx))
+    {
+        return 0;
+    }
+    regs.eax = board;
+    vertrix_regs_virtual(calls, globals, &regs, STATE_VIRTUAL_SLOT);
+    if (flag != 1)
+    {
+        return regs.eax;
+    }
+    regs.eax = player;
+    vertrix_regs_call(calls, &regs, CHOICE_FINISH);
+    regs.eax = opponent;
+    vertrix_regs_call(calls, &regs, CHOICE_FINISH);
+    if (!vertrix_build_store(services, board, PAIR_CLEAR_FIELD, DWORD_WIDTH, 0) ||
+        !vertrix_build_store(services, other, PAIR_CLEAR_FIELD, DWORD_WIDTH, 0))
+    {
+        return 0;
+    }
+    return regs.eax;
+}

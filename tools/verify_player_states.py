@@ -171,3 +171,18 @@ run_screen('state-advance-452770', 0x452770, ['player_states.c'], 'vertrix_state
            [U, U], U, ADVANCE, player_edx, TEXT,
            **{**COMMON, 'patch': patch_advance,
               'choices': {0x4328a0: [1, 1, 0, 2], 0x4ac590: [0, 1, 2, 5]}})
+
+
+PAIR = {address: 0 for address in (0x42eca0, 0x42ecc0, 0x42edf0, 0x42eb60, 0x42ebe0, 0x43bbf0,
+                                   LEAF)}
+
+
+def pair_case(rng, pool, cpu):
+    player = rng.choice(pool.handles)
+    return {'eax': player}, (), (player,)
+
+
+run_screen('state-pair-453050', 0x453050, ['player_states.c'], 'vertrix_state_pair_453050', [U],
+           U, PAIR, pair_case, TEXT,
+           **{**MORE, 'choices': {0x42eca0: [1, 1, 1, 0], 0x42ecc0: [1, 1, 1, 0],
+                                  0x42edf0: [1, 0, 1, 1, 0]}})
