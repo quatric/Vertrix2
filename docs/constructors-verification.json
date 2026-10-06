@@ -3,9 +3,10 @@
   "complete_original_executions": {
     "0x42b5c0": 4096,
     "0x43a080": 4096,
+    "0x4b5400": 4096,
     "0x425e20": 4096,
     "0x429880": 4096,
     "0x43a160": 4096
   },
-  "scope": "Complete 42b5c0, 43a080, 425e20, 429880 and 43a160 execute in the original over random storage; whole objects compare, plus short-storage preservation checks."
+  "scope": "Complete 42b5c0, 43a080, 4b5400, 425e20, 429880 and 43a160 execute in the original over random storage; whole objects compare, plus short-storage preservation checks."
 }

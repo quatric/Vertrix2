@@ -40,6 +40,11 @@ int vertrix_block_construct(void *storage, size_t size);
  * and +0x95 = 3. Returns zero for short storage. */
 int vertrix_block_construct_kind_one(void *storage, size_t size);
 
+/* Original0x4b5400: construct a class-0x518174 actor: the base fields
+ * (0x4abd70), then dword +0x158 = 0x518174, byte +0x94 = 0 and word +0x15c
+ * = 0. Returns zero for short storage. */
+int vertrix_actor_construct_518174(void *storage, size_t size);
+
 /* Original0x42bbd0: allocate and build one block of the given kind (a signed byte): initialise it
  * with handler, set the dword +0xd0 to d0 and the period to steps * 12, attach the resource at
  * 0x544ac0 + kind * 28 and store the kind in byte +0x15c. Returns zero when allocation fails or an

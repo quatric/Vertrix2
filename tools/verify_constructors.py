@@ -26,6 +26,7 @@ def main():
                'block_factory.c', 'actor_fields.c', 'board_cells.c', 'piece_children.c'])
     n.vertrix_piece_actor_construct_empty.argtypes = [c.c_void_p, c.c_size_t]
     n.vertrix_block_construct_kind_one.argtypes = [c.c_void_p, c.c_size_t]
+    n.vertrix_actor_construct_518174.argtypes = [c.c_void_p, c.c_size_t]
     n.vertrix_player_piece_initialize.argtypes = [c.c_void_p, c.c_size_t]
     n.vertrix_piece_actor_construct_slots.argtypes = [c.c_void_p, c.c_size_t]
     n.vertrix_piece_child_slots_init.argtypes = [c.c_void_p, c.c_size_t]
@@ -35,6 +36,7 @@ def main():
     totals = {}
     members = ((0x42b5c0, n.vertrix_piece_actor_construct_empty, '0x42b5c0'),
                (0x43a080, n.vertrix_block_construct_kind_one, '0x43a080'),
+               (0x4b5400, n.vertrix_actor_construct_518174, '0x4b5400'),
                (0x425e20, n.vertrix_player_piece_initialize, '0x425e20'),
                (0x429880, n.vertrix_piece_actor_construct_slots, '0x429880'),
                (0x43a160, n.vertrix_piece_child_slots_init, '0x43a160'))
@@ -54,9 +56,9 @@ def main():
         assert not native(tiny, 8), name
     assert tiny.raw == b'\xaa' * 8
     report = {'status': 'passed', 'complete_original_executions': totals,
-              'scope': 'Complete 42b5c0, 43a080, 425e20, 429880 and 43a160 execute in the original '
-                       'over random storage; whole objects compare, plus short-storage '
-                       'preservation checks.'}
+              'scope': 'Complete 42b5c0, 43a080, 4b5400, 425e20, 429880 and 43a160 execute in '
+                       'the original over random storage; whole objects compare, plus '
+                       'short-storage preservation checks.'}
     (args.build_dir / 'constructors-verification.json').write_text(
         json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))

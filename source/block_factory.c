@@ -78,6 +78,17 @@ int vertrix_block_construct_kind_one(void *storage, size_t size)
            vertrix_actor_storage_write(storage, size, 0x95, 1, 3);
 }
 
+int vertrix_actor_construct_518174(void *storage, size_t size)
+{
+    if (!storage || size < BLOCK_SIZE || !vertrix_actor_storage_construct(storage, size))
+    {
+        return 0;
+    }
+    return vertrix_actor_storage_write(storage, size, BLOCK_CLASS, 4, 0x518174) &&
+           vertrix_actor_storage_write(storage, size, 0x94, 1, 0) &&
+           vertrix_actor_storage_write(storage, size, 0x15c, 2, 0);
+}
+
 int vertrix_block_create(uint8_t kind, uint32_t d0, uint32_t steps, uint32_t handler,
                          const VertrixFactoryServices *services, uint32_t *handle)
 {
