@@ -182,9 +182,12 @@ def main():
     def scratch_pointer():
         return 0x950000 + rng.randrange(0, 0x10000)
 
+    mode = {'small': False}
+
     def value_mix():
-        return rng.choice([0, 1, 2, 3, 0xffffffff, rng.getrandbits(32), rng.randrange(0, 64),
-                           rng.choice(handles), scratch_pointer(), scratch_pointer()])
+        wide = ([] if mode['small'] else [0xffffffff, rng.getrandbits(32)])
+        return rng.choice([0, 1, 2, 3, rng.randrange(0, 64), rng.randrange(0, 12),
+                           rng.choice(handles), scratch_pointer(), scratch_pointer()] + wide)
 
     def handler(address, eax, edx, ebx, ecx, stack):
         if address in OUTPUTS:
@@ -326,9 +329,10 @@ def main():
                     elif choice < 0.8:
                         value = rng.randrange(0, 64)
                     else:
-                        value = rng.getrandbits(32)
+                        value = rng.randrange(0, 12) if mode['small'] else rng.getrandbits(32)
                     struct.pack_into('<I', data, offset, value)
                 struct.pack_into('<I', data, 0x158, VTABLE)
+            mode['small'] = case % 2 == 1
             pool.fill(rng, patch)
             cpu.mem_write(0x950000, rng.randbytes(0x20000))
             for offset in range(0, STACK_SPAN, 4):
