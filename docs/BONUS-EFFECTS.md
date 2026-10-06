@@ -216,6 +216,10 @@ changed it.
 
 `vertrix_actor_rises` (0x456a80, 0x456b00), `vertrix_effect_actor_drop`, `_actor_toggle` and `_actor_scale` (a percentage computed from the high half of +0x46 and the globals 0x532b98 / 0x532b9c).
 
+## Timed ticks 0x456d80 .. 0x457060
+
+`vertrix_effect_tick` with `vertrix_ticks`: recovered by hand from their lifted translations; the dword `+0x5c` comes from a constant, a word of the globals 0x5b9c8e / 0x5b9c90, two thirds of it or half of it.
+
 ## Tally
 
 Distinct direct `call` targets in 0x401000..0x4d0000: 1827. Named in `source/` (ported): 1139.

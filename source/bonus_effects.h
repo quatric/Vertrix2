@@ -685,4 +685,31 @@ uint32_t vertrix_effect_actor_toggle(const VertrixEffectServices *services, uint
  * (unsigned 32-bit products); ebx is 100 and ecx c. Returns the result of 0x4828f0. */
 uint32_t vertrix_effect_actor_scale(const VertrixEffectServices *services, uint32_t object,
                                     uint32_t entry_edx);
+
+/* The timed ticks 0x456d80, 0x456de0, 0x456e40, 0x456ea0, 0x456fa0, 0x457000 and 0x457060
+ * (eax = obj; ebx and edx the caller's): 0x4ac500 and 0x4ac520; a result other than 1 is returned.
+ * Then 0x4ac540 (n) and 0x4ac5b0 (edx 0 and ebx n for the kinds that set them, else edx n), the
+ * dword +0x5c from the source (a constant, a word of a global, two thirds of it or half of it) and
+ * +0x60 = k, and 0x4ad6e0 with n: a non-zero result is returned, zero runs 0x4ac8f0 with edx 0. */
+typedef enum
+{
+    VERTRIX_TICK_CONSTANT,
+    VERTRIX_TICK_WORD,
+    VERTRIX_TICK_TWO_THIRDS,
+    VERTRIX_TICK_HALF
+} VertrixTickSource;
+
+typedef struct
+{
+    uint32_t routine;
+    VertrixTickSource kind;
+    uint32_t source;
+    uint32_t k;
+} VertrixTick;
+
+#define VERTRIX_TICK_COUNT 7
+extern const VertrixTick vertrix_ticks[VERTRIX_TICK_COUNT];
+
+uint32_t vertrix_effect_tick(const VertrixEffectServices *services, uint32_t object,
+                             uint32_t entry_ebx, uint32_t entry_edx, const VertrixTick *tick);
 #endif

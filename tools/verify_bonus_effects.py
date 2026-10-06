@@ -125,6 +125,10 @@ class ActorRise(c.Structure):
     _fields_ = [(name, U) for name in ('routine', 'word_a', 'word_b', 'byte', 'token')]
 
 
+class Tick(c.Structure):
+    _fields_ = [('routine', U), ('kind', c.c_int), ('source', U), ('k', U)]
+
+
 class Site(c.Structure):
     _fields_ = [(name, U) for name in ('target', 'eax', 'edx', 'ebx', 'ecx', 'stack', 'stack_next',
                                        'stack_third', 'out_ebx', 'out_ecx')] + [
@@ -1269,6 +1273,29 @@ def main():
     for pair in pairs_actor:
         run_actor(hex(pair.routine), pair.routine, n.vertrix_effect_actor_pair,
                   (c.byref(pair),), ('edx',))
+    # The timed ticks 0x456d80 .. 0x457060
+    stubs.add(0x4ad6e0, 0)
+    FLOW[0x4ad6e0] = (0, 0, 1, 5)
+    n.vertrix_effect_tick.argtypes = [c.POINTER(Services), U, U, U, c.POINTER(Tick)]
+    n.vertrix_effect_tick.restype = U
+    ticks = (Tick * 7).in_dll(n, 'vertrix_ticks')
+    for tick in ticks:
+        for case in range(args.cases):
+            pool.fill(rng, patch_slide)
+            cpu.mem_write(0x5b9c8e, struct.pack('<HH', rng.getrandbits(16), rng.getrandbits(16)))
+            stubs.log.clear()
+            returns.clear()
+            draws.clear()
+            native_log.clear()
+            values = [rng.getrandbits(32), rng.getrandbits(32)]
+            result = original.call(tick.routine, eax=player, ebx=values[0], edx=values[1]) & 0xffffffff
+            replay[:] = list(returns)
+            got = n.vertrix_effect_tick(c.byref(services), player, *values, c.byref(tick))
+            expected = normalized(stubs.log)
+            assert native_log == expected, (hex(tick.routine), case, native_log, expected)
+            assert got == result, (hex(tick.routine), case, hex(got), hex(result))
+            assert not replay, case
+            assert pool.same(), (hex(tick.routine), case, pool.diff())
     # Objects that do not resolve: the effect stops where the original would have read them. Before
     # the first call (player, opponent, grid) nothing is called or stored; later failures still
     # never reach the final 0x43bbf0.

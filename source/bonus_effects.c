@@ -3901,3 +3901,75 @@ uint32_t vertrix_effect_actor_scale(const VertrixEffectServices *services, uint3
     product = g2 * scaled;
     return vertrix_call(calls, 0x4828f0, product / 100u, product % 100u, 100, scaled, 0);
 }
+
+const VertrixTick vertrix_ticks[VERTRIX_TICK_COUNT] = {
+    {0x456d80, VERTRIX_TICK_WORD, 0x5b9c8e, 0xa}, {0x456de0, VERTRIX_TICK_WORD, 0x5b9c8e, 4},
+    {0x456e40, VERTRIX_TICK_WORD, 0x5b9c8e, 8},   {0x456ea0, VERTRIX_TICK_TWO_THIRDS, 0x5b9c8e, 4},
+    {0x456fa0, VERTRIX_TICK_WORD, 0x5b9c90, 4},   {0x457000, VERTRIX_TICK_HALF, 0x5b9c90, 4},
+    {0x457060, VERTRIX_TICK_CONSTANT, 0x10, 1}};
+
+uint32_t vertrix_effect_tick(const VertrixEffectServices *services, uint32_t object,
+                             uint32_t entry_ebx, uint32_t entry_edx, const VertrixTick *tick)
+{
+    void *storage;
+    size_t size;
+    uint32_t result;
+    uint32_t n;
+    uint32_t value;
+    uint32_t ebx = entry_ebx;
+    uint32_t edx = entry_edx;
+    int follows;
+    const VertrixCalls *calls;
+    if (!services || !services->calls || !services->global || !tick ||
+        !resolve_object(services, object, &storage, &size))
+    {
+        return 0;
+    }
+    calls = services->calls;
+    follows = tick->kind == VERTRIX_TICK_TWO_THIRDS || tick->kind == VERTRIX_TICK_HALF;
+    vertrix_call(calls, 0x4ac500, object, edx, ebx, object, 0);
+    result = vertrix_call(calls, 0x4ac520, object, edx, ebx, object, 0);
+    if (result != 1)
+    {
+        return result;
+    }
+    n = vertrix_call(calls, 0x4ac540, object, edx, ebx, object, 0);
+    if (follows)
+    {
+        ebx = n;
+        edx = 0;
+    }
+    else
+    {
+        edx = n;
+    }
+    vertrix_call(calls, 0x4ac5b0, object, edx, ebx, object, 0);
+    if (tick->kind == VERTRIX_TICK_CONSTANT)
+    {
+        value = tick->source;
+    }
+    else
+    {
+        value = services->global(tick->source, services->global_context) & 0xffffu;
+        if (tick->kind == VERTRIX_TICK_TWO_THIRDS)
+        {
+            value = (uint32_t)((int32_t)(value + value) / 3);
+        }
+        else if (tick->kind == VERTRIX_TICK_HALF)
+        {
+            value >>= 1;
+        }
+    }
+    edx = n;
+    if (!vertrix_actor_storage_write(storage, size, 0x5c, DWORD_WIDTH, value) ||
+        !vertrix_actor_storage_write(storage, size, 0x60, DWORD_WIDTH, tick->k))
+    {
+        return 0;
+    }
+    result = vertrix_call(calls, 0x4ad6e0, object, edx, ebx, object, 0);
+    if (result != 0)
+    {
+        return result;
+    }
+    return vertrix_call(calls, 0x4ac8f0, object, 0, ebx, object, 0);
+}
