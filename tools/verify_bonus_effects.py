@@ -83,6 +83,12 @@ class CountedStep(c.Structure):
     _fields_ = [(name, U) for name in ('routine', 'first', 'first_edx', 'check', 'token')]
 
 
+class StepB(c.Structure):
+    _fields_ = [('routine', U), ('negative', c.c_int)] + [
+        (name, U) for name in ('small_first', 'small_second', 'big_first', 'big_second', 'check',
+                               'tail', 'token')]
+
+
 class Site(c.Structure):
     _fields_ = [(name, U) for name in ('target', 'eax', 'edx', 'ebx', 'ecx', 'stack', 'stack_next',
                                        'stack_third', 'out_ebx', 'out_ecx')] + [
@@ -638,12 +644,13 @@ def main():
     n.vertrix_effect_field_end.argtypes = [c.POINTER(Services), U]
     n.vertrix_effect_field_end.restype = U
     for case in range(args.cases):
+        field_routine = (0x453ef0, 0x454200, 0x454510)[case % 3]
         pool.fill(rng, patch_slide)
         stubs.log.clear()
         returns.clear()
         draws.clear()
         native_log.clear()
-        result = original.call(0x453ef0, eax=player) & 0xffffffff
+        result = original.call(field_routine, eax=player) & 0xffffffff
         replay[:] = list(returns)
         got = n.vertrix_effect_field_end(c.byref(services), player)
         expected = normalized(stubs.log)
@@ -731,11 +738,15 @@ def main():
             assert got == result, (hex(step.routine), case, hex(got), hex(result))
             assert not replay, case
             assert pool.same(), (hex(step.routine), case, pool.diff())
-    # 0x454090
-    for address in (0x42f440, 0x42f520, 0x42f6e0, 0x42f580, 0x432040):
+    # 0x454090 and 0x4543a0
+    for address in (0x42f440, 0x42f520, 0x42f6e0, 0x42f580, 0x432040, 0x42f4b0, 0x42f550, 0x42f720,
+                    0x42f620, 0x432080):
         stubs.add(address, 0)
-    n.vertrix_effect_slide_step_b.argtypes = [c.POINTER(Services), U, U, U, U]
+    FLOW[0x431930] = (0, 0, 1)
+    n.vertrix_effect_slide_step_b.argtypes = [c.POINTER(Services), U, U, U, U,
+                                              c.POINTER(StepB)]
     n.vertrix_effect_slide_step_b.restype = U
+    steps_b = (StepB * 2).in_dll(n, 'vertrix_slide_steps_b')
 
     def patch_step_b(handle, data):
         patch_step(handle, data)
@@ -744,22 +755,26 @@ def main():
         elif handle == own_board:
             struct.pack_into('<I', data, 0x10,
                              ((rng.randrange(-3, 4) << 16) & 0xffff0000) | rng.getrandbits(16))
-    for case in range(args.cases):
-        pool.fill(rng, patch_step_b)
-        stubs.log.clear()
-        returns.clear()
-        draws.clear()
-        native_log.clear()
-        values = [rng.getrandbits(32) for _ in range(3)]
-        result = original.call(0x454090, eax=player, ebx=values[0], ecx=values[1],
-                               edx=values[2]) & 0xffffffff
-        replay[:] = list(returns)
-        got = n.vertrix_effect_slide_step_b(c.byref(services), player, *values)
-        expected = normalized(stubs.log)
-        assert native_log == expected, ('0x454090', case, native_log, expected)
-        assert got == result, ('0x454090', case, hex(got), hex(result))
-        assert not replay, case
-        assert pool.same(), ('0x454090', case, pool.diff())
+            if rng.random() < 0.5:
+                struct.pack_into('<I', data, 0x58, rng.choice([0, 5, 0xffffffe8, 0xffffffe7,
+                                                               0xffffffff, 0xffffff00]))
+    for step in steps_b:
+        for case in range(args.cases):
+            pool.fill(rng, patch_step_b)
+            stubs.log.clear()
+            returns.clear()
+            draws.clear()
+            native_log.clear()
+            values = [rng.getrandbits(32) for _ in range(3)]
+            result = original.call(step.routine, eax=player, ebx=values[0], ecx=values[1],
+                                   edx=values[2]) & 0xffffffff
+            replay[:] = list(returns)
+            got = n.vertrix_effect_slide_step_b(c.byref(services), player, *values, c.byref(step))
+            expected = normalized(stubs.log)
+            assert native_log == expected, (hex(step.routine), case, native_log, expected)
+            assert got == result, (hex(step.routine), case, hex(got), hex(result))
+            assert not replay, case
+            assert pool.same(), (hex(step.routine), case, pool.diff())
     # Objects that do not resolve: the effect stops where the original would have read them. Before
     # the first call (player, opponent, grid) nothing is called or stored; later failures still
     # never reach the final 0x43bbf0.
@@ -807,7 +822,7 @@ def main():
                                             0x454c30, 0x454e90, 0x455020, 0x455b20, 0x455ca0,
                                             0x45b9c0, 0x4554a0, 0x455600, 0x455670, 0x455790,
                                             0x4558e0, 0x455a00, 0x455510, 0x455e50, 0x455f10,
-                                            0x455f80, 0x456060, 0x453c90, 0x453fd0, 0x4542e0, 0x453ef0, 0x453d50, 0x454830, 0x454a50, 0x454cb0, 0x454090)}},
+                                            0x455f80, 0x456060, 0x453c90, 0x453fd0, 0x4542e0, 0x453ef0, 0x454200, 0x454510, 0x453d50, 0x454830, 0x454a50, 0x454cb0, 0x454090, 0x4543a0)}},
         'paths': totals,
         'convert_paths': convert_totals,
         'match_paths': match_totals,

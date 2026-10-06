@@ -128,17 +128,19 @@ takes the caller's ebx, ecx and edx). 2048 cases each.
 the tables 0x4f7c54 / 0x4f7c60 and the sounds 0x4f8190 / 0x4f8194 are read through `global`.
 2048 cases each.
 
-## 0x454090
+## 0x454090, 0x4543a0, 0x454200, 0x454510
 
-`vertrix_effect_slide_step_b`, the step handler bound by 0x453fd0 (sibling of 0x453d50 with the
-rate at the board's `+0x10`, counter `+0x430`, argument `+0x42c`). 2048 cases.
+`vertrix_effect_slide_step_b` with `vertrix_slide_steps_b`: the step handlers bound by 0x453fd0 and
+0x4542e0 (siblings of 0x453d50 with the rate at the board's `+0x10`, counter `+0x430`, argument
+`+0x42c`; 0x4543a0 runs the same flow with the direction reversed). 0x454200 and 0x454510 are
+byte-identical to 0x453ef0 and are verified against `vertrix_effect_field_end`.
 
 ## Tally
 
 Distinct direct `call` targets in 0x401000..0x4d0000: 1827. Named in `source/` (ported): 1139.
 Not named: 688, listed in `docs/unported-call-targets.txt` (about 260 of them in 0x452830..0x45bd00,
 the follow-up and animation handlers of the bonus effects). Handlers reached only through tokens or
-vtables are not in this count. Oracle-verified bonus-effect routines: 53.
+vtables are not in this count. Oracle-verified bonus-effect routines: 56.
 
 ## Wiring note
 

@@ -2128,8 +2128,13 @@ uint32_t vertrix_effect_counted_step(const VertrixEffectServices *services, uint
                  : result;
 }
 
+const VertrixSlideStepB vertrix_slide_steps_b[VERTRIX_SLIDE_STEP_B_COUNT] = {
+    {0x454090, 0, 0x42f440, 0x42f520, 0x42f6e0, 0x42f580, 0x432040, 0x431780, 0x454200},
+    {0x4543a0, 1, 0x42f4b0, 0x42f550, 0x42f720, 0x42f620, 0x432080, 0x431930, 0x454510}};
+
 uint32_t vertrix_effect_slide_step_b(const VertrixEffectServices *services, uint32_t player,
-                                     uint32_t entry_ebx, uint32_t entry_ecx, uint32_t entry_edx)
+                                     uint32_t entry_ebx, uint32_t entry_ecx, uint32_t entry_edx,
+                                     const VertrixSlideStepB *step)
 {
     void *player_storage;
     void *board_storage;
@@ -2146,7 +2151,7 @@ uint32_t vertrix_effect_slide_step_b(const VertrixEffectServices *services, uint
     uint32_t edx = entry_edx;
     uint32_t pre_edx;
     const VertrixCalls *calls;
-    if (!services || !services->calls ||
+    if (!services || !services->calls || !step ||
         !resolve_object(services, player, &player_storage, &player_size) ||
         !vertrix_actor_storage_read(player_storage, player_size, PLAYER_BOARD, DWORD_WIDTH,
                                     &board) ||
@@ -2171,7 +2176,8 @@ uint32_t vertrix_effect_slide_step_b(const VertrixEffectServices *services, uint
         }
         edx = (uint32_t)((int32_t)edx * ((int32_t)rate >> 16));
         if (!vertrix_actor_storage_write(board_storage, board_size, BOARD_SLIDE_POSITION,
-                                         DWORD_WIDTH, position + edx))
+                                         DWORD_WIDTH,
+                                         step->negative ? position - edx : position + edx))
         {
             return 0;
         }
@@ -2186,16 +2192,16 @@ uint32_t vertrix_effect_slide_step_b(const VertrixEffectServices *services, uint
     {
         return 0;
     }
-    if ((int32_t)position < SLIDE_LIMIT)
+    if (step->negative ? (int32_t)position > -SLIDE_LIMIT : (int32_t)position < SLIDE_LIMIT)
     {
-        vertrix_call(calls, 0x42f440, board, pre_edx, entry_ebx, entry_ecx, 0);
-        vertrix_call(calls, 0x42f520, board, edx, ebx, entry_ecx, 0);
+        vertrix_call(calls, step->small_first, board, pre_edx, entry_ebx, entry_ecx, 0);
+        vertrix_call(calls, step->small_second, board, edx, ebx, entry_ecx, 0);
         return release_board(services, board, board_storage, board_size);
     }
-    vertrix_call(calls, 0x42f6e0, board, edx, ebx, ecx, 0);
-    vertrix_call(calls, 0x42f580, board, edx, ebx, ecx, 0);
+    vertrix_call(calls, step->big_first, board, edx, ebx, ecx, 0);
+    vertrix_call(calls, step->big_second, board, edx, ebx, ecx, 0);
     if (vertrix_call(calls, 0x4320c0, board, edx, ebx, ecx, 0) == 1 &&
-        vertrix_call(calls, 0x432040, board, edx, ebx, ecx, 0) == 1)
+        vertrix_call(calls, step->check, board, edx, ebx, ecx, 0) == 1)
     {
         if (!vertrix_actor_storage_read(player_storage, player_size, PLAYER_PENDING, DWORD_WIDTH,
                                         &pending))
@@ -2230,9 +2236,9 @@ uint32_t vertrix_effect_slide_step_b(const VertrixEffectServices *services, uint
     {
         return 0;
     }
-    while ((int32_t)position >= SLIDE_LIMIT)
+    while (step->negative ? (int32_t)position <= -SLIDE_LIMIT : (int32_t)position >= SLIDE_LIMIT)
     {
-        position -= SLIDE_LIMIT;
+        position = step->negative ? position + SLIDE_LIMIT : position - SLIDE_LIMIT;
         if (!vertrix_actor_storage_write(board_storage, board_size, BOARD_SLIDE_POSITION,
                                          DWORD_WIDTH, position))
         {
@@ -2246,9 +2252,9 @@ uint32_t vertrix_effect_slide_step_b(const VertrixEffectServices *services, uint
     {
         return 0;
     }
-    if (vertrix_call(calls, 0x431780, board, edx, ebx, ecx, 0) == 0)
+    if (vertrix_call(calls, step->tail, board, edx, ebx, ecx, 0) == 0)
     {
-        vertrix_call(calls, 0x4ac8f0, player, HANDLER_FIELD_END_B, ebx, ecx, 0);
+        vertrix_call(calls, 0x4ac8f0, player, step->token, ebx, ecx, 0);
     }
     else
     {

@@ -348,12 +348,32 @@ extern const VertrixCountedStep vertrix_counted_steps[VERTRIX_COUNTED_STEP_COUNT
 uint32_t vertrix_effect_counted_step(const VertrixEffectServices *services, uint32_t player,
                                      const VertrixCountedStep *step);
 
-/* Original 0x454090 (eax = player; ebx, ecx and edx the caller's): the step handler bound by
- * 0x453fd0, built like vertrix_effect_slide_step but with the rate in the board's +0x10, the
- * player's counter at +0x430 and argument at +0x42c, 0x42f440 / 0x42f520 below 24, and above it
- * 0x42f6e0, 0x42f580, then (0x4320c0 and 0x432040 both one) the piece kinds to 0x43a560 for a
- * pending +0x170 of one and 0x42eb60. 0x431780 decides: zero binds 0x454200, anything else plays
- * sound 2. Returns the result of slot 1 of the board. */
+/* The step handlers 0x454090 (bound by 0x453fd0) and 0x4543a0 (eax = player; ebx, ecx and edx the
+ * caller's), built like vertrix_effect_slide_step but with the rate in the board's +0x10, the
+ * player's counter at +0x430 and argument at +0x42c. The first runs 0x4ac540 times the rate added
+ * to +0x58, the second subtracts it and mirrors every comparison (-24). Inside the limit
+ * small_first and small_second run (the second with the counter and argument). Beyond it big_first
+ * and big_second run, then (0x4320c0 and check both one) the piece kinds go to 0x43a560 for a
+ * pending +0x170 of one and 0x42eb60 follows; the counter grows, +0x58 is brought back inside the
+ * limit, and the tail callee decides: zero binds the token, anything else plays sound 2. Returns
+ * the result of slot 1 of the board. */
+typedef struct
+{
+    uint32_t routine;
+    int negative;
+    uint32_t small_first;
+    uint32_t small_second;
+    uint32_t big_first;
+    uint32_t big_second;
+    uint32_t check;
+    uint32_t tail;
+    uint32_t token;
+} VertrixSlideStepB;
+
+#define VERTRIX_SLIDE_STEP_B_COUNT 2
+extern const VertrixSlideStepB vertrix_slide_steps_b[VERTRIX_SLIDE_STEP_B_COUNT];
+
 uint32_t vertrix_effect_slide_step_b(const VertrixEffectServices *services, uint32_t player,
-                                     uint32_t entry_ebx, uint32_t entry_ecx, uint32_t entry_edx);
+                                     uint32_t entry_ebx, uint32_t entry_ecx, uint32_t entry_edx,
+                                     const VertrixSlideStepB *step);
 #endif
