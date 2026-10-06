@@ -57,3 +57,10 @@ a verified translation):
 
 The 139 indirect-call routines are wrappers around Win32 imports; they need Wii replacements, not
 a port. The rest need hand recovery.
+
+### Failed translations (6 left)
+
+0x415580, 0x415c60, 0x416c30, 0x472f80, 0x480ec0, 0x4ca2e0. In 0x480ec0 the difference is a value the
+routine reads through a pointer returned by a stubbed callee (0x478d10): the original reads the
+oracle's scratch memory, the native side reads a global. That is a limit of the generic harness, not
+yet a proven translation bug; each needs a hand recovery with a targeted verifier.
