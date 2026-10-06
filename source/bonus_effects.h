@@ -480,10 +480,32 @@ uint32_t vertrix_effect_field_finish(const VertrixEffectServices *services, uint
 uint32_t vertrix_effect_field_finish_after(const VertrixEffectServices *services, uint32_t player,
                                            uint32_t entry_edx);
 
-/* Original 0x455b90 (eax = player): the handler bound by 0x455b20. 0x437f60 (edx 0) and 0x437fe0
- * on the player's board. Result 1 binds the token 0x455c30 to the player, plays sound 11
- * (0x4f81ac), sets the board's +0xb8c to one and calls 0x43ac00 on the opponent. Anything else
- * calls 0x43acd0 on the opponent (ecx 1) and makes the handler end with 0x43bbf0 on the player
- * (ebx 1, ecx 1). Slot 1 of the board comes between. */
-uint32_t vertrix_effect_pair_check(const VertrixEffectServices *services, uint32_t player);
+/* The handlers 0x455b90 (bound by 0x455b20) and 0x455d10 (bound by 0x455ca0) (eax = player). The
+ * first callee (edx 0) and the second run on the player's board. Result 1 binds the token to the
+ * player, plays sound 11 (0x4f81ac), sets the board's +0xb8c to one and calls 0x43ac00 on the
+ * opponent. Anything else calls 0x43acd0 on the opponent (ecx 1) and makes the handler end with
+ * 0x43bbf0 on the player (ebx 1, ecx 1). Slot 1 of the board comes between. */
+typedef struct
+{
+    uint32_t routine;
+    uint32_t first;
+    uint32_t second;
+    uint32_t token;
+} VertrixPairCheck;
+
+#define VERTRIX_PAIR_CHECK_COUNT 2
+extern const VertrixPairCheck vertrix_pair_checks[VERTRIX_PAIR_CHECK_COUNT];
+
+uint32_t vertrix_effect_pair_check(const VertrixEffectServices *services, uint32_t player,
+                                   const VertrixPairCheck *check);
+
+/* Original 0x455c30 (eax = player): when 0x42eca0 and 0x42ecc0 are both non-zero 0x42ebe0 runs on
+ * the board; slot 1 follows and then, in that case, 0x43bbf0 on the player and the board's +0xb8c
+ * is cleared; otherwise the slot's result is returned. */
+uint32_t vertrix_effect_field_end_slide(const VertrixEffectServices *services, uint32_t player);
+
+/* Original 0x455db0 (eax = player): 0x42eca0 on the board with 0x44c860. A non-zero result calls
+ * 0x4387b0 on the board with the token 0x455e00 and binds the token to the player. Returns the
+ * result of slot 1 of the board. */
+uint32_t vertrix_effect_field_bind_next(const VertrixEffectServices *services, uint32_t player);
 #endif
