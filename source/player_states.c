@@ -349,3 +349,125 @@ uint32_t vertrix_state_start_451690(const VertrixCalls *calls,
     vertrix_regs_call(calls, &regs, STATE_SET_HANDLER);
     return finish_edx(calls, services, globals, &regs, board);
 }
+
+enum
+{
+    CHOICE_GRID = 0x3b8,
+    CHOICE_ROW = 0x194,
+    CHOICE_COLUMN = 0x198,
+    CHOICE_CHECK = 0x42a1b0,
+    CHOICE_HANDLER = 0x451e20,
+    CHOICE_ASK = 0x42a190,
+    CHOICE_WAIT = 0x43acd0,
+    CHOICE_BUSY = 0x43ccb0,
+    CHOICE_CELL = 0x42a170,
+    CHOICE_PLACE = 0x43c140,
+    CHOICE_FINISH = 0x43bbf0,
+    CHOICE_LOCAL_FIRST = 0x1c,
+    CHOICE_LOCAL_SECOND = 0x18
+};
+
+uint32_t vertrix_state_choice_check(const VertrixCalls *calls,
+                                    const VertrixFactoryServices *services,
+                                    const VertrixGlobals *globals, uint32_t player, uint32_t edx)
+{
+    VertrixRegs regs = {player, edx, 0, player};
+    uint32_t board;
+    uint32_t grid;
+    if (!read_value(services, player, STATE_BOARD, DWORD_WIDTH, &board) ||
+        !read_value(services, player, CHOICE_GRID, DWORD_WIDTH, &grid))
+    {
+        return 0;
+    }
+    regs.ebx = board;
+    regs.eax = grid;
+    vertrix_regs_call(calls, &regs, CHOICE_CHECK);
+    if (regs.eax == 0)
+    {
+        regs.edx = CHOICE_HANDLER;
+        regs.eax = player;
+        vertrix_regs_call(calls, &regs, STATE_SET_HANDLER);
+    }
+    if (!read_value(services, board, STATE_BOARD_TABLE, DWORD_WIDTH, &regs.ecx))
+    {
+        return 0;
+    }
+    regs.eax = board;
+    vertrix_regs_virtual_at(calls, globals, &regs, regs.ecx, STATE_VIRTUAL_SLOT);
+    return regs.eax;
+}
+
+uint32_t vertrix_state_choice_apply(const VertrixCalls *calls,
+                                    const VertrixFactoryServices *services,
+                                    const VertrixGlobals *globals, uint32_t frame, uint32_t player,
+                                    uint32_t ecx)
+{
+    VertrixRegs regs;
+    uint32_t grid;
+    uint32_t board;
+    uint32_t row;
+    uint32_t column;
+    uint32_t flag = 0;
+    if (!read_value(services, player, CHOICE_GRID, DWORD_WIDTH, &grid) ||
+        !read_value(services, player, CHOICE_COLUMN, DWORD_WIDTH, &column) ||
+        !read_value(services, player, STATE_BOARD, DWORD_WIDTH, &board) ||
+        !read_value(services, player, CHOICE_ROW, DWORD_WIDTH, &row))
+    {
+        return 0;
+    }
+    regs.eax = grid;
+    regs.edx = row;
+    regs.ebx = column;
+    regs.ecx = ecx;
+    vertrix_regs_call(calls, &regs, CHOICE_ASK);
+    if (regs.eax != 1)
+    {
+        regs.eax = player;
+        regs.ecx = 1;
+        vertrix_regs_call(calls, &regs, CHOICE_WAIT);
+        flag = regs.ecx;
+    }
+    else
+    {
+        regs.eax = player;
+        vertrix_regs_call(calls, &regs, CHOICE_BUSY);
+        if (regs.eax == 0)
+        {
+            VertrixCallSite site;
+            uint32_t pointer = frame - CHOICE_LOCAL_FIRST;
+            if (!read_value(services, player, CHOICE_COLUMN, DWORD_WIDTH, &regs.ebx) ||
+                !read_value(services, player, CHOICE_ROW, DWORD_WIDTH, &regs.edx))
+            {
+                return 0;
+            }
+            regs.eax = grid;
+            regs.ecx = frame - CHOICE_LOCAL_SECOND;
+            site = (VertrixCallSite){CHOICE_CELL, regs.eax, regs.edx, regs.ebx, regs.ecx, pointer,
+                                     0,           0,        0,        0,        {0},      0};
+            calls->call(&site, calls->context);
+            regs.eax = player;
+            regs.ebx = site.out_value & 0xff;
+            regs.edx = site.out_ecx & 0xff;
+            vertrix_regs_call(calls, &regs, CHOICE_PLACE);
+            if (regs.eax == 0)
+            {
+                regs.eax = player;
+                regs.ebx = 1;
+                vertrix_regs_call(calls, &regs, CHOICE_WAIT);
+                flag = regs.ebx;
+            }
+        }
+    }
+    if (!read_value(services, board, STATE_BOARD_TABLE, DWORD_WIDTH, &regs.edx))
+    {
+        return 0;
+    }
+    regs.eax = board;
+    vertrix_regs_virtual(calls, globals, &regs, STATE_VIRTUAL_SLOT);
+    if (flag == 1)
+    {
+        regs.eax = player;
+        vertrix_regs_call(calls, &regs, CHOICE_FINISH);
+    }
+    return regs.eax;
+}

@@ -58,7 +58,8 @@ recovered (or have unmodeled global state):
 
 ## Player state handlers (bonus system range 0x450ff0..0x456033)
 
-- RECOVERED: `0x451490`, `0x451520`, `0x451580`, `0x451630`, `0x451690`, `0x451730`
+- RECOVERED: `0x451490`, `0x451520`, `0x451580`, `0x451630`, `0x451690`, `0x451730`, `0x451dd0`,
+  `0x451e20`
   (`source/player_states.c`, `tools/verify_player_states.py`,
   `docs/state-*-verification.json`, 4,096 executions each). `source/regs_call.h` tracks the four
   argument registers so every boundary call carries the values the original holds.

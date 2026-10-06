@@ -123,7 +123,11 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
         native_log.append(site_log(s, callees[s.target]) + tuple(
             native_extras[s.target](s) if s.target in native_extras else ()))
         if s.target in effects:
-            s.out_value = replay_out.pop(0)
+            out = replay_out.pop(0)
+            if isinstance(out, tuple):
+                s.out_value, s.out_ebx, s.out_ecx = out
+            else:
+                s.out_value = out
         return replay.pop(0)
 
     calls = Calls(call, None)

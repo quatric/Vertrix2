@@ -34,4 +34,11 @@ static inline void vertrix_regs_virtual(const VertrixCalls *calls, const Vertrix
 {
     vertrix_regs_call(calls, regs, globals->read(regs->edx + offset, globals->context));
 }
+
+/* `call [table + offset]` where the vtable pointer table is held in a register other than edx. */
+static inline void vertrix_regs_virtual_at(const VertrixCalls *calls, const VertrixGlobals *globals,
+                                           VertrixRegs *regs, uint32_t table, uint32_t offset)
+{
+    vertrix_regs_call(calls, regs, globals->read(table + offset, globals->context));
+}
 #endif

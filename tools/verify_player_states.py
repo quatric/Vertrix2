@@ -64,3 +64,31 @@ run_screen('state-check-451630', 0x451630, ['player_states.c'], 'vertrix_state_c
            U, CALLEES, player_only, TEXT, **COMMON)
 run_screen('state-start-451690', 0x451690, ['player_states.c'], 'vertrix_state_start_451690',
            [U, U], U, CALLEES, player_edx, TEXT, **COMMON)
+
+
+STACK = 0x708000
+CHOICE = {address: 0 for address in (0x42a1b0, 0x4ac8f0, 0x42a190, 0x43acd0, 0x43ccb0, 0x43c140,
+                                     0x43bbf0, LEAF)}
+CHOICE[0x42a170] = 1
+CHOICE_CHOICES = {0x42a1b0: [0, 1], 0x42a190: [1, 1, 0, 2], 0x43ccb0: [0, 1], 0x43c140: [0, 1]}
+
+
+def cell_effect(cpu, rng, eax, edx, ebx, ecx, stack):
+    first, second = rng.getrandbits(32), rng.getrandbits(32)
+    cpu.mem_write(stack[0], struct.pack('<I', first))
+    cpu.mem_write(ecx, struct.pack('<I', second))
+    return first, 0, second
+
+
+def choice_apply_case(rng, pool, cpu):
+    player, ecx = rng.choice(pool.handles), rng.getrandbits(32)
+    return {'eax': player, 'ecx': ecx}, (), (STACK - 4, player, ecx)
+
+
+run_screen('state-choice-check', 0x451dd0, ['player_states.c'], 'vertrix_state_choice_check',
+           [U, U], U, CHOICE, player_edx, TEXT, **{**COMMON, 'choices': CHOICE_CHOICES})
+run_screen('state-choice-apply', 0x451e20, ['player_states.c'], 'vertrix_state_choice_apply',
+           [U, U, U], U, CHOICE, choice_apply_case,
+           TEXT + ' 0x42a170 stores two random dwords through its pointers (frame locals), carried '
+           'through the call site.',
+           effects={0x42a170: cell_effect}, **{**COMMON, 'choices': CHOICE_CHOICES})

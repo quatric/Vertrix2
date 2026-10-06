@@ -55,4 +55,24 @@ uint32_t vertrix_state_check_451630(const VertrixCalls *calls,
 uint32_t vertrix_state_start_451690(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services,
                                     const VertrixGlobals *globals, uint32_t player, uint32_t edx);
+
+/* Original 0x451dd0 (eax = player, edx the caller's register): 0x42a1b0 on the choice grid
+ * (+0x3b8) with the board in ebx; a non-zero result ends, otherwise 0x4ac8f0 sets the handler
+ * 0x451e20 on the player. Both end with the board's virtual call through [board + 0x158] held in
+ * ecx. */
+uint32_t vertrix_state_choice_check(const VertrixCalls *calls,
+                                    const VertrixFactoryServices *services,
+                                    const VertrixGlobals *globals, uint32_t player, uint32_t edx);
+
+/* Original 0x451e20 (eax = player, ecx the caller's register, frame the token for ebp). The
+ * choice grid (+0x3b8) is asked about the cell (+0x194, +0x198) with 0x42a190. Unless that is
+ * one, 0x43acd0 runs on the player (ecx = 1, flag set). If it is one and 0x43ccb0 is zero,
+ * 0x42a170 gives two bytes (stored through the pointers frame - 0x1c and frame - 0x18, the call
+ * site's out_value and out_ecx) for 0x43c140(player, edx = second, ebx = first); when that is
+ * zero 0x43acd0 runs with ebx = 1 (flag set). The board's virtual call follows, and a set flag
+ * ends with 0x43bbf0 on the player. Returns the last eax. */
+uint32_t vertrix_state_choice_apply(const VertrixCalls *calls,
+                                    const VertrixFactoryServices *services,
+                                    const VertrixGlobals *globals, uint32_t frame, uint32_t player,
+                                    uint32_t ecx);
 #endif
