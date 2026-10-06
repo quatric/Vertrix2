@@ -508,4 +508,9 @@ uint32_t vertrix_effect_field_end_slide(const VertrixEffectServices *services, u
  * 0x4387b0 on the board with the token 0x455e00 and binds the token to the player. Returns the
  * result of slot 1 of the board. */
 uint32_t vertrix_effect_field_bind_next(const VertrixEffectServices *services, uint32_t player);
+
+/* Original 0x455e00 (eax = player): 0x42eca0 on the board with 0x44c860 (ebx 0). A non-zero result
+ * makes the handler end, after slot 1 of the board, with 0x43bbf0 on the player (ebx 1) and the
+ * board's +0xb8c cleared; otherwise the slot's result is returned. */
+uint32_t vertrix_effect_field_check_end(const VertrixEffectServices *services, uint32_t player);
 #endif

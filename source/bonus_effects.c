@@ -3094,3 +3094,42 @@ uint32_t vertrix_effect_field_bind_next(const VertrixEffectServices *services, u
     }
     return release_board(services, board, board_storage, board_size);
 }
+
+uint32_t vertrix_effect_field_check_end(const VertrixEffectServices *services, uint32_t player)
+{
+    void *player_storage;
+    void *board_storage;
+    size_t player_size;
+    size_t board_size;
+    uint32_t board;
+    uint32_t vtable;
+    uint32_t result;
+    int ended = 0;
+    if (!services || !services->calls ||
+        !resolve_object(services, player, &player_storage, &player_size) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_BOARD, DWORD_WIDTH,
+                                    &board) ||
+        !resolve_object(services, board, &board_storage, &board_size))
+    {
+        return 0;
+    }
+    if (vertrix_call(services->calls, 0x42eca0, board, HANDLER_FIELD, 0, board, 0) != 0)
+    {
+        ended = 1;
+    }
+    if (!vertrix_actor_storage_read(board_storage, board_size, BOARD_VTABLE, DWORD_WIDTH, &vtable))
+    {
+        return 0;
+    }
+    result = services->virtual_call ? (uint32_t)services->virtual_call(services->virtual_context,
+                                                                       board, SLOT_RELEASE, 0)
+                                    : 0;
+    if (!ended)
+    {
+        return result;
+    }
+    result = vertrix_call(services->calls, 0x43bbf0, player, vtable, 1, board, 0);
+    return vertrix_actor_storage_write(board_storage, board_size, BOARD_FLAG_SLIDE, DWORD_WIDTH, 0)
+               ? result
+               : 0;
+}
