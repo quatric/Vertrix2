@@ -1,0 +1,4830 @@
+{
+ "definition": "Entry points run to completion in the original by a passing verifier (Original.call), compared with the native recovery.",
+ "count": 1390,
+ "functions": {
+  "0x401010": [
+   "verify_mixer_output"
+  ],
+  "0x401054": [
+   "verify_mixer_output"
+  ],
+  "0x40109c": [
+   "verify_mixer_dispatch",
+   "verify_mixer_mono"
+  ],
+  "0x401328": [
+   "verify_mixer_dispatch",
+   "verify_mixer_gains",
+   "verify_mixer_stereo"
+  ],
+  "0x401cd0": [
+   "verify_mixer_dispatch",
+   "verify_mixer_filter",
+   "verify_mixer_interpolated_mono"
+  ],
+  "0x401f9c": [
+   "verify_mixer_dispatch",
+   "verify_mixer_interpolated_stereo"
+  ],
+  "0x402934": [
+   "verify_mixer_dispatch",
+   "verify_mixer_pcm16_mono"
+  ],
+  "0x402c18": [
+   "verify_mixer_dispatch",
+   "verify_mixer_gains",
+   "verify_mixer_pcm16_stereo"
+  ],
+  "0x4036c8": [
+   "verify_mixer_dispatch",
+   "verify_mixer_pcm16_interpolated_mono"
+  ],
+  "0x4039e4": [
+   "verify_mixer_dispatch",
+   "verify_mixer_pcm16_interpolated_stereo"
+  ],
+  "0x407280": [
+   "verify_bits_header"
+  ],
+  "0x4074a0": [
+   "verify_bits_fill"
+  ],
+  "0x40a590": [
+   "verify_window_tables"
+  ],
+  "0x40ab10": [
+   "verify_call_glue"
+  ],
+  "0x40ae80": [
+   "verify_call_glue"
+  ],
+  "0x40afc0": [
+   "verify_call_glue"
+  ],
+  "0x40ba00": [
+   "verify_call_glue"
+  ],
+  "0x40c1e0": [
+   "verify_call_glue"
+  ],
+  "0x40c1f0": [
+   "verify_call_glue"
+  ],
+  "0x40c210": [
+   "verify_call_glue"
+  ],
+  "0x40c460": [
+   "verify_mixer_channel",
+   "verify_sequence_module_pcm"
+  ],
+  "0x40c483": [
+   "verify_mixer_boundary"
+  ],
+  "0x40c4d6": [
+   "verify_mixer_boundary"
+  ],
+  "0x40c518": [
+   "verify_mixer_batch"
+  ],
+  "0x40c5c0": [
+   "verify_mixer_ticks"
+  ],
+  "0x40c7d0": [
+   "verify_mixer_channel",
+   "verify_mixer_dispatch",
+   "verify_mixer_filter",
+   "verify_mixer_gains",
+   "verify_mixer_interpolated_mono",
+   "verify_mixer_interpolated_stereo",
+   "verify_mixer_mono",
+   "verify_mixer_pcm16_interpolated_mono",
+   "verify_mixer_pcm16_interpolated_stereo",
+   "verify_mixer_pcm16_mono",
+   "verify_mixer_pcm16_stereo",
+   "verify_mixer_stereo",
+   "verify_mixer_table",
+   "verify_sequence_module_pcm"
+  ],
+  "0x40c990": [
+   "verify_audio_guard"
+  ],
+  "0x40c9d0": [
+   "verify_mixer_attach",
+   "verify_mixer_cursor"
+  ],
+  "0x40ca70": [
+   "verify_mixer_command"
+  ],
+  "0x40caa0": [
+   "verify_mixer_command"
+  ],
+  "0x40cad0": [
+   "verify_mixer_command"
+  ],
+  "0x40cb10": [
+   "verify_mixer_command",
+   "verify_mixer_cursor"
+  ],
+  "0x40cb70": [
+   "verify_mixer_command"
+  ],
+  "0x40cbb0": [
+   "verify_mixer_command"
+  ],
+  "0x40cd40": [
+   "verify_mixer_tempo"
+  ],
+  "0x40ce20": [
+   "verify_mixer_pitch"
+  ],
+  "0x40ce80": [
+   "verify_mixer_notes"
+  ],
+  "0x40cef0": [
+   "verify_mixer_arpeggio"
+  ],
+  "0x40cf50": [
+   "verify_mixer_slides"
+  ],
+  "0x40cfa0": [
+   "verify_mixer_slides"
+  ],
+  "0x40cff0": [
+   "verify_mixer_portamento"
+  ],
+  "0x40d090": [
+   "verify_mixer_vibrato"
+  ],
+  "0x40d170": [
+   "verify_mixer_fine_vibrato"
+  ],
+  "0x40d250": [
+   "verify_mixer_volume_slide"
+  ],
+  "0x40d300": [
+   "verify_mixer_combined"
+  ],
+  "0x40d330": [
+   "verify_mixer_tremolo"
+  ],
+  "0x40d410": [
+   "verify_mixer_set_effects"
+  ],
+  "0x40d430": [
+   "verify_mixer_set_effects"
+  ],
+  "0x40d450": [
+   "verify_mixer_pattern_change"
+  ],
+  "0x40d490": [
+   "verify_mixer_set_effects"
+  ],
+  "0x40d4c0": [
+   "verify_mixer_pattern_change"
+  ],
+  "0x40d540": [
+   "verify_mixer_extended_pan",
+   "verify_mixer_fine_slide",
+   "verify_mixer_fine_volume",
+   "verify_mixer_finetune_control",
+   "verify_mixer_glissando_control",
+   "verify_mixer_note_cut",
+   "verify_mixer_pattern_delay",
+   "verify_mixer_pattern_loop",
+   "verify_mixer_timed_trigger",
+   "verify_mixer_waveform_control"
+  ],
+  "0x40dc50": [
+   "verify_mixer_effect_selection",
+   "verify_mixer_global_effects",
+   "verify_mixer_pan_release",
+   "verify_mixer_retrigger",
+   "verify_mixer_tremor_extra_fine",
+   "verify_sequence_channel_pipeline",
+   "verify_sequence_effects",
+   "verify_sequence_extended_effect",
+   "verify_sequence_global_effect",
+   "verify_sequence_note_effect",
+   "verify_sequence_pitch_effect",
+   "verify_sequence_playback"
+  ],
+  "0x40dc80": [
+   "verify_mixer_volume_column",
+   "verify_sequence_channel_pipeline",
+   "verify_sequence_effects",
+   "verify_sequence_extended_effect",
+   "verify_sequence_note_effect",
+   "verify_sequence_pitch_effect",
+   "verify_sequence_playback",
+   "verify_sequence_volume"
+  ],
+  "0x40df20": [
+   "verify_mixer_trigger_reset"
+  ],
+  "0x40e030": [
+   "verify_mixer_playback_tick",
+   "verify_sequence_channel_pipeline",
+   "verify_sequence_playback"
+  ],
+  "0x40e038": [
+   "verify_mixer_envelope_output"
+  ],
+  "0x40e070": [
+   "verify_mixer_envelope"
+  ],
+  "0x40e0f2": [
+   "verify_mixer_envelope_output"
+  ],
+  "0x40e122": [
+   "verify_mixer_envelope"
+  ],
+  "0x40e1a4": [
+   "verify_mixer_envelope_output"
+  ],
+  "0x40e1db": [
+   "verify_mixer_instrument_vibrato"
+  ],
+  "0x40e3c3": [
+   "verify_mixer_envelope_output"
+  ],
+  "0x40e4ff": [
+   "verify_mixer_envelope_output"
+  ],
+  "0x40e580": [
+   "verify_mixer_sample_selection"
+  ],
+  "0x40e640": [
+   "verify_mixer_note_release"
+  ],
+  "0x40e670": [
+   "verify_mixer_timed_trigger"
+  ],
+  "0x40e690": [
+   "verify_xm"
+  ],
+  "0x40e770": [
+   "verify_mixer_row",
+   "verify_mixer_row_effects"
+  ],
+  "0x40e7ba": [
+   "verify_mixer_row_instrument"
+  ],
+  "0x40e82c": [
+   "verify_mixer_row_instrument"
+  ],
+  "0x40e8a0": [
+   "verify_mixer_deliver",
+   "verify_mixer_publish",
+   "verify_sequence_channel_pipeline",
+   "verify_sequence_deliver",
+   "verify_sequence_playback"
+  ],
+  "0x40e940": [
+   "verify_mixer_sequence_row",
+   "verify_sequence_advance"
+  ],
+  "0x40ea45": [
+   "verify_xm_seek_row"
+  ],
+  "0x40eb10": [
+   "verify_mixer_sequence_tick",
+   "verify_sequence_module_differential",
+   "verify_sequence_module_mixer",
+   "verify_sequence_module_pcm",
+   "verify_sequence_tick"
+  ],
+  "0x40eb3a": [
+   "verify_sequence_process"
+  ],
+  "0x40eb6e": [
+   "verify_mixer_sequence_tick",
+   "verify_sequence_global_effect"
+  ],
+  "0x40ec40": [
+   "verify_sequence_module_differential",
+   "verify_sequence_module_mixer",
+   "verify_sequence_module_pcm",
+   "verify_sequence_start"
+  ],
+  "0x40ed70": [
+   "verify_call_glue"
+  ],
+  "0x40ef90": [
+   "verify_free_tree"
+  ],
+  "0x40f1a0": [
+   "verify_event_pack"
+  ],
+  "0x40f360": [
+   "verify_module_load"
+  ],
+  "0x40f910": [
+   "verify_attach_item"
+  ],
+  "0x410890": [
+   "verify_flip_bits"
+  ],
+  "0x410ffd": [
+   "verify_audio_format"
+  ],
+  "0x41108a": [
+   "verify_audio_format"
+  ],
+  "0x411280": [
+   "verify_audio_delta"
+  ],
+  "0x4117e0": [
+   "verify_sequence_module_differential",
+   "verify_sequence_module_mixer",
+   "verify_sequence_module_pcm",
+   "verify_xm_instrument_header",
+   "verify_xm_instruments"
+  ],
+  "0x4121e0": [
+   "verify_object_dwords",
+   "verify_record_stream"
+  ],
+  "0x4123d0": [
+   "verify_actor_style_storage"
+  ],
+  "0x4126d0": [
+   "verify_object_scalars"
+  ],
+  "0x4126f0": [
+   "verify_object_scalars"
+  ],
+  "0x415180": [
+   "verify_text_table"
+  ],
+  "0x415330": [
+   "verify_assets"
+  ],
+  "0x415530": [
+   "verify_object_scalars"
+  ],
+  "0x415b10": [
+   "verify_object_scalars"
+  ],
+  "0x415b30": [
+   "verify_object_scalars"
+  ],
+  "0x415b40": [
+   "verify_object_scalars"
+  ],
+  "0x415d40": [
+   "verify_object_scalars"
+  ],
+  "0x415d60": [
+   "verify_object_scalars"
+  ],
+  "0x415d90": [
+   "verify_object_scalars"
+  ],
+  "0x415e10": [
+   "verify_call_glue"
+  ],
+  "0x416010": [
+   "verify_notice"
+  ],
+  "0x416a80": [
+   "verify_list_text"
+  ],
+  "0x416c10": [
+   "verify_call_glue"
+  ],
+  "0x4174f0": [
+   "verify_sfx_dispatch"
+  ],
+  "0x417550": [
+   "verify_sfx_dispatch"
+  ],
+  "0x417790": [
+   "verify_score_text"
+  ],
+  "0x4177b0": [
+   "verify_score_table"
+  ],
+  "0x4178d0": [
+   "verify_board",
+   "verify_timing"
+  ],
+  "0x4179d0": [
+   "verify_score_table"
+  ],
+  "0x417c80": [
+   "verify_actor_angle",
+   "verify_actor_chain_visit",
+   "verify_actor_counters",
+   "verify_actor_double_orbit",
+   "verify_actor_draw_slot",
+   "verify_actor_dword_transition",
+   "verify_actor_fields",
+   "verify_actor_frame_switch",
+   "verify_actor_gate",
+   "verify_actor_image_bounds",
+   "verify_actor_image_clip",
+   "verify_actor_match_burst",
+   "verify_actor_match_effect",
+   "verify_actor_refresh",
+   "verify_actor_render_draw",
+   "verify_actor_render_geometry",
+   "verify_actor_render_style",
+   "verify_actor_spawn",
+   "verify_actor_style_storage",
+   "verify_actor_value_steps",
+   "verify_actor_wrap",
+   "verify_ai_bomb",
+   "verify_ai_chain",
+   "verify_ai_fallback",
+   "verify_ai_features",
+   "verify_ai_piece_choice",
+   "verify_ai_player",
+   "verify_ai_scoring",
+   "verify_ai_search",
+   "verify_ai_timing",
+   "verify_alpha",
+   "verify_animation",
+   "verify_array_list",
+   "verify_assets",
+   "verify_attach_item",
+   "verify_audio_delta",
+   "verify_audio_format",
+   "verify_audio_guard",
+   "verify_bitmap_load",
+   "verify_bits_fill",
+   "verify_bits_header",
+   "verify_block_accelerate",
+   "verify_block_byte_pulse",
+   "verify_block_centered",
+   "verify_block_centered_finish",
+   "verify_block_chain",
+   "verify_block_collapse",
+   "verify_block_combined",
+   "verify_block_cycle",
+   "verify_block_departure",
+   "verify_block_effect",
+   "verify_block_factory",
+   "verify_block_fade",
+   "verify_block_finish",
+   "verify_block_finish_effect",
+   "verify_block_frames",
+   "verify_block_half_pulse",
+   "verify_block_mode_amount",
+   "verify_block_mode_pulse",
+   "verify_block_motion",
+   "verify_block_orbit",
+   "verify_block_period",
+   "verify_block_pulse",
+   "verify_block_resource",
+   "verify_block_return",
+   "verify_block_scale",
+   "verify_block_slide",
+   "verify_block_spin",
+   "verify_block_staged",
+   "verify_block_swell",
+   "verify_block_travel",
+   "verify_block_triple",
+   "verify_block_update",
+   "verify_block_visibility",
+   "verify_board",
+   "verify_board_actions",
+   "verify_board_burst",
+   "verify_board_cell_replace",
+   "verify_board_cells",
+   "verify_board_collapse_bytes",
+   "verify_board_conversions",
+   "verify_board_effects",
+   "verify_board_fields",
+   "verify_board_frame",
+   "verify_board_markers",
+   "verify_board_overlay",
+   "verify_board_piece",
+   "verify_board_piece_moves",
+   "verify_board_reach",
+   "verify_board_rows",
+   "verify_board_stones",
+   "verify_board_swap",
+   "verify_board_tiles",
+   "verify_bonus_effects",
+   "verify_byte_transition",
+   "verify_call_glue",
+   "verify_choice_grid",
+   "verify_circle_points",
+   "verify_color_conversion",
+   "verify_color_order",
+   "verify_color_table",
+   "verify_constructors",
+   "verify_controls",
+   "verify_coordinates",
+   "verify_copy_rows",
+   "verify_corner_call",
+   "verify_descent",
+   "verify_dword_transition",
+   "verify_engine_helpers",
+   "verify_event_frame_draw",
+   "verify_event_pack",
+   "verify_event_stack",
+   "verify_exception_chain",
+   "verify_far_strings",
+   "verify_field_accessors",
+   "verify_figure_pass",
+   "verify_find_name",
+   "verify_fixed_point",
+   "verify_flip_bits",
+   "verify_float_dispatch",
+   "verify_float_exp",
+   "verify_float_power",
+   "verify_float_remainder",
+   "verify_float_split",
+   "verify_font_bank",
+   "verify_font_binding",
+   "verify_font_cell",
+   "verify_font_crop",
+   "verify_font_draw",
+   "verify_font_initialize",
+   "verify_font_map",
+   "verify_font_measure",
+   "verify_font_outline",
+   "verify_font_run",
+   "verify_font_scaled_draw",
+   "verify_font_scaled_run",
+   "verify_font_scaled_text",
+   "verify_font_sheet",
+   "verify_font_stencil",
+   "verify_font_stencils",
+   "verify_font_style",
+   "verify_format_spec",
+   "verify_frame_resource",
+   "verify_free_tree",
+   "verify_gauge_tube",
+   "verify_graded_mask",
+   "verify_icons",
+   "verify_image_key",
+   "verify_image_mirror",
+   "verify_input",
+   "verify_jump_capture",
+   "verify_key_maps",
+   "verify_kind_text",
+   "verify_letter_grid",
+   "verify_letter_menu",
+   "verify_letter_row",
+   "verify_line_pass",
+   "verify_linked_alternating",
+   "verify_linked_burst",
+   "verify_linked_indicator",
+   "verify_linked_movement",
+   "verify_list_text",
+   "verify_ln",
+   "verify_map_find",
+   "verify_map_iterate",
+   "verify_marquee",
+   "verify_mask",
+   "verify_match_scan",
+   "verify_message_dispatch",
+   "verify_mixer_arpeggio",
+   "verify_mixer_attach",
+   "verify_mixer_batch",
+   "verify_mixer_boundary",
+   "verify_mixer_channel",
+   "verify_mixer_combined",
+   "verify_mixer_command",
+   "verify_mixer_cursor",
+   "verify_mixer_deliver",
+   "verify_mixer_dispatch",
+   "verify_mixer_effect_selection",
+   "verify_mixer_envelope",
+   "verify_mixer_envelope_output",
+   "verify_mixer_extended_pan",
+   "verify_mixer_filter",
+   "verify_mixer_fine_slide",
+   "verify_mixer_fine_vibrato",
+   "verify_mixer_fine_volume",
+   "verify_mixer_finetune_control",
+   "verify_mixer_gains",
+   "verify_mixer_glissando_control",
+   "verify_mixer_global_effects",
+   "verify_mixer_instrument_vibrato",
+   "verify_mixer_interpolated_mono",
+   "verify_mixer_interpolated_stereo",
+   "verify_mixer_mono",
+   "verify_mixer_note_cut",
+   "verify_mixer_note_release",
+   "verify_mixer_notes",
+   "verify_mixer_output",
+   "verify_mixer_pan_release",
+   "verify_mixer_pattern_change",
+   "verify_mixer_pattern_delay",
+   "verify_mixer_pattern_loop",
+   "verify_mixer_pcm16_interpolated_mono",
+   "verify_mixer_pcm16_interpolated_stereo",
+   "verify_mixer_pcm16_mono",
+   "verify_mixer_pcm16_stereo",
+   "verify_mixer_pitch",
+   "verify_mixer_playback_tick",
+   "verify_mixer_portamento",
+   "verify_mixer_publish",
+   "verify_mixer_retrigger",
+   "verify_mixer_row",
+   "verify_mixer_row_effects",
+   "verify_mixer_row_instrument",
+   "verify_mixer_sample_selection",
+   "verify_mixer_sequence_row",
+   "verify_mixer_sequence_tick",
+   "verify_mixer_set_effects",
+   "verify_mixer_slides",
+   "verify_mixer_stereo",
+   "verify_mixer_table",
+   "verify_mixer_tempo",
+   "verify_mixer_ticks",
+   "verify_mixer_timed_trigger",
+   "verify_mixer_tremolo",
+   "verify_mixer_tremor_extra_fine",
+   "verify_mixer_trigger_reset",
+   "verify_mixer_vibrato",
+   "verify_mixer_volume_column",
+   "verify_mixer_volume_slide",
+   "verify_mixer_waveform_control",
+   "verify_mode_colors",
+   "verify_module_load",
+   "verify_node_pool",
+   "verify_notice",
+   "verify_number_player",
+   "verify_number_text",
+   "verify_number_transition",
+   "verify_object_append",
+   "verify_object_attack",
+   "verify_object_attack_composed",
+   "verify_object_bounds",
+   "verify_object_chain_select",
+   "verify_object_chain_select_pair",
+   "verify_object_construct",
+   "verify_object_dispatch",
+   "verify_object_dwords",
+   "verify_object_events",
+   "verify_object_find",
+   "verify_object_glue",
+   "verify_object_growth",
+   "verify_object_list",
+   "verify_object_post_lock",
+   "verify_object_post_lock_twin",
+   "verify_object_scalars",
+   "verify_object_slots",
+   "verify_object_tails",
+   "verify_orbit_chain",
+   "verify_original_image",
+   "verify_pair_sync",
+   "verify_palette_color",
+   "verify_palette_cycle",
+   "verify_palette_half",
+   "verify_palette_lookup_entry",
+   "verify_palette_map",
+   "verify_palette_rgb",
+   "verify_palette_tables",
+   "verify_parse_texts",
+   "verify_parse_values",
+   "verify_particle_emit",
+   "verify_particle_init",
+   "verify_particle_setup",
+   "verify_particle_spawn",
+   "verify_path_text",
+   "verify_pattern_tables",
+   "verify_pick_entry",
+   "verify_piece",
+   "verify_piece_actor_construct",
+   "verify_piece_actor_destroy",
+   "verify_piece_actor_layout",
+   "verify_piece_actor_slot2",
+   "verify_piece_child_update",
+   "verify_piece_children",
+   "verify_piece_frames",
+   "verify_piece_preview_kinds",
+   "verify_piece_setup",
+   "verify_piece_spawn",
+   "verify_player_actions",
+   "verify_player_ai_tick",
+   "verify_player_bonus",
+   "verify_player_bump",
+   "verify_player_chain_init",
+   "verify_player_countdown",
+   "verify_player_delays",
+   "verify_player_indicator",
+   "verify_player_level_side",
+   "verify_player_mode_sets",
+   "verify_player_modes",
+   "verify_player_piece",
+   "verify_player_piece_progress",
+   "verify_player_preview_state",
+   "verify_player_progress",
+   "verify_player_reward",
+   "verify_player_reward_composed",
+   "verify_player_score",
+   "verify_player_side",
+   "verify_player_slots",
+   "verify_player_start_bonus",
+   "verify_player_stores",
+   "verify_populate",
+   "verify_random",
+   "verify_read_into",
+   "verify_record_stream",
+   "verify_regions",
+   "verify_release_tables",
+   "verify_render_color",
+   "verify_render_color_bank",
+   "verify_render_dispatch",
+   "verify_render_geometry",
+   "verify_render_operation",
+   "verify_render_palette",
+   "verify_render_pixel",
+   "verify_render_preparation",
+   "verify_render_rectangle",
+   "verify_render_weights",
+   "verify_resource_record",
+   "verify_rotation",
+   "verify_rotation_tables",
+   "verify_rtl_glue",
+   "verify_scale_chain",
+   "verify_scene",
+   "verify_scene_descent",
+   "verify_scene_fall",
+   "verify_scene_frame",
+   "verify_scene_layout",
+   "verify_scene_lock",
+   "verify_score",
+   "verify_score_table",
+   "verify_score_text",
+   "verify_sequence_advance",
+   "verify_sequence_channel_pipeline",
+   "verify_sequence_deliver",
+   "verify_sequence_effects",
+   "verify_sequence_extended_effect",
+   "verify_sequence_global_effect",
+   "verify_sequence_module_differential",
+   "verify_sequence_module_mixer",
+   "verify_sequence_module_pcm",
+   "verify_sequence_note_effect",
+   "verify_sequence_pitch_effect",
+   "verify_sequence_playback",
+   "verify_sequence_process",
+   "verify_sequence_start",
+   "verify_sequence_tick",
+   "verify_sequence_volume",
+   "verify_settings_defaults",
+   "verify_sfx_dispatch",
+   "verify_shift",
+   "verify_slot_objects",
+   "verify_spawn",
+   "verify_sprite_actor_storage",
+   "verify_sprite_clone",
+   "verify_sprite_files",
+   "verify_sprite_load_plan",
+   "verify_sqrt",
+   "verify_staged_chain",
+   "verify_stream_read",
+   "verify_stream_token",
+   "verify_string_append",
+   "verify_surface",
+   "verify_surface_blit",
+   "verify_surface_clear",
+   "verify_surface_fade",
+   "verify_surface_fill",
+   "verify_surface_mask",
+   "verify_table_release",
+   "verify_text_equal",
+   "verify_text_insert",
+   "verify_text_layout",
+   "verify_text_rebuild",
+   "verify_text_remove",
+   "verify_text_seek",
+   "verify_text_table",
+   "verify_text_value",
+   "verify_text_wrap",
+   "verify_timer",
+   "verify_timing",
+   "verify_title_letter",
+   "verify_ui_actor_place",
+   "verify_ui_artwork",
+   "verify_ui_border_actor",
+   "verify_ui_companion_actor",
+   "verify_ui_companion_spawn",
+   "verify_ui_display_setup",
+   "verify_ui_preview_pair",
+   "verify_ui_scene_frame",
+   "verify_ui_sprite_bank",
+   "verify_ui_sprite_vf",
+   "verify_wave_load",
+   "verify_wide_assign",
+   "verify_window_tables",
+   "verify_word_transition",
+   "verify_xm",
+   "verify_xm_instrument_header",
+   "verify_xm_instruments",
+   "verify_xm_seek_row"
+  ],
+  "0x417f40": [
+   "verify_object_scalars"
+  ],
+  "0x417f50": [
+   "verify_call_glue"
+  ],
+  "0x418150": [
+   "verify_object_scalars"
+  ],
+  "0x418170": [
+   "verify_list_text"
+  ],
+  "0x4182f0": [
+   "verify_call_glue"
+  ],
+  "0x418550": [
+   "verify_call_glue"
+  ],
+  "0x418570": [
+   "verify_call_glue"
+  ],
+  "0x418760": [
+   "verify_rtl_glue"
+  ],
+  "0x418820": [
+   "verify_object_scalars"
+  ],
+  "0x418830": [
+   "verify_object_scalars"
+  ],
+  "0x418840": [
+   "verify_object_scalars"
+  ],
+  "0x418850": [
+   "verify_object_dispatch"
+  ],
+  "0x418870": [
+   "verify_object_scalars"
+  ],
+  "0x419490": [
+   "verify_call_glue"
+  ],
+  "0x4194b0": [
+   "verify_call_glue"
+  ],
+  "0x41a2f0": [
+   "verify_surface_blit"
+  ],
+  "0x41a930": [
+   "verify_object_scalars"
+  ],
+  "0x41a9e0": [
+   "verify_resource_record"
+  ],
+  "0x41ab90": [
+   "verify_surface_blit"
+  ],
+  "0x41ac70": [
+   "verify_surface_clear"
+  ],
+  "0x41d5b0": [
+   "verify_call_glue"
+  ],
+  "0x41d660": [
+   "verify_object_scalars"
+  ],
+  "0x41de80": [
+   "verify_object_tails"
+  ],
+  "0x424760": [
+   "verify_object_glue"
+  ],
+  "0x425b8d": [
+   "verify_input"
+  ],
+  "0x425d30": [
+   "verify_call_glue"
+  ],
+  "0x425e00": [
+   "verify_object_scalars"
+  ],
+  "0x425e20": [
+   "verify_constructors"
+  ],
+  "0x425ef0": [
+   "verify_piece_children"
+  ],
+  "0x4261b0": [
+   "verify_ai_features"
+  ],
+  "0x426240": [
+   "verify_ai_fallback"
+  ],
+  "0x4269e0": [
+   "verify_ai_chain"
+  ],
+  "0x4270a0": [
+   "verify_ai_player",
+   "verify_ai_search"
+  ],
+  "0x427380": [
+   "verify_ai_bomb"
+  ],
+  "0x427ae0": [
+   "verify_regions"
+  ],
+  "0x427c10": [
+   "verify_ai_features"
+  ],
+  "0x427e10": [
+   "verify_ai_features"
+  ],
+  "0x428110": [
+   "verify_ai_scoring"
+  ],
+  "0x428610": [
+   "verify_ai_scoring"
+  ],
+  "0x428e70": [
+   "verify_ai_features"
+  ],
+  "0x429000": [
+   "verify_ai_piece_choice"
+  ],
+  "0x4290a0": [
+   "verify_ai_piece_choice"
+  ],
+  "0x4290c0": [
+   "verify_settings_defaults"
+  ],
+  "0x429350": [
+   "verify_object_glue"
+  ],
+  "0x4293e0": [
+   "verify_record_stream"
+  ],
+  "0x429660": [
+   "verify_object_slots"
+  ],
+  "0x429670": [
+   "verify_object_slots"
+  ],
+  "0x429880": [
+   "verify_constructors"
+  ],
+  "0x429bf0": [
+   "verify_slot_objects"
+  ],
+  "0x429d50": [
+   "verify_choice_grid"
+  ],
+  "0x429df0": [
+   "verify_choice_grid"
+  ],
+  "0x429e80": [
+   "verify_choice_grid"
+  ],
+  "0x429ee0": [
+   "verify_choice_grid"
+  ],
+  "0x429fe0": [
+   "verify_choice_grid"
+  ],
+  "0x42a080": [
+   "verify_choice_grid"
+  ],
+  "0x42a140": [
+   "verify_choice_grid"
+  ],
+  "0x42a170": [
+   "verify_choice_grid"
+  ],
+  "0x42a190": [
+   "verify_choice_grid"
+  ],
+  "0x42a1b0": [
+   "verify_choice_grid"
+  ],
+  "0x42a480": [
+   "verify_object_slots"
+  ],
+  "0x42a4a0": [
+   "verify_object_slots"
+  ],
+  "0x42a800": [
+   "verify_piece_children"
+  ],
+  "0x42a8b0": [
+   "verify_piece"
+  ],
+  "0x42a8e0": [
+   "verify_piece"
+  ],
+  "0x42a940": [
+   "verify_object_scalars"
+  ],
+  "0x42a950": [
+   "verify_object_scalars"
+  ],
+  "0x42a980": [
+   "verify_piece_children"
+  ],
+  "0x42aab0": [
+   "verify_piece_actor_layout"
+  ],
+  "0x42ab10": [
+   "verify_piece_actor_destroy"
+  ],
+  "0x42abf0": [
+   "verify_piece_actor_slot2"
+  ],
+  "0x42ac30": [
+   "verify_piece_actor_slot2"
+  ],
+  "0x42ac40": [
+   "verify_piece_actor_layout"
+  ],
+  "0x42acf0": [
+   "verify_piece_actor_construct"
+  ],
+  "0x42ae11": [
+   "verify_piece_child_update"
+  ],
+  "0x42af30": [
+   "verify_piece_actor_layout"
+  ],
+  "0x42af80": [
+   "verify_piece_actor_layout"
+  ],
+  "0x42b000": [
+   "verify_player_preview_state"
+  ],
+  "0x42b050": [
+   "verify_player_preview_state"
+  ],
+  "0x42b070": [
+   "verify_player_preview_state"
+  ],
+  "0x42b090": [
+   "verify_player_preview_state"
+  ],
+  "0x42b0e0": [
+   "verify_player_preview_state"
+  ],
+  "0x42b0f0": [
+   "verify_player_preview_state"
+  ],
+  "0x42b110": [
+   "verify_player_preview_state"
+  ],
+  "0x42b150": [
+   "verify_ui_preview_pair"
+  ],
+  "0x42b290": [
+   "verify_actor_render_draw"
+  ],
+  "0x42b310": [
+   "verify_ui_scene_frame"
+  ],
+  "0x42b3ac": [
+   "verify_ui_border_actor"
+  ],
+  "0x42b3f3": [
+   "verify_ui_companion_actor",
+   "verify_ui_preview_pair"
+  ],
+  "0x42b4d7": [
+   "verify_ui_border_actor",
+   "verify_ui_preview_pair"
+  ],
+  "0x42b5c0": [
+   "verify_constructors"
+  ],
+  "0x42b920": [
+   "verify_piece_children"
+  ],
+  "0x42b950": [
+   "verify_piece_children"
+  ],
+  "0x42b990": [
+   "verify_piece_children"
+  ],
+  "0x42b9f0": [
+   "verify_piece_children"
+  ],
+  "0x42ba40": [
+   "verify_object_scalars"
+  ],
+  "0x42bb00": [
+   "verify_block_factory"
+  ],
+  "0x42bbd0": [
+   "verify_block_factory"
+  ],
+  "0x42e870": [
+   "verify_object_construct"
+  ],
+  "0x42eb60": [
+   "verify_board_cells"
+  ],
+  "0x42eba0": [
+   "verify_object_slots"
+  ],
+  "0x42ee20": [
+   "verify_board_cells"
+  ],
+  "0x42ee80": [
+   "verify_board_cells"
+  ],
+  "0x42efa0": [
+   "verify_board_piece_moves"
+  ],
+  "0x42f030": [
+   "verify_board_piece_moves",
+   "verify_coordinates"
+  ],
+  "0x42f120": [
+   "verify_board_piece_moves",
+   "verify_coordinates"
+  ],
+  "0x42f210": [
+   "verify_board_cells"
+  ],
+  "0x42f280": [
+   "verify_board_piece_moves"
+  ],
+  "0x42f2b0": [
+   "verify_board_piece_moves"
+  ],
+  "0x42f2e0": [
+   "verify_board_piece"
+  ],
+  "0x42f310": [
+   "verify_shift"
+  ],
+  "0x42f440": [
+   "verify_board_cells"
+  ],
+  "0x42f4b0": [
+   "verify_board_cells"
+  ],
+  "0x42f520": [
+   "verify_board_piece_moves"
+  ],
+  "0x42f550": [
+   "verify_board_piece_moves"
+  ],
+  "0x42f580": [
+   "verify_shift"
+  ],
+  "0x42f620": [
+   "verify_shift"
+  ],
+  "0x42f6e0": [
+   "verify_board_piece_moves"
+  ],
+  "0x42f720": [
+   "verify_board_piece_moves"
+  ],
+  "0x42f760": [
+   "verify_board_cells"
+  ],
+  "0x42fb60": [
+   "verify_board_effects",
+   "verify_board_frame"
+  ],
+  "0x42fbba": [
+   "verify_descent",
+   "verify_scene_fall"
+  ],
+  "0x42fc2d": [
+   "verify_descent",
+   "verify_scene_descent"
+  ],
+  "0x42fc56": [
+   "verify_scene",
+   "verify_scene_frame"
+  ],
+  "0x42ff10": [
+   "verify_board_cells",
+   "verify_render_geometry"
+  ],
+  "0x42ff50": [
+   "verify_board_overlay"
+  ],
+  "0x430090": [
+   "verify_board_fields"
+  ],
+  "0x4300b0": [
+   "verify_board_cells"
+  ],
+  "0x430100": [
+   "verify_board_cells"
+  ],
+  "0x430150": [
+   "verify_board_cells"
+  ],
+  "0x430190": [
+   "verify_actor_match_effect"
+  ],
+  "0x4302a0": [
+   "verify_actor_match_burst"
+  ],
+  "0x430440": [
+   "verify_board_burst"
+  ],
+  "0x430660": [
+   "verify_board_burst"
+  ],
+  "0x430800": [
+   "verify_block_factory"
+  ],
+  "0x430930": [
+   "verify_render_geometry",
+   "verify_scene_layout"
+  ],
+  "0x431100": [
+   "verify_descent"
+  ],
+  "0x431140": [
+   "verify_descent"
+  ],
+  "0x431340": [
+   "verify_board_piece"
+  ],
+  "0x431380": [
+   "verify_board_fields"
+  ],
+  "0x431390": [
+   "verify_timing"
+  ],
+  "0x431400": [
+   "verify_player_level_side",
+   "verify_timing"
+  ],
+  "0x431480": [
+   "verify_board_fields"
+  ],
+  "0x431490": [
+   "verify_board_fields"
+  ],
+  "0x4316c0": [
+   "verify_board_stones"
+  ],
+  "0x431780": [
+   "verify_board_rows"
+  ],
+  "0x431930": [
+   "verify_board_rows"
+  ],
+  "0x431ae0": [
+   "verify_coordinates"
+  ],
+  "0x431b20": [
+   "verify_board_piece"
+  ],
+  "0x431b80": [
+   "verify_coordinates"
+  ],
+  "0x431c10": [
+   "verify_board_piece"
+  ],
+  "0x431c60": [
+   "verify_scene_lock",
+   "verify_shift"
+  ],
+  "0x431d80": [
+   "verify_board_fields"
+  ],
+  "0x431d90": [
+   "verify_spawn"
+  ],
+  "0x431fa0": [
+   "verify_board_piece"
+  ],
+  "0x431fb0": [
+   "verify_board_piece"
+  ],
+  "0x432000": [
+   "verify_board_fields"
+  ],
+  "0x432010": [
+   "verify_board_fields"
+  ],
+  "0x432040": [
+   "verify_board_piece"
+  ],
+  "0x432080": [
+   "verify_board_piece"
+  ],
+  "0x4320c0": [
+   "verify_board_piece"
+  ],
+  "0x4320d0": [
+   "verify_piece_spawn"
+  ],
+  "0x432110": [
+   "verify_player_piece"
+  ],
+  "0x432160": [
+   "verify_player_piece"
+  ],
+  "0x4321b0": [
+   "verify_player_piece"
+  ],
+  "0x432200": [
+   "verify_board_cells"
+  ],
+  "0x432280": [
+   "verify_board_cells"
+  ],
+  "0x4322f0": [
+   "verify_board_cells"
+  ],
+  "0x432480": [
+   "verify_match_scan"
+  ],
+  "0x4327e0": [
+   "verify_board_markers"
+  ],
+  "0x432820": [
+   "verify_board_markers"
+  ],
+  "0x432840": [
+   "verify_board_markers"
+  ],
+  "0x4328a0": [
+   "verify_board_markers"
+  ],
+  "0x4328e0": [
+   "verify_board"
+  ],
+  "0x432980": [
+   "verify_board",
+   "verify_board_collapse_bytes"
+  ],
+  "0x432b10": [
+   "verify_board_markers"
+  ],
+  "0x432ba0": [
+   "verify_board_cells"
+  ],
+  "0x433040": [
+   "verify_board_cell_replace"
+  ],
+  "0x4330d0": [
+   "verify_board_actions"
+  ],
+  "0x433180": [
+   "verify_board_tiles"
+  ],
+  "0x4334a0": [
+   "verify_board_fields"
+  ],
+  "0x4334b0": [
+   "verify_board_cells"
+  ],
+  "0x433550": [
+   "verify_board_reach"
+  ],
+  "0x433750": [
+   "verify_board_actions"
+  ],
+  "0x433e20": [
+   "verify_board"
+  ],
+  "0x4342f0": [
+   "verify_board_fields"
+  ],
+  "0x434300": [
+   "verify_board"
+  ],
+  "0x4346b0": [
+   "verify_board",
+   "verify_line_pass"
+  ],
+  "0x434ee0": [
+   "verify_board",
+   "verify_figure_pass"
+  ],
+  "0x435e80": [
+   "verify_board_markers"
+  ],
+  "0x435f30": [
+   "verify_board_markers"
+  ],
+  "0x435fe0": [
+   "verify_board_markers"
+  ],
+  "0x436030": [
+   "verify_board_markers"
+  ],
+  "0x436070": [
+   "verify_board_markers"
+  ],
+  "0x4360b0": [
+   "verify_board_markers"
+  ],
+  "0x436100": [
+   "verify_board_markers"
+  ],
+  "0x436150": [
+   "verify_board_swap"
+  ],
+  "0x436440": [
+   "verify_board_cell_replace"
+  ],
+  "0x4365c0": [
+   "verify_board_cell_replace"
+  ],
+  "0x436720": [
+   "verify_board_conversions"
+  ],
+  "0x436850": [
+   "verify_board_markers"
+  ],
+  "0x4368e0": [
+   "verify_board_conversions"
+  ],
+  "0x436a10": [
+   "verify_board_markers"
+  ],
+  "0x436aa0": [
+   "verify_board_markers"
+  ],
+  "0x436b40": [
+   "verify_board_conversions"
+  ],
+  "0x436d80": [
+   "verify_board_conversions"
+  ],
+  "0x436fe0": [
+   "verify_board_markers"
+  ],
+  "0x437060": [
+   "verify_board_conversions"
+  ],
+  "0x4371b0": [
+   "verify_board_actions"
+  ],
+  "0x437240": [
+   "verify_board_markers"
+  ],
+  "0x4372c0": [
+   "verify_board_markers"
+  ],
+  "0x437350": [
+   "verify_board_conversions"
+  ],
+  "0x437460": [
+   "verify_board_actions"
+  ],
+  "0x4375a0": [
+   "verify_board_markers"
+  ],
+  "0x4378c0": [
+   "verify_board_conversions"
+  ],
+  "0x437b70": [
+   "verify_board_conversions",
+   "verify_board_markers"
+  ],
+  "0x437be0": [
+   "verify_board_conversions"
+  ],
+  "0x437d70": [
+   "verify_board_conversions"
+  ],
+  "0x437f60": [
+   "verify_board_markers"
+  ],
+  "0x437fe0": [
+   "verify_board_conversions"
+  ],
+  "0x4383f0": [
+   "verify_board_markers"
+  ],
+  "0x438470": [
+   "verify_board_actions"
+  ],
+  "0x438540": [
+   "verify_board_conversions"
+  ],
+  "0x438830": [
+   "verify_board_markers"
+  ],
+  "0x4388a0": [
+   "verify_board_markers"
+  ],
+  "0x438910": [
+   "verify_board_markers"
+  ],
+  "0x438960": [
+   "verify_board_conversions"
+  ],
+  "0x438d50": [
+   "verify_board_markers"
+  ],
+  "0x439140": [
+   "verify_board_markers"
+  ],
+  "0x439260": [
+   "verify_board_conversions"
+  ],
+  "0x439370": [
+   "verify_board_markers"
+  ],
+  "0x43a080": [
+   "verify_constructors"
+  ],
+  "0x43a160": [
+   "verify_constructors"
+  ],
+  "0x43a310": [
+   "verify_piece_frames"
+  ],
+  "0x43a410": [
+   "verify_piece_children"
+  ],
+  "0x43a4f0": [
+   "verify_piece_preview_kinds"
+  ],
+  "0x43a510": [
+   "verify_piece_children"
+  ],
+  "0x43a520": [
+   "verify_piece_children"
+  ],
+  "0x43a560": [
+   "verify_piece_children"
+  ],
+  "0x43a5b0": [
+   "verify_piece_children"
+  ],
+  "0x43a5f0": [
+   "verify_piece_children"
+  ],
+  "0x43aab0": [
+   "verify_player_slots"
+  ],
+  "0x43ab30": [
+   "verify_piece_setup"
+  ],
+  "0x43ab80": [
+   "verify_regions"
+  ],
+  "0x43ac00": [
+   "verify_object_chain_select"
+  ],
+  "0x43acd0": [
+   "verify_object_chain_select_pair"
+  ],
+  "0x43ad50": [
+   "verify_player_piece_progress"
+  ],
+  "0x43b1a0": [
+   "verify_player_slots"
+  ],
+  "0x43b430": [
+   "verify_player_ai_tick"
+  ],
+  "0x43b590": [
+   "verify_player_delays"
+  ],
+  "0x43b5b0": [
+   "verify_ai_timing",
+   "verify_player_delays",
+   "verify_timing"
+  ],
+  "0x43b660": [
+   "verify_player_delays",
+   "verify_timing"
+  ],
+  "0x43b680": [
+   "verify_player_delays",
+   "verify_timing"
+  ],
+  "0x43b6a0": [
+   "verify_player_actions"
+  ],
+  "0x43b720": [
+   "verify_player_progress"
+  ],
+  "0x43b7c0": [
+   "verify_player_actions"
+  ],
+  "0x43b800": [
+   "verify_player_bump"
+  ],
+  "0x43b810": [
+   "verify_player_slots"
+  ],
+  "0x43b860": [
+   "verify_object_scalars"
+  ],
+  "0x43b870": [
+   "verify_object_scalars"
+  ],
+  "0x43b930": [
+   "verify_player_side"
+  ],
+  "0x43b970": [
+   "verify_object_scalars"
+  ],
+  "0x43b980": [
+   "verify_player_side"
+  ],
+  "0x43b9c0": [
+   "verify_player_reward",
+   "verify_player_reward_composed"
+  ],
+  "0x43ba60": [
+   "verify_player_chain_init"
+  ],
+  "0x43ba70": [
+   "verify_player_bonus"
+  ],
+  "0x43ba80": [
+   "verify_player_side",
+   "verify_player_stores"
+  ],
+  "0x43ba90": [
+   "verify_player_score",
+   "verify_score"
+  ],
+  "0x43bad0": [
+   "verify_object_scalars",
+   "verify_player_stores"
+  ],
+  "0x43bae0": [
+   "verify_object_scalars",
+   "verify_player_stores"
+  ],
+  "0x43baf0": [
+   "verify_player_mode_sets"
+  ],
+  "0x43bb00": [
+   "verify_player_side"
+  ],
+  "0x43bb40": [
+   "verify_player_mode_sets"
+  ],
+  "0x43bb60": [
+   "verify_player_actions"
+  ],
+  "0x43bbf0": [
+   "verify_board_cell_replace"
+  ],
+  "0x43bc90": [
+   "verify_player_actions"
+  ],
+  "0x43bce0": [
+   "verify_player_actions"
+  ],
+  "0x43bd00": [
+   "verify_player_actions"
+  ],
+  "0x43bd40": [
+   "verify_object_scalars"
+  ],
+  "0x43bd60": [
+   "verify_object_scalars"
+  ],
+  "0x43bd80": [
+   "verify_board_cell_replace"
+  ],
+  "0x43bd90": [
+   "verify_mode_colors"
+  ],
+  "0x43c0e0": [
+   "verify_sfx_dispatch"
+  ],
+  "0x43c110": [
+   "verify_sfx_dispatch"
+  ],
+  "0x43cc90": [
+   "verify_object_scalars"
+  ],
+  "0x43ccb0": [
+   "verify_player_actions"
+  ],
+  "0x43ccf0": [
+   "verify_player_side"
+  ],
+  "0x43cd30": [
+   "verify_player_side"
+  ],
+  "0x43cd60": [
+   "verify_player_side"
+  ],
+  "0x43cda0": [
+   "verify_player_side"
+  ],
+  "0x43cde0": [
+   "verify_object_scalars"
+  ],
+  "0x43ce00": [
+   "verify_player_side"
+  ],
+  "0x43ce30": [
+   "verify_player_side"
+  ],
+  "0x43ce70": [
+   "verify_player_modes"
+  ],
+  "0x43ceb0": [
+   "verify_player_modes"
+  ],
+  "0x43cef0": [
+   "verify_player_modes"
+  ],
+  "0x43cf30": [
+   "verify_player_modes"
+  ],
+  "0x43cf70": [
+   "verify_player_modes"
+  ],
+  "0x43cfb0": [
+   "verify_player_modes"
+  ],
+  "0x43cff0": [
+   "verify_player_modes"
+  ],
+  "0x43d030": [
+   "verify_player_modes"
+  ],
+  "0x43d070": [
+   "verify_player_modes"
+  ],
+  "0x43d0b0": [
+   "verify_player_modes"
+  ],
+  "0x43d0f0": [
+   "verify_player_modes"
+  ],
+  "0x43d180": [
+   "verify_piece"
+  ],
+  "0x43d2b0": [
+   "verify_board_overlay"
+  ],
+  "0x43d300": [
+   "verify_object_slots"
+  ],
+  "0x43d320": [
+   "verify_object_dispatch"
+  ],
+  "0x43d3b0": [
+   "verify_player_slots"
+  ],
+  "0x43d3d0": [
+   "verify_player_slots"
+  ],
+  "0x43d6a0": [
+   "verify_object_construct"
+  ],
+  "0x43d800": [
+   "verify_object_slots"
+  ],
+  "0x43dc80": [
+   "verify_particle_emit"
+  ],
+  "0x43dea0": [
+   "verify_particle_spawn"
+  ],
+  "0x43dff0": [
+   "verify_populate"
+  ],
+  "0x43e100": [
+   "verify_particle_init"
+  ],
+  "0x43e260": [
+   "verify_object_slots"
+  ],
+  "0x43e4d0": [
+   "verify_particle_setup"
+  ],
+  "0x43e740": [
+   "verify_particle_init",
+   "verify_particle_spawn"
+  ],
+  "0x43e840": [
+   "verify_particle_init",
+   "verify_particle_spawn"
+  ],
+  "0x43e920": [
+   "verify_particle_spawn"
+  ],
+  "0x43f200": [
+   "verify_font_cell"
+  ],
+  "0x43f3f0": [
+   "verify_release_tables"
+  ],
+  "0x43f420": [
+   "verify_font_map"
+  ],
+  "0x43f460": [
+   "verify_call_glue"
+  ],
+  "0x43f550": [
+   "verify_key_maps"
+  ],
+  "0x43f630": [
+   "verify_key_maps"
+  ],
+  "0x43f710": [
+   "verify_key_maps"
+  ],
+  "0x43f7f0": [
+   "verify_key_maps"
+  ],
+  "0x43f8d0": [
+   "verify_key_maps"
+  ],
+  "0x43f9b0": [
+   "verify_key_maps"
+  ],
+  "0x43fa90": [
+   "verify_key_maps"
+  ],
+  "0x43fb70": [
+   "verify_key_maps"
+  ],
+  "0x43fc50": [
+   "verify_font_binding",
+   "verify_font_initialize"
+  ],
+  "0x440490": [
+   "verify_font_run"
+  ],
+  "0x440610": [
+   "verify_font_binding",
+   "verify_font_measure"
+  ],
+  "0x4408e0": [
+   "verify_call_glue"
+  ],
+  "0x440990": [
+   "verify_text_layout"
+  ],
+  "0x440a20": [
+   "verify_font_scaled_run"
+  ],
+  "0x440b93": [
+   "verify_font_style"
+  ],
+  "0x440ca0": [
+   "verify_corner_call"
+  ],
+  "0x441120": [
+   "verify_call_glue"
+  ],
+  "0x4413b0": [
+   "verify_object_construct"
+  ],
+  "0x441530": [
+   "verify_resource_record"
+  ],
+  "0x441a80": [
+   "verify_resource_record"
+  ],
+  "0x441b30": [
+   "verify_resource_record",
+   "verify_surface_blit"
+  ],
+  "0x441e30": [
+   "verify_color_table"
+  ],
+  "0x441f20": [
+   "verify_pattern_tables"
+  ],
+  "0x442110": [
+   "verify_release_tables"
+  ],
+  "0x442b00": [
+   "verify_resource_record"
+  ],
+  "0x449360": [
+   "verify_actor_frame_switch"
+  ],
+  "0x449390": [
+   "verify_actor_frame_switch"
+  ],
+  "0x44c2a0": [
+   "verify_piece_child_update"
+  ],
+  "0x44c2b0": [
+   "verify_piece_child_update"
+  ],
+  "0x44c310": [
+   "verify_piece_child_update"
+  ],
+  "0x44c370": [
+   "verify_piece_child_update"
+  ],
+  "0x44c860": [
+   "verify_block_resource",
+   "verify_block_update"
+  ],
+  "0x44c880": [
+   "verify_block_motion"
+  ],
+  "0x44c960": [
+   "verify_block_fade"
+  ],
+  "0x44c9d0": [
+   "verify_block_pulse"
+  ],
+  "0x44ca40": [
+   "verify_block_pulse"
+  ],
+  "0x44cab0": [
+   "verify_block_combined"
+  ],
+  "0x44cbf0": [
+   "verify_block_byte_pulse"
+  ],
+  "0x44cc60": [
+   "verify_block_byte_pulse"
+  ],
+  "0x44ce80": [
+   "verify_block_scale"
+  ],
+  "0x44cf00": [
+   "verify_block_return"
+  ],
+  "0x44cf70": [
+   "verify_block_return"
+  ],
+  "0x44cfd0": [
+   "verify_block_scale"
+  ],
+  "0x44d1e0": [
+   "verify_block_chain"
+  ],
+  "0x44d250": [
+   "verify_block_chain"
+  ],
+  "0x44d2c0": [
+   "verify_block_chain"
+  ],
+  "0x44d330": [
+   "verify_block_scale",
+   "verify_scale_chain"
+  ],
+  "0x44d3a0": [
+   "verify_block_scale",
+   "verify_scale_chain"
+  ],
+  "0x44d410": [
+   "verify_block_byte_pulse",
+   "verify_scale_chain"
+  ],
+  "0x44d480": [
+   "verify_block_chain"
+  ],
+  "0x44d4f0": [
+   "verify_block_chain"
+  ],
+  "0x44d560": [
+   "verify_block_finish"
+  ],
+  "0x44d5f0": [
+   "verify_block_scale"
+  ],
+  "0x44d660": [
+   "verify_block_scale"
+  ],
+  "0x44d6d0": [
+   "verify_block_finish"
+  ],
+  "0x44d760": [
+   "verify_block_byte_pulse"
+  ],
+  "0x44d7d0": [
+   "verify_block_chain"
+  ],
+  "0x44d840": [
+   "verify_block_chain"
+  ],
+  "0x44d8b0": [
+   "verify_block_mode_pulse"
+  ],
+  "0x44d940": [
+   "verify_block_mode_pulse"
+  ],
+  "0x44d9d0": [
+   "verify_block_triple"
+  ],
+  "0x44da70": [
+   "verify_block_half_pulse"
+  ],
+  "0x44db10": [
+   "verify_block_half_pulse"
+  ],
+  "0x44dbb0": [
+   "verify_block_staged",
+   "verify_staged_chain"
+  ],
+  "0x44dc80": [
+   "verify_block_chain",
+   "verify_staged_chain"
+  ],
+  "0x44dcf0": [
+   "verify_block_departure"
+  ],
+  "0x44de20": [
+   "verify_block_orbit",
+   "verify_orbit_chain"
+  ],
+  "0x44dfb0": [
+   "verify_block_orbit",
+   "verify_orbit_chain"
+  ],
+  "0x44e250": [
+   "verify_block_slide"
+  ],
+  "0x44e2d0": [
+   "verify_block_slide"
+  ],
+  "0x44e380": [
+   "verify_block_collapse"
+  ],
+  "0x44e410": [
+   "verify_block_collapse"
+  ],
+  "0x44e4a0": [
+   "verify_block_visibility"
+  ],
+  "0x44e510": [
+   "verify_block_visibility"
+  ],
+  "0x44e590": [
+   "verify_block_swell"
+  ],
+  "0x44e600": [
+   "verify_block_swell"
+  ],
+  "0x44e670": [
+   "verify_block_swell"
+  ],
+  "0x44e6e0": [
+   "verify_block_accelerate"
+  ],
+  "0x44e790": [
+   "verify_block_mode_amount"
+  ],
+  "0x44e800": [
+   "verify_block_mode_amount"
+  ],
+  "0x44e890": [
+   "verify_block_period"
+  ],
+  "0x44e920": [
+   "verify_block_centered"
+  ],
+  "0x44e9f0": [
+   "verify_block_centered"
+  ],
+  "0x44eaf0": [
+   "verify_block_centered_finish"
+  ],
+  "0x44ebe0": [
+   "verify_block_travel"
+  ],
+  "0x44ec40": [
+   "verify_block_travel"
+  ],
+  "0x44ece0": [
+   "verify_block_spin"
+  ],
+  "0x44ee20": [
+   "verify_block_spin"
+  ],
+  "0x44ef60": [
+   "verify_block_visibility"
+  ],
+  "0x44efd0": [
+   "verify_block_visibility"
+  ],
+  "0x44f040": [
+   "verify_block_swell"
+  ],
+  "0x44f0b0": [
+   "verify_block_swell"
+  ],
+  "0x44f120": [
+   "verify_block_effect"
+  ],
+  "0x44f180": [
+   "verify_block_effect"
+  ],
+  "0x44f1e0": [
+   "verify_block_effect"
+  ],
+  "0x44f240": [
+   "verify_block_effect"
+  ],
+  "0x44f2b0": [
+   "verify_block_effect"
+  ],
+  "0x44f320": [
+   "verify_block_effect"
+  ],
+  "0x44f390": [
+   "verify_block_cycle"
+  ],
+  "0x44f3e0": [
+   "verify_block_cycle"
+  ],
+  "0x44f430": [
+   "verify_block_cycle"
+  ],
+  "0x44f4a0": [
+   "verify_block_effect"
+  ],
+  "0x44f500": [
+   "verify_block_effect"
+  ],
+  "0x44f560": [
+   "verify_block_effect"
+  ],
+  "0x44f5d0": [
+   "verify_block_effect"
+  ],
+  "0x44f630": [
+   "verify_block_effect"
+  ],
+  "0x44f690": [
+   "verify_block_effect"
+  ],
+  "0x44f700": [
+   "verify_block_swell"
+  ],
+  "0x44f770": [
+   "verify_block_swell"
+  ],
+  "0x44f920": [
+   "verify_block_swell"
+  ],
+  "0x44f990": [
+   "verify_block_mode_amount"
+  ],
+  "0x44fa00": [
+   "verify_block_mode_amount"
+  ],
+  "0x44fa70": [
+   "verify_number_player"
+  ],
+  "0x44faa0": [
+   "verify_number_player"
+  ],
+  "0x44fad0": [
+   "verify_number_transition"
+  ],
+  "0x44fb40": [
+   "verify_number_transition"
+  ],
+  "0x44fbb0": [
+   "verify_number_transition"
+  ],
+  "0x44fc00": [
+   "verify_number_player"
+  ],
+  "0x44fc30": [
+   "verify_number_player"
+  ],
+  "0x44fc60": [
+   "verify_number_transition"
+  ],
+  "0x44fcf0": [
+   "verify_number_transition"
+  ],
+  "0x44fd60": [
+   "verify_number_transition"
+  ],
+  "0x44fdb0": [
+   "verify_number_transition"
+  ],
+  "0x44fe30": [
+   "verify_number_transition"
+  ],
+  "0x44fe80": [
+   "verify_player_indicator"
+  ],
+  "0x44fed0": [
+   "verify_player_indicator"
+  ],
+  "0x44ff30": [
+   "verify_player_indicator"
+  ],
+  "0x44ff60": [
+   "verify_player_indicator"
+  ],
+  "0x44ff90": [
+   "verify_linked_indicator"
+  ],
+  "0x44fff0": [
+   "verify_linked_indicator"
+  ],
+  "0x450040": [
+   "verify_linked_indicator"
+  ],
+  "0x4500b0": [
+   "verify_linked_indicator"
+  ],
+  "0x450100": [
+   "verify_linked_indicator"
+  ],
+  "0x450130": [
+   "verify_linked_burst"
+  ],
+  "0x4501a0": [
+   "verify_linked_burst"
+  ],
+  "0x450200": [
+   "verify_linked_burst"
+  ],
+  "0x450270": [
+   "verify_linked_burst"
+  ],
+  "0x450300": [
+   "verify_linked_burst"
+  ],
+  "0x450330": [
+   "verify_block_finish_effect"
+  ],
+  "0x450710": [
+   "verify_block_update"
+  ],
+  "0x450730": [
+   "verify_block_update"
+  ],
+  "0x450750": [
+   "verify_player_countdown"
+  ],
+  "0x4507e0": [
+   "verify_player_countdown"
+  ],
+  "0x450830": [
+   "verify_player_countdown"
+  ],
+  "0x450860": [
+   "verify_gauge_tube",
+   "verify_linked_movement"
+  ],
+  "0x4508c0": [
+   "verify_gauge_tube",
+   "verify_linked_movement"
+  ],
+  "0x450920": [
+   "verify_gauge_tube",
+   "verify_linked_movement"
+  ],
+  "0x450960": [
+   "verify_gauge_tube",
+   "verify_linked_movement"
+  ],
+  "0x4509a0": [
+   "verify_gauge_tube",
+   "verify_linked_movement"
+  ],
+  "0x4509d0": [
+   "verify_gauge_tube",
+   "verify_linked_movement"
+  ],
+  "0x450a10": [
+   "verify_gauge_tube",
+   "verify_linked_alternating"
+  ],
+  "0x450aa0": [
+   "verify_gauge_tube",
+   "verify_linked_alternating"
+  ],
+  "0x450b30": [
+   "verify_gauge_tube",
+   "verify_linked_alternating"
+  ],
+  "0x450b90": [
+   "verify_gauge_tube",
+   "verify_linked_alternating"
+  ],
+  "0x450bf0": [
+   "verify_gauge_tube",
+   "verify_linked_alternating"
+  ],
+  "0x450c70": [
+   "verify_gauge_tube",
+   "verify_linked_alternating"
+  ],
+  "0x450f80": [
+   "verify_object_events"
+  ],
+  "0x450ff0": [
+   "verify_controls"
+  ],
+  "0x4517c0": [
+   "verify_object_post_lock"
+  ],
+  "0x451920": [
+   "verify_object_post_lock_twin"
+  ],
+  "0x451a60": [
+   "verify_player_start_bonus"
+  ],
+  "0x452250": [
+   "verify_object_events"
+  ],
+  "0x4522c0": [
+   "verify_object_attack",
+   "verify_object_attack_composed"
+  ],
+  "0x452830": [
+   "verify_bonus_effects"
+  ],
+  "0x452880": [
+   "verify_bonus_effects"
+  ],
+  "0x4528e0": [
+   "verify_bonus_effects"
+  ],
+  "0x452a30": [
+   "verify_bonus_effects"
+  ],
+  "0x452a50": [
+   "verify_bonus_effects"
+  ],
+  "0x452b00": [
+   "verify_bonus_effects"
+  ],
+  "0x452b20": [
+   "verify_bonus_effects"
+  ],
+  "0x452bb0": [
+   "verify_bonus_effects"
+  ],
+  "0x452bd0": [
+   "verify_bonus_effects"
+  ],
+  "0x452c60": [
+   "verify_bonus_effects"
+  ],
+  "0x452c80": [
+   "verify_bonus_effects"
+  ],
+  "0x452d10": [
+   "verify_bonus_effects"
+  ],
+  "0x452d70": [
+   "verify_bonus_effects"
+  ],
+  "0x452e00": [
+   "verify_bonus_effects"
+  ],
+  "0x453150": [
+   "verify_bonus_effects"
+  ],
+  "0x453460": [
+   "verify_bonus_effects"
+  ],
+  "0x4534e0": [
+   "verify_bonus_effects"
+  ],
+  "0x453570": [
+   "verify_bonus_effects"
+  ],
+  "0x4535d0": [
+   "verify_bonus_effects"
+  ],
+  "0x453620": [
+   "verify_bonus_effects"
+  ],
+  "0x453670": [
+   "verify_bonus_effects"
+  ],
+  "0x4536c0": [
+   "verify_bonus_effects"
+  ],
+  "0x453710": [
+   "verify_bonus_effects"
+  ],
+  "0x453760": [
+   "verify_bonus_effects"
+  ],
+  "0x4537b0": [
+   "verify_bonus_effects"
+  ],
+  "0x453800": [
+   "verify_bonus_effects"
+  ],
+  "0x453850": [
+   "verify_bonus_effects"
+  ],
+  "0x4538a0": [
+   "verify_bonus_effects"
+  ],
+  "0x4538f0": [
+   "verify_bonus_effects"
+  ],
+  "0x453940": [
+   "verify_bonus_effects"
+  ],
+  "0x453990": [
+   "verify_bonus_effects"
+  ],
+  "0x4539e0": [
+   "verify_bonus_effects"
+  ],
+  "0x453a30": [
+   "verify_bonus_effects"
+  ],
+  "0x453a80": [
+   "verify_bonus_effects"
+  ],
+  "0x453ad0": [
+   "verify_bonus_effects"
+  ],
+  "0x453b90": [
+   "verify_bonus_effects"
+  ],
+  "0x453c00": [
+   "verify_bonus_effects"
+  ],
+  "0x453c90": [
+   "verify_bonus_effects"
+  ],
+  "0x453d50": [
+   "verify_bonus_effects"
+  ],
+  "0x453ef0": [
+   "verify_bonus_effects"
+  ],
+  "0x453f40": [
+   "verify_bonus_effects"
+  ],
+  "0x453fd0": [
+   "verify_bonus_effects"
+  ],
+  "0x454090": [
+   "verify_bonus_effects"
+  ],
+  "0x454250": [
+   "verify_bonus_effects"
+  ],
+  "0x4542e0": [
+   "verify_bonus_effects"
+  ],
+  "0x454560": [
+   "verify_bonus_effects"
+  ],
+  "0x4547b0": [
+   "verify_bonus_effects"
+  ],
+  "0x454830": [
+   "verify_bonus_effects"
+  ],
+  "0x4549d0": [
+   "verify_bonus_effects"
+  ],
+  "0x454a50": [
+   "verify_bonus_effects"
+  ],
+  "0x454c30": [
+   "verify_bonus_effects"
+  ],
+  "0x454cb0": [
+   "verify_bonus_effects"
+  ],
+  "0x454e90": [
+   "verify_bonus_effects"
+  ],
+  "0x455020": [
+   "verify_bonus_effects"
+  ],
+  "0x4554a0": [
+   "verify_bonus_effects"
+  ],
+  "0x455510": [
+   "verify_bonus_effects"
+  ],
+  "0x455600": [
+   "verify_bonus_effects"
+  ],
+  "0x455670": [
+   "verify_bonus_effects"
+  ],
+  "0x455790": [
+   "verify_bonus_effects"
+  ],
+  "0x4558e0": [
+   "verify_bonus_effects"
+  ],
+  "0x455a00": [
+   "verify_bonus_effects"
+  ],
+  "0x455b20": [
+   "verify_bonus_effects"
+  ],
+  "0x455ca0": [
+   "verify_bonus_effects"
+  ],
+  "0x455e50": [
+   "verify_bonus_effects"
+  ],
+  "0x455f10": [
+   "verify_bonus_effects"
+  ],
+  "0x455f80": [
+   "verify_bonus_effects"
+  ],
+  "0x456060": [
+   "verify_bonus_effects"
+  ],
+  "0x457810": [
+   "verify_object_events"
+  ],
+  "0x45afe0": [
+   "verify_actor_refresh"
+  ],
+  "0x45b9c0": [
+   "verify_bonus_effects"
+  ],
+  "0x45cdc0": [
+   "verify_actor_refresh"
+  ],
+  "0x45cff0": [
+   "verify_actor_refresh"
+  ],
+  "0x45d820": [
+   "verify_object_glue"
+  ],
+  "0x45dca0": [
+   "verify_sprite_load_plan"
+  ],
+  "0x45dd52": [
+   "verify_ui_sprite_bank"
+  ],
+  "0x45e260": [
+   "verify_table_release"
+  ],
+  "0x45e440": [
+   "verify_table_release"
+  ],
+  "0x45e490": [
+   "verify_ui_artwork"
+  ],
+  "0x45e630": [
+   "verify_table_release"
+  ],
+  "0x45e670": [
+   "verify_table_release"
+  ],
+  "0x45e690": [
+   "verify_call_glue"
+  ],
+  "0x45e720": [
+   "verify_call_glue"
+  ],
+  "0x45e740": [
+   "verify_table_release"
+  ],
+  "0x45e750": [
+   "verify_table_release"
+  ],
+  "0x45e7b0": [
+   "verify_table_release"
+  ],
+  "0x45e810": [
+   "verify_table_release"
+  ],
+  "0x45e820": [
+   "verify_table_release"
+  ],
+  "0x45e830": [
+   "verify_table_release"
+  ],
+  "0x45e850": [
+   "verify_table_release"
+  ],
+  "0x45e8d0": [
+   "verify_call_glue"
+  ],
+  "0x45e8f0": [
+   "verify_table_release"
+  ],
+  "0x45e910": [
+   "verify_table_release"
+  ],
+  "0x45e950": [
+   "verify_call_glue"
+  ],
+  "0x45e990": [
+   "verify_call_glue"
+  ],
+  "0x45e9e0": [
+   "verify_table_release"
+  ],
+  "0x45ea60": [
+   "verify_call_glue"
+  ],
+  "0x45ea80": [
+   "verify_table_release"
+  ],
+  "0x45ecd0": [
+   "verify_call_glue"
+  ],
+  "0x45ed40": [
+   "verify_table_release"
+  ],
+  "0x45f0a0": [
+   "verify_call_glue"
+  ],
+  "0x45f0c0": [
+   "verify_block_frames"
+  ],
+  "0x45f1e0": [
+   "verify_field_accessors"
+  ],
+  "0x45f540": [
+   "verify_sprite_files",
+   "verify_string_append"
+  ],
+  "0x46b800": [
+   "verify_call_glue"
+  ],
+  "0x46e022": [
+   "verify_sprite_actor_storage"
+  ],
+  "0x46e0c8": [
+   "verify_ui_artwork",
+   "verify_ui_display_setup"
+  ],
+  "0x46e101": [
+   "verify_ui_display_setup"
+  ],
+  "0x46e1b2": [
+   "verify_sprite_actor_storage"
+  ],
+  "0x46e257": [
+   "verify_ui_artwork",
+   "verify_ui_display_setup"
+  ],
+  "0x46e290": [
+   "verify_ui_display_setup"
+  ],
+  "0x46e8b0": [
+   "verify_marquee"
+  ],
+  "0x46ea30": [
+   "verify_letter_menu"
+  ],
+  "0x46eda0": [
+   "verify_letter_grid"
+  ],
+  "0x46f000": [
+   "verify_letter_row"
+  ],
+  "0x46f220": [
+   "verify_letter_row"
+  ],
+  "0x4710d0": [
+   "verify_ui_actor_place"
+  ],
+  "0x471100": [
+   "verify_sprite_actor_storage",
+   "verify_ui_companion_spawn"
+  ],
+  "0x4713d0": [
+   "verify_title_letter"
+  ],
+  "0x4715a0": [
+   "verify_title_letter"
+  ],
+  "0x471a70": [
+   "verify_call_glue"
+  ],
+  "0x471a80": [
+   "verify_call_glue"
+  ],
+  "0x471b00": [
+   "verify_call_glue"
+  ],
+  "0x471b80": [
+   "verify_call_glue"
+  ],
+  "0x471bb0": [
+   "verify_object_slots"
+  ],
+  "0x471bf0": [
+   "verify_object_slots"
+  ],
+  "0x471d90": [
+   "verify_object_slots"
+  ],
+  "0x471dd0": [
+   "verify_object_slots"
+  ],
+  "0x471e10": [
+   "verify_object_tails"
+  ],
+  "0x471e60": [
+   "verify_field_accessors"
+  ],
+  "0x471e80": [
+   "verify_field_accessors"
+  ],
+  "0x471ea0": [
+   "verify_field_accessors"
+  ],
+  "0x471eb0": [
+   "verify_field_accessors"
+  ],
+  "0x471ec0": [
+   "verify_field_accessors"
+  ],
+  "0x471ed0": [
+   "verify_field_accessors"
+  ],
+  "0x472350": [
+   "verify_call_glue"
+  ],
+  "0x472470": [
+   "verify_actor_spawn"
+  ],
+  "0x4724f0": [
+   "verify_actor_spawn"
+  ],
+  "0x472570": [
+   "verify_actor_spawn",
+   "verify_object_construct"
+  ],
+  "0x4725f0": [
+   "verify_object_tails"
+  ],
+  "0x472d00": [
+   "verify_call_glue"
+  ],
+  "0x4731a0": [
+   "verify_icons"
+  ],
+  "0x4735e0": [
+   "verify_call_glue"
+  ],
+  "0x473610": [
+   "verify_call_glue"
+  ],
+  "0x473630": [
+   "verify_pair_sync"
+  ],
+  "0x4737d0": [
+   "verify_pair_sync"
+  ],
+  "0x473960": [
+   "verify_pair_sync"
+  ],
+  "0x473af0": [
+   "verify_pair_sync"
+  ],
+  "0x473cd0": [
+   "verify_call_glue"
+  ],
+  "0x473cf0": [
+   "verify_bitmap_load"
+  ],
+  "0x474560": [
+   "verify_palette_rgb"
+  ],
+  "0x474910": [
+   "verify_palette_color"
+  ],
+  "0x474e00": [
+   "verify_render_color_bank"
+  ],
+  "0x475183": [
+   "verify_palette_lookup_entry"
+  ],
+  "0x475400": [
+   "verify_actor_render_draw",
+   "verify_palette_map",
+   "verify_render_pixel",
+   "verify_render_rectangle",
+   "verify_ui_artwork"
+  ],
+  "0x4754e0": [
+   "verify_actor_render_draw",
+   "verify_palette_cycle",
+   "verify_render_pixel"
+  ],
+  "0x4757b0": [
+   "verify_field_accessors"
+  ],
+  "0x475800": [
+   "verify_field_accessors"
+  ],
+  "0x475810": [
+   "verify_field_accessors"
+  ],
+  "0x475820": [
+   "verify_field_accessors"
+  ],
+  "0x475830": [
+   "verify_field_accessors"
+  ],
+  "0x4759d0": [
+   "verify_field_accessors"
+  ],
+  "0x475a20": [
+   "verify_object_glue"
+  ],
+  "0x475a80": [
+   "verify_call_glue"
+  ],
+  "0x475ab0": [
+   "verify_call_glue"
+  ],
+  "0x475ad0": [
+   "verify_input"
+  ],
+  "0x475af0": [
+   "verify_input"
+  ],
+  "0x475b00": [
+   "verify_field_accessors"
+  ],
+  "0x475c30": [
+   "verify_input"
+  ],
+  "0x475cd0": [
+   "verify_input"
+  ],
+  "0x475d20": [
+   "verify_input"
+  ],
+  "0x475d70": [
+   "verify_input"
+  ],
+  "0x475d90": [
+   "verify_call_glue"
+  ],
+  "0x475da0": [
+   "verify_object_slots"
+  ],
+  "0x475dd0": [
+   "verify_field_accessors"
+  ],
+  "0x475df0": [
+   "verify_field_accessors"
+  ],
+  "0x475e10": [
+   "verify_field_accessors"
+  ],
+  "0x475e40": [
+   "verify_field_accessors"
+  ],
+  "0x475e50": [
+   "verify_input"
+  ],
+  "0x475ec0": [
+   "verify_object_glue"
+  ],
+  "0x476010": [
+   "verify_call_glue"
+  ],
+  "0x476090": [
+   "verify_object_tails"
+  ],
+  "0x4760c0": [
+   "verify_call_glue"
+  ],
+  "0x4760f0": [
+   "verify_call_glue"
+  ],
+  "0x476120": [
+   "verify_object_slots"
+  ],
+  "0x476140": [
+   "verify_object_slots"
+  ],
+  "0x4761d0": [
+   "verify_input"
+  ],
+  "0x476260": [
+   "verify_call_glue"
+  ],
+  "0x476280": [
+   "verify_input"
+  ],
+  "0x4762e0": [
+   "verify_object_glue"
+  ],
+  "0x476320": [
+   "verify_input"
+  ],
+  "0x476360": [
+   "verify_input"
+  ],
+  "0x4763c0": [
+   "verify_input"
+  ],
+  "0x4764a0": [
+   "verify_call_glue"
+  ],
+  "0x476530": [
+   "verify_call_glue"
+  ],
+  "0x476590": [
+   "verify_call_glue"
+  ],
+  "0x4765b0": [
+   "verify_call_glue"
+  ],
+  "0x4766b0": [
+   "verify_call_glue"
+  ],
+  "0x4766f0": [
+   "verify_call_glue"
+  ],
+  "0x477240": [
+   "verify_field_accessors"
+  ],
+  "0x4777c0": [
+   "verify_call_glue"
+  ],
+  "0x477870": [
+   "verify_field_accessors"
+  ],
+  "0x477d70": [
+   "verify_object_glue"
+  ],
+  "0x477e10": [
+   "verify_field_accessors"
+  ],
+  "0x477e30": [
+   "verify_object_glue"
+  ],
+  "0x477ed0": [
+   "verify_object_glue"
+  ],
+  "0x478460": [
+   "verify_field_accessors"
+  ],
+  "0x478b40": [
+   "verify_call_glue"
+  ],
+  "0x478bd0": [
+   "verify_call_glue"
+  ],
+  "0x478bf0": [
+   "verify_call_glue"
+  ],
+  "0x478c40": [
+   "verify_call_glue"
+  ],
+  "0x478c90": [
+   "verify_object_glue"
+  ],
+  "0x478cd0": [
+   "verify_event_stack"
+  ],
+  "0x478da0": [
+   "verify_event_stack"
+  ],
+  "0x478dd0": [
+   "verify_list_text"
+  ],
+  "0x478eb0": [
+   "verify_surface"
+  ],
+  "0x478ed0": [
+   "verify_surface"
+  ],
+  "0x478f10": [
+   "verify_surface"
+  ],
+  "0x478f50": [
+   "verify_surface_fill"
+  ],
+  "0x4797f0": [
+   "verify_mask"
+  ],
+  "0x4798b0": [
+   "verify_graded_mask"
+  ],
+  "0x4799f0": [
+   "verify_font_sheet",
+   "verify_image_key"
+  ],
+  "0x479b30": [
+   "verify_field_accessors"
+  ],
+  "0x479df0": [
+   "verify_call_glue"
+  ],
+  "0x479e50": [
+   "verify_circle_points"
+  ],
+  "0x47a040": [
+   "verify_surface_fade"
+  ],
+  "0x47ce10": [
+   "verify_font_crop",
+   "verify_font_sheet",
+   "verify_surface_blit"
+  ],
+  "0x47e990": [
+   "verify_field_accessors"
+  ],
+  "0x47e9a0": [
+   "verify_object_dwords"
+  ],
+  "0x47ecd0": [
+   "verify_object_glue"
+  ],
+  "0x47ecf0": [
+   "verify_object_dwords"
+  ],
+  "0x47ed50": [
+   "verify_call_glue"
+  ],
+  "0x47ed60": [
+   "verify_object_dwords"
+  ],
+  "0x47ed70": [
+   "verify_object_dwords"
+  ],
+  "0x47ed80": [
+   "verify_object_dwords"
+  ],
+  "0x47ed90": [
+   "verify_object_dwords"
+  ],
+  "0x47f070": [
+   "verify_object_glue"
+  ],
+  "0x47f190": [
+   "verify_object_glue"
+  ],
+  "0x47f260": [
+   "verify_call_glue"
+  ],
+  "0x47f280": [
+   "verify_pick_entry"
+  ],
+  "0x47f8d0": [
+   "verify_call_glue"
+  ],
+  "0x47f8e0": [
+   "verify_object_dwords"
+  ],
+  "0x47f9b0": [
+   "verify_call_glue"
+  ],
+  "0x47faf0": [
+   "verify_object_glue"
+  ],
+  "0x47fbb0": [
+   "verify_call_glue"
+  ],
+  "0x480070": [
+   "verify_object_dwords"
+  ],
+  "0x480739": [
+   "verify_surface"
+  ],
+  "0x4807ea": [
+   "verify_graded_mask",
+   "verify_surface"
+  ],
+  "0x480890": [
+   "verify_color_conversion"
+  ],
+  "0x480ca0": [
+   "verify_color_conversion"
+  ],
+  "0x481420": [
+   "verify_engine_helpers"
+  ],
+  "0x481480": [
+   "verify_rtl_glue"
+  ],
+  "0x481580": [
+   "verify_rtl_glue"
+  ],
+  "0x481b20": [
+   "verify_object_dwords"
+  ],
+  "0x481bc0": [
+   "verify_color_order",
+   "verify_render_color_bank"
+  ],
+  "0x481d90": [
+   "verify_color_conversion"
+  ],
+  "0x481f30": [
+   "verify_object_glue"
+  ],
+  "0x481fb0": [
+   "verify_object_glue"
+  ],
+  "0x482050": [
+   "verify_object_dwords"
+  ],
+  "0x482060": [
+   "verify_event_stack"
+  ],
+  "0x482110": [
+   "verify_event_stack"
+  ],
+  "0x482210": [
+   "verify_event_stack"
+  ],
+  "0x482300": [
+   "verify_event_stack"
+  ],
+  "0x482480": [
+   "verify_engine_helpers"
+  ],
+  "0x482540": [
+   "verify_object_dwords"
+  ],
+  "0x482550": [
+   "verify_random"
+  ],
+  "0x482610": [
+   "verify_call_glue"
+  ],
+  "0x482640": [
+   "verify_board_markers",
+   "verify_controls",
+   "verify_engine_helpers",
+   "verify_object_post_lock",
+   "verify_object_post_lock_twin",
+   "verify_piece",
+   "verify_piece_setup",
+   "verify_player_delays",
+   "verify_player_modes",
+   "verify_player_side",
+   "verify_random",
+   "verify_spawn",
+   "verify_timing"
+  ],
+  "0x482720": [
+   "verify_object_glue"
+  ],
+  "0x482740": [
+   "verify_call_glue"
+  ],
+  "0x482750": [
+   "verify_engine_helpers"
+  ],
+  "0x482770": [
+   "verify_random"
+  ],
+  "0x482a40": [
+   "verify_call_glue"
+  ],
+  "0x482b30": [
+   "verify_object_tails"
+  ],
+  "0x482bb0": [
+   "verify_call_glue"
+  ],
+  "0x482e10": [
+   "verify_event_frame_draw"
+  ],
+  "0x482e80": [
+   "verify_event_frame_draw"
+  ],
+  "0x482f00": [
+   "verify_event_frame_draw"
+  ],
+  "0x4831b0": [
+   "verify_font_stencil"
+  ],
+  "0x483400": [
+   "verify_font_outline"
+  ],
+  "0x483750": [
+   "verify_alpha",
+   "verify_color_order"
+  ],
+  "0x483ce0": [
+   "verify_image_mirror"
+  ],
+  "0x483ed0": [
+   "verify_color_order"
+  ],
+  "0x484410": [
+   "verify_object_dwords"
+  ],
+  "0x484a60": [
+   "verify_object_tails"
+  ],
+  "0x4856a0": [
+   "verify_surface_clear"
+  ],
+  "0x487280": [
+   "verify_object_glue"
+  ],
+  "0x4872b0": [
+   "verify_call_glue"
+  ],
+  "0x4872c0": [
+   "verify_object_glue"
+  ],
+  "0x4874f0": [
+   "verify_array_list"
+  ],
+  "0x4875a0": [
+   "verify_array_list"
+  ],
+  "0x487640": [
+   "verify_object_dwords"
+  ],
+  "0x487660": [
+   "verify_array_list"
+  ],
+  "0x4876c0": [
+   "verify_array_list"
+  ],
+  "0x487710": [
+   "verify_object_glue"
+  ],
+  "0x487770": [
+   "verify_object_dwords"
+  ],
+  "0x487790": [
+   "verify_sprite_clone"
+  ],
+  "0x4877d0": [
+   "verify_sprite_clone"
+  ],
+  "0x4877e0": [
+   "verify_object_dwords"
+  ],
+  "0x4877f0": [
+   "verify_frame_resource"
+  ],
+  "0x487870": [
+   "verify_engine_helpers"
+  ],
+  "0x4879e0": [
+   "verify_object_dwords"
+  ],
+  "0x4879f0": [
+   "verify_object_glue"
+  ],
+  "0x487a10": [
+   "verify_call_glue"
+  ],
+  "0x487a20": [
+   "verify_object_dwords"
+  ],
+  "0x487b00": [
+   "verify_object_glue"
+  ],
+  "0x487fd0": [
+   "verify_find_name"
+  ],
+  "0x488030": [
+   "verify_object_dwords"
+  ],
+  "0x488040": [
+   "verify_object_dwords"
+  ],
+  "0x4885a0": [
+   "verify_path_text"
+  ],
+  "0x488940": [
+   "verify_path_text"
+  ],
+  "0x488b10": [
+   "verify_object_glue"
+  ],
+  "0x488b90": [
+   "verify_object_glue"
+  ],
+  "0x488d80": [
+   "verify_kind_text"
+  ],
+  "0x489470": [
+   "verify_rtl_glue"
+  ],
+  "0x4895b0": [
+   "verify_call_glue"
+  ],
+  "0x4895e0": [
+   "verify_call_glue"
+  ],
+  "0x489610": [
+   "verify_call_glue"
+  ],
+  "0x489640": [
+   "verify_rtl_glue"
+  ],
+  "0x4896f0": [
+   "verify_rtl_glue"
+  ],
+  "0x489760": [
+   "verify_call_glue"
+  ],
+  "0x489ba0": [
+   "verify_rtl_glue"
+  ],
+  "0x489d00": [
+   "verify_text_equal"
+  ],
+  "0x489f90": [
+   "verify_object_tails"
+  ],
+  "0x48a2e0": [
+   "verify_object_dwords"
+  ],
+  "0x48a2f0": [
+   "verify_object_tails"
+  ],
+  "0x48a300": [
+   "verify_list_text"
+  ],
+  "0x48a310": [
+   "verify_object_glue"
+  ],
+  "0x48a380": [
+   "verify_object_glue"
+  ],
+  "0x48a3c0": [
+   "verify_stream_token"
+  ],
+  "0x48a420": [
+   "verify_stream_token"
+  ],
+  "0x48a4a0": [
+   "verify_parse_texts"
+  ],
+  "0x48a560": [
+   "verify_parse_values"
+  ],
+  "0x48a620": [
+   "verify_object_glue"
+  ],
+  "0x48a670": [
+   "verify_object_glue"
+  ],
+  "0x48a8a0": [
+   "verify_object_dwords"
+  ],
+  "0x48a8c0": [
+   "verify_object_glue"
+  ],
+  "0x48a910": [
+   "verify_object_dwords"
+  ],
+  "0x48a930": [
+   "verify_object_dwords",
+   "verify_stream_read"
+  ],
+  "0x48a9d0": [
+   "verify_stream_read"
+  ],
+  "0x48aa70": [
+   "verify_object_dwords"
+  ],
+  "0x48aa80": [
+   "verify_object_dwords"
+  ],
+  "0x48aa90": [
+   "verify_stream_read"
+  ],
+  "0x48aad0": [
+   "verify_object_dwords"
+  ],
+  "0x48aaf0": [
+   "verify_object_dwords"
+  ],
+  "0x48ab10": [
+   "verify_font_binding"
+  ],
+  "0x48abe0": [
+   "verify_object_dwords"
+  ],
+  "0x48abf0": [
+   "verify_object_dwords"
+  ],
+  "0x48c260": [
+   "verify_object_glue"
+  ],
+  "0x48c280": [
+   "verify_object_glue"
+  ],
+  "0x48c2b0": [
+   "verify_object_glue"
+  ],
+  "0x48c2e0": [
+   "verify_object_glue"
+  ],
+  "0x48c310": [
+   "verify_object_glue"
+  ],
+  "0x48c330": [
+   "verify_object_glue"
+  ],
+  "0x48c370": [
+   "verify_call_glue"
+  ],
+  "0x48c9b0": [
+   "verify_object_glue"
+  ],
+  "0x48d330": [
+   "verify_object_tails"
+  ],
+  "0x48d3e0": [
+   "verify_rtl_glue"
+  ],
+  "0x48d480": [
+   "verify_object_tails"
+  ],
+  "0x48d500": [
+   "verify_object_tails"
+  ],
+  "0x48d520": [
+   "verify_object_glue"
+  ],
+  "0x48d5f0": [
+   "verify_object_dwords"
+  ],
+  "0x48d600": [
+   "verify_object_glue"
+  ],
+  "0x48d620": [
+   "verify_call_glue"
+  ],
+  "0x48d630": [
+   "verify_object_dwords"
+  ],
+  "0x48d6b0": [
+   "verify_call_glue"
+  ],
+  "0x48d720": [
+   "verify_render_pixel",
+   "verify_surface"
+  ],
+  "0x48d740": [
+   "verify_palette_map",
+   "verify_palette_tables",
+   "verify_render_palette",
+   "verify_render_pixel"
+  ],
+  "0x48d7f0": [
+   "verify_palette_map",
+   "verify_palette_tables",
+   "verify_render_palette",
+   "verify_render_pixel"
+  ],
+  "0x48d890": [
+   "verify_render_pixel"
+  ],
+  "0x48d8c0": [
+   "verify_render_pixel"
+  ],
+  "0x48d9a0": [
+   "verify_render_pixel"
+  ],
+  "0x48da80": [
+   "verify_render_pixel"
+  ],
+  "0x48db70": [
+   "verify_render_pixel",
+   "verify_surface"
+  ],
+  "0x48dba0": [
+   "verify_palette_half",
+   "verify_render_pixel"
+  ],
+  "0x48dcd0": [
+   "verify_render_pixel",
+   "verify_surface"
+  ],
+  "0x48dd00": [
+   "verify_render_pixel",
+   "verify_surface"
+  ],
+  "0x48dd50": [
+   "verify_render_pixel",
+   "verify_surface"
+  ],
+  "0x48dda0": [
+   "verify_render_pixel",
+   "verify_surface"
+  ],
+  "0x48ddf0": [
+   "verify_render_pixel",
+   "verify_surface"
+  ],
+  "0x48de10": [
+   "verify_render_pixel",
+   "verify_surface"
+  ],
+  "0x48de30": [
+   "verify_render_pixel"
+  ],
+  "0x48df10": [
+   "verify_render_pixel"
+  ],
+  "0x48dff0": [
+   "verify_render_pixel"
+  ],
+  "0x48e0c0": [
+   "verify_render_pixel"
+  ],
+  "0x48e190": [
+   "verify_render_pixel"
+  ],
+  "0x48e280": [
+   "verify_render_pixel"
+  ],
+  "0x48e370": [
+   "verify_render_pixel"
+  ],
+  "0x48e460": [
+   "verify_render_pixel"
+  ],
+  "0x48e520": [
+   "verify_render_pixel"
+  ],
+  "0x48e5f0": [
+   "verify_render_pixel"
+  ],
+  "0x48e6c0": [
+   "verify_render_pixel"
+  ],
+  "0x48e700": [
+   "verify_render_pixel"
+  ],
+  "0x48e850": [
+   "verify_render_pixel"
+  ],
+  "0x48e900": [
+   "verify_render_pixel"
+  ],
+  "0x48e9d0": [
+   "verify_render_pixel"
+  ],
+  "0x48ea30": [
+   "verify_render_pixel"
+  ],
+  "0x48eb40": [
+   "verify_render_pixel"
+  ],
+  "0x48ec10": [
+   "verify_render_pixel"
+  ],
+  "0x48ec70": [
+   "verify_render_pixel"
+  ],
+  "0x48ed80": [
+   "verify_render_pixel"
+  ],
+  "0x48ee50": [
+   "verify_render_pixel"
+  ],
+  "0x48eeb0": [
+   "verify_render_pixel"
+  ],
+  "0x48efc0": [
+   "verify_render_pixel"
+  ],
+  "0x48f070": [
+   "verify_render_pixel"
+  ],
+  "0x48f0a0": [
+   "verify_render_pixel"
+  ],
+  "0x48f190": [
+   "verify_render_pixel"
+  ],
+  "0x48f230": [
+   "verify_render_pixel"
+  ],
+  "0x48f260": [
+   "verify_render_pixel"
+  ],
+  "0x48f360": [
+   "verify_render_pixel"
+  ],
+  "0x48f430": [
+   "verify_render_pixel"
+  ],
+  "0x48f520": [
+   "verify_render_pixel"
+  ],
+  "0x48f620": [
+   "verify_render_pixel"
+  ],
+  "0x48f6f0": [
+   "verify_render_pixel"
+  ],
+  "0x48f800": [
+   "verify_render_pixel"
+  ],
+  "0x48f910": [
+   "verify_render_pixel"
+  ],
+  "0x48f9f0": [
+   "verify_render_pixel"
+  ],
+  "0x48faf0": [
+   "verify_render_pixel"
+  ],
+  "0x48fbe0": [
+   "verify_render_pixel"
+  ],
+  "0x48fcd0": [
+   "verify_render_pixel"
+  ],
+  "0x48fdb0": [
+   "verify_render_pixel"
+  ],
+  "0x48fe90": [
+   "verify_render_pixel"
+  ],
+  "0x490010": [
+   "verify_render_pixel"
+  ],
+  "0x4901a0": [
+   "verify_render_pixel"
+  ],
+  "0x4902a0": [
+   "verify_render_pixel",
+   "verify_surface"
+  ],
+  "0x490340": [
+   "verify_palette_half",
+   "verify_render_pixel"
+  ],
+  "0x4904c0": [
+   "verify_render_pixel"
+  ],
+  "0x490560": [
+   "verify_render_pixel"
+  ],
+  "0x4906a0": [
+   "verify_render_pixel"
+  ],
+  "0x4907d0": [
+   "verify_render_pixel"
+  ],
+  "0x4908c0": [
+   "verify_render_pixel"
+  ],
+  "0x490980": [
+   "verify_render_pixel"
+  ],
+  "0x490b30": [
+   "verify_render_pixel"
+  ],
+  "0x490c60": [
+   "verify_render_pixel"
+  ],
+  "0x490dc0": [
+   "verify_render_pixel"
+  ],
+  "0x490e90": [
+   "verify_render_pixel"
+  ],
+  "0x490f60": [
+   "verify_render_pixel"
+  ],
+  "0x491050": [
+   "verify_render_pixel"
+  ],
+  "0x4911d0": [
+   "verify_render_pixel"
+  ],
+  "0x4912e0": [
+   "verify_render_pixel"
+  ],
+  "0x4913e0": [
+   "verify_render_pixel"
+  ],
+  "0x491530": [
+   "verify_render_pixel"
+  ],
+  "0x491620": [
+   "verify_render_pixel"
+  ],
+  "0x491720": [
+   "verify_render_pixel"
+  ],
+  "0x491820": [
+   "verify_render_pixel"
+  ],
+  "0x491920": [
+   "verify_render_pixel"
+  ],
+  "0x491a00": [
+   "verify_render_pixel"
+  ],
+  "0x491af0": [
+   "verify_render_pixel"
+  ],
+  "0x491be0": [
+   "verify_render_pixel"
+  ],
+  "0x491ce0": [
+   "verify_render_pixel"
+  ],
+  "0x491e10": [
+   "verify_render_pixel"
+  ],
+  "0x491f70": [
+   "verify_render_pixel"
+  ],
+  "0x492120": [
+   "verify_render_pixel"
+  ],
+  "0x492280": [
+   "verify_render_pixel"
+  ],
+  "0x492400": [
+   "verify_render_pixel"
+  ],
+  "0x492550": [
+   "verify_render_pixel",
+   "verify_surface"
+  ],
+  "0x492710": [
+   "verify_render_pixel",
+   "verify_surface"
+  ],
+  "0x492880": [
+   "verify_render_pixel"
+  ],
+  "0x4928f0": [
+   "verify_render_pixel",
+   "verify_surface"
+  ],
+  "0x492b90": [
+   "verify_render_rectangle"
+  ],
+  "0x492cc0": [
+   "verify_render_rectangle"
+  ],
+  "0x492dc0": [
+   "verify_render_rectangle"
+  ],
+  "0x492e40": [
+   "verify_render_rectangle"
+  ],
+  "0x492f90": [
+   "verify_render_rectangle"
+  ],
+  "0x4933e0": [
+   "verify_surface"
+  ],
+  "0x49b4a0": [
+   "verify_surface"
+  ],
+  "0x4a3540": [
+   "verify_surface"
+  ],
+  "0x4ab200": [
+   "verify_surface_mask"
+  ],
+  "0x4ab2a0": [
+   "verify_surface"
+  ],
+  "0x4ab310": [
+   "verify_surface"
+  ],
+  "0x4ab380": [
+   "verify_render_pixel",
+   "verify_surface"
+  ],
+  "0x4abd70": [
+   "verify_piece_child_update",
+   "verify_ui_artwork",
+   "verify_ui_border_actor",
+   "verify_ui_companion_actor",
+   "verify_ui_display_setup",
+   "verify_ui_preview_pair"
+  ],
+  "0x4ac130": [
+   "verify_piece_actor_destroy"
+  ],
+  "0x4ac1f0": [
+   "verify_animation"
+  ],
+  "0x4ac250": [
+   "verify_animation"
+  ],
+  "0x4ac2b0": [
+   "verify_animation"
+  ],
+  "0x4ac310": [
+   "verify_animation"
+  ],
+  "0x4ac370": [
+   "verify_actor_counters"
+  ],
+  "0x4ac380": [
+   "verify_actor_fields"
+  ],
+  "0x4ac390": [
+   "verify_actor_counters"
+  ],
+  "0x4ac3b0": [
+   "verify_actor_value_steps"
+  ],
+  "0x4ac420": [
+   "verify_actor_value_steps"
+  ],
+  "0x4ac470": [
+   "verify_board_fields"
+  ],
+  "0x4ac490": [
+   "verify_actor_fields"
+  ],
+  "0x4ac4a0": [
+   "verify_object_dwords"
+  ],
+  "0x4ac4e0": [
+   "verify_actor_counters"
+  ],
+  "0x4ac4f0": [
+   "verify_actor_counters"
+  ],
+  "0x4ac500": [
+   "verify_timer"
+  ],
+  "0x4ac510": [
+   "verify_actor_fields"
+  ],
+  "0x4ac520": [
+   "verify_actor_counters",
+   "verify_timer"
+  ],
+  "0x4ac540": [
+   "verify_actor_counters",
+   "verify_timer"
+  ],
+  "0x4ac560": [
+   "verify_call_glue"
+  ],
+  "0x4ac590": [
+   "verify_timer"
+  ],
+  "0x4ac5b0": [
+   "verify_actor_wrap",
+   "verify_timer"
+  ],
+  "0x4ac600": [
+   "verify_timer"
+  ],
+  "0x4ac620": [
+   "verify_timer"
+  ],
+  "0x4ac640": [
+   "verify_actor_counters",
+   "verify_timer"
+  ],
+  "0x4ac690": [
+   "verify_timer"
+  ],
+  "0x4ac6b0": [
+   "verify_actor_wrap",
+   "verify_timer"
+  ],
+  "0x4ac700": [
+   "verify_actor_counters"
+  ],
+  "0x4ac710": [
+   "verify_actor_fields"
+  ],
+  "0x4ac720": [
+   "verify_block_resource"
+  ],
+  "0x4ac740": [
+   "verify_actor_counters"
+  ],
+  "0x4ac750": [
+   "verify_actor_counters"
+  ],
+  "0x4ac760": [
+   "verify_actor_value_steps"
+  ],
+  "0x4ac780": [
+   "verify_actor_value_steps"
+  ],
+  "0x4ac7a0": [
+   "verify_actor_counters"
+  ],
+  "0x4ac7b0": [
+   "verify_actor_fields"
+  ],
+  "0x4ac7d0": [
+   "verify_actor_fields"
+  ],
+  "0x4ac7e0": [
+   "verify_actor_value_steps"
+  ],
+  "0x4ac810": [
+   "verify_actor_value_steps"
+  ],
+  "0x4ac840": [
+   "verify_actor_counters"
+  ],
+  "0x4ac860": [
+   "verify_actor_counters"
+  ],
+  "0x4ac8a0": [
+   "verify_actor_chain_visit",
+   "verify_actor_render_draw",
+   "verify_block_resource",
+   "verify_ui_artwork",
+   "verify_ui_sprite_vf"
+  ],
+  "0x4ac8d0": [
+   "verify_block_factory",
+   "verify_block_resource"
+  ],
+  "0x4ac8f0": [
+   "verify_actor_fields"
+  ],
+  "0x4ac900": [
+   "verify_board_fields"
+  ],
+  "0x4ac910": [
+   "verify_actor_counters"
+  ],
+  "0x4ac920": [
+   "verify_actor_counters"
+  ],
+  "0x4ac930": [
+   "verify_actor_counters"
+  ],
+  "0x4ac940": [
+   "verify_actor_counters"
+  ],
+  "0x4ac950": [
+   "verify_actor_counters"
+  ],
+  "0x4ac960": [
+   "verify_actor_counters"
+  ],
+  "0x4ac980": [
+   "verify_actor_value_steps"
+  ],
+  "0x4aca00": [
+   "verify_call_glue"
+  ],
+  "0x4aca60": [
+   "verify_word_transition"
+  ],
+  "0x4acab0": [
+   "verify_word_transition"
+  ],
+  "0x4acb00": [
+   "verify_actor_value_steps"
+  ],
+  "0x4acc10": [
+   "verify_byte_transition"
+  ],
+  "0x4acc70": [
+   "verify_dword_transition"
+  ],
+  "0x4ace40": [
+   "verify_actor_angle"
+  ],
+  "0x4ad060": [
+   "verify_rotation"
+  ],
+  "0x4ad110": [
+   "verify_actor_angle"
+  ],
+  "0x4ad1c0": [
+   "verify_actor_angle",
+   "verify_rotation_tables"
+  ],
+  "0x4ad210": [
+   "verify_actor_angle"
+  ],
+  "0x4ad260": [
+   "verify_actor_angle"
+  ],
+  "0x4ad3c0": [
+   "verify_actor_double_orbit"
+  ],
+  "0x4ad440": [
+   "verify_actor_double_orbit"
+  ],
+  "0x4ad510": [
+   "verify_actor_counters"
+  ],
+  "0x4ad520": [
+   "verify_actor_counters"
+  ],
+  "0x4ad530": [
+   "verify_word_transition"
+  ],
+  "0x4ad580": [
+   "verify_byte_transition"
+  ],
+  "0x4ad5e0": [
+   "verify_word_transition"
+  ],
+  "0x4ad630": [
+   "verify_word_transition"
+  ],
+  "0x4ad6e0": [
+   "verify_actor_dword_transition",
+   "verify_dword_transition"
+  ],
+  "0x4ad720": [
+   "verify_object_glue"
+  ],
+  "0x4ad750": [
+   "verify_actor_value_steps"
+  ],
+  "0x4ad790": [
+   "verify_actor_dword_transition"
+  ],
+  "0x4ade60": [
+   "verify_actor_draw_slot",
+   "verify_actor_render_draw"
+  ],
+  "0x4adf20": [
+   "verify_block_factory"
+  ],
+  "0x4ae010": [
+   "verify_actor_draw_slot"
+  ],
+  "0x4ae140": [
+   "verify_actor_draw_slot"
+  ],
+  "0x4ae150": [
+   "verify_linked_alternating",
+   "verify_linked_movement",
+   "verify_piece_child_update"
+  ],
+  "0x4ae170": [
+   "verify_engine_helpers"
+  ],
+  "0x4ae250": [
+   "verify_render_preparation"
+  ],
+  "0x4ae26d": [
+   "verify_render_weights"
+  ],
+  "0x4ae2ff": [
+   "verify_render_color"
+  ],
+  "0x4ae3e0": [
+   "verify_actor_gate",
+   "verify_actor_render_draw",
+   "verify_actor_render_geometry"
+  ],
+  "0x4ae4e5": [
+   "verify_actor_render_style"
+  ],
+  "0x4ae5db": [
+   "verify_actor_render_style"
+  ],
+  "0x4ae672": [
+   "verify_actor_render_style"
+  ],
+  "0x4ae69d": [
+   "verify_actor_render_style"
+  ],
+  "0x4ae6fa": [
+   "verify_font_draw"
+  ],
+  "0x4ae99f": [
+   "verify_actor_image_clip",
+   "verify_render_geometry",
+   "verify_surface"
+  ],
+  "0x4aed56": [
+   "verify_font_scaled_draw"
+  ],
+  "0x4af0ee": [
+   "verify_render_geometry"
+  ],
+  "0x4af2a0": [
+   "verify_render_dispatch",
+   "verify_render_pixel",
+   "verify_render_rectangle"
+  ],
+  "0x4af2e0": [
+   "verify_render_dispatch"
+  ],
+  "0x4af340": [
+   "verify_render_dispatch"
+  ],
+  "0x4af370": [
+   "verify_render_dispatch",
+   "verify_render_pixel"
+  ],
+  "0x4af530": [
+   "verify_render_dispatch"
+  ],
+  "0x4af560": [
+   "verify_render_dispatch",
+   "verify_render_pixel",
+   "verify_surface"
+  ],
+  "0x4af707": [
+   "verify_render_dispatch"
+  ],
+  "0x4af786": [
+   "verify_render_operation",
+   "verify_render_pixel"
+  ],
+  "0x4af8c0": [
+   "verify_actor_chain_visit",
+   "verify_actor_render_draw",
+   "verify_ui_artwork"
+  ],
+  "0x4b14c0": [
+   "verify_actor_image_bounds",
+   "verify_font_scaled_draw",
+   "verify_font_scaled_text",
+   "verify_render_geometry",
+   "verify_surface"
+  ],
+  "0x4b15e0": [
+   "verify_actor_image_bounds",
+   "verify_font_scaled_draw",
+   "verify_font_scaled_text",
+   "verify_render_geometry"
+  ],
+  "0x4b1a99": [
+   "verify_actor_image_clip",
+   "verify_render_geometry",
+   "verify_surface"
+  ],
+  "0x4b1ae9": [
+   "verify_render_geometry"
+  ],
+  "0x4b1fde": [
+   "verify_render_dispatch",
+   "verify_render_pixel",
+   "verify_render_rectangle"
+  ],
+  "0x4b2290": [
+   "verify_object_dwords"
+  ],
+  "0x4b2400": [
+   "verify_object_glue"
+  ],
+  "0x4b25b0": [
+   "verify_text_wrap"
+  ],
+  "0x4b35b0": [
+   "verify_object_dwords"
+  ],
+  "0x4b3740": [
+   "verify_list_text"
+  ],
+  "0x4b37e0": [
+   "verify_list_text"
+  ],
+  "0x4b3880": [
+   "verify_list_text"
+  ],
+  "0x4b3940": [
+   "verify_list_text"
+  ],
+  "0x4b3c30": [
+   "verify_object_dwords"
+  ],
+  "0x4b3c40": [
+   "verify_list_text"
+  ],
+  "0x4b4270": [
+   "verify_object_bounds"
+  ],
+  "0x4b4500": [
+   "verify_object_dwords"
+  ],
+  "0x4b4510": [
+   "verify_object_glue"
+  ],
+  "0x4b45f0": [
+   "verify_text_seek"
+  ],
+  "0x4b4600": [
+   "verify_object_tails",
+   "verify_text_seek"
+  ],
+  "0x4b4610": [
+   "verify_object_tails",
+   "verify_text_seek"
+  ],
+  "0x4b4620": [
+   "verify_object_tails",
+   "verify_text_seek"
+  ],
+  "0x4b4630": [
+   "verify_object_tails",
+   "verify_text_seek"
+  ],
+  "0x4b4660": [
+   "verify_object_glue",
+   "verify_text_seek"
+  ],
+  "0x4b4690": [
+   "verify_object_glue",
+   "verify_text_seek"
+  ],
+  "0x4b46e0": [
+   "verify_text_seek"
+  ],
+  "0x4b4700": [
+   "verify_text_seek"
+  ],
+  "0x4b4780": [
+   "verify_text_seek"
+  ],
+  "0x4b4790": [
+   "verify_text_insert"
+  ],
+  "0x4b4950": [
+   "verify_text_remove"
+  ],
+  "0x4b4af0": [
+   "verify_text_rebuild"
+  ],
+  "0x4b4c90": [
+   "verify_object_glue"
+  ],
+  "0x4b4cb0": [
+   "verify_object_glue"
+  ],
+  "0x4b4cd0": [
+   "verify_object_glue"
+  ],
+  "0x4b4fa0": [
+   "verify_object_dwords"
+  ],
+  "0x4b4fb0": [
+   "verify_list_text"
+  ],
+  "0x4b5400": [
+   "verify_constructors"
+  ],
+  "0x4b5420": [
+   "verify_object_glue"
+  ],
+  "0x4b54d0": [
+   "verify_actor_counters"
+  ],
+  "0x4b5500": [
+   "verify_object_tails"
+  ],
+  "0x4b58a0": [
+   "verify_number_text"
+  ],
+  "0x4b5c60": [
+   "verify_object_glue"
+  ],
+  "0x4b5d40": [
+   "verify_object_tails"
+  ],
+  "0x4b5dc0": [
+   "verify_object_glue"
+  ],
+  "0x4b5e70": [
+   "verify_object_append"
+  ],
+  "0x4b5eb0": [
+   "verify_object_find"
+  ],
+  "0x4b5f50": [
+   "verify_object_list"
+  ],
+  "0x4b6020": [
+   "verify_object_tails"
+  ],
+  "0x4b6200": [
+   "verify_actor_render_draw",
+   "verify_object_list",
+   "verify_ui_artwork",
+   "verify_ui_scene_frame"
+  ],
+  "0x4b6240": [
+   "verify_actor_render_draw",
+   "verify_ui_artwork"
+  ],
+  "0x4b6350": [
+   "verify_object_glue"
+  ],
+  "0x4b6460": [
+   "verify_object_glue"
+  ],
+  "0x4b6530": [
+   "verify_object_dwords"
+  ],
+  "0x4b6540": [
+   "verify_object_dwords"
+  ],
+  "0x4b6550": [
+   "verify_object_dwords"
+  ],
+  "0x4b6560": [
+   "verify_object_dwords"
+  ],
+  "0x4b6590": [
+   "verify_object_dwords"
+  ],
+  "0x4b65a0": [
+   "verify_object_dwords"
+  ],
+  "0x4b65b0": [
+   "verify_object_dwords"
+  ],
+  "0x4b6690": [
+   "verify_object_dwords"
+  ],
+  "0x4b66c0": [
+   "verify_object_glue"
+  ],
+  "0x4b6700": [
+   "verify_object_tails"
+  ],
+  "0x4b6890": [
+   "verify_object_glue"
+  ],
+  "0x4b6930": [
+   "verify_text_value"
+  ],
+  "0x4b69f0": [
+   "verify_object_glue"
+  ],
+  "0x4b6a10": [
+   "verify_object_glue"
+  ],
+  "0x4b6f70": [
+   "verify_object_glue"
+  ],
+  "0x4b6fa0": [
+   "verify_object_dwords"
+  ],
+  "0x4b7080": [
+   "verify_list_text"
+  ],
+  "0x4b7120": [
+   "verify_list_text"
+  ],
+  "0x4b71c0": [
+   "verify_list_text"
+  ],
+  "0x4b7260": [
+   "verify_list_text"
+  ],
+  "0x4b7300": [
+   "verify_list_text"
+  ],
+  "0x4b73a0": [
+   "verify_list_text"
+  ],
+  "0x4b7420": [
+   "verify_list_text"
+  ],
+  "0x4b76d0": [
+   "verify_list_text"
+  ],
+  "0x4b7710": [
+   "verify_list_text"
+  ],
+  "0x4b7830": [
+   "verify_list_text"
+  ],
+  "0x4b78d0": [
+   "verify_object_glue"
+  ],
+  "0x4b79a0": [
+   "verify_object_glue"
+  ],
+  "0x4b79c0": [
+   "verify_object_dwords"
+  ],
+  "0x4b79e0": [
+   "verify_list_text"
+  ],
+  "0x4b7a80": [
+   "verify_object_glue"
+  ],
+  "0x4b7d10": [
+   "verify_timer"
+  ],
+  "0x4b7da0": [
+   "verify_call_glue"
+  ],
+  "0x4b7e80": [
+   "verify_wave_load"
+  ],
+  "0x4b8170": [
+   "verify_call_glue"
+  ],
+  "0x4b8fbc": [
+   "verify_rtl_glue"
+  ],
+  "0x4b9050": [
+   "verify_actor_image_bounds",
+   "verify_actor_image_clip",
+   "verify_actor_render_draw",
+   "verify_actor_render_geometry",
+   "verify_block_centered",
+   "verify_block_centered_finish",
+   "verify_block_orbit",
+   "verify_block_spin",
+   "verify_font_binding",
+   "verify_font_measure",
+   "verify_font_scaled_draw",
+   "verify_font_scaled_run",
+   "verify_font_scaled_text",
+   "verify_orbit_chain",
+   "verify_render_geometry",
+   "verify_surface",
+   "verify_ui_artwork"
+  ],
+  "0x4c0990": [
+   "verify_object_dwords"
+  ],
+  "0x4c0b51": [
+   "verify_object_glue"
+  ],
+  "0x4c3fa0": [
+   "verify_object_glue"
+  ],
+  "0x4c5bc0": [
+   "verify_call_glue"
+  ],
+  "0x4c5bd0": [
+   "verify_call_glue"
+  ],
+  "0x4c5be0": [
+   "verify_call_glue"
+  ],
+  "0x4c5bf0": [
+   "verify_call_glue"
+  ],
+  "0x4c5c10": [
+   "verify_call_glue"
+  ],
+  "0x4c5d60": [
+   "verify_object_dwords"
+  ],
+  "0x4c9840": [
+   "verify_rtl_glue"
+  ],
+  "0x4c9860": [
+   "verify_copy_rows"
+  ],
+  "0x4c98d0": [
+   "verify_rtl_glue"
+  ],
+  "0x4c98f0": [
+   "verify_rtl_glue"
+  ],
+  "0x4c9921": [
+   "verify_float_power"
+  ],
+  "0x4c9b10": [
+   "verify_sqrt"
+  ],
+  "0x4c9daf": [
+   "verify_rtl_glue"
+  ],
+  "0x4c9dd6": [
+   "verify_rtl_glue"
+  ],
+  "0x4c9e00": [
+   "verify_rtl_glue"
+  ],
+  "0x4ca180": [
+   "verify_rtl_glue"
+  ],
+  "0x4ca1a0": [
+   "verify_rtl_glue"
+  ],
+  "0x4ca1e0": [
+   "verify_rtl_glue"
+  ],
+  "0x4ca240": [
+   "verify_rtl_glue"
+  ],
+  "0x4ca3a0": [
+   "verify_wide_assign"
+  ],
+  "0x4ca3f0": [
+   "verify_rtl_glue"
+  ],
+  "0x4ca430": [
+   "verify_rtl_glue"
+  ],
+  "0x4ca630": [
+   "verify_rtl_glue"
+  ],
+  "0x4ca670": [
+   "verify_rtl_glue"
+  ],
+  "0x4ca6f0": [
+   "verify_rtl_glue"
+  ],
+  "0x4cb460": [
+   "verify_rtl_glue"
+  ],
+  "0x4cba60": [
+   "verify_rtl_glue"
+  ],
+  "0x4cba70": [
+   "verify_rtl_glue"
+  ],
+  "0x4cbe80": [
+   "verify_rtl_glue"
+  ],
+  "0x4cbf10": [
+   "verify_rtl_glue"
+  ],
+  "0x4ccb9f": [
+   "verify_rtl_glue"
+  ],
+  "0x4ccee0": [
+   "verify_rtl_glue"
+  ],
+  "0x4cd0a4": [
+   "verify_rtl_glue"
+  ],
+  "0x4cd520": [
+   "verify_rtl_glue"
+  ],
+  "0x4cd544": [
+   "verify_rtl_glue"
+  ],
+  "0x4cd836": [
+   "verify_rtl_glue"
+  ],
+  "0x4cd9f0": [
+   "verify_rtl_glue"
+  ],
+  "0x4cda10": [
+   "verify_rtl_glue"
+  ],
+  "0x4cda12": [
+   "verify_rtl_glue"
+  ],
+  "0x4cda90": [
+   "verify_rtl_glue"
+  ],
+  "0x4cdad0": [
+   "verify_rtl_glue"
+  ],
+  "0x4cdaf0": [
+   "verify_rtl_glue"
+  ],
+  "0x4cdfe0": [
+   "verify_rtl_glue"
+  ],
+  "0x4ce030": [
+   "verify_rtl_glue"
+  ],
+  "0x4ce9fd": [
+   "verify_rtl_glue"
+  ],
+  "0x4cf320": [
+   "verify_rtl_glue"
+  ],
+  "0x4cf3a0": [
+   "verify_rtl_glue"
+  ],
+  "0x4cf8e0": [
+   "verify_rtl_glue"
+  ],
+  "0x4cf980": [
+   "verify_rtl_glue"
+  ],
+  "0x4cfa10": [
+   "verify_rtl_glue"
+  ],
+  "0x4d0b30": [
+   "verify_rtl_glue"
+  ],
+  "0x4d16b0": [
+   "verify_rtl_glue"
+  ],
+  "0x4d2020": [
+   "verify_message_dispatch"
+  ],
+  "0x4d2390": [
+   "verify_rtl_glue"
+  ],
+  "0x4d2700": [
+   "verify_object_dwords"
+  ],
+  "0x4d2d70": [
+   "verify_object_dwords"
+  ],
+  "0x4d3020": [
+   "verify_rtl_glue"
+  ],
+  "0x4d3120": [
+   "verify_rtl_glue"
+  ],
+  "0x4d3f70": [
+   "verify_object_glue"
+  ],
+  "0x4d4060": [
+   "verify_rtl_glue"
+  ],
+  "0x4d4390": [
+   "verify_rtl_glue"
+  ],
+  "0x4d4990": [
+   "verify_rtl_glue"
+  ],
+  "0x4d5350": [
+   "verify_object_dwords"
+  ],
+  "0x4d66cd": [
+   "verify_rtl_glue"
+  ],
+  "0x4d6710": [
+   "verify_rtl_glue"
+  ],
+  "0x4d6775": [
+   "verify_rtl_glue"
+  ],
+  "0x4d67b2": [
+   "verify_rtl_glue"
+  ],
+  "0x4d67f0": [
+   "verify_rtl_glue"
+  ],
+  "0x4d8082": [
+   "verify_rtl_glue"
+  ],
+  "0x4d809c": [
+   "verify_float_dispatch"
+  ],
+  "0x4d80a6": [
+   "verify_float_dispatch"
+  ],
+  "0x4d82c6": [
+   "verify_rtl_glue"
+  ],
+  "0x4d8340": [
+   "verify_rtl_glue"
+  ],
+  "0x4d8490": [
+   "verify_node_pool"
+  ],
+  "0x4d8580": [
+   "verify_rtl_glue"
+  ],
+  "0x4d8620": [
+   "verify_rtl_glue"
+  ],
+  "0x4d8770": [
+   "verify_object_growth"
+  ],
+  "0x4d8ab0": [
+   "verify_rtl_glue"
+  ],
+  "0x4d8b80": [
+   "verify_object_glue"
+  ],
+  "0x4d8c20": [
+   "verify_node_pool"
+  ],
+  "0x4d9280": [
+   "verify_rtl_glue"
+  ],
+  "0x4d94a0": [
+   "verify_rtl_glue"
+  ],
+  "0x4d9510": [
+   "verify_rtl_glue"
+  ],
+  "0x4d9530": [
+   "verify_rtl_glue"
+  ],
+  "0x4d9930": [
+   "verify_rtl_glue"
+  ],
+  "0x4d9f06": [
+   "verify_jump_capture"
+  ],
+  "0x4da66e": [
+   "verify_rtl_glue"
+  ],
+  "0x4da6b6": [
+   "verify_exception_chain"
+  ],
+  "0x4daab0": [
+   "verify_rtl_glue"
+  ],
+  "0x4dabe0": [
+   "verify_rtl_glue"
+  ],
+  "0x4dacf8": [
+   "verify_rtl_glue"
+  ],
+  "0x4dad19": [
+   "verify_rtl_glue"
+  ],
+  "0x4dad2e": [
+   "verify_rtl_glue"
+  ],
+  "0x4dae1e": [
+   "verify_float_split"
+  ],
+  "0x4dae4a": [
+   "verify_rtl_glue"
+  ],
+  "0x4dae62": [
+   "verify_rtl_glue"
+  ],
+  "0x4daed8": [
+   "verify_float_exp"
+  ],
+  "0x4db10a": [
+   "verify_rtl_glue"
+  ],
+  "0x4db1fd": [
+   "verify_rtl_glue"
+  ],
+  "0x4db250": [
+   "verify_float_remainder"
+  ],
+  "0x4db6d9": [
+   "verify_rtl_glue"
+  ],
+  "0x4db866": [
+   "verify_rtl_glue"
+  ],
+  "0x4db896": [
+   "verify_ln"
+  ],
+  "0x4db8c0": [
+   "verify_read_into"
+  ],
+  "0x4dc160": [
+   "verify_rtl_glue"
+  ],
+  "0x4dd170": [
+   "verify_rtl_glue"
+  ],
+  "0x4dd360": [
+   "verify_rtl_glue"
+  ],
+  "0x4dd440": [
+   "verify_rtl_glue"
+  ],
+  "0x4ddc40": [
+   "verify_rtl_glue"
+  ],
+  "0x4ddc60": [
+   "verify_rtl_glue"
+  ],
+  "0x4dde50": [
+   "verify_rtl_glue"
+  ],
+  "0x4dec60": [
+   "verify_rtl_glue"
+  ],
+  "0x4decd0": [
+   "verify_rtl_glue"
+  ],
+  "0x4dee73": [
+   "verify_rtl_glue"
+  ],
+  "0x4deec0": [
+   "verify_rtl_glue"
+  ],
+  "0x4df070": [
+   "verify_node_pool"
+  ],
+  "0x4df140": [
+   "verify_rtl_glue"
+  ],
+  "0x4df160": [
+   "verify_map_find"
+  ],
+  "0x4df220": [
+   "verify_map_iterate"
+  ],
+  "0x4df6c8": [
+   "verify_format_spec"
+  ],
+  "0x4df81c": [
+   "verify_rtl_glue"
+  ],
+  "0x4df884": [
+   "verify_far_strings"
+  ],
+  "0x4df8a8": [
+   "verify_far_strings"
+  ],
+  "0x4df914": [
+   "verify_far_strings"
+  ],
+  "0x4dfa7c": [
+   "verify_rtl_glue"
+  ]
+ }
+}
