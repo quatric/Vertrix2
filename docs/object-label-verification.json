@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4b3210": 4096
+  },
+  "branches_seen": {
+    "(True, True, True)": 469,
+    "(False, True, False)": 681,
+    "(False, True, True)": 1378,
+    "(True, False, False)": 117,
+    "(False, False, True)": 699,
+    "(True, True, False)": 216,
+    "(False, False, False)": 318,
+    "(True, False, True)": 218
+  },
+  "scope": "The original executes completely with 0x4ca070, 0x4ca370, 0x4ca210 and 0x4b65d0 stubbed and logged (the first two store a random dword in the string temporary); every call with its registers and stack arguments, and every pool object compare. The original's eax is the saved exception chain head and is not modeled."
+}
