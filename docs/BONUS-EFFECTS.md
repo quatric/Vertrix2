@@ -104,6 +104,13 @@ follow-up 0x455510), 0x455670, 0x4558e0, 0x455a00 (board kind, sounds 1 and 12, 
 the new `global` service). `vertrix_effect_field_bind` is the follow-up handler 0x455510.
 2048 cases per routine.
 
+## Slide handlers 0x455e50, 0x455f10, 0x455f80, 0x456060
+
+`vertrix_effect_slide_begin/_wait/_advance/_end`. The board's `+0x58` position advances by the
+0x4ac540 result times the high half of `+0x18`, is reduced by 24 per step, and a counter at the
+player's `+0x444` is checked with 0x438910; the tables 0x4f7cfc and 0x4f7d08 are read through the
+`global` service. The entry ebx/edx that the handlers forward are parameters. 2048 cases each.
+
 ## Wiring note
 
 The dispatcher 0x43c140 does not call an effect: it stores the effect address as the player's

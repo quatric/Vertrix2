@@ -19,7 +19,9 @@ DRAW = 0x4826c0
 CALLEES = (0x43acd0, 0x43ac00, 0x43bb60, 0x4ac8f0, 0x43bbf0, 0x43c0e0)
 ALLOCATE = 0x4ca000
 # 0x452e00 callees; the first four steer its flow and return small values
-FLOW = {0x437350: (0, 1, 1), 0x4375f0: (0, 1, 1), 0x4378c0: (0, 1, 1), 0x437be0: (0, 1, 1),
+FLOW = {0x4ac540: (0, 1, 2, 3, 0xffffffff),
+        0x438910: (0, 1, 1, 2), 0x4ac520: (0, 1, 1), 0x430090: (0, 1, 1),
+        0x437350: (0, 1, 1), 0x4375f0: (0, 1, 1), 0x4378c0: (0, 1, 1), 0x437be0: (0, 1, 1),
         0x437d70: (0, 1, 1), 0x437060: (0, 1, 1), 0x42eca0: (0, 1, 1, 1), 0x42ecc0: (0, 1, 1, 1),
         0x4371b0: (0, 1, 1), 0x43b720: (0, 1, 1, 2), 0x43b800: (0, 1, 1, 2), 0x43b7c0: (0, 1, 1), 0x43d3b0: (0, 1), 0x438cd0: (0, 1), 0x43ab60: (0, 1, 1, 2), 0x4320c0: (1, 1, 1, 0), 0x4330d0: (1, 1, 1, 0)}
 MATCH_CALLEES = (0x438cd0, 0x43ab60, 0x4320c0, 0x4330d0, 0x431d80, 0x42ee20, 0x42eda0, 0x42ee80,
@@ -559,6 +561,45 @@ def main():
         assert got == result, ('0x455510', case, hex(got), hex(result))
         assert not replay, case
         assert pool.same(), ('0x455510', case, pool.diff())
+    # The slide handlers 0x455e50, 0x455f10, 0x455f80 and 0x456060
+    for address in (0x438910, 0x4ac500, 0x4ac520, 0x4ac5b0, 0x4ac540, 0x42f2e0, 0x42f760, 0x430090,
+                    0x430100, 0x43d2b0, 0x4300b0):
+        stubs.add(address, 0)
+
+    def patch_slide(handle, data):
+        patch_attack(handle, data)
+        if handle == player:
+            struct.pack_into('<II', data, 0x3e4, rng.getrandbits(32), 0)
+            struct.pack_into('<I', data, 0x444, rng.choice([0, 1, 5, 0xffffffff]))
+        elif handle == own_board:
+            struct.pack_into('<I', data, 0x58, rng.choice([0, 5, 23, 24, 25, 47, 48, 100,
+                                                           0xffffffff, rng.randrange(0, 600)]))
+            struct.pack_into('<I', data, 0x18,
+                             ((rng.randrange(-3, 4) << 16) & 0xffff0000) | rng.getrandbits(16))
+    slide_calls = (
+        (0x455e50, n.vertrix_effect_slide_begin, ()),
+        (0x455f10, n.vertrix_effect_slide_wait, ('edx',)),
+        (0x455f80, n.vertrix_effect_slide_advance, ('ebx', 'edx')),
+        (0x456060, n.vertrix_effect_slide_end, ('ebx',)))
+    for address, native, registers in slide_calls:
+        native.argtypes = [c.POINTER(Services), U] + [U] * len(registers)
+        native.restype = U
+        for case in range(args.cases):
+            cpu.mem_write(0x532bbc, struct.pack('<I', rng.randrange(0, 4)))
+            pool.fill(rng, patch_slide)
+            stubs.log.clear()
+            returns.clear()
+            draws.clear()
+            native_log.clear()
+            values = {name: rng.getrandbits(32) for name in registers}
+            result = original.call(address, eax=player, **values) & 0xffffffff
+            replay[:] = list(returns)
+            got = native(c.byref(services), player, *[values[name] for name in registers])
+            expected = normalized(stubs.log)
+            assert native_log == expected, (hex(address), case, native_log, expected)
+            assert got == result, (hex(address), case, hex(got), hex(result))
+            assert not replay, case
+            assert pool.same(), (hex(address), case, pool.diff())
     # Objects that do not resolve: the effect stops where the original would have read them. Before
     # the first call (player, opponent, grid) nothing is called or stored; later failures still
     # never reach the final 0x43bbf0.
@@ -605,7 +646,8 @@ def main():
                                             0x453f40, 0x454250, 0x454560, 0x4547b0, 0x4549d0,
                                             0x454c30, 0x454e90, 0x455020, 0x455b20, 0x455ca0,
                                             0x45b9c0, 0x4554a0, 0x455600, 0x455670, 0x455790,
-                                            0x4558e0, 0x455a00, 0x455510)}},
+                                            0x4558e0, 0x455a00, 0x455510, 0x455e50, 0x455f10,
+                                            0x455f80, 0x456060)}},
         'paths': totals,
         'convert_paths': convert_totals,
         'match_paths': match_totals,

@@ -251,4 +251,33 @@ uint32_t vertrix_effect_check_bind(const VertrixEffectServices *services, uint32
  * non-zero, plays sound 1, calls 0x437460 on the board with the token 0x455580 and binds the same
  * token to the player (0x4ac8f0). Slot 1 of the board is called last and its result returned. */
 uint32_t vertrix_effect_field_bind(const VertrixEffectServices *services, uint32_t player);
+
+/* Original 0x455e50 (eax = player): 0x438910 on the player's board with the player's +0x3e4 and a
+ * zero count (the player's +0x444 is cleared first) decides. Result 1: 0x4ac7b0 with the table
+ * entry 0x4f7cfc[dword 0x532bbc], the word 0x4f7d08[dword 0x532bbc] stored at the board's +0x1a,
+ * the board's +0x58 cleared, 0x4ac510 on the board, the handler token 0x455f10 bound to the player
+ * (0x4ac8f0), then 0x43d2b0 on the player and 0x4300b0 on the board. Anything else calls 0x43acd0
+ * and makes the handler end with 0x43bbf0. Slot 1 of the board comes between. */
+uint32_t vertrix_effect_slide_begin(const VertrixEffectServices *services, uint32_t player);
+
+/* Original 0x455f10 (eax = player; edx the caller's): 0x4ac500, 0x4ac520 on the board (result 1
+ * adds 0x4ac5b0), then 0x430090. Result 1 plays sound 2 (0x4f8188) and binds 0x455f80. Returns the
+ * result of slot 1 of the board. */
+uint32_t vertrix_effect_slide_wait(const VertrixEffectServices *services, uint32_t player,
+                                   uint32_t entry_edx);
+
+/* Original 0x455f80 (eax = player; edx and ebx the caller's): the board's +0x58 advances by
+ * 0x4ac540 times the high half of its +0x18 when 0x4ac520 reports one. Below 24 (signed)
+ * 0x42f2e0 runs on the board; otherwise 0x42f760, the player's +0x444 grows by one, +0x58 is
+ * reduced below 24 by repeated 24s, and 0x438910 with +0x3e4 and the count decides: non-zero
+ * plays sound 2, zero calls 0x430100 with 0x456060 and binds 0x456060. Returns the result of slot
+ * 1 of the board. */
+uint32_t vertrix_effect_slide_advance(const VertrixEffectServices *services, uint32_t player,
+                                      uint32_t entry_ebx, uint32_t entry_edx);
+
+/* Original 0x456060 (eax = player; ebx the caller's): 0x4ac500, 0x4ac520 (result 1 adds 0x4ac5b0)
+ * and 0x430090 on the board; a 0x430090 result of 1 makes the handler end with 0x43bbf0 on the
+ * player after slot 1 of the board, otherwise the slot's result is returned. */
+uint32_t vertrix_effect_slide_end(const VertrixEffectServices *services, uint32_t player,
+                                  uint32_t entry_ebx);
 #endif
