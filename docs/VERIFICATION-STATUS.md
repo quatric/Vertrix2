@@ -13,7 +13,7 @@ separately.
 
 | | |
 |---|---|
-| verifier scripts run | 466 (427 pass, 4 REVIEW, 1 SKIP, 6 PARTIAL, 28 not driven by `--build-dir`) |
+| verifier scripts run | 438 (427 pass, 4 REVIEW, 1 SKIP, 6 PARTIAL) |
 | entry points verified end to end | 1390 |
 | direct `call` targets in 0x401000..0x4d0000 | 1827 |
 | of those, verified | 902 |
