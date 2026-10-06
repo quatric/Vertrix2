@@ -50,7 +50,7 @@ def write_report(build_dir, name, report):
 
 def run_screen(name, address, sources, function, argtypes, restype, callees, generate, scope,
                *, wrappers=(), allocator=0x4ca000, globals_ranges=(), patch=None, compare=True,
-               result_mask=0xffffffff, description=''):
+               result_mask=0xffffffff, description='', table_targets=()):
     """Run `function` against the original routine at `address`.
 
     generate(rng, pool, cpu) returns (original keyword arguments, original stack arguments, native
@@ -89,6 +89,9 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
             returns.append(rng.getrandbits(32))
         return returns[-1]
 
+    callees = dict(callees)
+    for table in table_targets:
+        callees[struct.unpack('<I', bytes(cpu.mem_read(table, 4)))[0]] = 0
     stubs = Stubs(cpu, handler)
     for target, count in callees.items():
         stubs.add(target, count)

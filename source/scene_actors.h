@@ -24,4 +24,14 @@ uint32_t vertrix_banner_actor_spawn(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services,
                                     const VertrixGlobals *globals, uint32_t edx, uint32_t ebx,
                                     uint32_t ecx);
+
+/* Original 0x472c10 (eax = source object, edx, ebx and ecx the caller's registers). 0x4ca000(0x160)
+ * allocates the actor, a non-zero result going through 0x4b5400; 0x4adf20 initialises it and
+ * 0x4b54d0 gives it the box of the source: x = 0, y = 0, width = word +4 and height = word +8 of
+ * the source. The bytes +0x94 and +0x52 and the word +0x48 are cleared and two virtual calls follow
+ * through the table at +0x158: [table + 8] with edx = the source, then [table] with edx = 2.
+ * Returns the eax of the second call, zero when an object does not resolve. */
+uint32_t vertrix_overlay_spawn(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                               const VertrixGlobals *globals, uint32_t source, uint32_t edx,
+                               uint32_t ebx, uint32_t ecx);
 #endif

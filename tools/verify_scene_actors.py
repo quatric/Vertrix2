@@ -33,3 +33,27 @@ run_screen('banner-actor', 0x472620, ['scene_actors.c'], 'vertrix_banner_actor_s
            'its five stack arguments); the frame global 0x532a68 holds random data. Every call, '
            'the returned eax and every pool object compare.',
            wrappers=(0x4abd70,), globals_ranges=((0x532a68, 4),))
+
+
+OVERLAY = {0x4ca000: 0, 0x4b5400: 0, 0x4adf20: 5, 0x4b54d0: 1}
+TABLES = (0x517af4, 0x517c64)
+
+
+def overlay_case(rng, pool, cpu):
+    values = [rng.getrandbits(32) for _ in range(3)]
+    source = rng.choice(pool.handles)
+    return ({'eax': source, 'edx': values[0], 'ebx': values[1], 'ecx': values[2]}, (),
+            (source, *values))
+
+
+def overlay_patch(rng, handle, data):
+    data[0x158:0x15c] = rng.choice(TABLES).to_bytes(4, 'little')
+
+
+run_screen('overlay-actor', 0x472c10, ['scene_actors.c'], 'vertrix_overlay_spawn', [U, U, U, U], U,
+           OVERLAY, overlay_case,
+           'The original executes completely with its callees stubbed and logged (0x4adf20 with '
+           'its five stack arguments, the two virtual calls through the real vtables 0x517af4 and '
+           '0x517c64). Every call, the returned eax and every pool object compare.',
+           wrappers=(0x4b5400,), patch=overlay_patch,
+           table_targets=(0x517af4, 0x517afc, 0x517c64, 0x517c6c))

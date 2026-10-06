@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x472c10": 4096
+  },
+  "scope": "The original executes completely with its callees stubbed and logged (0x4adf20 with its five stack arguments, the two virtual calls through the real vtables 0x517af4 and 0x517c64). Every call, the returned eax and every pool object compare."
+}
