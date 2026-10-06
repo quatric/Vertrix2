@@ -147,16 +147,17 @@ byte-identical to 0x453ef0 and are verified against `vertrix_effect_field_end`.
 0x436150 holds). 0x454970 is identical to 0x453570 and is checked against
 `vertrix_effect_stone_clear`.
 
-## 0x454b20 and 0x454bd0
+## 0x454b20, 0x454d80 and their ends
 
-`vertrix_effect_counted_burst_step` (bound by 0x454a50); 0x454bd0 is identical to 0x453570.
+`vertrix_effect_counted_burst_step` with `vertrix_burst_steps` (bound by 0x454a50 and 0x454cb0);
+0x454bd0 and 0x454e30 are identical to 0x453570.
 
 ## Tally
 
 Distinct direct `call` targets in 0x401000..0x4d0000: 1827. Named in `source/` (ported): 1139.
 Not named: 688, listed in `docs/unported-call-targets.txt` (about 260 of them in 0x452830..0x45bd00,
 the follow-up and animation handlers of the bonus effects). Handlers reached only through tokens or
-vtables are not in this count. Oracle-verified bonus-effect routines: 63.
+vtables are not in this count. Oracle-verified bonus-effect routines: 65.
 
 ## Wiring note
 

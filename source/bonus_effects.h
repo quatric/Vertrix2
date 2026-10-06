@@ -400,11 +400,23 @@ uint32_t vertrix_effect_cycle_step(const VertrixEffectServices *services, uint32
 uint32_t vertrix_effect_burst_step(const VertrixEffectServices *services, uint32_t player,
                                    uint32_t entry_ecx, uint32_t entry_edx);
 
-/* Original 0x454b20 (eax = player; ebx and edx the caller's): the step bound by 0x454a50, built
+/* The steps 0x454b20 (bound by 0x454a50) and 0x454d80 (bound by 0x454cb0; check 0x4365c0, token
+ * 0x454e30) (eax = player; ebx and edx the caller's), built
  * like vertrix_effect_burst_step but spending the player's +0x438: while n from 0x4ac540 is
- * non-zero, +0x438 is positive (signed) and 0x436440 reports one (edx 5), +0x438 and n are
- * decremented and sound 5 plays. A remaining n binds 0x454bd0 to the player. Returns the result of
- * slot 1 of the board. */
+ * non-zero, +0x438 is positive (signed) and the check callee (0x436440, edx 5) reports one, +0x438
+ * and n are decremented and sound 5 plays. A remaining n binds the token to the player. Returns the
+ * result of slot 1 of the board. */
+typedef struct
+{
+    uint32_t routine;
+    uint32_t check;
+    uint32_t token;
+} VertrixBurstStep;
+
+#define VERTRIX_BURST_STEP_COUNT 2
+extern const VertrixBurstStep vertrix_burst_steps[VERTRIX_BURST_STEP_COUNT];
+
 uint32_t vertrix_effect_counted_burst_step(const VertrixEffectServices *services, uint32_t player,
-                                           uint32_t entry_ebx, uint32_t entry_edx);
+                                           uint32_t entry_ebx, uint32_t entry_edx,
+                                           const VertrixBurstStep *step);
 #endif

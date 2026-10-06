@@ -2442,8 +2442,12 @@ uint32_t vertrix_effect_burst_step(const VertrixEffectServices *services, uint32
     return release_board(services, board, board_storage, board_size);
 }
 
+const VertrixBurstStep vertrix_burst_steps[VERTRIX_BURST_STEP_COUNT] = {
+    {0x454b20, 0x436440, 0x454bd0}, {0x454d80, 0x4365c0, 0x454e30}};
+
 uint32_t vertrix_effect_counted_burst_step(const VertrixEffectServices *services, uint32_t player,
-                                           uint32_t entry_ebx, uint32_t entry_edx)
+                                           uint32_t entry_ebx, uint32_t entry_edx,
+                                           const VertrixBurstStep *step)
 {
     void *player_storage;
     void *board_storage;
@@ -2454,7 +2458,7 @@ uint32_t vertrix_effect_counted_burst_step(const VertrixEffectServices *services
     uint32_t edx = entry_edx;
     uint32_t ebx = entry_ebx;
     const VertrixCalls *calls;
-    if (!services || !services->calls || !services->global ||
+    if (!services || !services->calls || !services->global || !step ||
         !resolve_object(services, player, &player_storage, &player_size) ||
         !vertrix_actor_storage_read(player_storage, player_size, PLAYER_BOARD, DWORD_WIDTH,
                                     &board) ||
@@ -2480,7 +2484,8 @@ uint32_t vertrix_effect_counted_burst_step(const VertrixEffectServices *services
             {
                 return 0;
             }
-            if ((int32_t)left <= 0 || vertrix_call(calls, 0x436440, board, 5, ebx, player, 0) != 1)
+            if ((int32_t)left <= 0 ||
+                vertrix_call(calls, step->check, board, 5, ebx, player, 0) != 1)
             {
                 break;
             }
@@ -2505,7 +2510,7 @@ uint32_t vertrix_effect_counted_burst_step(const VertrixEffectServices *services
     }
     if (ebx != 0)
     {
-        vertrix_call(calls, 0x4ac8f0, player, 0x454bd0, ebx, player, 0);
+        vertrix_call(calls, 0x4ac8f0, player, step->token, ebx, player, 0);
     }
     return release_board(services, board, board_storage, board_size);
 }
