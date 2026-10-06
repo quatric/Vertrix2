@@ -206,12 +206,18 @@ changed it.
 0x456760 is another `vertrix_cursors` row; 0x456860 a flipping wait (`vertrix_object_waits`, globals
 0x598da8 / 0x532b9c, callee 0x4828f0).
 
+## Actor state handlers 0x4568c0, 0x456900, 0x456980, 0x456a00, 0x456a80
+
+`vertrix_effect_actor_prepare`, `_actor_settle`, `_actor_pair` (table `vertrix_actor_pairs`) and
+`_actor_rise`: short handlers that set bytes and words of the actor and call the actor primitives
+0x4ac500 / 0x4ac520 / 0x4ac540 / 0x4ac5b0 / 0x4ac8a0 / 0x4ac8f0.
+
 ## Tally
 
 Distinct direct `call` targets in 0x401000..0x4d0000: 1827. Named in `source/` (ported): 1139.
 Not named: 688, listed in `docs/unported-call-targets.txt` (about 260 of them in 0x452830..0x45bd00,
 the follow-up and animation handlers of the bonus effects). Handlers reached only through tokens or
-vtables are not in this count. Oracle-verified bonus-effect routines: 96.
+vtables are not in this count. Oracle-verified bonus-effect routines: 101.
 
 ## Wiring note
 

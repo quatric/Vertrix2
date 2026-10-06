@@ -116,6 +116,11 @@ class ObjectWait(c.Structure):
                                        'token')]
 
 
+class ActorPair(c.Structure):
+    _fields_ = [('routine', U), ('byte_value', U), ('token', U), ('flag_value', U),
+                ('flag_after', c.c_int)]
+
+
 class Site(c.Structure):
     _fields_ = [(name, U) for name in ('target', 'eax', 'edx', 'ebx', 'ecx', 'stack', 'stack_next',
                                        'stack_third', 'out_ebx', 'out_ecx')] + [
@@ -1212,6 +1217,43 @@ def main():
             assert pool.same(), (hex(wait.routine), case, pool.diff())
             if flag:
                 assert global_writes.get(flag, before) == after, (hex(wait.routine), case)
+    # 0x4568c0, 0x456900, 0x456980, 0x456a00 and 0x456a80: actor state handlers
+    for address in (0x4adfe0, 0x4ad580, 0x4ac8a0, 0x4acc10):
+        stubs.add(address, 0)
+    FLOW[0x4ad580] = (0, 0, 1, 5)
+    FLOW[0x4acc10] = (0, 0, 1)
+    n.vertrix_effect_actor_prepare.argtypes = [c.POINTER(Services), U, U]
+    n.vertrix_effect_actor_prepare.restype = U
+    n.vertrix_effect_actor_settle.argtypes = [c.POINTER(Services), U, U, U]
+    n.vertrix_effect_actor_settle.restype = U
+    n.vertrix_effect_actor_rise.argtypes = [c.POINTER(Services), U, U, U]
+    n.vertrix_effect_actor_rise.restype = U
+    n.vertrix_effect_actor_pair.argtypes = [c.POINTER(Services), U, U, c.POINTER(ActorPair)]
+    n.vertrix_effect_actor_pair.restype = U
+    pairs_actor = (ActorPair * 2).in_dll(n, 'vertrix_actor_pairs')
+
+    def run_actor(label, routine, native, extra, registers):
+        for case in range(args.cases):
+            pool.fill(rng, patch_slide)
+            stubs.log.clear()
+            returns.clear()
+            draws.clear()
+            native_log.clear()
+            values = {register: rng.getrandbits(32) for register in registers}
+            result = original.call(routine, eax=player, **values) & 0xffffffff
+            replay[:] = list(returns)
+            got = native(c.byref(services), player, *values.values(), *extra)
+            expected = normalized(stubs.log)
+            assert native_log == expected, (label, case, native_log, expected)
+            assert got == result, (label, case, hex(got), hex(result))
+            assert not replay, (label, case)
+            assert pool.same(), (label, case, pool.diff())
+    run_actor('0x4568c0', 0x4568c0, n.vertrix_effect_actor_prepare, (), ('ebx',))
+    run_actor('0x456900', 0x456900, n.vertrix_effect_actor_settle, (), ('ebx', 'edx'))
+    run_actor('0x456a80', 0x456a80, n.vertrix_effect_actor_rise, (), ('ebx', 'edx'))
+    for pair in pairs_actor:
+        run_actor(hex(pair.routine), pair.routine, n.vertrix_effect_actor_pair,
+                  (c.byref(pair),), ('edx',))
     # Objects that do not resolve: the effect stops where the original would have read them. Before
     # the first call (player, opponent, grid) nothing is called or stored; later failures still
     # never reach the final 0x43bbf0.
@@ -1261,7 +1303,8 @@ def main():
                                             0x4558e0, 0x455a00, 0x455510, 0x455e50, 0x455f10,
                                             0x455f80, 0x456060, 0x453c90, 0x453fd0, 0x4542e0, 0x453ef0, 0x454200, 0x454510, 0x454760, 0x453d50, 0x454830, 0x454a50, 0x454cb0, 0x454090, 0x4543a0, 0x454600, 0x4546a0, 0x4548e0, 0x454970, 0x454b20, 0x454bd0, 0x454d80, 0x454e30, 0x454f00, 0x454fc0, 0x4552b0, 0x455320, 0x4553a0, 0x4550a0, 0x455580, 0x455700, 0x455830, 0x455970, 0x455a90, 0x455b90, 0x455d10, 0x455c30, 0x455db0, 0x455e00, 0x45b4c0, 0x45b590,
                                             0x45b5f0, 0x4560c0, 0x456290, 0x456300, 0x456170, 0x456390, 0x456570, 0x456490, 0x456670,
-                                            0x4564e0, 0x4566d0, 0x456760, 0x456860)}},
+                                            0x4564e0, 0x4566d0, 0x456760, 0x456860, 0x4568c0, 0x456900, 0x456a80, 0x456980,
+                                            0x456a00)}},
         'paths': totals,
         'convert_paths': convert_totals,
         'match_paths': match_totals,

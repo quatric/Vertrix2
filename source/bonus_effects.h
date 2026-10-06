@@ -611,4 +611,44 @@ extern const VertrixObjectWait vertrix_object_waits[VERTRIX_OBJECT_WAIT_COUNT];
 
 uint32_t vertrix_effect_object_wait(const VertrixEffectServices *services, uint32_t object,
                                     uint32_t entry_ebx, const VertrixObjectWait *wait);
+
+/* Original 0x4568c0 (eax = obj; ebx the caller's): the words +0x10 and +0x18 become the words +8
+ * and +0xa, 0x4ac8f0 binds 0x456900, 0x4ac7b0 runs with edx 1 and the result of 0x4ac510 is
+ * returned. */
+uint32_t vertrix_effect_actor_prepare(const VertrixEffectServices *services, uint32_t object,
+                                      uint32_t entry_ebx);
+
+/* Original 0x456900 (eax = obj; ebx and edx the caller's): 0x4ac500, 0x4ac520 (a result other than
+ * 1 is returned), 0x4ac540 (n), 0x4ac5b0 with the caller's edx, the words +0x4a = 0 and +0x4c = 5,
+ * 0x4ad530, and 0x4aca60, 0x4acab0, 0x4acb00 with n. All three zero run 0x4ac8f0 with edx 0
+ * (clearing the handler); otherwise 0x4acb00's result is returned. */
+uint32_t vertrix_effect_actor_settle(const VertrixEffectServices *services, uint32_t object,
+                                     uint32_t entry_ebx, uint32_t entry_edx);
+
+/* The handlers 0x456980 and 0x456a00 (eax = obj; edx the caller's): 0x4adfe0, the byte +0x93 = 1,
+ * 0x4ac500 and 0x4ac520; a result other than 1 ends with 0x4ac8a0. Otherwise 0x4ac540 (n),
+ * 0x4ac5b0, the byte +0x4f and the word +0x50 = 5, and 0x4ad580 with n; a non-zero result ends with
+ * 0x4ac8a0, zero binds the token (+0x93 set to the given value before or after the bind) and then
+ * ends with 0x4ac8a0. Returns the result of 0x4ac8a0. */
+typedef struct
+{
+    uint32_t routine;
+    uint32_t byte_value;
+    uint32_t token;
+    uint32_t flag_value;
+    int flag_after;
+} VertrixActorPair;
+
+#define VERTRIX_ACTOR_PAIR_COUNT 2
+extern const VertrixActorPair vertrix_actor_pairs[VERTRIX_ACTOR_PAIR_COUNT];
+
+uint32_t vertrix_effect_actor_pair(const VertrixEffectServices *services, uint32_t object,
+                                   uint32_t entry_edx, const VertrixActorPair *pair);
+
+/* Original 0x456a80 (eax = obj; edx the caller's): 0x4adfe0, 0x4ac500 and 0x4ac520; a result other
+ * than 1 ends with 0x4ac8a0. Otherwise 0x4ac540 (n), 0x4ac5b0, the words +0x4a = 0xff38 and +0x4c
+ * = 6, 0x4ad530, the byte +0x45 = 0 and the word +0x46 = 1, and 0x4acc10 with n; zero binds
+ * 0x456b00. Ends with 0x4ac8a0 and returns its result. */
+uint32_t vertrix_effect_actor_rise(const VertrixEffectServices *services, uint32_t object,
+                                   uint32_t entry_ebx, uint32_t entry_edx);
 #endif

@@ -119,6 +119,15 @@ enum
     HANDLER_COUNT_WAIT = 0x45b590,
     HANDLER_COUNT_STEP = 0x45b5f0,
     OBJECT_VALUE = 0x14c,
+    OBJECT_SETTLE_WORD = 0x10,
+    OBJECT_SETTLE_WORD_B = 0x18,
+    OBJECT_SRC_A = 0x8,
+    OBJECT_SRC_B = 0xa,
+    OBJECT_FLAG93 = 0x93,
+    OBJECT_BYTE4F = 0x4f,
+    OBJECT_WORD50 = 0x50,
+    OBJECT_BYTE45 = 0x45,
+    OBJECT_WORD46 = 0x46,
     GLOBAL_FLIP = 0x5589dc,
     GLOBAL_SELECTION = 0x532b98,
     HANDLER_WAIT_NEXT = 0x456390,
@@ -3612,4 +3621,158 @@ uint32_t vertrix_effect_object_wait(const VertrixEffectServices *services, uint3
         vertrix_call(calls, wait->callee, result, POINT_KIND, entry_ebx, object, 0);
     }
     return vertrix_call(calls, 0x4ac8f0, object, wait->token, entry_ebx, object, 0);
+}
+
+uint32_t vertrix_effect_actor_prepare(const VertrixEffectServices *services, uint32_t object,
+                                      uint32_t entry_ebx)
+{
+    void *storage;
+    size_t size;
+    uint32_t a;
+    uint32_t b;
+    if (!services || !services->calls || !resolve_object(services, object, &storage, &size) ||
+        !vertrix_actor_storage_read(storage, size, OBJECT_SRC_A, 2, &a) ||
+        !vertrix_actor_storage_write(storage, size, OBJECT_SETTLE_WORD, 2, a) ||
+        !vertrix_actor_storage_read(storage, size, OBJECT_SRC_B, 2, &b) ||
+        !vertrix_actor_storage_write(storage, size, OBJECT_SETTLE_WORD_B, 2, b))
+    {
+        return 0;
+    }
+    vertrix_call(services->calls, 0x4ac8f0, object, 0x456900, entry_ebx, object, 0);
+    vertrix_call(services->calls, 0x4ac7b0, object, 1, entry_ebx, object, 0);
+    return vertrix_call(services->calls, 0x4ac510, object, 1, entry_ebx, object, 0);
+}
+
+uint32_t vertrix_effect_actor_settle(const VertrixEffectServices *services, uint32_t object,
+                                     uint32_t entry_ebx, uint32_t entry_edx)
+{
+    void *storage;
+    size_t size;
+    uint32_t result;
+    uint32_t n;
+    uint32_t first;
+    uint32_t second;
+    uint32_t third;
+    const VertrixCalls *calls;
+    if (!services || !services->calls || !resolve_object(services, object, &storage, &size))
+    {
+        return 0;
+    }
+    calls = services->calls;
+    vertrix_call(calls, 0x4ac500, object, entry_edx, entry_ebx, object, 0);
+    result = vertrix_call(calls, 0x4ac520, object, entry_edx, entry_ebx, object, 0);
+    if (result != 1)
+    {
+        return result;
+    }
+    n = vertrix_call(calls, 0x4ac540, object, entry_edx, entry_ebx, object, 0);
+    vertrix_call(calls, 0x4ac5b0, object, entry_edx, n, object, 0);
+    if (!vertrix_actor_storage_write(storage, size, OBJECT_WORD_A, 2, 0) ||
+        !vertrix_actor_storage_write(storage, size, OBJECT_WORD_B, 2, 5))
+    {
+        return 0;
+    }
+    vertrix_call(calls, 0x4ad530, object, n, n, object, 0);
+    first = vertrix_call(calls, 0x4aca60, object, n, n, object, 0);
+    second = vertrix_call(calls, 0x4acab0, object, n, n, object, 0);
+    third = vertrix_call(calls, 0x4acb00, object, n, n, object, 0);
+    if (first != 0 || second != 0 || third != 0)
+    {
+        return third;
+    }
+    return vertrix_call(calls, 0x4ac8f0, object, 0, n, object, 0);
+}
+
+const VertrixActorPair vertrix_actor_pairs[VERTRIX_ACTOR_PAIR_COUNT] = {
+    {0x456980, 0x64, 0x456bf0, 0, 0}, {0x456a00, 0, 0x456ca0, 1, 1}};
+
+uint32_t vertrix_effect_actor_pair(const VertrixEffectServices *services, uint32_t object,
+                                   uint32_t entry_edx, const VertrixActorPair *pair)
+{
+    void *storage;
+    size_t size;
+    uint32_t edx = entry_edx;
+    uint32_t n;
+    const VertrixCalls *calls;
+    if (!services || !services->calls || !pair ||
+        !resolve_object(services, object, &storage, &size))
+    {
+        return 0;
+    }
+    calls = services->calls;
+    vertrix_call(calls, 0x4adfe0, object, edx, object, object, 0);
+    if (!vertrix_actor_storage_write(storage, size, OBJECT_FLAG93, 1, 1))
+    {
+        return 0;
+    }
+    vertrix_call(calls, 0x4ac500, object, edx, object, object, 0);
+    if (vertrix_call(calls, 0x4ac520, object, edx, object, object, 0) == 1)
+    {
+        n = vertrix_call(calls, 0x4ac540, object, edx, object, object, 0);
+        edx = n;
+        vertrix_call(calls, 0x4ac5b0, object, edx, object, object, 0);
+        if (!vertrix_actor_storage_write(storage, size, OBJECT_BYTE4F, 1, pair->byte_value) ||
+            !vertrix_actor_storage_write(storage, size, OBJECT_WORD50, 2, 5))
+        {
+            return 0;
+        }
+        if (vertrix_call(calls, 0x4ad580, object, edx, object, object, 0) == 0)
+        {
+            edx = pair->token;
+            if (!pair->flag_after &&
+                !vertrix_actor_storage_write(storage, size, OBJECT_FLAG93, 1, pair->flag_value))
+            {
+                return 0;
+            }
+            vertrix_call(calls, 0x4ac8f0, object, edx, object, object, 0);
+            if (pair->flag_after &&
+                !vertrix_actor_storage_write(storage, size, OBJECT_FLAG93, 1, pair->flag_value))
+            {
+                return 0;
+            }
+        }
+    }
+    return vertrix_call(calls, 0x4ac8a0, object, edx, object, object, 0);
+}
+
+uint32_t vertrix_effect_actor_rise(const VertrixEffectServices *services, uint32_t object,
+                                   uint32_t entry_ebx, uint32_t entry_edx)
+{
+    void *storage;
+    size_t size;
+    uint32_t n;
+    uint32_t edx = entry_edx;
+    uint32_t ebx = entry_ebx;
+    const VertrixCalls *calls;
+    if (!services || !services->calls || !resolve_object(services, object, &storage, &size))
+    {
+        return 0;
+    }
+    calls = services->calls;
+    vertrix_call(calls, 0x4adfe0, object, edx, ebx, object, 0);
+    vertrix_call(calls, 0x4ac500, object, edx, ebx, object, 0);
+    if (vertrix_call(calls, 0x4ac520, object, edx, ebx, object, 0) == 1)
+    {
+        n = vertrix_call(calls, 0x4ac540, object, edx, ebx, object, 0);
+        ebx = n;
+        vertrix_call(calls, 0x4ac5b0, object, edx, ebx, object, 0);
+        edx = n;
+        if (!vertrix_actor_storage_write(storage, size, OBJECT_WORD_A, 2, 0xff38) ||
+            !vertrix_actor_storage_write(storage, size, OBJECT_WORD_B, 2, 6))
+        {
+            return 0;
+        }
+        vertrix_call(calls, 0x4ad530, object, edx, ebx, object, 0);
+        if (!vertrix_actor_storage_write(storage, size, OBJECT_BYTE45, 1, 0) ||
+            !vertrix_actor_storage_write(storage, size, OBJECT_WORD46, 2, 1))
+        {
+            return 0;
+        }
+        if (vertrix_call(calls, 0x4acc10, object, edx, ebx, object, 0) == 0)
+        {
+            edx = 0x456b00;
+            vertrix_call(calls, 0x4ac8f0, object, edx, ebx, object, 0);
+        }
+    }
+    return vertrix_call(calls, 0x4ac8a0, object, edx, ebx, object, 0);
 }
