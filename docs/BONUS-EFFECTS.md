@@ -44,4 +44,17 @@ counted in the report) with all callees stubbed and logged with registers. Limit
 stubbed callee would clobber in the original are not modelled (the stub leaves them), exactly as
 for the other effects.
 
-Not yet ported: 0x453b90.
+## 0x453b90 and 0x453c00
+
+Natives `vertrix_effect_pair_sound` (0x43d3b0 steers; else sound 3 and two 0x43ccf0 calls with the
+player's `+0x3f8`) and `vertrix_effect_copy_speed` (the opponent receives the player's `+0x3cc` at
+`+0x424`, `+0x428` cleared, handler 0x453c90). Both take the caller's edx, which they forward.
+2048 cases each in the same verifier.
+
+## Wiring note
+
+The dispatcher 0x43c140 does not call an effect: it stores the effect address as the player's
+actor handler with 0x4ac8f0 (`43cc74: edx = handler; eax = player; call 0x4ac8f0`). The effects run
+later from the actor update, so their entry ebx/edx come from that caller, not from the dispatcher.
+
+Not yet ported: the other effects behind 0x43c140 (about 87 of its 93 cases).

@@ -65,4 +65,20 @@ uint32_t vertrix_effect_convert_blocks(const VertrixEffectServices *services, ui
  * returned. Zero when an object does not resolve. */
 uint32_t vertrix_effect_board_match(const VertrixEffectServices *services, uint32_t player,
                                     uint32_t entry_ebx);
+
+/* Original 0x453b90 (eax = player): 0x43d3b0 decides. Result 1 only calls 0x43acd0 on the player;
+ * otherwise sound 3 (the dword at 0x4f818c) goes to the player (0x43c0e0) and 0x43ccf0 runs on the
+ * player and on the opponent (+0x3b0) with the player's +0x3f8. Slot 1 of the player's board
+ * (+0x15c) is then called and 0x43bbf0 on the player returned. entry_edx is the caller's edx,
+ * which 0x43d3b0 and 0x43acd0 receive. Zero when an object does not resolve. */
+uint32_t vertrix_effect_pair_sound(const VertrixEffectServices *services, uint32_t player,
+                                   uint32_t entry_edx);
+
+/* Original 0x453c00 (eax = player): 0x43ac00 on the player (edx = entry_edx), then 0x43bb60 and
+ * 0x43bae0 with edx 4 and 0x4ac8f0 with the handler token 0x453c90 on the opponent, the opponent's
+ * +0x428 cleared and its +0x424 set to the player's +0x3cc, the opponent board's +0xb80, +0xb84
+ * and +0xb88 set to one, slot 1 of the player's board and 0x43bbf0 on the player. Zero when an
+ * object does not resolve. */
+uint32_t vertrix_effect_copy_speed(const VertrixEffectServices *services, uint32_t player,
+                                   uint32_t entry_edx);
 #endif

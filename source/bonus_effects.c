@@ -39,7 +39,13 @@ enum
     PLAYER_PENDING = 0x170,
     PIECE_HANDLE = 0xa60,
     PIECE_CHILDREN = 0x15c,
-    CHILD_KIND = 0x15c
+    CHILD_KIND = 0x15c,
+    PLAYER_SOUND_ARG = 0x3f8,
+    PLAYER_SPEED = 0x3cc,
+    PLAYER_RECEIVED = 0x424,
+    PLAYER_RECEIVED_STATE = 0x428,
+    SOUND_PAIR = 3,
+    HANDLER_SPEED = 0x453c90
 };
 
 static int resolve_object(const VertrixEffectServices *services, uint32_t handle, void **storage,
@@ -453,4 +459,102 @@ uint32_t vertrix_effect_board_match(const VertrixEffectServices *services, uint3
                                                                        own_board, SLOT_RELEASE, 0)
                                     : 0;
     return result;
+}
+
+uint32_t vertrix_effect_pair_sound(const VertrixEffectServices *services, uint32_t player,
+                                   uint32_t entry_edx)
+{
+    void *player_storage;
+    void *board_storage;
+    size_t player_size;
+    size_t board_size;
+    uint32_t opponent;
+    uint32_t board;
+    uint32_t argument;
+    uint32_t vtable;
+    if (!services || !services->calls ||
+        !resolve_object(services, player, &player_storage, &player_size) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_OPPONENT, DWORD_WIDTH,
+                                    &opponent) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_BOARD, DWORD_WIDTH,
+                                    &board) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_SOUND_ARG, DWORD_WIDTH,
+                                    &argument) ||
+        !resolve_object(services, board, &board_storage, &board_size) ||
+        !vertrix_actor_storage_read(board_storage, board_size, BOARD_VTABLE, DWORD_WIDTH, &vtable))
+    {
+        return 0;
+    }
+    if (vertrix_call(services->calls, 0x43d3b0, player, entry_edx, board, player, 0) == 1)
+    {
+        vertrix_call(services->calls, 0x43acd0, player, entry_edx, board, player, 0);
+    }
+    else
+    {
+        vertrix_call(services->calls, 0x43c0e0, player, SOUND_PAIR, board, player, 0);
+        vertrix_call(services->calls, 0x43ccf0, player, argument, board, player, 0);
+        vertrix_call(services->calls, 0x43ccf0, opponent, argument, board, player, 0);
+    }
+    if (services->virtual_call)
+    {
+        services->virtual_call(services->virtual_context, board, SLOT_RELEASE, 0);
+    }
+    return vertrix_call(services->calls, 0x43bbf0, player, vtable, board, player, 0);
+}
+
+uint32_t vertrix_effect_copy_speed(const VertrixEffectServices *services, uint32_t player,
+                                   uint32_t entry_edx)
+{
+    void *player_storage;
+    void *opponent_storage;
+    void *own_storage;
+    void *opponent_board_storage;
+    size_t player_size;
+    size_t opponent_size;
+    size_t own_size;
+    size_t opponent_board_size;
+    uint32_t opponent;
+    uint32_t own_board;
+    uint32_t opponent_board;
+    uint32_t speed;
+    uint32_t vtable;
+    if (!services || !services->calls ||
+        !resolve_object(services, player, &player_storage, &player_size) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_OPPONENT, DWORD_WIDTH,
+                                    &opponent) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_BOARD, DWORD_WIDTH,
+                                    &own_board) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_SPEED, DWORD_WIDTH,
+                                    &speed) ||
+        !resolve_object(services, opponent, &opponent_storage, &opponent_size) ||
+        !vertrix_actor_storage_read(opponent_storage, opponent_size, PLAYER_BOARD, DWORD_WIDTH,
+                                    &opponent_board) ||
+        !resolve_object(services, own_board, &own_storage, &own_size) ||
+        !resolve_object(services, opponent_board, &opponent_board_storage, &opponent_board_size) ||
+        !vertrix_actor_storage_read(own_storage, own_size, BOARD_VTABLE, DWORD_WIDTH, &vtable))
+    {
+        return 0;
+    }
+    vertrix_call(services->calls, 0x43ac00, player, entry_edx, player, opponent, 0);
+    vertrix_call(services->calls, 0x43bb60, opponent, 4, player, opponent, 0);
+    vertrix_call(services->calls, 0x43bae0, opponent, 4, player, opponent, 0);
+    vertrix_call(services->calls, 0x4ac8f0, opponent, HANDLER_SPEED, player, opponent, 0);
+    if (!vertrix_actor_storage_write(opponent_storage, opponent_size, PLAYER_RECEIVED_STATE,
+                                     DWORD_WIDTH, 0) ||
+        !vertrix_actor_storage_write(opponent_storage, opponent_size, PLAYER_RECEIVED, DWORD_WIDTH,
+                                     speed) ||
+        !vertrix_actor_storage_write(opponent_board_storage, opponent_board_size, BOARD_FLAG_FIRST,
+                                     DWORD_WIDTH, 1) ||
+        !vertrix_actor_storage_write(opponent_board_storage, opponent_board_size, BOARD_FLAG_SECOND,
+                                     DWORD_WIDTH, 1) ||
+        !vertrix_actor_storage_write(opponent_board_storage, opponent_board_size, BOARD_FLAG_THIRD,
+                                     DWORD_WIDTH, 1))
+    {
+        return 0;
+    }
+    if (services->virtual_call)
+    {
+        services->virtual_call(services->virtual_context, own_board, SLOT_RELEASE, 0);
+    }
+    return vertrix_call(services->calls, 0x43bbf0, player, HANDLER_SPEED, player, vtable, 0);
 }

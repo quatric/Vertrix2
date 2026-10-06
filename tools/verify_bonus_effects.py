@@ -19,7 +19,7 @@ DRAW = 0x4826c0
 CALLEES = (0x43acd0, 0x43ac00, 0x43bb60, 0x4ac8f0, 0x43bbf0, 0x43c0e0)
 ALLOCATE = 0x4ca000
 # 0x452e00 callees; the first four steer its flow and return small values
-FLOW = {0x438cd0: (0, 1), 0x43ab60: (0, 1, 1, 2), 0x4320c0: (1, 1, 1, 0), 0x4330d0: (1, 1, 1, 0)}
+FLOW = {0x43d3b0: (0, 1), 0x438cd0: (0, 1), 0x43ab60: (0, 1, 1, 2), 0x4320c0: (1, 1, 1, 0), 0x4330d0: (1, 1, 1, 0)}
 MATCH_CALLEES = (0x438cd0, 0x43ab60, 0x4320c0, 0x4330d0, 0x431d80, 0x42ee20, 0x42eda0, 0x42ee80,
                  0x433040, 0x43a560)
 EFFECT_CODE = 0x450000
@@ -83,6 +83,10 @@ def main():
     n.vertrix_effect_convert_blocks.restype = U
     n.vertrix_effect_board_match.argtypes = [c.POINTER(Services), U, U]
     n.vertrix_effect_board_match.restype = U
+    for name in ('pair_sound', 'copy_speed'):
+        function = getattr(n, 'vertrix_effect_' + name)
+        function.argtypes = [c.POINTER(Services), U, U]
+        function.restype = U
     original = Original(args.executable)
     cpu = original.cpu
     rng = random.Random(0x453ad0)
@@ -275,6 +279,38 @@ def main():
             match_totals['chain'] += 1
         else:
             match_totals['plain'] += 1
+    # 0x453b90 and 0x453c00
+    for address in (0x43d3b0, 0x43ccf0, 0x43bae0):
+        stubs.add(address, 0)
+
+    def patch_small(handle, data):
+        patch_convert(handle, data)
+        if handle == player:
+            struct.pack_into('<II', data, 0x3f8, rng.getrandbits(32), 0)
+            struct.pack_into('<I', data, 0x3cc, rng.getrandbits(32))
+    small_totals = {'pair_sound_sound': 0, 'pair_sound_plain': 0, 'copy_speed': 0}
+    for name, address, function in (('0x453b90', 0x453b90, n.vertrix_effect_pair_sound),
+                                    ('0x453c00', 0x453c00, n.vertrix_effect_copy_speed)):
+        for case in range(args.cases):
+            pool.fill(rng, patch_small)
+            stubs.log.clear()
+            returns.clear()
+            draws.clear()
+            native_log.clear()
+            entry_edx = rng.getrandbits(32)
+            result = original.call(address, eax=player, edx=entry_edx) & 0xffffffff
+            replay[:] = list(returns)
+            got = function(c.byref(services), player, entry_edx)
+            expected = normalized(stubs.log)
+            assert native_log == expected, (name, case, native_log, expected)
+            assert got == result, (name, case, hex(got), hex(result))
+            assert not replay, case
+            assert pool.same(), (name, case, pool.diff())
+            if address == 0x453c00:
+                small_totals['copy_speed'] += 1
+            else:
+                small_totals['pair_sound_sound' if any(e[0] == 0x43ccf0 for e in expected)
+                             else 'pair_sound_plain'] += 1
     # Objects that do not resolve: the effect stops where the original would have read them. Before
     # the first call (player, opponent, grid) nothing is called or stored; later failures still
     # never reach the final 0x43bbf0.
@@ -309,10 +345,12 @@ def main():
     report = {
         'status': 'passed',
         'complete_original_executions': {'0x453ad0': args.cases, '0x453150': args.cases,
-                                        '0x452e00': args.cases},
+                                        '0x452e00': args.cases,
+                                        '0x453b90': args.cases, '0x453c00': args.cases},
         'paths': totals,
         'convert_paths': convert_totals,
         'match_paths': match_totals,
+        'small_paths': small_totals,
         'scope': 'Complete original 0x453ad0 executes with 0x429fe0 running for real (its 0x4826c0 '
                  'draws stubbed and replayed) and the boundaries 0x43acd0, 0x43ac00, 0x43bb60, '
                  '0x4ac8f0, 0x43bbf0 and virtual slot 1 of the player board stubbed and logged; '
@@ -324,7 +362,9 @@ def main():
                  '0x452e00 runs with every callee (0x438cd0, 0x43ab60, 0x4320c0, 0x4330d0, 0x431d80, '
                  '0x42ee20, 0x42eda0, 0x42ee80, 0x433040, 0x43a560, 0x43bb60, 0x4ac8f0, 0x43c0e0, '
                  '0x43acd0, 0x43ac00, 0x43bbf0) stubbed and logged with registers; the flow '
-                 'callees return replayed small values.'
+                 'callees return replayed small values. Complete originals 0x453b90 and 0x453c00 '
+                 'run with 0x43d3b0, 0x43ccf0, 0x43bae0 and the other callees stubbed and logged; '
+                 'the entry edx is random.'
     }
     (args.build_dir / 'bonus-effects-verification.json').write_text(
         json.dumps(report, indent=2) + '\n')

@@ -3,7 +3,9 @@
   "complete_original_executions": {
     "0x453ad0": 2048,
     "0x453150": 2048,
-    "0x452e00": 2048
+    "0x452e00": 2048,
+    "0x453b90": 2048,
+    "0x453c00": 2048
   },
   "paths": {
     "forced_choice": 1606,
@@ -22,5 +24,10 @@
     "pending_cleared": 259,
     "plain": 444
   },
-  "scope": "Complete original 0x453ad0 executes with 0x429fe0 running for real (its 0x4826c0 draws stubbed and replayed) and the boundaries 0x43acd0, 0x43ac00, 0x43bb60, 0x4ac8f0, 0x43bbf0 and virtual slot 1 of the player board stubbed and logged; the ordered call log with registers, every pool object and the result compare with vertrix_effect_forced_choice. Unresolvable objects are rejected. Complete original 0x453150 runs the same way with the real 0x436b40 and its callees (0x4ac8f0 only counts as a boundary where 0x453150 calls it; allocation 0x4ca000 and draws are replayed) and 0x43c0e0 stubbed; the registers left by 0x436b40 are compared through the boundary log. Complete original 0x452e00 runs with every callee (0x438cd0, 0x43ab60, 0x4320c0, 0x4330d0, 0x431d80, 0x42ee20, 0x42eda0, 0x42ee80, 0x433040, 0x43a560, 0x43bb60, 0x4ac8f0, 0x43c0e0, 0x43acd0, 0x43ac00, 0x43bbf0) stubbed and logged with registers; the flow callees return replayed small values."
+  "small_paths": {
+    "pair_sound_sound": 1008,
+    "pair_sound_plain": 1040,
+    "copy_speed": 2048
+  },
+  "scope": "Complete original 0x453ad0 executes with 0x429fe0 running for real (its 0x4826c0 draws stubbed and replayed) and the boundaries 0x43acd0, 0x43ac00, 0x43bb60, 0x4ac8f0, 0x43bbf0 and virtual slot 1 of the player board stubbed and logged; the ordered call log with registers, every pool object and the result compare with vertrix_effect_forced_choice. Unresolvable objects are rejected. Complete original 0x453150 runs the same way with the real 0x436b40 and its callees (0x4ac8f0 only counts as a boundary where 0x453150 calls it; allocation 0x4ca000 and draws are replayed) and 0x43c0e0 stubbed; the registers left by 0x436b40 are compared through the boundary log. Complete original 0x452e00 runs with every callee (0x438cd0, 0x43ab60, 0x4320c0, 0x4330d0, 0x431d80, 0x42ee20, 0x42eda0, 0x42ee80, 0x433040, 0x43a560, 0x43bb60, 0x4ac8f0, 0x43c0e0, 0x43acd0, 0x43ac00, 0x43bbf0) stubbed and logged with registers; the flow callees return replayed small values. Complete originals 0x453b90 and 0x453c00 run with 0x43d3b0, 0x43ccf0, 0x43bae0 and the other callees stubbed and logged; the entry edx is random."
 }
