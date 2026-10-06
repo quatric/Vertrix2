@@ -25,10 +25,7 @@ typedef struct
     uint8_t width;
 } DisplayField;
 
-#define FIELD(member, original, width)                                                             \
-    {                                                                                              \
-        offsetof(VertrixLinkedAlternating, member), original, width                                \
-    }
+#define FIELD(member, original, width) {offsetof(VertrixLinkedAlternating, member), original, width}
 
 static const DisplayField fields[] = {FIELD(threshold, 0x58, 4),
                                       FIELD(source, 0x134, 4),

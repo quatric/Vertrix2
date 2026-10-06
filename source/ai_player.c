@@ -58,7 +58,7 @@ int vertrix_ai_search_native(const uint8_t board[CELLS], uint32_t a, uint32_t b,
             {
                 cells[base + (uint32_t)cell - 2] = (uint8_t)colours[r][2];
             }
-            if (vertrix_figure_pass((uint8_t(*)[ROWS])cells, (uint8_t(*)[ROWS])mask, &reward, 0))
+            if (vertrix_figure_pass((uint8_t (*)[ROWS])cells, (uint8_t (*)[ROWS])mask, &reward, 0))
             {
                 uint32_t word = (uint32_t)reward & WORD_MASK;
                 failed = 0;
@@ -331,8 +331,8 @@ static int mask_sum(const uint8_t mask[CELLS])
 static int line_found(const uint8_t cells[CELLS], uint8_t mask[CELLS], uint32_t threshold)
 {
     int reward = 0;
-    return vertrix_line_pass((const uint8_t(*)[ROWS_PER_COLUMN])cells,
-                             (uint8_t(*)[ROWS_PER_COLUMN])mask, (int)(threshold & BYTE_MASK),
+    return vertrix_line_pass((const uint8_t (*)[ROWS_PER_COLUMN])cells,
+                             (uint8_t (*)[ROWS_PER_COLUMN])mask, (int)(threshold & BYTE_MASK),
                              &reward);
 }
 
@@ -426,7 +426,7 @@ int vertrix_ai_chain_search(const uint8_t board[CELLS], uint32_t p0, uint32_t p1
         memset(mask, 0, sizeof mask);
         line_found(cells, mask, threshold);
         remove_marked(cells, mask);
-        board_collapse((uint8_t(*)[ROWS_PER_COLUMN])cells);
+        board_collapse((uint8_t (*)[ROWS_PER_COLUMN])cells);
         memset(mask, 0, sizeof mask);
         if (!line_found(cells, mask, threshold))
         {
@@ -438,13 +438,13 @@ int vertrix_ai_chain_search(const uint8_t board[CELLS], uint32_t p0, uint32_t p1
             continue;
         }
         remove_marked(cells, mask);
-        board_collapse((uint8_t(*)[ROWS_PER_COLUMN])cells);
+        board_collapse((uint8_t (*)[ROWS_PER_COLUMN])cells);
         memset(mask, 0, sizeof mask);
         while (line_found(cells, mask, threshold))
         {
             third[x] = (uint8_t)(third[x] + mask_sum(mask));
             remove_marked(cells, mask);
-            board_collapse((uint8_t(*)[ROWS_PER_COLUMN])cells);
+            board_collapse((uint8_t (*)[ROWS_PER_COLUMN])cells);
         }
     }
     if (none)

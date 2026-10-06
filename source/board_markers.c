@@ -336,7 +336,7 @@ int vertrix_board_any_falling(const uint32_t slots[VERTRIX_MARKER_CELLS],
     {
         return 0;
     }
-    *falling = (uint32_t)board_falling_mask((const uint8_t(*)[ROWS])kinds, mask);
+    *falling = (uint32_t)board_falling_mask((const uint8_t (*)[ROWS])kinds, mask);
     return 1;
 }
 
@@ -350,7 +350,7 @@ int vertrix_board_mark_falling_cells(const uint32_t slots[VERTRIX_MARKER_CELLS],
     {
         return 0;
     }
-    if (board_falling_mask((const uint8_t(*)[ROWS])kinds, mask))
+    if (board_falling_mask((const uint8_t (*)[ROWS])kinds, mask))
     {
         for (int column = 0; column < COLUMNS; ++column)
         {
