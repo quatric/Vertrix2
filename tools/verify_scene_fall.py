@@ -46,14 +46,14 @@ def main():
     @ Resolver
     def resolve(handle, context):
         return c.addressof(actor) if handle == piece_handle else c.addressof(objects[handle]) if handle in objects else None
-        @ Visit
-        def visit(handle, destroy, context):
-            native_events.append((handle, destroy, tuple(piece.children)))
-            def original_visit(cpu, address, size, context):
-                original_events.append((cpu.reg_read(UC_X86_REG_EAX), cpu.reg_read(UC_X86_REG_EDX), struct.unpack('<3I', cpu.mem_read(piece_handle + 0x15c, 12))))
-                o.cpu.hook_add(UC_HOOK_CODE, original_visit, begin=0x700100, end=0x700100)
-                rng = random.Random(0x431c60)
-                destructions = transfers = 0
+    @ Visit
+    def visit(handle, destroy, context):
+        native_events.append((handle, destroy, tuple(piece.children)))
+    def original_visit(cpu, address, size, context):
+        original_events.append((cpu.reg_read(UC_X86_REG_EAX), cpu.reg_read(UC_X86_REG_EDX), struct.unpack('<3I', cpu.mem_read(piece_handle + 0x15c, 12))))
+    o.cpu.hook_add(UC_HOOK_CODE, original_visit, begin=0x700100, end=0x700100)
+    rng = random.Random(0x431c60)
+    destructions = transfers = 0
     for case in range(2048):
         scene = Scene()
         scene.active = piece_handle

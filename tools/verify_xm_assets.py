@@ -59,19 +59,19 @@ def main():
                 else:
                     assert not output.data
                     empty_patterns += 1
-                    saved = bytes(output)
-                    assert not n.vertrix_xm_pattern_load(vf, name, pattern, ctypes.byref(output))
-                    assert bytes(output) == saved
-                    n.vertrix_xm_pattern_free(ctypes.byref(output))
-                    assert bytes(output) == bytes(Pattern())
-                    n.vertrix_xm_pattern_free(ctypes.byref(output))
-                    offset += length + size
-                    patterns += 1
-                    packed_bytes += size
-                    output = Pattern()
-                    assert not n.vertrix_xm_pattern_load(vf, name, header.patterns, ctypes.byref(output))
-        assert bytes(output) == bytes(Pattern())
-        files += 1
+                saved = bytes(output)
+                assert not n.vertrix_xm_pattern_load(vf, name, pattern, ctypes.byref(output))
+                assert bytes(output) == saved
+                n.vertrix_xm_pattern_free(ctypes.byref(output))
+                assert bytes(output) == bytes(Pattern())
+                n.vertrix_xm_pattern_free(ctypes.byref(output))
+                offset += length + size
+                patterns += 1
+                packed_bytes += size
+            output = Pattern()
+            assert not n.vertrix_xm_pattern_load(vf, name, header.patterns, ctypes.byref(output))
+            assert bytes(output) == bytes(Pattern())
+            files += 1
         output = Pattern()
         assert not n.vertrix_xm_pattern_load(vf, b"missing.xm", 0, ctypes.byref(output))
         header = Header()
@@ -81,7 +81,7 @@ def main():
         assert bytes(header) == saved
     finally:
         n.vertrix_vf_close(vf)
-        assert files == 29 and patterns == 967
+    assert files == 29 and patterns == 967
     report = {"status": "passed", "files": files, "patterns": patterns, "packed_bytes": packed_bytes, "empty_patterns": empty_patterns, "scope": "Direct VF XM header/pattern loading compared with original extracted bytes; owned " "output guards, cleanup and unavailable/unsupported resources. No music playback."}
     (build / "xm-assets-verification.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report, indent=2))

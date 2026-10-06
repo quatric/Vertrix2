@@ -42,12 +42,12 @@ def main():
         for operation in operations:
             if operation['address'] != '0x43f200':
                 continue
-                name = operation['vf_image'].encode()
-                width, height = operation['ebx'], operation['ecx']
-                sheet, image = Sheet(), NativeImage()
-                assert native.vertrix_font_sheet_load(archive, name, b'image/systeme/.pcx', width, height, c.byref(sheet)), name
-                assert sheet.count == operation['stack_argument'], name
-                assert native.vertrix_image_bmp(archive, name, c.byref(image))
+            name = operation['vf_image'].encode()
+            width, height = operation['ebx'], operation['ecx']
+            sheet, image = Sheet(), NativeImage()
+            assert native.vertrix_font_sheet_load(archive, name, b'image/systeme/.pcx', width, height, c.byref(sheet)), name
+            assert sheet.count == operation['stack_argument'], name
+            assert native.vertrix_image_bmp(archive, name, c.byref(image))
             try:
                 raw = c.string_at(image.rgba, image.width * image.height * 4)
                 original.cpu.mem_write(0x804000, struct.pack('<3I', 0x900000, image.width, image.height))

@@ -41,7 +41,7 @@ def main():
     n = build(args.build_dir, 'board-rows',
               ['board_conversions.c', 'block_factory.c', 'board_markers.c', 'board.c',
                'board_cells.c', 'actor_storage.c', 'actor_fields.c', 'fixed_point.c',
-               'board_actions.c'])
+               'board_actions.c', 'random.c'])
     for name in ('first', 'second'):
         function = getattr(n, 'vertrix_board_deal_%s_row' % name)
         function.argtypes = [c.c_void_p, c.c_size_t, c.c_int32, c.c_int32, c.POINTER(Table),

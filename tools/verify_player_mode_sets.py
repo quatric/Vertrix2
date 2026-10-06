@@ -17,7 +17,7 @@ def main():
     parser.add_argument('--build-dir', type=Path, required=True)
     parser.add_argument('--cases', type=int, default=4096)
     args = parser.parse_args()
-    n = build(args.build_dir, 'player-mode-sets', ['player_slots.c', 'actor_storage.c'])
+    n = build(args.build_dir, 'player-mode-sets', ['player_slots.c', 'actor_storage.c', 'actor_fields.c', 'timing.c', 'piece.c', 'piece_actor_construct.c', 'piece_children.c', 'object_scalars.c', 'random.c', 'piece_child_update.c', 'dword_transition.c', 'frame_resource.c', 'timer.c'])
     n.vertrix_player_set_mode_and_refresh.argtypes = [c.c_void_p, c.c_size_t, U, U, Refresh, c.c_void_p]
     n.vertrix_player_set_b00_and_refresh.argtypes = [c.c_void_p, c.c_size_t, U, c.c_uint8, Refresh, c.c_void_p]
     original = Original(args.executable)

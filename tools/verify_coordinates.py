@@ -67,12 +67,12 @@ def main():
         piece_y = origin_y + chooser.randrange(- 120, 350)
         if case < 1000:
             piece_y = origin_y - 72 + (case % 25) - 12
-            native_board = (ctypes.c_uint8 * 65)(* board)
-            actual = native.vertrix_down_clear(native_board, origin_x, origin_y, piece_x, piece_y)
-            expected = oracle.down_clear(board, origin_x, origin_y, piece_x, piece_y)
-            if actual != expected:
-                raise AssertionError(f"Downward probe difference: case={case}")
-                down_comparisons += 1
+        native_board = (ctypes.c_uint8 * 65)(* board)
+        actual = native.vertrix_down_clear(native_board, origin_x, origin_y, piece_x, piece_y)
+        expected = oracle.down_clear(board, origin_x, origin_y, piece_x, piece_y)
+        if actual != expected:
+            raise AssertionError(f"Downward probe difference: case={case}")
+        down_comparisons += 1
     report = {"status": "passed", "coordinate_comparisons": len(cases), "downward_probe_comparisons": down_comparisons, "side_contact_comparisons": contacts, "original_shift_mask_comparisons": shift_contacts, "original_address": "0x00431ae0", "scope": "Coordinate conversion, supplied-mask contacts and original first-step " "shift patterns 0..2; full movement remains incomplete"}
     (args.build_dir / "coordinate-verification.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report, indent=2))

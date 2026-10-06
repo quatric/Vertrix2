@@ -43,14 +43,14 @@ def main():
     @ Resolver
     def resolve(handle, context):
         return c.addressof(actor) if handle == piece_handle else c.addressof(objects[handle]) if handle in objects else None
-        @ Visit
-        def visit(handle, destroy, context):
-            native_events.append((handle, destroy, tuple(piece.children)))
-            def original_visit(cpu, address, size, context):
-                original_events.append((cpu.reg_read(UC_X86_REG_EAX), cpu.reg_read(UC_X86_REG_EDX), struct.unpack('<3I', cpu.mem_read(piece_handle + 0x15c, 12))))
-                o.cpu.hook_add(UC_HOOK_CODE, original_visit, begin=0x700100, end=0x700100)
-                rng = random.Random(0x431c60)
-                destructions = transfers = 0
+    @ Visit
+    def visit(handle, destroy, context):
+        native_events.append((handle, destroy, tuple(piece.children)))
+    def original_visit(cpu, address, size, context):
+        original_events.append((cpu.reg_read(UC_X86_REG_EAX), cpu.reg_read(UC_X86_REG_EDX), struct.unpack('<3I', cpu.mem_read(piece_handle + 0x15c, 12))))
+    o.cpu.hook_add(UC_HOOK_CODE, original_visit, begin=0x700100, end=0x700100)
+    rng = random.Random(0x431c60)
+    destructions = transfers = 0
     for case in range(2048):
         scene = Scene()
         scene.active = piece_handle
@@ -106,9 +106,9 @@ def main():
             data[0x4e] = obj.field_4e
             struct.pack_into('<H', data, 0x48, obj.effect)
             assert bytes(data) == bytes(o.cpu.mem_read(handle, 512)), (case, hex(handle), 'block metadata')
-            destructions += len(native_events)
-            transfers += sum(h in scene.slots[: 65] for h in children)
-            assert not n.vertrix_scene_descent(None, c.byref(piece), 0, 0, 1, resolve, visit, None, c.byref(failed))
+        destructions += len(native_events)
+        transfers += sum(h in scene.slots[: 65] for h in children)
+        assert not n.vertrix_scene_descent(None, c.byref(piece), 0, 0, 1, resolve, visit, None, c.byref(failed))
     report = {'status': 'passed', 'cases': 2048, 'transferred_blocks': transfers, 'destructor_calls': destructions, 'scope': 'Original 0x42fc2d..0x42fc56/0x42fe81 pixel loop, actual downward probe and complete object lock; only virtual destructors captured. Cell handles, ownership observed at each destructor, child clearing, active clearing, lock result and whole block records match. Actual object destructors, timer/scene composition and complete game remain unfinished.'}
     (a.build_dir / 'scene-descent-verification.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))

@@ -38,7 +38,7 @@ def main():
     parser.add_argument('--build-dir', type=Path, required=True)
     parser.add_argument('--cases', type=int, default=2048)
     args = parser.parse_args()
-    n = build(args.build_dir, 'stream-token', ['object_glue.c', 'call_glue.c', 'actor_storage.c'])
+    n = build(args.build_dir, 'stream-token', ['object_glue.c', 'call_glue.c', 'actor_storage.c', 'table_queries.c'])
     for name in ('read_token', 'next_directive'):
         function = getattr(n, 'vertrix_stream_' + name)
         function.argtypes = [c.POINTER(Calls), c.POINTER(Services), U, U]

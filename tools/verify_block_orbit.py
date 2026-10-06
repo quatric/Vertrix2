@@ -61,38 +61,38 @@ def main():
         else:
             node(MASK, count, rng.choice([0, 2, 16, 0xffffffff]), frames=0x803000)
             resolved = ids[: count]
-            period = rng.randrange(65)
-            counter = rng.randrange(129) * (period or 1)
-            elapsed = rng.randrange(129) * (period or 1)
-            frame = rng.randrange(count)
-            animation = Animation(Timer(counter, period), frame, count)
-            frames = (c.c_uint32 * count)(* resolved)
-            descriptor = c.c_uint32(rng.getrandbits(32))
-            raw = bytearray(rng.randbytes(0x160))
-            struct.pack_into('<2I', raw, 0xbc, rng.randrange(65), rng.randrange(17))
-            struct.pack_into('<h', raw, 0x24, rng.randrange(360))
-            struct.pack_into('<h', raw, 0x28, rng.choice([0, - 15, 1, 15]))
-            raw[0x44] = rng.randrange(17)
-            raw[0x91] = rng.randrange(2)
-            struct.pack_into('<I', raw, 0x154, 0x44de20 if case < 64 or case % 2 == 0 else 0x44dfb0)
-            context = Context(c.pointer(tables), rng.randrange(65536), rng.randrange(65536), raw[0x91], rng.randrange(2), rng.randrange(17))
-            if case < 64:
-                elapsed = 0
-                context.width = context.height = 24
-                context.screen_override = 1
-                context.screen_unscaled = 1
-                raw[0x91] = 1
-                raw[0x44] = 11
-                struct.pack_into('<2h', raw, 8, 0, 12)
-                struct.pack_into('<h', raw, 14, 36)
-                struct.pack_into('<h', raw, 18, 0)
-                struct.pack_into('<h', raw, 22, 0)
-                struct.pack_into('<h', raw, 26, 0)
-                struct.pack_into('<h', raw, 36, 0)
-                struct.pack_into('<h', raw, 40, 0)
-                struct.pack_into('<2I', raw, 0xbc, 1, 1)
-                struct.pack_into('<3i', raw, 0x58, 0, case % 2, 0)
-                o.cpu.mem_write(0x805000, struct.pack('<3I', 0, context.width, context.height) + bytes(28))
+        period = rng.randrange(65)
+        counter = rng.randrange(129) * (period or 1)
+        elapsed = rng.randrange(129) * (period or 1)
+        frame = rng.randrange(count)
+        animation = Animation(Timer(counter, period), frame, count)
+        frames = (c.c_uint32 * count)(* resolved)
+        descriptor = c.c_uint32(rng.getrandbits(32))
+        raw = bytearray(rng.randbytes(0x160))
+        struct.pack_into('<2I', raw, 0xbc, rng.randrange(65), rng.randrange(17))
+        struct.pack_into('<h', raw, 0x24, rng.randrange(360))
+        struct.pack_into('<h', raw, 0x28, rng.choice([0, - 15, 1, 15]))
+        raw[0x44] = rng.randrange(17)
+        raw[0x91] = rng.randrange(2)
+        struct.pack_into('<I', raw, 0x154, 0x44de20 if case < 64 or case % 2 == 0 else 0x44dfb0)
+        context = Context(c.pointer(tables), rng.randrange(65536), rng.randrange(65536), raw[0x91], rng.randrange(2), rng.randrange(17))
+        if case < 64:
+            elapsed = 0
+            context.width = context.height = 24
+            context.screen_override = 1
+            context.screen_unscaled = 1
+            raw[0x91] = 1
+            raw[0x44] = 11
+            struct.pack_into('<2h', raw, 8, 0, 12)
+            struct.pack_into('<h', raw, 14, 36)
+            struct.pack_into('<h', raw, 18, 0)
+            struct.pack_into('<h', raw, 22, 0)
+            struct.pack_into('<h', raw, 26, 0)
+            struct.pack_into('<h', raw, 36, 0)
+            struct.pack_into('<h', raw, 40, 0)
+            struct.pack_into('<2I', raw, 0xbc, 1, 1)
+            struct.pack_into('<3i', raw, 0x58, 0, case % 2, 0)
+        o.cpu.mem_write(0x805000, struct.pack('<3I', 0, context.width, context.height) + bytes(28))
         descriptor.value = 0x805000
         o.cpu.mem_write(0x544070, struct.pack('<I', 0x809000))
         o.cpu.mem_write(0x809220, bytes([context.screen_unscaled, context.screen_mode]))
@@ -108,11 +108,11 @@ def main():
         assert n.vertrix_block_orbit_update(c.byref(animation), frames, count, elapsed, c.byref(descriptor), c.byref(state), c.byref(trace), c.byref(context))
         if case < 64:
             assert state.handler == (0x44dfb0 if case % 2 else 0x44c860)
-            expected = bytearray(raw)
-            struct.pack_into('<I', expected, 0xbc, state.timer.counter)
+        expected = bytearray(raw)
+        struct.pack_into('<I', expected, 0xbc, state.timer.counter)
         for name, typ, offset, fmt in fields:
             struct.pack_into('<' + fmt, expected, offset, getattr(state, name))
-            struct.pack_into('<I', expected, 0xb4, descriptor.value)
+        struct.pack_into('<I', expected, 0xb4, descriptor.value)
         struct.pack_into('<I', expected, 0xb8, animation.frame)
         struct.pack_into('<I', expected, 0xcc, animation.timer.counter)
         assert bytes(expected) == bytes(o.cpu.mem_read(BOARD, len(raw))), (case, 'whole normal block')

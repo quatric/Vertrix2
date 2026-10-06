@@ -19,7 +19,7 @@ def main():
     build.mkdir(parents=True, exist_ok=True)
     root = Path(__file__).resolve().parents[1]
     library = build / 'ui-companion-actor.dylib'
-    subprocess.run(['cc', '-shared', '-fPIC', '-O2', '-Wall', '-Wextra', '-Werror', str(root / 'source/ui_companion_actor.c'), str(root / 'source/actor_storage.c'), '-o', str(library)], check=True)
+    subprocess.run(['cc', '-shared', '-fPIC', '-O2', '-Wall', '-Wextra', '-Werror', str(root / 'source/ui_companion_actor.c'), str(root / 'source/actor_storage.c'), str(root / 'source/actor_style_storage.c'), str(root / 'source/call_glue.c'), str(root / 'source/ui_actor_storage.c'), str(root / 'source/block_factory.c'), str(root / 'source/ui_display_layout.c'), str(root / 'source/actor_fields.c'), str(root / 'source/board_cells.c'), '-o', str(library)], check=True)
     native = c.CDLL(str(library))
     construct = native.vertrix_ui_companion_actor_construct
     construct.argtypes = [c.c_void_p, c.c_size_t, c.c_int16, c.c_int16, c.c_uint32, c.c_uint32, c.c_size_t]

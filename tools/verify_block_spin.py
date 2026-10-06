@@ -61,24 +61,24 @@ def main():
         else:
             node(MASK, count, rng.choice([0, 2, 16, 0xffffffff]), frames=0x803000)
             resolved = ids[: count]
-            period = rng.randrange(65)
-            counter = rng.randrange(129) * (period or 1)
-            elapsed = rng.randrange(129) * (period or 1)
-            frame = rng.randrange(count)
-            animation = Animation(Timer(counter, period), frame, count)
-            frames = (c.c_uint32 * count)(* resolved)
-            descriptor = c.c_uint32(rng.getrandbits(32))
-            raw = bytearray(rng.randbytes(0x160))
-            struct.pack_into('<2I', raw, 0xbc, rng.randrange(65), rng.randrange(17))
-            struct.pack_into('<h', raw, 0x24, rng.randrange(360))
-            struct.pack_into('<2h', raw, 0x28, rng.choice([0, - 15, 1, 15]), rng.randrange(101))
-            struct.pack_into('<2h', raw, 0x30, rng.randrange(101), rng.randrange(9))
-            struct.pack_into('<2I', raw, 0xdc, rng.randrange(65), rng.randrange(17))
-            raw[0x44] = rng.randrange(17)
-            raw[0x91] = rng.randrange(2)
-            struct.pack_into('<I', raw, 0x154, 0x44ece0 if case % 2 == 0 else 0x44ee20)
-            if case < 64:
-                elapsed = 0
+        period = rng.randrange(65)
+        counter = rng.randrange(129) * (period or 1)
+        elapsed = rng.randrange(129) * (period or 1)
+        frame = rng.randrange(count)
+        animation = Animation(Timer(counter, period), frame, count)
+        frames = (c.c_uint32 * count)(* resolved)
+        descriptor = c.c_uint32(rng.getrandbits(32))
+        raw = bytearray(rng.randbytes(0x160))
+        struct.pack_into('<2I', raw, 0xbc, rng.randrange(65), rng.randrange(17))
+        struct.pack_into('<h', raw, 0x24, rng.randrange(360))
+        struct.pack_into('<2h', raw, 0x28, rng.choice([0, - 15, 1, 15]), rng.randrange(101))
+        struct.pack_into('<2h', raw, 0x30, rng.randrange(101), rng.randrange(9))
+        struct.pack_into('<2I', raw, 0xdc, rng.randrange(65), rng.randrange(17))
+        raw[0x44] = rng.randrange(17)
+        raw[0x91] = rng.randrange(2)
+        struct.pack_into('<I', raw, 0x154, 0x44ece0 if case % 2 == 0 else 0x44ee20)
+        if case < 64:
+            elapsed = 0
             struct.pack_into('<2I', raw, 0xbc, 0, 1)
             struct.pack_into('<2I', raw, 0xdc, 0, 1)
             struct.pack_into('<h', raw, 0x2a, 10)
@@ -101,19 +101,19 @@ def main():
         assert n.vertrix_block_spin_update(c.byref(animation), frames, count, elapsed, c.byref(descriptor), c.byref(state), c.byref(trace), c.byref(context))
         if case < 64:
             assert state.handler == 0x44c860 and state.field_93 == (0 if case % 2 else 1)
-            expected = bytearray(raw)
-            struct.pack_into('<I', expected, 0xbc, state.timer.counter)
-            struct.pack_into('<I', expected, 0xdc, state.rotation_timer.counter)
+        expected = bytearray(raw)
+        struct.pack_into('<I', expected, 0xbc, state.timer.counter)
+        struct.pack_into('<I', expected, 0xdc, state.rotation_timer.counter)
         for name, typ, offset, fmt in fields:
             struct.pack_into('<' + fmt, expected, offset, getattr(state, name))
-            struct.pack_into('<I', expected, 0xb4, descriptor.value)
+        struct.pack_into('<I', expected, 0xb4, descriptor.value)
         struct.pack_into('<I', expected, 0xb8, animation.frame)
         struct.pack_into('<I', expected, 0xcc, animation.timer.counter)
         assert bytes(expected) == bytes(o.cpu.mem_read(BOARD, len(raw))), (case, [(hex(i), a, b) for i, (a, b) in enumerate(zip(expected, o.cpu.mem_read(BOARD, len(raw)))) if a != b])
         assert (trace.iterations, trace.unwrapped) == (struct.unpack('<I', o.cpu.mem_read(0x5bb5f8, 4))[0], struct.unpack('<I', o.cpu.mem_read(0x5bb5f4, 4))[0])
-    prior = bytes(animation), descriptor.value
-    assert not n.vertrix_block_spin_update(c.byref(animation), frames, count - 1, 16, c.byref(descriptor), c.byref(state), c.byref(trace), c.byref(context)) and (bytes(animation), descriptor.value) == prior
-    assert not n.vertrix_block_spin_update(None, frames, count, 16, c.byref(descriptor), c.byref(state), c.byref(trace), c.byref(context))
+        prior = bytes(animation), descriptor.value
+        assert not n.vertrix_block_spin_update(c.byref(animation), frames, count - 1, 16, c.byref(descriptor), c.byref(state), c.byref(trace), c.byref(context)) and (bytes(animation), descriptor.value) == prior
+        assert not n.vertrix_block_spin_update(None, frames, count, 16, c.byref(descriptor), c.byref(state), c.byref(trace), c.byref(context))
     report = {'status': 'passed', 'cases': 4096, 'zero_cycle_completions': 64, 'linked_resources': linked, 'scope': 'Actual complete original 0x44ece0/0x44ee20 including independent timers, radius transition, angle, original table coordinates, fade, scale, measurement and frame binding, with no routine hooks. Whole block state matches direct and one/two-level linked resource tables. Native receives independently resolved descriptor order; does not implement resource graph construction, actual VF actor binding or complete object runtime/game.'}
     (a.build_dir / 'block-spin-verification.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))

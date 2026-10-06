@@ -42,14 +42,14 @@ def main():
     @ Resolver
     def resolve(handle, context):
         return c.addressof(objects[handle]) if handle in objects else None
-        @ Visit
-        def visit(handle, destroy, context):
-            native_events.append((handle, destroy, tuple(piece.children)))
-            def original_visit(cpu, address, size, context):
-                original_events.append((cpu.reg_read(UC_X86_REG_EAX), cpu.reg_read(UC_X86_REG_EDX), struct.unpack('<3I', cpu.mem_read(piece_handle + 0x15c, 12))))
-                o.cpu.hook_add(UC_HOOK_CODE, original_visit, begin=0x700100, end=0x700100)
-                rng = random.Random(0x431c60)
-                destructions = transfers = failed = 0
+    @ Visit
+    def visit(handle, destroy, context):
+        native_events.append((handle, destroy, tuple(piece.children)))
+    def original_visit(cpu, address, size, context):
+        original_events.append((cpu.reg_read(UC_X86_REG_EAX), cpu.reg_read(UC_X86_REG_EDX), struct.unpack('<3I', cpu.mem_read(piece_handle + 0x15c, 12))))
+    o.cpu.hook_add(UC_HOOK_CODE, original_visit, begin=0x700100, end=0x700100)
+    rng = random.Random(0x431c60)
+    destructions = transfers = failed = 0
     for case in range(4096):
         scene = Scene()
         scene.active = piece_handle
@@ -98,10 +98,10 @@ def main():
             data[0x4e] = obj.field_4e
             struct.pack_into('<H', data, 0x48, obj.effect)
             assert bytes(data) == bytes(o.cpu.mem_read(handle, 512)), (case, hex(handle), 'block metadata')
-            destructions += len(native_events)
-            transfers += sum(h in scene.slots[: 65] for h in children)
-            failed += not locked.value
-            assert not n.vertrix_scene_lock(None, c.byref(piece), 0, 0, resolve, visit, None, c.byref(locked))
+        destructions += len(native_events)
+        transfers += sum(h in scene.slots[: 65] for h in children)
+        failed += not locked.value
+        assert not n.vertrix_scene_lock(None, c.byref(piece), 0, 0, resolve, visit, None, c.byref(locked))
     report = {'status': 'passed', 'cases': 4096, 'transferred_blocks': transfers, 'destructor_calls': destructions, 'failed_lock_results': failed, 'scope': 'Complete original 0x431c60 including original coordinate conversion and block metadata writes; only virtual destructors captured. Cell handles, ownership observed at each destructor, child clearing, active clearing, lock result and whole block records match. Actual object destructors, surrounding descent/scene composition and complete game remain unfinished.'}
     (a.build_dir / 'scene-lock-verification.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))

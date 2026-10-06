@@ -23,7 +23,7 @@ def main():
     build.mkdir(parents=True, exist_ok=True)
     root = Path(__file__).resolve().parents[1]
     library = build / 'ui-preview-pair.dylib'
-    names = ['ui_preview_pair.c', 'ui_border_actor.c', 'ui_companion_actor.c', 'sprite_actor_image.c', 'actor_storage.c', 'ui_player_previews.c']
+    names = ['ui_preview_pair.c', 'ui_border_actor.c', 'ui_companion_actor.c', 'sprite_actor_image.c', 'actor_storage.c', 'ui_player_previews.c', 'actor_style_storage.c', 'call_glue.c', 'ui_actor_storage.c', 'block_factory.c', 'ui_display_layout.c', 'actor_fields.c', 'board_cells.c']
     subprocess.run(['cc', '-shared', '-fPIC', '-O2', '-Wall', '-Wextra', '-Werror', * [str(root / 'source' / name) for name in names], '-o', str(library)], check=True)
     native = c.CDLL(str(library))
     construct = native.vertrix_ui_preview_pair_construct

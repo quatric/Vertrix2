@@ -40,7 +40,7 @@ def main():
     parser.add_argument('--build-dir', type=Path, required=True)
     parser.add_argument('--cases', type=int, default=1024)
     args = parser.parse_args()
-    n = build(args.build_dir, 'free-tree', ['object_glue.c', 'call_glue.c', 'actor_storage.c'])
+    n = build(args.build_dir, 'free-tree', ['object_glue.c', 'call_glue.c', 'actor_storage.c', 'table_queries.c'])
     n.vertrix_object_free_tree.argtypes = [c.POINTER(Calls), c.POINTER(Services), U, U, U, U]
     n.vertrix_object_free_tree.restype = U
     original = Original(args.executable)

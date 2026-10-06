@@ -84,20 +84,20 @@ def main():
             ok = n.vertrix_random_inclusive(c.byref(native), minimum, maximum, c.byref(value))
             if width == 0:
                 assert not ok and value.value == 0xdeadbeef
-            try:
-                original.call(0x482750, eax=BOARD, edx=minimum, ebx=maximum)
-            except Exception:
-                faults += 1
-            else:
-                raise AssertionError('zero width did not fault in the original')
+                try:
+                    original.call(0x482750, eax=BOARD, edx=minimum, ebx=maximum)
+                except Exception:
+                    faults += 1
+                else:
+                    raise AssertionError('zero width did not fault in the original')
                 original.random_seed(seed)
                 native = NativeRandom()
                 n.vertrix_random_seed(c.byref(native), seed)
                 continue
-                result = original.call(0x482750, eax=BOARD, edx=minimum, ebx=maximum)
-                position = struct.unpack('<H', bytes(cpu.mem_read(BOARD + 12, 2)))[0]
-                assert ok and value.value == result and native.position == position, (seed, draw)
-                count('random_inclusive')
+            result = original.call(0x482750, eax=BOARD, edx=minimum, ebx=maximum)
+            position = struct.unpack('<H', bytes(cpu.mem_read(BOARD + 12, 2)))[0]
+            assert ok and value.value == result and native.position == position, (seed, draw)
+            count('random_inclusive')
     report = {'status': 'passed', 'complete_original_executions': totals, 'zero_width_ranges_matched_as_faults': faults, 'scope': 'Complete 482480, 487870, 481420, 4ae170 and 482750 execute in the original; objects, ' 'cursor globals, run-length sizes, draw values and sample positions compare ' '(three seeds, including buffer wrap). Zero-width ranges fault in the original and ' 'are rejected natively.'}
     (args.build_dir / 'engine-helpers-verification.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))

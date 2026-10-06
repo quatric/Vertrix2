@@ -36,32 +36,32 @@ def main():
         for path in args.extracted_assets.rglob("*"):
             if not path.is_file() or path.suffix.lower() not in (".wav", ".mp3"):
                 continue
-                name = str(path.relative_to(args.extracted_assets)).encode()
+            name = str(path.relative_to(args.extracted_assets)).encode()
+            output = Pcm8()
+            if path.suffix.lower() == ".mp3":
+                assert not native.vertrix_audio_pcm8(archive, name, ctypes.byref(output))
+                assert not output.samples and not output.sample_rate and not output.sample_count
+                unsupported += 1
+                continue
+            with wave.open(str(path)) as wav:
+                assert wav.getnchannels() == 1 and wav.getsampwidth() == 1
+                rate = wav.getframerate()
+                data = wav.readframes(wav.getnframes())
+                assert native.vertrix_audio_pcm8(archive, name, ctypes.byref(output)), name
+                assert output.sample_rate == rate and output.sample_count == len(data)
+                assert ctypes.string_at(output.samples, output.sample_count) == data
+                saved = bytes(output)
+                assert not native.vertrix_audio_pcm8(archive, name, ctypes.byref(output))
+                assert bytes(output) == saved
+                native.vertrix_pcm8_free(ctypes.byref(output))
+                assert bytes(output) == bytes(Pcm8())
+                native.vertrix_pcm8_free(ctypes.byref(output))
+                files += 1
+                samples += len(data)
+                rates.add(rate)
                 output = Pcm8()
-                if path.suffix.lower() == ".mp3":
-                    assert not native.vertrix_audio_pcm8(archive, name, ctypes.byref(output))
-                    assert not output.samples and not output.sample_rate and not output.sample_count
-                    unsupported += 1
-                    continue
-                    with wave.open(str(path)) as wav:
-                        assert wav.getnchannels() == 1 and wav.getsampwidth() == 1
-                        rate = wav.getframerate()
-                        data = wav.readframes(wav.getnframes())
-                        assert native.vertrix_audio_pcm8(archive, name, ctypes.byref(output)), name
-                        assert output.sample_rate == rate and output.sample_count == len(data)
-                        assert ctypes.string_at(output.samples, output.sample_count) == data
-                        saved = bytes(output)
-                        assert not native.vertrix_audio_pcm8(archive, name, ctypes.byref(output))
-                        assert bytes(output) == saved
-                        native.vertrix_pcm8_free(ctypes.byref(output))
-                        assert bytes(output) == bytes(Pcm8())
-                        native.vertrix_pcm8_free(ctypes.byref(output))
-                        files += 1
-                        samples += len(data)
-                        rates.add(rate)
-                        output = Pcm8()
-                        assert not native.vertrix_audio_pcm8(archive, b"missing.wav", ctypes.byref(output))
-                        assert bytes(output) == bytes(Pcm8())
+                assert not native.vertrix_audio_pcm8(archive, b"missing.wav", ctypes.byref(output))
+                assert bytes(output) == bytes(Pcm8())
     finally:
         native.vertrix_vf_close(archive)
         assert files == 13 and unsupported == 63

@@ -70,22 +70,22 @@ def main():
         cpu.mem_write(SCREEN, struct.pack('<HH', width, height))
         def patch(handle, data):
             struct.pack_into('<I', data, 0x94c, rng.choice([0, 1, 1, 2]))
-            def fresh():
-                pool.fill(rng, patch)
-                def check(name):
-                    assert pool.same(), (case, name, pool.diff())
-                    count(name)
-                def run(name, address, call, scratch_address, ** registers):
-                    nonlocal replay
-                    fresh()
-                    cpu.mem_write(scratch_address, bytes(8))
-                    draws.clear()
-                    stubs.log.clear()
-                    original.call(address, ** registers)
-                    replay = iter(list(draws))
-                    scratch = Scratch()
-                    call(scratch)
-                    assert next(replay, None) is None, (case, name)
+        def fresh():
+            pool.fill(rng, patch)
+        def check(name):
+            assert pool.same(), (case, name, pool.diff())
+            count(name)
+        def run(name, address, call, scratch_address, ** registers):
+            nonlocal replay
+            fresh()
+            cpu.mem_write(scratch_address, bytes(8))
+            draws.clear()
+            stubs.log.clear()
+            original.call(address, ** registers)
+            replay = iter(list(draws))
+            scratch = Scratch()
+            call(scratch)
+            assert next(replay, None) is None, (case, name)
             words = struct.unpack('<4H', cpu.mem_read(scratch_address, 8))
             return scratch, words
         scene, child = rng.choice(handles), rng.choice(handles)

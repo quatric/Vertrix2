@@ -57,8 +57,8 @@ def main():
             name = native.vertrix_vf_name(archive, index)
             if '/font' not in name.decode().lower().replace('\\', '/') or not name.lower().endswith(b'.bmp'):
                 continue
-                before, output = NativeImage(), NativeImage()
-                assert native.vertrix_image_bmp(archive, name, c.byref(before))
+            before, output = NativeImage(), NativeImage()
+            assert native.vertrix_image_bmp(archive, name, c.byref(before))
             try:
                 raw = c.string_at(before.rgba, before.width * before.height * 4)
                 reference = expected(raw, before.width, before.height, struct.unpack_from('<I', raw)[0])

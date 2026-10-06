@@ -16,16 +16,18 @@ class Storage(ctypes.Structure):
 
 def address(pointer):
     return ctypes.cast(pointer, ctypes.c_void_p).value
-    def main():
-        parser = argparse.ArgumentParser(description=__doc__)
-        parser.add_argument('archive', type=Path)
-        parser.add_argument('music', type=Path)
-        parser.add_argument('--build-dir', type=Path, required=True)
-        args = parser.parse_args()
-        build = args.build_dir.resolve()
-        build.mkdir(parents=True, exist_ok=True)
-        source = Path(__file__).resolve().parents[1] / 'source'
-        library = build / 'instrument-bind.dylib'
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('archive', type=Path)
+    parser.add_argument('music', type=Path)
+    parser.add_argument('--build-dir', type=Path, required=True)
+    args = parser.parse_args()
+    build = args.build_dir.resolve()
+    build.mkdir(parents=True, exist_ok=True)
+    source = Path(__file__).resolve().parents[1] / 'source'
+    library = build / 'instrument-bind.dylib'
     subprocess.run(['cc', '-std=c11', '-Wall', '-Wextra', '-Werror', '-shared', '-fPIC', * [str(source / n) for n in ('sequencer.c', 'mixer.c', 'xm.c', 'vf.c', 'audio.c')], '-o', str(library)], check=True)
     native = ctypes.CDLL(str(library))
     native.vertrix_vf_open.argtypes = [ctypes.c_char_p]

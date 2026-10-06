@@ -47,21 +47,21 @@ def main():
         else:
             node(MASK, count, rng.choice([0, 2, 16, 0xffffffff]), frames=0x803000)
             resolved = ids[: count]
-            period = rng.randrange(65)
-            counter = rng.randrange(129) * (period or 1)
-            elapsed = rng.randrange(129) * (period or 1)
-            frame = rng.randrange(count)
-            animation = Animation(Timer(counter, period), frame, count)
-            frames = (c.c_uint32 * count)(* resolved)
-            descriptor = c.c_uint32(rng.getrandbits(32))
-            raw = bytearray(rng.randbytes(0x160))
-            struct.pack_into('<2I', raw, 0xbc, rng.getrandbits(32), rng.choice([0, 1, 100, 0xffffffff]))
-            struct.pack_into('<I', raw, 0x154, 0x44dcf0)
-            if case < 64:
-                elapsed = 0
-                struct.pack_into('<2I', raw, 0xbc, 1, 1)
-                struct.pack_into('<I', raw, 0x58, 0)
-                struct.pack_into('<i', raw, 0x64, case % 2)
+        period = rng.randrange(65)
+        counter = rng.randrange(129) * (period or 1)
+        elapsed = rng.randrange(129) * (period or 1)
+        frame = rng.randrange(count)
+        animation = Animation(Timer(counter, period), frame, count)
+        frames = (c.c_uint32 * count)(* resolved)
+        descriptor = c.c_uint32(rng.getrandbits(32))
+        raw = bytearray(rng.randbytes(0x160))
+        struct.pack_into('<2I', raw, 0xbc, rng.getrandbits(32), rng.choice([0, 1, 100, 0xffffffff]))
+        struct.pack_into('<I', raw, 0x154, 0x44dcf0)
+        if case < 64:
+            elapsed = 0
+            struct.pack_into('<2I', raw, 0xbc, 1, 1)
+            struct.pack_into('<I', raw, 0x58, 0)
+            struct.pack_into('<i', raw, 0x64, case % 2)
             struct.pack_into('<h', raw, 0xe, [200, 201, - 23, - 24][(case // 2) % 4])
             struct.pack_into('<h', raw, 0x16, [0, 200, 201, - 24][(case // 8) % 4])
             struct.pack_into('<h', raw, 0x12, 0)

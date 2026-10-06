@@ -30,8 +30,8 @@ def main():
         if index % 3 == 0:
             struct.pack_into('<II', data, 16, rng.randrange(65), rng.randrange(65))
             struct.pack_into('<I', data, 28, rng.randrange(256))
-            row = row_state(data)
-            column = Column(* [struct.unpack_from('<I', data, o)[0] for o in OFFSETS], data[60], data[1])
+        row = row_state(data)
+        column = Column(* [struct.unpack_from('<I', data, o)[0] for o in OFFSETS], data[60], data[1])
         for tick_index in range(ticks):
             tick = tick_index % 3
             if not tick:
@@ -41,8 +41,8 @@ def main():
                 data[4] = parameter
                 row.selection.volume = command
                 row.parameter = parameter
-                original.cpu.mem_write(BOARD, bytes(data))
-                original.cpu.mem_write(0x531b4c, struct.pack('<i', tick))
+            original.cpu.mem_write(BOARD, bytes(data))
+            original.cpu.mem_write(0x531b4c, struct.pack('<i', tick))
             original.call(0x40dc80, eax=BOARD)
             assert function(tick, ctypes.byref(row), ctypes.byref(column))
             actual = bytearray(reconstruct(data, row))

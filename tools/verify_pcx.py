@@ -55,8 +55,8 @@ def main():
             native.vertrix_pcx_free(ctypes.byref(image))
             assert not image.indices and image.width == image.height == 0
             native.vertrix_pcx_free(ctypes.byref(image))
-            archive = native.vertrix_vf_open(str(args.archive.resolve()).encode())
-            assert archive
+    archive = native.vertrix_vf_open(str(args.archive.resolve()).encode())
+    assert archive
     try:
         for index in range(native.vertrix_vf_count(archive)):
             name = native.vertrix_vf_name(archive, index)

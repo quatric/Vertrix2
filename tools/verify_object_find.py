@@ -40,33 +40,33 @@ def main():
         identities = dict(zip(handles, ids))
         for handle, identity in identities.items():
             original.cpu.mem_write(handle, struct.pack('<I', identity))
-            visits = []
-            @ resolver_type
-            def resolve(handle, value, context):
-                visits.append(handle)
-                value[0] = identities[handle]
-                return 1
-                storage = (c.c_uint32 * count)(* handles)
-                listing = ObjectList(storage, count, count)
-                result = c.c_uint32(0x12345678)
-                expected = original.call(0x4b5eb0, eax=BOARD, edx=query)
-                assert native.vertrix_object_list_find(c.byref(listing), query, resolve, None, c.byref(result))
-                assert result.value == expected
-                expected_visits = handles[: handles.index(expected) + 1] if expected else handles
-                assert visits == expected_visits
-                assert bytes(raw) == bytes(original.cpu.mem_read(BOARD, len(raw)))
-                assert list(storage) == handles
-                matches += bool(expected)
-                @ resolver_type
-                def unresolved(handle, value, context):
-                    return 0
-                    listing = ObjectList((c.c_uint32 * 1)(1), 1, 1)
-                    result = c.c_uint32(123)
-                    assert not native.vertrix_object_list_find(c.byref(listing), 1, unresolved, None, c.byref(result))
-                    assert result.value == 123
-                    listing.count = 2
-                    assert not native.vertrix_object_list_find(c.byref(listing), 1, unresolved, None, c.byref(result))
-                    assert result.value == 123
+        visits = []
+        @ resolver_type
+        def resolve(handle, value, context):
+            visits.append(handle)
+            value[0] = identities[handle]
+            return 1
+        storage = (c.c_uint32 * count)(* handles)
+        listing = ObjectList(storage, count, count)
+        result = c.c_uint32(0x12345678)
+        expected = original.call(0x4b5eb0, eax=BOARD, edx=query)
+        assert native.vertrix_object_list_find(c.byref(listing), query, resolve, None, c.byref(result))
+        assert result.value == expected
+        expected_visits = handles[: handles.index(expected) + 1] if expected else handles
+        assert visits == expected_visits
+        assert bytes(raw) == bytes(original.cpu.mem_read(BOARD, len(raw)))
+        assert list(storage) == handles
+        matches += bool(expected)
+        @ resolver_type
+        def unresolved(handle, value, context):
+            return 0
+        listing = ObjectList((c.c_uint32 * 1)(1), 1, 1)
+        result = c.c_uint32(123)
+        assert not native.vertrix_object_list_find(c.byref(listing), 1, unresolved, None, c.byref(result))
+        assert result.value == 123
+        listing.count = 2
+        assert not native.vertrix_object_list_find(c.byref(listing), 1, unresolved, None, c.byref(result))
+        assert result.value == 123
     report = {'status': 'passed', 'cases': 2048, 'matches': matches, 'scope': 'Original 0x4b5eb0 without hooks; first duplicate ID, missing/empty lists, ' 'read order and unchanged list storage. Player/resource integration remains unfinished.'}
     (args.build_dir / 'object-find-verification.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))

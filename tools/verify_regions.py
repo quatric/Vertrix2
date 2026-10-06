@@ -41,7 +41,7 @@ def main():
     parser.add_argument('--build-dir', type=Path, required=True)
     parser.add_argument('--cases', type=int, default=1024)
     args = parser.parse_args()
-    n = build(args.build_dir, 'regions', ['object_glue.c', 'call_glue.c', 'actor_storage.c'])
+    n = build(args.build_dir, 'regions', ['object_glue.c', 'call_glue.c', 'actor_storage.c', 'table_queries.c'])
     n.vertrix_object_compare_regions.argtypes = [c.POINTER(Calls), c.POINTER(Services), U, U, U,
                                                  U, c.c_char_p, c.c_char_p]
     n.vertrix_object_compare_regions.restype = U

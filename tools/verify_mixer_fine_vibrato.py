@@ -34,19 +34,19 @@ def main():
             phase = index % 256
             depth = rng.randrange(16)
             speed = rng.randrange(16) * 4
-            channel = bytearray(128)
-            channel[1] = flags
-            channel[4] = parameter
-            channel[60] = wave
-            struct.pack_into("<II", channel, 36, base, output)
-            struct.pack_into("<III", channel, 64, phase, depth, speed)
-            original.cpu.mem_write(BOARD, bytes(channel))
-            original.cpu.mem_write(0x531B4C, struct.pack("<i", tick))
-            original.call(0x40D170, eax=BOARD)
-    expected = (* struct.unpack("<II", original.cpu.mem_read(BOARD + 36, 8)), * struct.unpack("<III", original.cpu.mem_read(BOARD + 64, 12)), original.cpu.mem_read(BOARD + 60, 1)[0], original.cpu.mem_read(BOARD + 1, 1)[0])
-    state = State(base, output, phase, depth, speed, wave, flags)
-    assert native.vertrix_mixer_fine_vibrato(parameter, tick, ctypes.byref(state))
-    assert (state.base, state.output, state.phase, state.depth, state.speed, state.wave, state.flags) == expected, index
+        channel = bytearray(128)
+        channel[1] = flags
+        channel[4] = parameter
+        channel[60] = wave
+        struct.pack_into("<II", channel, 36, base, output)
+        struct.pack_into("<III", channel, 64, phase, depth, speed)
+        original.cpu.mem_write(BOARD, bytes(channel))
+        original.cpu.mem_write(0x531B4C, struct.pack("<i", tick))
+        original.call(0x40D170, eax=BOARD)
+        expected = (* struct.unpack("<II", original.cpu.mem_read(BOARD + 36, 8)), * struct.unpack("<III", original.cpu.mem_read(BOARD + 64, 12)), original.cpu.mem_read(BOARD + 60, 1)[0], original.cpu.mem_read(BOARD + 1, 1)[0])
+        state = State(base, output, phase, depth, speed, wave, flags)
+        assert native.vertrix_mixer_fine_vibrato(parameter, tick, ctypes.byref(state))
+        assert (state.base, state.output, state.phase, state.depth, state.speed, state.wave, state.flags) == expected, index
     assert not native.vertrix_mixer_fine_vibrato(1, 0, None)
     report = {"status": "passed", "effect_cases": cases, "scope": "Complete original 0x40d170: all waveform selectors/phase bytes, tick-zero nibble " "memory, signed clamps and wrapped multiply/phase arithmetic, realistic and " "full-width states. Excludes other vibrato variants and full effect dispatch."}
     (build / "mixer-fine-vibrato-verification.json").write_text(json.dumps(report, indent=2) + "\n")

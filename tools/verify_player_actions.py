@@ -19,7 +19,7 @@ def main():
     parser.add_argument('--build-dir', type=Path, required=True)
     parser.add_argument('--cases', type=int, default=4096)
     args = parser.parse_args()
-    n = build(args.build_dir, 'player-actions', ['player_actions.c', 'player_slots.c', 'event_stack.c', 'actor_storage.c', 'actor_fields.c', 'board_cells.c', 'random.c'])
+    n = build(args.build_dir, 'player-actions', ['player_actions.c', 'player_slots.c', 'event_stack.c', 'actor_storage.c', 'actor_fields.c', 'board_cells.c', 'random.c', 'timing.c', 'piece.c', 'piece_actor_construct.c', 'piece_children.c', 'object_scalars.c', 'piece_child_update.c', 'dword_transition.c', 'frame_resource.c', 'timer.c'])
     P, SZ = c.c_void_p, c.c_size_t
     n.vertrix_player_push_event.argtypes = [P, SZ, Resolve, P]
     UP = c.POINTER(U)

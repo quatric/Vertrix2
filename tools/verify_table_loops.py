@@ -136,7 +136,7 @@ def main():
         original.call(0x45f1e0)
         host = c.create_string_buffer(cells, 7)
         n.vertrix_table_identity_cells(host)
-        assert host.raw == bytes(cpu.mem_read(0x53bcc8, 7)) == b'\0' * 7
+        assert host.raw == bytes(cpu.mem_read(0x53bcc8, 7)) == bytes(range(7))
         totals['0x45f1e0'] = totals.get('0x45f1e0', 0) + 1
     report = {'status': 'passed', 'complete_original_executions': totals,
               'scope': 'Each loop executes completely in the original with its callees stubbed and '

@@ -31,7 +31,7 @@ def main():
     args = parser.parse_args()
     n = build(args.build_dir, 'board-piece-moves',
               ['board_piece_moves.c', 'board_piece.c', 'piece_children.c', 'board_markers.c', 'board.c', 'board_cells.c',
-               'actor_storage.c', 'actor_fields.c'])
+               'actor_storage.c', 'actor_fields.c', 'random.c'])
     S = c.POINTER(Services)
     P, SZ, UP = c.c_void_p, c.c_size_t, c.POINTER(U)
     class Piece(c.Structure):

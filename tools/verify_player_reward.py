@@ -27,7 +27,7 @@ def main():
 
     native = build(args.build_dir, 'player-reward',
                    ['player_slots.c', 'piece.c', 'piece_children.c', 'actor_storage.c',
-                    'actor_fields.c', 'object_scalars.c', 'timing.c', 'random.c'])
+                    'actor_fields.c', 'object_scalars.c', 'timing.c', 'random.c', 'piece_actor_construct.c', 'piece_child_update.c', 'dword_transition.c', 'frame_resource.c', 'timer.c'])
     Progress = c.CFUNCTYPE(None, c.c_uint32, c.c_int32, c.c_void_p)
     Level = c.CFUNCTYPE(None, c.c_uint32, c.c_int32, c.c_void_p)
     Effect = c.CFUNCTYPE(None, c.c_uint32, c.c_uint32, c.c_void_p)

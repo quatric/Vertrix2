@@ -29,21 +29,21 @@ def main():
             if kind == 1 and index % 3 == 0:
                 end = rng.randrange(1, 0x80000000)
                 struct.pack_into('<I', data, 16, end)
-                value = rng.getrandbits(32)
-                if index % 2:
-                    value = rng.randrange({1: 0x100000, 3: 524800, 4: 70, 5: 270}.get(kind, 256))
-                    if kind == 1 and index % 5 == 0:
-                        value = end >> 12
-                        rate = rng.randrange(1, 0x100000000)
-                        state = Channel(Cursor(position, start, end, data[22]), step, data[20], data[21], data[23])
-                        original.cpu.mem_write(0x52f918, bytes(data))
-                        original.cpu.mem_write(0x52fc20, struct.pack('<I', rate))
-    expected_result = original.call(address, eax=0, edx=value)
-    assert function(kind, value, rate, ctypes.byref(state)) == expected_result, (kind, index)
-    actual = bytearray(data)
-    struct.pack_into('<5I', actual, 0, pointer, state.cursor.position, state.step, state.cursor.start, state.cursor.end)
-    actual[20: 24] = bytes((state.volume, state.pan, state.cursor.flags, state.last))
-    assert bytes(actual) == bytes(original.cpu.mem_read(0x52f918, 24)), (kind, index)
+            value = rng.getrandbits(32)
+            if index % 2:
+                value = rng.randrange({1: 0x100000, 3: 524800, 4: 70, 5: 270}.get(kind, 256))
+                if kind == 1 and index % 5 == 0:
+                    value = end >> 12
+            rate = rng.randrange(1, 0x100000000)
+            state = Channel(Cursor(position, start, end, data[22]), step, data[20], data[21], data[23])
+            original.cpu.mem_write(0x52f918, bytes(data))
+            original.cpu.mem_write(0x52fc20, struct.pack('<I', rate))
+            expected_result = original.call(address, eax=0, edx=value)
+            assert function(kind, value, rate, ctypes.byref(state)) == expected_result, (kind, index)
+            actual = bytearray(data)
+            struct.pack_into('<5I', actual, 0, pointer, state.cursor.position, state.step, state.cursor.start, state.cursor.end)
+            actual[20: 24] = bytes((state.volume, state.pan, state.cursor.flags, state.last))
+            assert bytes(actual) == bytes(original.cpu.mem_read(0x52f918, 24)), (kind, index)
     before = bytes(state)
     assert function(0, 0, 48000, ctypes.byref(state)) == 2 and bytes(state) == before
     assert function(3, 512, 0, ctypes.byref(state)) == 2 and bytes(state) == before

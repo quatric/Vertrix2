@@ -42,13 +42,13 @@ def main():
             name = native.vertrix_vf_name(archive, index)
             if not name.lower().endswith(b".bmp"):
                 continue
-                size = ctypes.c_uint32()
-                assert native.vertrix_vf_size(archive, index, ctypes.byref(size))
-                data = ctypes.create_string_buffer(size.value)
-                assert native.vertrix_vf_read(archive, index, 0, data, size.value)
-                reference = Image.open(io.BytesIO(data.raw)).convert("RGBA")
-                image = NativeImage()
-                assert native.vertrix_image_bmp(archive, name, ctypes.byref(image)), name
+            size = ctypes.c_uint32()
+            assert native.vertrix_vf_size(archive, index, ctypes.byref(size))
+            data = ctypes.create_string_buffer(size.value)
+            assert native.vertrix_vf_read(archive, index, 0, data, size.value)
+            reference = Image.open(io.BytesIO(data.raw)).convert("RGBA")
+            image = NativeImage()
+            assert native.vertrix_image_bmp(archive, name, ctypes.byref(image)), name
             try:
                 assert (image.width, image.height) == reference.size
                 actual = ctypes.string_at(image.rgba, image.width * image.height * 4)

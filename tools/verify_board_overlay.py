@@ -25,7 +25,7 @@ def main():
     parser.add_argument('--build-dir', type=Path, required=True)
     parser.add_argument('--cases', type=int, default=2048)
     args = parser.parse_args()
-    n = build(args.build_dir, 'board-overlay', ['board_overlay.c', 'actor_style_storage.c', 'block_factory.c', 'board_markers.c', 'board.c', 'board_cells.c', 'actor_storage.c', 'actor_fields.c'])
+    n = build(args.build_dir, 'board-overlay', ['board_overlay.c', 'actor_style_storage.c', 'block_factory.c', 'board_markers.c', 'board.c', 'board_cells.c', 'actor_storage.c', 'actor_fields.c', 'random.c'])
     S = c.POINTER(Services)
     P, SZ, UP = c.c_void_p, c.c_size_t, c.POINTER(U)
     P, SZ = c.c_void_p, c.c_size_t

@@ -40,7 +40,7 @@ def main():
     parser.add_argument('--build-dir', type=Path, required=True)
     parser.add_argument('--cases', type=int, default=2048)
     args = parser.parse_args()
-    n = build(args.build_dir, 'object-events', ['object_events.c', 'call_glue.c', 'actor_storage.c'])
+    n = build(args.build_dir, 'object-events', ['object_events.c', 'call_glue.c', 'actor_storage.c', 'player_slots.c', 'sfx_dispatch.c', 'actor_fields.c', 'timing.c', 'piece.c', 'piece_actor_construct.c', 'piece_children.c', 'object_scalars.c', 'random.c', 'piece_child_update.c', 'dword_transition.c', 'frame_resource.c', 'timer.c'])
     P, V, S = c.POINTER(Calls), c.c_void_p, c.c_size_t
     n.vertrix_object_flip_side.argtypes = [P, U, V, S]
     n.vertrix_object_start_hold.argtypes = [P, c.POINTER(Services), U, V, S, c.POINTER(U)]

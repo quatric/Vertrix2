@@ -8,8 +8,10 @@ from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_EDX, UC_X86_REG_GDTR, U
 
 class List(c.Structure):
     _fields_ = [('items', c.POINTER(c.c_uint32)), ('count', c.c_size_t), ('capacity', c.c_size_t)]
-    Visit = c.CFUNCTYPE(None, c.c_uint32, c.c_uint, c.c_void_p)
-    State = c.CFUNCTYPE(c.c_int, c.c_uint32, c.POINTER(c.c_uint32), c.c_void_p)
+
+Visit = c.CFUNCTYPE(None, c.c_uint32, c.c_uint, c.c_void_p)
+
+State = c.CFUNCTYPE(c.c_int, c.c_uint32, c.POINTER(c.c_uint32), c.c_void_p)
 
 
 def main():
@@ -58,8 +60,8 @@ def main():
             return 0
         output[0] = states[handle]
         return 1
-        rng = random.Random(0x4b5f50)
-        compared = removed = 0
+    rng = random.Random(0x4b5f50)
+    compared = removed = 0
     for case in range(2048):
         count = rng.randrange(33)
         handles = rng.sample(objects, count)
@@ -70,8 +72,8 @@ def main():
         states = {handle: rng.choice([0, 1, 2, 0xffffffff]) for handle in objects}
         for handle in objects:
             record = bytearray(512)
-        struct.pack_into('<II', record, 0x154, states[handle], 0x709000)
-        o.cpu.mem_write(handle, bytes(record))
+            struct.pack_into('<II', record, 0x154, states[handle], 0x709000)
+            o.cpu.mem_write(handle, bytes(record))
         o.cpu.mem_write(BOARD, struct.pack('<4I', 0x518344, MASK, count, 32))
         o.cpu.mem_write(MASK, bytes(storage))
         original_events.clear()
@@ -88,12 +90,12 @@ def main():
         assert bytes(storage) == bytes(o.cpu.mem_read(MASK, 128)), (case, 'storage including stale tail')
         compared += count
         removed += count - lst.count
-        storage = (c.c_uint32 * 2)(objects[0], 0)
-        lst = List(storage, 2, 2)
-        native_events.clear()
-        assert not n.vertrix_object_list_update(c.byref(lst), visit, None) and not native_events
-        assert not n.vertrix_object_list_prune(c.byref(lst), 0, state, visit, None) and not native_events
-        assert not n.vertrix_object_list_update(None, visit, None)
+    storage = (c.c_uint32 * 2)(objects[0], 0)
+    lst = List(storage, 2, 2)
+    native_events.clear()
+    assert not n.vertrix_object_list_update(c.byref(lst), visit, None) and not native_events
+    assert not n.vertrix_object_list_prune(c.byref(lst), 0, state, visit, None) and not native_events
+    assert not n.vertrix_object_list_update(None, visit, None)
     report = {'status': 'passed', 'cases': 2048, 'updated_objects': compared, 'destroyed_objects': removed, 'scope': 'Actual original 0x4b6200 updates, 0x4b5f50 state getter/filter, 0x4b5ee0 destructor traversal and 0x4d8950 shift with real original memory move. Only object virtual update/destructor leaves captured. Exact update/destruction order, post-update state matching, count and entire list storage including stale tail. Runtime allocation/object implementations and complete game integration remain unfinished.'}
     (a.build_dir / 'object-list-verification.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))

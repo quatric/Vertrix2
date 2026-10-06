@@ -95,8 +95,8 @@ def main():
             expected = oracle.down_clear(board, origin_x, origin_y, x, y, horizontal=right, active=active)
             if (moved, piece.x) != expected or list(actual) != board or piece.y != y:
                 raise AssertionError(f"Horizontal movement differs: case={case}, right={right}")
-                horizontal_cases += 1
-                tick_comparisons = verify_ticks(native, oracle, chooser)
+            horizontal_cases += 1
+    tick_comparisons = verify_ticks(native, oracle, chooser)
     report = {"status": "passed", "timed_descent_comparisons": tick_comparisons, "integrated_descent_comparisons": 10000, "horizontal_movement_comparisons": horizontal_cases, "scope": "Original pixel loop, downward probe, board locking and " "failure flag; elapsed timers and frozen blinking integrated; " "surrounding board/player loop and rendering remain incomplete"}
     (args.build_dir / "descent-verification.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report, indent=2))

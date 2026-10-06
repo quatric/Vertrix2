@@ -40,13 +40,13 @@ def count(name):
     totals[name] = totals.get(name, 0) + 1
     def number():
         return rng.choice([0, 1, 2, 3, 0xffff, 0x10000, 0x7fffffff, 0x80000000, 0xffffffff, rng.getrandbits(32), rng.getrandbits(16), rng.getrandbits(8), (- rng.getrandbits(16)) & 0xffffffff])
-        def small():
-            return rng.choice([0, 1, 0xffff, 0x8000, 0x7fff, rng.getrandbits(16), rng.randrange(0, 40), (- rng.randrange(1, 40)) & 0xffff])
-            def run(address, ** registers):
-                try:
-                    return original.call(address, ** registers)
-                except Exception:
-                    return None
+    def small():
+        return rng.choice([0, 1, 0xffff, 0x8000, 0x7fff, rng.getrandbits(16), rng.randrange(0, 40), (- rng.randrange(1, 40)) & 0xffff])
+    def run(address, ** registers):
+        try:
+            return original.call(address, ** registers)
+        except Exception:
+            return None
     def signed(v):
         return v - (1 << 32) if v & 0x80000000 else v
     for case in range(args.cases):

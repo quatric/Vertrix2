@@ -22,7 +22,7 @@ def main():
 
     native = build(args.build_dir, 'player-bonus',
                    ['player_slots.c', 'piece.c', 'piece_children.c', 'actor_storage.c',
-                    'actor_fields.c', 'object_scalars.c', 'timing.c', 'random.c'])
+                    'actor_fields.c', 'object_scalars.c', 'timing.c', 'random.c', 'piece_actor_construct.c', 'piece_child_update.c', 'dword_transition.c', 'frame_resource.c', 'timer.c'])
     native.vertrix_player_bonus_ready.argtypes = [c.c_void_p, c.c_size_t]
     native.vertrix_player_bonus_ready.restype = c.c_int
 

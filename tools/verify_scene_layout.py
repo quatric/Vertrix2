@@ -9,7 +9,8 @@ from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_EDX, UC_X86_REG_EBX, UC
 
 class Object(c.Structure):
     _fields_ = [('x', c.c_int16), ('y', c.c_int16), ('mode', c.c_uint8), ('width', c.c_int32), ('height', c.c_int32)]
-    Resolver = c.CFUNCTYPE(c.c_void_p, c.c_uint32, c.c_void_p)
+
+Resolver = c.CFUNCTYPE(c.c_void_p, c.c_uint32, c.c_void_p)
 
 
 def main():

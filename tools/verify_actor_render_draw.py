@@ -103,13 +103,13 @@ def main():
             pixels = (c.c_ubyte * len(raw)).from_buffer_copy(raw)
             frame = Frame(Image(width, height, pixels), 1, (c.c_uint32 * 10)(* metadata))
             frame.metadata[0] = 0x804000
-            actor = bytearray(0x15c)
-            struct.pack_into('<H', actor, 0xe, rng.randrange(- 20, 71) & 65535)
-            struct.pack_into('<H', actor, 0x16, rng.randrange(- 20, 71) & 65535)
-            struct.pack_into('<H', actor, 0x1e, rng.randrange(- 5, 6) & 65535)
-            actor[0x44], actor[0x4e], actor[0x52], actor[0x8e] = rng.randrange(1, 17), 100, 13, 1
-            if case >= 4096:
-                actor[0x4e] = rng.choice((0, 25, 50, 75, 100))
+        actor = bytearray(0x15c)
+        struct.pack_into('<H', actor, 0xe, rng.randrange(- 20, 71) & 65535)
+        struct.pack_into('<H', actor, 0x16, rng.randrange(- 20, 71) & 65535)
+        struct.pack_into('<H', actor, 0x1e, rng.randrange(- 5, 6) & 65535)
+        actor[0x44], actor[0x4e], actor[0x52], actor[0x8e] = rng.randrange(1, 17), 100, 13, 1
+        if case >= 4096:
+            actor[0x4e] = rng.choice((0, 25, 50, 75, 100))
             actor[0x52] = rng.choice((13, rng.randrange(13)))
             actor[0x8c], actor[0x93] = rng.randrange(2), 1
             actor[0x94] = rng.randrange(3)
@@ -236,9 +236,9 @@ def main():
             assert native.vertrix_actor_render_draw32(storage, len(actor), c.byref(frame), c.byref(surface), Clip(0, 63, 0, 63), c.byref(weights), c.byref(bank), c.byref(tables), c.byref(prepared)) == - 1
             assert (bytes(destination), bytes(prepared)) == before
             truncated_targets += 1
-            from verify_sprite_chain_draw import verify as verify_chain
-            chain_report = verify_chain(native, original, samples, weights, tables)
-            native.vertrix_palette_tables_free(c.byref(tables))
+    from verify_sprite_chain_draw import verify as verify_chain
+    chain_report = verify_chain(native, original, samples, weights, tables)
+    native.vertrix_palette_tables_free(c.byref(tables))
     report = {'status': 'passed', 'complete_actor_geometry_and_draw_cases': 8192, 'original_vf_sprite_cases': 6144, 'vf_frames_used': len(samples), 'actor_effect_cases': effects, 'vf_bank_binding_and_draw_cases': 8192, 'explicit_resource_bank_draw_cases': 8192, 'actor_resource_map_draw_cases': 8192, 'missing_resource_map_preservation_cases': 8192, 'mismatched_resource_bank_preservation_cases': 8192, 'invalid_bank_frame_preservation_cases': 8192, 'unmatched_original_rule_preservation_cases': unsupported, 'nonstandard_overlapping_surface_stride_cases': overlapping_strides, 'truncated_destination_preservation_cases': truncated_targets, 'visible_cases': visible, 'source_preservation_cases': 8192, 'invalid_actor_preservation_cases': 8192, 'scope': 'Original 0x4ac8a0 frame binding then complete 0x4af8c0 executes ' 'with real 0x4ae3e0 geometry and 0x4af560 drawing, without draw hooks. ' 'Direct coordinates, scale1..16, clipping, anchors, displacement, ' 'opaque/binary source, alpha override, actor effects, fixed colors, ' 'palette shifts and cycling covered, including overlapping row strides. ' 'Unmatched original flag rules preserve pixels and native rejects them. ' 'Transforms, special clipping and full application remain unfinished.'}
     report.update(chain_report)
     (args.build_dir / 'actor-render-draw-verification.json').write_text(json.dumps(report, indent=2) + '\n')

@@ -47,12 +47,12 @@ def main():
             original_mutated = True
             cpu.mem_write(BOARD + OFFSETS[- 1], struct.pack('<I', objects[- 1]))
             cpu.mem_write(BOARD + 0xb8c, bytes(4))
-            if address in (0x700100, 0x42a960, 0x42a970):
-                return
-                stack = cpu.reg_read(UC_X86_REG_ESP)
-                target = struct.unpack('<I', cpu.mem_read(stack, 4))[0]
-                cpu.reg_write(UC_X86_REG_ESP, stack + 4)
-                cpu.reg_write(UC_X86_REG_EIP, target)
+        if address in (0x700100, 0x42a960, 0x42a970):
+            return
+        stack = cpu.reg_read(UC_X86_REG_ESP)
+        target = struct.unpack('<I', cpu.mem_read(stack, 4))[0]
+        cpu.reg_write(UC_X86_REG_ESP, stack + 4)
+        cpu.reg_write(UC_X86_REG_EIP, target)
     addresses = (0x700100, 0x42a960, 0x42a970, 0x430930, 0x4b6200, 0x4b5f50)
     for addr in addresses:
         o.cpu.hook_add(UC_HOOK_CODE, original_event, begin=addr, end=addr)
@@ -64,8 +64,8 @@ def main():
             native_mutated = True
             scene.slots[- 1] = objects[- 1]
             scene.suppress_layout = 0
-            rng = random.Random(0x42fc56)
-            events = 0
+    rng = random.Random(0x42fc56)
+    events = 0
     for case in range(512):
         scene = Scene()
         raw = bytearray(0xd00)
@@ -73,25 +73,25 @@ def main():
             value = rng.choice([0] * 5 + objects)
             scene.slots[index] = value
             struct.pack_into('<I', raw, offset, value)
-            scene.active = rng.choice([0] + objects)
-            scene.extra = rng.choice([0] + objects)
-            scene.suppress_layout = rng.choice([0, 1, 2, 0xffffffff])
-            scene.active_a = rng.randrange(256)
-            scene.active_b = rng.randrange(256)
-            struct.pack_into('<I', raw, 0xa60, scene.active)
-            raw[0xa64] = scene.active_a
-            raw[0xa65] = scene.active_b
-            struct.pack_into('<I', raw, 0xce0, scene.extra)
-            struct.pack_into('<I', raw, 0xb8c, scene.suppress_layout)
+        scene.active = rng.choice([0] + objects)
+        scene.extra = rng.choice([0] + objects)
+        scene.suppress_layout = rng.choice([0, 1, 2, 0xffffffff])
+        scene.active_a = rng.randrange(256)
+        scene.active_b = rng.randrange(256)
+        struct.pack_into('<I', raw, 0xa60, scene.active)
+        raw[0xa64] = scene.active_a
+        raw[0xa65] = scene.active_b
+        struct.pack_into('<I', raw, 0xce0, scene.extra)
+        struct.pack_into('<I', raw, 0xb8c, scene.suppress_layout)
         for field, offset, size in [('cell_a', 0x15c, 65), ('cell_b', 0x19d, 65), ('columns_a', 0x99c, 5), ('columns_b', 0x9a1, 5), ('rows', 0x9a6, 52)]:
             flags = bytes(rng.randrange(256) for _ in range(size))
             raw[offset: offset + size] = flags
             c.memmove(c.addressof(getattr(scene, field)), flags, size)
-            o.cpu.mem_write(BOARD, bytes(raw))
-            original_events.clear()
-            native_events.clear()
-            mutate = case % 2 == 0
-            original_mutated = native_mutated = False
+        o.cpu.mem_write(BOARD, bytes(raw))
+        original_events.clear()
+        native_events.clear()
+        mutate = case % 2 == 0
+        original_mutated = native_mutated = False
         o.cpu.reg_write(UC_X86_REG_ECX, BOARD)
         o.call(0x42fc56, ecx=BOARD, stop=0x42fd81)
         assert n.vertrix_scene_update(c.byref(scene), BOARD, native_event, None)

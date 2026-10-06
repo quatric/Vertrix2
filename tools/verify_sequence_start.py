@@ -90,12 +90,12 @@ def main():
             active += result == 3
             invalid += result == 2
             continue
-            success += 1
-            expected = bytearray(64)
-            expected[0] = 0x81
-            struct.pack_into('<H', expected, 2, header.flags)
-            struct.pack_into('<I', expected, 4, header.channels)
-            struct.pack_into('<III', expected, 28, header.speed, header.bpm, 64)
+        success += 1
+        expected = bytearray(64)
+        expected[0] = 0x81
+        struct.pack_into('<H', expected, 2, header.flags)
+        struct.pack_into('<I', expected, 4, header.channels)
+        struct.pack_into('<III', expected, 28, header.speed, header.bpm, 64)
         assert bytes(expected[: 60]) == bytes(original.cpu.mem_read(0x531b44, 60))
         assert sequence.flags == global_state.flags == 0x81 and not sequence.tick and not sequence.row and not sequence.order and not sequence.rows and not sequence.pending_order and not sequence.pending_row
         assert (global_state.speed, global_state.tempo, global_state.volume, global_state.memory, delay.value, tempo.value) == (header.speed, header.bpm, 64, 0, 0, header.bpm)

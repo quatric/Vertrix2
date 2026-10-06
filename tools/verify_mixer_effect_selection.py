@@ -51,34 +51,34 @@ def main():
     original.cpu.mem_write(callback_address, b'\xc3')
     def callback_capture(cpu, address, size, data):
         events.append((cpu.reg_read(UC_X86_REG_EAX), cpu.reg_read(UC_X86_REG_EDX), cpu.reg_read(UC_X86_REG_EBX)))
-        hook = original.cpu.hook_add(UC_HOOK_CODE, callback_capture, begin=callback_address, end=callback_address)
-        @ Callback
-        def callback(parameter, order, row, context):
-            assert context == 123
-            native_events.append((parameter, order, row))
-            cases = 20000
-            try:
-                for index in range(cases):
-                    channel = bytearray(rng.randbytes(192))
-                    parameter = index % 256
-                    channel[3] = 35
-                    channel[4] = parameter
-                    tick = 0 if index % 3 == 0 else rng.randrange(- 2147483648, 2147483648)
-                    present = index % 2
-                    order, row = rng.getrandbits(32), rng.getrandbits(32)
-                    original.cpu.mem_write(BOARD, bytes(channel))
-                    original.cpu.mem_write(0x531b4c, struct.pack('<i', tick))
-                    original.cpu.mem_write(0x531b50, struct.pack('<I', row))
-                    original.cpu.mem_write(0x531b5c, struct.pack('<I', order))
-                    original.cpu.mem_write(0x531b7c, struct.pack('<I', callback_address if present else 0))
-                    events.clear()
-                    native_events.clear()
-                    original.call(0x40dc50, eax=BOARD)
-                    native.vertrix_mixer_effect_callback(parameter, tick, order, row, callback if present else Callback(), 123)
-                    assert native_events == events, index
-                    assert bytes(original.cpu.mem_read(BOARD, 192)) == bytes(channel)
-            finally:
-                original.cpu.hook_del(hook)
+    hook = original.cpu.hook_add(UC_HOOK_CODE, callback_capture, begin=callback_address, end=callback_address)
+    @ Callback
+    def callback(parameter, order, row, context):
+        assert context == 123
+        native_events.append((parameter, order, row))
+    cases = 20000
+    try:
+        for index in range(cases):
+            channel = bytearray(rng.randbytes(192))
+            parameter = index % 256
+            channel[3] = 35
+            channel[4] = parameter
+            tick = 0 if index % 3 == 0 else rng.randrange(- 2147483648, 2147483648)
+            present = index % 2
+            order, row = rng.getrandbits(32), rng.getrandbits(32)
+            original.cpu.mem_write(BOARD, bytes(channel))
+            original.cpu.mem_write(0x531b4c, struct.pack('<i', tick))
+            original.cpu.mem_write(0x531b50, struct.pack('<I', row))
+            original.cpu.mem_write(0x531b5c, struct.pack('<I', order))
+            original.cpu.mem_write(0x531b7c, struct.pack('<I', callback_address if present else 0))
+            events.clear()
+            native_events.clear()
+            original.call(0x40dc50, eax=BOARD)
+            native.vertrix_mixer_effect_callback(parameter, tick, order, row, callback if present else Callback(), 123)
+            assert native_events == events, index
+            assert bytes(original.cpu.mem_read(BOARD, 192)) == bytes(channel)
+    finally:
+        original.cpu.hook_del(hook)
     report = {'status': 'passed', 'dispatch_selection_cases': 65536, 'callback_cases': cases, 'scope': 'Complete original 0x40dc50 selection over every effect/parameter pair; hooks capture selected target without executing it. Complete callback effect executes with a return-only callback and captured arguments. Verifies tick gate, callback presence, parameter/order/row and channel preservation. Excludes unified effect execution.'}
     (build / 'mixer-effect-selection-verification.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))

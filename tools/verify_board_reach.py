@@ -30,7 +30,7 @@ def main():
     n = build(args.build_dir, 'board-reach',
               ['board_conversions.c', 'block_factory.c', 'board_markers.c', 'board.c',
                'board_cells.c', 'actor_storage.c', 'actor_fields.c', 'fixed_point.c',
-               'board_actions.c'])
+               'board_actions.c', 'random.c'])
     n.vertrix_board_marker_reach.argtypes = [c.c_void_p, c.c_size_t, c.POINTER(Services),
                                              c.POINTER(U)]
     original = Original(args.executable)

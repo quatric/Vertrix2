@@ -77,9 +77,9 @@ def main():
             assert output.value == before
             assert native.vertrix_render_palette_half_pixel(source_pixel, destination_pixel, lookup, 262144, maps, 0, stride, count, c.byref(output)) == 0
             assert output.value == before
-            native.vertrix_palette_tables_free(c.byref(tables))
-            assert native.vertrix_render_palette_weighted_pixel(source_pixel, destination_pixel, lookup, 262144, maps, len(maps_bytes), stride, count, None, destination_weight, c.byref(output)) == 0
-            assert output.value == before
+    native.vertrix_palette_tables_free(c.byref(tables))
+    assert native.vertrix_render_palette_weighted_pixel(source_pixel, destination_pixel, lookup, 262144, maps, len(maps_bytes), stride, count, None, destination_weight, c.byref(output)) == 0
+    assert output.value == before
     report = {'status': 'passed', 'cases': 8192, 'recovered_table_cases': 4096, 'weighted_cases': 8192, 'scope': 'Complete original48dba0 executes without hooks. Native palette ' 'index averaging matches original for recovered tables and arbitrary ' 'lookup/channel fixtures. Additional8192 complete original490340 weighted ' 'kernel comparisons match using recovered percentage tables and arbitrary byte ' 'weight tables, including cross-row index sums. Scene selection ' 'and full draw integration remain unfinished.'}
     (args.build_dir / 'palette-half-verification.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))

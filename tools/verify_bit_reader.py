@@ -49,26 +49,26 @@ def main():
             amount = rng.choice([rng.randrange(0, 25)] * 3 + [rng.randrange(0, 40), rng.getrandbits(32)])
             if width == 2 and amount > 16 and rng.random() < 0.7:
                 amount %= 17
-                bit = rng.choice([rng.randrange(8)] * 3 + [rng.randrange(40), rng.getrandbits(32)])
-                address_in = 0x806000 + rng.randrange(0x100)
-                cpu.mem_write(0x51f014, struct.pack('<2I', address_in, bit))
-                data = bytes(cpu.mem_read(address_in, 3))
-                reader = Reader(address_in, bit)
-                want = original.call(address, eax=amount) & 0xffffffff
-                got = getattr(n, 'vertrix_bit_reader_' + name)(c.byref(reader), amount, (c.c_uint8 * 3).from_buffer_copy(data))
-                assert want == got, (case, name, amount, bit)
-                assert struct.unpack('<2I', cpu.mem_read(0x51f014, 8)) == (reader.address, reader.bit), (case, name)
-                totals[name] += 1
-                stream = 0x808000
-                filled = rng.choice([rng.randrange(- 4, 100), rng.getrandbits(32) - (1 << 31), 0, - 1])
-                index = rng.choice([rng.randrange(0, 16), rng.getrandbits(32)])
-                cpu.mem_write(stream + 0x10, struct.pack('<i', filled))
-                cpu.mem_write(stream + 0x3668, struct.pack('<I', index))
-                cpu.mem_write(0x51f01c, struct.pack('<I', stream))
-                amount = rng.choice([0, rng.randrange(0, 40), rng.getrandbits(32), 0xffffffff])
-                address_in, bit = rng.getrandbits(32), rng.choice([rng.randrange(8), rng.getrandbits(32)])
-                cpu.mem_write(0x51f014, struct.pack('<2I', address_in, bit))
-                copies.clear()
+            bit = rng.choice([rng.randrange(8)] * 3 + [rng.randrange(40), rng.getrandbits(32)])
+            address_in = 0x806000 + rng.randrange(0x100)
+            cpu.mem_write(0x51f014, struct.pack('<2I', address_in, bit))
+            data = bytes(cpu.mem_read(address_in, 3))
+            reader = Reader(address_in, bit)
+            want = original.call(address, eax=amount) & 0xffffffff
+            got = getattr(n, 'vertrix_bit_reader_' + name)(c.byref(reader), amount, (c.c_uint8 * 3).from_buffer_copy(data))
+            assert want == got, (case, name, amount, bit)
+            assert struct.unpack('<2I', cpu.mem_read(0x51f014, 8)) == (reader.address, reader.bit), (case, name)
+            totals[name] += 1
+        stream = 0x808000
+        filled = rng.choice([rng.randrange(- 4, 100), rng.getrandbits(32) - (1 << 31), 0, - 1])
+        index = rng.choice([rng.randrange(0, 16), rng.getrandbits(32)])
+        cpu.mem_write(stream + 0x10, struct.pack('<i', filled))
+        cpu.mem_write(stream + 0x3668, struct.pack('<I', index))
+        cpu.mem_write(0x51f01c, struct.pack('<I', stream))
+        amount = rng.choice([0, rng.randrange(0, 40), rng.getrandbits(32), 0xffffffff])
+        address_in, bit = rng.getrandbits(32), rng.choice([rng.randrange(8), rng.getrandbits(32)])
+        cpu.mem_write(0x51f014, struct.pack('<2I', address_in, bit))
+        copies.clear()
         native_copies.clear()
         reader = Reader(address_in, bit)
         want = original.call(0x4060e0, eax=amount) & 0xffffffff

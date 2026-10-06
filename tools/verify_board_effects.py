@@ -45,24 +45,24 @@ def main():
         original_events.append(handle)
         if mutate and handle == handles[0]:
             cpu.mem_write(BOARD + 0xb88, struct.pack('<I', replacement))
-            o.cpu.hook_add(UC_HOOK_CODE, original_visit, begin=0x700100, end=0x700100)
-            @ Visit
-            def visit(handle, destroy, context):
-                assert not destroy
-                native_events.append(handle)
-                if mutate and handle == handles[0]:
-                    controller.second_parameter = replacement
-                    rng = random.Random(0x42fb60)
-                    comparisons = updates = 0
-                    def value():
-                        return rng.choice([0, 1, 2, 0xffffffff, rng.getrandbits(32)])
-                        def encode(effect, kind, data):
-                            result = bytearray(data)
-                            struct.pack_into('<3I', result, 0x15c if kind == 0 else 0x17c, effect.parameter, effect.state, effect.flash)
-                            struct.pack_into('<I', result, 0xbc, effect.primary)
-                            struct.pack_into('<2I', result, 0xdc, effect.blink.counter, effect.blink.period)
-                            struct.pack_into('<H', result, 0x48, effect.effect)
-                            return bytes(result)
+    o.cpu.hook_add(UC_HOOK_CODE, original_visit, begin=0x700100, end=0x700100)
+    @ Visit
+    def visit(handle, destroy, context):
+        assert not destroy
+        native_events.append(handle)
+        if mutate and handle == handles[0]:
+            controller.second_parameter = replacement
+    rng = random.Random(0x42fb60)
+    comparisons = updates = 0
+    def value():
+        return rng.choice([0, 1, 2, 0xffffffff, rng.getrandbits(32)])
+    def encode(effect, kind, data):
+        result = bytearray(data)
+        struct.pack_into('<3I', result, 0x15c if kind == 0 else 0x17c, effect.parameter, effect.state, effect.flash)
+        struct.pack_into('<I', result, 0xbc, effect.primary)
+        struct.pack_into('<2I', result, 0xdc, effect.blink.counter, effect.blink.period)
+        struct.pack_into('<H', result, 0x48, effect.effect)
+        return bytes(result)
     for case in range(4096):
         actors = [Effect(value(), value(), value(), value(), Timer(value(), value()), rng.randrange(65536)) for _ in range(2)]
         present = [bool(rng.randrange(2)) for _ in range(2)]
@@ -78,10 +78,10 @@ def main():
         baselines = []
         for kind, actor in enumerate(actors):
             data = bytearray(rng.randbytes(512))
-        struct.pack_into('<I', data, 0x158, 0x709000)
-        data = encode(actor, kind, data)
-        baselines.append(data)
-        o.cpu.mem_write(handles[kind], data)
+            struct.pack_into('<I', data, 0x158, 0x709000)
+            data = encode(actor, kind, data)
+            baselines.append(data)
+            o.cpu.mem_write(handles[kind], data)
         controller = Effects(c.pointer(actors[0]) if present[0] else None, c.pointer(actors[1]) if present[1] else None, * handles, * params)
         o.cpu.mem_write(BOARD, bytes(raw))
         o.cpu.mem_write(0x5bd834, struct.pack('<I', elapsed))

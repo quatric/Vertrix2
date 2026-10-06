@@ -54,8 +54,8 @@ def main():
             struct.pack_into('<II', data, 36, rng.randrange(1, 0x7d00), rng.randrange(1, 0x7d00))
             struct.pack_into('<ii', data, 8, rng.randrange(- 128, 128), rng.randrange(- 12, 13))
             data[7] = rng.randrange(1, 97)
-            row = row_state(data)
-            column = Column(* [struct.unpack_from('<I', data, o)[0] for o in OFFSETS], data[60], data[1])
+        row = row_state(data)
+        column = Column(* [struct.unpack_from('<I', data, o)[0] for o in OFFSETS], data[60], data[1])
         memory = Memory(* [struct.unpack_from('<I', data, o)[0] for o in (88, 92, 80, 84, 116)], * [data[o] for o in (104, 105, 113, 108, 109, 110, 111)])
         for ti in range(ticks):
             tick = ti % 3
@@ -63,15 +63,15 @@ def main():
                 if ti:
                     data[3] = rng.choice(effects)
                     row.selection.effect = data[3]
-                    data[2] = rng.randrange(256)
-                    data[4] = rng.randrange(256)
-                    row.selection.volume = data[2]
-                    row.parameter = data[4]
-                    original.cpu.mem_write(BOARD, bytes(data))
-                    original.cpu.mem_write(0x531b4c, struct.pack('<i', tick))
-                    original.cpu.mem_write(0x531b46, bytes([linear]))
-                    original.call(0x40dc80, eax=BOARD)
-                    original.call(0x40dc50, eax=BOARD)
+                data[2] = rng.randrange(256)
+                data[4] = rng.randrange(256)
+                row.selection.volume = data[2]
+                row.parameter = data[4]
+            original.cpu.mem_write(BOARD, bytes(data))
+            original.cpu.mem_write(0x531b4c, struct.pack('<i', tick))
+            original.cpu.mem_write(0x531b46, bytes([linear]))
+            original.call(0x40dc80, eax=BOARD)
+            original.call(0x40dc50, eax=BOARD)
             assert native.vertrix_sequence_volume(tick, ctypes.byref(row), ctypes.byref(column))
             assert native.vertrix_sequence_note_effect(tick, linear, ctypes.byref(instrument) if present else None, ctypes.byref(row), ctypes.byref(column), ctypes.byref(memory))
             actual = bytearray(reconstruct(data, row))

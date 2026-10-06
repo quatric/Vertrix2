@@ -56,10 +56,10 @@ def main():
             cursor = ctypes.c_size_t()
             event = Event(1, 2, 3, 4, 5)
             saved = bytes(event)
-    storage = (ctypes.c_uint8 * len(full)).from_buffer_copy(full)
-    assert not native.vertrix_xm_event(storage, size, ctypes.byref(cursor), ctypes.byref(event))
-    assert cursor.value == 0 and bytes(event) == saved
-    truncated += 1
+            storage = (ctypes.c_uint8 * len(full)).from_buffer_copy(full)
+            assert not native.vertrix_xm_event(storage, size, ctypes.byref(cursor), ctypes.byref(event))
+            assert cursor.value == 0 and bytes(event) == saved
+            truncated += 1
     files = patterns = cells = 0
     for path in sorted(args.music.glob("*.xm")):
         data = path.read_bytes()
@@ -73,10 +73,10 @@ def main():
             offset += header + size
             patterns += 1
             cells += rows * channels
-            files += 1
-            if files % 5 == 0:
-                print(f"Verified {files} original XM files", flush=True)
-                assert files == 29 and patterns == 967 and cells == 610816
+        files += 1
+        if files % 5 == 0:
+            print(f"Verified {files} original XM files", flush=True)
+    assert files == 29 and patterns == 967 and cells == 610816
     report = {"status": "passed", "xm_files": files, "patterns": patterns, "original_events": cells, "random_events": 20000, "truncated_events_rejected": truncated, "scope": "Original complete 0x40e690 event decoder; all original XM pattern events. No music " "tick, instrument playback or effects execution."}
     (build / "xm-verification.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report, indent=2))

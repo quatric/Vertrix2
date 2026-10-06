@@ -44,7 +44,7 @@ def main():
     parser.add_argument('--build-dir', type=Path, required=True)
     parser.add_argument('--cases', type=int, default=2048)
     args = parser.parse_args()
-    n = build(args.build_dir, 'object-glue', ['object_glue.c', 'call_glue.c', 'actor_storage.c'])
+    n = build(args.build_dir, 'object-glue', ['object_glue.c', 'call_glue.c', 'actor_storage.c', 'table_queries.c'])
     P, V, S = c.POINTER(Calls), c.c_void_p, c.c_size_t
     for name, types in (
             ('vertrix_object_set_mode', [c.POINTER(Services), U, V, S, U]),

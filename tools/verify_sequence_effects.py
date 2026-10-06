@@ -49,12 +49,12 @@ def main():
         target = struct.unpack('<I', cpu.mem_read(stack, 4))[0]
         cpu.reg_write(UC_X86_REG_ESP, stack + 4)
         cpu.reg_write(UC_X86_REG_EIP, target)
-        hook = original.cpu.hook_add(UC_HOOK_CODE, capture, begin=callback_address, end=callback_address)
-        def native_capture(parameter, order, row, context):
-            assert context == 123
-            native_events.append((parameter, order, row))
-            callback = Callback(native_capture)
-            absent_callback = Callback()
+    hook = original.cpu.hook_add(UC_HOOK_CODE, capture, begin=callback_address, end=callback_address)
+    def native_capture(parameter, order, row, context):
+        assert context == 123
+        native_events.append((parameter, order, row))
+    callback = Callback(native_capture)
+    absent_callback = Callback()
     callback_calls = 0
     for index in range(sequences):
         data = bytearray(rng.randbytes(180))
@@ -79,8 +79,8 @@ def main():
             struct.pack_into('<II', data, 36, rng.randrange(1, 0x7d00), rng.randrange(1, 0x7d00))
             struct.pack_into('<ii', data, 8, rng.randrange(- 128, 128), rng.randrange(- 12, 13))
             data[7] = rng.randrange(1, 97)
-            row = row_state(data)
-            column = Column(* [struct.unpack_from('<I', data, o)[0] for o in OFFSETS], data[60], data[1])
+        row = row_state(data)
+        column = Column(* [struct.unpack_from('<I', data, o)[0] for o in OFFSETS], data[60], data[1])
         memory = Memory(* [struct.unpack_from('<I', data, o)[0] for o in (88, 92, 80, 84, 116)], * [data[o] for o in (104, 105, 113, 108, 109, 110, 111)])
         extended = Extended(* struct.unpack_from('<II', data, 172), data[106], data[107], data[61])
         region = bytearray(rng.randbytes(64))
@@ -100,21 +100,21 @@ def main():
                 if ti:
                     data[3] = rng.choice(effects)
                     row.selection.effect = data[3]
-                    data[2] = rng.randrange(256)
-                    data[4] = index % 256 if not ti else rng.randrange(256)
-                    row.selection.volume = data[2]
-                    row.parameter = data[4]
-                    region[2] = linear
-                    struct.pack_into('<i', region, 8, tick)
-                    sequence.tick = tick
-                    original.cpu.mem_write(0x531b44, bytes(region))
-                    original.cpu.mem_write(BOARD, bytes(data))
-                    original.cpu.mem_write(0x531b4c, struct.pack('<i', tick))
-                    original.cpu.mem_write(0x531b46, bytes([linear]))
-                    events.clear()
-                    native_events.clear()
-                    original.call(0x40dc80, eax=BOARD)
-                    original.call(0x40dc50, eax=BOARD)
+                data[2] = rng.randrange(256)
+                data[4] = index % 256 if not ti else rng.randrange(256)
+                row.selection.volume = data[2]
+                row.parameter = data[4]
+            region[2] = linear
+            struct.pack_into('<i', region, 8, tick)
+            sequence.tick = tick
+            original.cpu.mem_write(0x531b44, bytes(region))
+            original.cpu.mem_write(BOARD, bytes(data))
+            original.cpu.mem_write(0x531b4c, struct.pack('<i', tick))
+            original.cpu.mem_write(0x531b46, bytes([linear]))
+            events.clear()
+            native_events.clear()
+            original.call(0x40dc80, eax=BOARD)
+            original.call(0x40dc50, eax=BOARD)
             assert native.vertrix_sequence_volume(tick, ctypes.byref(row), ctypes.byref(column))
             assert native.vertrix_sequence_effect(tick, linear, song_length, ctypes.byref(instrument) if present else None, ctypes.byref(row), ctypes.byref(column), ctypes.byref(memory), ctypes.byref(extended), ctypes.byref(sequence), ctypes.byref(global_state), ctypes.byref(delay), callback if callback_present else absent_callback, 123)
             actual = bytearray(reconstruct(data, row))
@@ -141,11 +141,11 @@ def main():
             assert bytes(actual) == bytes(original.cpu.mem_read(BOARD, 180)), (index, ti, data[3])
             assert row.selection.flags == row.defaults.flags == column.flags
             data = actual
-            before = bytes(row), bytes(column), bytes(memory), bytes(extended), bytes(sequence), bytes(global_state), delay.value
-            assert not native.vertrix_sequence_effect(0, 0, 1, None, ctypes.byref(row), ctypes.byref(column), ctypes.byref(memory), None, ctypes.byref(sequence), ctypes.byref(global_state), ctypes.byref(delay), absent_callback, None)
-            assert (bytes(row), bytes(column), bytes(memory), bytes(extended), bytes(sequence), bytes(global_state), delay.value) == before
-            original.cpu.hook_del(hook)
-            assert callback_calls
+    before = bytes(row), bytes(column), bytes(memory), bytes(extended), bytes(sequence), bytes(global_state), delay.value
+    assert not native.vertrix_sequence_effect(0, 0, 1, None, ctypes.byref(row), ctypes.byref(column), ctypes.byref(memory), None, ctypes.byref(sequence), ctypes.byref(global_state), ctypes.byref(delay), absent_callback, None)
+    assert (bytes(row), bytes(column), bytes(memory), bytes(extended), bytes(sequence), bytes(global_state), delay.value) == before
+    original.cpu.hook_del(hook)
+    assert callback_calls
     report = {'status': 'passed', 'sequences': sequences, 'integrated_ticks': sequences * ticks, 'callback_calls': callback_calls, 'scope': 'Complete original volume-column and all 36 main dispatcher entries plus ignored commands, whole 180-byte channels and 64-byte globals across six consecutive ticks. Both pitch modes, present/absent instruments, retained sample ownership, reset and effect memory, pattern/global controls and callbacks. Only application callback is captured. Invalid native storage preserves state. Excludes full instrument playback, row advancement and audio.'}
     (build / 'sequence-effects-verification.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))
