@@ -19,7 +19,7 @@ DRAW = 0x4826c0
 CALLEES = (0x43acd0, 0x43ac00, 0x43bb60, 0x4ac8f0, 0x43bbf0, 0x43c0e0)
 ALLOCATE = 0x4ca000
 # 0x452e00 callees; the first four steer its flow and return small values
-FLOW = {0x43d3b0: (0, 1), 0x438cd0: (0, 1), 0x43ab60: (0, 1, 1, 2), 0x4320c0: (1, 1, 1, 0), 0x4330d0: (1, 1, 1, 0)}
+FLOW = {0x43b720: (0, 1, 1, 2), 0x43b800: (0, 1, 1, 2), 0x43b7c0: (0, 1, 1), 0x43d3b0: (0, 1), 0x438cd0: (0, 1), 0x43ab60: (0, 1, 1, 2), 0x4320c0: (1, 1, 1, 0), 0x4330d0: (1, 1, 1, 0)}
 MATCH_CALLEES = (0x438cd0, 0x43ab60, 0x4320c0, 0x4330d0, 0x431d80, 0x42ee20, 0x42eda0, 0x42ee80,
                  0x433040, 0x43a560)
 EFFECT_CODE = 0x450000
@@ -105,6 +105,11 @@ def main():
             value = rng.randrange(max(1, edx & 0xffff))
             draws.append(value)
             return value
+        if address == 0x43b7c0 and progress_effects is not None:
+            # the callee changes the opponent's +0x17c; the native replay applies the same change
+            new = rng.choice([rng.getrandbits(32), rng.getrandbits(4)])
+            cpu.mem_write(opponent + 0x17c, struct.pack('<I', new))
+            progress_effects.append(new)
         if address == ALLOCATE:
             handle = targets[len(allocations) % len(targets)]
             allocations.append(handle)
@@ -114,6 +119,7 @@ def main():
         return value
 
     allocations, alloc_replay = [], []
+    progress_effects = None
     targets = pool.handles[6:]
     stubs = Gate(cpu, handler)
     stubs.add(DRAW)
@@ -124,7 +130,10 @@ def main():
     @Call
     def call(site, context):
         s = site.contents
-        native_log.append((s.target, s.eax, s.edx, s.ebx, s.ecx))
+        native_log.append((s.target, s.eax, s.edx, s.ebx, s.ecx) + (
+            (s.stack, s.stack_next, s.stack_third) if s.target == 0x43a5f0 else ()))
+        if s.target == 0x43b7c0 and progress_effects:
+            struct.pack_into('<I', pool.buffers[opponent], 0x17c, progress_effects.pop(0))
         return replay.pop(0)
 
     @Virtual
@@ -177,6 +186,8 @@ def main():
                 continue
             if entry[0] == SLOT_ONE:
                 result.append(('virtual', entry[1], 1))
+            elif entry[0] == 0x43a5f0:
+                result.append(tuple(entry[:8]))
             else:
                 result.append(tuple(entry[:5]))
         return result
@@ -348,6 +359,98 @@ def main():
             assert not replay, case
             assert pool.same(), (hex(gate.handler), case, pool.diff())
             gate_totals['matched' if expected[0][0] == 0x43acd0 else 'other'] += 1
+    # 0x452830, 0x452880 and 0x4528e0
+    for address in (0x43b800, 0x43b7c0):
+        stubs.add(address, 0)
+    progress_effects = []
+    function_gate = {0x452830: n.vertrix_effect_negated_gate, 0x452880: n.vertrix_effect_value_gate,
+                     0x4528e0: n.vertrix_effect_progress_gate}
+    for function in function_gate.values():
+        function.argtypes = [c.POINTER(Services), U]
+        function.restype = U
+
+    def patch_values(handle, data):
+        patch_convert(handle, data)
+        if handle == player:
+            struct.pack_into('<II', data, 0x3bc, rng.getrandbits(32), rng.getrandbits(32))
+    value_totals = {}
+    for address, function in function_gate.items():
+        for case in range(args.cases):
+            pool.fill(rng, patch_values)
+            stubs.log.clear()
+            returns.clear()
+            draws.clear()
+            native_log.clear()
+            progress_effects.clear()
+            result = original.call(address, eax=player) & 0xffffffff
+            replay[:] = list(returns)
+            got = function(c.byref(services), player)
+            expected = normalized(stubs.log)
+            assert native_log == expected, (hex(address), case, native_log, expected)
+            assert got == result, (hex(address), case, hex(got), hex(result))
+            assert not replay and not progress_effects, case
+            assert pool.same(), (hex(address), case, pool.diff())
+            path = tuple(e[0] for e in expected if e[0] not in ('virtual', 0x43bbf0))
+            key = hex(address) + ':' + ','.join(hex(t) for t in path)
+            value_totals[key] = value_totals.get(key, 0) + 1
+    # 0x452a30 family: the arming step and its four handlers; 0x452d10 and 0x452d70
+    for address in (0x43bad0, 0x43b810, 0x43b720):
+        stubs.add(address, 0)
+    stubs.add(0x43a5f0, 3)
+    for name in ('arm_handler', 'armed_handler'):
+        function = getattr(n, 'vertrix_effect_' + name)
+        function.argtypes = [c.POINTER(Services), U, U, c.c_uint]
+        function.restype = U
+    for name in ('progress_update_gate', 'progress_compare'):
+        function = getattr(n, 'vertrix_effect_' + name)
+        function.argtypes = [c.POINTER(Services), U]
+        function.restype = U
+
+    def patch_arm(handle, data):
+        patch_convert(handle, data)
+        if handle == player:
+            data[0x4cd] = rng.choice([0, 1, 1, 2, 2, 3, 3, 4, 4, 5])
+            struct.pack_into('<I', data, 0x3c4, rng.choice([0, 1, 1, 2, 3]))
+            for offset in (0x4d0, 0x4d4, 0x4d8):
+                struct.pack_into('<I', data, offset,
+                                 0 if rng.random() < 0.8 else rng.getrandbits(32))
+            struct.pack_into('<I', data, 0x3b4, rng.getrandbits(32))
+            struct.pack_into('<I', data, 0x3c8, rng.getrandbits(32))
+            struct.pack_into('<I', data, 0x17c, rng.choice([0, 1, 2, 0xffffffff]))
+        elif handle == opponent:
+            struct.pack_into('<I', data, 0x17c, rng.choice([0, 1, 2, 0xffffffff]))
+    arm_totals = {}
+
+    def check_one(label, case, address, native, *extra, **registers):
+        pool.fill(rng, patch_arm)
+        stubs.log.clear()
+        returns.clear()
+        draws.clear()
+        native_log.clear()
+        result = original.call(address, eax=player, **registers) & 0xffffffff
+        replay[:] = list(returns)
+        got = native(c.byref(services), player, *extra)
+        expected = normalized(stubs.log)
+        assert native_log == expected, (label, case, native_log, expected)
+        assert got == result, (label, case, hex(got), hex(result))
+        assert not replay, (label, case)
+        assert pool.same(), (label, case, pool.diff())
+        key = label + ':' + ','.join(hex(e[0]) if e[0] != 'virtual' else 'v' for e in expected)
+        arm_totals[key] = arm_totals.get(key, 0) + 1
+    for index, address in enumerate((0x452a30, 0x452b00, 0x452bb0, 0x452c60), 1):
+        for case in range(args.cases):
+            ebx = rng.getrandbits(32)
+            check_one(hex(address), case, address, n.vertrix_effect_arm_handler, ebx, index,
+                      ebx=ebx)
+    for which, address in enumerate((0x452a50, 0x452b20, 0x452bd0, 0x452c80)):
+        for case in range(args.cases):
+            ebx = rng.getrandbits(32)
+            check_one(hex(address), case, address, n.vertrix_effect_armed_handler, ebx, which,
+                      ebx=ebx)
+    for address, native in ((0x452d10, n.vertrix_effect_progress_update_gate),
+                            (0x452d70, n.vertrix_effect_progress_compare)):
+        for case in range(args.cases):
+            check_one(hex(address), case, address, native)
     # Objects that do not resolve: the effect stops where the original would have read them. Before
     # the first call (player, opponent, grid) nothing is called or stored; later failures still
     # never reach the final 0x43bbf0.
@@ -384,12 +487,19 @@ def main():
         'complete_original_executions': {'0x453ad0': args.cases, '0x453150': args.cases,
                                         '0x452e00': args.cases,
                                         '0x453b90': args.cases, '0x453c00': args.cases,
-                                        'state_gates_16': max(1, args.cases // 4) * 16},
+                                        'state_gates_16': max(1, args.cases // 4) * 16,
+                                        '0x452830': args.cases, '0x452880': args.cases,
+                                        '0x4528e0': args.cases,
+                                        **{hex(a): args.cases for a in (
+                                            0x452a30, 0x452b00, 0x452bb0, 0x452c60, 0x452a50,
+                                            0x452b20, 0x452bd0, 0x452c80, 0x452d10, 0x452d70)}},
         'paths': totals,
         'convert_paths': convert_totals,
         'match_paths': match_totals,
         'small_paths': small_totals,
         'gate_paths': gate_totals,
+        'value_gate_paths': value_totals,
+        'arm_paths': arm_totals,
         'scope': 'Complete original 0x453ad0 executes with 0x429fe0 running for real (its 0x4826c0 '
                  'draws stubbed and replayed) and the boundaries 0x43acd0, 0x43ac00, 0x43bb60, '
                  '0x4ac8f0, 0x43bbf0 and virtual slot 1 of the player board stubbed and logged; '

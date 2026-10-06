@@ -63,11 +63,28 @@ Self-sound layout (sound 6 instead of 0x43ac00): 0x453620 (0x22, 0x43cf70), 0x45
 otherwise the callee runs; all end with slot 1 of the player's board and 0x43bbf0. 512 cases per
 handler in the verifier, half with a matching state.
 
+## 0x452830, 0x452880, 0x4528e0, 0x452d10, 0x452d70
+
+Gates built on the callees 0x43b800 (0x452830, negated +0x3bc; 0x452880, on the opponent with
++0x3c0), 0x43b7c0 (0x4528e0, opponent +0x17c read before and after; the verifier lets the stub
+change it) and 0x43b720 (0x452d10, negated +0x3c8). 0x452d70 compares the two +0x17c values
+(equal: 0x43acd0 only; else 0x43acd0 or 0x43ac00, 0x43b810 twice, sound 11). Natives:
+`vertrix_effect_negated_gate`, `_value_gate`, `_progress_gate`, `_progress_update_gate`,
+`_progress_compare`. 2048 cases each.
+
+## 0x452a30, 0x452b00, 0x452bb0, 0x452c60 and their handlers
+
+`vertrix_effect_arm_handler(index 1..4)`: 0x43bad0, then the shared step 0x452960, which stores
+the arm dwords `+0x4d0/+0x4d4/+0x4d8` from the state byte `+0x4cd` and `+0x3c4`, binds the handler
+0x452a50 / 0x452b20 / 0x452bd0 / 0x452c80 (0x4ac8f0), calls slot 1 and plays sound 9. The step
+leaves ebx as the state byte merged into the caller's ebx, so the entry ebx is a parameter.
+`vertrix_effect_armed_handler(which)`: the four handlers; 0x43a5f0 with three stack arguments is a
+boundary call (compared with its stack arguments). 2048 cases each.
+
 ## Wiring note
 
 The dispatcher 0x43c140 does not call an effect: it stores the effect address as the player's
 actor handler with 0x4ac8f0 (`43cc74: edx = handler; eax = player; call 0x4ac8f0`). The effects run
 later from the actor update, so their entry ebx/edx come from that caller, not from the dispatcher.
 
-Not yet ported: the remaining effects behind 0x43c140 (0x452830, 0x452880, 0x4528e0, 0x452a30,
-0x452b00, 0x452bb0, 0x452c60, 0x452d10, 0x452d70, 0x453460, 0x453f40 and everything from 0x454250).
+Not yet ported: the remaining effects behind 0x43c140 (0x4528e0.. is done; open are 0x453460, 0x453f40 and everything from 0x454250).

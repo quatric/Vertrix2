@@ -47,7 +47,19 @@ enum
     SOUND_PAIR = 3,
     HANDLER_SPEED = 0x453c90,
     PLAYER_STATE = 0x4c8,
-    SOUND_GATE = 6
+    SOUND_GATE = 6,
+    SOUND_DROP = 5,
+    PLAYER_NEGATED = 0x3bc,
+    PLAYER_VALUE = 0x3c0,
+    PLAYER_PROGRESS = 0x17c,
+    PLAYER_PROGRESS_STEP = 0x3c8,
+    PLAYER_SHAPE = 0x3c4,
+    PLAYER_MODE_BYTE = 0x4cd,
+    PLAYER_ARM_FIRST = 0x4d0,
+    PLAYER_ARM_SECOND = 0x4d4,
+    PLAYER_ARM_THIRD = 0x4d8,
+    SOUND_ARMED = 9,
+    SOUND_COMPARE = 11
 };
 
 static int resolve_object(const VertrixEffectServices *services, uint32_t handle, void **storage,
@@ -673,4 +685,384 @@ uint32_t vertrix_effect_state_gate(const VertrixEffectServices *services, uint32
         default:
             return vertrix_call(services->calls, 0x43bbf0, player, vtable, board, player, 0);
     }
+}
+
+/* The tail the three handlers share: slot 1 of the board, then 0x43bbf0 on the player. */
+static uint32_t finish_with_board(const VertrixEffectServices *services, uint32_t player,
+                                  uint32_t board, uint32_t vtable, uint32_t ebx, uint32_t ecx)
+{
+    if (services->virtual_call)
+    {
+        services->virtual_call(services->virtual_context, board, SLOT_RELEASE, 0);
+    }
+    return vertrix_call(services->calls, 0x43bbf0, player, vtable, ebx, ecx, 0);
+}
+
+uint32_t vertrix_effect_negated_gate(const VertrixEffectServices *services, uint32_t player)
+{
+    void *player_storage;
+    void *board_storage;
+    size_t player_size;
+    size_t board_size;
+    uint32_t value;
+    uint32_t board;
+    uint32_t vtable;
+    uint32_t negated;
+    if (!services || !services->calls ||
+        !resolve_object(services, player, &player_storage, &player_size) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_NEGATED, DWORD_WIDTH,
+                                    &value) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_BOARD, DWORD_WIDTH,
+                                    &board) ||
+        !resolve_object(services, board, &board_storage, &board_size) ||
+        !vertrix_actor_storage_read(board_storage, board_size, BOARD_VTABLE, DWORD_WIDTH, &vtable))
+    {
+        return 0;
+    }
+    negated = 0u - value;
+    if (vertrix_call(services->calls, 0x43b800, player, negated, board, player, 0) == 1)
+    {
+        vertrix_call(services->calls, 0x43c0e0, player, SOUND_DROP, board, player, 0);
+    }
+    else
+    {
+        vertrix_call(services->calls, 0x43acd0, player, negated, board, player, 0);
+    }
+    return finish_with_board(services, player, board, vtable, board, player);
+}
+
+uint32_t vertrix_effect_value_gate(const VertrixEffectServices *services, uint32_t player)
+{
+    void *player_storage;
+    void *board_storage;
+    size_t player_size;
+    size_t board_size;
+    uint32_t value;
+    uint32_t opponent;
+    uint32_t board;
+    uint32_t vtable;
+    if (!services || !services->calls ||
+        !resolve_object(services, player, &player_storage, &player_size) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_VALUE, DWORD_WIDTH,
+                                    &value) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_OPPONENT, DWORD_WIDTH,
+                                    &opponent) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_BOARD, DWORD_WIDTH,
+                                    &board) ||
+        !resolve_object(services, board, &board_storage, &board_size) ||
+        !vertrix_actor_storage_read(board_storage, board_size, BOARD_VTABLE, DWORD_WIDTH, &vtable))
+    {
+        return 0;
+    }
+    if (vertrix_call(services->calls, 0x43b800, opponent, value, board, player, 0) == 1)
+    {
+        vertrix_call(services->calls, 0x43c0e0, player, SOUND_GATE, board, player, 0);
+        vertrix_call(services->calls, 0x43ac00, player, SOUND_GATE, board, player, 0);
+    }
+    else
+    {
+        vertrix_call(services->calls, 0x43acd0, player, value, board, player, 0);
+    }
+    return finish_with_board(services, player, board, vtable, board, player);
+}
+
+uint32_t vertrix_effect_progress_gate(const VertrixEffectServices *services, uint32_t player)
+{
+    void *player_storage;
+    void *opponent_storage;
+    void *board_storage;
+    size_t player_size;
+    size_t opponent_size;
+    size_t board_size;
+    uint32_t opponent;
+    uint32_t board;
+    uint32_t vtable;
+    uint32_t before;
+    uint32_t after;
+    uint32_t sound;
+    if (!services || !services->calls ||
+        !resolve_object(services, player, &player_storage, &player_size) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_OPPONENT, DWORD_WIDTH,
+                                    &opponent) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_BOARD, DWORD_WIDTH,
+                                    &board) ||
+        !resolve_object(services, opponent, &opponent_storage, &opponent_size) ||
+        !vertrix_actor_storage_read(opponent_storage, opponent_size, PLAYER_PROGRESS, DWORD_WIDTH,
+                                    &before) ||
+        !resolve_object(services, board, &board_storage, &board_size) ||
+        !vertrix_actor_storage_read(board_storage, board_size, BOARD_VTABLE, DWORD_WIDTH, &vtable))
+    {
+        return 0;
+    }
+    if (vertrix_call(services->calls, 0x43b7c0, opponent, opponent, board, player, 0) != 1)
+    {
+        vertrix_call(services->calls, 0x43acd0, player, opponent, board, player, 0);
+    }
+    else
+    {
+        if (!vertrix_actor_storage_read(opponent_storage, opponent_size, PLAYER_PROGRESS,
+                                        DWORD_WIDTH, &after))
+        {
+            return 0;
+        }
+        if (before > after)
+        {
+            sound = SOUND_DROP;
+            vertrix_call(services->calls, 0x43c0e0, player, sound, board, player, 0);
+            vertrix_call(services->calls, 0x43acd0, player, sound, board, player, 0);
+        }
+        else
+        {
+            sound = SOUND_GATE;
+            vertrix_call(services->calls, 0x43c0e0, player, sound, board, player, 0);
+            vertrix_call(services->calls, 0x43ac00, player, sound, board, player, 0);
+        }
+    }
+    return finish_with_board(services, player, board, vtable, board, player);
+}
+
+static const uint32_t arm_handlers[4] = {0x452a50, 0x452b20, 0x452bd0, 0x452c80};
+
+uint32_t vertrix_effect_arm_handler(const VertrixEffectServices *services, uint32_t player,
+                                    uint32_t entry_ebx, unsigned index)
+{
+    void *player_storage;
+    size_t player_size;
+    uint32_t board;
+    uint32_t mode;
+    uint32_t shape = 0;
+    uint32_t first = 0;
+    uint32_t second = 0;
+    uint32_t third = 0;
+    uint32_t ebx;
+    if (!services || !services->calls || index < 1 || index > 4 ||
+        !resolve_object(services, player, &player_storage, &player_size))
+    {
+        return 0;
+    }
+    vertrix_call(services->calls, 0x43bad0, player, index, entry_ebx, player, 0);
+    /* The state the call may have changed is read afterwards, as the original does. */
+    if (!vertrix_actor_storage_read(player_storage, player_size, PLAYER_BOARD, DWORD_WIDTH,
+                                    &board) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_MODE_BYTE, BYTE_WIDTH,
+                                    &mode))
+    {
+        return 0;
+    }
+    ebx = (entry_ebx & 0xffffff00u) | mode;
+    if (mode >= 1 && mode <= 4)
+    {
+        if (!vertrix_actor_storage_read(player_storage, player_size, PLAYER_SHAPE, DWORD_WIDTH,
+                                        &shape))
+        {
+            return 0;
+        }
+        ebx = shape;
+        if ((mode == 1 || mode == 3) && shape == 1)
+        {
+            third = 1;
+        }
+        else if (mode == 1 && shape == 2)
+        {
+            first = 1;
+            third = 1;
+        }
+        else if ((mode == 2 || mode == 4) && shape == 1)
+        {
+            first = 1;
+            second = 1;
+            third = 1;
+        }
+    }
+    if (!vertrix_actor_storage_write(player_storage, player_size, PLAYER_ARM_FIRST, DWORD_WIDTH,
+                                     first) ||
+        !vertrix_actor_storage_write(player_storage, player_size, PLAYER_ARM_SECOND, DWORD_WIDTH,
+                                     second) ||
+        !vertrix_actor_storage_write(player_storage, player_size, PLAYER_ARM_THIRD, DWORD_WIDTH,
+                                     third))
+    {
+        return 0;
+    }
+    vertrix_call(services->calls, 0x4ac8f0, player, arm_handlers[index - 1], ebx, player, 0);
+    if (services->virtual_call)
+    {
+        services->virtual_call(services->virtual_context, board, SLOT_RELEASE, 0);
+    }
+    return vertrix_call(services->calls, 0x43c0e0, player, SOUND_ARMED, ebx, player, 0);
+}
+
+uint32_t vertrix_effect_armed_handler(const VertrixEffectServices *services, uint32_t player,
+                                      uint32_t entry_ebx, unsigned which)
+{
+    void *player_storage;
+    void *board_storage;
+    size_t player_size;
+    size_t board_size;
+    uint32_t board;
+    uint32_t extra;
+    uint32_t first;
+    uint32_t second;
+    uint32_t third;
+    uint32_t shape;
+    uint32_t vtable;
+    uint32_t ebx = entry_ebx;
+    uint32_t armed = 0;
+    uint32_t result;
+    if (!services || !services->calls || which > 3 ||
+        !resolve_object(services, player, &player_storage, &player_size) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_BOARD, DWORD_WIDTH,
+                                    &board) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_EXTRA, DWORD_WIDTH,
+                                    &extra) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_ARM_FIRST, DWORD_WIDTH,
+                                    &first) ||
+        !resolve_object(services, board, &board_storage, &board_size) ||
+        !vertrix_actor_storage_read(board_storage, board_size, BOARD_VTABLE, DWORD_WIDTH, &vtable))
+    {
+        return 0;
+    }
+    if (first == 0)
+    {
+        if (!vertrix_actor_storage_read(player_storage, player_size, PLAYER_ARM_SECOND, DWORD_WIDTH,
+                                        &second))
+        {
+            return 0;
+        }
+        if (second == 0)
+        {
+            if (!vertrix_actor_storage_read(player_storage, player_size, PLAYER_ARM_THIRD,
+                                            DWORD_WIDTH, &third) ||
+                !vertrix_actor_storage_read(player_storage, player_size, PLAYER_SHAPE, DWORD_WIDTH,
+                                            &shape))
+            {
+                return 0;
+            }
+            if (third == 0)
+            {
+                uint32_t stack[3];
+                uint32_t edx;
+                int call = 0;
+                if (shape == 1)
+                {
+                    call = 1;
+                    if (which == 1 || which == 3)
+                    {
+                        ebx = 6;
+                        edx = 6;
+                        stack[0] = stack[1] = stack[2] = 1;
+                    }
+                    else
+                    {
+                        ebx = 0xffffffffu;
+                        edx = 0xffffffffu;
+                        stack[0] = 0;
+                        stack[1] = third;
+                        stack[2] = 1;
+                    }
+                }
+                else if (shape == 2 && which == 0)
+                {
+                    call = 1;
+                    ebx = 0xffffffffu;
+                    edx = 6;
+                    stack[0] = 1;
+                    stack[1] = third;
+                    stack[2] = 1;
+                }
+                if (call)
+                {
+                    vertrix_call3(services->calls, 0x43a5f0, extra, edx, ebx, 6, stack);
+                }
+                armed = 1;
+            }
+        }
+    }
+    result = services->virtual_call ? (uint32_t)services->virtual_call(services->virtual_context,
+                                                                       board, SLOT_RELEASE, 0)
+                                    : 0;
+    if (armed)
+    {
+        return vertrix_call(services->calls, 0x43bbf0, player, 1, ebx, vtable, 0);
+    }
+    return result;
+}
+
+uint32_t vertrix_effect_progress_update_gate(const VertrixEffectServices *services, uint32_t player)
+{
+    void *player_storage;
+    void *board_storage;
+    size_t player_size;
+    size_t board_size;
+    uint32_t step;
+    uint32_t opponent;
+    uint32_t board;
+    uint32_t vtable;
+    uint32_t negated;
+    if (!services || !services->calls ||
+        !resolve_object(services, player, &player_storage, &player_size) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_PROGRESS_STEP, DWORD_WIDTH,
+                                    &step) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_OPPONENT, DWORD_WIDTH,
+                                    &opponent) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_BOARD, DWORD_WIDTH,
+                                    &board) ||
+        !resolve_object(services, board, &board_storage, &board_size) ||
+        !vertrix_actor_storage_read(board_storage, board_size, BOARD_VTABLE, DWORD_WIDTH, &vtable))
+    {
+        return 0;
+    }
+    negated = 0u - step;
+    if (vertrix_call(services->calls, 0x43b720, opponent, negated, board, player, 0) == 1)
+    {
+        vertrix_call(services->calls, 0x43c0e0, player, SOUND_DROP, board, player, 0);
+        vertrix_call(services->calls, 0x43ac00, player, SOUND_DROP, board, player, 0);
+    }
+    else
+    {
+        vertrix_call(services->calls, 0x43acd0, player, negated, board, player, 0);
+    }
+    return finish_with_board(services, player, board, vtable, board, player);
+}
+
+uint32_t vertrix_effect_progress_compare(const VertrixEffectServices *services, uint32_t player)
+{
+    void *player_storage;
+    void *opponent_storage;
+    void *board_storage;
+    size_t player_size;
+    size_t opponent_size;
+    size_t board_size;
+    uint32_t opponent;
+    uint32_t board;
+    uint32_t a;
+    uint32_t b;
+    uint32_t vtable;
+    if (!services || !services->calls ||
+        !resolve_object(services, player, &player_storage, &player_size) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_OPPONENT, DWORD_WIDTH,
+                                    &opponent) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_BOARD, DWORD_WIDTH,
+                                    &board) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_PROGRESS, DWORD_WIDTH,
+                                    &a) ||
+        !resolve_object(services, opponent, &opponent_storage, &opponent_size) ||
+        !vertrix_actor_storage_read(opponent_storage, opponent_size, PLAYER_PROGRESS, DWORD_WIDTH,
+                                    &b) ||
+        !resolve_object(services, board, &board_storage, &board_size) ||
+        !vertrix_actor_storage_read(board_storage, board_size, BOARD_VTABLE, DWORD_WIDTH, &vtable))
+    {
+        return 0;
+    }
+    if (a == b)
+    {
+        vertrix_call(services->calls, 0x43acd0, player, b, player, opponent, 0);
+    }
+    else
+    {
+        vertrix_call(services->calls, a < b ? 0x43acd0 : 0x43ac00, player, b, player, opponent, 0);
+        vertrix_call(services->calls, 0x43b810, player, b, player, opponent, 0);
+        vertrix_call(services->calls, 0x43b810, opponent, a, player, opponent, 0);
+        vertrix_call(services->calls, 0x43c0e0, opponent, SOUND_COMPARE, player, opponent, 0);
+    }
+    return finish_with_board(services, player, board, vtable, player, opponent);
 }

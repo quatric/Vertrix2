@@ -110,4 +110,54 @@ extern const VertrixStateGate vertrix_state_gates[VERTRIX_STATE_GATE_COUNT];
 
 uint32_t vertrix_effect_state_gate(const VertrixEffectServices *services, uint32_t player,
                                    const VertrixStateGate *gate);
+
+/* Original 0x452830 (eax = player): 0x43b800 with the negated +0x3bc of the player decides. Result
+ * 1 plays sound 5 (the dword at 0x4f8194, 0x43c0e0), anything else calls 0x43acd0. Then slot 1 of
+ * the player's board and 0x43bbf0 on the player, whose result is returned. */
+uint32_t vertrix_effect_negated_gate(const VertrixEffectServices *services, uint32_t player);
+
+/* Original 0x452880 (eax = player): 0x43b800 on the opponent with the player's +0x3c0. Result 1
+ * plays sound 6 (0x4f8198) and calls 0x43ac00, anything else calls 0x43acd0 (edx still the +0x3c0
+ * value); then slot 1 of the board and 0x43bbf0. */
+uint32_t vertrix_effect_value_gate(const VertrixEffectServices *services, uint32_t player);
+
+/* Original 0x4528e0 (eax = player): 0x43b7c0 on the opponent decides, with the opponent's +0x17c
+ * read before and after it (a, b). Anything but 1 calls 0x43acd0. With 1 and a > b (unsigned)
+ * sound 5 plays and 0x43acd0 follows; with a <= b sound 6 plays and 0x43ac00 follows. Then slot 1
+ * of the board and 0x43bbf0. */
+uint32_t vertrix_effect_progress_gate(const VertrixEffectServices *services, uint32_t player);
+
+/* Original 0x452a30, 0x452b00, 0x452bb0 and 0x452c60 (index 1 to 4; eax = player): 0x43bad0 with
+ * the index, then the common arming step 0x452960 with the handler token 0x452a50, 0x452b20,
+ * 0x452bd0 or 0x452c80. The step reads the player's state byte (+0x4cd) and +0x3c4 (p) and stores
+ * the dwords +0x4d0, +0x4d4 and +0x4d8: state 1 sets (0, 0, 1) for p = 1 and (1, 0, 1) for p = 2;
+ * state 2 sets (1, 1, 1) for p = 1; state 3 sets (0, 0, 1) for p = 1; state 4 sets (1, 1, 1) for
+ * p = 1; all others (0, 0, 0). It binds the handler to the player (0x4ac8f0), calls slot 1 of the
+ * player's board and plays sound 9 (the dword at 0x4f81a4, 0x43c0e0); the result is that of the
+ * sound. entry_ebx is the caller's ebx; the step's ebx is its low byte replaced by the state
+ * byte until +0x3c4 is read. */
+uint32_t vertrix_effect_arm_handler(const VertrixEffectServices *services, uint32_t player,
+                                    uint32_t entry_ebx, unsigned index);
+
+/* The handlers 0x452a50, 0x452b20, 0x452bd0 and 0x452c80 (which 0 to 3; eax = player) armed by the
+ * step above. With +0x4d0, +0x4d4 and +0x4d8 all zero and +0x3c4 equal to one, 0x43a5f0 runs with
+ * the opponent's +0x3b4 and three stack arguments (0x452a50 and 0x452bd0: edx and ebx -1, ecx 6,
+ * stack 0, 0, 1; 0x452b20 and 0x452c80: 6, 6, 6, stack 1, 1, 1); 0x452a50 does the same with edx 6,
+ * ebx -1, ecx 6, stack 1, 0, 1 for +0x3c4 equal to two. Slot 1 of the board follows; only when all
+ * three dwords were zero 0x43bbf0 runs on the player and its result is returned, otherwise the
+ * result of the slot. */
+uint32_t vertrix_effect_armed_handler(const VertrixEffectServices *services, uint32_t player,
+                                      uint32_t entry_ebx, unsigned which);
+
+/* Original 0x452d10 (eax = player): 0x43b720 on the opponent with the negated +0x3c8 of the player.
+ * Result 1 plays sound 5 and calls 0x43ac00, anything else calls 0x43acd0; then slot 1 and
+ * 0x43bbf0. */
+uint32_t vertrix_effect_progress_update_gate(const VertrixEffectServices *services,
+                                             uint32_t player);
+
+/* Original 0x452d70 (eax = player): compares the player's +0x17c (a) with the opponent's (b), both
+ * unsigned. Equal: 0x43acd0 only. Otherwise 0x43acd0 (a < b) or 0x43ac00 (a > b), then 0x43b810 on
+ * the player with b and on the opponent with a, and sound 11 for the opponent. Then slot 1 of the
+ * board and 0x43bbf0. */
+uint32_t vertrix_effect_progress_compare(const VertrixEffectServices *services, uint32_t player);
 #endif

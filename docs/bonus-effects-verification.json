@@ -6,7 +6,20 @@
     "0x452e00": 2048,
     "0x453b90": 2048,
     "0x453c00": 2048,
-    "state_gates_16": 8192
+    "state_gates_16": 8192,
+    "0x452830": 2048,
+    "0x452880": 2048,
+    "0x4528e0": 2048,
+    "0x452a30": 2048,
+    "0x452b00": 2048,
+    "0x452bb0": 2048,
+    "0x452c60": 2048,
+    "0x452a50": 2048,
+    "0x452b20": 2048,
+    "0x452bd0": 2048,
+    "0x452c80": 2048,
+    "0x452d10": 2048,
+    "0x452d70": 2048
   },
   "paths": {
     "forced_choice": 1606,
@@ -33,6 +46,38 @@
   "gate_paths": {
     "matched": 3761,
     "other": 4431
+  },
+  "value_gate_paths": {
+    "0x452830:0x43b800,0x43acd0": 992,
+    "0x452830:0x43b800,0x43c0e0": 1056,
+    "0x452880:0x43b800,0x43c0e0,0x43ac00": 1055,
+    "0x452880:0x43b800,0x43acd0": 993,
+    "0x4528e0:0x43b7c0,0x43c0e0,0x43acd0": 995,
+    "0x4528e0:0x43b7c0,0x43c0e0,0x43ac00": 344,
+    "0x4528e0:0x43b7c0,0x43acd0": 709
+  },
+  "arm_paths": {
+    "0x452a30:0x43bad0,0x4ac8f0,v,0x43c0e0": 2048,
+    "0x452b00:0x43bad0,0x4ac8f0,v,0x43c0e0": 2048,
+    "0x452bb0:0x43bad0,0x4ac8f0,v,0x43c0e0": 2048,
+    "0x452c60:0x43bad0,0x4ac8f0,v,0x43c0e0": 2048,
+    "0x452a50:v,0x43bbf0": 424,
+    "0x452a50:v": 992,
+    "0x452a50:0x43a5f0,v,0x43bbf0": 632,
+    "0x452b20:v,0x43bbf0": 638,
+    "0x452b20:v": 1010,
+    "0x452b20:0x43a5f0,v,0x43bbf0": 400,
+    "0x452bd0:0x43a5f0,v,0x43bbf0": 415,
+    "0x452bd0:v,0x43bbf0": 610,
+    "0x452bd0:v": 1023,
+    "0x452c80:0x43a5f0,v,0x43bbf0": 429,
+    "0x452c80:v,0x43bbf0": 603,
+    "0x452c80:v": 1016,
+    "0x452d10:0x43b720,0x43c0e0,0x43ac00,v,0x43bbf0": 1042,
+    "0x452d10:0x43b720,0x43acd0,v,0x43bbf0": 1006,
+    "0x452d70:0x43ac00,0x43b810,0x43b810,0x43c0e0,v,0x43bbf0": 767,
+    "0x452d70:0x43acd0,0x43b810,0x43b810,0x43c0e0,v,0x43bbf0": 771,
+    "0x452d70:0x43acd0,v,0x43bbf0": 510
   },
   "scope": "Complete original 0x453ad0 executes with 0x429fe0 running for real (its 0x4826c0 draws stubbed and replayed) and the boundaries 0x43acd0, 0x43ac00, 0x43bb60, 0x4ac8f0, 0x43bbf0 and virtual slot 1 of the player board stubbed and logged; the ordered call log with registers, every pool object and the result compare with vertrix_effect_forced_choice. Unresolvable objects are rejected. Complete original 0x453150 runs the same way with the real 0x436b40 and its callees (0x4ac8f0 only counts as a boundary where 0x453150 calls it; allocation 0x4ca000 and draws are replayed) and 0x43c0e0 stubbed; the registers left by 0x436b40 are compared through the boundary log. Complete original 0x452e00 runs with every callee (0x438cd0, 0x43ab60, 0x4320c0, 0x4330d0, 0x431d80, 0x42ee20, 0x42eda0, 0x42ee80, 0x433040, 0x43a560, 0x43bb60, 0x4ac8f0, 0x43c0e0, 0x43acd0, 0x43ac00, 0x43bbf0) stubbed and logged with registers; the flow callees return replayed small values. Complete originals 0x453b90 and 0x453c00 run with 0x43d3b0, 0x43ccf0, 0x43bae0 and the other callees stubbed and logged; the entry edx is random."
 }
