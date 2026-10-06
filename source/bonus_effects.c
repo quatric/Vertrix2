@@ -45,7 +45,9 @@ enum
     PLAYER_RECEIVED = 0x424,
     PLAYER_RECEIVED_STATE = 0x428,
     SOUND_PAIR = 3,
-    HANDLER_SPEED = 0x453c90
+    HANDLER_SPEED = 0x453c90,
+    PLAYER_STATE = 0x4c8,
+    SOUND_GATE = 6
 };
 
 static int resolve_object(const VertrixEffectServices *services, uint32_t handle, void **storage,
@@ -557,4 +559,118 @@ uint32_t vertrix_effect_copy_speed(const VertrixEffectServices *services, uint32
         services->virtual_call(services->virtual_context, own_board, SLOT_RELEASE, 0);
     }
     return vertrix_call(services->calls, 0x43bbf0, player, HANDLER_SPEED, player, vtable, 0);
+}
+
+const VertrixStateGate vertrix_state_gates[VERTRIX_STATE_GATE_COUNT] = {
+    {0x4535d0, VERTRIX_GATE_OPPONENT, 0x23, 0x43cf30},
+    {0x453620, VERTRIX_GATE_SELF_SOUND, 0x22, 0x43cf70},
+    {0x453670, VERTRIX_GATE_SELF_SOUND, 0x30, 0x43ce30},
+    {0x4536c0, VERTRIX_GATE_SELF_BOARD, 0x32, 0x43ce70},
+    {0x453710, VERTRIX_GATE_SELF_BOARD, 0x33, 0x43ce70},
+    {0x453760, VERTRIX_GATE_SELF_BOARD, 0x34, 0x43ce70},
+    {0x4537b0, VERTRIX_GATE_OPPONENT, 0x2f, 0x43ceb0},
+    {0x453800, VERTRIX_GATE_OPPONENT, 0x31, 0x43cef0},
+    {0x453850, VERTRIX_GATE_OPPONENT, 0x24, 0x43cfb0},
+    {0x4538a0, VERTRIX_GATE_OPPONENT, 0x28, 0x43cff0},
+    {0x4538f0, VERTRIX_GATE_SELF_SOUND, 0x29, 0x43d030},
+    {0x453940, VERTRIX_GATE_SELF_SOUND, 0x2a, 0x43d070},
+    {0x453990, VERTRIX_GATE_OPPONENT, 0x2d, 0x43d0b0},
+    {0x4539e0, VERTRIX_GATE_OPPONENT, 0x2e, 0x43d0f0},
+    {0x453a30, VERTRIX_GATE_SELF_BOARD, 0x2b, 0x43cd60},
+    {0x453a80, VERTRIX_GATE_OPPONENT, 0x2c, 0x43cda0}};
+
+uint32_t vertrix_effect_state_gate(const VertrixEffectServices *services, uint32_t player,
+                                   const VertrixStateGate *gate)
+{
+    void *player_storage;
+    void *opponent_storage;
+    void *board_storage;
+    size_t player_size;
+    size_t opponent_size;
+    size_t board_size;
+    uint32_t opponent = 0;
+    uint32_t board;
+    uint32_t state;
+    uint32_t vtable;
+    uint32_t eax = player;
+    uint32_t edx;
+    uint32_t ebx;
+    uint32_t ecx;
+    if (!services || !services->calls || !gate ||
+        !resolve_object(services, player, &player_storage, &player_size) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_BOARD, DWORD_WIDTH,
+                                    &board) ||
+        !resolve_object(services, board, &board_storage, &board_size) ||
+        !vertrix_actor_storage_read(board_storage, board_size, BOARD_VTABLE, DWORD_WIDTH, &vtable))
+    {
+        return 0;
+    }
+    if (gate->kind == VERTRIX_GATE_OPPONENT)
+    {
+        if (!vertrix_actor_storage_read(player_storage, player_size, PLAYER_OPPONENT, DWORD_WIDTH,
+                                        &opponent) ||
+            !resolve_object(services, opponent, &opponent_storage, &opponent_size) ||
+            !vertrix_actor_storage_read(opponent_storage, opponent_size, PLAYER_STATE, DWORD_WIDTH,
+                                        &state))
+        {
+            return 0;
+        }
+        edx = board;
+        ebx = player;
+        ecx = opponent;
+    }
+    else
+    {
+        if (!vertrix_actor_storage_read(player_storage, player_size, PLAYER_STATE, DWORD_WIDTH,
+                                        &state))
+        {
+            return 0;
+        }
+        if (gate->kind == VERTRIX_GATE_SELF_BOARD)
+        {
+            edx = player;
+            ebx = player;
+            ecx = board;
+        }
+        else
+        {
+            edx = state;
+            ebx = board;
+            ecx = player;
+        }
+    }
+    if (state == gate->state)
+    {
+        vertrix_call(services->calls, 0x43acd0, eax, edx, ebx, ecx, 0);
+    }
+    else
+    {
+        if (gate->kind == VERTRIX_GATE_SELF_SOUND)
+        {
+            edx = SOUND_GATE;
+            vertrix_call(services->calls, 0x43c0e0, eax, edx, ebx, ecx, 0);
+        }
+        else
+        {
+            vertrix_call(services->calls, 0x43ac00, eax, edx, ebx, ecx, 0);
+        }
+        if (gate->kind == VERTRIX_GATE_OPPONENT)
+        {
+            eax = opponent;
+        }
+        vertrix_call(services->calls, gate->callee, eax, edx, ebx, ecx, 0);
+    }
+    if (services->virtual_call)
+    {
+        services->virtual_call(services->virtual_context, board, SLOT_RELEASE, 0);
+    }
+    switch (gate->kind)
+    {
+        case VERTRIX_GATE_OPPONENT:
+            return vertrix_call(services->calls, 0x43bbf0, player, board, player, vtable, 0);
+        case VERTRIX_GATE_SELF_BOARD:
+            return vertrix_call(services->calls, 0x43bbf0, player, vtable, player, board, 0);
+        default:
+            return vertrix_call(services->calls, 0x43bbf0, player, vtable, board, player, 0);
+    }
 }

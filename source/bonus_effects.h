@@ -81,4 +81,33 @@ uint32_t vertrix_effect_pair_sound(const VertrixEffectServices *services, uint32
  * object does not resolve. */
 uint32_t vertrix_effect_copy_speed(const VertrixEffectServices *services, uint32_t player,
                                    uint32_t entry_edx);
+
+/* The sixteen small handlers 0x4535d0..0x453a80. Each reads a state dword (+0x4c8) of the opponent
+ * (VERTRIX_GATE_OPPONENT) or of the player. When it equals state, 0x43acd0 runs on the player;
+ * otherwise 0x43ac00 does (not in the self-sound kind) and then callee, with the registers the
+ * original holds: opponent kind
+ * (eax opponent, edx the player's board), self-board kind (eax and edx the player, ecx the player's
+ * board) and self-sound kind (0x43c0e0 plays sound 6 instead of 0x43ac00; callee receives it in
+ * edx). Every handler ends with slot 1 of the player's board and 0x43bbf0 on the player, whose
+ * result is returned. Zero when an object does not resolve. */
+typedef enum
+{
+    VERTRIX_GATE_OPPONENT,
+    VERTRIX_GATE_SELF_BOARD,
+    VERTRIX_GATE_SELF_SOUND
+} VertrixGateKind;
+
+typedef struct
+{
+    uint32_t handler;
+    VertrixGateKind kind;
+    uint32_t state;
+    uint32_t callee;
+} VertrixStateGate;
+
+#define VERTRIX_STATE_GATE_COUNT 16
+extern const VertrixStateGate vertrix_state_gates[VERTRIX_STATE_GATE_COUNT];
+
+uint32_t vertrix_effect_state_gate(const VertrixEffectServices *services, uint32_t player,
+                                   const VertrixStateGate *gate);
 #endif

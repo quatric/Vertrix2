@@ -51,10 +51,23 @@ player's `+0x3f8`) and `vertrix_effect_copy_speed` (the opponent receives the pl
 `+0x424`, `+0x428` cleared, handler 0x453c90). Both take the caller's edx, which they forward.
 2048 cases each in the same verifier.
 
+## The sixteen state gates 0x4535d0..0x453a80
+
+One native, `vertrix_effect_state_gate`, with the table `vertrix_state_gates` (handler, register
+layout, expected state `+0x4c8`, callee). Opponent layout: 0x4535d0 (0x23, 0x43cf30), 0x4537b0
+(0x2f, 0x43ceb0), 0x453800 (0x31, 0x43cef0), 0x453850 (0x24, 0x43cfb0), 0x4538a0 (0x28, 0x43cff0),
+0x453990 (0x2d, 0x43d0b0), 0x4539e0 (0x2e, 0x43d0f0), 0x453a80 (0x2c, 0x43cda0). Self-board layout:
+0x4536c0 (0x32), 0x453710 (0x33), 0x453760 (0x34), all 0x43ce70, and 0x453a30 (0x2b, 0x43cd60).
+Self-sound layout (sound 6 instead of 0x43ac00): 0x453620 (0x22, 0x43cf70), 0x453670 (0x30,
+0x43ce30), 0x4538f0 (0x29, 0x43d030), 0x453940 (0x2a, 0x43d070). A matching state calls 0x43acd0,
+otherwise the callee runs; all end with slot 1 of the player's board and 0x43bbf0. 512 cases per
+handler in the verifier, half with a matching state.
+
 ## Wiring note
 
 The dispatcher 0x43c140 does not call an effect: it stores the effect address as the player's
 actor handler with 0x4ac8f0 (`43cc74: edx = handler; eax = player; call 0x4ac8f0`). The effects run
 later from the actor update, so their entry ebx/edx come from that caller, not from the dispatcher.
 
-Not yet ported: the other effects behind 0x43c140 (about 87 of its 93 cases).
+Not yet ported: the remaining effects behind 0x43c140 (0x452830, 0x452880, 0x4528e0, 0x452a30,
+0x452b00, 0x452bb0, 0x452c60, 0x452d10, 0x452d70, 0x453460, 0x453f40 and everything from 0x454250).

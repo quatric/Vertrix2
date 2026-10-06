@@ -48,6 +48,10 @@ class Gate(Stubs):
 Virtual = c.CFUNCTYPE(c.c_int32, c.c_void_p, U, U, U)
 
 
+class Gate_(c.Structure):
+    _fields_ = [('handler', U), ('kind', c.c_int), ('state', U), ('callee', U)]
+
+
 class Site(c.Structure):
     _fields_ = [(name, U) for name in ('target', 'eax', 'edx', 'ebx', 'ecx', 'stack', 'stack_next',
                                        'stack_third', 'out_ebx', 'out_ecx')] + [
@@ -83,6 +87,9 @@ def main():
     n.vertrix_effect_convert_blocks.restype = U
     n.vertrix_effect_board_match.argtypes = [c.POINTER(Services), U, U]
     n.vertrix_effect_board_match.restype = U
+    n.vertrix_effect_state_gate.argtypes = [c.POINTER(Services), U, c.POINTER(Gate_)]
+    n.vertrix_effect_state_gate.restype = U
+    gates = (Gate_ * 16).in_dll(n, 'vertrix_state_gates')
     for name in ('pair_sound', 'copy_speed'):
         function = getattr(n, 'vertrix_effect_' + name)
         function.argtypes = [c.POINTER(Services), U, U]
@@ -311,6 +318,36 @@ def main():
             else:
                 small_totals['pair_sound_sound' if any(e[0] == 0x43ccf0 for e in expected)
                              else 'pair_sound_plain'] += 1
+    # The sixteen state gate handlers 0x4535d0..0x453a80
+    for callee in sorted({gate.callee for gate in gates}):
+        stubs.add(callee, 0)
+    gate_totals = {'matched': 0, 'other': 0}
+
+    def patch_gate(gate):
+        def patch(handle, data):
+            patch_convert(handle, data)
+            if handle in (player, opponent):
+                matched = rng.random() < 0.5
+                state = gate.state if matched else rng.choice([gate.state + 1, 0, 0x22])
+                struct.pack_into('<I', data, 0x4c8, state if rng.random() < 0.9 else
+                                 rng.getrandbits(32))
+        return patch
+    for gate in gates:
+        for case in range(max(1, args.cases // 4)):
+            pool.fill(rng, patch_gate(gate))
+            stubs.log.clear()
+            returns.clear()
+            draws.clear()
+            native_log.clear()
+            result = original.call(gate.handler, eax=player) & 0xffffffff
+            replay[:] = list(returns)
+            got = n.vertrix_effect_state_gate(c.byref(services), player, c.byref(gate))
+            expected = normalized(stubs.log)
+            assert native_log == expected, (hex(gate.handler), case, native_log, expected)
+            assert got == result, (hex(gate.handler), case, hex(got), hex(result))
+            assert not replay, case
+            assert pool.same(), (hex(gate.handler), case, pool.diff())
+            gate_totals['matched' if expected[0][0] == 0x43acd0 else 'other'] += 1
     # Objects that do not resolve: the effect stops where the original would have read them. Before
     # the first call (player, opponent, grid) nothing is called or stored; later failures still
     # never reach the final 0x43bbf0.
@@ -346,11 +383,13 @@ def main():
         'status': 'passed',
         'complete_original_executions': {'0x453ad0': args.cases, '0x453150': args.cases,
                                         '0x452e00': args.cases,
-                                        '0x453b90': args.cases, '0x453c00': args.cases},
+                                        '0x453b90': args.cases, '0x453c00': args.cases,
+                                        'state_gates_16': max(1, args.cases // 4) * 16},
         'paths': totals,
         'convert_paths': convert_totals,
         'match_paths': match_totals,
         'small_paths': small_totals,
+        'gate_paths': gate_totals,
         'scope': 'Complete original 0x453ad0 executes with 0x429fe0 running for real (its 0x4826c0 '
                  'draws stubbed and replayed) and the boundaries 0x43acd0, 0x43ac00, 0x43bb60, '
                  '0x4ac8f0, 0x43bbf0 and virtual slot 1 of the player board stubbed and logged; '
