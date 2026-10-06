@@ -17,3 +17,19 @@ recovered (or have unmodeled global state):
   exception frames, imported API calls and COM setup chains.
 - `0x47c930`, `0x47cb40`: blends through the runtime table at `0x558cf0` (possible later
   with a supplied table).
+
+## Trace of the `0x45fb00` dependency chain
+
+- `0x4ca000` is `operator new`, a retrying `malloc` wrapper. It is already supplied as a
+  boundary by the other oracles and is not the blocker.
+- `0x45fb00` allocates two actors (`0x170`, `0x180` bytes), initialises them with `0x4adf20`,
+  positions them with `0x4b54d0`/`0x4b65d0` and sets fields through `0x4ac7b0` and `0x4b3210`,
+  inside a Delphi exception frame (`0x4ec1ec`, `0x515750`).
+- `0x4b3210` stores `edx`, `bx`, `cx` and two stack arguments at `+0x160..+0x16c`. It then
+  builds an AnsiString temporary with `0x4ca070`, assigns it with `0x4ca370`, reads
+  `[[this+0x160]+0x160]` and calls `0x4b65d0`. It releases the temporary with `0x4ca210`
+  (`InterlockedDecrement` through import `0x4f1c34`, then free `0x4ca040`).
+- Not yet recovered, so these remain blocked: the AnsiString runtime `0x4ca060`, `0x4ca070`,
+  `0x4ca210`, `0x4ca370`, `0x4ca040`, plus `0x4b3210` and `0x4b5550`.
+- Next step: recover the AnsiString runtime with a refcount-aware oracle, then `0x4b3210`,
+  then `0x45fb00`.
