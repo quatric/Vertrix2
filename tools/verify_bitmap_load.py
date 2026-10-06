@@ -19,7 +19,7 @@ CALLEES = (0x48a8a0, 0x48aad0, 0x48a930, 0x478d10, 0x48aaf0, 0x48aa90, 0x479b50)
 class Site(c.Structure):
     _fields_ = [(name, U) for name in ('target', 'eax', 'edx', 'ebx', 'ecx', 'stack', 'stack_next',
                                        'stack_third', 'out_ebx', 'out_ecx')] + [
-        ('rest%d' % i, U) for i in range(8)] + [('out_value', U)]
+        ('rest%d' % i, U) for i in range(14)] + [('out_value', U)]
 
 
 Call = c.CFUNCTYPE(U, c.POINTER(Site), c.c_void_p)

@@ -22,7 +22,7 @@ MESSAGES = (list(range(0x28, 0x32)) + [0x38, 0x39, 0x3a, 0x4d, 0x4e, 0x4f, 0x110
 class Site(c.Structure):
     _fields_ = [(name, U) for name in ('target', 'eax', 'edx', 'ebx', 'ecx', 'stack', 'stack_next',
                                        'stack_third', 'out_ebx', 'out_ecx')] + [
-        ('rest%d' % i, U) for i in range(8)] + [('out_value', U)]
+        ('rest%d' % i, U) for i in range(14)] + [('out_value', U)]
 
 
 Call = c.CFUNCTYPE(U, c.POINTER(Site), c.c_void_p)

@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x461fc0": 4096
+  },
+  "scope": "The original executes completely with its callees stubbed and logged (0x4cdfb0 as a cdecl call; 0x4ca280 and 0x4ca370 store a random dword through their local pointer and the native reads it back); the settings, the glyph dwords and the screen object hold random data. Every call with its registers and stack arguments (up to 17), the stored dword 0x532a48 and every pool object compare."
+}

@@ -17,7 +17,7 @@ typedef struct VertrixCallSite
     uint32_t stack_third;
     uint32_t out_ebx;
     uint32_t out_ecx;
-    uint32_t stack_rest[8];
+    uint32_t stack_rest[14];
     uint32_t out_value;
 } VertrixCallSite;
 

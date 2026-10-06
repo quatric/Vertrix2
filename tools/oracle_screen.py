@@ -9,7 +9,7 @@ U = c.c_uint32
 class Site(c.Structure):
     _fields_ = [(name, U) for name in ('target', 'eax', 'edx', 'ebx', 'ecx', 'stack', 'stack_next',
                                        'stack_third', 'out_ebx', 'out_ecx')] + [
-        ('rest%d' % i, U) for i in range(8)] + [('out_value', U)]
+        ('rest%d' % i, U) for i in range(14)] + [('out_value', U)]
 
 
 Call = c.CFUNCTYPE(U, c.POINTER(Site), c.c_void_p)
@@ -33,7 +33,7 @@ class Services(c.Structure):
 def site_log(s, count):
     return (s.target, s.eax, s.edx, s.ebx, s.ecx) + (
         s.stack, s.stack_next, s.stack_third, s.rest0, s.rest1, s.rest2, s.rest3, s.rest4,
-        s.rest5, s.rest6, s.rest7)[:count]
+        s.rest5, s.rest6, s.rest7, s.rest8, s.rest9, s.rest10, s.rest11, s.rest12, s.rest13)[:count]
 
 
 def global_reader(cpu):
@@ -51,7 +51,7 @@ def write_report(build_dir, name, report):
 def run_screen(name, address, sources, function, argtypes, restype, callees, generate, scope,
                *, wrappers=(), allocator=0x4ca000, globals_ranges=(), patch=None, compare=True,
                result_mask=0xffffffff, description='', table_targets=(), lookups=(), pool_size=0x200, effects=None, fixed_returns=None, handle_returns=(), choices=None,
-               setup=None, extras=None, native_extras_arg=None,
+               setup=None, extras=None, native_extras_arg=None, post=None,
                leading=('calls', 'services', 'globals')):
     """Run `function` against the original routine at `address`.
 
@@ -156,6 +156,8 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
         else:
             assert got == 1, (case, got)
         assert native_log == stubs.log, (case, native_log, stubs.log)
+        if post:
+            post(cpu, native_args)
         assert not replay and not replay_out and pool.same(), (case, pool.diff())
     write_report(args.build_dir, name, {
         'status': 'passed', 'complete_original_executions': {hex(address): args.cases},

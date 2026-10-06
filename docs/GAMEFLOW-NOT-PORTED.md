@@ -57,6 +57,10 @@ recovered (or have unmodeled global state):
 - Next step: recover the AnsiString runtime with a refcount-aware oracle, then `0x4b3210`,
   then `0x45fb00`.
 
+- ~~`0x461fc0`~~ RECOVERED (`source/options_screen.c`, `tools/verify_options_screen.py`,
+  `docs/options-screen-verification.json`, 4,096 executions; `VertrixCallSite` now carries up to 17
+  stack arguments, `run_screen` gained a `post` check for the stored global `0x532a48`).
+
 ## Player state handlers (bonus system range 0x450ff0..0x456033)
 
 - RECOVERED: `0x451490`, `0x451520`, `0x451580`, `0x451630`, `0x451690`, `0x451730`, `0x451dd0`,
