@@ -983,6 +983,14 @@
    },
    "failure": null
   },
+  "0x42a200": {
+   "passed": 15,
+   "skipped": 15,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 15
+   },
+   "failure": null
+  },
   "0x42a310": {
    "passed": 29,
    "skipped": 1,
@@ -1759,6 +1767,14 @@
    "passed": 30,
    "skipped": 0,
    "reasons": {},
+   "failure": null
+  },
+  "0x452770": {
+   "passed": 10,
+   "skipped": 20,
+   "reasons": {
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 20
+   },
    "failure": null
   },
   "0x452960": {
@@ -3250,6 +3266,14 @@
    "reasons": {},
    "failure": null
   },
+  "0x476160": {
+   "passed": 26,
+   "skipped": 4,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 4
+   },
+   "failure": null
+  },
   "0x476400": {
    "passed": 30,
    "skipped": 0,
@@ -3711,6 +3735,12 @@
    },
    "failure": null
   },
+  "0x47f410": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
   "0x47f4b0": {
    "passed": 13,
    "skipped": 17,
@@ -3726,6 +3756,12 @@
    "failure": null
   },
   "0x47f770": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x47f8f0": {
    "passed": 30,
    "skipped": 0,
    "reasons": {},
@@ -3868,6 +3904,12 @@
    "failure": null
   },
   "0x482860": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x4828a0": {
    "passed": 30,
    "skipped": 0,
    "reasons": {},
@@ -4059,6 +4101,12 @@
    "reasons": {},
    "failure": null
   },
+  "0x4886f0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
   "0x489170": {
    "passed": 40,
    "skipped": 0,
@@ -4150,6 +4198,14 @@
    "reasons": {},
    "failure": null
   },
+  "0x48b550": {
+   "passed": 27,
+   "skipped": 3,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 3
+   },
+   "failure": null
+  },
   "0x48b770": {
    "passed": 40,
    "skipped": 0,
@@ -4220,6 +4276,15 @@
    "passed": 40,
    "skipped": 0,
    "reasons": {},
+   "failure": null
+  },
+  "0x48d650": {
+   "passed": 12,
+   "skipped": 18,
+   "reasons": {
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 17,
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 1
+   },
    "failure": null
   },
   "0x48d6c0": {
@@ -4349,6 +4414,12 @@
    "reasons": {},
    "failure": null
   },
+  "0x4ae250": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
   "0x4af8c0": {
    "passed": 40,
    "skipped": 0,
@@ -4434,6 +4505,12 @@
    "reasons": {
     "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 18
    },
+   "failure": null
+  },
+  "0x4b3360": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4b3390": {
@@ -4538,6 +4615,12 @@
    },
    "failure": null
   },
+  "0x4b5700": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
   "0x4b5db0": {
    "passed": 28,
    "skipped": 2,
@@ -4574,6 +4657,12 @@
    "failure": null
   },
   "0x4b65d0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x4b6800": {
    "passed": 30,
    "skipped": 0,
    "reasons": {},
@@ -4749,10 +4838,10 @@
  },
  "weak": {
   "0x405ee0": {
-   "passed": 6,
-   "skipped": 24,
+   "passed": 1,
+   "skipped": 10,
    "reasons": {
-    "step limit": 24
+    "step limit": 10
    },
    "failure": null
   },
@@ -4765,10 +4854,10 @@
    "failure": null
   },
   "0x408800": {
-   "passed": 0,
-   "skipped": 10,
+   "passed": 4,
+   "skipped": 26,
    "reasons": {
-    "step limit": 10
+    "step limit": 26
    },
    "failure": null
   },
@@ -4789,11 +4878,10 @@
    "failure": null
   },
   "0x409f00": {
-   "passed": 0,
+   "passed": 1,
    "skipped": 10,
    "reasons": {
-    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 9,
-    "step limit": 1
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 10
    },
    "failure": null
   },
@@ -4806,10 +4894,12 @@
    "failure": null
   },
   "0x412240": {
-   "passed": 7,
-   "skipped": 23,
+   "passed": 5,
+   "skipped": 25,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 23
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 17,
+    "step limit": 1,
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 7
    },
    "failure": null
   },
@@ -4841,7 +4931,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "step limit": 10
+    "Invalid instruction (UC_ERR_INSN_INVALID)": 10
    },
    "failure": null
   },
@@ -4873,12 +4963,12 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
   "0x4374e0": {
-   "passed": 0,
+   "passed": 1,
    "skipped": 10,
    "reasons": {
     "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
@@ -4886,12 +4976,12 @@
    "failure": null
   },
   "0x4375f0": {
-   "passed": 0,
+   "passed": 1,
    "skipped": 10,
    "reasons": {
-    "step limit": 4,
-    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 4,
-    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 2
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 7,
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 1,
+    "step limit": 2
    },
    "failure": null
   },
@@ -4899,8 +4989,9 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 1,
     "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 1,
-    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 9
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 8
    },
    "failure": null
   },
@@ -4908,19 +4999,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "step limit": 1,
-    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 1,
-    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 1,
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 7
-   },
-   "failure": null
-  },
-  "0x452770": {
-   "passed": 7,
-   "skipped": 23,
-   "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 22,
-    "step limit": 1
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -4944,7 +5023,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -4957,6 +5036,14 @@
    "failure": null
   },
   "0x46c9d0": {
+   "passed": 9,
+   "skipped": 21,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 21
+   },
+   "failure": null
+  },
+  "0x472c10": {
    "passed": 0,
    "skipped": 10,
    "reasons": {
@@ -4964,19 +5051,11 @@
    },
    "failure": null
   },
-  "0x472c10": {
-   "passed": 1,
-   "skipped": 10,
-   "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
-   },
-   "failure": null
-  },
   "0x473e60": {
-   "passed": 1,
+   "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -4992,16 +5071,16 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
+    "step limit": 9,
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 1
    },
    "failure": null
   },
   "0x4759e0": {
-   "passed": 4,
-   "skipped": 26,
+   "passed": 0,
+   "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 25,
-    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 1
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -5009,38 +5088,20 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
-   },
-   "failure": null
-  },
-  "0x476c80": {
-   "passed": 0,
-   "skipped": 10,
-   "reasons": {
     "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
-  "0x477390": {
-   "passed": 0,
+  "0x476c80": {
+   "passed": 1,
    "skipped": 10,
    "reasons": {
     "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
    },
    "failure": null
   },
-  "0x4774e0": {
-   "passed": 4,
-   "skipped": 26,
-   "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 24,
-    "Invalid instruction (UC_ERR_INSN_INVALID)": 1,
-    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 1
-   },
-   "failure": null
-  },
-  "0x477c90": {
-   "passed": 0,
+  "0x477390": {
+   "passed": 2,
    "skipped": 10,
    "reasons": {
     "step limit": 1,
@@ -5048,11 +5109,28 @@
    },
    "failure": null
   },
-  "0x4792d0": {
+  "0x4774e0": {
    "passed": 0,
    "skipped": 10,
    "reasons": {
     "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
+   },
+   "failure": null
+  },
+  "0x477c90": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
+   },
+   "failure": null
+  },
+  "0x4792d0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 4,
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 6
    },
    "failure": null
   },
@@ -5060,7 +5138,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -5068,20 +5146,11 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
   "0x47ea20": {
-   "passed": 1,
-   "skipped": 10,
-   "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 9,
-    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 1
-   },
-   "failure": null
-  },
-  "0x47ed10": {
    "passed": 0,
    "skipped": 10,
    "reasons": {
@@ -5089,11 +5158,21 @@
    },
    "failure": null
   },
-  "0x47eda0": {
+  "0x47ed10": {
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid instruction (UC_ERR_INSN_INVALID)": 10
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+   },
+   "failure": null
+  },
+  "0x47eda0": {
+   "passed": 1,
+   "skipped": 10,
+   "reasons": {
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 1,
+    "step limit": 6,
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 3
    },
    "failure": null
   },
@@ -5101,7 +5180,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -5114,18 +5193,11 @@
    "failure": null
   },
   "0x47f830": {
-   "passed": 0,
-   "skipped": 10,
+   "passed": 3,
+   "skipped": 27,
    "reasons": {
-    "Invalid instruction (UC_ERR_INSN_INVALID)": 10
-   },
-   "failure": null
-  },
-  "0x47f8f0": {
-   "passed": 0,
-   "skipped": 10,
-   "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 26,
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 1
    },
    "failure": null
   },
@@ -5133,7 +5205,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -5146,10 +5218,10 @@
    "failure": null
   },
   "0x47fe80": {
-   "passed": 0,
-   "skipped": 10,
+   "passed": 9,
+   "skipped": 21,
    "reasons": {
-    "Invalid instruction (UC_ERR_INSN_INVALID)": 10
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 21
    },
    "failure": null
   },
@@ -5157,7 +5229,8 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 1,
+    "step limit": 9
    },
    "failure": null
   },
@@ -5165,7 +5238,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "step limit": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -5181,7 +5254,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid instruction (UC_ERR_INSN_INVALID)": 10
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
    },
    "failure": null
   },
@@ -5189,15 +5262,15 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
   "0x4817a0": {
-   "passed": 1,
+   "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -5209,19 +5282,11 @@
    },
    "failure": null
   },
-  "0x4828a0": {
-   "passed": 0,
-   "skipped": 10,
-   "reasons": {
-    "Invalid instruction (UC_ERR_INSN_INVALID)": 10
-   },
-   "failure": null
-  },
   "0x483060": {
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -5237,7 +5302,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid instruction (UC_ERR_INSN_INVALID)": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -5253,8 +5318,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 6,
-    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 4
+    "step limit": 10
    },
    "failure": null
   },
@@ -5270,7 +5334,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid instruction (UC_ERR_INSN_INVALID)": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -5286,8 +5350,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 5,
-    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 5
+    "step limit": 10
    },
    "failure": null
   },
@@ -5303,7 +5366,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid instruction (UC_ERR_INSN_INVALID)": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -5319,8 +5382,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 6,
-    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 4
+    "step limit": 10
    },
    "failure": null
   },
@@ -5336,7 +5398,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid instruction (UC_ERR_INSN_INVALID)": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -5349,11 +5411,10 @@
    "failure": null
   },
   "0x4873d0": {
-   "passed": 2,
+   "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 8,
-    "step limit": 2
+    "step limit": 10
    },
    "failure": null
   },
@@ -5369,15 +5430,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid instruction (UC_ERR_INSN_INVALID)": 10
-   },
-   "failure": null
-  },
-  "0x4886f0": {
-   "passed": 0,
-   "skipped": 10,
-   "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -5385,8 +5438,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 2,
-    "step limit": 8
+    "step limit": 10
    },
    "failure": null
   },
@@ -5402,7 +5454,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid instruction (UC_ERR_INSN_INVALID)": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -5410,8 +5462,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 9,
-    "Invalid instruction (UC_ERR_INSN_INVALID)": 1
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
    },
    "failure": null
   },
@@ -5435,15 +5486,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid instruction (UC_ERR_INSN_INVALID)": 10
-   },
-   "failure": null
-  },
-  "0x48b550": {
-   "passed": 0,
-   "skipped": 10,
-   "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -5467,15 +5510,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid instruction (UC_ERR_INSN_INVALID)": 10
-   },
-   "failure": null
-  },
-  "0x48d650": {
-   "passed": 0,
-   "skipped": 10,
-   "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -5499,15 +5534,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "step limit": 10
-   },
-   "failure": null
-  },
-  "0x4ae250": {
-   "passed": 0,
-   "skipped": 10,
-   "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -5531,15 +5558,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "step limit": 10
-   },
-   "failure": null
-  },
-  "0x4b3360": {
-   "passed": 0,
-   "skipped": 10,
-   "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -5547,8 +5566,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 7,
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 3
+    "step limit": 10
    },
    "failure": null
   },
@@ -5564,15 +5582,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "step limit": 10
-   },
-   "failure": null
-  },
-  "0x4b5700": {
-   "passed": 0,
-   "skipped": 10,
-   "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -5580,8 +5590,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 7,
-    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 3
+    "step limit": 10
    },
    "failure": null
   },
@@ -5597,15 +5606,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "step limit": 10
-   },
-   "failure": null
-  },
-  "0x4b6800": {
-   "passed": 0,
-   "skipped": 10,
-   "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -5613,8 +5614,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 8,
-    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 2
+    "step limit": 10
    },
    "failure": null
   },
@@ -5630,17 +5630,16 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "step limit": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
   "0x4b9170": {
-   "passed": 0,
+   "passed": 1,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 8,
-    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 1,
-    "step limit": 1
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 4,
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 6
    },
    "failure": null
   },
@@ -5648,7 +5647,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -5664,7 +5663,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "step limit": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -5672,9 +5671,9 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 8,
-    "step limit": 1,
-    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 1
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 2,
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 1,
+    "step limit": 7
    },
    "failure": null
   },
@@ -5682,7 +5681,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -5698,7 +5697,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "step limit": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -5706,7 +5705,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -5714,7 +5713,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -5730,7 +5729,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "step limit": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -5738,7 +5737,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -5746,7 +5745,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -5762,7 +5761,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "step limit": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -5770,7 +5769,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -5778,7 +5777,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -5794,7 +5793,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "step limit": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -5802,8 +5801,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 9,
-    "step limit": 1
+    "step limit": 10
    },
    "failure": null
   },
@@ -5811,7 +5809,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -5827,7 +5825,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "step limit": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -5835,7 +5833,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -5843,7 +5841,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -5859,7 +5857,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "step limit": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -5867,7 +5865,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -5875,7 +5873,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -5891,7 +5889,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "step limit": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -5899,9 +5897,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 8,
-    "step limit": 1,
-    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 1
+    "step limit": 10
    },
    "failure": null
   },
@@ -5909,7 +5905,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -5925,7 +5921,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "step limit": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -5933,8 +5929,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 9,
-    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 1
+    "step limit": 10
    },
    "failure": null
   },
@@ -5942,7 +5937,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -5958,7 +5953,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "step limit": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -5966,9 +5961,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 2,
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 7,
-    "step limit": 1
+    "step limit": 10
    },
    "failure": null
   },
@@ -5976,7 +5969,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -5992,7 +5985,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "step limit": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -6000,7 +5993,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -6008,7 +6001,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -6024,7 +6017,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "step limit": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -6032,7 +6025,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -6040,7 +6033,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -6056,7 +6049,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "step limit": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -6064,7 +6057,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -6072,7 +6065,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -6088,7 +6081,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "step limit": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -6096,7 +6089,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -6104,7 +6097,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -6120,7 +6113,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "step limit": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -6128,7 +6121,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -6136,7 +6129,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -6152,7 +6145,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "step limit": 10
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 10
    },
    "failure": null
   },
@@ -6160,7 +6153,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -6168,7 +6161,7 @@
    "passed": 0,
    "skipped": 10,
    "reasons": {
-    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+    "step limit": 10
    },
    "failure": null
   },
@@ -6195,52 +6188,32 @@
    "failure": "(0, ('calls', 'first difference', 7, 16, 16, [(4728512, 5868848, 16, 6, 28), (4728512, 5868848, 16, 2414882593, 32)], [(4728512, 5868848, 16, 0, 28), (4728512, 5868848, 16, 2414882593, 32)]))"
   },
   "0x416c30": {
-   "passed": 4,
+   "passed": 0,
    "skipped": 0,
    "reasons": {},
-   "failure": "(4, ('calls', 'first difference', 1, 12, 12, [(5033952, 3979466719, 9457664, 0, 0), (5022224, 7372772, 0, 0, 0)], [(5033952, 1887424735, 9457664, 0, 0), (5022224, 7372772, 0, 0, 0)]))"
-  },
-  "0x42a200": {
-   "passed": 0,
-   "skipped": 1,
-   "reasons": {
-    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 1
-   },
-   "failure": "(1, ('calls', 'first difference', 0, 0, 48, [], [(4907280, 8, 59, 149, 24, 24), (4920512, 8, 7372756, 7372760, 24)]))"
+   "failure": "(0, ('calls', 'first difference', 4, 57, 57, [(5033952, 3979466719, 9498624, 1, 1), (5022224, 7372772, 0, 0, 1)], [(5033952, 1887424735, 9498624, 1, 1), (5022224, 7372772, 0, 0, 1)]))"
   },
   "0x472f80": {
-   "passed": 0,
-   "skipped": 0,
-   "reasons": {},
-   "failure": "(0, ('calls', 'first difference', 5, 51, 51, [(5021696, 348, 4, 3, 4), (4906784, 0, 0, 0, 0, 0, 0, 0, 0, 0)], [(5021696, 348, 0, 3, 4), (4906784, 0, 0, 0, 0, 0, 0, 0, 0, 0)]))"
-  },
-  "0x476160": {
-   "passed": 6,
-   "skipped": 2,
+   "passed": 22,
+   "skipped": 3,
    "reasons": {
-    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 2
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 3
    },
-   "failure": "(8, ('global', '0x4', 215, 220))"
-  },
-  "0x47f410": {
-   "passed": 0,
-   "skipped": 0,
-   "reasons": {},
-   "failure": "(0, ('result', '0x0', '0x1'))"
+   "failure": "(25, ('calls', 'first difference', 5, 53, 53, [(5021696, 348, 4, 2, 4), (4898160, 1, 4, 2, 4)], [(5021696, 348, 0, 2, 4), (4898160, 1, 0, 2, 4)]))"
   },
   "0x480ec0": {
-   "passed": 10,
+   "passed": 2,
    "skipped": 0,
    "reasons": {},
-   "failure": "(10, ('calls', 'first difference', 4, 5, 5, [(4722016, 3979466719, 9580544, 2, 4294967295)], [(4722016, 223, 9580544, 2, 4294967295)]))"
+   "failure": "(2, ('calls', 'first difference', 4, 5, 5, [(4722016, 3979466719, 9560064, 2, 4294967295)], [(4722016, 223, 9560064, 2, 4294967295)]))"
   },
   "0x4ca2e0": {
-   "passed": 0,
-   "skipped": 1,
+   "passed": 3,
+   "skipped": 3,
    "reasons": {
-    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 1
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 3
    },
-   "failure": "(1, ('failed',))"
+   "failure": "(6, ('failed',))"
   }
  }
 }

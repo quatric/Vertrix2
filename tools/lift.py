@@ -374,6 +374,9 @@ class Lifter:
                 address += insn.size
         lines = []
         order = sorted(instructions)
+        if order[0] != start:
+            lines.append(f"    goto L_{start:x};")
+            targets.add(start)
         for index, address in enumerate(order):
             insn = instructions[address]
             if address in targets:
