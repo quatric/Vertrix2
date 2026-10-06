@@ -168,6 +168,8 @@ class Lifter:
     def string_operation(self, insn):
         parts = insn.mnemonic.split()
         prefix = parts[0] if len(parts) > 1 else None
+        if prefix is None and insn.bytes[0] in (0xf2, 0xf3):
+            prefix = "repne" if insn.bytes[0] == 0xf2 else "rep"
         base = parts[-1]
         width = {"b": 8, "w": 16, "d": 32}[base[-1]]
         step = width // 8

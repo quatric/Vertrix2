@@ -25,7 +25,7 @@ case disagrees and enough cases complete.
 
 ## Result
 
-717 routines kept (`docs/lifted-verification.json`, key `kept`): they pass the comparison in
+729 routines kept (`docs/lifted-verification.json`, key `kept`): they pass the comparison in
 the final form of the file (30 cases each, at least 10 completing). 195 are lifted but
 too few cases complete (pointer or buffer arguments the random inputs cannot supply), 6
 fail. The translation refuses 106 routines that call the Win32 import table, 6 that call a routine

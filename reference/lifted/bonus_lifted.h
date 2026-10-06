@@ -116,6 +116,10 @@ uint32_t vertrix_lift_412510(LiftContext *L, uint32_t eax, uint32_t edx, uint32_
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_4125e0(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
+uint32_t vertrix_lift_412650(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
+                             uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
+uint32_t vertrix_lift_412690(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
+                             uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_4138b0(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_413a40(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
@@ -308,6 +312,8 @@ uint32_t vertrix_lift_425de0(LiftContext *L, uint32_t eax, uint32_t edx, uint32_
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_425f40(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
+uint32_t vertrix_lift_425f60(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
+                             uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_427850(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_4279b0(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
@@ -491,6 +497,8 @@ uint32_t vertrix_lift_439080(LiftContext *L, uint32_t eax, uint32_t edx, uint32_
 uint32_t vertrix_lift_439140(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_439190(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
+                             uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
+uint32_t vertrix_lift_4393f0(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_439510(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
@@ -834,6 +842,8 @@ uint32_t vertrix_lift_4657f0(LiftContext *L, uint32_t eax, uint32_t edx, uint32_
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_465a70(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
+uint32_t vertrix_lift_465af0(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
+                             uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_466d60(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_469480(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
@@ -1008,6 +1018,8 @@ uint32_t vertrix_lift_475b80(LiftContext *L, uint32_t eax, uint32_t edx, uint32_
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_475be0(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
+uint32_t vertrix_lift_475c80(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
+                             uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_475de0(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_475e30(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
@@ -1154,6 +1166,8 @@ uint32_t vertrix_lift_47f370(LiftContext *L, uint32_t eax, uint32_t edx, uint32_
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_47f3d0(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
+uint32_t vertrix_lift_47f4b0(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
+                             uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_47f750(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_47f770(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
@@ -1210,9 +1224,13 @@ uint32_t vertrix_lift_482aa0(LiftContext *L, uint32_t eax, uint32_t edx, uint32_
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_482b40(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
+uint32_t vertrix_lift_482d00(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
+                             uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_482f80(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_4830f0(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
+                             uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
+uint32_t vertrix_lift_483110(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_483790(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
@@ -1354,6 +1372,8 @@ uint32_t vertrix_lift_4b2300(LiftContext *L, uint32_t eax, uint32_t edx, uint32_
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_4b2340(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
+uint32_t vertrix_lift_4b2a00(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
+                             uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_4b2d90(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_4b3100(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
@@ -1432,6 +1452,8 @@ uint32_t vertrix_lift_4c5a40(LiftContext *L, uint32_t eax, uint32_t edx, uint32_
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_4c5bb0(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
+uint32_t vertrix_lift_4c70f0(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
+                             uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_4c9b6a(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_4ca060(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
@@ -1439,6 +1461,8 @@ uint32_t vertrix_lift_4ca060(LiftContext *L, uint32_t eax, uint32_t edx, uint32_
 uint32_t vertrix_lift_4ca5a0(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_4cd847(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
+                             uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
+uint32_t vertrix_lift_4cdb70(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);
 uint32_t vertrix_lift_4cea15(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp);

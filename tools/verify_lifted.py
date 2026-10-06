@@ -118,6 +118,7 @@ def main():
                         default=Path(__file__).resolve().parents[1] / 'reference' / 'lifted' / 'bonus_lifted.c')
     parser.add_argument('--routines', nargs='*', default=None)
     parser.add_argument('--cases', type=int, default=300)
+    parser.add_argument('--small-only', action='store_true')
     parser.add_argument('--seed', type=int, default=0x1f7)
     parser.add_argument('--report', type=Path, default=None)
     args = parser.parse_args()
@@ -185,6 +186,8 @@ def main():
     mode = {'small': False}
 
     def value_mix():
+        if args.small_only:
+            return rng.randrange(0, 64)
         wide = ([] if mode['small'] else [0xffffffff, rng.getrandbits(32)])
         return rng.choice([0, 1, 2, 3, rng.randrange(0, 64), rng.randrange(0, 12),
                            rng.choice(handles), scratch_pointer(), scratch_pointer()] + wide)
@@ -332,7 +335,7 @@ def main():
                         value = rng.randrange(0, 12) if mode['small'] else rng.getrandbits(32)
                     struct.pack_into('<I', data, offset, value)
                 struct.pack_into('<I', data, 0x158, VTABLE)
-            mode['small'] = case % 2 == 1
+            mode['small'] = args.small_only or case % 2 == 1
             pool.fill(rng, patch)
             cpu.mem_write(0x950000, rng.randbytes(0x20000))
             for offset in range(0, STACK_SPAN, 4):
@@ -413,7 +416,18 @@ def main():
             elif replay:
                 problems.append(('replay left', replay))
             elif not pool.same():
-                problems.append(('objects', pool.diff()))
+                detail = []
+                for h in pool.handles:
+                    want = bytes(cpu.mem_read(h, pool.size))
+                    got_bytes = pool.buffers[h].raw
+                    for i in range(pool.size):
+                        if want[i] != got_bytes[i]:
+                            detail.append((hex(h + i), want[i], got_bytes[i]))
+                            if len(detail) >= 4:
+                                break
+                    if len(detail) >= 4:
+                        break
+                problems.append(('objects', pool.diff(), 'original, native', detail, hex(entry_eax)))
             else:
                 after_native = dict(native_writes)
                 def peek(address):

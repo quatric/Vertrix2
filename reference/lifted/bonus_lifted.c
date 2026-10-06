@@ -30554,6 +30554,322 @@ L_412648:;
     return eax;
 }
 
+uint32_t vertrix_lift_412650(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
+                             uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp)
+{
+    uint32_t a;
+    uint32_t b;
+    uint32_t c;
+    uint32_t d;
+    uint32_t k;
+    uint32_t r;
+    uint32_t t;
+    uint64_t u;
+    int64_t p;
+    int32_t s;
+    unsigned ZF = 0;
+    unsigned SF = 0;
+    unsigned CF = 0;
+    unsigned OF = 0;
+    unsigned PF = 0;
+    (void)a;
+    (void)b;
+    (void)c;
+    (void)d;
+    (void)k;
+    (void)r;
+    (void)t;
+    (void)u;
+    (void)p;
+    (void)s;
+    (void)ZF;
+    (void)SF;
+    (void)CF;
+    (void)OF;
+    (void)PF;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)L;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esp;
+    /* 412650: push ecx */
+    t = ecx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 412651: push esi */
+    t = esi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 412652: push edi */
+    t = edi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 412653: mov ecx, eax */
+    ecx = eax;
+    /* 412655: lea eax, [edx*4] */
+    eax = (edx * 4u);
+    /* 41265c: sub eax, edx */
+    a = eax;
+    b = edx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 41265e: shl eax, 2 */
+    a = eax;
+    c = 0x2u & 31u;
+    if (c)
+    {
+        r = (a << c) & 0xffffffffu;
+        CF = (a >> (32 - c)) & 1u;
+        OF = ((r & 0x80000000u) != 0) != CF;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        eax = r;
+    }
+    /* 412661: lea esi, [ecx + eax] */
+    esi = (ecx + eax);
+    /* 412664: lea edi, [ecx + 0x5c0] */
+    edi = (ecx + 0x5c0u);
+    /* 41266a: mov ecx, 0xc */
+    ecx = 0xcu;
+    /* 41266f: push edi */
+    t = edi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 412670: mov eax, ecx */
+    eax = ecx;
+    /* 412672: shr ecx, 2 */
+    a = ecx;
+    c = 0x2u & 31u;
+    if (c)
+    {
+        r = a >> c;
+        CF = (a >> (c - 1)) & 1u;
+        OF = (a & 0x80000000u) != 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ecx = r;
+    }
+    /* 412675: movsd dword ptr es:[edi], dword ptr [esi] */
+    while (ecx != 0)
+    {
+        vertrix_lift_write(L, edi, 32, vertrix_lift_read(L, esi, 32, 0), 0);
+        esi += 4u;
+        edi += 4u;
+        ecx -= 1;
+        if (L->failed)
+            return 0;
+    }
+    /* 412677: mov cl, al */
+    ecx = (ecx & ~(0xffu << 0)) | (((((eax >> 0) & 0xffu)) & 0xffu) << 0);
+    /* 412679: and cl, 3 */
+    a = ((ecx >> 0) & 0xffu);
+    b = 0x3u & 0xffu;
+    r = (a & b) & 0xffu;
+    ZF = r == 0;
+    SF = (r & 0x80u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = (ecx & ~(0xffu << 0)) | (((r) & 0xffu) << 0);
+    /* 41267c: repne movsb byte ptr es:[edi], byte ptr [esi] */
+    while (ecx != 0)
+    {
+        vertrix_lift_write(L, edi, 8, vertrix_lift_read(L, esi, 8, 0), 0);
+        esi += 1u;
+        edi += 1u;
+        ecx -= 1;
+        if (L->failed)
+            return 0;
+    }
+    /* 41267e: pop edi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edi = t;
+    /* 41267f: pop edi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edi = t;
+    /* 412680: pop esi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    esi = t;
+    /* 412681: pop ecx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ecx = t;
+    /* 412682: ret  */
+    return eax;
+}
+
+uint32_t vertrix_lift_412690(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
+                             uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp)
+{
+    uint32_t a;
+    uint32_t b;
+    uint32_t c;
+    uint32_t d;
+    uint32_t k;
+    uint32_t r;
+    uint32_t t;
+    uint64_t u;
+    int64_t p;
+    int32_t s;
+    unsigned ZF = 0;
+    unsigned SF = 0;
+    unsigned CF = 0;
+    unsigned OF = 0;
+    unsigned PF = 0;
+    (void)a;
+    (void)b;
+    (void)c;
+    (void)d;
+    (void)k;
+    (void)r;
+    (void)t;
+    (void)u;
+    (void)p;
+    (void)s;
+    (void)ZF;
+    (void)SF;
+    (void)CF;
+    (void)OF;
+    (void)PF;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)L;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esp;
+    /* 412690: push ecx */
+    t = ecx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 412691: push esi */
+    t = esi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 412692: push edi */
+    t = edi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 412693: mov ecx, eax */
+    ecx = eax;
+    /* 412695: lea eax, [edx*4] */
+    eax = (edx * 4u);
+    /* 41269c: sub eax, edx */
+    a = eax;
+    b = edx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 41269e: shl eax, 2 */
+    a = eax;
+    c = 0x2u & 31u;
+    if (c)
+    {
+        r = (a << c) & 0xffffffffu;
+        CF = (a >> (32 - c)) & 1u;
+        OF = ((r & 0x80000000u) != 0) != CF;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        eax = r;
+    }
+    /* 4126a1: lea edi, [ecx + eax] */
+    edi = (ecx + eax);
+    /* 4126a4: lea esi, [ecx + 0x5c0] */
+    esi = (ecx + 0x5c0u);
+    /* 4126aa: mov ecx, 0xc */
+    ecx = 0xcu;
+    /* 4126af: push edi */
+    t = edi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4126b0: mov eax, ecx */
+    eax = ecx;
+    /* 4126b2: shr ecx, 2 */
+    a = ecx;
+    c = 0x2u & 31u;
+    if (c)
+    {
+        r = a >> c;
+        CF = (a >> (c - 1)) & 1u;
+        OF = (a & 0x80000000u) != 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ecx = r;
+    }
+    /* 4126b5: movsd dword ptr es:[edi], dword ptr [esi] */
+    while (ecx != 0)
+    {
+        vertrix_lift_write(L, edi, 32, vertrix_lift_read(L, esi, 32, 0), 0);
+        esi += 4u;
+        edi += 4u;
+        ecx -= 1;
+        if (L->failed)
+            return 0;
+    }
+    /* 4126b7: mov cl, al */
+    ecx = (ecx & ~(0xffu << 0)) | (((((eax >> 0) & 0xffu)) & 0xffu) << 0);
+    /* 4126b9: and cl, 3 */
+    a = ((ecx >> 0) & 0xffu);
+    b = 0x3u & 0xffu;
+    r = (a & b) & 0xffu;
+    ZF = r == 0;
+    SF = (r & 0x80u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = (ecx & ~(0xffu << 0)) | (((r) & 0xffu) << 0);
+    /* 4126bc: repne movsb byte ptr es:[edi], byte ptr [esi] */
+    while (ecx != 0)
+    {
+        vertrix_lift_write(L, edi, 8, vertrix_lift_read(L, esi, 8, 0), 0);
+        esi += 1u;
+        edi += 1u;
+        ecx -= 1;
+        if (L->failed)
+            return 0;
+    }
+    /* 4126be: pop edi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edi = t;
+    /* 4126bf: pop edi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edi = t;
+    /* 4126c0: pop esi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    esi = t;
+    /* 4126c1: pop ecx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ecx = t;
+    /* 4126c2: ret  */
+    return eax;
+}
+
 uint32_t vertrix_lift_4138b0(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp)
 {
@@ -60010,6 +60326,943 @@ uint32_t vertrix_lift_425f40(LiftContext *L, uint32_t eax, uint32_t edx, uint32_
     return eax;
 }
 
+uint32_t vertrix_lift_425f60(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
+                             uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp)
+{
+    uint32_t a;
+    uint32_t b;
+    uint32_t c;
+    uint32_t d;
+    uint32_t k;
+    uint32_t r;
+    uint32_t t;
+    uint64_t u;
+    int64_t p;
+    int32_t s;
+    unsigned ZF = 0;
+    unsigned SF = 0;
+    unsigned CF = 0;
+    unsigned OF = 0;
+    unsigned PF = 0;
+    (void)a;
+    (void)b;
+    (void)c;
+    (void)d;
+    (void)k;
+    (void)r;
+    (void)t;
+    (void)u;
+    (void)p;
+    (void)s;
+    (void)ZF;
+    (void)SF;
+    (void)CF;
+    (void)OF;
+    (void)PF;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)L;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esp;
+    /* 425f60: push ebp */
+    t = ebp;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 425f61: mov ebp, esp */
+    ebp = esp;
+    /* 425f63: push esi */
+    t = esi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 425f64: push edi */
+    t = edi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 425f65: sub esp, 0x20 */
+    a = esp;
+    b = 0x20u & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    esp = r;
+    /* 425f68: mov dword ptr [ebp - 0xc], eax */
+    vertrix_lift_write(L, ebp + 0xfffffff4u, 32, eax, 0);
+    /* 425f6b: mov dword ptr [ebp - 0x10], edx */
+    vertrix_lift_write(L, ebp + 0xfffffff0u, 32, edx, 0);
+    /* 425f6e: mov dword ptr [ebp - 0x18], ebx */
+    vertrix_lift_write(L, ebp + 0xffffffe8u, 32, ebx, 0);
+    /* 425f71: mov dword ptr [ebp - 0x14], ecx */
+    vertrix_lift_write(L, ebp + 0xffffffecu, 32, ecx, 0);
+    /* 425f74: xor esi, esi */
+    a = esi;
+    b = esi & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    esi = r;
+    /* 425f76: mov dword ptr [ebp - 0x28], esi */
+    vertrix_lift_write(L, ebp + 0xffffffd8u, 32, esi, 0);
+    /* 425f79: mov dword ptr [ebp - 0x24], esi */
+    vertrix_lift_write(L, ebp + 0xffffffdcu, 32, esi, 0);
+    /* 425f7c: mov dword ptr [ebp - 0x20], esi */
+    vertrix_lift_write(L, ebp + 0xffffffe0u, 32, esi, 0);
+    /* 425f7f: mov eax, dword ptr [edx + 0x15c] */
+    eax = vertrix_lift_read(L, edx + 0x15cu, 32, edx);
+    /* 425f85: mov edi, dword ptr [eax + 0xa60] */
+    edi = vertrix_lift_read(L, eax + 0xa60u, 32, eax);
+    /* 425f8b: mov dword ptr [ebp - 0x1c], eax */
+    vertrix_lift_write(L, ebp + 0xffffffe4u, 32, eax, 0);
+    /* 425f8e: test edi, edi */
+    a = edi;
+    b = edi & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 425f90: jne 0x425f9b */
+    if (!ZF)
+    {
+        goto L_425f9b;
+    }
+L_425f92:;
+    /* 425f92: lea esp, [ebp - 8] */
+    esp = (ebp + 0xfffffff8u);
+    /* 425f95: pop edi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edi = t;
+    /* 425f96: pop esi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    esi = t;
+    /* 425f97: pop ebp */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ebp = t;
+    /* 425f98: ret 4 */
+    return eax;
+L_425f9b:;
+    /* 425f9b: lea ecx, [ebp - 0x20] */
+    ecx = (ebp + 0xffffffe0u);
+    /* 425f9e: lea ebx, [ebp - 0x24] */
+    ebx = (ebp + 0xffffffdcu);
+    /* 425fa1: lea edx, [ebp - 0x28] */
+    edx = (ebp + 0xffffffd8u);
+    /* 425fa4: call 0x431b20 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x425fa9u, 0);
+    eax = vertrix_lift_call(L, 0x431b20, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 425fa9: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 425fab: je 0x425f92 */
+    if (ZF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_425f92;
+    }
+    /* 425fad: mov eax, dword ptr [ebp - 0x1c] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffe4u, 32, 0);
+    /* 425fb0: call 0x432820 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x425fb5u, 0);
+    eax = vertrix_lift_call(L, 0x432820, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 425fb5: mov eax, dword ptr [ebp - 0x10] */
+    eax = vertrix_lift_read(L, ebp + 0xfffffff0u, 32, 0);
+    /* 425fb8: mov al, byte ptr [eax + 0x4cd] */
+    eax = (eax & ~(0xffu << 0)) | (((vertrix_lift_read(L, eax + 0x4cdu, 8, eax)) & 0xffu) << 0);
+    /* 425fbe: test al, al */
+    a = ((eax >> 0) & 0xffu);
+    b = ((eax >> 0) & 0xffu) & 0xffu;
+    r = (a & b) & 0xffu;
+    ZF = r == 0;
+    SF = (r & 0x80u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 425fc0: je 0x42604a */
+    if (ZF)
+    {
+        goto L_42604a;
+    }
+    /* 425fc6: mov esi, dword ptr [ebp - 0x1c] */
+    esi = vertrix_lift_read(L, ebp + 0xffffffe4u, 32, 0);
+    /* 425fc9: mov edi, dword ptr [ebp - 0xc] */
+    edi = vertrix_lift_read(L, ebp + 0xfffffff4u, 32, 0);
+    /* 425fcc: mov ecx, 0x41 */
+    ecx = 0x41u;
+    /* 425fd1: add esi, 0x1de */
+    a = esi;
+    b = 0x1deu & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    esi = r;
+    /* 425fd7: add edi, 0x184 */
+    a = edi;
+    b = 0x184u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edi = r;
+    /* 425fdd: push edi */
+    t = edi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 425fde: mov eax, ecx */
+    eax = ecx;
+    /* 425fe0: shr ecx, 2 */
+    a = ecx;
+    c = 0x2u & 31u;
+    if (c)
+    {
+        r = a >> c;
+        CF = (a >> (c - 1)) & 1u;
+        OF = (a & 0x80000000u) != 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ecx = r;
+    }
+    /* 425fe3: movsd dword ptr es:[edi], dword ptr [esi] */
+    while (ecx != 0)
+    {
+        vertrix_lift_write(L, edi, 32, vertrix_lift_read(L, esi, 32, 0), 0);
+        esi += 4u;
+        edi += 4u;
+        ecx -= 1;
+        if (L->failed)
+            return 0;
+    }
+    /* 425fe5: mov cl, al */
+    ecx = (ecx & ~(0xffu << 0)) | (((((eax >> 0) & 0xffu)) & 0xffu) << 0);
+    /* 425fe7: and cl, 3 */
+    a = ((ecx >> 0) & 0xffu);
+    b = 0x3u & 0xffu;
+    r = (a & b) & 0xffu;
+    ZF = r == 0;
+    SF = (r & 0x80u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = (ecx & ~(0xffu << 0)) | (((r) & 0xffu) << 0);
+    /* 425fea: repne movsb byte ptr es:[edi], byte ptr [esi] */
+    while (ecx != 0)
+    {
+        vertrix_lift_write(L, edi, 8, vertrix_lift_read(L, esi, 8, 0), 0);
+        esi += 1u;
+        edi += 1u;
+        ecx -= 1;
+        if (L->failed)
+            return 0;
+    }
+    /* 425fec: pop edi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edi = t;
+    /* 425fed: mov eax, dword ptr [ebp - 0x10] */
+    eax = vertrix_lift_read(L, ebp + 0xfffffff0u, 32, 0);
+    /* 425ff0: mov eax, dword ptr [eax + 0x4c8] */
+    eax = vertrix_lift_read(L, eax + 0x4c8u, 32, eax);
+    /* 425ff6: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 425ff7: mov eax, dword ptr [ebp - 0x10] */
+    eax = vertrix_lift_read(L, ebp + 0xfffffff0u, 32, 0);
+    /* 425ffa: mov al, byte ptr [eax + 0x4cd] */
+    eax = (eax & ~(0xffu << 0)) | (((vertrix_lift_read(L, eax + 0x4cdu, 8, eax)) & 0xffu) << 0);
+    /* 426000: movsx eax, al */
+    eax = (uint32_t)(int32_t)(int8_t)(((eax >> 0) & 0xffu));
+    /* 426003: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 426004: mov eax, dword ptr [ebp - 0xc] */
+    eax = vertrix_lift_read(L, ebp + 0xfffffff4u, 32, 0);
+    /* 426007: mov edx, dword ptr [eax + 0x160] */
+    edx = vertrix_lift_read(L, eax + 0x160u, 32, eax);
+    /* 42600d: push edx */
+    t = edx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 42600e: mov ecx, dword ptr [ebp - 0x20] */
+    ecx = vertrix_lift_read(L, ebp + 0xffffffe0u, 32, 0);
+    /* 426011: mov eax, dword ptr [ebp - 0x10] */
+    eax = vertrix_lift_read(L, ebp + 0xfffffff0u, 32, 0);
+    /* 426014: push ecx */
+    t = ecx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 426015: mov ebx, dword ptr [ebp - 0x28] */
+    ebx = vertrix_lift_read(L, ebp + 0xffffffd8u, 32, 0);
+    /* 426018: mov al, byte ptr [eax + 0x4dc] */
+    eax = (eax & ~(0xffu << 0)) | (((vertrix_lift_read(L, eax + 0x4dcu, 8, eax)) & 0xffu) << 0);
+    /* 42601e: push ebx */
+    t = ebx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 42601f: and eax, 0xff */
+    a = eax;
+    b = 0xffu & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 426024: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 426025: mov eax, dword ptr [ebp - 0xc] */
+    eax = vertrix_lift_read(L, ebp + 0xfffffff4u, 32, 0);
+    /* 426028: add eax, 0x168 */
+    a = eax;
+    b = 0x168u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 42602d: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 42602e: mov eax, dword ptr [ebp - 0xc] */
+    eax = vertrix_lift_read(L, ebp + 0xfffffff4u, 32, 0);
+    /* 426031: mov ecx, dword ptr [ebp + 8] */
+    ecx = vertrix_lift_read(L, ebp + 0x8u, 32, 0);
+    /* 426034: add eax, 0x16c */
+    a = eax;
+    b = 0x16cu & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 426039: mov ebx, dword ptr [ebp - 0x14] */
+    ebx = vertrix_lift_read(L, ebp + 0xffffffecu, 32, 0);
+    /* 42603c: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 42603d: mov edx, dword ptr [ebp - 0x18] */
+    edx = vertrix_lift_read(L, ebp + 0xffffffe8u, 32, 0);
+    /* 426040: mov eax, dword ptr [ebp - 0xc] */
+    eax = vertrix_lift_read(L, ebp + 0xfffffff4u, 32, 0);
+    /* 426043: call 0x427380 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x426048u, 0);
+    eax = vertrix_lift_call(L, 0x427380, eax, edx, ebx, ecx, esp, 8);
+    esp += 32u;
+    if (L->failed)
+        return 0;
+    /* 426048: mov esi, eax */
+    esi = eax;
+L_42604a:;
+    /* 42604a: test esi, esi */
+    a = esi;
+    b = esi & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 42604c: jne 0x4260bb */
+    if (!ZF)
+    {
+        goto L_4260bb;
+    }
+    /* 42604e: mov esi, dword ptr [ebp - 0x1c] */
+    esi = vertrix_lift_read(L, ebp + 0xffffffe4u, 32, 0);
+    /* 426051: mov edi, dword ptr [ebp - 0xc] */
+    edi = vertrix_lift_read(L, ebp + 0xfffffff4u, 32, 0);
+    /* 426054: mov ecx, 0x41 */
+    ecx = 0x41u;
+    /* 426059: add esi, 0x1de */
+    a = esi;
+    b = 0x1deu & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    esi = r;
+    /* 42605f: add edi, 0x184 */
+    a = edi;
+    b = 0x184u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edi = r;
+    /* 426065: push edi */
+    t = edi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 426066: mov eax, ecx */
+    eax = ecx;
+    /* 426068: shr ecx, 2 */
+    a = ecx;
+    c = 0x2u & 31u;
+    if (c)
+    {
+        r = a >> c;
+        CF = (a >> (c - 1)) & 1u;
+        OF = (a & 0x80000000u) != 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ecx = r;
+    }
+    /* 42606b: movsd dword ptr es:[edi], dword ptr [esi] */
+    while (ecx != 0)
+    {
+        vertrix_lift_write(L, edi, 32, vertrix_lift_read(L, esi, 32, 0), 0);
+        esi += 4u;
+        edi += 4u;
+        ecx -= 1;
+        if (L->failed)
+            return 0;
+    }
+    /* 42606d: mov cl, al */
+    ecx = (ecx & ~(0xffu << 0)) | (((((eax >> 0) & 0xffu)) & 0xffu) << 0);
+    /* 42606f: and cl, 3 */
+    a = ((ecx >> 0) & 0xffu);
+    b = 0x3u & 0xffu;
+    r = (a & b) & 0xffu;
+    ZF = r == 0;
+    SF = (r & 0x80u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = (ecx & ~(0xffu << 0)) | (((r) & 0xffu) << 0);
+    /* 426072: repne movsb byte ptr es:[edi], byte ptr [esi] */
+    while (ecx != 0)
+    {
+        vertrix_lift_write(L, edi, 8, vertrix_lift_read(L, esi, 8, 0), 0);
+        esi += 1u;
+        edi += 1u;
+        ecx -= 1;
+        if (L->failed)
+            return 0;
+    }
+    /* 426074: pop edi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edi = t;
+    /* 426075: mov eax, dword ptr [ebp - 0xc] */
+    eax = vertrix_lift_read(L, ebp + 0xfffffff4u, 32, 0);
+    /* 426078: mov esi, dword ptr [eax + 0x160] */
+    esi = vertrix_lift_read(L, eax + 0x160u, 32, eax);
+    /* 42607e: push esi */
+    t = esi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 42607f: mov edi, dword ptr [ebp - 0x20] */
+    edi = vertrix_lift_read(L, ebp + 0xffffffe0u, 32, 0);
+    /* 426082: push edi */
+    t = edi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 426083: mov eax, dword ptr [ebp - 0x28] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffd8u, 32, 0);
+    /* 426086: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 426087: mov eax, dword ptr [ebp - 0x10] */
+    eax = vertrix_lift_read(L, ebp + 0xfffffff0u, 32, 0);
+    /* 42608a: mov al, byte ptr [eax + 0x4dc] */
+    eax = (eax & ~(0xffu << 0)) | (((vertrix_lift_read(L, eax + 0x4dcu, 8, eax)) & 0xffu) << 0);
+    /* 426090: and eax, 0xff */
+    a = eax;
+    b = 0xffu & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 426095: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 426096: mov eax, dword ptr [ebp - 0xc] */
+    eax = vertrix_lift_read(L, ebp + 0xfffffff4u, 32, 0);
+    /* 426099: add eax, 0x168 */
+    a = eax;
+    b = 0x168u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 42609e: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 42609f: mov eax, dword ptr [ebp - 0xc] */
+    eax = vertrix_lift_read(L, ebp + 0xfffffff4u, 32, 0);
+    /* 4260a2: mov ecx, dword ptr [ebp + 8] */
+    ecx = vertrix_lift_read(L, ebp + 0x8u, 32, 0);
+    /* 4260a5: add eax, 0x16c */
+    a = eax;
+    b = 0x16cu & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 4260aa: mov ebx, dword ptr [ebp - 0x14] */
+    ebx = vertrix_lift_read(L, ebp + 0xffffffecu, 32, 0);
+    /* 4260ad: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4260ae: mov edx, dword ptr [ebp - 0x18] */
+    edx = vertrix_lift_read(L, ebp + 0xffffffe8u, 32, 0);
+    /* 4260b1: mov eax, dword ptr [ebp - 0xc] */
+    eax = vertrix_lift_read(L, ebp + 0xfffffff4u, 32, 0);
+    /* 4260b4: call 0x4270a0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4260b9u, 0);
+    eax = vertrix_lift_call(L, 0x4270a0, eax, edx, ebx, ecx, esp, 6);
+    esp += 24u;
+    if (L->failed)
+        return 0;
+    /* 4260b9: mov esi, eax */
+    esi = eax;
+L_4260bb:;
+    /* 4260bb: test esi, esi */
+    a = esi;
+    b = esi & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 4260bd: jne 0x42612c */
+    if (!ZF)
+    {
+        goto L_42612c;
+    }
+    /* 4260bf: mov esi, dword ptr [ebp - 0x1c] */
+    esi = vertrix_lift_read(L, ebp + 0xffffffe4u, 32, 0);
+    /* 4260c2: mov edi, dword ptr [ebp - 0xc] */
+    edi = vertrix_lift_read(L, ebp + 0xfffffff4u, 32, 0);
+    /* 4260c5: mov ecx, 0x41 */
+    ecx = 0x41u;
+    /* 4260ca: add esi, 0x1de */
+    a = esi;
+    b = 0x1deu & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    esi = r;
+    /* 4260d0: add edi, 0x184 */
+    a = edi;
+    b = 0x184u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edi = r;
+    /* 4260d6: push edi */
+    t = edi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4260d7: mov eax, ecx */
+    eax = ecx;
+    /* 4260d9: shr ecx, 2 */
+    a = ecx;
+    c = 0x2u & 31u;
+    if (c)
+    {
+        r = a >> c;
+        CF = (a >> (c - 1)) & 1u;
+        OF = (a & 0x80000000u) != 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ecx = r;
+    }
+    /* 4260dc: movsd dword ptr es:[edi], dword ptr [esi] */
+    while (ecx != 0)
+    {
+        vertrix_lift_write(L, edi, 32, vertrix_lift_read(L, esi, 32, 0), 0);
+        esi += 4u;
+        edi += 4u;
+        ecx -= 1;
+        if (L->failed)
+            return 0;
+    }
+    /* 4260de: mov cl, al */
+    ecx = (ecx & ~(0xffu << 0)) | (((((eax >> 0) & 0xffu)) & 0xffu) << 0);
+    /* 4260e0: and cl, 3 */
+    a = ((ecx >> 0) & 0xffu);
+    b = 0x3u & 0xffu;
+    r = (a & b) & 0xffu;
+    ZF = r == 0;
+    SF = (r & 0x80u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = (ecx & ~(0xffu << 0)) | (((r) & 0xffu) << 0);
+    /* 4260e3: repne movsb byte ptr es:[edi], byte ptr [esi] */
+    while (ecx != 0)
+    {
+        vertrix_lift_write(L, edi, 8, vertrix_lift_read(L, esi, 8, 0), 0);
+        esi += 1u;
+        edi += 1u;
+        ecx -= 1;
+        if (L->failed)
+            return 0;
+    }
+    /* 4260e5: pop edi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edi = t;
+    /* 4260e6: mov eax, dword ptr [ebp - 0xc] */
+    eax = vertrix_lift_read(L, ebp + 0xfffffff4u, 32, 0);
+    /* 4260e9: mov edx, dword ptr [eax + 0x160] */
+    edx = vertrix_lift_read(L, eax + 0x160u, 32, eax);
+    /* 4260ef: push edx */
+    t = edx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4260f0: mov ecx, dword ptr [ebp - 0x20] */
+    ecx = vertrix_lift_read(L, ebp + 0xffffffe0u, 32, 0);
+    /* 4260f3: mov eax, dword ptr [ebp - 0x10] */
+    eax = vertrix_lift_read(L, ebp + 0xfffffff0u, 32, 0);
+    /* 4260f6: push ecx */
+    t = ecx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4260f7: mov ebx, dword ptr [ebp - 0x28] */
+    ebx = vertrix_lift_read(L, ebp + 0xffffffd8u, 32, 0);
+    /* 4260fa: mov al, byte ptr [eax + 0x4dc] */
+    eax = (eax & ~(0xffu << 0)) | (((vertrix_lift_read(L, eax + 0x4dcu, 8, eax)) & 0xffu) << 0);
+    /* 426100: push ebx */
+    t = ebx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 426101: and eax, 0xff */
+    a = eax;
+    b = 0xffu & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 426106: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 426107: mov eax, dword ptr [ebp - 0xc] */
+    eax = vertrix_lift_read(L, ebp + 0xfffffff4u, 32, 0);
+    /* 42610a: add eax, 0x168 */
+    a = eax;
+    b = 0x168u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 42610f: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 426110: mov eax, dword ptr [ebp - 0xc] */
+    eax = vertrix_lift_read(L, ebp + 0xfffffff4u, 32, 0);
+    /* 426113: mov ecx, dword ptr [ebp + 8] */
+    ecx = vertrix_lift_read(L, ebp + 0x8u, 32, 0);
+    /* 426116: add eax, 0x16c */
+    a = eax;
+    b = 0x16cu & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 42611b: mov ebx, dword ptr [ebp - 0x14] */
+    ebx = vertrix_lift_read(L, ebp + 0xffffffecu, 32, 0);
+    /* 42611e: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 42611f: mov edx, dword ptr [ebp - 0x18] */
+    edx = vertrix_lift_read(L, ebp + 0xffffffe8u, 32, 0);
+    /* 426122: mov eax, dword ptr [ebp - 0xc] */
+    eax = vertrix_lift_read(L, ebp + 0xfffffff4u, 32, 0);
+    /* 426125: call 0x4269e0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x42612au, 0);
+    eax = vertrix_lift_call(L, 0x4269e0, eax, edx, ebx, ecx, esp, 6);
+    esp += 24u;
+    if (L->failed)
+        return 0;
+    /* 42612a: mov esi, eax */
+    esi = eax;
+L_42612c:;
+    /* 42612c: test esi, esi */
+    a = esi;
+    b = esi & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 42612e: jne 0x425f92 */
+    if (!ZF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_425f92;
+    }
+    /* 426134: mov esi, dword ptr [ebp - 0x1c] */
+    esi = vertrix_lift_read(L, ebp + 0xffffffe4u, 32, 0);
+    /* 426137: mov edi, dword ptr [ebp - 0xc] */
+    edi = vertrix_lift_read(L, ebp + 0xfffffff4u, 32, 0);
+    /* 42613a: mov ecx, 0x41 */
+    ecx = 0x41u;
+    /* 42613f: add esi, 0x1de */
+    a = esi;
+    b = 0x1deu & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    esi = r;
+    /* 426145: add edi, 0x184 */
+    a = edi;
+    b = 0x184u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edi = r;
+    /* 42614b: push edi */
+    t = edi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 42614c: mov eax, ecx */
+    eax = ecx;
+    /* 42614e: shr ecx, 2 */
+    a = ecx;
+    c = 0x2u & 31u;
+    if (c)
+    {
+        r = a >> c;
+        CF = (a >> (c - 1)) & 1u;
+        OF = (a & 0x80000000u) != 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ecx = r;
+    }
+    /* 426151: movsd dword ptr es:[edi], dword ptr [esi] */
+    while (ecx != 0)
+    {
+        vertrix_lift_write(L, edi, 32, vertrix_lift_read(L, esi, 32, 0), 0);
+        esi += 4u;
+        edi += 4u;
+        ecx -= 1;
+        if (L->failed)
+            return 0;
+    }
+    /* 426153: mov cl, al */
+    ecx = (ecx & ~(0xffu << 0)) | (((((eax >> 0) & 0xffu)) & 0xffu) << 0);
+    /* 426155: and cl, 3 */
+    a = ((ecx >> 0) & 0xffu);
+    b = 0x3u & 0xffu;
+    r = (a & b) & 0xffu;
+    ZF = r == 0;
+    SF = (r & 0x80u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = (ecx & ~(0xffu << 0)) | (((r) & 0xffu) << 0);
+    /* 426158: repne movsb byte ptr es:[edi], byte ptr [esi] */
+    while (ecx != 0)
+    {
+        vertrix_lift_write(L, edi, 8, vertrix_lift_read(L, esi, 8, 0), 0);
+        esi += 1u;
+        edi += 1u;
+        ecx -= 1;
+        if (L->failed)
+            return 0;
+    }
+    /* 42615a: pop edi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edi = t;
+    /* 42615b: mov eax, dword ptr [ebp - 0xc] */
+    eax = vertrix_lift_read(L, ebp + 0xfffffff4u, 32, 0);
+    /* 42615e: mov esi, dword ptr [eax + 0x160] */
+    esi = vertrix_lift_read(L, eax + 0x160u, 32, eax);
+    /* 426164: push esi */
+    t = esi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 426165: mov edi, dword ptr [ebp - 0x20] */
+    edi = vertrix_lift_read(L, ebp + 0xffffffe0u, 32, 0);
+    /* 426168: push edi */
+    t = edi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 426169: mov eax, dword ptr [ebp - 0x28] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffd8u, 32, 0);
+    /* 42616c: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 42616d: mov eax, dword ptr [ebp - 0x10] */
+    eax = vertrix_lift_read(L, ebp + 0xfffffff0u, 32, 0);
+    /* 426170: mov al, byte ptr [eax + 0x4dc] */
+    eax = (eax & ~(0xffu << 0)) | (((vertrix_lift_read(L, eax + 0x4dcu, 8, eax)) & 0xffu) << 0);
+    /* 426176: and eax, 0xff */
+    a = eax;
+    b = 0xffu & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 42617b: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 42617c: mov eax, dword ptr [ebp - 0xc] */
+    eax = vertrix_lift_read(L, ebp + 0xfffffff4u, 32, 0);
+    /* 42617f: add eax, 0x168 */
+    a = eax;
+    b = 0x168u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 426184: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 426185: mov eax, dword ptr [ebp - 0xc] */
+    eax = vertrix_lift_read(L, ebp + 0xfffffff4u, 32, 0);
+    /* 426188: mov ecx, dword ptr [ebp + 8] */
+    ecx = vertrix_lift_read(L, ebp + 0x8u, 32, 0);
+    /* 42618b: add eax, 0x16c */
+    a = eax;
+    b = 0x16cu & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 426190: mov ebx, dword ptr [ebp - 0x14] */
+    ebx = vertrix_lift_read(L, ebp + 0xffffffecu, 32, 0);
+    /* 426193: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 426194: mov edx, dword ptr [ebp - 0x18] */
+    edx = vertrix_lift_read(L, ebp + 0xffffffe8u, 32, 0);
+    /* 426197: mov eax, dword ptr [ebp - 0xc] */
+    eax = vertrix_lift_read(L, ebp + 0xfffffff4u, 32, 0);
+    /* 42619a: call 0x426240 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x42619fu, 0);
+    eax = vertrix_lift_call(L, 0x426240, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 42619f: lea esp, [ebp - 8] */
+    esp = (ebp + 0xfffffff8u);
+    /* 4261a2: pop edi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edi = t;
+    /* 4261a3: pop esi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    esi = t;
+    /* 4261a4: pop ebp */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ebp = t;
+    /* 4261a5: ret 4 */
+    return eax;
+}
+
 uint32_t vertrix_lift_427850(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp)
 {
@@ -60148,9 +61401,15 @@ uint32_t vertrix_lift_427850(LiftContext *L, uint32_t eax, uint32_t edx, uint32_
         ecx = r;
     }
     /* 4278a0: movsd dword ptr es:[edi], dword ptr [esi] */
-    vertrix_lift_write(L, edi, 32, vertrix_lift_read(L, esi, 32, 0), 0);
-    esi += 4u;
-    edi += 4u;
+    while (ecx != 0)
+    {
+        vertrix_lift_write(L, edi, 32, vertrix_lift_read(L, esi, 32, 0), 0);
+        esi += 4u;
+        edi += 4u;
+        ecx -= 1;
+        if (L->failed)
+            return 0;
+    }
     /* 4278a2: mov cl, al */
     ecx = (ecx & ~(0xffu << 0)) | (((((eax >> 0) & 0xffu)) & 0xffu) << 0);
     /* 4278a4: and cl, 3 */
@@ -60203,9 +61462,15 @@ uint32_t vertrix_lift_427850(LiftContext *L, uint32_t eax, uint32_t edx, uint32_
         ecx = r;
     }
     /* 4278c1: movsd dword ptr es:[edi], dword ptr [esi] */
-    vertrix_lift_write(L, edi, 32, vertrix_lift_read(L, esi, 32, 0), 0);
-    esi += 4u;
-    edi += 4u;
+    while (ecx != 0)
+    {
+        vertrix_lift_write(L, edi, 32, vertrix_lift_read(L, esi, 32, 0), 0);
+        esi += 4u;
+        edi += 4u;
+        ecx -= 1;
+        if (L->failed)
+            return 0;
+    }
     /* 4278c3: mov cl, al */
     ecx = (ecx & ~(0xffu << 0)) | (((((eax >> 0) & 0xffu)) & 0xffu) << 0);
     /* 4278c5: and cl, 3 */
@@ -60580,9 +61845,15 @@ uint32_t vertrix_lift_4279b0(LiftContext *L, uint32_t eax, uint32_t edx, uint32_
         ecx = r;
     }
     /* 427a00: movsd dword ptr es:[edi], dword ptr [esi] */
-    vertrix_lift_write(L, edi, 32, vertrix_lift_read(L, esi, 32, 0), 0);
-    esi += 4u;
-    edi += 4u;
+    while (ecx != 0)
+    {
+        vertrix_lift_write(L, edi, 32, vertrix_lift_read(L, esi, 32, 0), 0);
+        esi += 4u;
+        edi += 4u;
+        ecx -= 1;
+        if (L->failed)
+            return 0;
+    }
     /* 427a02: mov cl, al */
     ecx = (ecx & ~(0xffu << 0)) | (((((eax >> 0) & 0xffu)) & 0xffu) << 0);
     /* 427a04: and cl, 3 */
@@ -60637,9 +61908,15 @@ uint32_t vertrix_lift_4279b0(LiftContext *L, uint32_t eax, uint32_t edx, uint32_
         ecx = r;
     }
     /* 427a27: movsd dword ptr es:[edi], dword ptr [esi] */
-    vertrix_lift_write(L, edi, 32, vertrix_lift_read(L, esi, 32, 0), 0);
-    esi += 4u;
-    edi += 4u;
+    while (ecx != 0)
+    {
+        vertrix_lift_write(L, edi, 32, vertrix_lift_read(L, esi, 32, 0), 0);
+        esi += 4u;
+        edi += 4u;
+        ecx -= 1;
+        if (L->failed)
+            return 0;
+    }
     /* 427a29: mov cl, al */
     ecx = (ecx & ~(0xffu << 0)) | (((((eax >> 0) & 0xffu)) & 0xffu) << 0);
     /* 427a2b: and cl, 3 */
@@ -85081,6 +86358,473 @@ L_439210:;
     ebp = t;
     /* 43925b: ret  */
     return eax;
+}
+
+uint32_t vertrix_lift_4393f0(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
+                             uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp)
+{
+    uint32_t a;
+    uint32_t b;
+    uint32_t c;
+    uint32_t d;
+    uint32_t k;
+    uint32_t r;
+    uint32_t t;
+    uint64_t u;
+    int64_t p;
+    int32_t s;
+    unsigned ZF = 0;
+    unsigned SF = 0;
+    unsigned CF = 0;
+    unsigned OF = 0;
+    unsigned PF = 0;
+    (void)a;
+    (void)b;
+    (void)c;
+    (void)d;
+    (void)k;
+    (void)r;
+    (void)t;
+    (void)u;
+    (void)p;
+    (void)s;
+    (void)ZF;
+    (void)SF;
+    (void)CF;
+    (void)OF;
+    (void)PF;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)L;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esp;
+    /* 4393f0: push ebp */
+    t = ebp;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4393f1: mov ebp, esp */
+    ebp = esp;
+    /* 4393f3: push esi */
+    t = esi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4393f4: push edi */
+    t = edi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4393f5: sub esp, 0x28 */
+    a = esp;
+    b = 0x28u & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    esp = r;
+    /* 4393f8: mov edi, eax */
+    edi = eax;
+    /* 4393fa: mov dword ptr [ebp - 0x18], ebx */
+    vertrix_lift_write(L, ebp + 0xffffffe8u, 32, ebx, 0);
+    /* 4393fd: mov dword ptr [ebp - 0x30], ecx */
+    vertrix_lift_write(L, ebp + 0xffffffd0u, 32, ecx, 0);
+    /* 439400: mov eax, dword ptr [ebp - 0x30] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffd0u, 32, 0);
+    /* 439403: mov ecx, 1 */
+    ecx = 0x1u;
+    /* 439408: mov eax, dword ptr [eax] */
+    eax = vertrix_lift_read(L, eax, 32, eax);
+    /* 43940a: mov dword ptr [ebp - 0x1c], ecx */
+    vertrix_lift_write(L, ebp + 0xffffffe4u, 32, ecx, 0);
+    /* 43940d: cmp eax, ebx */
+    a = eax;
+    b = ebx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 43940f: jb 0x43941b */
+    if (CF)
+    {
+        goto L_43941b;
+    }
+    /* 439411: mov eax, dword ptr [ebp - 0x1c] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffe4u, 32, 0);
+    /* 439414: lea esp, [ebp - 8] */
+    esp = (ebp + 0xfffffff8u);
+    /* 439417: pop edi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edi = t;
+    /* 439418: pop esi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    esi = t;
+    /* 439419: pop ebp */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ebp = t;
+    /* 43941a: ret  */
+    return eax;
+L_43941b:;
+    /* 43941b: mov ebx, dword ptr [ebp - 0x30] */
+    ebx = vertrix_lift_read(L, ebp + 0xffffffd0u, 32, 0);
+    /* 43941e: mov eax, edi */
+    eax = edi;
+    /* 439420: mov dword ptr [ebp - 0x20], edi */
+    vertrix_lift_write(L, ebp + 0xffffffe0u, 32, edi, 0);
+    /* 439423: mov dword ptr [ebp - 0x24], edi */
+    vertrix_lift_write(L, ebp + 0xffffffdcu, 32, edi, 0);
+    /* 439426: mov ebx, dword ptr [ebx] */
+    ebx = vertrix_lift_read(L, ebx, 32, ebx);
+    /* 439428: xor esi, esi */
+    a = esi;
+    b = esi & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    esi = r;
+    /* 43942a: call 0x439370 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x43942fu, 0);
+    eax = vertrix_lift_call(L, 0x439370, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 43942f: mov dword ptr [ebp - 0x2c], esi */
+    vertrix_lift_write(L, ebp + 0xffffffd4u, 32, esi, 0);
+L_439432:;
+    /* 439432: mov eax, dword ptr [ebp - 0x20] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffe0u, 32, 0);
+    /* 439435: mov dword ptr [ebp - 0x14], eax */
+    vertrix_lift_write(L, ebp + 0xffffffecu, 32, eax, 0);
+    /* 439438: mov eax, dword ptr [ebp - 0x24] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffdcu, 32, 0);
+    /* 43943b: mov dword ptr [ebp - 0xc], eax */
+    vertrix_lift_write(L, ebp + 0xfffffff4u, 32, eax, 0);
+    /* 43943e: mov eax, dword ptr [ebp - 0x20] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffe0u, 32, 0);
+    /* 439441: mov dword ptr [ebp - 0x28], eax */
+    vertrix_lift_write(L, ebp + 0xffffffd8u, 32, eax, 0);
+    /* 439444: mov eax, dword ptr [ebp - 0x24] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffdcu, 32, 0);
+    /* 439447: xor esi, esi */
+    a = esi;
+    b = esi & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    esi = r;
+    /* 439449: mov dword ptr [ebp - 0x10], eax */
+    vertrix_lift_write(L, ebp + 0xfffffff0u, 32, eax, 0);
+L_43944c:;
+    /* 43944c: mov eax, dword ptr [ebp - 0x14] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffecu, 32, 0);
+    /* 43944f: cmp byte ptr [eax + 0xb94], 1 */
+    a = vertrix_lift_read(L, eax + 0xb94u, 8, eax);
+    b = 0x1u & 0xffu;
+    r = (a - b) & 0xffu;
+    ZF = r == 0;
+    SF = (r & 0x80u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffu) < ((b) & 0xffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80u) != 0;
+    /* 439456: jne 0x439491 */
+    if (!ZF)
+    {
+        goto L_439491;
+    }
+    /* 439458: xor eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 43945a: mov dword ptr [ebp - 0x1c], eax */
+    vertrix_lift_write(L, ebp + 0xffffffe4u, 32, eax, 0);
+    /* 43945d: mov eax, dword ptr [ebp - 0x30] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffd0u, 32, 0);
+    /* 439460: mov eax, dword ptr [eax] */
+    eax = vertrix_lift_read(L, eax, 32, eax);
+    /* 439462: mov edx, dword ptr [ebp - 0x18] */
+    edx = vertrix_lift_read(L, ebp + 0xffffffe8u, 32, 0);
+    /* 439465: inc eax */
+    a = eax;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    eax = r;
+    /* 439466: cmp eax, edx */
+    a = eax;
+    b = edx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 439468: jne 0x4394e8 */
+    if (!ZF)
+    {
+        goto L_4394e8;
+    }
+    /* 43946e: mov edx, dword ptr [ebp - 0x2e] */
+    edx = vertrix_lift_read(L, ebp + 0xffffffd2u, 32, 0);
+    /* 439471: movsx ebx, si */
+    ebx = (uint32_t)(int32_t)(int16_t)((esi & 0xffffu));
+    /* 439474: mov eax, edi */
+    eax = edi;
+    /* 439476: sar edx, 0x10 */
+    a = edx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 439479: call 0x439690 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x43947eu, 0);
+    eax = vertrix_lift_call(L, 0x439690, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+L_43947e:;
+    /* 43947e: mov edx, dword ptr [ebp - 0x10] */
+    edx = vertrix_lift_read(L, ebp + 0xfffffff0u, 32, 0);
+    /* 439481: mov dword ptr [edx + 0xbdc], eax */
+    vertrix_lift_write(L, edx + 0xbdcu, 32, eax, edx);
+    /* 439487: mov eax, dword ptr [ebp - 0x28] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffd8u, 32, 0);
+    /* 43948a: mov byte ptr [eax + 0xb94], 2 */
+    vertrix_lift_write(L, eax + 0xb94u, 8, 0x2u, eax);
+L_439491:;
+    /* 439491: mov ecx, dword ptr [ebp - 0x14] */
+    ecx = vertrix_lift_read(L, ebp + 0xffffffecu, 32, 0);
+    /* 439494: mov ebx, dword ptr [ebp - 0xc] */
+    ebx = vertrix_lift_read(L, ebp + 0xfffffff4u, 32, 0);
+    /* 439497: mov eax, dword ptr [ebp - 0x28] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffd8u, 32, 0);
+    /* 43949a: mov edx, dword ptr [ebp - 0x10] */
+    edx = vertrix_lift_read(L, ebp + 0xfffffff0u, 32, 0);
+    /* 43949d: inc esi */
+    a = esi;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    esi = r;
+    /* 43949e: inc ecx */
+    a = ecx;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    ecx = r;
+    /* 43949f: add ebx, 4 */
+    a = ebx;
+    b = 0x4u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    ebx = r;
+    /* 4394a2: inc eax */
+    a = eax;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    eax = r;
+    /* 4394a3: add edx, 4 */
+    a = edx;
+    b = 0x4u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4394a6: mov dword ptr [ebp - 0x14], ecx */
+    vertrix_lift_write(L, ebp + 0xffffffecu, 32, ecx, 0);
+    /* 4394a9: mov dword ptr [ebp - 0xc], ebx */
+    vertrix_lift_write(L, ebp + 0xfffffff4u, 32, ebx, 0);
+    /* 4394ac: mov dword ptr [ebp - 0x28], eax */
+    vertrix_lift_write(L, ebp + 0xffffffd8u, 32, eax, 0);
+    /* 4394af: mov dword ptr [ebp - 0x10], edx */
+    vertrix_lift_write(L, ebp + 0xfffffff0u, 32, edx, 0);
+    /* 4394b2: cmp esi, 0xd */
+    a = esi;
+    b = 0xdu & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4394b5: jb 0x43944c */
+    if (CF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_43944c;
+    }
+    /* 4394b7: mov ecx, dword ptr [ebp - 0x20] */
+    ecx = vertrix_lift_read(L, ebp + 0xffffffe0u, 32, 0);
+    /* 4394ba: mov ebx, dword ptr [ebp - 0x24] */
+    ebx = vertrix_lift_read(L, ebp + 0xffffffdcu, 32, 0);
+    /* 4394bd: mov esi, dword ptr [ebp - 0x2c] */
+    esi = vertrix_lift_read(L, ebp + 0xffffffd4u, 32, 0);
+    /* 4394c0: add ecx, 0xd */
+    a = ecx;
+    b = 0xdu & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    ecx = r;
+    /* 4394c3: add ebx, 0x34 */
+    a = ebx;
+    b = 0x34u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    ebx = r;
+    /* 4394c6: inc esi */
+    a = esi;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    esi = r;
+    /* 4394c7: mov dword ptr [ebp - 0x20], ecx */
+    vertrix_lift_write(L, ebp + 0xffffffe0u, 32, ecx, 0);
+    /* 4394ca: mov dword ptr [ebp - 0x24], ebx */
+    vertrix_lift_write(L, ebp + 0xffffffdcu, 32, ebx, 0);
+    /* 4394cd: mov dword ptr [ebp - 0x2c], esi */
+    vertrix_lift_write(L, ebp + 0xffffffd4u, 32, esi, 0);
+    /* 4394d0: cmp esi, 5 */
+    a = esi;
+    b = 0x5u & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4394d3: jb 0x439432 */
+    if (CF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_439432;
+    }
+    /* 4394d9: mov eax, dword ptr [ebp - 0x30] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffd0u, 32, 0);
+    /* 4394dc: inc dword ptr [eax] */
+    a = vertrix_lift_read(L, eax, 32, eax);
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    vertrix_lift_write(L, eax, 32, r, eax);
+    /* 4394de: mov eax, dword ptr [ebp - 0x1c] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffe4u, 32, 0);
+    /* 4394e1: lea esp, [ebp - 8] */
+    esp = (ebp + 0xfffffff8u);
+    /* 4394e4: pop edi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edi = t;
+    /* 4394e5: pop esi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    esi = t;
+    /* 4394e6: pop ebp */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ebp = t;
+    /* 4394e7: ret  */
+    return eax;
+L_4394e8:;
+    /* 4394e8: mov ecx, dword ptr [ebp - 0xc] */
+    ecx = vertrix_lift_read(L, ebp + 0xfffffff4u, 32, 0);
+    /* 4394eb: mov edx, dword ptr [ebp - 0x2e] */
+    edx = vertrix_lift_read(L, ebp + 0xffffffd2u, 32, 0);
+    /* 4394ee: movsx ebx, si */
+    ebx = (uint32_t)(int32_t)(int16_t)((esi & 0xffffu));
+    /* 4394f1: mov eax, edi */
+    eax = edi;
+    /* 4394f3: sar edx, 0x10 */
+    a = edx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 4394f6: mov ecx, dword ptr [ecx + 0x220] */
+    ecx = vertrix_lift_read(L, ecx + 0x220u, 32, ecx);
+    /* 4394fc: call 0x439510 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x439501u, 0);
+    eax = vertrix_lift_call(L, 0x439510, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 439501: jmp 0x43947e */
+    if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+    {
+        L->failed = 1;
+        return 0;
+    }
+    goto L_43947e;
 }
 
 uint32_t vertrix_lift_439510(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
@@ -152116,6 +153860,6374 @@ L_465ae4:;
     goto L_465a85;
 }
 
+uint32_t vertrix_lift_465af0(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
+                             uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp)
+{
+    uint32_t a;
+    uint32_t b;
+    uint32_t c;
+    uint32_t d;
+    uint32_t k;
+    uint32_t r;
+    uint32_t t;
+    uint64_t u;
+    int64_t p;
+    int32_t s;
+    unsigned ZF = 0;
+    unsigned SF = 0;
+    unsigned CF = 0;
+    unsigned OF = 0;
+    unsigned PF = 0;
+    (void)a;
+    (void)b;
+    (void)c;
+    (void)d;
+    (void)k;
+    (void)r;
+    (void)t;
+    (void)u;
+    (void)p;
+    (void)s;
+    (void)ZF;
+    (void)SF;
+    (void)CF;
+    (void)OF;
+    (void)PF;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)L;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esp;
+    /* 465af0: push ebp */
+    t = ebp;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465af1: mov ebp, esp */
+    ebp = esp;
+    /* 465af3: push ebx */
+    t = ebx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465af4: push ecx */
+    t = ecx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465af5: push edx */
+    t = edx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465af6: push esi */
+    t = esi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465af7: push edi */
+    t = edi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465af8: sub esp, 0x34 */
+    a = esp;
+    b = 0x34u & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    esp = r;
+    /* 465afb: lea eax, [ebp - 0x48] */
+    eax = (ebp + 0xffffffb8u);
+    /* 465afe: mov edx, 0x4ec1ec */
+    edx = 0x4ec1ecu;
+    /* 465b03: mov ecx, 0x515abc */
+    ecx = 0x515abcu;
+    /* 465b08: mov edi, 0xffffffe2 */
+    edi = 0xffffffe2u;
+    /* 465b0d: push dword ptr fs:[0] */
+    t = vertrix_lift_read(L, 0x0u, 32, 0);
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465b14: pop dword ptr [eax] */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    vertrix_lift_write(L, eax, 32, t, eax);
+    /* 465b16: mov dword ptr fs:[0], eax */
+    vertrix_lift_write(L, 0x0u, 32, eax, 0);
+    /* 465b1c: mov eax, dword ptr [0x4f86d4] */
+    eax = vertrix_lift_read(L, 0x4f86d4u, 32, 0);
+    /* 465b21: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 465b23: shr eax, 1 */
+    a = eax;
+    c = 0x1u & 31u;
+    if (c)
+    {
+        r = a >> c;
+        CF = (a >> (c - 1)) & 1u;
+        OF = (a & 0x80000000u) != 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        eax = r;
+    }
+    /* 465b25: mov dword ptr [ebp - 0x44], edx */
+    vertrix_lift_write(L, ebp + 0xffffffbcu, 32, edx, 0);
+    /* 465b28: mov dword ptr [ebp - 0x2c], eax */
+    vertrix_lift_write(L, ebp + 0xffffffd4u, 32, eax, 0);
+    /* 465b2b: mov dword ptr [ebp - 0x40], ecx */
+    vertrix_lift_write(L, ebp + 0xffffffc0u, 32, ecx, 0);
+    /* 465b2e: mov esi, dword ptr [ebp - 0x2c] */
+    esi = vertrix_lift_read(L, ebp + 0xffffffd4u, 32, 0);
+    /* 465b31: mov eax, dword ptr [0x4f86d4] */
+    eax = vertrix_lift_read(L, 0x4f86d4u, 32, 0);
+    /* 465b36: mov dword ptr [ebp - 0x3c], ebx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, ebx, 0);
+    /* 465b39: sub eax, esi */
+    a = eax;
+    b = esi & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 465b3b: mov dword ptr [ebp - 0x18], ebx */
+    vertrix_lift_write(L, ebp + 0xffffffe8u, 32, ebx, 0);
+    /* 465b3e: mov dword ptr [ebp - 0x24], eax */
+    vertrix_lift_write(L, ebp + 0xffffffdcu, 32, eax, 0);
+    /* 465b41: test esi, esi */
+    a = esi;
+    b = esi & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 465b43: jbe 0x465bdc */
+    if (CF || ZF)
+    {
+        goto L_465bdc;
+    }
+L_465b49:;
+    /* 465b49: mov eax, 0x160 */
+    eax = 0x160u;
+    /* 465b4e: call 0x4ca000 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465b53u, 0);
+    eax = vertrix_lift_call(L, 0x4ca000, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465b53: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 465b55: jne 0x466cf0 */
+    if (!ZF)
+    {
+        goto L_466cf0;
+    }
+L_465b5b:;
+    /* 465b5b: mov esi, eax */
+    esi = eax;
+    /* 465b5d: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465b5f: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465b61: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465b63: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465b65: mov eax, esi */
+    eax = esi;
+    /* 465b67: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 465b69: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465b6b: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 465b6d: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 465b6f: call 0x4adf20 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465b74u, 0);
+    eax = vertrix_lift_call(L, 0x4adf20, eax, edx, ebx, ecx, esp, 5);
+    esp += 20u;
+    if (L->failed)
+        return 0;
+    /* 465b74: mov edx, dword ptr [ebp - 0x18] */
+    edx = vertrix_lift_read(L, ebp + 0xffffffe8u, 32, 0);
+    /* 465b77: mov ax, word ptr [0x533d30] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, 0x533d30u, 16, 0)) & 0xffffu);
+    /* 465b7d: push 1 */
+    t = 0x1u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465b7f: add eax, edx */
+    a = eax;
+    b = edx & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 465b81: mov ecx, 0x280 */
+    ecx = 0x280u;
+    /* 465b86: movsx ebx, ax */
+    ebx = (uint32_t)(int32_t)(int16_t)((eax & 0xffffu));
+    /* 465b89: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 465b8b: mov eax, esi */
+    eax = esi;
+    /* 465b8d: call 0x4b54d0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465b92u, 0);
+    eax = vertrix_lift_call(L, 0x4b54d0, eax, edx, ebx, ecx, esp, 1);
+    esp += 4u;
+    if (L->failed)
+        return 0;
+    /* 465b92: mov edx, 2 */
+    edx = 0x2u;
+    /* 465b97: mov ecx, dword ptr [ebp - 0x18] */
+    ecx = vertrix_lift_read(L, ebp + 0xffffffe8u, 32, 0);
+    /* 465b9a: mov ebx, dword ptr [ebp - 0x2c] */
+    ebx = vertrix_lift_read(L, ebp + 0xffffffd4u, 32, 0);
+    /* 465b9d: mov byte ptr [esi + 0x52], 8 */
+    vertrix_lift_write(L, esi + 0x52u, 8, 0x8u, esi);
+    /* 465ba1: mov eax, esi */
+    eax = esi;
+    /* 465ba3: mov word ptr [esi + 0x48], di */
+    vertrix_lift_write(L, esi + 0x48u, 16, (edi & 0xffffu), esi);
+    /* 465ba7: call 0x4ac7b0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465bacu, 0);
+    eax = vertrix_lift_call(L, 0x4ac7b0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465bac: mov byte ptr [esi + 0x94], 1 */
+    vertrix_lift_write(L, esi + 0x94u, 8, 0x1u, esi);
+    /* 465bb3: mov eax, 0x54671c */
+    eax = 0x54671cu;
+    /* 465bb8: mov byte ptr [esi + 0x95], 1 */
+    vertrix_lift_write(L, esi + 0x95u, 8, 0x1u, esi);
+    /* 465bbf: mov edx, esi */
+    edx = esi;
+    /* 465bc1: mov byte ptr [esi + 0x110], 0 */
+    vertrix_lift_write(L, esi + 0x110u, 8, 0x0u, esi);
+    /* 465bc8: call 0x4b5e70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465bcdu, 0);
+    eax = vertrix_lift_call(L, 0x4b5e70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465bcd: inc ecx */
+    a = ecx;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    ecx = r;
+    /* 465bce: add edi, 6 */
+    a = edi;
+    b = 0x6u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edi = r;
+    /* 465bd1: mov dword ptr [ebp - 0x18], ecx */
+    vertrix_lift_write(L, ebp + 0xffffffe8u, 32, ecx, 0);
+    /* 465bd4: cmp ecx, ebx */
+    a = ecx;
+    b = ebx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 465bd6: jb 0x465b49 */
+    if (CF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_465b49;
+    }
+L_465bdc:;
+    /* 465bdc: xor esi, esi */
+    a = esi;
+    b = esi & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    esi = r;
+    /* 465bde: mov eax, dword ptr [ebp - 0x24] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffdcu, 32, 0);
+    /* 465be1: mov dword ptr [ebp - 0x18], esi */
+    vertrix_lift_write(L, ebp + 0xffffffe8u, 32, esi, 0);
+    /* 465be4: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 465be6: jbe 0x465c85 */
+    if (CF || ZF)
+    {
+        goto L_465c85;
+    }
+L_465bec:;
+    /* 465bec: mov eax, 0x160 */
+    eax = 0x160u;
+    /* 465bf1: call 0x4ca000 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465bf6u, 0);
+    eax = vertrix_lift_call(L, 0x4ca000, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465bf6: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 465bf8: je 0x465bff */
+    if (ZF)
+    {
+        goto L_465bff;
+    }
+    /* 465bfa: call 0x4b5400 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465bffu, 0);
+    eax = vertrix_lift_call(L, 0x4b5400, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+L_465bff:;
+    /* 465bff: mov esi, eax */
+    esi = eax;
+    /* 465c01: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465c03: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465c05: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465c07: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465c09: mov eax, esi */
+    eax = esi;
+    /* 465c0b: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 465c0d: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465c0f: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 465c11: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 465c13: call 0x4adf20 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465c18u, 0);
+    eax = vertrix_lift_call(L, 0x4adf20, eax, edx, ebx, ecx, esp, 5);
+    esp += 20u;
+    if (L->failed)
+        return 0;
+    /* 465c18: push 1 */
+    t = 0x1u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465c1a: mov ebx, dword ptr [ebp - 0x2c] */
+    ebx = vertrix_lift_read(L, ebp + 0xffffffd4u, 32, 0);
+    /* 465c1d: mov ax, word ptr [0x533d30] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, 0x533d30u, 16, 0)) & 0xffffu);
+    /* 465c23: mov ecx, dword ptr [ebp - 0x18] */
+    ecx = vertrix_lift_read(L, ebp + 0xffffffe8u, 32, 0);
+    /* 465c26: add eax, ebx */
+    a = eax;
+    b = ebx & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 465c28: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 465c2a: add eax, ecx */
+    a = eax;
+    b = ecx & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 465c2c: mov ecx, 0x280 */
+    ecx = 0x280u;
+    /* 465c31: movsx ebx, ax */
+    ebx = (uint32_t)(int32_t)(int16_t)((eax & 0xffffu));
+    /* 465c34: mov eax, esi */
+    eax = esi;
+    /* 465c36: call 0x4b54d0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465c3bu, 0);
+    eax = vertrix_lift_call(L, 0x4b54d0, eax, edx, ebx, ecx, esp, 1);
+    esp += 4u;
+    if (L->failed)
+        return 0;
+    /* 465c3b: mov edx, 2 */
+    edx = 0x2u;
+    /* 465c40: mov byte ptr [esi + 0x52], 8 */
+    vertrix_lift_write(L, esi + 0x52u, 8, 0x8u, esi);
+    /* 465c44: mov eax, esi */
+    eax = esi;
+    /* 465c46: mov word ptr [esi + 0x48], di */
+    vertrix_lift_write(L, esi + 0x48u, 16, (edi & 0xffffu), esi);
+    /* 465c4a: call 0x4ac7b0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465c4fu, 0);
+    eax = vertrix_lift_call(L, 0x4ac7b0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465c4f: mov byte ptr [esi + 0x94], 1 */
+    vertrix_lift_write(L, esi + 0x94u, 8, 0x1u, esi);
+    /* 465c56: mov eax, 0x54671c */
+    eax = 0x54671cu;
+    /* 465c5b: mov byte ptr [esi + 0x95], 1 */
+    vertrix_lift_write(L, esi + 0x95u, 8, 0x1u, esi);
+    /* 465c62: mov edx, esi */
+    edx = esi;
+    /* 465c64: mov byte ptr [esi + 0x110], 0 */
+    vertrix_lift_write(L, esi + 0x110u, 8, 0x0u, esi);
+    /* 465c6b: call 0x4b5e70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465c70u, 0);
+    eax = vertrix_lift_call(L, 0x4b5e70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465c70: mov edx, dword ptr [ebp - 0x18] */
+    edx = vertrix_lift_read(L, ebp + 0xffffffe8u, 32, 0);
+    /* 465c73: mov ecx, dword ptr [ebp - 0x24] */
+    ecx = vertrix_lift_read(L, ebp + 0xffffffdcu, 32, 0);
+    /* 465c76: inc edx */
+    a = edx;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    edx = r;
+    /* 465c77: sub edi, 6 */
+    a = edi;
+    b = 0x6u & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edi = r;
+    /* 465c7a: mov dword ptr [ebp - 0x18], edx */
+    vertrix_lift_write(L, ebp + 0xffffffe8u, 32, edx, 0);
+    /* 465c7d: cmp edx, ecx */
+    a = edx;
+    b = ecx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 465c7f: jb 0x465bec */
+    if (CF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_465bec;
+    }
+L_465c85:;
+    /* 465c85: mov ebx, dword ptr [0x532a84] */
+    ebx = vertrix_lift_read(L, 0x532a84u, 32, 0);
+    /* 465c8b: test ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 465c8d: jne 0x465d34 */
+    if (!ZF)
+    {
+        goto L_465d34;
+    }
+    /* 465c93: mov eax, 0x180 */
+    eax = 0x180u;
+    /* 465c98: call 0x4ca000 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465c9du, 0);
+    eax = vertrix_lift_call(L, 0x4ca000, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465c9d: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 465c9f: je 0x466cfa */
+    if (ZF)
+    {
+        goto L_466cfa;
+    }
+    /* 465ca5: call 0x4b6350 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465caau, 0);
+    eax = vertrix_lift_call(L, 0x4b6350, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465caa: mov esi, eax */
+    esi = eax;
+L_465cac:;
+    /* 465cac: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465cae: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465cb0: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465cb2: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465cb4: mov eax, esi */
+    eax = esi;
+    /* 465cb6: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 465cb8: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465cba: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 465cbc: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 465cbe: call 0x4adf20 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465cc3u, 0);
+    eax = vertrix_lift_call(L, 0x4adf20, eax, edx, ebx, ecx, esp, 5);
+    esp += 20u;
+    if (L->failed)
+        return 0;
+    /* 465cc3: mov eax, dword ptr [0x4f869e] */
+    eax = vertrix_lift_read(L, 0x4f869eu, 32, 0);
+    /* 465cc8: sar eax, 0x10 */
+    a = eax;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        eax = r;
+    }
+    /* 465ccb: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465ccc: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465ccd: mov eax, dword ptr [0x558c7c] */
+    eax = vertrix_lift_read(L, 0x558c7cu, 32, 0);
+    /* 465cd2: mov ax, word ptr [eax + 4] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, eax + 0x4u, 16, eax)) & 0xffffu);
+    /* 465cd6: mov edx, 0x50e506 */
+    edx = 0x50e506u;
+    /* 465cdb: dec eax */
+    a = eax;
+    r = (a - 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u - 1u);
+    eax = r;
+    /* 465cdc: mov ebx, dword ptr [0x4f9bfd] */
+    ebx = vertrix_lift_read(L, 0x4f9bfdu, 32, 0);
+    /* 465ce2: cwde  */
+    eax = (uint32_t)(int32_t)(int16_t)(eax & 0xffffu);
+    /* 465ce3: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 465ce5: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465ce6: sar ebx, 0x18 */
+    a = ebx;
+    c = 0x18u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ebx = r;
+    }
+    /* 465ce9: mov eax, esi */
+    eax = esi;
+    /* 465ceb: call 0x4b65d0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465cf0u, 0);
+    eax = vertrix_lift_call(L, 0x4b65d0, eax, edx, ebx, ecx, esp, 3);
+    esp += 12u;
+    if (L->failed)
+        return 0;
+    /* 465cf0: mov edx, 2 */
+    edx = 0x2u;
+    /* 465cf5: mov eax, esi */
+    eax = esi;
+    /* 465cf7: call 0x4ac7b0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465cfcu, 0);
+    eax = vertrix_lift_call(L, 0x4ac7b0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465cfc: mov byte ptr [esi + 0x44], 0x10 */
+    vertrix_lift_write(L, esi + 0x44u, 8, 0x10u, esi);
+    /* 465d00: mov byte ptr [esi + 0x4e], 0x32 */
+    vertrix_lift_write(L, esi + 0x4eu, 8, 0x32u, esi);
+    /* 465d04: mov byte ptr [esi + 0x94], 1 */
+    vertrix_lift_write(L, esi + 0x94u, 8, 0x1u, esi);
+    /* 465d0b: mov byte ptr [esi + 0x95], 4 */
+    vertrix_lift_write(L, esi + 0x95u, 8, 0x4u, esi);
+    /* 465d12: mov eax, esi */
+    eax = esi;
+    /* 465d14: mov byte ptr [esi + 0x93], 1 */
+    vertrix_lift_write(L, esi + 0x93u, 8, 0x1u, esi);
+    /* 465d1b: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 465d1d: mov word ptr [esi + 0x48], 0xffe2 */
+    vertrix_lift_write(L, esi + 0x48u, 16, 0xffe2u, esi);
+    /* 465d23: call 0x4ac910 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465d28u, 0);
+    eax = vertrix_lift_call(L, 0x4ac910, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465d28: mov eax, 0x54671c */
+    eax = 0x54671cu;
+    /* 465d2d: mov edx, esi */
+    edx = esi;
+    /* 465d2f: call 0x4b5e70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465d34u, 0);
+    eax = vertrix_lift_call(L, 0x4b5e70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+L_465d34:;
+    /* 465d34: mov eax, 0x160 */
+    eax = 0x160u;
+    /* 465d39: call 0x4ca000 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465d3eu, 0);
+    eax = vertrix_lift_call(L, 0x4ca000, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465d3e: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 465d40: je 0x465d57 */
+    if (ZF)
+    {
+        goto L_465d57;
+    }
+    /* 465d42: mov esi, 1 */
+    esi = 0x1u;
+    /* 465d47: mov dword ptr [ebp - 0x34], eax */
+    vertrix_lift_write(L, ebp + 0xffffffccu, 32, eax, 0);
+    /* 465d4a: xor edi, edi */
+    a = edi;
+    b = edi & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edi = r;
+    /* 465d4c: mov dword ptr [ebp - 0x3c], esi */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, esi, 0);
+    /* 465d4f: call 0x4b5400 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465d54u, 0);
+    eax = vertrix_lift_call(L, 0x4b5400, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465d54: mov dword ptr [ebp - 0x3c], edi */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, edi, 0);
+L_465d57:;
+    /* 465d57: mov esi, eax */
+    esi = eax;
+    /* 465d59: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465d5b: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465d5d: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465d5f: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465d61: mov eax, esi */
+    eax = esi;
+    /* 465d63: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 465d65: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465d67: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 465d69: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 465d6b: call 0x4adf20 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465d70u, 0);
+    eax = vertrix_lift_call(L, 0x4adf20, eax, edx, ebx, ecx, esp, 5);
+    esp += 20u;
+    if (L->failed)
+        return 0;
+    /* 465d70: mov ebx, dword ptr [0x4f85ea] */
+    ebx = vertrix_lift_read(L, 0x4f85eau, 32, 0);
+    /* 465d76: mov edx, dword ptr [0x4f85e6] */
+    edx = vertrix_lift_read(L, 0x4f85e6u, 32, 0);
+    /* 465d7c: xor eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 465d7e: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 465d80: mov ax, word ptr [0x4f85fc] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f85fcu, 16, 0)) & 0xffffu);
+    /* 465d86: mov cx, word ptr [0x4f85f8] */
+    ecx = (ecx & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f85f8u, 16, 0)) & 0xffffu);
+    /* 465d8d: sar ebx, 0x10 */
+    a = ebx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ebx = r;
+    }
+    /* 465d90: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465d91: sar edx, 0x10 */
+    a = edx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 465d94: mov eax, esi */
+    eax = esi;
+    /* 465d96: call 0x4b54d0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465d9bu, 0);
+    eax = vertrix_lift_call(L, 0x4b54d0, eax, edx, ebx, ecx, esp, 1);
+    esp += 4u;
+    if (L->failed)
+        return 0;
+    /* 465d9b: mov edx, 2 */
+    edx = 0x2u;
+    /* 465da0: mov eax, esi */
+    eax = esi;
+    /* 465da2: mov word ptr [esi + 0x48], 0xf */
+    vertrix_lift_write(L, esi + 0x48u, 16, 0xfu, esi);
+    /* 465da8: call 0x4ac7b0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465dadu, 0);
+    eax = vertrix_lift_call(L, 0x4ac7b0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465dad: mov byte ptr [esi + 0x52], 8 */
+    vertrix_lift_write(L, esi + 0x52u, 8, 0x8u, esi);
+    /* 465db1: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 465db3: mov byte ptr [esi + 0x94], 1 */
+    vertrix_lift_write(L, esi + 0x94u, 8, 0x1u, esi);
+    /* 465dba: mov edx, 0xff000000 */
+    edx = 0xff000000u;
+    /* 465dbf: mov byte ptr [esi + 0x95], 1 */
+    vertrix_lift_write(L, esi + 0x95u, 8, 0x1u, esi);
+    /* 465dc6: mov eax, esi */
+    eax = esi;
+    /* 465dc8: mov byte ptr [esi + 0x110], 1 */
+    vertrix_lift_write(L, esi + 0x110u, 8, 0x1u, esi);
+    /* 465dcf: call 0x4ac4e0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465dd4u, 0);
+    eax = vertrix_lift_call(L, 0x4ac4e0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465dd4: mov eax, 0x54671c */
+    eax = 0x54671cu;
+    /* 465dd9: mov edx, esi */
+    edx = esi;
+    /* 465ddb: call 0x4b5e70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465de0u, 0);
+    eax = vertrix_lift_call(L, 0x4b5e70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465de0: mov eax, 0x160 */
+    eax = 0x160u;
+    /* 465de5: call 0x4ca000 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465deau, 0);
+    eax = vertrix_lift_call(L, 0x4ca000, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465dea: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 465dec: je 0x465e03 */
+    if (ZF)
+    {
+        goto L_465e03;
+    }
+    /* 465dee: mov edx, 3 */
+    edx = 0x3u;
+    /* 465df3: mov dword ptr [ebp - 0x34], eax */
+    vertrix_lift_write(L, ebp + 0xffffffccu, 32, eax, 0);
+    /* 465df6: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 465df8: mov dword ptr [ebp - 0x3c], edx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, edx, 0);
+    /* 465dfb: call 0x4b5400 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465e00u, 0);
+    eax = vertrix_lift_call(L, 0x4b5400, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465e00: mov dword ptr [ebp - 0x3c], ecx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, ecx, 0);
+L_465e03:;
+    /* 465e03: mov esi, eax */
+    esi = eax;
+    /* 465e05: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465e07: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465e09: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465e0b: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465e0d: mov eax, esi */
+    eax = esi;
+    /* 465e0f: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 465e11: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465e13: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 465e15: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 465e17: call 0x4adf20 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465e1cu, 0);
+    eax = vertrix_lift_call(L, 0x4adf20, eax, edx, ebx, ecx, esp, 5);
+    esp += 20u;
+    if (L->failed)
+        return 0;
+    /* 465e1c: mov ebx, dword ptr [0x4f85f2] */
+    ebx = vertrix_lift_read(L, 0x4f85f2u, 32, 0);
+    /* 465e22: mov edx, dword ptr [0x4f85ee] */
+    edx = vertrix_lift_read(L, 0x4f85eeu, 32, 0);
+    /* 465e28: xor eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 465e2a: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 465e2c: mov ax, word ptr [0x4f85fc] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f85fcu, 16, 0)) & 0xffffu);
+    /* 465e32: mov cx, word ptr [0x4f85f8] */
+    ecx = (ecx & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f85f8u, 16, 0)) & 0xffffu);
+    /* 465e39: sar ebx, 0x10 */
+    a = ebx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ebx = r;
+    }
+    /* 465e3c: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465e3d: sar edx, 0x10 */
+    a = edx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 465e40: mov eax, esi */
+    eax = esi;
+    /* 465e42: call 0x4b54d0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465e47u, 0);
+    eax = vertrix_lift_call(L, 0x4b54d0, eax, edx, ebx, ecx, esp, 1);
+    esp += 4u;
+    if (L->failed)
+        return 0;
+    /* 465e47: mov edx, 2 */
+    edx = 0x2u;
+    /* 465e4c: mov eax, esi */
+    eax = esi;
+    /* 465e4e: mov word ptr [esi + 0x48], 0xf */
+    vertrix_lift_write(L, esi + 0x48u, 16, 0xfu, esi);
+    /* 465e54: call 0x4ac7b0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465e59u, 0);
+    eax = vertrix_lift_call(L, 0x4ac7b0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465e59: mov byte ptr [esi + 0x52], 0xb */
+    vertrix_lift_write(L, esi + 0x52u, 8, 0xbu, esi);
+    /* 465e5d: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 465e5f: mov byte ptr [esi + 0x94], 1 */
+    vertrix_lift_write(L, esi + 0x94u, 8, 0x1u, esi);
+    /* 465e66: mov edx, 0xff000000 */
+    edx = 0xff000000u;
+    /* 465e6b: mov byte ptr [esi + 0x95], 1 */
+    vertrix_lift_write(L, esi + 0x95u, 8, 0x1u, esi);
+    /* 465e72: mov eax, esi */
+    eax = esi;
+    /* 465e74: mov byte ptr [esi + 0x110], 1 */
+    vertrix_lift_write(L, esi + 0x110u, 8, 0x1u, esi);
+    /* 465e7b: call 0x4ac4e0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465e80u, 0);
+    eax = vertrix_lift_call(L, 0x4ac4e0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465e80: mov eax, 0x54671c */
+    eax = 0x54671cu;
+    /* 465e85: mov edx, esi */
+    edx = esi;
+    /* 465e87: call 0x4b5e70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465e8cu, 0);
+    eax = vertrix_lift_call(L, 0x4b5e70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465e8c: mov eax, 0x160 */
+    eax = 0x160u;
+    /* 465e91: call 0x4ca000 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465e96u, 0);
+    eax = vertrix_lift_call(L, 0x4ca000, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465e96: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 465e98: je 0x465eaf */
+    if (ZF)
+    {
+        goto L_465eaf;
+    }
+    /* 465e9a: mov ebx, 5 */
+    ebx = 0x5u;
+    /* 465e9f: mov dword ptr [ebp - 0x34], eax */
+    vertrix_lift_write(L, ebp + 0xffffffccu, 32, eax, 0);
+    /* 465ea2: xor esi, esi */
+    a = esi;
+    b = esi & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    esi = r;
+    /* 465ea4: mov dword ptr [ebp - 0x3c], ebx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, ebx, 0);
+    /* 465ea7: call 0x4b5400 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465eacu, 0);
+    eax = vertrix_lift_call(L, 0x4b5400, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465eac: mov dword ptr [ebp - 0x3c], esi */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, esi, 0);
+L_465eaf:;
+    /* 465eaf: mov esi, eax */
+    esi = eax;
+    /* 465eb1: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465eb3: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465eb5: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465eb7: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465eb9: mov eax, esi */
+    eax = esi;
+    /* 465ebb: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 465ebd: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465ebf: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 465ec1: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 465ec3: call 0x4adf20 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465ec8u, 0);
+    eax = vertrix_lift_call(L, 0x4adf20, eax, edx, ebx, ecx, esp, 5);
+    esp += 20u;
+    if (L->failed)
+        return 0;
+    /* 465ec8: mov ebx, dword ptr [0x4f86da] */
+    ebx = vertrix_lift_read(L, 0x4f86dau, 32, 0);
+    /* 465ece: mov edx, dword ptr [0x4f86d6] */
+    edx = vertrix_lift_read(L, 0x4f86d6u, 32, 0);
+    /* 465ed4: xor eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 465ed6: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 465ed8: mov ax, word ptr [0x4f86e4] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f86e4u, 16, 0)) & 0xffffu);
+    /* 465ede: mov cx, word ptr [0x4f86e0] */
+    ecx = (ecx & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f86e0u, 16, 0)) & 0xffffu);
+    /* 465ee5: sar ebx, 0x10 */
+    a = ebx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ebx = r;
+    }
+    /* 465ee8: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465ee9: sar edx, 0x10 */
+    a = edx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 465eec: mov eax, esi */
+    eax = esi;
+    /* 465eee: call 0x4b54d0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465ef3u, 0);
+    eax = vertrix_lift_call(L, 0x4b54d0, eax, edx, ebx, ecx, esp, 1);
+    esp += 4u;
+    if (L->failed)
+        return 0;
+    /* 465ef3: mov edx, 2 */
+    edx = 0x2u;
+    /* 465ef8: mov eax, esi */
+    eax = esi;
+    /* 465efa: mov word ptr [esi + 0x48], 0xfff6 */
+    vertrix_lift_write(L, esi + 0x48u, 16, 0xfff6u, esi);
+    /* 465f00: call 0x4ac7b0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465f05u, 0);
+    eax = vertrix_lift_call(L, 0x4ac7b0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465f05: mov byte ptr [esi + 0x52], 9 */
+    vertrix_lift_write(L, esi + 0x52u, 8, 0x9u, esi);
+    /* 465f09: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 465f0b: mov byte ptr [esi + 0x94], 1 */
+    vertrix_lift_write(L, esi + 0x94u, 8, 0x1u, esi);
+    /* 465f12: mov edx, 0xff000000 */
+    edx = 0xff000000u;
+    /* 465f17: mov byte ptr [esi + 0x95], 1 */
+    vertrix_lift_write(L, esi + 0x95u, 8, 0x1u, esi);
+    /* 465f1e: mov eax, esi */
+    eax = esi;
+    /* 465f20: mov byte ptr [esi + 0x110], 1 */
+    vertrix_lift_write(L, esi + 0x110u, 8, 0x1u, esi);
+    /* 465f27: call 0x4ac4e0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465f2cu, 0);
+    eax = vertrix_lift_call(L, 0x4ac4e0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465f2c: mov eax, 0x54671c */
+    eax = 0x54671cu;
+    /* 465f31: mov edx, esi */
+    edx = esi;
+    /* 465f33: call 0x4b5e70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465f38u, 0);
+    eax = vertrix_lift_call(L, 0x4b5e70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465f38: mov eax, 0x160 */
+    eax = 0x160u;
+    /* 465f3d: call 0x4ca000 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465f42u, 0);
+    eax = vertrix_lift_call(L, 0x4ca000, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465f42: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 465f44: je 0x465f5b */
+    if (ZF)
+    {
+        goto L_465f5b;
+    }
+    /* 465f46: mov edi, 7 */
+    edi = 0x7u;
+    /* 465f4b: mov dword ptr [ebp - 0x34], eax */
+    vertrix_lift_write(L, ebp + 0xffffffccu, 32, eax, 0);
+    /* 465f4e: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 465f50: mov dword ptr [ebp - 0x3c], edi */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, edi, 0);
+    /* 465f53: call 0x4b5400 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465f58u, 0);
+    eax = vertrix_lift_call(L, 0x4b5400, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465f58: mov dword ptr [ebp - 0x3c], edx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, edx, 0);
+L_465f5b:;
+    /* 465f5b: mov esi, eax */
+    esi = eax;
+    /* 465f5d: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465f5f: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465f61: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465f63: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465f65: mov eax, esi */
+    eax = esi;
+    /* 465f67: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 465f69: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465f6b: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 465f6d: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 465f6f: call 0x4adf20 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465f74u, 0);
+    eax = vertrix_lift_call(L, 0x4adf20, eax, edx, ebx, ecx, esp, 5);
+    esp += 20u;
+    if (L->failed)
+        return 0;
+    /* 465f74: mov ebx, dword ptr [0x4f86fa] */
+    ebx = vertrix_lift_read(L, 0x4f86fau, 32, 0);
+    /* 465f7a: mov edx, dword ptr [0x4f86f6] */
+    edx = vertrix_lift_read(L, 0x4f86f6u, 32, 0);
+    /* 465f80: xor eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 465f82: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 465f84: mov ax, word ptr [0x4f8704] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f8704u, 16, 0)) & 0xffffu);
+    /* 465f8a: mov cx, word ptr [0x4f8700] */
+    ecx = (ecx & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f8700u, 16, 0)) & 0xffffu);
+    /* 465f91: sar ebx, 0x10 */
+    a = ebx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ebx = r;
+    }
+    /* 465f94: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 465f95: sar edx, 0x10 */
+    a = edx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 465f98: mov eax, esi */
+    eax = esi;
+    /* 465f9a: call 0x4b54d0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465f9fu, 0);
+    eax = vertrix_lift_call(L, 0x4b54d0, eax, edx, ebx, ecx, esp, 1);
+    esp += 4u;
+    if (L->failed)
+        return 0;
+    /* 465f9f: mov edx, 2 */
+    edx = 0x2u;
+    /* 465fa4: mov eax, esi */
+    eax = esi;
+    /* 465fa6: mov word ptr [esi + 0x48], 0xfff6 */
+    vertrix_lift_write(L, esi + 0x48u, 16, 0xfff6u, esi);
+    /* 465fac: call 0x4ac7b0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465fb1u, 0);
+    eax = vertrix_lift_call(L, 0x4ac7b0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465fb1: mov byte ptr [esi + 0x52], 9 */
+    vertrix_lift_write(L, esi + 0x52u, 8, 0x9u, esi);
+    /* 465fb5: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 465fb7: mov byte ptr [esi + 0x94], 1 */
+    vertrix_lift_write(L, esi + 0x94u, 8, 0x1u, esi);
+    /* 465fbe: mov edx, 0xff000000 */
+    edx = 0xff000000u;
+    /* 465fc3: mov byte ptr [esi + 0x95], 1 */
+    vertrix_lift_write(L, esi + 0x95u, 8, 0x1u, esi);
+    /* 465fca: mov eax, esi */
+    eax = esi;
+    /* 465fcc: mov byte ptr [esi + 0x110], 1 */
+    vertrix_lift_write(L, esi + 0x110u, 8, 0x1u, esi);
+    /* 465fd3: call 0x4ac4e0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465fd8u, 0);
+    eax = vertrix_lift_call(L, 0x4ac4e0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465fd8: mov eax, 0x54671c */
+    eax = 0x54671cu;
+    /* 465fdd: mov edx, esi */
+    edx = esi;
+    /* 465fdf: call 0x4b5e70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465fe4u, 0);
+    eax = vertrix_lift_call(L, 0x4b5e70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465fe4: mov eax, 0x160 */
+    eax = 0x160u;
+    /* 465fe9: call 0x4ca000 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x465feeu, 0);
+    eax = vertrix_lift_call(L, 0x4ca000, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 465fee: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 465ff0: je 0x466007 */
+    if (ZF)
+    {
+        goto L_466007;
+    }
+    /* 465ff2: mov ecx, 9 */
+    ecx = 0x9u;
+    /* 465ff7: mov dword ptr [ebp - 0x34], eax */
+    vertrix_lift_write(L, ebp + 0xffffffccu, 32, eax, 0);
+    /* 465ffa: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 465ffc: mov dword ptr [ebp - 0x3c], ecx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, ecx, 0);
+    /* 465fff: call 0x4b5400 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466004u, 0);
+    eax = vertrix_lift_call(L, 0x4b5400, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466004: mov dword ptr [ebp - 0x3c], ebx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, ebx, 0);
+L_466007:;
+    /* 466007: mov esi, eax */
+    esi = eax;
+    /* 466009: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 46600b: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 46600d: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 46600f: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466011: mov eax, esi */
+    eax = esi;
+    /* 466013: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 466015: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466017: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 466019: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 46601b: call 0x4adf20 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466020u, 0);
+    eax = vertrix_lift_call(L, 0x4adf20, eax, edx, ebx, ecx, esp, 5);
+    esp += 20u;
+    if (L->failed)
+        return 0;
+    /* 466020: mov ebx, dword ptr [0x4f86ea] */
+    ebx = vertrix_lift_read(L, 0x4f86eau, 32, 0);
+    /* 466026: mov edx, dword ptr [0x4f86e6] */
+    edx = vertrix_lift_read(L, 0x4f86e6u, 32, 0);
+    /* 46602c: xor eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 46602e: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 466030: mov ax, word ptr [0x4f86f4] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f86f4u, 16, 0)) & 0xffffu);
+    /* 466036: mov cx, word ptr [0x4f86f0] */
+    ecx = (ecx & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f86f0u, 16, 0)) & 0xffffu);
+    /* 46603d: sar ebx, 0x10 */
+    a = ebx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ebx = r;
+    }
+    /* 466040: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466041: sar edx, 0x10 */
+    a = edx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 466044: mov eax, esi */
+    eax = esi;
+    /* 466046: call 0x4b54d0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x46604bu, 0);
+    eax = vertrix_lift_call(L, 0x4b54d0, eax, edx, ebx, ecx, esp, 1);
+    esp += 4u;
+    if (L->failed)
+        return 0;
+    /* 46604b: mov edx, 2 */
+    edx = 0x2u;
+    /* 466050: mov eax, esi */
+    eax = esi;
+    /* 466052: mov word ptr [esi + 0x48], 0xfff6 */
+    vertrix_lift_write(L, esi + 0x48u, 16, 0xfff6u, esi);
+    /* 466058: call 0x4ac7b0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x46605du, 0);
+    eax = vertrix_lift_call(L, 0x4ac7b0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 46605d: mov byte ptr [esi + 0x52], 9 */
+    vertrix_lift_write(L, esi + 0x52u, 8, 0x9u, esi);
+    /* 466061: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 466063: mov byte ptr [esi + 0x94], 1 */
+    vertrix_lift_write(L, esi + 0x94u, 8, 0x1u, esi);
+    /* 46606a: mov edx, 0xff000000 */
+    edx = 0xff000000u;
+    /* 46606f: mov byte ptr [esi + 0x95], 1 */
+    vertrix_lift_write(L, esi + 0x95u, 8, 0x1u, esi);
+    /* 466076: mov eax, esi */
+    eax = esi;
+    /* 466078: mov byte ptr [esi + 0x110], 1 */
+    vertrix_lift_write(L, esi + 0x110u, 8, 0x1u, esi);
+    /* 46607f: call 0x4ac4e0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466084u, 0);
+    eax = vertrix_lift_call(L, 0x4ac4e0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466084: mov eax, 0x54671c */
+    eax = 0x54671cu;
+    /* 466089: mov edx, esi */
+    edx = esi;
+    /* 46608b: xor esi, esi */
+    a = esi;
+    b = esi & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    esi = r;
+    /* 46608d: call 0x4b5e70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466092u, 0);
+    eax = vertrix_lift_call(L, 0x4b5e70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466092: mov dword ptr [ebp - 0x18], esi */
+    vertrix_lift_write(L, ebp + 0xffffffe8u, 32, esi, 0);
+L_466095:;
+    /* 466095: xor edi, edi */
+    a = edi;
+    b = edi & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edi = r;
+L_466097:;
+    /* 466097: mov eax, dword ptr [0x4f9060] */
+    eax = vertrix_lift_read(L, 0x4f9060u, 32, 0);
+    /* 46609c: add eax, dword ptr [0x4f8668] */
+    a = eax;
+    b = vertrix_lift_read(L, 0x4f8668u, 32, 0) & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 4660a2: imul eax, edi */
+    p = (int64_t)(int32_t)(eax) * (int64_t)(int32_t)(edi);
+    r = (uint32_t)p;
+    CF = OF = p != (int64_t)(int32_t)r;
+    ZF = r == 0;
+    SF = (r >> 31) != 0;
+    eax = r;
+    /* 4660a5: add eax, dword ptr [0x4f8660] */
+    a = eax;
+    b = vertrix_lift_read(L, 0x4f8660u, 32, 0) & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 4660ab: add eax, 2 */
+    a = eax;
+    b = 0x2u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 4660ae: mov ebx, dword ptr [0x4f866c] */
+    ebx = vertrix_lift_read(L, 0x4f866cu, 32, 0);
+    /* 4660b4: mov dword ptr [ebp - 0x28], eax */
+    vertrix_lift_write(L, ebp + 0xffffffd8u, 32, eax, 0);
+    /* 4660b7: mov eax, dword ptr [0x4f9064] */
+    eax = vertrix_lift_read(L, 0x4f9064u, 32, 0);
+    /* 4660bc: mov esi, dword ptr [ebp - 0x18] */
+    esi = vertrix_lift_read(L, ebp + 0xffffffe8u, 32, 0);
+    /* 4660bf: add eax, ebx */
+    a = eax;
+    b = ebx & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 4660c1: imul eax, esi */
+    p = (int64_t)(int32_t)(eax) * (int64_t)(int32_t)(esi);
+    r = (uint32_t)p;
+    CF = OF = p != (int64_t)(int32_t)r;
+    ZF = r == 0;
+    SF = (r >> 31) != 0;
+    eax = r;
+    /* 4660c4: add eax, dword ptr [0x4f8664] */
+    a = eax;
+    b = vertrix_lift_read(L, 0x4f8664u, 32, 0) & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 4660ca: add eax, 2 */
+    a = eax;
+    b = 0x2u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 4660cd: mov dword ptr [ebp - 0x1c], eax */
+    vertrix_lift_write(L, ebp + 0xffffffe4u, 32, eax, 0);
+    /* 4660d0: mov eax, 0x160 */
+    eax = 0x160u;
+    /* 4660d5: call 0x4ca000 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4660dau, 0);
+    eax = vertrix_lift_call(L, 0x4ca000, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4660da: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 4660dc: je 0x4660f3 */
+    if (ZF)
+    {
+        goto L_4660f3;
+    }
+    /* 4660de: mov ecx, 0xb */
+    ecx = 0xbu;
+    /* 4660e3: mov dword ptr [ebp - 0x34], eax */
+    vertrix_lift_write(L, ebp + 0xffffffccu, 32, eax, 0);
+    /* 4660e6: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 4660e8: mov dword ptr [ebp - 0x3c], ecx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, ecx, 0);
+    /* 4660eb: call 0x4b5400 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4660f0u, 0);
+    eax = vertrix_lift_call(L, 0x4b5400, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4660f0: mov dword ptr [ebp - 0x3c], ebx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, ebx, 0);
+L_4660f3:;
+    /* 4660f3: mov esi, eax */
+    esi = eax;
+    /* 4660f5: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4660f7: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4660f9: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4660fb: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4660fd: mov eax, esi */
+    eax = esi;
+    /* 4660ff: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 466101: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466103: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 466105: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 466107: call 0x4adf20 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x46610cu, 0);
+    eax = vertrix_lift_call(L, 0x4adf20, eax, edx, ebx, ecx, esp, 5);
+    esp += 20u;
+    if (L->failed)
+        return 0;
+    /* 46610c: mov ax, word ptr [0x4f9064] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f9064u, 16, 0)) & 0xffffu);
+    /* 466112: sub eax, 4 */
+    a = eax;
+    b = 0x4u & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 466115: mov ebx, dword ptr [ebp - 0x1e] */
+    ebx = vertrix_lift_read(L, ebp + 0xffffffe2u, 32, 0);
+    /* 466118: mov edx, dword ptr [ebp - 0x2a] */
+    edx = vertrix_lift_read(L, ebp + 0xffffffd6u, 32, 0);
+    /* 46611b: and eax, 0xffff */
+    a = eax;
+    b = 0xffffu & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 466120: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 466122: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466123: mov ax, word ptr [0x4f9060] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f9060u, 16, 0)) & 0xffffu);
+    /* 466129: sar ebx, 0x10 */
+    a = ebx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ebx = r;
+    }
+    /* 46612c: sub eax, 4 */
+    a = eax;
+    b = 0x4u & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 46612f: sar edx, 0x10 */
+    a = edx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 466132: mov cx, ax */
+    ecx = (ecx & 0xffff0000u) | (((eax & 0xffffu)) & 0xffffu);
+    /* 466135: mov eax, esi */
+    eax = esi;
+    /* 466137: call 0x4b54d0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x46613cu, 0);
+    eax = vertrix_lift_call(L, 0x4b54d0, eax, edx, ebx, ecx, esp, 1);
+    esp += 4u;
+    if (L->failed)
+        return 0;
+    /* 46613c: mov edx, 2 */
+    edx = 0x2u;
+    /* 466141: mov word ptr [esi + 0x48], 0 */
+    vertrix_lift_write(L, esi + 0x48u, 16, 0x0u, esi);
+    /* 466147: mov eax, esi */
+    eax = esi;
+    /* 466149: mov byte ptr [esi + 0x52], 8 */
+    vertrix_lift_write(L, esi + 0x52u, 8, 0x8u, esi);
+    /* 46614d: call 0x4ac7b0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466152u, 0);
+    eax = vertrix_lift_call(L, 0x4ac7b0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466152: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 466154: mov byte ptr [esi + 0x94], 1 */
+    vertrix_lift_write(L, esi + 0x94u, 8, 0x1u, esi);
+    /* 46615b: mov edx, 0x7f */
+    edx = 0x7fu;
+    /* 466160: mov byte ptr [esi + 0x95], 1 */
+    vertrix_lift_write(L, esi + 0x95u, 8, 0x1u, esi);
+    /* 466167: mov eax, esi */
+    eax = esi;
+    /* 466169: mov byte ptr [esi + 0x110], 1 */
+    vertrix_lift_write(L, esi + 0x110u, 8, 0x1u, esi);
+    /* 466170: call 0x4ac4e0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466175u, 0);
+    eax = vertrix_lift_call(L, 0x4ac4e0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466175: mov eax, 0x54671c */
+    eax = 0x54671cu;
+    /* 46617a: mov edx, esi */
+    edx = esi;
+    /* 46617c: call 0x4b5e70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466181u, 0);
+    eax = vertrix_lift_call(L, 0x4b5e70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466181: mov eax, dword ptr [0x4f9060] */
+    eax = vertrix_lift_read(L, 0x4f9060u, 32, 0);
+    /* 466186: add eax, dword ptr [0x4f8668] */
+    a = eax;
+    b = vertrix_lift_read(L, 0x4f8668u, 32, 0) & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 46618c: imul eax, edi */
+    p = (int64_t)(int32_t)(eax) * (int64_t)(int32_t)(edi);
+    r = (uint32_t)p;
+    CF = OF = p != (int64_t)(int32_t)r;
+    ZF = r == 0;
+    SF = (r >> 31) != 0;
+    eax = r;
+    /* 46618f: add eax, dword ptr [0x4f8670] */
+    a = eax;
+    b = vertrix_lift_read(L, 0x4f8670u, 32, 0) & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 466195: add eax, 2 */
+    a = eax;
+    b = 0x2u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 466198: mov ecx, dword ptr [0x4f866c] */
+    ecx = vertrix_lift_read(L, 0x4f866cu, 32, 0);
+    /* 46619e: mov dword ptr [ebp - 0x28], eax */
+    vertrix_lift_write(L, ebp + 0xffffffd8u, 32, eax, 0);
+    /* 4661a1: mov eax, dword ptr [0x4f9064] */
+    eax = vertrix_lift_read(L, 0x4f9064u, 32, 0);
+    /* 4661a6: mov ebx, dword ptr [ebp - 0x18] */
+    ebx = vertrix_lift_read(L, ebp + 0xffffffe8u, 32, 0);
+    /* 4661a9: add eax, ecx */
+    a = eax;
+    b = ecx & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 4661ab: imul eax, ebx */
+    p = (int64_t)(int32_t)(eax) * (int64_t)(int32_t)(ebx);
+    r = (uint32_t)p;
+    CF = OF = p != (int64_t)(int32_t)r;
+    ZF = r == 0;
+    SF = (r >> 31) != 0;
+    eax = r;
+    /* 4661ae: add eax, dword ptr [0x4f8674] */
+    a = eax;
+    b = vertrix_lift_read(L, 0x4f8674u, 32, 0) & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 4661b4: add eax, 2 */
+    a = eax;
+    b = 0x2u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 4661b7: mov dword ptr [ebp - 0x1c], eax */
+    vertrix_lift_write(L, ebp + 0xffffffe4u, 32, eax, 0);
+    /* 4661ba: mov eax, 0x160 */
+    eax = 0x160u;
+    /* 4661bf: call 0x4ca000 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4661c4u, 0);
+    eax = vertrix_lift_call(L, 0x4ca000, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4661c4: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 4661c6: je 0x4661dd */
+    if (ZF)
+    {
+        goto L_4661dd;
+    }
+    /* 4661c8: mov edx, 0xd */
+    edx = 0xdu;
+    /* 4661cd: mov dword ptr [ebp - 0x34], eax */
+    vertrix_lift_write(L, ebp + 0xffffffccu, 32, eax, 0);
+    /* 4661d0: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 4661d2: mov dword ptr [ebp - 0x3c], edx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, edx, 0);
+    /* 4661d5: call 0x4b5400 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4661dau, 0);
+    eax = vertrix_lift_call(L, 0x4b5400, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4661da: mov dword ptr [ebp - 0x3c], ecx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, ecx, 0);
+L_4661dd:;
+    /* 4661dd: mov esi, eax */
+    esi = eax;
+    /* 4661df: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4661e1: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4661e3: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4661e5: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4661e7: mov eax, esi */
+    eax = esi;
+    /* 4661e9: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 4661eb: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4661ed: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 4661ef: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 4661f1: call 0x4adf20 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4661f6u, 0);
+    eax = vertrix_lift_call(L, 0x4adf20, eax, edx, ebx, ecx, esp, 5);
+    esp += 20u;
+    if (L->failed)
+        return 0;
+    /* 4661f6: mov ax, word ptr [0x4f9064] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f9064u, 16, 0)) & 0xffffu);
+    /* 4661fc: sub eax, 4 */
+    a = eax;
+    b = 0x4u & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 4661ff: mov ebx, dword ptr [ebp - 0x1e] */
+    ebx = vertrix_lift_read(L, ebp + 0xffffffe2u, 32, 0);
+    /* 466202: mov edx, dword ptr [ebp - 0x2a] */
+    edx = vertrix_lift_read(L, ebp + 0xffffffd6u, 32, 0);
+    /* 466205: and eax, 0xffff */
+    a = eax;
+    b = 0xffffu & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 46620a: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 46620c: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 46620d: mov ax, word ptr [0x4f9060] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f9060u, 16, 0)) & 0xffffu);
+    /* 466213: sar ebx, 0x10 */
+    a = ebx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ebx = r;
+    }
+    /* 466216: sub eax, 4 */
+    a = eax;
+    b = 0x4u & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 466219: sar edx, 0x10 */
+    a = edx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 46621c: mov cx, ax */
+    ecx = (ecx & 0xffff0000u) | (((eax & 0xffffu)) & 0xffffu);
+    /* 46621f: mov eax, esi */
+    eax = esi;
+    /* 466221: inc edi */
+    a = edi;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    edi = r;
+    /* 466222: call 0x4b54d0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466227u, 0);
+    eax = vertrix_lift_call(L, 0x4b54d0, eax, edx, ebx, ecx, esp, 1);
+    esp += 4u;
+    if (L->failed)
+        return 0;
+    /* 466227: mov edx, 2 */
+    edx = 0x2u;
+    /* 46622c: mov word ptr [esi + 0x48], 0 */
+    vertrix_lift_write(L, esi + 0x48u, 16, 0x0u, esi);
+    /* 466232: mov eax, esi */
+    eax = esi;
+    /* 466234: mov byte ptr [esi + 0x52], 8 */
+    vertrix_lift_write(L, esi + 0x52u, 8, 0x8u, esi);
+    /* 466238: call 0x4ac7b0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x46623du, 0);
+    eax = vertrix_lift_call(L, 0x4ac7b0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 46623d: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 46623f: mov byte ptr [esi + 0x94], 1 */
+    vertrix_lift_write(L, esi + 0x94u, 8, 0x1u, esi);
+    /* 466246: mov edx, 0x7f */
+    edx = 0x7fu;
+    /* 46624b: mov byte ptr [esi + 0x95], 1 */
+    vertrix_lift_write(L, esi + 0x95u, 8, 0x1u, esi);
+    /* 466252: mov eax, esi */
+    eax = esi;
+    /* 466254: mov byte ptr [esi + 0x110], 1 */
+    vertrix_lift_write(L, esi + 0x110u, 8, 0x1u, esi);
+    /* 46625b: call 0x4ac4e0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466260u, 0);
+    eax = vertrix_lift_call(L, 0x4ac4e0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466260: mov eax, 0x54671c */
+    eax = 0x54671cu;
+    /* 466265: mov edx, esi */
+    edx = esi;
+    /* 466267: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 466269: call 0x4b5e70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x46626eu, 0);
+    eax = vertrix_lift_call(L, 0x4b5e70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 46626e: mov dword ptr [ebp - 0x3c], ebx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, ebx, 0);
+    /* 466271: cmp edi, 4 */
+    a = edi;
+    b = 0x4u & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 466274: jl 0x466097 */
+    if (SF != OF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_466097;
+    }
+    /* 46627a: mov esi, dword ptr [ebp - 0x18] */
+    esi = vertrix_lift_read(L, ebp + 0xffffffe8u, 32, 0);
+    /* 46627d: inc esi */
+    a = esi;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    esi = r;
+    /* 46627e: mov dword ptr [ebp - 0x18], esi */
+    vertrix_lift_write(L, ebp + 0xffffffe8u, 32, esi, 0);
+    /* 466281: cmp esi, 7 */
+    a = esi;
+    b = 0x7u & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 466284: jb 0x466095 */
+    if (CF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_466095;
+    }
+    /* 46628a: mov eax, 0x160 */
+    eax = 0x160u;
+    /* 46628f: call 0x4ca000 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466294u, 0);
+    eax = vertrix_lift_call(L, 0x4ca000, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466294: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 466296: je 0x466d01 */
+    if (ZF)
+    {
+        goto L_466d01;
+    }
+    /* 46629c: mov edx, 0xf */
+    edx = 0xfu;
+    /* 4662a1: mov dword ptr [ebp - 0x34], eax */
+    vertrix_lift_write(L, ebp + 0xffffffccu, 32, eax, 0);
+    /* 4662a4: mov dword ptr [ebp - 0x3c], edx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, edx, 0);
+    /* 4662a7: call 0x4b5400 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4662acu, 0);
+    eax = vertrix_lift_call(L, 0x4b5400, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4662ac: mov dword ptr [ebp - 0x3c], ebx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, ebx, 0);
+    /* 4662af: mov esi, eax */
+    esi = eax;
+L_4662b1:;
+    /* 4662b1: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4662b3: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4662b5: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4662b7: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4662b9: mov eax, esi */
+    eax = esi;
+    /* 4662bb: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 4662bd: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4662bf: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 4662c1: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 4662c3: call 0x4adf20 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4662c8u, 0);
+    eax = vertrix_lift_call(L, 0x4adf20, eax, edx, ebx, ecx, esp, 5);
+    esp += 20u;
+    if (L->failed)
+        return 0;
+    /* 4662c8: mov ebx, dword ptr [0x4f85a2] */
+    ebx = vertrix_lift_read(L, 0x4f85a2u, 32, 0);
+    /* 4662ce: mov edx, dword ptr [0x4f85e6] */
+    edx = vertrix_lift_read(L, 0x4f85e6u, 32, 0);
+    /* 4662d4: xor eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 4662d6: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 4662d8: mov ax, word ptr [0x4f85a8] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f85a8u, 16, 0)) & 0xffffu);
+    /* 4662de: mov cx, word ptr [0x4f85f8] */
+    ecx = (ecx & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f85f8u, 16, 0)) & 0xffffu);
+    /* 4662e5: sar ebx, 0x10 */
+    a = ebx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ebx = r;
+    }
+    /* 4662e8: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4662e9: sar edx, 0x10 */
+    a = edx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 4662ec: mov eax, esi */
+    eax = esi;
+    /* 4662ee: call 0x4b54d0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4662f3u, 0);
+    eax = vertrix_lift_call(L, 0x4b54d0, eax, edx, ebx, ecx, esp, 1);
+    esp += 4u;
+    if (L->failed)
+        return 0;
+    /* 4662f3: mov edx, 2 */
+    edx = 0x2u;
+    /* 4662f8: mov eax, esi */
+    eax = esi;
+    /* 4662fa: mov word ptr [esi + 0x48], 0xfff6 */
+    vertrix_lift_write(L, esi + 0x48u, 16, 0xfff6u, esi);
+    /* 466300: call 0x4ac7b0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466305u, 0);
+    eax = vertrix_lift_call(L, 0x4ac7b0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466305: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 466307: mov byte ptr [esi + 0x94], 1 */
+    vertrix_lift_write(L, esi + 0x94u, 8, 0x1u, esi);
+    /* 46630e: mov edx, 0xff000000 */
+    edx = 0xff000000u;
+    /* 466313: mov byte ptr [esi + 0x95], 1 */
+    vertrix_lift_write(L, esi + 0x95u, 8, 0x1u, esi);
+    /* 46631a: mov eax, esi */
+    eax = esi;
+    /* 46631c: mov byte ptr [esi + 0x110], 0 */
+    vertrix_lift_write(L, esi + 0x110u, 8, 0x0u, esi);
+    /* 466323: call 0x4ac4e0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466328u, 0);
+    eax = vertrix_lift_call(L, 0x4ac4e0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466328: mov eax, 0x54671c */
+    eax = 0x54671cu;
+    /* 46632d: mov edx, esi */
+    edx = esi;
+    /* 46632f: call 0x4b5e70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466334u, 0);
+    eax = vertrix_lift_call(L, 0x4b5e70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466334: mov eax, 0x160 */
+    eax = 0x160u;
+    /* 466339: call 0x4ca000 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x46633eu, 0);
+    eax = vertrix_lift_call(L, 0x4ca000, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 46633e: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 466340: je 0x466357 */
+    if (ZF)
+    {
+        goto L_466357;
+    }
+    /* 466342: mov ebx, 0x11 */
+    ebx = 0x11u;
+    /* 466347: mov dword ptr [ebp - 0x34], eax */
+    vertrix_lift_write(L, ebp + 0xffffffccu, 32, eax, 0);
+    /* 46634a: xor esi, esi */
+    a = esi;
+    b = esi & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    esi = r;
+    /* 46634c: mov dword ptr [ebp - 0x3c], ebx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, ebx, 0);
+    /* 46634f: call 0x4b5400 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466354u, 0);
+    eax = vertrix_lift_call(L, 0x4b5400, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466354: mov dword ptr [ebp - 0x3c], esi */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, esi, 0);
+L_466357:;
+    /* 466357: mov esi, eax */
+    esi = eax;
+    /* 466359: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 46635b: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 46635d: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 46635f: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466361: mov eax, esi */
+    eax = esi;
+    /* 466363: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 466365: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466367: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 466369: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 46636b: call 0x4adf20 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466370u, 0);
+    eax = vertrix_lift_call(L, 0x4adf20, eax, edx, ebx, ecx, esp, 5);
+    esp += 20u;
+    if (L->failed)
+        return 0;
+    /* 466370: mov ebx, dword ptr [0x4f85a2] */
+    ebx = vertrix_lift_read(L, 0x4f85a2u, 32, 0);
+    /* 466376: mov edx, dword ptr [0x4f85ee] */
+    edx = vertrix_lift_read(L, 0x4f85eeu, 32, 0);
+    /* 46637c: xor eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 46637e: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 466380: mov ax, word ptr [0x4f85a8] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f85a8u, 16, 0)) & 0xffffu);
+    /* 466386: mov cx, word ptr [0x4f85f8] */
+    ecx = (ecx & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f85f8u, 16, 0)) & 0xffffu);
+    /* 46638d: sar ebx, 0x10 */
+    a = ebx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ebx = r;
+    }
+    /* 466390: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466391: sar edx, 0x10 */
+    a = edx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 466394: mov eax, esi */
+    eax = esi;
+    /* 466396: call 0x4b54d0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x46639bu, 0);
+    eax = vertrix_lift_call(L, 0x4b54d0, eax, edx, ebx, ecx, esp, 1);
+    esp += 4u;
+    if (L->failed)
+        return 0;
+    /* 46639b: mov edx, 2 */
+    edx = 0x2u;
+    /* 4663a0: mov eax, esi */
+    eax = esi;
+    /* 4663a2: mov word ptr [esi + 0x48], 0xfff6 */
+    vertrix_lift_write(L, esi + 0x48u, 16, 0xfff6u, esi);
+    /* 4663a8: call 0x4ac7b0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4663adu, 0);
+    eax = vertrix_lift_call(L, 0x4ac7b0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4663ad: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 4663af: mov byte ptr [esi + 0x94], 1 */
+    vertrix_lift_write(L, esi + 0x94u, 8, 0x1u, esi);
+    /* 4663b6: mov edx, 0xff000000 */
+    edx = 0xff000000u;
+    /* 4663bb: mov byte ptr [esi + 0x95], 1 */
+    vertrix_lift_write(L, esi + 0x95u, 8, 0x1u, esi);
+    /* 4663c2: mov eax, esi */
+    eax = esi;
+    /* 4663c4: mov byte ptr [esi + 0x110], 0 */
+    vertrix_lift_write(L, esi + 0x110u, 8, 0x0u, esi);
+    /* 4663cb: call 0x4ac4e0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4663d0u, 0);
+    eax = vertrix_lift_call(L, 0x4ac4e0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4663d0: mov eax, 0x54671c */
+    eax = 0x54671cu;
+    /* 4663d5: mov edx, esi */
+    edx = esi;
+    /* 4663d7: call 0x4b5e70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4663dcu, 0);
+    eax = vertrix_lift_call(L, 0x4b5e70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4663dc: mov eax, 0x160 */
+    eax = 0x160u;
+    /* 4663e1: call 0x4ca000 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4663e6u, 0);
+    eax = vertrix_lift_call(L, 0x4ca000, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4663e6: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 4663e8: je 0x4663ff */
+    if (ZF)
+    {
+        goto L_4663ff;
+    }
+    /* 4663ea: mov edi, 0x13 */
+    edi = 0x13u;
+    /* 4663ef: mov dword ptr [ebp - 0x34], eax */
+    vertrix_lift_write(L, ebp + 0xffffffccu, 32, eax, 0);
+    /* 4663f2: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 4663f4: mov dword ptr [ebp - 0x3c], edi */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, edi, 0);
+    /* 4663f7: call 0x4b5400 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4663fcu, 0);
+    eax = vertrix_lift_call(L, 0x4b5400, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4663fc: mov dword ptr [ebp - 0x3c], edx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, edx, 0);
+L_4663ff:;
+    /* 4663ff: mov esi, eax */
+    esi = eax;
+    /* 466401: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466403: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466405: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466407: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466409: mov eax, esi */
+    eax = esi;
+    /* 46640b: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 46640d: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 46640f: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 466411: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 466413: call 0x4adf20 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466418u, 0);
+    eax = vertrix_lift_call(L, 0x4adf20, eax, edx, ebx, ecx, esp, 5);
+    esp += 20u;
+    if (L->failed)
+        return 0;
+    /* 466418: mov ebx, dword ptr [0x4f85a2] */
+    ebx = vertrix_lift_read(L, 0x4f85a2u, 32, 0);
+    /* 46641e: mov edx, dword ptr [0x4f8606] */
+    edx = vertrix_lift_read(L, 0x4f8606u, 32, 0);
+    /* 466424: xor eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 466426: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 466428: mov ax, word ptr [0x4f85a8] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f85a8u, 16, 0)) & 0xffffu);
+    /* 46642e: mov cx, word ptr [0x4f8610] */
+    ecx = (ecx & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f8610u, 16, 0)) & 0xffffu);
+    /* 466435: sar ebx, 0x10 */
+    a = ebx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ebx = r;
+    }
+    /* 466438: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466439: sar edx, 0x10 */
+    a = edx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 46643c: mov eax, esi */
+    eax = esi;
+    /* 46643e: call 0x4b54d0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466443u, 0);
+    eax = vertrix_lift_call(L, 0x4b54d0, eax, edx, ebx, ecx, esp, 1);
+    esp += 4u;
+    if (L->failed)
+        return 0;
+    /* 466443: mov edx, 2 */
+    edx = 0x2u;
+    /* 466448: mov eax, esi */
+    eax = esi;
+    /* 46644a: mov word ptr [esi + 0x48], 0xfff6 */
+    vertrix_lift_write(L, esi + 0x48u, 16, 0xfff6u, esi);
+    /* 466450: call 0x4ac7b0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466455u, 0);
+    eax = vertrix_lift_call(L, 0x4ac7b0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466455: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 466457: mov byte ptr [esi + 0x94], 1 */
+    vertrix_lift_write(L, esi + 0x94u, 8, 0x1u, esi);
+    /* 46645e: mov edx, 0xff000000 */
+    edx = 0xff000000u;
+    /* 466463: mov byte ptr [esi + 0x95], 1 */
+    vertrix_lift_write(L, esi + 0x95u, 8, 0x1u, esi);
+    /* 46646a: mov eax, esi */
+    eax = esi;
+    /* 46646c: mov byte ptr [esi + 0x110], 0 */
+    vertrix_lift_write(L, esi + 0x110u, 8, 0x0u, esi);
+    /* 466473: call 0x4ac4e0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466478u, 0);
+    eax = vertrix_lift_call(L, 0x4ac4e0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466478: mov eax, 0x54671c */
+    eax = 0x54671cu;
+    /* 46647d: mov edx, esi */
+    edx = esi;
+    /* 46647f: call 0x4b5e70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466484u, 0);
+    eax = vertrix_lift_call(L, 0x4b5e70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466484: mov eax, dword ptr [0x4f870c] */
+    eax = vertrix_lift_read(L, 0x4f870cu, 32, 0);
+    /* 466489: shr eax, 1 */
+    a = eax;
+    c = 0x1u & 31u;
+    if (c)
+    {
+        r = a >> c;
+        CF = (a >> (c - 1)) & 1u;
+        OF = (a & 0x80000000u) != 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        eax = r;
+    }
+    /* 46648b: mov dword ptr [ebp - 0x2c], eax */
+    vertrix_lift_write(L, ebp + 0xffffffd4u, 32, eax, 0);
+    /* 46648e: mov edi, 0xffffffe2 */
+    edi = 0xffffffe2u;
+    /* 466493: mov ecx, dword ptr [ebp - 0x2c] */
+    ecx = vertrix_lift_read(L, ebp + 0xffffffd4u, 32, 0);
+    /* 466496: mov eax, dword ptr [0x4f870c] */
+    eax = vertrix_lift_read(L, 0x4f870cu, 32, 0);
+    /* 46649b: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 46649d: sub eax, ecx */
+    a = eax;
+    b = ecx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 46649f: mov dword ptr [ebp - 0x18], ebx */
+    vertrix_lift_write(L, ebp + 0xffffffe8u, 32, ebx, 0);
+    /* 4664a2: mov dword ptr [ebp - 0x20], eax */
+    vertrix_lift_write(L, ebp + 0xffffffe0u, 32, eax, 0);
+    /* 4664a5: test ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 4664a7: jbe 0x466541 */
+    if (CF || ZF)
+    {
+        goto L_466541;
+    }
+L_4664ad:;
+    /* 4664ad: mov eax, 0x160 */
+    eax = 0x160u;
+    /* 4664b2: call 0x4ca000 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4664b7u, 0);
+    eax = vertrix_lift_call(L, 0x4ca000, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4664b7: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 4664b9: je 0x4664c0 */
+    if (ZF)
+    {
+        goto L_4664c0;
+    }
+    /* 4664bb: call 0x4b5400 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4664c0u, 0);
+    eax = vertrix_lift_call(L, 0x4b5400, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+L_4664c0:;
+    /* 4664c0: mov esi, eax */
+    esi = eax;
+    /* 4664c2: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4664c4: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4664c6: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4664c8: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4664ca: mov eax, esi */
+    eax = esi;
+    /* 4664cc: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 4664ce: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4664d0: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 4664d2: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 4664d4: call 0x4adf20 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4664d9u, 0);
+    eax = vertrix_lift_call(L, 0x4adf20, eax, edx, ebx, ecx, esp, 5);
+    esp += 20u;
+    if (L->failed)
+        return 0;
+    /* 4664d9: mov edx, dword ptr [ebp - 0x18] */
+    edx = vertrix_lift_read(L, ebp + 0xffffffe8u, 32, 0);
+    /* 4664dc: mov ax, word ptr [0x4f8708] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f8708u, 16, 0)) & 0xffffu);
+    /* 4664e2: push 1 */
+    t = 0x1u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4664e4: add eax, edx */
+    a = eax;
+    b = edx & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 4664e6: mov ecx, 0x280 */
+    ecx = 0x280u;
+    /* 4664eb: movsx ebx, ax */
+    ebx = (uint32_t)(int32_t)(int16_t)((eax & 0xffffu));
+    /* 4664ee: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 4664f0: mov eax, esi */
+    eax = esi;
+    /* 4664f2: call 0x4b54d0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4664f7u, 0);
+    eax = vertrix_lift_call(L, 0x4b54d0, eax, edx, ebx, ecx, esp, 1);
+    esp += 4u;
+    if (L->failed)
+        return 0;
+    /* 4664f7: mov edx, 2 */
+    edx = 0x2u;
+    /* 4664fc: mov byte ptr [esi + 0x52], 8 */
+    vertrix_lift_write(L, esi + 0x52u, 8, 0x8u, esi);
+    /* 466500: mov eax, esi */
+    eax = esi;
+    /* 466502: mov word ptr [esi + 0x48], di */
+    vertrix_lift_write(L, esi + 0x48u, 16, (edi & 0xffffu), esi);
+    /* 466506: call 0x4ac7b0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x46650bu, 0);
+    eax = vertrix_lift_call(L, 0x4ac7b0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 46650b: mov byte ptr [esi + 0x94], 1 */
+    vertrix_lift_write(L, esi + 0x94u, 8, 0x1u, esi);
+    /* 466512: mov eax, 0x54671c */
+    eax = 0x54671cu;
+    /* 466517: mov byte ptr [esi + 0x95], 1 */
+    vertrix_lift_write(L, esi + 0x95u, 8, 0x1u, esi);
+    /* 46651e: mov edx, esi */
+    edx = esi;
+    /* 466520: mov byte ptr [esi + 0x110], 0 */
+    vertrix_lift_write(L, esi + 0x110u, 8, 0x0u, esi);
+    /* 466527: call 0x4b5e70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x46652cu, 0);
+    eax = vertrix_lift_call(L, 0x4b5e70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 46652c: mov eax, dword ptr [ebp - 0x18] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffe8u, 32, 0);
+    /* 46652f: add edi, 7 */
+    a = edi;
+    b = 0x7u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edi = r;
+    /* 466532: inc eax */
+    a = eax;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    eax = r;
+    /* 466533: mov edx, dword ptr [ebp - 0x2c] */
+    edx = vertrix_lift_read(L, ebp + 0xffffffd4u, 32, 0);
+    /* 466536: mov dword ptr [ebp - 0x18], eax */
+    vertrix_lift_write(L, ebp + 0xffffffe8u, 32, eax, 0);
+    /* 466539: cmp eax, edx */
+    a = eax;
+    b = edx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 46653b: jb 0x4664ad */
+    if (CF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_4664ad;
+    }
+L_466541:;
+    /* 466541: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 466543: mov ebx, dword ptr [ebp - 0x20] */
+    ebx = vertrix_lift_read(L, ebp + 0xffffffe0u, 32, 0);
+    /* 466546: mov dword ptr [ebp - 0x18], ecx */
+    vertrix_lift_write(L, ebp + 0xffffffe8u, 32, ecx, 0);
+    /* 466549: test ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 46654b: jbe 0x4665ea */
+    if (CF || ZF)
+    {
+        goto L_4665ea;
+    }
+L_466551:;
+    /* 466551: mov eax, 0x160 */
+    eax = 0x160u;
+    /* 466556: call 0x4ca000 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x46655bu, 0);
+    eax = vertrix_lift_call(L, 0x4ca000, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 46655b: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 46655d: je 0x466564 */
+    if (ZF)
+    {
+        goto L_466564;
+    }
+    /* 46655f: call 0x4b5400 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466564u, 0);
+    eax = vertrix_lift_call(L, 0x4b5400, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+L_466564:;
+    /* 466564: mov esi, eax */
+    esi = eax;
+    /* 466566: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466568: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 46656a: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 46656c: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 46656e: mov eax, esi */
+    eax = esi;
+    /* 466570: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 466572: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466574: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 466576: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 466578: call 0x4adf20 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x46657du, 0);
+    eax = vertrix_lift_call(L, 0x4adf20, eax, edx, ebx, ecx, esp, 5);
+    esp += 20u;
+    if (L->failed)
+        return 0;
+    /* 46657d: push 1 */
+    t = 0x1u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 46657f: mov ebx, dword ptr [ebp - 0x2c] */
+    ebx = vertrix_lift_read(L, ebp + 0xffffffd4u, 32, 0);
+    /* 466582: mov ax, word ptr [0x4f8708] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f8708u, 16, 0)) & 0xffffu);
+    /* 466588: mov ecx, dword ptr [ebp - 0x18] */
+    ecx = vertrix_lift_read(L, ebp + 0xffffffe8u, 32, 0);
+    /* 46658b: add eax, ebx */
+    a = eax;
+    b = ebx & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 46658d: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 46658f: add eax, ecx */
+    a = eax;
+    b = ecx & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 466591: mov ecx, 0x280 */
+    ecx = 0x280u;
+    /* 466596: movsx ebx, ax */
+    ebx = (uint32_t)(int32_t)(int16_t)((eax & 0xffffu));
+    /* 466599: mov eax, esi */
+    eax = esi;
+    /* 46659b: call 0x4b54d0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4665a0u, 0);
+    eax = vertrix_lift_call(L, 0x4b54d0, eax, edx, ebx, ecx, esp, 1);
+    esp += 4u;
+    if (L->failed)
+        return 0;
+    /* 4665a0: mov edx, 2 */
+    edx = 0x2u;
+    /* 4665a5: mov byte ptr [esi + 0x52], 8 */
+    vertrix_lift_write(L, esi + 0x52u, 8, 0x8u, esi);
+    /* 4665a9: mov eax, esi */
+    eax = esi;
+    /* 4665ab: mov word ptr [esi + 0x48], di */
+    vertrix_lift_write(L, esi + 0x48u, 16, (edi & 0xffffu), esi);
+    /* 4665af: call 0x4ac7b0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4665b4u, 0);
+    eax = vertrix_lift_call(L, 0x4ac7b0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4665b4: mov byte ptr [esi + 0x94], 1 */
+    vertrix_lift_write(L, esi + 0x94u, 8, 0x1u, esi);
+    /* 4665bb: mov eax, 0x54671c */
+    eax = 0x54671cu;
+    /* 4665c0: mov byte ptr [esi + 0x95], 1 */
+    vertrix_lift_write(L, esi + 0x95u, 8, 0x1u, esi);
+    /* 4665c7: mov edx, esi */
+    edx = esi;
+    /* 4665c9: mov byte ptr [esi + 0x110], 0 */
+    vertrix_lift_write(L, esi + 0x110u, 8, 0x0u, esi);
+    /* 4665d0: call 0x4b5e70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4665d5u, 0);
+    eax = vertrix_lift_call(L, 0x4b5e70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4665d5: mov esi, dword ptr [ebp - 0x18] */
+    esi = vertrix_lift_read(L, ebp + 0xffffffe8u, 32, 0);
+    /* 4665d8: sub edi, 7 */
+    a = edi;
+    b = 0x7u & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edi = r;
+    /* 4665db: inc esi */
+    a = esi;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    esi = r;
+    /* 4665dc: mov edx, dword ptr [ebp - 0x20] */
+    edx = vertrix_lift_read(L, ebp + 0xffffffe0u, 32, 0);
+    /* 4665df: mov dword ptr [ebp - 0x18], esi */
+    vertrix_lift_write(L, ebp + 0xffffffe8u, 32, esi, 0);
+    /* 4665e2: cmp esi, edx */
+    a = esi;
+    b = edx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4665e4: jb 0x466551 */
+    if (CF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_466551;
+    }
+L_4665ea:;
+    /* 4665ea: mov ecx, dword ptr [0x532a8c] */
+    ecx = vertrix_lift_read(L, 0x532a8cu, 32, 0);
+    /* 4665f0: test ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 4665f2: jne 0x466d08 */
+    if (!ZF)
+    {
+        goto L_466d08;
+    }
+L_4665f8:;
+    /* 4665f8: mov eax, 0x160 */
+    eax = 0x160u;
+    /* 4665fd: call 0x4ca000 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466602u, 0);
+    eax = vertrix_lift_call(L, 0x4ca000, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466602: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 466604: je 0x46661b */
+    if (ZF)
+    {
+        goto L_46661b;
+    }
+    /* 466606: mov esi, 0x15 */
+    esi = 0x15u;
+    /* 46660b: mov dword ptr [ebp - 0x34], eax */
+    vertrix_lift_write(L, ebp + 0xffffffccu, 32, eax, 0);
+    /* 46660e: xor edi, edi */
+    a = edi;
+    b = edi & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edi = r;
+    /* 466610: mov dword ptr [ebp - 0x3c], esi */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, esi, 0);
+    /* 466613: call 0x4b5400 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466618u, 0);
+    eax = vertrix_lift_call(L, 0x4b5400, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466618: mov dword ptr [ebp - 0x3c], edi */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, edi, 0);
+L_46661b:;
+    /* 46661b: mov esi, eax */
+    esi = eax;
+    /* 46661d: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 46661f: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466621: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466623: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466625: mov eax, esi */
+    eax = esi;
+    /* 466627: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 466629: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 46662b: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 46662d: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 46662f: call 0x4adf20 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466634u, 0);
+    eax = vertrix_lift_call(L, 0x4adf20, eax, edx, ebx, ecx, esp, 5);
+    esp += 20u;
+    if (L->failed)
+        return 0;
+    /* 466634: mov ebx, dword ptr [0x4f86c6] */
+    ebx = vertrix_lift_read(L, 0x4f86c6u, 32, 0);
+    /* 46663a: mov edx, dword ptr [0x4f86c2] */
+    edx = vertrix_lift_read(L, 0x4f86c2u, 32, 0);
+    /* 466640: xor eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 466642: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 466644: mov ax, word ptr [0x4f86d0] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f86d0u, 16, 0)) & 0xffffu);
+    /* 46664a: mov cx, word ptr [0x4f86cc] */
+    ecx = (ecx & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f86ccu, 16, 0)) & 0xffffu);
+    /* 466651: sar ebx, 0x10 */
+    a = ebx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ebx = r;
+    }
+    /* 466654: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466655: sar edx, 0x10 */
+    a = edx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 466658: mov eax, esi */
+    eax = esi;
+    /* 46665a: call 0x4b54d0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x46665fu, 0);
+    eax = vertrix_lift_call(L, 0x4b54d0, eax, edx, ebx, ecx, esp, 1);
+    esp += 4u;
+    if (L->failed)
+        return 0;
+    /* 46665f: mov edx, 2 */
+    edx = 0x2u;
+    /* 466664: mov eax, esi */
+    eax = esi;
+    /* 466666: mov word ptr [esi + 0x48], 0xffdd */
+    vertrix_lift_write(L, esi + 0x48u, 16, 0xffddu, esi);
+    /* 46666c: call 0x4ac7b0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466671u, 0);
+    eax = vertrix_lift_call(L, 0x4ac7b0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466671: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 466673: mov byte ptr [esi + 0x94], 0 */
+    vertrix_lift_write(L, esi + 0x94u, 8, 0x0u, esi);
+    /* 46667a: mov edx, 0xff000000 */
+    edx = 0xff000000u;
+    /* 46667f: mov byte ptr [esi + 0x95], 1 */
+    vertrix_lift_write(L, esi + 0x95u, 8, 0x1u, esi);
+    /* 466686: mov eax, esi */
+    eax = esi;
+    /* 466688: mov byte ptr [esi + 0x110], 1 */
+    vertrix_lift_write(L, esi + 0x110u, 8, 0x1u, esi);
+    /* 46668f: call 0x4ac4e0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466694u, 0);
+    eax = vertrix_lift_call(L, 0x4ac4e0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466694: mov eax, 0x54671c */
+    eax = 0x54671cu;
+    /* 466699: mov edx, esi */
+    edx = esi;
+    /* 46669b: call 0x4b5e70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4666a0u, 0);
+    eax = vertrix_lift_call(L, 0x4b5e70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4666a0: mov eax, 0x160 */
+    eax = 0x160u;
+    /* 4666a5: call 0x4ca000 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4666aau, 0);
+    eax = vertrix_lift_call(L, 0x4ca000, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4666aa: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 4666ac: je 0x4666c3 */
+    if (ZF)
+    {
+        goto L_4666c3;
+    }
+    /* 4666ae: mov edx, 0x17 */
+    edx = 0x17u;
+    /* 4666b3: mov dword ptr [ebp - 0x34], eax */
+    vertrix_lift_write(L, ebp + 0xffffffccu, 32, eax, 0);
+    /* 4666b6: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 4666b8: mov dword ptr [ebp - 0x3c], edx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, edx, 0);
+    /* 4666bb: call 0x4b5400 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4666c0u, 0);
+    eax = vertrix_lift_call(L, 0x4b5400, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4666c0: mov dword ptr [ebp - 0x3c], ecx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, ecx, 0);
+L_4666c3:;
+    /* 4666c3: mov esi, eax */
+    esi = eax;
+    /* 4666c5: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4666c7: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4666c9: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4666cb: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4666cd: mov eax, esi */
+    eax = esi;
+    /* 4666cf: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 4666d1: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4666d3: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 4666d5: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 4666d7: call 0x4adf20 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4666dcu, 0);
+    eax = vertrix_lift_call(L, 0x4adf20, eax, edx, ebx, ecx, esp, 5);
+    esp += 20u;
+    if (L->failed)
+        return 0;
+    /* 4666dc: mov ebx, dword ptr [0x4f86b6] */
+    ebx = vertrix_lift_read(L, 0x4f86b6u, 32, 0);
+    /* 4666e2: mov edx, dword ptr [0x4f86b2] */
+    edx = vertrix_lift_read(L, 0x4f86b2u, 32, 0);
+    /* 4666e8: xor eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 4666ea: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 4666ec: mov ax, word ptr [0x4f86c0] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f86c0u, 16, 0)) & 0xffffu);
+    /* 4666f2: mov cx, word ptr [0x4f86bc] */
+    ecx = (ecx & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f86bcu, 16, 0)) & 0xffffu);
+    /* 4666f9: sar ebx, 0x10 */
+    a = ebx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ebx = r;
+    }
+    /* 4666fc: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4666fd: sar edx, 0x10 */
+    a = edx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 466700: mov eax, esi */
+    eax = esi;
+    /* 466702: call 0x4b54d0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466707u, 0);
+    eax = vertrix_lift_call(L, 0x4b54d0, eax, edx, ebx, ecx, esp, 1);
+    esp += 4u;
+    if (L->failed)
+        return 0;
+    /* 466707: mov edx, 2 */
+    edx = 0x2u;
+    /* 46670c: mov eax, esi */
+    eax = esi;
+    /* 46670e: mov word ptr [esi + 0x48], 0xffdd */
+    vertrix_lift_write(L, esi + 0x48u, 16, 0xffddu, esi);
+    /* 466714: call 0x4ac7b0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466719u, 0);
+    eax = vertrix_lift_call(L, 0x4ac7b0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466719: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 46671b: mov byte ptr [esi + 0x94], 1 */
+    vertrix_lift_write(L, esi + 0x94u, 8, 0x1u, esi);
+    /* 466722: mov edx, 0xff000000 */
+    edx = 0xff000000u;
+    /* 466727: mov byte ptr [esi + 0x95], 1 */
+    vertrix_lift_write(L, esi + 0x95u, 8, 0x1u, esi);
+    /* 46672e: mov eax, esi */
+    eax = esi;
+    /* 466730: mov byte ptr [esi + 0x110], 1 */
+    vertrix_lift_write(L, esi + 0x110u, 8, 0x1u, esi);
+    /* 466737: call 0x4ac4e0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x46673cu, 0);
+    eax = vertrix_lift_call(L, 0x4ac4e0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 46673c: mov eax, 0x54671c */
+    eax = 0x54671cu;
+    /* 466741: mov edx, esi */
+    edx = esi;
+    /* 466743: call 0x4b5e70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466748u, 0);
+    eax = vertrix_lift_call(L, 0x4b5e70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466748: mov eax, 0x180 */
+    eax = 0x180u;
+    /* 46674d: call 0x4ca000 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466752u, 0);
+    eax = vertrix_lift_call(L, 0x4ca000, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466752: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 466754: je 0x46676b */
+    if (ZF)
+    {
+        goto L_46676b;
+    }
+    /* 466756: mov ebx, 0x19 */
+    ebx = 0x19u;
+    /* 46675b: mov dword ptr [ebp - 0x34], eax */
+    vertrix_lift_write(L, ebp + 0xffffffccu, 32, eax, 0);
+    /* 46675e: xor esi, esi */
+    a = esi;
+    b = esi & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    esi = r;
+    /* 466760: mov dword ptr [ebp - 0x3c], ebx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, ebx, 0);
+    /* 466763: call 0x4b6350 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466768u, 0);
+    eax = vertrix_lift_call(L, 0x4b6350, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466768: mov dword ptr [ebp - 0x3c], esi */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, esi, 0);
+L_46676b:;
+    /* 46676b: mov esi, eax */
+    esi = eax;
+    /* 46676d: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 46676f: push 0x4479f0 */
+    t = 0x4479f0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466774: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466776: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466778: mov eax, esi */
+    eax = esi;
+    /* 46677a: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 46677c: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 46677e: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 466780: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 466782: call 0x4adf20 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466787u, 0);
+    eax = vertrix_lift_call(L, 0x4adf20, eax, edx, ebx, ecx, esp, 5);
+    esp += 20u;
+    if (L->failed)
+        return 0;
+    /* 466787: mov eax, dword ptr [0x4f8712] */
+    eax = vertrix_lift_read(L, 0x4f8712u, 32, 0);
+    /* 46678c: sar eax, 0x10 */
+    a = eax;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        eax = r;
+    }
+    /* 46678f: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466790: mov di, word ptr [0x4f8718] */
+    edi = (edi & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f8718u, 16, 0)) & 0xffffu);
+    /* 466797: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466798: mov ax, word ptr [0x4f8710] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f8710u, 16, 0)) & 0xffffu);
+    /* 46679e: mov edx, 0x50e518 */
+    edx = 0x50e518u;
+    /* 4667a3: add eax, edi */
+    a = eax;
+    b = edi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 4667a5: mov ecx, dword ptr [0x4f870e] */
+    ecx = vertrix_lift_read(L, 0x4f870eu, 32, 0);
+    /* 4667ab: dec eax */
+    a = eax;
+    r = (a - 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u - 1u);
+    eax = r;
+    /* 4667ac: mov ebx, dword ptr [0x540018] */
+    ebx = vertrix_lift_read(L, 0x540018u, 32, 0);
+    /* 4667b2: cwde  */
+    eax = (uint32_t)(int32_t)(int16_t)(eax & 0xffffu);
+    /* 4667b3: sar ecx, 0x10 */
+    a = ecx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ecx = r;
+    }
+    /* 4667b6: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4667b7: sar ebx, 0x18 */
+    a = ebx;
+    c = 0x18u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ebx = r;
+    }
+    /* 4667ba: mov eax, esi */
+    eax = esi;
+    /* 4667bc: call 0x4b65d0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4667c1u, 0);
+    eax = vertrix_lift_call(L, 0x4b65d0, eax, edx, ebx, ecx, esp, 3);
+    esp += 12u;
+    if (L->failed)
+        return 0;
+    /* 4667c1: mov edx, 2 */
+    edx = 0x2u;
+    /* 4667c6: mov eax, esi */
+    eax = esi;
+    /* 4667c8: call 0x4ac7b0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4667cdu, 0);
+    eax = vertrix_lift_call(L, 0x4ac7b0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4667cd: mov byte ptr [esi + 0x44], 8 */
+    vertrix_lift_write(L, esi + 0x44u, 8, 0x8u, esi);
+    /* 4667d1: mov eax, 0x54671c */
+    eax = 0x54671cu;
+    /* 4667d6: mov byte ptr [esi + 0x93], 1 */
+    vertrix_lift_write(L, esi + 0x93u, 8, 0x1u, esi);
+    /* 4667dd: mov edx, esi */
+    edx = esi;
+    /* 4667df: mov byte ptr [esi + 0x95], 4 */
+    vertrix_lift_write(L, esi + 0x95u, 8, 0x4u, esi);
+    /* 4667e6: call 0x4b5e70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4667ebu, 0);
+    eax = vertrix_lift_call(L, 0x4b5e70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4667eb: mov eax, 0x180 */
+    eax = 0x180u;
+    /* 4667f0: call 0x4ca000 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4667f5u, 0);
+    eax = vertrix_lift_call(L, 0x4ca000, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4667f5: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 4667f7: je 0x46680e */
+    if (ZF)
+    {
+        goto L_46680e;
+    }
+    /* 4667f9: mov edi, 0x1b */
+    edi = 0x1bu;
+    /* 4667fe: mov dword ptr [ebp - 0x34], eax */
+    vertrix_lift_write(L, ebp + 0xffffffccu, 32, eax, 0);
+    /* 466801: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 466803: mov dword ptr [ebp - 0x3c], edi */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, edi, 0);
+    /* 466806: call 0x4b6350 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x46680bu, 0);
+    eax = vertrix_lift_call(L, 0x4b6350, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 46680b: mov dword ptr [ebp - 0x3c], edx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, edx, 0);
+L_46680e:;
+    /* 46680e: mov esi, eax */
+    esi = eax;
+    /* 466810: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466812: push 0x4479f0 */
+    t = 0x4479f0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466817: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466819: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 46681b: mov eax, esi */
+    eax = esi;
+    /* 46681d: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 46681f: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466821: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 466823: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 466825: call 0x4adf20 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x46682au, 0);
+    eax = vertrix_lift_call(L, 0x4adf20, eax, edx, ebx, ecx, esp, 5);
+    esp += 20u;
+    if (L->failed)
+        return 0;
+    /* 46682a: mov eax, dword ptr [0x4f871e] */
+    eax = vertrix_lift_read(L, 0x4f871eu, 32, 0);
+    /* 46682f: sar eax, 0x10 */
+    a = eax;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        eax = r;
+    }
+    /* 466832: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466833: mov dx, word ptr [0x4f8724] */
+    edx = (edx & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f8724u, 16, 0)) & 0xffffu);
+    /* 46683a: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 46683b: mov ax, word ptr [0x533d34] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, 0x533d34u, 16, 0)) & 0xffffu);
+    /* 466841: mov ecx, dword ptr [0x533d32] */
+    ecx = vertrix_lift_read(L, 0x533d32u, 32, 0);
+    /* 466847: add eax, edx */
+    a = eax;
+    b = edx & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 466849: mov ebx, dword ptr [0x540018] */
+    ebx = vertrix_lift_read(L, 0x540018u, 32, 0);
+    /* 46684f: dec eax */
+    a = eax;
+    r = (a - 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u - 1u);
+    eax = r;
+    /* 466850: sar ecx, 0x10 */
+    a = ecx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ecx = r;
+    }
+    /* 466853: cwde  */
+    eax = (uint32_t)(int32_t)(int16_t)(eax & 0xffffu);
+    /* 466854: sar ebx, 0x18 */
+    a = ebx;
+    c = 0x18u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ebx = r;
+    }
+    /* 466857: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466858: mov edx, 0x50e51c */
+    edx = 0x50e51cu;
+    /* 46685d: mov eax, esi */
+    eax = esi;
+    /* 46685f: call 0x4b65d0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466864u, 0);
+    eax = vertrix_lift_call(L, 0x4b65d0, eax, edx, ebx, ecx, esp, 3);
+    esp += 12u;
+    if (L->failed)
+        return 0;
+    /* 466864: mov edx, 2 */
+    edx = 0x2u;
+    /* 466869: mov eax, esi */
+    eax = esi;
+    /* 46686b: call 0x4ac7b0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466870u, 0);
+    eax = vertrix_lift_call(L, 0x4ac7b0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466870: mov byte ptr [esi + 0x44], 8 */
+    vertrix_lift_write(L, esi + 0x44u, 8, 0x8u, esi);
+    /* 466874: mov eax, 0x54671c */
+    eax = 0x54671cu;
+    /* 466879: mov byte ptr [esi + 0x93], 1 */
+    vertrix_lift_write(L, esi + 0x93u, 8, 0x1u, esi);
+    /* 466880: mov edx, esi */
+    edx = esi;
+    /* 466882: mov byte ptr [esi + 0x95], 4 */
+    vertrix_lift_write(L, esi + 0x95u, 8, 0x4u, esi);
+    /* 466889: call 0x4b5e70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x46688eu, 0);
+    eax = vertrix_lift_call(L, 0x4b5e70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 46688e: mov eax, 0x180 */
+    eax = 0x180u;
+    /* 466893: call 0x4ca000 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466898u, 0);
+    eax = vertrix_lift_call(L, 0x4ca000, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466898: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 46689a: je 0x4668b1 */
+    if (ZF)
+    {
+        goto L_4668b1;
+    }
+    /* 46689c: mov ecx, 0x1d */
+    ecx = 0x1du;
+    /* 4668a1: mov dword ptr [ebp - 0x34], eax */
+    vertrix_lift_write(L, ebp + 0xffffffccu, 32, eax, 0);
+    /* 4668a4: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 4668a6: mov dword ptr [ebp - 0x3c], ecx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, ecx, 0);
+    /* 4668a9: call 0x4b6350 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4668aeu, 0);
+    eax = vertrix_lift_call(L, 0x4b6350, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4668ae: mov dword ptr [ebp - 0x3c], ebx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, ebx, 0);
+L_4668b1:;
+    /* 4668b1: mov esi, eax */
+    esi = eax;
+    /* 4668b3: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4668b5: push 0x4479f0 */
+    t = 0x4479f0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4668ba: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4668bc: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4668be: mov eax, esi */
+    eax = esi;
+    /* 4668c0: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 4668c2: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4668c4: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 4668c6: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 4668c8: call 0x4adf20 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4668cdu, 0);
+    eax = vertrix_lift_call(L, 0x4adf20, eax, edx, ebx, ecx, esp, 5);
+    esp += 20u;
+    if (L->failed)
+        return 0;
+    /* 4668cd: mov eax, dword ptr [0x4f872e] */
+    eax = vertrix_lift_read(L, 0x4f872eu, 32, 0);
+    /* 4668d2: sar eax, 0x10 */
+    a = eax;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        eax = r;
+    }
+    /* 4668d5: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4668d6: mov bx, word ptr [0x4f8734] */
+    ebx = (ebx & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f8734u, 16, 0)) & 0xffffu);
+    /* 4668dd: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4668de: mov ax, word ptr [0x4f872c] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, 0x4f872cu, 16, 0)) & 0xffffu);
+    /* 4668e4: mov edx, 0x50e522 */
+    edx = 0x50e522u;
+    /* 4668e9: add eax, ebx */
+    a = eax;
+    b = ebx & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 4668eb: mov ecx, dword ptr [0x4f872a] */
+    ecx = vertrix_lift_read(L, 0x4f872au, 32, 0);
+    /* 4668f1: dec eax */
+    a = eax;
+    r = (a - 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u - 1u);
+    eax = r;
+    /* 4668f2: sar ecx, 0x10 */
+    a = ecx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ecx = r;
+    }
+    /* 4668f5: cwde  */
+    eax = (uint32_t)(int32_t)(int16_t)(eax & 0xffffu);
+    /* 4668f6: mov ebx, dword ptr [0x540018] */
+    ebx = vertrix_lift_read(L, 0x540018u, 32, 0);
+    /* 4668fc: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4668fd: sar ebx, 0x18 */
+    a = ebx;
+    c = 0x18u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ebx = r;
+    }
+    /* 466900: mov eax, esi */
+    eax = esi;
+    /* 466902: call 0x4b65d0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466907u, 0);
+    eax = vertrix_lift_call(L, 0x4b65d0, eax, edx, ebx, ecx, esp, 3);
+    esp += 12u;
+    if (L->failed)
+        return 0;
+    /* 466907: mov edx, 2 */
+    edx = 0x2u;
+    /* 46690c: mov eax, esi */
+    eax = esi;
+    /* 46690e: call 0x4ac7b0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466913u, 0);
+    eax = vertrix_lift_call(L, 0x4ac7b0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466913: mov byte ptr [esi + 0x44], 8 */
+    vertrix_lift_write(L, esi + 0x44u, 8, 0x8u, esi);
+    /* 466917: mov eax, 0x54671c */
+    eax = 0x54671cu;
+    /* 46691c: mov byte ptr [esi + 0x93], 1 */
+    vertrix_lift_write(L, esi + 0x93u, 8, 0x1u, esi);
+    /* 466923: mov edx, esi */
+    edx = esi;
+    /* 466925: mov byte ptr [esi + 0x95], 4 */
+    vertrix_lift_write(L, esi + 0x95u, 8, 0x4u, esi);
+    /* 46692c: xor esi, esi */
+    a = esi;
+    b = esi & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    esi = r;
+    /* 46692e: call 0x4b5e70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466933u, 0);
+    eax = vertrix_lift_call(L, 0x4b5e70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466933: mov dword ptr [ebp - 0x3c], esi */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, esi, 0);
+L_466936:;
+    /* 466936: mov eax, 0x15c */
+    eax = 0x15cu;
+    /* 46693b: mov edi, 5 */
+    edi = 0x5u;
+    /* 466940: call 0x4ca000 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466945u, 0);
+    eax = vertrix_lift_call(L, 0x4ca000, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466945: mov dword ptr [ebp - 0x30], edi */
+    vertrix_lift_write(L, ebp + 0xffffffd0u, 32, edi, 0);
+    /* 466948: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 46694a: je 0x466961 */
+    if (ZF)
+    {
+        goto L_466961;
+    }
+    /* 46694c: mov edx, 0x1f */
+    edx = 0x1fu;
+    /* 466951: mov dword ptr [ebp - 0x34], eax */
+    vertrix_lift_write(L, ebp + 0xffffffccu, 32, eax, 0);
+    /* 466954: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 466956: mov dword ptr [ebp - 0x3c], edx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, edx, 0);
+    /* 466959: call 0x4abd70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x46695eu, 0);
+    eax = vertrix_lift_call(L, 0x4abd70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 46695e: mov dword ptr [ebp - 0x3c], ecx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, ecx, 0);
+L_466961:;
+    /* 466961: mov esi, eax */
+    esi = eax;
+    /* 466963: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466965: mov eax, dword ptr [0x4f85b0] */
+    eax = vertrix_lift_read(L, 0x4f85b0u, 32, 0);
+    /* 46696a: mov ebx, dword ptr [0x533d20] */
+    ebx = vertrix_lift_read(L, 0x533d20u, 32, 0);
+    /* 466970: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466972: shr eax, 1 */
+    a = eax;
+    c = 0x1u & 31u;
+    if (c)
+    {
+        r = a >> c;
+        CF = (a >> (c - 1)) & 1u;
+        OF = (a & 0x80000000u) != 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        eax = r;
+    }
+    /* 466974: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466976: mov edx, dword ptr [ebp - 0x30] */
+    edx = vertrix_lift_read(L, ebp + 0xffffffd0u, 32, 0);
+    /* 466979: add eax, ebx */
+    a = eax;
+    b = ebx & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 46697b: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 46697d: add edx, eax */
+    a = edx;
+    b = eax & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 46697f: mov eax, dword ptr [0x4f85b4] */
+    eax = vertrix_lift_read(L, 0x4f85b4u, 32, 0);
+    /* 466984: mov dword ptr [ebp - 0x28], edx */
+    vertrix_lift_write(L, ebp + 0xffffffd8u, 32, edx, 0);
+    /* 466987: mov edx, dword ptr [0x4f85ac] */
+    edx = vertrix_lift_read(L, 0x4f85acu, 32, 0);
+    /* 46698d: shr eax, 1 */
+    a = eax;
+    c = 0x1u & 31u;
+    if (c)
+    {
+        r = a >> c;
+        CF = (a >> (c - 1)) & 1u;
+        OF = (a & 0x80000000u) != 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        eax = r;
+    }
+    /* 46698f: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 466991: add eax, edx */
+    a = eax;
+    b = edx & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 466993: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466995: add eax, edi */
+    a = eax;
+    b = edi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 466997: mov edx, dword ptr [ebp - 0x2a] */
+    edx = vertrix_lift_read(L, ebp + 0xffffffd6u, 32, 0);
+    /* 46699a: mov dword ptr [ebp - 0x1c], eax */
+    vertrix_lift_write(L, ebp + 0xffffffe4u, 32, eax, 0);
+    /* 46699d: sar edx, 0x10 */
+    a = edx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 4669a0: mov ebx, dword ptr [ebp - 0x1e] */
+    ebx = vertrix_lift_read(L, ebp + 0xffffffe2u, 32, 0);
+    /* 4669a3: mov eax, esi */
+    eax = esi;
+    /* 4669a5: sar ebx, 0x10 */
+    a = ebx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ebx = r;
+    }
+    /* 4669a8: call 0x4adf20 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4669adu, 0);
+    eax = vertrix_lift_call(L, 0x4adf20, eax, edx, ebx, ecx, esp, 5);
+    esp += 20u;
+    if (L->failed)
+        return 0;
+    /* 4669ad: mov edx, 0x544a18 */
+    edx = 0x544a18u;
+    /* 4669b2: mov eax, esi */
+    eax = esi;
+    /* 4669b4: call 0x4ac8d0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4669b9u, 0);
+    eax = vertrix_lift_call(L, 0x4ac8d0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4669b9: mov edx, dword ptr [0x4fbf1c] */
+    edx = vertrix_lift_read(L, 0x4fbf1cu, 32, 0);
+    /* 4669bf: mov eax, esi */
+    eax = esi;
+    /* 4669c1: call 0x4ac710 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4669c6u, 0);
+    eax = vertrix_lift_call(L, 0x4ac710, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4669c6: mov eax, esi */
+    eax = esi;
+    /* 4669c8: call 0x4ac8a0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4669cdu, 0);
+    eax = vertrix_lift_call(L, 0x4ac8a0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4669cd: mov byte ptr [esi + 0x93], 1 */
+    vertrix_lift_write(L, esi + 0x93u, 8, 0x1u, esi);
+    /* 4669d4: mov byte ptr [esi + 0x95], 1 */
+    vertrix_lift_write(L, esi + 0x95u, 8, 0x1u, esi);
+    /* 4669db: mov edx, esi */
+    edx = esi;
+    /* 4669dd: mov byte ptr [esi + 0x4e], 0 */
+    vertrix_lift_write(L, esi + 0x4eu, 8, 0x0u, esi);
+    /* 4669e1: mov eax, 0x54671c */
+    eax = 0x54671cu;
+    /* 4669e6: mov word ptr [esi + 0x48], 0xffd8 */
+    vertrix_lift_write(L, esi + 0x48u, 16, 0xffd8u, esi);
+    /* 4669ec: call 0x4b5e70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4669f1u, 0);
+    eax = vertrix_lift_call(L, 0x4b5e70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4669f1: mov eax, 0x15c */
+    eax = 0x15cu;
+    /* 4669f6: call 0x4ca000 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4669fbu, 0);
+    eax = vertrix_lift_call(L, 0x4ca000, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4669fb: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 4669fd: je 0x466a14 */
+    if (ZF)
+    {
+        goto L_466a14;
+    }
+    /* 4669ff: mov ecx, 0x21 */
+    ecx = 0x21u;
+    /* 466a04: mov dword ptr [ebp - 0x34], eax */
+    vertrix_lift_write(L, ebp + 0xffffffccu, 32, eax, 0);
+    /* 466a07: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 466a09: mov dword ptr [ebp - 0x3c], ecx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, ecx, 0);
+    /* 466a0c: call 0x4abd70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466a11u, 0);
+    eax = vertrix_lift_call(L, 0x4abd70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466a11: mov dword ptr [ebp - 0x3c], ebx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, ebx, 0);
+L_466a14:;
+    /* 466a14: mov esi, eax */
+    esi = eax;
+    /* 466a16: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466a18: mov eax, dword ptr [0x4f85c0] */
+    eax = vertrix_lift_read(L, 0x4f85c0u, 32, 0);
+    /* 466a1d: mov edx, dword ptr [0x4f85b8] */
+    edx = vertrix_lift_read(L, 0x4f85b8u, 32, 0);
+    /* 466a23: mov ecx, dword ptr [0x4f85bc] */
+    ecx = vertrix_lift_read(L, 0x4f85bcu, 32, 0);
+    /* 466a29: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466a2b: shr eax, 1 */
+    a = eax;
+    c = 0x1u & 31u;
+    if (c)
+    {
+        r = a >> c;
+        CF = (a >> (c - 1)) & 1u;
+        OF = (a & 0x80000000u) != 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        eax = r;
+    }
+    /* 466a2d: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466a2f: add eax, edx */
+    a = eax;
+    b = edx & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 466a31: mov edx, dword ptr [ebp - 0x30] */
+    edx = vertrix_lift_read(L, ebp + 0xffffffd0u, 32, 0);
+    /* 466a34: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466a36: add edx, eax */
+    a = edx;
+    b = eax & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 466a38: mov eax, dword ptr [0x4f85c4] */
+    eax = vertrix_lift_read(L, 0x4f85c4u, 32, 0);
+    /* 466a3d: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466a3f: shr eax, 1 */
+    a = eax;
+    c = 0x1u & 31u;
+    if (c)
+    {
+        r = a >> c;
+        CF = (a >> (c - 1)) & 1u;
+        OF = (a & 0x80000000u) != 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        eax = r;
+    }
+    /* 466a41: mov dword ptr [ebp - 0x28], edx */
+    vertrix_lift_write(L, ebp + 0xffffffd8u, 32, edx, 0);
+    /* 466a44: add eax, ecx */
+    a = eax;
+    b = ecx & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 466a46: mov edx, dword ptr [ebp - 0x2a] */
+    edx = vertrix_lift_read(L, ebp + 0xffffffd6u, 32, 0);
+    /* 466a49: add eax, edi */
+    a = eax;
+    b = edi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 466a4b: sar edx, 0x10 */
+    a = edx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 466a4e: mov dword ptr [ebp - 0x1c], eax */
+    vertrix_lift_write(L, ebp + 0xffffffe4u, 32, eax, 0);
+    /* 466a51: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 466a53: mov ebx, dword ptr [ebp - 0x1e] */
+    ebx = vertrix_lift_read(L, ebp + 0xffffffe2u, 32, 0);
+    /* 466a56: mov eax, esi */
+    eax = esi;
+    /* 466a58: sar ebx, 0x10 */
+    a = ebx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ebx = r;
+    }
+    /* 466a5b: call 0x4adf20 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466a60u, 0);
+    eax = vertrix_lift_call(L, 0x4adf20, eax, edx, ebx, ecx, esp, 5);
+    esp += 20u;
+    if (L->failed)
+        return 0;
+    /* 466a60: mov edx, 0x544a18 */
+    edx = 0x544a18u;
+    /* 466a65: mov eax, esi */
+    eax = esi;
+    /* 466a67: call 0x4ac8d0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466a6cu, 0);
+    eax = vertrix_lift_call(L, 0x4ac8d0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466a6c: mov edx, dword ptr [0x4fbf20] */
+    edx = vertrix_lift_read(L, 0x4fbf20u, 32, 0);
+    /* 466a72: mov eax, esi */
+    eax = esi;
+    /* 466a74: call 0x4ac710 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466a79u, 0);
+    eax = vertrix_lift_call(L, 0x4ac710, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466a79: mov eax, esi */
+    eax = esi;
+    /* 466a7b: call 0x4ac8a0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466a80u, 0);
+    eax = vertrix_lift_call(L, 0x4ac8a0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466a80: mov byte ptr [esi + 0x93], 1 */
+    vertrix_lift_write(L, esi + 0x93u, 8, 0x1u, esi);
+    /* 466a87: mov byte ptr [esi + 0x95], 1 */
+    vertrix_lift_write(L, esi + 0x95u, 8, 0x1u, esi);
+    /* 466a8e: mov edx, esi */
+    edx = esi;
+    /* 466a90: mov byte ptr [esi + 0x4e], 0 */
+    vertrix_lift_write(L, esi + 0x4eu, 8, 0x0u, esi);
+    /* 466a94: mov eax, 0x54671c */
+    eax = 0x54671cu;
+    /* 466a99: mov word ptr [esi + 0x48], 0xffd8 */
+    vertrix_lift_write(L, esi + 0x48u, 16, 0xffd8u, esi);
+    /* 466a9f: call 0x4b5e70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466aa4u, 0);
+    eax = vertrix_lift_call(L, 0x4b5e70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466aa4: mov eax, 0x15c */
+    eax = 0x15cu;
+    /* 466aa9: call 0x4ca000 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466aaeu, 0);
+    eax = vertrix_lift_call(L, 0x4ca000, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466aae: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 466ab0: je 0x466ac7 */
+    if (ZF)
+    {
+        goto L_466ac7;
+    }
+    /* 466ab2: mov ebx, 0x23 */
+    ebx = 0x23u;
+    /* 466ab7: mov dword ptr [ebp - 0x34], eax */
+    vertrix_lift_write(L, ebp + 0xffffffccu, 32, eax, 0);
+    /* 466aba: xor esi, esi */
+    a = esi;
+    b = esi & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    esi = r;
+    /* 466abc: mov dword ptr [ebp - 0x3c], ebx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, ebx, 0);
+    /* 466abf: call 0x4abd70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466ac4u, 0);
+    eax = vertrix_lift_call(L, 0x4abd70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466ac4: mov dword ptr [ebp - 0x3c], esi */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, esi, 0);
+L_466ac7:;
+    /* 466ac7: mov esi, eax */
+    esi = eax;
+    /* 466ac9: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466acb: mov eax, dword ptr [0x4f85b0] */
+    eax = vertrix_lift_read(L, 0x4f85b0u, 32, 0);
+    /* 466ad0: mov edx, dword ptr [0x533d20] */
+    edx = vertrix_lift_read(L, 0x533d20u, 32, 0);
+    /* 466ad6: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466ad8: shr eax, 1 */
+    a = eax;
+    c = 0x1u & 31u;
+    if (c)
+    {
+        r = a >> c;
+        CF = (a >> (c - 1)) & 1u;
+        OF = (a & 0x80000000u) != 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        eax = r;
+    }
+    /* 466ada: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466adc: add edx, eax */
+    a = edx;
+    b = eax & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 466ade: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466ae0: mov eax, dword ptr [0x4f85b4] */
+    eax = vertrix_lift_read(L, 0x4f85b4u, 32, 0);
+    /* 466ae5: mov dword ptr [ebp - 0x28], edx */
+    vertrix_lift_write(L, ebp + 0xffffffd8u, 32, edx, 0);
+    /* 466ae8: mov edx, dword ptr [0x4f85ac] */
+    edx = vertrix_lift_read(L, 0x4f85acu, 32, 0);
+    /* 466aee: shr eax, 1 */
+    a = eax;
+    c = 0x1u & 31u;
+    if (c)
+    {
+        r = a >> c;
+        CF = (a >> (c - 1)) & 1u;
+        OF = (a & 0x80000000u) != 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        eax = r;
+    }
+    /* 466af0: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 466af2: add edx, eax */
+    a = edx;
+    b = eax & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 466af4: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466af6: mov dword ptr [ebp - 0x1c], edx */
+    vertrix_lift_write(L, ebp + 0xffffffe4u, 32, edx, 0);
+    /* 466af9: mov eax, esi */
+    eax = esi;
+    /* 466afb: mov ebx, dword ptr [ebp - 0x1e] */
+    ebx = vertrix_lift_read(L, ebp + 0xffffffe2u, 32, 0);
+    /* 466afe: mov edx, dword ptr [ebp - 0x2a] */
+    edx = vertrix_lift_read(L, ebp + 0xffffffd6u, 32, 0);
+    /* 466b01: sar ebx, 0x10 */
+    a = ebx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ebx = r;
+    }
+    /* 466b04: sar edx, 0x10 */
+    a = edx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 466b07: call 0x4adf20 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466b0cu, 0);
+    eax = vertrix_lift_call(L, 0x4adf20, eax, edx, ebx, ecx, esp, 5);
+    esp += 20u;
+    if (L->failed)
+        return 0;
+    /* 466b0c: mov edx, 0x544a18 */
+    edx = 0x544a18u;
+    /* 466b11: mov eax, esi */
+    eax = esi;
+    /* 466b13: call 0x4ac8d0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466b18u, 0);
+    eax = vertrix_lift_call(L, 0x4ac8d0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466b18: mov edx, dword ptr [0x4fbf1c] */
+    edx = vertrix_lift_read(L, 0x4fbf1cu, 32, 0);
+    /* 466b1e: mov eax, esi */
+    eax = esi;
+    /* 466b20: call 0x4ac710 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466b25u, 0);
+    eax = vertrix_lift_call(L, 0x4ac710, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466b25: mov eax, esi */
+    eax = esi;
+    /* 466b27: call 0x4ac8a0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466b2cu, 0);
+    eax = vertrix_lift_call(L, 0x4ac8a0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466b2c: mov byte ptr [esi + 0x93], 1 */
+    vertrix_lift_write(L, esi + 0x93u, 8, 0x1u, esi);
+    /* 466b33: mov edx, esi */
+    edx = esi;
+    /* 466b35: mov byte ptr [esi + 0x95], 0 */
+    vertrix_lift_write(L, esi + 0x95u, 8, 0x0u, esi);
+    /* 466b3c: mov eax, 0x54671c */
+    eax = 0x54671cu;
+    /* 466b41: mov byte ptr [esi + 0x4e], 0x5a */
+    vertrix_lift_write(L, esi + 0x4eu, 8, 0x5au, esi);
+    /* 466b45: call 0x4b5e70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466b4au, 0);
+    eax = vertrix_lift_call(L, 0x4b5e70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466b4a: mov eax, 0x15c */
+    eax = 0x15cu;
+    /* 466b4f: call 0x4ca000 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466b54u, 0);
+    eax = vertrix_lift_call(L, 0x4ca000, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466b54: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 466b56: je 0x466b6d */
+    if (ZF)
+    {
+        goto L_466b6d;
+    }
+    /* 466b58: mov edx, 0x25 */
+    edx = 0x25u;
+    /* 466b5d: mov dword ptr [ebp - 0x34], eax */
+    vertrix_lift_write(L, ebp + 0xffffffccu, 32, eax, 0);
+    /* 466b60: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 466b62: mov dword ptr [ebp - 0x3c], edx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, edx, 0);
+    /* 466b65: call 0x4abd70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466b6au, 0);
+    eax = vertrix_lift_call(L, 0x4abd70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466b6a: mov dword ptr [ebp - 0x3c], ecx */
+    vertrix_lift_write(L, ebp + 0xffffffc4u, 32, ecx, 0);
+L_466b6d:;
+    /* 466b6d: mov esi, eax */
+    esi = eax;
+    /* 466b6f: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466b71: mov eax, dword ptr [0x4f85c0] */
+    eax = vertrix_lift_read(L, 0x4f85c0u, 32, 0);
+    /* 466b76: mov edx, dword ptr [0x4f85b8] */
+    edx = vertrix_lift_read(L, 0x4f85b8u, 32, 0);
+    /* 466b7c: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466b7e: shr eax, 1 */
+    a = eax;
+    c = 0x1u & 31u;
+    if (c)
+    {
+        r = a >> c;
+        CF = (a >> (c - 1)) & 1u;
+        OF = (a & 0x80000000u) != 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        eax = r;
+    }
+    /* 466b80: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466b82: add edx, eax */
+    a = edx;
+    b = eax & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 466b84: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466b86: mov eax, dword ptr [0x4f85c4] */
+    eax = vertrix_lift_read(L, 0x4f85c4u, 32, 0);
+    /* 466b8b: mov dword ptr [ebp - 0x28], edx */
+    vertrix_lift_write(L, ebp + 0xffffffd8u, 32, edx, 0);
+    /* 466b8e: mov edx, dword ptr [0x4f85bc] */
+    edx = vertrix_lift_read(L, 0x4f85bcu, 32, 0);
+    /* 466b94: shr eax, 1 */
+    a = eax;
+    c = 0x1u & 31u;
+    if (c)
+    {
+        r = a >> c;
+        CF = (a >> (c - 1)) & 1u;
+        OF = (a & 0x80000000u) != 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        eax = r;
+    }
+    /* 466b96: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 466b98: add edx, eax */
+    a = edx;
+    b = eax & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 466b9a: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 466b9c: mov dword ptr [ebp - 0x1c], edx */
+    vertrix_lift_write(L, ebp + 0xffffffe4u, 32, edx, 0);
+    /* 466b9f: mov eax, esi */
+    eax = esi;
+    /* 466ba1: mov ebx, dword ptr [ebp - 0x1e] */
+    ebx = vertrix_lift_read(L, ebp + 0xffffffe2u, 32, 0);
+    /* 466ba4: mov edx, dword ptr [ebp - 0x2a] */
+    edx = vertrix_lift_read(L, ebp + 0xffffffd6u, 32, 0);
+    /* 466ba7: sar ebx, 0x10 */
+    a = ebx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ebx = r;
+    }
+    /* 466baa: sar edx, 0x10 */
+    a = edx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 466bad: call 0x4adf20 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466bb2u, 0);
+    eax = vertrix_lift_call(L, 0x4adf20, eax, edx, ebx, ecx, esp, 5);
+    esp += 20u;
+    if (L->failed)
+        return 0;
+    /* 466bb2: mov edx, 0x544a18 */
+    edx = 0x544a18u;
+    /* 466bb7: mov eax, esi */
+    eax = esi;
+    /* 466bb9: call 0x4ac8d0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466bbeu, 0);
+    eax = vertrix_lift_call(L, 0x4ac8d0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466bbe: mov edx, dword ptr [0x4fbf20] */
+    edx = vertrix_lift_read(L, 0x4fbf20u, 32, 0);
+    /* 466bc4: mov eax, esi */
+    eax = esi;
+    /* 466bc6: call 0x4ac710 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466bcbu, 0);
+    eax = vertrix_lift_call(L, 0x4ac710, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466bcb: mov eax, esi */
+    eax = esi;
+    /* 466bcd: call 0x4ac8a0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466bd2u, 0);
+    eax = vertrix_lift_call(L, 0x4ac8a0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466bd2: mov byte ptr [esi + 0x93], 1 */
+    vertrix_lift_write(L, esi + 0x93u, 8, 0x1u, esi);
+    /* 466bd9: mov edx, esi */
+    edx = esi;
+    /* 466bdb: mov byte ptr [esi + 0x95], 0 */
+    vertrix_lift_write(L, esi + 0x95u, 8, 0x0u, esi);
+    /* 466be2: mov eax, 0x54671c */
+    eax = 0x54671cu;
+    /* 466be7: mov byte ptr [esi + 0x4e], 0x5a */
+    vertrix_lift_write(L, esi + 0x4eu, 8, 0x5au, esi);
+    /* 466beb: call 0x4b5e70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466bf0u, 0);
+    eax = vertrix_lift_call(L, 0x4b5e70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466bf0: mov esi, dword ptr [ebp - 0x30] */
+    esi = vertrix_lift_read(L, ebp + 0xffffffd0u, 32, 0);
+    /* 466bf3: mov ebx, dword ptr [0x4fbed0] */
+    ebx = vertrix_lift_read(L, 0x4fbed0u, 32, 0);
+    /* 466bf9: mov edx, dword ptr [0x4f861c] */
+    edx = vertrix_lift_read(L, 0x4f861cu, 32, 0);
+    /* 466bff: mov eax, dword ptr [0x4f8618] */
+    eax = vertrix_lift_read(L, 0x4f8618u, 32, 0);
+    /* 466c04: add edx, edi */
+    a = edx;
+    b = edi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 466c06: add eax, esi */
+    a = eax;
+    b = esi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 466c08: call 0x465a70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466c0du, 0);
+    eax = vertrix_lift_call(L, 0x465a70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466c0d: mov ebx, dword ptr [0x4fbed8] */
+    ebx = vertrix_lift_read(L, 0x4fbed8u, 32, 0);
+    /* 466c13: mov edx, dword ptr [0x4f8624] */
+    edx = vertrix_lift_read(L, 0x4f8624u, 32, 0);
+    /* 466c19: mov eax, dword ptr [0x4f8620] */
+    eax = vertrix_lift_read(L, 0x4f8620u, 32, 0);
+    /* 466c1e: add edx, edi */
+    a = edx;
+    b = edi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 466c20: add eax, esi */
+    a = eax;
+    b = esi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 466c22: call 0x465a70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466c27u, 0);
+    eax = vertrix_lift_call(L, 0x465a70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466c27: mov ebx, dword ptr [0x4fbee0] */
+    ebx = vertrix_lift_read(L, 0x4fbee0u, 32, 0);
+    /* 466c2d: mov edx, dword ptr [0x4f862c] */
+    edx = vertrix_lift_read(L, 0x4f862cu, 32, 0);
+    /* 466c33: mov eax, dword ptr [0x4f8628] */
+    eax = vertrix_lift_read(L, 0x4f8628u, 32, 0);
+    /* 466c38: add edx, edi */
+    a = edx;
+    b = edi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 466c3a: add eax, esi */
+    a = eax;
+    b = esi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 466c3c: call 0x465a70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466c41u, 0);
+    eax = vertrix_lift_call(L, 0x465a70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466c41: mov ebx, dword ptr [0x4fbf00] */
+    ebx = vertrix_lift_read(L, 0x4fbf00u, 32, 0);
+    /* 466c47: mov edx, dword ptr [0x4f864c] */
+    edx = vertrix_lift_read(L, 0x4f864cu, 32, 0);
+    /* 466c4d: mov eax, dword ptr [0x4f8648] */
+    eax = vertrix_lift_read(L, 0x4f8648u, 32, 0);
+    /* 466c52: add edx, edi */
+    a = edx;
+    b = edi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 466c54: add eax, esi */
+    a = eax;
+    b = esi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 466c56: call 0x465a70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466c5bu, 0);
+    eax = vertrix_lift_call(L, 0x465a70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466c5b: mov ebx, dword ptr [0x4fbf08] */
+    ebx = vertrix_lift_read(L, 0x4fbf08u, 32, 0);
+    /* 466c61: mov edx, dword ptr [0x4f8654] */
+    edx = vertrix_lift_read(L, 0x4f8654u, 32, 0);
+    /* 466c67: mov eax, dword ptr [0x4f8650] */
+    eax = vertrix_lift_read(L, 0x4f8650u, 32, 0);
+    /* 466c6c: add edx, edi */
+    a = edx;
+    b = edi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 466c6e: add eax, esi */
+    a = eax;
+    b = esi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 466c70: call 0x465a70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466c75u, 0);
+    eax = vertrix_lift_call(L, 0x465a70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466c75: mov ebx, dword ptr [0x4fbf10] */
+    ebx = vertrix_lift_read(L, 0x4fbf10u, 32, 0);
+    /* 466c7b: mov edx, dword ptr [0x4f865c] */
+    edx = vertrix_lift_read(L, 0x4f865cu, 32, 0);
+    /* 466c81: mov eax, dword ptr [0x4f8658] */
+    eax = vertrix_lift_read(L, 0x4f8658u, 32, 0);
+    /* 466c86: add edx, edi */
+    a = edx;
+    b = edi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 466c88: add eax, esi */
+    a = eax;
+    b = esi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 466c8a: call 0x465a70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466c8fu, 0);
+    eax = vertrix_lift_call(L, 0x465a70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466c8f: mov ebx, dword ptr [0x4fbed0] */
+    ebx = vertrix_lift_read(L, 0x4fbed0u, 32, 0);
+    /* 466c95: mov edx, dword ptr [0x4f8634] */
+    edx = vertrix_lift_read(L, 0x4f8634u, 32, 0);
+    /* 466c9b: mov eax, dword ptr [0x4f8630] */
+    eax = vertrix_lift_read(L, 0x4f8630u, 32, 0);
+    /* 466ca0: add edx, edi */
+    a = edx;
+    b = edi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 466ca2: add eax, esi */
+    a = eax;
+    b = esi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 466ca4: call 0x465a70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466ca9u, 0);
+    eax = vertrix_lift_call(L, 0x465a70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466ca9: mov ebx, dword ptr [0x4fbed8] */
+    ebx = vertrix_lift_read(L, 0x4fbed8u, 32, 0);
+    /* 466caf: mov edx, dword ptr [0x4f863c] */
+    edx = vertrix_lift_read(L, 0x4f863cu, 32, 0);
+    /* 466cb5: mov eax, dword ptr [0x4f8638] */
+    eax = vertrix_lift_read(L, 0x4f8638u, 32, 0);
+    /* 466cba: add edx, edi */
+    a = edx;
+    b = edi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 466cbc: add eax, esi */
+    a = eax;
+    b = esi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 466cbe: call 0x465a70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466cc3u, 0);
+    eax = vertrix_lift_call(L, 0x465a70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466cc3: mov ebx, dword ptr [0x4fbee0] */
+    ebx = vertrix_lift_read(L, 0x4fbee0u, 32, 0);
+    /* 466cc9: mov edx, dword ptr [0x4f8644] */
+    edx = vertrix_lift_read(L, 0x4f8644u, 32, 0);
+    /* 466ccf: mov eax, dword ptr [0x4f8640] */
+    eax = vertrix_lift_read(L, 0x4f8640u, 32, 0);
+    /* 466cd4: add edx, edi */
+    a = edx;
+    b = edi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 466cd6: add eax, esi */
+    a = eax;
+    b = esi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 466cd8: call 0x465a70 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466cddu, 0);
+    eax = vertrix_lift_call(L, 0x465a70, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466cdd: mov eax, dword ptr [ebp - 0x48] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffb8u, 32, 0);
+    /* 466ce0: mov dword ptr fs:[0], eax */
+    vertrix_lift_write(L, 0x0u, 32, eax, 0);
+    /* 466ce6: lea esp, [ebp - 0x14] */
+    esp = (ebp + 0xffffffecu);
+    /* 466ce9: pop edi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edi = t;
+    /* 466cea: pop esi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    esi = t;
+    /* 466ceb: pop edx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edx = t;
+    /* 466cec: pop ecx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ecx = t;
+    /* 466ced: pop ebx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ebx = t;
+    /* 466cee: pop ebp */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ebp = t;
+    /* 466cef: ret  */
+    return eax;
+L_466cf0:;
+    /* 466cf0: call 0x4b5400 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x466cf5u, 0);
+    eax = vertrix_lift_call(L, 0x4b5400, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 466cf5: jmp 0x465b5b */
+    if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+    {
+        L->failed = 1;
+        return 0;
+    }
+    goto L_465b5b;
+L_466cfa:;
+    /* 466cfa: mov esi, ebx */
+    esi = ebx;
+    /* 466cfc: jmp 0x465cac */
+    if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+    {
+        L->failed = 1;
+        return 0;
+    }
+    goto L_465cac;
+L_466d01:;
+    /* 466d01: mov esi, ebx */
+    esi = ebx;
+    /* 466d03: jmp 0x4662b1 */
+    if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+    {
+        L->failed = 1;
+        return 0;
+    }
+    goto L_4662b1;
+L_466d08:;
+    /* 466d08: cmp ecx, 1 */
+    a = ecx;
+    b = 0x1u & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 466d0b: je 0x4665f8 */
+    if (ZF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_4665f8;
+    }
+    /* 466d11: jmp 0x466936 */
+    if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+    {
+        L->failed = 1;
+        return 0;
+    }
+    goto L_466936;
+}
+
 uint32_t vertrix_lift_466d60(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp)
 {
@@ -205295,6 +213407,211 @@ L_475c06:;
     return eax;
 }
 
+uint32_t vertrix_lift_475c80(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
+                             uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp)
+{
+    uint32_t a;
+    uint32_t b;
+    uint32_t c;
+    uint32_t d;
+    uint32_t k;
+    uint32_t r;
+    uint32_t t;
+    uint64_t u;
+    int64_t p;
+    int32_t s;
+    unsigned ZF = 0;
+    unsigned SF = 0;
+    unsigned CF = 0;
+    unsigned OF = 0;
+    unsigned PF = 0;
+    (void)a;
+    (void)b;
+    (void)c;
+    (void)d;
+    (void)k;
+    (void)r;
+    (void)t;
+    (void)u;
+    (void)p;
+    (void)s;
+    (void)ZF;
+    (void)SF;
+    (void)CF;
+    (void)OF;
+    (void)PF;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)L;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esp;
+    /* 475c80: push ebx */
+    t = ebx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 475c81: push ecx */
+    t = ecx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 475c82: push esi */
+    t = esi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 475c83: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 475c85: test edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 475c87: jne 0x475cb3 */
+    if (!ZF)
+    {
+        goto L_475cb3;
+    }
+L_475c89:;
+    /* 475c89: lea ecx, [eax + 0x20] */
+    ecx = (eax + 0x20u);
+    /* 475c8c: cmp dword ptr [ecx + 0xc], 0 */
+    a = vertrix_lift_read(L, ecx + 0xcu, 32, ecx);
+    b = 0x0u & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 475c90: je 0x475cad */
+    if (ZF)
+    {
+        goto L_475cad;
+    }
+    /* 475c92: add eax, 0x20 */
+    a = eax;
+    b = 0x20u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 475c95: call 0x4d8540 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x475c9au, 0);
+    eax = vertrix_lift_call(L, 0x4d8540, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 475c9a: mov ecx, eax */
+    ecx = eax;
+    /* 475c9c: mov bx, word ptr [eax + 0x10] */
+    ebx = (ebx & 0xffff0000u) | ((vertrix_lift_read(L, eax + 0x10u, 16, eax)) & 0xffffu);
+    /* 475ca0: test edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 475ca2: je 0x475ca9 */
+    if (ZF)
+    {
+        goto L_475ca9;
+    }
+    /* 475ca4: mov eax, dword ptr [eax + 0x14] */
+    eax = vertrix_lift_read(L, eax + 0x14u, 32, eax);
+    /* 475ca7: mov dword ptr [edx], eax */
+    vertrix_lift_write(L, edx, 32, eax, edx);
+L_475ca9:;
+    /* 475ca9: test ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 475cab: jne 0x475cbb */
+    if (!ZF)
+    {
+        goto L_475cbb;
+    }
+L_475cad:;
+    /* 475cad: mov eax, ebx */
+    eax = ebx;
+    /* 475caf: pop esi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    esi = t;
+    /* 475cb0: pop ecx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ecx = t;
+    /* 475cb1: pop ebx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ebx = t;
+    /* 475cb2: ret  */
+    return eax;
+L_475cb3:;
+    /* 475cb3: mov dword ptr [edx], 0 */
+    vertrix_lift_write(L, edx, 32, 0x0u, edx);
+    /* 475cb9: jmp 0x475c89 */
+    if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+    {
+        L->failed = 1;
+        return 0;
+    }
+    goto L_475c89;
+L_475cbb:;
+    /* 475cbb: mov esi, dword ptr [ecx + 0x18] */
+    esi = vertrix_lift_read(L, ecx + 0x18u, 32, ecx);
+    /* 475cbe: mov edx, 2 */
+    edx = 0x2u;
+    /* 475cc3: mov eax, ecx */
+    eax = ecx;
+    /* 475cc5: call dword ptr [esi] */
+    vertrix_lift_write(L, esp - 4u, 32, 0x475cc7u, 0);
+    eax = vertrix_lift_virtual(L, eax, 0u);
+    if (L->failed)
+        return 0;
+    /* 475cc7: mov eax, ebx */
+    eax = ebx;
+    /* 475cc9: pop esi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    esi = t;
+    /* 475cca: pop ecx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ecx = t;
+    /* 475ccb: pop ebx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ebx = t;
+    /* 475ccc: ret  */
+    return eax;
+}
+
 uint32_t vertrix_lift_475de0(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp)
 {
@@ -232924,6 +241241,445 @@ L_47f3fe:;
     return eax;
 }
 
+uint32_t vertrix_lift_47f4b0(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
+                             uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp)
+{
+    uint32_t a;
+    uint32_t b;
+    uint32_t c;
+    uint32_t d;
+    uint32_t k;
+    uint32_t r;
+    uint32_t t;
+    uint64_t u;
+    int64_t p;
+    int32_t s;
+    unsigned ZF = 0;
+    unsigned SF = 0;
+    unsigned CF = 0;
+    unsigned OF = 0;
+    unsigned PF = 0;
+    (void)a;
+    (void)b;
+    (void)c;
+    (void)d;
+    (void)k;
+    (void)r;
+    (void)t;
+    (void)u;
+    (void)p;
+    (void)s;
+    (void)ZF;
+    (void)SF;
+    (void)CF;
+    (void)OF;
+    (void)PF;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)L;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esp;
+    /* 47f4b0: push ebp */
+    t = ebp;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 47f4b1: mov ebp, esp */
+    ebp = esp;
+    /* 47f4b3: push ebx */
+    t = ebx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 47f4b4: push ecx */
+    t = ecx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 47f4b5: push edx */
+    t = edx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 47f4b6: push esi */
+    t = esi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 47f4b7: push edi */
+    t = edi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 47f4b8: sub esp, 0x4c */
+    a = esp;
+    b = 0x4cu & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    esp = r;
+    /* 47f4bb: mov edi, eax */
+    edi = eax;
+    /* 47f4bd: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 47f4bf: mov dword ptr [ebp - 0x18], edx */
+    vertrix_lift_write(L, ebp + 0xffffffe8u, 32, edx, 0);
+    /* 47f4c2: cmp dword ptr [eax], 0 */
+    a = vertrix_lift_read(L, eax, 32, eax);
+    b = 0x0u & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 47f4c5: jne 0x47f4d3 */
+    if (!ZF)
+    {
+        goto L_47f4d3;
+    }
+L_47f4c7:;
+    /* 47f4c7: xor eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+L_47f4c9:;
+    /* 47f4c9: lea esp, [ebp - 0x14] */
+    esp = (ebp + 0xffffffecu);
+    /* 47f4cc: pop edi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edi = t;
+    /* 47f4cd: pop esi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    esi = t;
+    /* 47f4ce: pop edx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edx = t;
+    /* 47f4cf: pop ecx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ecx = t;
+    /* 47f4d0: pop ebx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ebx = t;
+    /* 47f4d1: pop ebp */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ebp = t;
+    /* 47f4d2: ret  */
+    return eax;
+L_47f4d3:;
+    /* 47f4d3: call 0x47f320 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x47f4d8u, 0);
+    eax = vertrix_lift_call(L, 0x47f320, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 47f4d8: mov ecx, eax */
+    ecx = eax;
+    /* 47f4da: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 47f4dc: je 0x47f4c9 */
+    if (ZF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_47f4c9;
+    }
+    /* 47f4de: mov ebx, 0x48 */
+    ebx = 0x48u;
+    /* 47f4e3: lea eax, [ebp - 0x60] */
+    eax = (ebp + 0xffffffa0u);
+    /* 47f4e6: call 0x4eb5c0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x47f4ebu, 0);
+    eax = vertrix_lift_call(L, 0x4eb5c0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 47f4eb: mov dword ptr [ebp - 0x60], 0x48 */
+    vertrix_lift_write(L, ebp + 0xffffffa0u, 32, 0x48u, 0);
+    /* 47f4f2: mov ebx, dword ptr [edi + 0x1c8] */
+    ebx = vertrix_lift_read(L, edi + 0x1c8u, 32, edi);
+    /* 47f4f8: lea esi, [ebp - 0x48] */
+    esi = (ebp + 0xffffffb8u);
+    /* 47f4fb: mov eax, edi */
+    eax = edi;
+    /* 47f4fd: call dword ptr [ebx + 0x20] */
+    vertrix_lift_write(L, esp - 4u, 32, 0x47f500u, 0);
+    eax = vertrix_lift_virtual(L, eax, 8u);
+    if (L->failed)
+        return 0;
+    /* 47f500: lea ebx, [ebp - 0x18] */
+    ebx = (ebp + 0xffffffe8u);
+    /* 47f503: mov eax, dword ptr [ecx + 0x48] */
+    eax = vertrix_lift_read(L, ecx + 0x48u, 32, ecx);
+    /* 47f506: push ebx */
+    t = ebx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 47f507: mov ecx, dword ptr [eax] */
+    ecx = vertrix_lift_read(L, eax, 32, eax);
+    /* 47f509: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 47f50a: call dword ptr [ecx + 0x14] */
+    vertrix_lift_write(L, esp - 4u, 32, 0x47f50du, 0);
+    eax = vertrix_lift_virtual(L, eax, 5u);
+    if (L->failed)
+        return 0;
+    /* 47f50d: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 47f50f: jl 0x47f4c7 */
+    if (SF != OF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_47f4c7;
+    }
+    /* 47f511: push 0x80000000 */
+    t = 0x80000000u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 47f516: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 47f518: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 47f51a: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 47f51c: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 47f51e: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 47f520: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 47f522: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 47f524: mov esi, dword ptr [edi + 4] */
+    esi = vertrix_lift_read(L, edi + 0x4u, 32, edi);
+    /* 47f527: push esi */
+    t = esi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 47f528: mov edx, dword ptr [ebp - 0x18] */
+    edx = vertrix_lift_read(L, ebp + 0xffffffe8u, 32, 0);
+    /* 47f52b: push edx */
+    t = edx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 47f52c: lea ebx, [ebp - 0x60] */
+    ebx = (ebp + 0xffffffa0u);
+    /* 47f52f: mov eax, dword ptr [edi] */
+    eax = vertrix_lift_read(L, edi, 32, edi);
+    /* 47f531: push ebx */
+    t = ebx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 47f532: mov ecx, dword ptr [eax] */
+    ecx = vertrix_lift_read(L, eax, 32, eax);
+    /* 47f534: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 47f535: call dword ptr [ecx + 0x18] */
+    vertrix_lift_write(L, esp - 4u, 32, 0x47f538u, 0);
+    eax = vertrix_lift_virtual(L, eax, 6u);
+    if (L->failed)
+        return 0;
+    /* 47f538: mov ecx, dword ptr [ebp - 0x18] */
+    ecx = vertrix_lift_read(L, ebp + 0xffffffe8u, 32, 0);
+    /* 47f53b: mov ebx, eax */
+    ebx = eax;
+    /* 47f53d: test ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 47f53f: je 0x47f54c */
+    if (ZF)
+    {
+        goto L_47f54c;
+    }
+    /* 47f541: push ecx */
+    t = ecx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 47f542: mov eax, dword ptr [ecx] */
+    eax = vertrix_lift_read(L, ecx, 32, ecx);
+    /* 47f544: call dword ptr [eax + 8] */
+    vertrix_lift_write(L, esp - 4u, 32, 0x47f547u, 0);
+    eax = vertrix_lift_virtual(L, eax, 2u);
+    if (L->failed)
+        return 0;
+    /* 47f547: xor eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 47f549: mov dword ptr [ebp - 0x18], eax */
+    vertrix_lift_write(L, ebp + 0xffffffe8u, 32, eax, 0);
+L_47f54c:;
+    /* 47f54c: test ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 47f54e: jl 0x47f566 */
+    if (SF != OF)
+    {
+        goto L_47f566;
+    }
+    /* 47f550: mov eax, 1 */
+    eax = 0x1u;
+    /* 47f555: mov dword ptr [edi + 0x30], 0 */
+    vertrix_lift_write(L, edi + 0x30u, 32, 0x0u, edi);
+    /* 47f55c: lea esp, [ebp - 0x14] */
+    esp = (ebp + 0xffffffecu);
+    /* 47f55f: pop edi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edi = t;
+    /* 47f560: pop esi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    esi = t;
+    /* 47f561: pop edx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edx = t;
+    /* 47f562: pop ecx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ecx = t;
+    /* 47f563: pop ebx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ebx = t;
+    /* 47f564: pop ebp */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ebp = t;
+    /* 47f565: ret  */
+    return eax;
+L_47f566:;
+    /* 47f566: mov edx, ebx */
+    edx = ebx;
+    /* 47f568: mov eax, edi */
+    eax = edi;
+    /* 47f56a: call 0x480080 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x47f56fu, 0);
+    eax = vertrix_lift_call(L, 0x480080, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 47f56f: mov dword ptr [edi + 0x30], 1 */
+    vertrix_lift_write(L, edi + 0x30u, 32, 0x1u, edi);
+    /* 47f576: xor eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 47f578: lea esp, [ebp - 0x14] */
+    esp = (ebp + 0xffffffecu);
+    /* 47f57b: pop edi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edi = t;
+    /* 47f57c: pop esi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    esi = t;
+    /* 47f57d: pop edx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edx = t;
+    /* 47f57e: pop ecx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ecx = t;
+    /* 47f57f: pop ebx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ebx = t;
+    /* 47f580: pop ebp */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ebp = t;
+    /* 47f581: ret  */
+    return eax;
+}
+
 uint32_t vertrix_lift_47f750(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp)
 {
@@ -239421,6 +248177,448 @@ L_482b7b:;
     return eax;
 }
 
+uint32_t vertrix_lift_482d00(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
+                             uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp)
+{
+    uint32_t a;
+    uint32_t b;
+    uint32_t c;
+    uint32_t d;
+    uint32_t k;
+    uint32_t r;
+    uint32_t t;
+    uint64_t u;
+    int64_t p;
+    int32_t s;
+    unsigned ZF = 0;
+    unsigned SF = 0;
+    unsigned CF = 0;
+    unsigned OF = 0;
+    unsigned PF = 0;
+    (void)a;
+    (void)b;
+    (void)c;
+    (void)d;
+    (void)k;
+    (void)r;
+    (void)t;
+    (void)u;
+    (void)p;
+    (void)s;
+    (void)ZF;
+    (void)SF;
+    (void)CF;
+    (void)OF;
+    (void)PF;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)L;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esp;
+    /* 482d00: push ebp */
+    t = ebp;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 482d01: mov ebp, esp */
+    ebp = esp;
+    /* 482d03: push ebx */
+    t = ebx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 482d04: push ecx */
+    t = ecx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 482d05: push edx */
+    t = edx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 482d06: push esi */
+    t = esi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 482d07: push edi */
+    t = edi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 482d08: sub esp, 0x3c */
+    a = esp;
+    b = 0x3cu & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    esp = r;
+    /* 482d0b: mov dword ptr [ebp - 0x20], eax */
+    vertrix_lift_write(L, ebp + 0xffffffe0u, 32, eax, 0);
+    /* 482d0e: mov edx, 0x28 */
+    edx = 0x28u;
+    /* 482d13: mov eax, 1 */
+    eax = 0x1u;
+    /* 482d18: mov ecx, 0x30 */
+    ecx = 0x30u;
+    /* 482d1d: mov ebx, 1 */
+    ebx = 0x1u;
+    /* 482d22: lea esi, [ebp - 0x48] */
+    esi = (ebp + 0xffffffb8u);
+    /* 482d25: call 0x4ec160 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x482d2au, 0);
+    eax = vertrix_lift_call(L, 0x4ec160, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 482d2a: lea edx, [ebp - 0x50] */
+    edx = (ebp + 0xffffffb0u);
+    /* 482d2d: mov dword ptr [ebp - 0x1c], eax */
+    vertrix_lift_write(L, ebp + 0xffffffe4u, 32, eax, 0);
+    /* 482d30: mov dword ptr [ebp - 0x18], eax */
+    vertrix_lift_write(L, ebp + 0xffffffe8u, 32, eax, 0);
+    /* 482d33: mov eax, dword ptr [ebp - 0x20] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffe0u, 32, 0);
+    /* 482d36: mov edi, dword ptr [ebp - 0x1c] */
+    edi = vertrix_lift_read(L, ebp + 0xffffffe4u, 32, 0);
+    /* 482d39: call 0x48a930 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x482d3eu, 0);
+    eax = vertrix_lift_call(L, 0x48a930, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 482d3e: mov ecx, 0x28 */
+    ecx = 0x28u;
+    /* 482d43: push edi */
+    t = edi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 482d44: mov eax, ecx */
+    eax = ecx;
+    /* 482d46: shr ecx, 2 */
+    a = ecx;
+    c = 0x2u & 31u;
+    if (c)
+    {
+        r = a >> c;
+        CF = (a >> (c - 1)) & 1u;
+        OF = (a & 0x80000000u) != 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ecx = r;
+    }
+    /* 482d49: movsd dword ptr es:[edi], dword ptr [esi] */
+    while (ecx != 0)
+    {
+        vertrix_lift_write(L, edi, 32, vertrix_lift_read(L, esi, 32, 0), 0);
+        esi += 4u;
+        edi += 4u;
+        ecx -= 1;
+        if (L->failed)
+            return 0;
+    }
+    /* 482d4b: mov cl, al */
+    ecx = (ecx & ~(0xffu << 0)) | (((((eax >> 0) & 0xffu)) & 0xffu) << 0);
+    /* 482d4d: and cl, 3 */
+    a = ((ecx >> 0) & 0xffu);
+    b = 0x3u & 0xffu;
+    r = (a & b) & 0xffu;
+    ZF = r == 0;
+    SF = (r & 0x80u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = (ecx & ~(0xffu << 0)) | (((r) & 0xffu) << 0);
+    /* 482d50: repne movsb byte ptr es:[edi], byte ptr [esi] */
+    while (ecx != 0)
+    {
+        vertrix_lift_write(L, edi, 8, vertrix_lift_read(L, esi, 8, 0), 0);
+        esi += 1u;
+        edi += 1u;
+        ecx -= 1;
+        if (L->failed)
+            return 0;
+    }
+    /* 482d52: pop edi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edi = t;
+    /* 482d53: mov ecx, dword ptr [edi + 4] */
+    ecx = vertrix_lift_read(L, edi + 0x4u, 32, edi);
+    /* 482d56: imul ecx, dword ptr [edi + 8] */
+    p = (int64_t)(int32_t)(ecx) * (int64_t)(int32_t)(vertrix_lift_read(L, edi + 0x8u, 32, edi));
+    r = (uint32_t)p;
+    CF = OF = p != (int64_t)(int32_t)r;
+    ZF = r == 0;
+    SF = (r >> 31) != 0;
+    ecx = r;
+    /* 482d5a: mov al, byte ptr [edi + 0x27] */
+    eax = (eax & ~(0xffu << 0)) | (((vertrix_lift_read(L, edi + 0x27u, 8, edi)) & 0xffu) << 0);
+    /* 482d5d: cmp al, 1 */
+    a = ((eax >> 0) & 0xffu);
+    b = 0x1u & 0xffu;
+    r = (a - b) & 0xffu;
+    ZF = r == 0;
+    SF = (r & 0x80u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffu) < ((b) & 0xffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80u) != 0;
+    /* 482d5f: je 0x482d72 */
+    if (ZF)
+    {
+        goto L_482d72;
+    }
+    /* 482d61: cmp al, 4 */
+    a = ((eax >> 0) & 0xffu);
+    b = 0x4u & 0xffu;
+    r = (a - b) & 0xffu;
+    ZF = r == 0;
+    SF = (r & 0x80u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffu) < ((b) & 0xffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80u) != 0;
+    /* 482d63: je 0x482db1 */
+    if (ZF)
+    {
+        goto L_482db1;
+    }
+L_482d65:;
+    /* 482d65: mov eax, dword ptr [ebp - 0x18] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffe8u, 32, 0);
+    /* 482d68: lea esp, [ebp - 0x14] */
+    esp = (ebp + 0xffffffecu);
+    /* 482d6b: pop edi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edi = t;
+    /* 482d6c: pop esi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    esi = t;
+    /* 482d6d: pop edx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edx = t;
+    /* 482d6e: pop ecx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ecx = t;
+    /* 482d6f: pop ebx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ebx = t;
+    /* 482d70: pop ebp */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ebp = t;
+    /* 482d71: ret  */
+    return eax;
+L_482d72:;
+    /* 482d72: mov edx, 1 */
+    edx = 0x1u;
+    /* 482d77: mov eax, ecx */
+    eax = ecx;
+    /* 482d79: call 0x4ec160 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x482d7eu, 0);
+    eax = vertrix_lift_call(L, 0x4ec160, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 482d7e: mov dh, byte ptr [ebp - 0x50] */
+    edx = (edx & ~(0xffu << 8)) | (((vertrix_lift_read(L, ebp + 0xffffffb0u, 8, 0)) & 0xffu) << 8);
+    /* 482d81: mov esi, eax */
+    esi = eax;
+    /* 482d83: test dh, dh */
+    a = ((edx >> 8) & 0xffu);
+    b = ((edx >> 8) & 0xffu) & 0xffu;
+    r = (a & b) & 0xffu;
+    ZF = r == 0;
+    SF = (r & 0x80u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 482d85: jne 0x482d9d */
+    if (!ZF)
+    {
+        goto L_482d9d;
+    }
+    /* 482d87: mov ebx, 1 */
+    ebx = 0x1u;
+    /* 482d8c: mov edx, eax */
+    edx = eax;
+    /* 482d8e: mov eax, dword ptr [ebp - 0x20] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffe0u, 32, 0);
+    /* 482d91: call 0x48a930 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x482d96u, 0);
+    eax = vertrix_lift_call(L, 0x48a930, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+L_482d96:;
+    /* 482d96: mov eax, dword ptr [ebp - 0x18] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffe8u, 32, 0);
+    /* 482d99: mov dword ptr [eax], esi */
+    vertrix_lift_write(L, eax, 32, esi, eax);
+    /* 482d9b: jmp 0x482d65 */
+    if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+    {
+        L->failed = 1;
+        return 0;
+    }
+    goto L_482d65;
+L_482d9d:;
+    /* 482d9d: cmp dh, 1 */
+    a = ((edx >> 8) & 0xffu);
+    b = 0x1u & 0xffu;
+    r = (a - b) & 0xffu;
+    ZF = r == 0;
+    SF = (r & 0x80u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffu) < ((b) & 0xffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80u) != 0;
+    /* 482da0: jne 0x482d96 */
+    if (!ZF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_482d96;
+    }
+    /* 482da2: mov ebx, dword ptr [ebp - 0x4c] */
+    ebx = vertrix_lift_read(L, ebp + 0xffffffb4u, 32, 0);
+    /* 482da5: mov edx, eax */
+    edx = eax;
+    /* 482da7: mov eax, dword ptr [ebp - 0x20] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffe0u, 32, 0);
+    /* 482daa: call 0x481480 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x482dafu, 0);
+    eax = vertrix_lift_call(L, 0x481480, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 482daf: jmp 0x482d96 */
+    if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+    {
+        L->failed = 1;
+        return 0;
+    }
+    goto L_482d96;
+L_482db1:;
+    /* 482db1: and eax, 0xff */
+    a = eax;
+    b = 0xffu & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 482db6: imul ecx, eax */
+    p = (int64_t)(int32_t)(ecx) * (int64_t)(int32_t)(eax);
+    r = (uint32_t)p;
+    CF = OF = p != (int64_t)(int32_t)r;
+    ZF = r == 0;
+    SF = (r >> 31) != 0;
+    ecx = r;
+    /* 482db9: mov edx, 1 */
+    edx = 0x1u;
+    /* 482dbe: mov eax, ecx */
+    eax = ecx;
+    /* 482dc0: call 0x4ec160 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x482dc5u, 0);
+    eax = vertrix_lift_call(L, 0x4ec160, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 482dc5: mov dl, byte ptr [ebp - 0x50] */
+    edx = (edx & ~(0xffu << 0)) | (((vertrix_lift_read(L, ebp + 0xffffffb0u, 8, 0)) & 0xffu) << 0);
+    /* 482dc8: mov esi, eax */
+    esi = eax;
+    /* 482dca: test dl, dl */
+    a = ((edx >> 0) & 0xffu);
+    b = ((edx >> 0) & 0xffu) & 0xffu;
+    r = (a & b) & 0xffu;
+    ZF = r == 0;
+    SF = (r & 0x80u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 482dcc: jne 0x482ddd */
+    if (!ZF)
+    {
+        goto L_482ddd;
+    }
+    /* 482dce: mov ebx, 1 */
+    ebx = 0x1u;
+    /* 482dd3: mov edx, eax */
+    edx = eax;
+    /* 482dd5: mov eax, dword ptr [ebp - 0x20] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffe0u, 32, 0);
+    /* 482dd8: call 0x48a930 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x482dddu, 0);
+    eax = vertrix_lift_call(L, 0x48a930, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+L_482ddd:;
+    /* 482ddd: mov eax, dword ptr [ebp - 0x18] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffe8u, 32, 0);
+    /* 482de0: mov edx, 0x5b9c60 */
+    edx = 0x5b9c60u;
+    /* 482de5: mov dword ptr [eax], esi */
+    vertrix_lift_write(L, eax, 32, esi, eax);
+    /* 482de7: call 0x483750 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x482decu, 0);
+    eax = vertrix_lift_call(L, 0x483750, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 482dec: mov eax, dword ptr [ebp - 0x18] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffe8u, 32, 0);
+    /* 482def: call 0x483ed0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x482df4u, 0);
+    eax = vertrix_lift_call(L, 0x483ed0, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 482df4: mov eax, dword ptr [ebp - 0x18] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffe8u, 32, 0);
+    /* 482df7: lea esp, [ebp - 0x14] */
+    esp = (ebp + 0xffffffecu);
+    /* 482dfa: pop edi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edi = t;
+    /* 482dfb: pop esi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    esi = t;
+    /* 482dfc: pop edx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edx = t;
+    /* 482dfd: pop ecx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ecx = t;
+    /* 482dfe: pop ebx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ebx = t;
+    /* 482dff: pop ebp */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ebp = t;
+    /* 482e00: ret  */
+    return eax;
+}
+
 uint32_t vertrix_lift_482f80(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp)
 {
@@ -239816,6 +249014,353 @@ L_4830f9:;
     return eax;
 }
 
+uint32_t vertrix_lift_483110(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
+                             uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp)
+{
+    uint32_t a;
+    uint32_t b;
+    uint32_t c;
+    uint32_t d;
+    uint32_t k;
+    uint32_t r;
+    uint32_t t;
+    uint64_t u;
+    int64_t p;
+    int32_t s;
+    unsigned ZF = 0;
+    unsigned SF = 0;
+    unsigned CF = 0;
+    unsigned OF = 0;
+    unsigned PF = 0;
+    (void)a;
+    (void)b;
+    (void)c;
+    (void)d;
+    (void)k;
+    (void)r;
+    (void)t;
+    (void)u;
+    (void)p;
+    (void)s;
+    (void)ZF;
+    (void)SF;
+    (void)CF;
+    (void)OF;
+    (void)PF;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)L;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esp;
+    /* 483110: push ebp */
+    t = ebp;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 483111: mov ebp, esp */
+    ebp = esp;
+    /* 483113: push ebx */
+    t = ebx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 483114: push ecx */
+    t = ecx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 483115: push edx */
+    t = edx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 483116: push esi */
+    t = esi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 483117: push edi */
+    t = edi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 483118: sub esp, 8 */
+    a = esp;
+    b = 0x8u & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    esp = r;
+    /* 48311b: mov ebx, eax */
+    ebx = eax;
+    /* 48311d: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 48311f: mov dword ptr [ebp - 0x18], edx */
+    vertrix_lift_write(L, ebp + 0xffffffe8u, 32, edx, 0);
+    /* 483122: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 483124: jne 0x483133 */
+    if (!ZF)
+    {
+        goto L_483133;
+    }
+    /* 483126: mov eax, dword ptr [ebp - 0x18] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffe8u, 32, 0);
+    /* 483129: lea esp, [ebp - 0x14] */
+    esp = (ebp + 0xffffffecu);
+    /* 48312c: pop edi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edi = t;
+    /* 48312d: pop esi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    esi = t;
+    /* 48312e: pop edx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edx = t;
+    /* 48312f: pop ecx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ecx = t;
+    /* 483130: pop ebx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ebx = t;
+    /* 483131: pop ebp */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ebp = t;
+    /* 483132: ret  */
+    return eax;
+L_483133:;
+    /* 483133: mov edx, 0x28 */
+    edx = 0x28u;
+    /* 483138: mov eax, 1 */
+    eax = 0x1u;
+    /* 48313d: mov ecx, 0x28 */
+    ecx = 0x28u;
+    /* 483142: call 0x4ec160 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x483147u, 0);
+    eax = vertrix_lift_call(L, 0x4ec160, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 483147: mov esi, ebx */
+    esi = ebx;
+    /* 483149: mov dword ptr [ebp - 0x1c], eax */
+    vertrix_lift_write(L, ebp + 0xffffffe4u, 32, eax, 0);
+    /* 48314c: mov edi, eax */
+    edi = eax;
+    /* 48314e: mov dword ptr [ebp - 0x18], eax */
+    vertrix_lift_write(L, ebp + 0xffffffe8u, 32, eax, 0);
+    /* 483151: push edi */
+    t = edi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 483152: mov eax, ecx */
+    eax = ecx;
+    /* 483154: shr ecx, 2 */
+    a = ecx;
+    c = 0x2u & 31u;
+    if (c)
+    {
+        r = a >> c;
+        CF = (a >> (c - 1)) & 1u;
+        OF = (a & 0x80000000u) != 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ecx = r;
+    }
+    /* 483157: movsd dword ptr es:[edi], dword ptr [esi] */
+    while (ecx != 0)
+    {
+        vertrix_lift_write(L, edi, 32, vertrix_lift_read(L, esi, 32, 0), 0);
+        esi += 4u;
+        edi += 4u;
+        ecx -= 1;
+        if (L->failed)
+            return 0;
+    }
+    /* 483159: mov cl, al */
+    ecx = (ecx & ~(0xffu << 0)) | (((((eax >> 0) & 0xffu)) & 0xffu) << 0);
+    /* 48315b: and cl, 3 */
+    a = ((ecx >> 0) & 0xffu);
+    b = 0x3u & 0xffu;
+    r = (a & b) & 0xffu;
+    ZF = r == 0;
+    SF = (r & 0x80u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = (ecx & ~(0xffu << 0)) | (((r) & 0xffu) << 0);
+    /* 48315e: repne movsb byte ptr es:[edi], byte ptr [esi] */
+    while (ecx != 0)
+    {
+        vertrix_lift_write(L, edi, 8, vertrix_lift_read(L, esi, 8, 0), 0);
+        esi += 1u;
+        edi += 1u;
+        ecx -= 1;
+        if (L->failed)
+            return 0;
+    }
+    /* 483160: pop edi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edi = t;
+    /* 483161: mov edx, dword ptr [ebx + 4] */
+    edx = vertrix_lift_read(L, ebx + 0x4u, 32, ebx);
+    /* 483164: imul edx, dword ptr [ebx + 8] */
+    p = (int64_t)(int32_t)(edx) * (int64_t)(int32_t)(vertrix_lift_read(L, ebx + 0x8u, 32, ebx));
+    r = (uint32_t)p;
+    CF = OF = p != (int64_t)(int32_t)r;
+    ZF = r == 0;
+    SF = (r >> 31) != 0;
+    edx = r;
+    /* 483168: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 48316a: mov cl, byte ptr [ebx + 0x27] */
+    ecx = (ecx & ~(0xffu << 0)) | (((vertrix_lift_read(L, ebx + 0x27u, 8, ebx)) & 0xffu) << 0);
+    /* 48316d: imul ecx, edx */
+    p = (int64_t)(int32_t)(ecx) * (int64_t)(int32_t)(edx);
+    r = (uint32_t)p;
+    CF = OF = p != (int64_t)(int32_t)r;
+    ZF = r == 0;
+    SF = (r >> 31) != 0;
+    ecx = r;
+    /* 483170: mov edx, 1 */
+    edx = 0x1u;
+    /* 483175: mov eax, ecx */
+    eax = ecx;
+    /* 483177: call 0x4ec160 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x48317cu, 0);
+    eax = vertrix_lift_call(L, 0x4ec160, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 48317c: mov edi, eax */
+    edi = eax;
+    /* 48317e: mov esi, dword ptr [ebx] */
+    esi = vertrix_lift_read(L, ebx, 32, ebx);
+    /* 483180: mov edx, eax */
+    edx = eax;
+    /* 483182: push edi */
+    t = edi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 483183: mov eax, ecx */
+    eax = ecx;
+    /* 483185: shr ecx, 2 */
+    a = ecx;
+    c = 0x2u & 31u;
+    if (c)
+    {
+        r = a >> c;
+        CF = (a >> (c - 1)) & 1u;
+        OF = (a & 0x80000000u) != 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ecx = r;
+    }
+    /* 483188: movsd dword ptr es:[edi], dword ptr [esi] */
+    while (ecx != 0)
+    {
+        vertrix_lift_write(L, edi, 32, vertrix_lift_read(L, esi, 32, 0), 0);
+        esi += 4u;
+        edi += 4u;
+        ecx -= 1;
+        if (L->failed)
+            return 0;
+    }
+    /* 48318a: mov cl, al */
+    ecx = (ecx & ~(0xffu << 0)) | (((((eax >> 0) & 0xffu)) & 0xffu) << 0);
+    /* 48318c: and cl, 3 */
+    a = ((ecx >> 0) & 0xffu);
+    b = 0x3u & 0xffu;
+    r = (a & b) & 0xffu;
+    ZF = r == 0;
+    SF = (r & 0x80u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = (ecx & ~(0xffu << 0)) | (((r) & 0xffu) << 0);
+    /* 48318f: repne movsb byte ptr es:[edi], byte ptr [esi] */
+    while (ecx != 0)
+    {
+        vertrix_lift_write(L, edi, 8, vertrix_lift_read(L, esi, 8, 0), 0);
+        esi += 1u;
+        edi += 1u;
+        ecx -= 1;
+        if (L->failed)
+            return 0;
+    }
+    /* 483191: pop edi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edi = t;
+    /* 483192: mov ecx, dword ptr [ebp - 0x1c] */
+    ecx = vertrix_lift_read(L, ebp + 0xffffffe4u, 32, 0);
+    /* 483195: mov dword ptr [ecx], edx */
+    vertrix_lift_write(L, ecx, 32, edx, ecx);
+    /* 483197: mov eax, dword ptr [ebp - 0x18] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffe8u, 32, 0);
+    /* 48319a: lea esp, [ebp - 0x14] */
+    esp = (ebp + 0xffffffecu);
+    /* 48319d: pop edi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edi = t;
+    /* 48319e: pop esi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    esi = t;
+    /* 48319f: pop edx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edx = t;
+    /* 4831a0: pop ecx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ecx = t;
+    /* 4831a1: pop ebx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ebx = t;
+    /* 4831a2: pop ebp */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ebp = t;
+    /* 4831a3: ret  */
+    return eax;
+}
+
 uint32_t vertrix_lift_483790(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp)
 {
@@ -240083,9 +249628,15 @@ L_4837c2:;
         ecx = r;
     }
     /* 483815: movsd dword ptr es:[edi], dword ptr [esi] */
-    vertrix_lift_write(L, edi, 32, vertrix_lift_read(L, esi, 32, 0), 0);
-    esi += 4u;
-    edi += 4u;
+    while (ecx != 0)
+    {
+        vertrix_lift_write(L, edi, 32, vertrix_lift_read(L, esi, 32, 0), 0);
+        esi += 4u;
+        edi += 4u;
+        ecx -= 1;
+        if (L->failed)
+            return 0;
+    }
     /* 483817: mov cl, al */
     ecx = (ecx & ~(0xffu << 0)) | (((((eax >> 0) & 0xffu)) & 0xffu) << 0);
     /* 483819: and cl, 3 */
@@ -279023,6 +288574,1639 @@ L_4b2361:;
     return eax;
 }
 
+uint32_t vertrix_lift_4b2a00(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
+                             uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp)
+{
+    uint32_t a;
+    uint32_t b;
+    uint32_t c;
+    uint32_t d;
+    uint32_t k;
+    uint32_t r;
+    uint32_t t;
+    uint64_t u;
+    int64_t p;
+    int32_t s;
+    unsigned ZF = 0;
+    unsigned SF = 0;
+    unsigned CF = 0;
+    unsigned OF = 0;
+    unsigned PF = 0;
+    (void)a;
+    (void)b;
+    (void)c;
+    (void)d;
+    (void)k;
+    (void)r;
+    (void)t;
+    (void)u;
+    (void)p;
+    (void)s;
+    (void)ZF;
+    (void)SF;
+    (void)CF;
+    (void)OF;
+    (void)PF;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)L;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esp;
+    /* 4b2a00: push ebp */
+    t = ebp;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2a01: mov ebp, esp */
+    ebp = esp;
+    /* 4b2a03: push ebx */
+    t = ebx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2a04: push ecx */
+    t = ecx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2a05: push esi */
+    t = esi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2a06: push edi */
+    t = edi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2a07: sub esp, 0x6c */
+    a = esp;
+    b = 0x6cu & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    esp = r;
+    /* 4b2a0a: mov esi, eax */
+    esi = eax;
+    /* 4b2a0c: mov dword ptr [ebp - 0x60], edx */
+    vertrix_lift_write(L, ebp + 0xffffffa0u, 32, edx, 0);
+    /* 4b2a0f: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 4b2a11: lea edi, [eax + 0x15c] */
+    edi = (eax + 0x15cu);
+    /* 4b2a17: mov dword ptr [ebp - 0x64], edx */
+    vertrix_lift_write(L, ebp + 0xffffff9cu, 32, edx, 0);
+    /* 4b2a1a: mov edi, dword ptr [edi] */
+    edi = vertrix_lift_read(L, edi, 32, edi);
+    /* 4b2a1c: mov edx, 1 */
+    edx = 0x1u;
+    /* 4b2a21: mov dword ptr [ebp - 0x54], edi */
+    vertrix_lift_write(L, ebp + 0xffffffacu, 32, edi, 0);
+    /* 4b2a24: sub ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    ecx = r;
+    /* 4b2a26: dec ecx */
+    a = ecx;
+    r = (a - 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u - 1u);
+    ecx = r;
+    /* 4b2a27: xor eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 4b2a29: repne scasb al, byte ptr es:[edi] */
+    while (ecx != 0)
+    {
+        a = (eax & 0xffu);
+        b = vertrix_lift_read(L, edi, 8, 0);
+        r = (a - b) & 0xffu;
+        ZF = r == 0;
+        SF = (r & 0x80u) != 0;
+        CF = a < b;
+        OF = (((a ^ b) & (a ^ r)) & 0x80u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edi += 1u;
+        ecx -= 1;
+        if (ZF != 0)
+            break;
+        if (L->failed)
+            return 0;
+    }
+    /* 4b2a2b: not ecx */
+    ecx = ~ecx;
+    /* 4b2a2d: dec ecx */
+    a = ecx;
+    r = (a - 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u - 1u);
+    ecx = r;
+    /* 4b2a2e: lea eax, [ecx + 1] */
+    eax = (ecx + 0x1u);
+    /* 4b2a31: call 0x4ec160 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4b2a36u, 0);
+    eax = vertrix_lift_call(L, 0x4ec160, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4b2a36: mov ecx, dword ptr [esi + 0x304] */
+    ecx = vertrix_lift_read(L, esi + 0x304u, 32, esi);
+    /* 4b2a3c: mov edi, eax */
+    edi = eax;
+    /* 4b2a3e: cmp ecx, 1 */
+    a = ecx;
+    b = 0x1u & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4b2a41: jne 0x4b2aef */
+    if (!ZF)
+    {
+        goto L_4b2aef;
+    }
+    /* 4b2a47: cmp ecx, dword ptr [esi + 0x2fc] */
+    a = ecx;
+    b = vertrix_lift_read(L, esi + 0x2fcu, 32, esi) & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4b2a4d: jne 0x4b2aef */
+    if (!ZF)
+    {
+        goto L_4b2aef;
+    }
+    /* 4b2a53: mov al, byte ptr [esi + 0x161] */
+    eax = (eax & ~(0xffu << 0)) | (((vertrix_lift_read(L, esi + 0x161u, 8, esi)) & 0xffu) << 0);
+    /* 4b2a59: mov byte ptr [ebp - 0x20], al */
+    vertrix_lift_write(L, ebp + 0xffffffe0u, 8, ((eax >> 0) & 0xffu), 0);
+    /* 4b2a5c: xor ah, ah */
+    a = ((eax >> 8) & 0xffu);
+    b = ((eax >> 8) & 0xffu) & 0xffu;
+    r = (a ^ b) & 0xffu;
+    ZF = r == 0;
+    SF = (r & 0x80u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = (eax & ~(0xffu << 8)) | (((r) & 0xffu) << 8);
+    /* 4b2a5e: mov byte ptr [ebp - 0x14], ah */
+    vertrix_lift_write(L, ebp + 0xffffffecu, 8, ((eax >> 8) & 0xffu), 0);
+    /* 4b2a61: test al, al */
+    a = ((eax >> 0) & 0xffu);
+    b = ((eax >> 0) & 0xffu) & 0xffu;
+    r = (a & b) & 0xffu;
+    ZF = r == 0;
+    SF = (r & 0x80u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 4b2a63: jbe 0x4b2aef */
+    if (CF || ZF)
+    {
+        goto L_4b2aef;
+    }
+L_4b2a69:;
+    /* 4b2a69: xor eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 4b2a6b: mov al, byte ptr [ebp - 0x14] */
+    eax = (eax & ~(0xffu << 0)) | (((vertrix_lift_read(L, ebp + 0xffffffecu, 8, 0)) & 0xffu) << 0);
+    /* 4b2a6e: add eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 4b2a70: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 4b2a72: lea ecx, [esi + eax] */
+    ecx = (esi + eax);
+    /* 4b2a75: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 4b2a77: mov eax, dword ptr [ebp - 0x54] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffacu, 32, 0);
+    /* 4b2a7a: mov dx, word ptr [ecx + 0x162] */
+    edx = (edx & 0xffff0000u) | ((vertrix_lift_read(L, ecx + 0x162u, 16, ecx)) & 0xffffu);
+    /* 4b2a81: mov bx, word ptr [ecx + 0x22a] */
+    ebx = (ebx & 0xffff0000u) | ((vertrix_lift_read(L, ecx + 0x22au, 16, ecx)) & 0xffffu);
+    /* 4b2a88: add edx, eax */
+    a = edx;
+    b = eax & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4b2a8a: mov eax, edi */
+    eax = edi;
+    /* 4b2a8c: call 0x4eb860 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4b2a91u, 0);
+    eax = vertrix_lift_call(L, 0x4eb860, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4b2a91: xor eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 4b2a93: mov ax, word ptr [ecx + 0x22a] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, ecx + 0x22au, 16, ecx)) & 0xffffu);
+    /* 4b2a9a: mov byte ptr [edi + eax], 0 */
+    vertrix_lift_write(L, edi + eax, 8, 0x0u, 0);
+    /* 4b2a9e: lea eax, [ebp - 0x38] */
+    eax = (ebp + 0xffffffc8u);
+    /* 4b2aa1: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2aa2: lea eax, [ebp - 0x50] */
+    eax = (ebp + 0xffffffb0u);
+    /* 4b2aa5: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2aa6: lea eax, [ebp - 0x78] */
+    eax = (ebp + 0xffffff88u);
+    /* 4b2aa9: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2aaa: lea eax, [ebp - 0x7c] */
+    eax = (ebp + 0xffffff84u);
+    /* 4b2aad: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2aae: xor eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 4b2ab0: mov al, byte ptr [esi + 0x44] */
+    eax = (eax & ~(0xffu << 0)) | (((vertrix_lift_read(L, esi + 0x44u, 8, esi)) & 0xffu) << 0);
+    /* 4b2ab3: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2ab4: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 4b2ab6: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 4b2ab8: push edi */
+    t = edi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2ab9: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 4b2abb: mov eax, dword ptr [esi + 0x15d] */
+    eax = vertrix_lift_read(L, esi + 0x15du, 32, esi);
+    /* 4b2ac1: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2ac3: sar eax, 0x18 */
+    a = eax;
+    c = 0x18u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        eax = r;
+    }
+    /* 4b2ac6: call 0x4408e0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4b2acbu, 0);
+    eax = vertrix_lift_call(L, 0x4408e0, eax, edx, ebx, ecx, esp, 7);
+    esp += 28u;
+    if (L->failed)
+        return 0;
+    /* 4b2acb: mov eax, dword ptr [ebp - 0x7c] */
+    eax = vertrix_lift_read(L, ebp + 0xffffff84u, 32, 0);
+    /* 4b2ace: mov edx, dword ptr [ebp - 0x64] */
+    edx = vertrix_lift_read(L, ebp + 0xffffff9cu, 32, 0);
+    /* 4b2ad1: cmp eax, edx */
+    a = eax;
+    b = edx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4b2ad3: jbe 0x4b2c74 */
+    if (CF || ZF)
+    {
+        goto L_4b2c74;
+    }
+L_4b2ad9:;
+    /* 4b2ad9: mov dh, byte ptr [ebp - 0x14] */
+    edx = (edx & ~(0xffu << 8)) | (((vertrix_lift_read(L, ebp + 0xffffffecu, 8, 0)) & 0xffu) << 8);
+    /* 4b2adc: mov bl, byte ptr [ebp - 0x20] */
+    ebx = (ebx & ~(0xffu << 0)) | (((vertrix_lift_read(L, ebp + 0xffffffe0u, 8, 0)) & 0xffu) << 0);
+    /* 4b2adf: inc dh */
+    a = ((edx >> 8) & 0xffu);
+    r = (a + 1u) & 0xffu;
+    ZF = r == 0;
+    SF = (r & 0x80u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80u);
+    edx = (edx & ~(0xffu << 8)) | (((r) & 0xffu) << 8);
+    /* 4b2ae1: mov dword ptr [ebp - 0x64], eax */
+    vertrix_lift_write(L, ebp + 0xffffff9cu, 32, eax, 0);
+    /* 4b2ae4: mov byte ptr [ebp - 0x14], dh */
+    vertrix_lift_write(L, ebp + 0xffffffecu, 8, ((edx >> 8) & 0xffu), 0);
+    /* 4b2ae7: cmp dh, bl */
+    a = ((edx >> 8) & 0xffu);
+    b = ((ebx >> 0) & 0xffu) & 0xffu;
+    r = (a - b) & 0xffu;
+    ZF = r == 0;
+    SF = (r & 0x80u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffu) < ((b) & 0xffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80u) != 0;
+    /* 4b2ae9: jb 0x4b2a69 */
+    if (CF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_4b2a69;
+    }
+L_4b2aef:;
+    /* 4b2aef: cmp dword ptr [esi + 0x300], 1 */
+    a = vertrix_lift_read(L, esi + 0x300u, 32, esi);
+    b = 0x1u & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4b2af6: jne 0x4b2c7b */
+    if (!ZF)
+    {
+        goto L_4b2c7b;
+    }
+    /* 4b2afc: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 4b2afe: mov al, byte ptr [esi + 0x161] */
+    eax = (eax & ~(0xffu << 0)) | (((vertrix_lift_read(L, esi + 0x161u, 8, esi)) & 0xffu) << 0);
+    /* 4b2b04: mov word ptr [ebp - 0x2c], bx */
+    vertrix_lift_write(L, ebp + 0xffffffd4u, 16, (ebx & 0xffffu), 0);
+    /* 4b2b08: xor bh, bh */
+    a = ((ebx >> 8) & 0xffu);
+    b = ((ebx >> 8) & 0xffu) & 0xffu;
+    r = (a ^ b) & 0xffu;
+    ZF = r == 0;
+    SF = (r & 0x80u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = (ebx & ~(0xffu << 8)) | (((r) & 0xffu) << 8);
+    /* 4b2b0a: mov byte ptr [ebp - 0x1c], al */
+    vertrix_lift_write(L, ebp + 0xffffffe4u, 8, ((eax >> 0) & 0xffu), 0);
+    /* 4b2b0d: mov byte ptr [ebp - 0x18], bh */
+    vertrix_lift_write(L, ebp + 0xffffffe8u, 8, ((ebx >> 8) & 0xffu), 0);
+    /* 4b2b10: test al, al */
+    a = ((eax >> 0) & 0xffu);
+    b = ((eax >> 0) & 0xffu) & 0xffu;
+    r = (a & b) & 0xffu;
+    ZF = r == 0;
+    SF = (r & 0x80u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 4b2b12: jbe 0x4b2ba0 */
+    if (CF || ZF)
+    {
+        goto L_4b2ba0;
+    }
+L_4b2b18:;
+    /* 4b2b18: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 4b2b1a: mov eax, dword ptr [ebp - 0x54] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffacu, 32, 0);
+    /* 4b2b1d: mov cl, byte ptr [ebp - 0x18] */
+    ecx = (ecx & ~(0xffu << 0)) | (((vertrix_lift_read(L, ebp + 0xffffffe8u, 8, 0)) & 0xffu) << 0);
+    /* 4b2b20: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 4b2b22: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 4b2b24: mov dx, word ptr [esi + ecx*2 + 0x162] */
+    edx = (edx & 0xffff0000u) | ((vertrix_lift_read(L, esi + ecx * 2u + 0x162u, 16, 0)) & 0xffffu);
+    /* 4b2b2c: mov bx, word ptr [esi + ecx*2 + 0x22a] */
+    ebx = (ebx & 0xffff0000u) | ((vertrix_lift_read(L, esi + ecx * 2u + 0x22au, 16, 0)) & 0xffffu);
+    /* 4b2b34: add edx, eax */
+    a = edx;
+    b = eax & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4b2b36: mov eax, edi */
+    eax = edi;
+    /* 4b2b38: call 0x4eb860 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4b2b3du, 0);
+    eax = vertrix_lift_call(L, 0x4eb860, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4b2b3d: xor eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 4b2b3f: mov ax, word ptr [esi + ecx*2 + 0x22a] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, esi + ecx * 2u + 0x22au, 16, 0)) & 0xffffu);
+    /* 4b2b47: mov byte ptr [edi + eax], 0 */
+    vertrix_lift_write(L, edi + eax, 8, 0x0u, 0);
+    /* 4b2b4b: lea eax, [ebp - 0x4c] */
+    eax = (ebp + 0xffffffb4u);
+    /* 4b2b4e: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2b4f: lea eax, [ebp - 0x40] */
+    eax = (ebp + 0xffffffc0u);
+    /* 4b2b52: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2b53: lea eax, [ebp - 0x6c] */
+    eax = (ebp + 0xffffff94u);
+    /* 4b2b56: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2b57: lea eax, [ebp - 0x74] */
+    eax = (ebp + 0xffffff8cu);
+    /* 4b2b5a: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2b5b: xor eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 4b2b5d: mov al, byte ptr [esi + 0x44] */
+    eax = (eax & ~(0xffu << 0)) | (((vertrix_lift_read(L, esi + 0x44u, 8, esi)) & 0xffu) << 0);
+    /* 4b2b60: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2b61: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 4b2b63: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 4b2b65: push edi */
+    t = edi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2b66: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 4b2b68: mov eax, dword ptr [esi + 0x15d] */
+    eax = vertrix_lift_read(L, esi + 0x15du, 32, esi);
+    /* 4b2b6e: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2b70: sar eax, 0x18 */
+    a = eax;
+    c = 0x18u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        eax = r;
+    }
+    /* 4b2b73: call 0x4408e0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4b2b78u, 0);
+    eax = vertrix_lift_call(L, 0x4408e0, eax, edx, ebx, ecx, esp, 7);
+    esp += 28u;
+    if (L->failed)
+        return 0;
+    /* 4b2b78: mov eax, dword ptr [ebp - 0x6c] */
+    eax = vertrix_lift_read(L, ebp + 0xffffff94u, 32, 0);
+    /* 4b2b7b: mov ecx, dword ptr [ebp - 0x2c] */
+    ecx = vertrix_lift_read(L, ebp + 0xffffffd4u, 32, 0);
+    /* 4b2b7e: inc eax */
+    a = eax;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    eax = r;
+    /* 4b2b7f: add ecx, eax */
+    a = ecx;
+    b = eax & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    ecx = r;
+    /* 4b2b81: mov word ptr [ebp - 0x2c], cx */
+    vertrix_lift_write(L, ebp + 0xffffffd4u, 16, (ecx & 0xffffu), 0);
+    /* 4b2b85: mov ch, byte ptr [ebp - 0x18] */
+    ecx = (ecx & ~(0xffu << 8)) | (((vertrix_lift_read(L, ebp + 0xffffffe8u, 8, 0)) & 0xffu) << 8);
+    /* 4b2b88: inc ch */
+    a = ((ecx >> 8) & 0xffu);
+    r = (a + 1u) & 0xffu;
+    ZF = r == 0;
+    SF = (r & 0x80u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80u);
+    ecx = (ecx & ~(0xffu << 8)) | (((r) & 0xffu) << 8);
+    /* 4b2b8a: mov ah, byte ptr [ebp - 0x1c] */
+    eax = (eax & ~(0xffu << 8)) | (((vertrix_lift_read(L, ebp + 0xffffffe4u, 8, 0)) & 0xffu) << 8);
+    /* 4b2b8d: mov byte ptr [ebp - 0x18], ch */
+    vertrix_lift_write(L, ebp + 0xffffffe8u, 8, ((ecx >> 8) & 0xffu), 0);
+    /* 4b2b90: cmp ch, ah */
+    a = ((ecx >> 8) & 0xffu);
+    b = ((eax >> 8) & 0xffu) & 0xffu;
+    r = (a - b) & 0xffu;
+    ZF = r == 0;
+    SF = (r & 0x80u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffu) < ((b) & 0xffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80u) != 0;
+    /* 4b2b92: jb 0x4b2b18 */
+    if (CF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_4b2b18;
+    }
+    /* 4b2b94: lea eax, [eax] */
+    /* 4b2b9a: lea edx, [edx] */
+L_4b2ba0:;
+    /* 4b2ba0: mov edx, dword ptr [esi + 0xf6] */
+    edx = vertrix_lift_read(L, esi + 0xf6u, 32, esi);
+    /* 4b2ba6: mov eax, dword ptr [ebp - 0x2e] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffd2u, 32, 0);
+    /* 4b2ba9: sar edx, 0x10 */
+    a = edx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 4b2bac: sar eax, 0x10 */
+    a = eax;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        eax = r;
+    }
+    /* 4b2baf: sub edx, eax */
+    a = edx;
+    b = eax & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4b2bb1: xor eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 4b2bb3: mov ax, word ptr [esi + 0x2f6] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, esi + 0x2f6u, 16, esi)) & 0xffffu);
+    /* 4b2bba: sub edx, eax */
+    a = edx;
+    b = eax & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4b2bbc: mov eax, edx */
+    eax = edx;
+    /* 4b2bbe: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 4b2bc0: mov dx, word ptr [esi + 0x2f8] */
+    edx = (edx & 0xffff0000u) | ((vertrix_lift_read(L, esi + 0x2f8u, 16, esi)) & 0xffffu);
+    /* 4b2bc7: sub eax, edx */
+    a = eax;
+    b = edx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 4b2bc9: mov edx, eax */
+    edx = eax;
+    /* 4b2bcb: sar edx, 0x1f */
+    a = edx;
+    c = 0x1fu & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 4b2bce: sub eax, edx */
+    a = eax;
+    b = edx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 4b2bd0: sar eax, 1 */
+    a = eax;
+    c = 0x1u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        eax = r;
+    }
+    /* 4b2bd2: mov edx, eax */
+    edx = eax;
+    /* 4b2bd4: cwde  */
+    eax = (uint32_t)(int32_t)(int16_t)(eax & 0xffffu);
+    /* 4b2bd5: test eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 4b2bd7: jle 0x4b2c7b */
+    if (ZF || SF != OF)
+    {
+        goto L_4b2c7b;
+    }
+    /* 4b2bdd: mov ax, word ptr [esi + 0x16] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, esi + 0x16u, 16, esi)) & 0xffffu);
+    /* 4b2be1: add ax, word ptr [esi + 0x2f6] */
+    a = (eax & 0xffffu);
+    b = vertrix_lift_read(L, esi + 0x2f6u, 16, esi) & 0xffffu;
+    r = (a + b) & 0xffffu;
+    ZF = r == 0;
+    SF = (r & 0x8000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x8000u) != 0;
+    eax = (eax & 0xffff0000u) | ((r) & 0xffffu);
+L_4b2be8:;
+    /* 4b2be8: add eax, edx */
+    a = eax;
+    b = edx & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 4b2bea: mov word ptr [ebp - 0x34], ax */
+    vertrix_lift_write(L, ebp + 0xffffffccu, 16, (eax & 0xffffu), 0);
+    /* 4b2bee: mov ax, word ptr [esi + 0xe] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, esi + 0xeu, 16, esi)) & 0xffffu);
+    /* 4b2bf2: mov cx, word ptr [esi + 0x2f2] */
+    ecx = (ecx & 0xffff0000u) | ((vertrix_lift_read(L, esi + 0x2f2u, 16, esi)) & 0xffffu);
+    /* 4b2bf9: xor dl, dl */
+    a = ((edx >> 0) & 0xffu);
+    b = ((edx >> 0) & 0xffu) & 0xffu;
+    r = (a ^ b) & 0xffu;
+    ZF = r == 0;
+    SF = (r & 0x80u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = (edx & ~(0xffu << 0)) | (((r) & 0xffu) << 0);
+    /* 4b2bfb: add eax, ecx */
+    a = eax;
+    b = ecx & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 4b2bfd: mov byte ptr [ebp - 0x28], dl */
+    vertrix_lift_write(L, ebp + 0xffffffd8u, 8, ((edx >> 0) & 0xffu), 0);
+    /* 4b2c00: mov word ptr [ebp - 0x44], ax */
+    vertrix_lift_write(L, ebp + 0xffffffbcu, 16, (eax & 0xffffu), 0);
+    /* 4b2c04: mov al, byte ptr [esi + 0x161] */
+    eax = (eax & ~(0xffu << 0)) | (((vertrix_lift_read(L, esi + 0x161u, 8, esi)) & 0xffu) << 0);
+    /* 4b2c0a: mov edx, dword ptr [esi + 0x2fc] */
+    edx = vertrix_lift_read(L, esi + 0x2fcu, 32, esi);
+    /* 4b2c10: mov byte ptr [ebp - 0x24], al */
+    vertrix_lift_write(L, ebp + 0xffffffdcu, 8, ((eax >> 0) & 0xffu), 0);
+    /* 4b2c13: cmp edx, 1 */
+    a = edx;
+    b = 0x1u & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4b2c16: jne 0x4b2c55 */
+    if (!ZF)
+    {
+        goto L_4b2c55;
+    }
+    /* 4b2c18: cmp edx, dword ptr [esi + 0x304] */
+    a = edx;
+    b = vertrix_lift_read(L, esi + 0x304u, 32, esi) & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4b2c1e: jne 0x4b2c8b */
+    if (!ZF)
+    {
+        goto L_4b2c8b;
+    }
+    /* 4b2c20: mov ebx, dword ptr [ebp - 0x64] */
+    ebx = vertrix_lift_read(L, ebp + 0xffffff9cu, 32, 0);
+    /* 4b2c23: mov eax, dword ptr [esi + 0xf2] */
+    eax = vertrix_lift_read(L, esi + 0xf2u, 32, esi);
+    /* 4b2c29: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 4b2c2b: sar eax, 0x10 */
+    a = eax;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        eax = r;
+    }
+    /* 4b2c2e: mov dx, word ptr [esi + 0x2f2] */
+    edx = (edx & 0xffff0000u) | ((vertrix_lift_read(L, esi + 0x2f2u, 16, esi)) & 0xffffu);
+    /* 4b2c35: sub eax, ebx */
+    a = eax;
+    b = ebx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 4b2c37: sub eax, edx */
+    a = eax;
+    b = edx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 4b2c39: mov edx, eax */
+    edx = eax;
+    /* 4b2c3b: xor eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 4b2c3d: mov ax, word ptr [esi + 0x2f4] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, esi + 0x2f4u, 16, esi)) & 0xffffu);
+    /* 4b2c44: sub edx, eax */
+    a = edx;
+    b = eax & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4b2c46: mov eax, edx */
+    eax = edx;
+    /* 4b2c48: shr eax, 1 */
+    a = eax;
+    c = 0x1u & 31u;
+    if (c)
+    {
+        r = a >> c;
+        CF = (a >> (c - 1)) & 1u;
+        OF = (a & 0x80000000u) != 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        eax = r;
+    }
+    /* 4b2c4a: movsx edx, ax */
+    edx = (uint32_t)(int32_t)(int16_t)((eax & 0xffffu));
+    /* 4b2c4d: test edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 4b2c4f: jle 0x4b2c55 */
+    if (ZF || SF != OF)
+    {
+        goto L_4b2c55;
+    }
+    /* 4b2c51: add word ptr [ebp - 0x44], ax */
+    a = vertrix_lift_read(L, ebp + 0xffffffbcu, 16, 0);
+    b = (eax & 0xffffu) & 0xffffu;
+    r = (a + b) & 0xffffu;
+    ZF = r == 0;
+    SF = (r & 0x8000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x8000u) != 0;
+    vertrix_lift_write(L, ebp + 0xffffffbcu, 16, r, 0);
+L_4b2c55:;
+    /* 4b2c55: mov eax, dword ptr [ebp - 0x44] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffbcu, 32, 0);
+L_4b2c58:;
+    /* 4b2c58: mov word ptr [ebp - 0x30], ax */
+    vertrix_lift_write(L, ebp + 0xffffffd0u, 16, (eax & 0xffffu), 0);
+L_4b2c5c:;
+    /* 4b2c5c: mov al, byte ptr [ebp - 0x28] */
+    eax = (eax & ~(0xffu << 0)) | (((vertrix_lift_read(L, ebp + 0xffffffd8u, 8, 0)) & 0xffu) << 0);
+    /* 4b2c5f: cmp al, byte ptr [ebp - 0x24] */
+    a = ((eax >> 0) & 0xffu);
+    b = vertrix_lift_read(L, ebp + 0xffffffdcu, 8, 0) & 0xffu;
+    r = (a - b) & 0xffu;
+    ZF = r == 0;
+    SF = (r & 0x80u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffu) < ((b) & 0xffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80u) != 0;
+    /* 4b2c62: jb 0x4b2ca4 */
+    if (CF)
+    {
+        goto L_4b2ca4;
+    }
+    /* 4b2c64: mov eax, edi */
+    eax = edi;
+    /* 4b2c66: call 0x4ea190 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4b2c6bu, 0);
+    eax = vertrix_lift_call(L, 0x4ea190, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4b2c6b: lea esp, [ebp - 0x10] */
+    esp = (ebp + 0xfffffff0u);
+    /* 4b2c6e: pop edi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edi = t;
+    /* 4b2c6f: pop esi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    esi = t;
+    /* 4b2c70: pop ecx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ecx = t;
+    /* 4b2c71: pop ebx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ebx = t;
+    /* 4b2c72: pop ebp */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ebp = t;
+    /* 4b2c73: ret  */
+    return eax;
+L_4b2c74:;
+    /* 4b2c74: mov eax, edx */
+    eax = edx;
+    /* 4b2c76: jmp 0x4b2ad9 */
+    if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+    {
+        L->failed = 1;
+        return 0;
+    }
+    goto L_4b2ad9;
+L_4b2c7b:;
+    /* 4b2c7b: mov ax, word ptr [esi + 0x16] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, esi + 0x16u, 16, esi)) & 0xffffu);
+    /* 4b2c7f: mov dx, word ptr [esi + 0x2f6] */
+    edx = (edx & 0xffff0000u) | ((vertrix_lift_read(L, esi + 0x2f6u, 16, esi)) & 0xffffu);
+    /* 4b2c86: jmp 0x4b2be8 */
+    if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+    {
+        L->failed = 1;
+        return 0;
+    }
+    goto L_4b2be8;
+L_4b2c8b:;
+    /* 4b2c8b: mov ax, word ptr [esi + 0xe] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, esi + 0xeu, 16, esi)) & 0xffffu);
+    /* 4b2c8f: mov dx, word ptr [esi + 0xf4] */
+    edx = (edx & 0xffff0000u) | ((vertrix_lift_read(L, esi + 0xf4u, 16, esi)) & 0xffffu);
+    /* 4b2c96: mov bx, word ptr [esi + 0x2f4] */
+    ebx = (ebx & 0xffff0000u) | ((vertrix_lift_read(L, esi + 0x2f4u, 16, esi)) & 0xffffu);
+    /* 4b2c9d: add eax, edx */
+    a = eax;
+    b = edx & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 4b2c9f: sub eax, ebx */
+    a = eax;
+    b = ebx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 4b2ca1: dec eax */
+    a = eax;
+    r = (a - 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u - 1u);
+    eax = r;
+    /* 4b2ca2: jmp 0x4b2c58 */
+    if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+    {
+        L->failed = 1;
+        return 0;
+    }
+    goto L_4b2c58;
+L_4b2ca4:;
+    /* 4b2ca4: xor eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 4b2ca6: mov al, byte ptr [ebp - 0x28] */
+    eax = (eax & ~(0xffu << 0)) | (((vertrix_lift_read(L, ebp + 0xffffffd8u, 8, 0)) & 0xffu) << 0);
+    /* 4b2ca9: add eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 4b2cab: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 4b2cad: lea ecx, [esi + eax] */
+    ecx = (esi + eax);
+    /* 4b2cb0: xor edx, edx */
+    a = edx;
+    b = edx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    edx = r;
+    /* 4b2cb2: mov eax, dword ptr [ebp - 0x54] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffacu, 32, 0);
+    /* 4b2cb5: mov dx, word ptr [ecx + 0x162] */
+    edx = (edx & 0xffff0000u) | ((vertrix_lift_read(L, ecx + 0x162u, 16, ecx)) & 0xffffu);
+    /* 4b2cbc: mov bx, word ptr [ecx + 0x22a] */
+    ebx = (ebx & 0xffff0000u) | ((vertrix_lift_read(L, ecx + 0x22au, 16, ecx)) & 0xffffu);
+    /* 4b2cc3: add edx, eax */
+    a = edx;
+    b = eax & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4b2cc5: mov eax, edi */
+    eax = edi;
+    /* 4b2cc7: call 0x4eb860 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4b2cccu, 0);
+    eax = vertrix_lift_call(L, 0x4eb860, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4b2ccc: xor eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 4b2cce: mov ax, word ptr [ecx + 0x22a] */
+    eax = (eax & 0xffff0000u) | ((vertrix_lift_read(L, ecx + 0x22au, 16, ecx)) & 0xffffu);
+    /* 4b2cd5: mov byte ptr [edi + eax], 0 */
+    vertrix_lift_write(L, edi + eax, 8, 0x0u, 0);
+    /* 4b2cd9: lea eax, [ebp - 0x48] */
+    eax = (ebp + 0xffffffb8u);
+    /* 4b2cdc: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2cdd: lea eax, [ebp - 0x3c] */
+    eax = (ebp + 0xffffffc4u);
+    /* 4b2ce0: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2ce1: lea eax, [ebp - 0x68] */
+    eax = (ebp + 0xffffff98u);
+    /* 4b2ce4: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2ce5: lea eax, [ebp - 0x70] */
+    eax = (ebp + 0xffffff90u);
+    /* 4b2ce8: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2ce9: xor eax, eax */
+    a = eax;
+    b = eax & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    eax = r;
+    /* 4b2ceb: mov al, byte ptr [esi + 0x44] */
+    eax = (eax & ~(0xffu << 0)) | (((vertrix_lift_read(L, esi + 0x44u, 8, esi)) & 0xffu) << 0);
+    /* 4b2cee: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2cef: mov eax, dword ptr [ebp - 0x36] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffcau, 32, 0);
+    /* 4b2cf2: sar eax, 0x10 */
+    a = eax;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        eax = r;
+    }
+    /* 4b2cf5: push edi */
+    t = edi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2cf6: mov dword ptr [ebp - 0x5c], eax */
+    vertrix_lift_write(L, ebp + 0xffffffa4u, 32, eax, 0);
+    /* 4b2cf9: mov ecx, eax */
+    ecx = eax;
+    /* 4b2cfb: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2cfc: mov eax, dword ptr [ebp - 0x46] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffbau, 32, 0);
+    /* 4b2cff: mov ebx, dword ptr [ebp - 0x32] */
+    ebx = vertrix_lift_read(L, ebp + 0xffffffceu, 32, 0);
+    /* 4b2d02: sar eax, 0x10 */
+    a = eax;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        eax = r;
+    }
+    /* 4b2d05: sar ebx, 0x10 */
+    a = ebx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ebx = r;
+    }
+    /* 4b2d08: mov dword ptr [ebp - 0x58], eax */
+    vertrix_lift_write(L, ebp + 0xffffffa8u, 32, eax, 0);
+    /* 4b2d0b: mov eax, dword ptr [esi + 0x15d] */
+    eax = vertrix_lift_read(L, esi + 0x15du, 32, esi);
+    /* 4b2d11: mov edx, dword ptr [ebp - 0x58] */
+    edx = vertrix_lift_read(L, ebp + 0xffffffa8u, 32, 0);
+    /* 4b2d14: sar eax, 0x18 */
+    a = eax;
+    c = 0x18u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        eax = r;
+    }
+    /* 4b2d17: call 0x4408e0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4b2d1cu, 0);
+    eax = vertrix_lift_call(L, 0x4408e0, eax, edx, ebx, ecx, esp, 7);
+    esp += 28u;
+    if (L->failed)
+        return 0;
+    /* 4b2d1c: mov ecx, dword ptr [esi + 0x304] */
+    ecx = vertrix_lift_read(L, esi + 0x304u, 32, esi);
+    /* 4b2d22: cmp ecx, 1 */
+    a = ecx;
+    b = 0x1u & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4b2d25: jne 0x4b2d62 */
+    if (!ZF)
+    {
+        goto L_4b2d62;
+    }
+    /* 4b2d27: cmp ecx, dword ptr [esi + 0x2fc] */
+    a = ecx;
+    b = vertrix_lift_read(L, esi + 0x2fcu, 32, esi) & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4b2d2d: jne 0x4b2d62 */
+    if (!ZF)
+    {
+        goto L_4b2d62;
+    }
+    /* 4b2d2f: mov ecx, dword ptr [ebp - 0x5c] */
+    ecx = vertrix_lift_read(L, ebp + 0xffffffa4u, 32, 0);
+    /* 4b2d32: mov ebx, dword ptr [ebp - 0x58] */
+    ebx = vertrix_lift_read(L, ebp + 0xffffffa8u, 32, 0);
+    /* 4b2d35: push esi */
+    t = esi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2d36: mov eax, dword ptr [ebp - 0x60] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffa0u, 32, 0);
+    /* 4b2d39: mov edx, dword ptr [esi + 0x15d] */
+    edx = vertrix_lift_read(L, esi + 0x15du, 32, esi);
+    /* 4b2d3f: push edi */
+    t = edi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2d40: sar edx, 0x18 */
+    a = edx;
+    c = 0x18u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 4b2d43: call 0x440a20 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4b2d48u, 0);
+    eax = vertrix_lift_call(L, 0x440a20, eax, edx, ebx, ecx, esp, 2);
+    esp += 8u;
+    if (L->failed)
+        return 0;
+L_4b2d48:;
+    /* 4b2d48: mov eax, dword ptr [ebp - 0x68] */
+    eax = vertrix_lift_read(L, ebp + 0xffffff98u, 32, 0);
+    /* 4b2d4b: mov edx, dword ptr [ebp - 0x34] */
+    edx = vertrix_lift_read(L, ebp + 0xffffffccu, 32, 0);
+    /* 4b2d4e: mov bl, byte ptr [ebp - 0x28] */
+    ebx = (ebx & ~(0xffu << 0)) | (((vertrix_lift_read(L, ebp + 0xffffffd8u, 8, 0)) & 0xffu) << 0);
+    /* 4b2d51: inc eax */
+    a = eax;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    eax = r;
+    /* 4b2d52: inc bl */
+    a = ((ebx >> 0) & 0xffu);
+    r = (a + 1u) & 0xffu;
+    ZF = r == 0;
+    SF = (r & 0x80u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80u);
+    ebx = (ebx & ~(0xffu << 0)) | (((r) & 0xffu) << 0);
+    /* 4b2d54: add edx, eax */
+    a = edx;
+    b = eax & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4b2d56: mov byte ptr [ebp - 0x28], bl */
+    vertrix_lift_write(L, ebp + 0xffffffd8u, 8, ((ebx >> 0) & 0xffu), 0);
+    /* 4b2d59: mov word ptr [ebp - 0x34], dx */
+    vertrix_lift_write(L, ebp + 0xffffffccu, 16, (edx & 0xffffu), 0);
+    /* 4b2d5d: jmp 0x4b2c5c */
+    if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+    {
+        L->failed = 1;
+        return 0;
+    }
+    goto L_4b2c5c;
+L_4b2d62:;
+    /* 4b2d62: mov eax, dword ptr [ebp - 0x36] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffcau, 32, 0);
+    /* 4b2d65: mov ecx, dword ptr [ebp - 0x32] */
+    ecx = vertrix_lift_read(L, ebp + 0xffffffceu, 32, 0);
+    /* 4b2d68: push esi */
+    t = esi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2d69: mov ebx, dword ptr [ebp - 0x46] */
+    ebx = vertrix_lift_read(L, ebp + 0xffffffbau, 32, 0);
+    /* 4b2d6c: mov edx, dword ptr [esi + 0x15d] */
+    edx = vertrix_lift_read(L, esi + 0x15du, 32, esi);
+    /* 4b2d72: push edi */
+    t = edi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2d73: sar eax, 0x10 */
+    a = eax;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        eax = r;
+    }
+    /* 4b2d76: sar ecx, 0x10 */
+    a = ecx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ecx = r;
+    }
+    /* 4b2d79: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2d7a: sar ebx, 0x10 */
+    a = ebx;
+    c = 0x10u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ebx = r;
+    }
+    /* 4b2d7d: push eax */
+    t = eax;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4b2d7e: sar edx, 0x18 */
+    a = edx;
+    c = 0x18u & 31u;
+    if (c)
+    {
+        s = (int32_t)(a << 0) >> 0;
+        r = (uint32_t)(s >> c) & 0xffffffffu;
+        CF = (uint32_t)(s >> (c - 1)) & 1u;
+        OF = 0;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 4b2d81: mov eax, dword ptr [ebp - 0x60] */
+    eax = vertrix_lift_read(L, ebp + 0xffffffa0u, 32, 0);
+    /* 4b2d84: call 0x440ca0 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4b2d89u, 0);
+    eax = vertrix_lift_call(L, 0x440ca0, eax, edx, ebx, ecx, esp, 4);
+    esp += 16u;
+    if (L->failed)
+        return 0;
+    /* 4b2d89: jmp 0x4b2d48 */
+    if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+    {
+        L->failed = 1;
+        return 0;
+    }
+    goto L_4b2d48;
+}
+
 uint32_t vertrix_lift_4b2d90(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp)
 {
@@ -293106,6 +304290,2465 @@ uint32_t vertrix_lift_4c5bb0(LiftContext *L, uint32_t eax, uint32_t edx, uint32_
     return eax;
 }
 
+uint32_t vertrix_lift_4c70f0(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
+                             uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp)
+{
+    uint32_t a;
+    uint32_t b;
+    uint32_t c;
+    uint32_t d;
+    uint32_t k;
+    uint32_t r;
+    uint32_t t;
+    uint64_t u;
+    int64_t p;
+    int32_t s;
+    unsigned ZF = 0;
+    unsigned SF = 0;
+    unsigned CF = 0;
+    unsigned OF = 0;
+    unsigned PF = 0;
+    (void)a;
+    (void)b;
+    (void)c;
+    (void)d;
+    (void)k;
+    (void)r;
+    (void)t;
+    (void)u;
+    (void)p;
+    (void)s;
+    (void)ZF;
+    (void)SF;
+    (void)CF;
+    (void)OF;
+    (void)PF;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)L;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esp;
+    /* 4c70f0: push ebx */
+    t = ebx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4c70f1: push ecx */
+    t = ecx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4c70f2: push esi */
+    t = esi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4c70f3: push edi */
+    t = edi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4c70f4: push ebp */
+    t = ebp;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4c70f5: sub esp, 0xb8 */
+    a = esp;
+    b = 0xb8u & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    esp = r;
+    /* 4c70fb: mov dword ptr [esp + 0x10], edx */
+    vertrix_lift_write(L, esp + 0x10u, 32, edx, 0);
+    /* 4c70ff: mov eax, dword ptr [eax + 0x1cc] */
+    eax = vertrix_lift_read(L, eax + 0x1ccu, 32, eax);
+    /* 4c7105: mov eax, dword ptr [eax + 0x18] */
+    eax = vertrix_lift_read(L, eax + 0x18u, 32, eax);
+    /* 4c7108: mov dword ptr [esp + 0x5c], eax */
+    vertrix_lift_write(L, esp + 0x5cu, 32, eax, 0);
+    /* 4c710c: mov eax, dword ptr [edx] */
+    eax = vertrix_lift_read(L, edx, 32, edx);
+    /* 4c710e: mov ebx, dword ptr [edx + 0xc] */
+    ebx = vertrix_lift_read(L, edx + 0xcu, 32, edx);
+    /* 4c7111: mov dword ptr [esp + 0x60], eax */
+    vertrix_lift_write(L, esp + 0x60u, 32, eax, 0);
+    /* 4c7115: mov eax, dword ptr [edx + 4] */
+    eax = vertrix_lift_read(L, edx + 0x4u, 32, edx);
+    /* 4c7118: mov ebp, dword ptr [edx + 0x10] */
+    ebp = vertrix_lift_read(L, edx + 0x10u, 32, edx);
+    /* 4c711b: mov dword ptr [esp + 0xb0], eax */
+    vertrix_lift_write(L, esp + 0xb0u, 32, eax, 0);
+    /* 4c7122: mov eax, dword ptr [edx + 8] */
+    eax = vertrix_lift_read(L, edx + 0x8u, 32, edx);
+    /* 4c7125: mov ecx, dword ptr [esp + 0x60] */
+    ecx = vertrix_lift_read(L, esp + 0x60u, 32, 0);
+    /* 4c7129: mov dword ptr [esp + 0xb4], eax */
+    vertrix_lift_write(L, esp + 0xb4u, 32, eax, 0);
+    /* 4c7130: mov eax, dword ptr [edx + 0x14] */
+    eax = vertrix_lift_read(L, edx + 0x14u, 32, edx);
+    /* 4c7133: mov edx, dword ptr [esp + 0xb0] */
+    edx = vertrix_lift_read(L, esp + 0xb0u, 32, 0);
+    /* 4c713a: cmp edx, ecx */
+    a = edx;
+    b = ecx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c713c: jg 0x4c7518 */
+    if (!ZF && SF == OF)
+    {
+        goto L_4c7518;
+    }
+L_4c7142:;
+    /* 4c7142: mov edx, dword ptr [esp + 0xb0] */
+    edx = vertrix_lift_read(L, esp + 0xb0u, 32, 0);
+    /* 4c7149: mov ecx, dword ptr [esp + 0x60] */
+    ecx = vertrix_lift_read(L, esp + 0x60u, 32, 0);
+    /* 4c714d: cmp edx, ecx */
+    a = edx;
+    b = ecx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c714f: jle 0x4c71dd */
+    if (ZF || SF != OF)
+    {
+        goto L_4c71dd;
+    }
+    /* 4c7155: mov dword ptr [esp + 0x44], edx */
+    vertrix_lift_write(L, esp + 0x44u, 32, edx, 0);
+    /* 4c7159: jl 0x4c71dd */
+    if (SF != OF)
+    {
+        goto L_4c71dd;
+    }
+    /* 4c715f: lea edx, [ebp + ebp] */
+    edx = (ebp + ebp);
+    /* 4c7163: mov dword ptr [esp + 0x7c], edx */
+    vertrix_lift_write(L, esp + 0x7cu, 32, edx, 0);
+    /* 4c7167: mov edx, dword ptr [esp + 0xb0] */
+    edx = vertrix_lift_read(L, esp + 0xb0u, 32, 0);
+    /* 4c716e: mov esi, dword ptr [esp + 0x5c] */
+    esi = vertrix_lift_read(L, esp + 0x5cu, 32, 0);
+    /* 4c7172: shl edx, 2 */
+    a = edx;
+    c = 0x2u & 31u;
+    if (c)
+    {
+        r = (a << c) & 0xffffffffu;
+        CF = (a >> (32 - c)) & 1u;
+        OF = ((r & 0x80000000u) != 0) != CF;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 4c7175: add edx, esi */
+    a = edx;
+    b = esi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c7177: mov dword ptr [esp + 0x34], edx */
+    vertrix_lift_write(L, esp + 0x34u, 32, edx, 0);
+L_4c717b:;
+    /* 4c717b: mov edx, dword ptr [esp + 0xb4] */
+    edx = vertrix_lift_read(L, esp + 0xb4u, 32, 0);
+    /* 4c7182: mov dword ptr [esp + 0x9c], edx */
+    vertrix_lift_write(L, esp + 0x9cu, 32, edx, 0);
+    /* 4c7189: cmp ebx, edx */
+    a = ebx;
+    b = edx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c718b: jl 0x4c7616 */
+    if (SF != OF)
+    {
+        goto L_4c7616;
+    }
+    /* 4c7191: mov ecx, dword ptr [esp + 0x34] */
+    ecx = vertrix_lift_read(L, esp + 0x34u, 32, 0);
+    /* 4c7195: shl edx, 6 */
+    a = edx;
+    c = 0x6u & 31u;
+    if (c)
+    {
+        r = (a << c) & 0xffffffffu;
+        CF = (a >> (32 - c)) & 1u;
+        OF = ((r & 0x80000000u) != 0) != CF;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 4c7198: mov ecx, dword ptr [ecx] */
+    ecx = vertrix_lift_read(L, ecx, 32, ecx);
+    /* 4c719a: add edx, ecx */
+    a = edx;
+    b = ecx & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c719c: mov dword ptr [esp + 0x90], edx */
+    vertrix_lift_write(L, esp + 0x90u, 32, edx, 0);
+L_4c71a3:;
+    /* 4c71a3: mov edx, dword ptr [esp + 0x90] */
+    edx = vertrix_lift_read(L, esp + 0x90u, 32, 0);
+    /* 4c71aa: mov edi, dword ptr [esp + 0x7c] */
+    edi = vertrix_lift_read(L, esp + 0x7cu, 32, 0);
+    /* 4c71ae: mov ecx, ebp */
+    ecx = ebp;
+    /* 4c71b0: add edx, edi */
+    a = edx;
+    b = edi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c71b2: cmp ebp, eax */
+    a = ebp;
+    b = eax & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c71b4: jg 0x4c75ee */
+    if (!ZF && SF == OF)
+    {
+        goto L_4c75ee;
+    }
+L_4c71ba:;
+    /* 4c71ba: mov esi, edx */
+    esi = edx;
+    /* 4c71bc: mov di, word ptr [esi] */
+    edi = (edi & 0xffff0000u) | ((vertrix_lift_read(L, esi, 16, esi)) & 0xffffu);
+    /* 4c71bf: add edx, 2 */
+    a = edx;
+    b = 0x2u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c71c2: test di, di */
+    a = (edi & 0xffffu);
+    b = (edi & 0xffffu) & 0xffffu;
+    r = (a & b) & 0xffffu;
+    ZF = r == 0;
+    SF = (r & 0x8000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 4c71c5: je 0x4c75e5 */
+    if (ZF)
+    {
+        goto L_4c75e5;
+    }
+    /* 4c71cb: mov edx, dword ptr [esp + 0x44] */
+    edx = vertrix_lift_read(L, esp + 0x44u, 32, 0);
+    /* 4c71cf: mov ecx, dword ptr [esp + 0x10] */
+    ecx = vertrix_lift_read(L, esp + 0x10u, 32, 0);
+    /* 4c71d3: mov dword ptr [esp + 0xb0], edx */
+    vertrix_lift_write(L, esp + 0xb0u, 32, edx, 0);
+    /* 4c71da: mov dword ptr [ecx + 4], edx */
+    vertrix_lift_write(L, ecx + 0x4u, 32, edx, ecx);
+L_4c71dd:;
+    /* 4c71dd: mov edx, dword ptr [esp + 0xb4] */
+    edx = vertrix_lift_read(L, esp + 0xb4u, 32, 0);
+    /* 4c71e4: cmp ebx, edx */
+    a = ebx;
+    b = edx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c71e6: jle 0x4c7290 */
+    if (ZF || SF != OF)
+    {
+        goto L_4c7290;
+    }
+    /* 4c71ec: mov dword ptr [esp + 0x30], edx */
+    vertrix_lift_write(L, esp + 0x30u, 32, edx, 0);
+    /* 4c71f0: jl 0x4c7290 */
+    if (SF != OF)
+    {
+        goto L_4c7290;
+    }
+    /* 4c71f6: lea edx, [ebp + ebp] */
+    edx = (ebp + ebp);
+    /* 4c71fa: mov dword ptr [esp + 0x70], edx */
+    vertrix_lift_write(L, esp + 0x70u, 32, edx, 0);
+    /* 4c71fe: mov edx, dword ptr [esp + 0xb4] */
+    edx = vertrix_lift_read(L, esp + 0xb4u, 32, 0);
+    /* 4c7205: shl edx, 6 */
+    a = edx;
+    c = 0x6u & 31u;
+    if (c)
+    {
+        r = (a << c) & 0xffffffffu;
+        CF = (a >> (32 - c)) & 1u;
+        OF = ((r & 0x80000000u) != 0) != CF;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 4c7208: mov dword ptr [esp + 0x58], edx */
+    vertrix_lift_write(L, esp + 0x58u, 32, edx, 0);
+    /* 4c720c: mov edx, ebx */
+    edx = ebx;
+    /* 4c720e: shl edx, 6 */
+    a = edx;
+    c = 0x6u & 31u;
+    if (c)
+    {
+        r = (a << c) & 0xffffffffu;
+        CF = (a >> (32 - c)) & 1u;
+        OF = ((r & 0x80000000u) != 0) != CF;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 4c7211: mov dword ptr [esp + 0x20], edx */
+    vertrix_lift_write(L, esp + 0x20u, 32, edx, 0);
+L_4c7215:;
+    /* 4c7215: mov edx, dword ptr [esp + 0x60] */
+    edx = vertrix_lift_read(L, esp + 0x60u, 32, 0);
+    /* 4c7219: mov esi, dword ptr [esp + 0xb0] */
+    esi = vertrix_lift_read(L, esp + 0xb0u, 32, 0);
+    /* 4c7220: mov dword ptr [esp + 8], edx */
+    vertrix_lift_write(L, esp + 0x8u, 32, edx, 0);
+    /* 4c7224: cmp edx, esi */
+    a = edx;
+    b = esi & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c7226: jg 0x4c766d */
+    if (!ZF && SF == OF)
+    {
+        goto L_4c766d;
+    }
+    /* 4c722c: mov edx, dword ptr [esp + 0x58] */
+    edx = vertrix_lift_read(L, esp + 0x58u, 32, 0);
+    /* 4c7230: mov dword ptr [esp + 0x84], edx */
+    vertrix_lift_write(L, esp + 0x84u, 32, edx, 0);
+    /* 4c7237: mov edx, dword ptr [esp + 0x60] */
+    edx = vertrix_lift_read(L, esp + 0x60u, 32, 0);
+    /* 4c723b: mov esi, dword ptr [esp + 0x5c] */
+    esi = vertrix_lift_read(L, esp + 0x5cu, 32, 0);
+    /* 4c723f: shl edx, 2 */
+    a = edx;
+    c = 0x2u & 31u;
+    if (c)
+    {
+        r = (a << c) & 0xffffffffu;
+        CF = (a >> (32 - c)) & 1u;
+        OF = ((r & 0x80000000u) != 0) != CF;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 4c7242: add edx, esi */
+    a = edx;
+    b = esi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c7244: mov dword ptr [esp + 0x94], edx */
+    vertrix_lift_write(L, esp + 0x94u, 32, edx, 0);
+L_4c724b:;
+    /* 4c724b: mov edx, dword ptr [esp + 0x94] */
+    edx = vertrix_lift_read(L, esp + 0x94u, 32, 0);
+    /* 4c7252: mov edi, dword ptr [esp + 0x84] */
+    edi = vertrix_lift_read(L, esp + 0x84u, 32, 0);
+    /* 4c7259: mov edx, dword ptr [edx] */
+    edx = vertrix_lift_read(L, edx, 32, edx);
+    /* 4c725b: mov ecx, dword ptr [esp + 0x70] */
+    ecx = vertrix_lift_read(L, esp + 0x70u, 32, 0);
+    /* 4c725f: add edx, edi */
+    a = edx;
+    b = edi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c7261: add edx, ecx */
+    a = edx;
+    b = ecx & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c7263: mov ecx, ebp */
+    ecx = ebp;
+    /* 4c7265: cmp ebp, eax */
+    a = ebp;
+    b = eax & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c7267: jg 0x4c7644 */
+    if (!ZF && SF == OF)
+    {
+        goto L_4c7644;
+    }
+L_4c726d:;
+    /* 4c726d: mov esi, edx */
+    esi = edx;
+    /* 4c726f: mov di, word ptr [esi] */
+    edi = (edi & 0xffff0000u) | ((vertrix_lift_read(L, esi, 16, esi)) & 0xffffu);
+    /* 4c7272: add edx, 2 */
+    a = edx;
+    b = 0x2u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c7275: test di, di */
+    a = (edi & 0xffffu);
+    b = (edi & 0xffffu) & 0xffffu;
+    r = (a & b) & 0xffffu;
+    ZF = r == 0;
+    SF = (r & 0x8000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 4c7278: je 0x4c763b */
+    if (ZF)
+    {
+        goto L_4c763b;
+    }
+    /* 4c727e: mov edx, dword ptr [esp + 0x30] */
+    edx = vertrix_lift_read(L, esp + 0x30u, 32, 0);
+    /* 4c7282: mov ecx, dword ptr [esp + 0x10] */
+    ecx = vertrix_lift_read(L, esp + 0x10u, 32, 0);
+    /* 4c7286: mov dword ptr [esp + 0xb4], edx */
+    vertrix_lift_write(L, esp + 0xb4u, 32, edx, 0);
+    /* 4c728d: mov dword ptr [ecx + 8], edx */
+    vertrix_lift_write(L, ecx + 0x8u, 32, edx, ecx);
+L_4c7290:;
+    /* 4c7290: mov esi, dword ptr [esp + 0xb4] */
+    esi = vertrix_lift_read(L, esp + 0xb4u, 32, 0);
+    /* 4c7297: cmp ebx, esi */
+    a = ebx;
+    b = esi & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c7299: jle 0x4c732f */
+    if (ZF || SF != OF)
+    {
+        goto L_4c732f;
+    }
+    /* 4c729f: mov dword ptr [esp + 0x2c], ebx */
+    vertrix_lift_write(L, esp + 0x2cu, 32, ebx, 0);
+    /* 4c72a3: jl 0x4c732f */
+    if (SF != OF)
+    {
+        goto L_4c732f;
+    }
+    /* 4c72a9: lea edx, [ebp + ebp] */
+    edx = (ebp + ebp);
+    /* 4c72ad: mov dword ptr [esp + 0x68], edx */
+    vertrix_lift_write(L, esp + 0x68u, 32, edx, 0);
+    /* 4c72b1: mov edx, ebx */
+    edx = ebx;
+    /* 4c72b3: shl edx, 6 */
+    a = edx;
+    c = 0x6u & 31u;
+    if (c)
+    {
+        r = (a << c) & 0xffffffffu;
+        CF = (a >> (32 - c)) & 1u;
+        OF = ((r & 0x80000000u) != 0) != CF;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 4c72b6: mov dword ptr [esp + 0x54], edx */
+    vertrix_lift_write(L, esp + 0x54u, 32, edx, 0);
+    /* 4c72ba: mov edx, esi */
+    edx = esi;
+    /* 4c72bc: shl edx, 6 */
+    a = edx;
+    c = 0x6u & 31u;
+    if (c)
+    {
+        r = (a << c) & 0xffffffffu;
+        CF = (a >> (32 - c)) & 1u;
+        OF = ((r & 0x80000000u) != 0) != CF;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 4c72bf: mov dword ptr [esp + 0x14], edx */
+    vertrix_lift_write(L, esp + 0x14u, 32, edx, 0);
+L_4c72c3:;
+    /* 4c72c3: mov edx, dword ptr [esp + 0x60] */
+    edx = vertrix_lift_read(L, esp + 0x60u, 32, 0);
+    /* 4c72c7: mov edi, dword ptr [esp + 0xb0] */
+    edi = vertrix_lift_read(L, esp + 0xb0u, 32, 0);
+    /* 4c72ce: mov dword ptr [esp + 0xc], edx */
+    vertrix_lift_write(L, esp + 0xcu, 32, edx, 0);
+    /* 4c72d2: cmp edx, edi */
+    a = edx;
+    b = edi & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c72d4: jg 0x4c76c4 */
+    if (!ZF && SF == OF)
+    {
+        goto L_4c76c4;
+    }
+    /* 4c72da: mov edx, dword ptr [esp + 0x54] */
+    edx = vertrix_lift_read(L, esp + 0x54u, 32, 0);
+    /* 4c72de: mov dword ptr [esp], edx */
+    vertrix_lift_write(L, esp, 32, edx, 0);
+    /* 4c72e1: mov edx, dword ptr [esp + 0x60] */
+    edx = vertrix_lift_read(L, esp + 0x60u, 32, 0);
+    /* 4c72e5: mov edi, dword ptr [esp + 0x5c] */
+    edi = vertrix_lift_read(L, esp + 0x5cu, 32, 0);
+    /* 4c72e9: shl edx, 2 */
+    a = edx;
+    c = 0x2u & 31u;
+    if (c)
+    {
+        r = (a << c) & 0xffffffffu;
+        CF = (a >> (32 - c)) & 1u;
+        OF = ((r & 0x80000000u) != 0) != CF;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 4c72ec: add edx, edi */
+    a = edx;
+    b = edi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c72ee: mov dword ptr [esp + 0xa8], edx */
+    vertrix_lift_write(L, esp + 0xa8u, 32, edx, 0);
+L_4c72f5:;
+    /* 4c72f5: mov edx, dword ptr [esp + 0xa8] */
+    edx = vertrix_lift_read(L, esp + 0xa8u, 32, 0);
+    /* 4c72fc: mov ecx, dword ptr [esp] */
+    ecx = vertrix_lift_read(L, esp, 32, 0);
+    /* 4c72ff: mov edx, dword ptr [edx] */
+    edx = vertrix_lift_read(L, edx, 32, edx);
+    /* 4c7301: add edx, ecx */
+    a = edx;
+    b = ecx & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c7303: mov ecx, dword ptr [esp + 0x68] */
+    ecx = vertrix_lift_read(L, esp + 0x68u, 32, 0);
+    /* 4c7307: add ecx, edx */
+    a = ecx;
+    b = edx & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    ecx = r;
+    /* 4c7309: mov edx, ebp */
+    edx = ebp;
+    /* 4c730b: cmp ebp, eax */
+    a = ebp;
+    b = eax & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c730d: jg 0x4c769b */
+    if (!ZF && SF == OF)
+    {
+        goto L_4c769b;
+    }
+L_4c7313:;
+    /* 4c7313: mov esi, ecx */
+    esi = ecx;
+    /* 4c7315: mov di, word ptr [esi] */
+    edi = (edi & 0xffff0000u) | ((vertrix_lift_read(L, esi, 16, esi)) & 0xffffu);
+    /* 4c7318: add ecx, 2 */
+    a = ecx;
+    b = 0x2u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    ecx = r;
+    /* 4c731b: test di, di */
+    a = (edi & 0xffffu);
+    b = (edi & 0xffffu) & 0xffffu;
+    r = (a & b) & 0xffffu;
+    ZF = r == 0;
+    SF = (r & 0x8000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 4c731e: je 0x4c7692 */
+    if (ZF)
+    {
+        goto L_4c7692;
+    }
+    /* 4c7324: mov ecx, dword ptr [esp + 0x10] */
+    ecx = vertrix_lift_read(L, esp + 0x10u, 32, 0);
+    /* 4c7328: mov ebx, dword ptr [esp + 0x2c] */
+    ebx = vertrix_lift_read(L, esp + 0x2cu, 32, 0);
+    /* 4c732c: mov dword ptr [ecx + 0xc], ebx */
+    vertrix_lift_write(L, ecx + 0xcu, 32, ebx, ecx);
+L_4c732f:;
+    /* 4c732f: cmp eax, ebp */
+    a = eax;
+    b = ebp & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c7331: jle 0x4c73c7 */
+    if (ZF || SF != OF)
+    {
+        goto L_4c73c7;
+    }
+    /* 4c7337: mov dword ptr [esp + 0x28], ebp */
+    vertrix_lift_write(L, esp + 0x28u, 32, ebp, 0);
+    /* 4c733b: cmp ebp, eax */
+    a = ebp;
+    b = eax & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c733d: jg 0x4c73c7 */
+    if (!ZF && SF == OF)
+    {
+        goto L_4c73c7;
+    }
+    /* 4c7343: mov edx, dword ptr [esp + 0xb4] */
+    edx = vertrix_lift_read(L, esp + 0xb4u, 32, 0);
+    /* 4c734a: shl edx, 6 */
+    a = edx;
+    c = 0x6u & 31u;
+    if (c)
+    {
+        r = (a << c) & 0xffffffffu;
+        CF = (a >> (32 - c)) & 1u;
+        OF = ((r & 0x80000000u) != 0) != CF;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 4c734d: mov dword ptr [esp + 0x74], edx */
+    vertrix_lift_write(L, esp + 0x74u, 32, edx, 0);
+    /* 4c7351: lea edx, [ebp + ebp] */
+    edx = (ebp + ebp);
+    /* 4c7355: mov dword ptr [esp + 0x50], edx */
+    vertrix_lift_write(L, esp + 0x50u, 32, edx, 0);
+    /* 4c7359: lea edx, [eax + eax] */
+    edx = (eax + eax);
+    /* 4c735c: mov dword ptr [esp + 0x1c], edx */
+    vertrix_lift_write(L, esp + 0x1cu, 32, edx, 0);
+L_4c7360:;
+    /* 4c7360: mov edx, dword ptr [esp + 0x60] */
+    edx = vertrix_lift_read(L, esp + 0x60u, 32, 0);
+    /* 4c7364: mov esi, dword ptr [esp + 0xb0] */
+    esi = vertrix_lift_read(L, esp + 0xb0u, 32, 0);
+    /* 4c736b: mov dword ptr [esp + 0xa0], edx */
+    vertrix_lift_write(L, esp + 0xa0u, 32, edx, 0);
+    /* 4c7372: cmp edx, esi */
+    a = edx;
+    b = esi & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c7374: jg 0x4c7716 */
+    if (!ZF && SF == OF)
+    {
+        goto L_4c7716;
+    }
+    /* 4c737a: mov edx, dword ptr [esp + 0x50] */
+    edx = vertrix_lift_read(L, esp + 0x50u, 32, 0);
+    /* 4c737e: mov esi, dword ptr [esp + 0x60] */
+    esi = vertrix_lift_read(L, esp + 0x60u, 32, 0);
+    /* 4c7382: mov edi, dword ptr [esp + 0x5c] */
+    edi = vertrix_lift_read(L, esp + 0x5cu, 32, 0);
+    /* 4c7386: shl esi, 2 */
+    a = esi;
+    c = 0x2u & 31u;
+    if (c)
+    {
+        r = (a << c) & 0xffffffffu;
+        CF = (a >> (32 - c)) & 1u;
+        OF = ((r & 0x80000000u) != 0) != CF;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        esi = r;
+    }
+    /* 4c7389: mov dword ptr [esp + 0x88], edx */
+    vertrix_lift_write(L, esp + 0x88u, 32, edx, 0);
+    /* 4c7390: add esi, edi */
+    a = esi;
+    b = edi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    esi = r;
+L_4c7392:;
+    /* 4c7392: mov ecx, dword ptr [esp + 0x74] */
+    ecx = vertrix_lift_read(L, esp + 0x74u, 32, 0);
+    /* 4c7396: mov edx, dword ptr [esi] */
+    edx = vertrix_lift_read(L, esi, 32, esi);
+    /* 4c7398: add edx, ecx */
+    a = edx;
+    b = ecx & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c739a: mov ecx, dword ptr [esp + 0x88] */
+    ecx = vertrix_lift_read(L, esp + 0x88u, 32, 0);
+    /* 4c73a1: add ecx, edx */
+    a = ecx;
+    b = edx & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    ecx = r;
+    /* 4c73a3: mov edx, dword ptr [esp + 0xb4] */
+    edx = vertrix_lift_read(L, esp + 0xb4u, 32, 0);
+    /* 4c73aa: cmp ebx, edx */
+    a = ebx;
+    b = edx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c73ac: jl 0x4c76f5 */
+    if (SF != OF)
+    {
+        goto L_4c76f5;
+    }
+L_4c73b2:;
+    /* 4c73b2: cmp word ptr [ecx], 0 */
+    a = vertrix_lift_read(L, ecx, 16, ecx);
+    b = 0x0u & 0xffffu;
+    r = (a - b) & 0xffffu;
+    ZF = r == 0;
+    SF = (r & 0x8000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffu) < ((b) & 0xffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x8000u) != 0;
+    /* 4c73b6: je 0x4c76e9 */
+    if (ZF)
+    {
+        goto L_4c76e9;
+    }
+    /* 4c73bc: mov ecx, dword ptr [esp + 0x10] */
+    ecx = vertrix_lift_read(L, esp + 0x10u, 32, 0);
+    /* 4c73c0: mov ebp, dword ptr [esp + 0x28] */
+    ebp = vertrix_lift_read(L, esp + 0x28u, 32, 0);
+    /* 4c73c4: mov dword ptr [ecx + 0x10], ebp */
+    vertrix_lift_write(L, ecx + 0x10u, 32, ebp, ecx);
+L_4c73c7:;
+    /* 4c73c7: cmp eax, ebp */
+    a = eax;
+    b = ebp & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c73c9: jle 0x4c7462 */
+    if (ZF || SF != OF)
+    {
+        goto L_4c7462;
+    }
+    /* 4c73cf: mov dword ptr [esp + 0x24], eax */
+    vertrix_lift_write(L, esp + 0x24u, 32, eax, 0);
+    /* 4c73d3: jl 0x4c7462 */
+    if (SF != OF)
+    {
+        goto L_4c7462;
+    }
+    /* 4c73d9: mov edx, dword ptr [esp + 0xb4] */
+    edx = vertrix_lift_read(L, esp + 0xb4u, 32, 0);
+    /* 4c73e0: shl edx, 6 */
+    a = edx;
+    c = 0x6u & 31u;
+    if (c)
+    {
+        r = (a << c) & 0xffffffffu;
+        CF = (a >> (32 - c)) & 1u;
+        OF = ((r & 0x80000000u) != 0) != CF;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 4c73e3: mov dword ptr [esp + 0x64], edx */
+    vertrix_lift_write(L, esp + 0x64u, 32, edx, 0);
+    /* 4c73e7: lea edx, [eax + eax] */
+    edx = (eax + eax);
+    /* 4c73ea: mov dword ptr [esp + 0x4c], edx */
+    vertrix_lift_write(L, esp + 0x4cu, 32, edx, 0);
+    /* 4c73ee: lea edx, [ebp + ebp] */
+    edx = (ebp + ebp);
+    /* 4c73f2: mov dword ptr [esp + 0x18], edx */
+    vertrix_lift_write(L, esp + 0x18u, 32, edx, 0);
+L_4c73f6:;
+    /* 4c73f6: mov esi, dword ptr [esp + 0x60] */
+    esi = vertrix_lift_read(L, esp + 0x60u, 32, 0);
+    /* 4c73fa: cmp esi, dword ptr [esp + 0xb0] */
+    a = esi;
+    b = vertrix_lift_read(L, esp + 0xb0u, 32, 0) & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c7401: jg 0x4c7768 */
+    if (!ZF && SF == OF)
+    {
+        goto L_4c7768;
+    }
+    /* 4c7407: mov edx, dword ptr [esp + 0x4c] */
+    edx = vertrix_lift_read(L, esp + 0x4cu, 32, 0);
+    /* 4c740b: mov edi, dword ptr [esp + 0x5c] */
+    edi = vertrix_lift_read(L, esp + 0x5cu, 32, 0);
+    /* 4c740f: mov dword ptr [esp + 0x80], edx */
+    vertrix_lift_write(L, esp + 0x80u, 32, edx, 0);
+    /* 4c7416: lea edx, [esi*4] */
+    edx = (esi * 4u);
+    /* 4c741d: add edx, edi */
+    a = edx;
+    b = edi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c741f: mov dword ptr [esp + 0x98], edx */
+    vertrix_lift_write(L, esp + 0x98u, 32, edx, 0);
+L_4c7426:;
+    /* 4c7426: mov edx, dword ptr [esp + 0x98] */
+    edx = vertrix_lift_read(L, esp + 0x98u, 32, 0);
+    /* 4c742d: mov ecx, dword ptr [esp + 0x64] */
+    ecx = vertrix_lift_read(L, esp + 0x64u, 32, 0);
+    /* 4c7431: mov edx, dword ptr [edx] */
+    edx = vertrix_lift_read(L, edx, 32, edx);
+    /* 4c7433: mov edi, dword ptr [esp + 0x80] */
+    edi = vertrix_lift_read(L, esp + 0x80u, 32, 0);
+    /* 4c743a: add edx, ecx */
+    a = edx;
+    b = ecx & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c743c: mov ecx, dword ptr [esp + 0xb4] */
+    ecx = vertrix_lift_read(L, esp + 0xb4u, 32, 0);
+    /* 4c7443: add edx, edi */
+    a = edx;
+    b = edi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c7445: cmp ebx, ecx */
+    a = ebx;
+    b = ecx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c7447: jl 0x4c7747 */
+    if (SF != OF)
+    {
+        goto L_4c7747;
+    }
+L_4c744d:;
+    /* 4c744d: cmp word ptr [edx], 0 */
+    a = vertrix_lift_read(L, edx, 16, edx);
+    b = 0x0u & 0xffffu;
+    r = (a - b) & 0xffffu;
+    ZF = r == 0;
+    SF = (r & 0x8000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffu) < ((b) & 0xffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x8000u) != 0;
+    /* 4c7451: je 0x4c773b */
+    if (ZF)
+    {
+        goto L_4c773b;
+    }
+    /* 4c7457: mov ecx, dword ptr [esp + 0x10] */
+    ecx = vertrix_lift_read(L, esp + 0x10u, 32, 0);
+    /* 4c745b: mov eax, dword ptr [esp + 0x24] */
+    eax = vertrix_lift_read(L, esp + 0x24u, 32, 0);
+    /* 4c745f: mov dword ptr [ecx + 0x14], eax */
+    vertrix_lift_write(L, ecx + 0x14u, 32, eax, ecx);
+L_4c7462:;
+    /* 4c7462: mov esi, dword ptr [esp + 0xb0] */
+    esi = vertrix_lift_read(L, esp + 0xb0u, 32, 0);
+    /* 4c7469: sub esi, dword ptr [esp + 0x60] */
+    a = esi;
+    b = vertrix_lift_read(L, esp + 0x60u, 32, 0) & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    esi = r;
+    /* 4c746d: shl esi, 4 */
+    a = esi;
+    c = 0x4u & 31u;
+    if (c)
+    {
+        r = (a << c) & 0xffffffffu;
+        CF = (a >> (32 - c)) & 1u;
+        OF = ((r & 0x80000000u) != 0) != CF;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        esi = r;
+    }
+    /* 4c7470: imul esi, esi */
+    p = (int64_t)(int32_t)(esi) * (int64_t)(int32_t)(esi);
+    r = (uint32_t)p;
+    CF = OF = p != (int64_t)(int32_t)r;
+    ZF = r == 0;
+    SF = (r >> 31) != 0;
+    esi = r;
+    /* 4c7473: mov edi, dword ptr [esp + 0xb4] */
+    edi = vertrix_lift_read(L, esp + 0xb4u, 32, 0);
+    /* 4c747a: mov ecx, ebx */
+    ecx = ebx;
+    /* 4c747c: sub ecx, edi */
+    a = ecx;
+    b = edi & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    ecx = r;
+    /* 4c747e: lea edx, [ecx*4] */
+    edx = (ecx * 4u);
+    /* 4c7485: sub edx, ecx */
+    a = edx;
+    b = ecx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c7487: shl edx, 2 */
+    a = edx;
+    c = 0x2u & 31u;
+    if (c)
+    {
+        r = (a << c) & 0xffffffffu;
+        CF = (a >> (32 - c)) & 1u;
+        OF = ((r & 0x80000000u) != 0) != CF;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 4c748a: imul edx, edx */
+    p = (int64_t)(int32_t)(edx) * (int64_t)(int32_t)(edx);
+    r = (uint32_t)p;
+    CF = OF = p != (int64_t)(int32_t)r;
+    ZF = r == 0;
+    SF = (r >> 31) != 0;
+    edx = r;
+    /* 4c748d: mov ecx, eax */
+    ecx = eax;
+    /* 4c748f: sub ecx, ebp */
+    a = ecx;
+    b = ebp & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    ecx = r;
+    /* 4c7491: shl ecx, 3 */
+    a = ecx;
+    c = 0x3u & 31u;
+    if (c)
+    {
+        r = (a << c) & 0xffffffffu;
+        CF = (a >> (32 - c)) & 1u;
+        OF = ((r & 0x80000000u) != 0) != CF;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        ecx = r;
+    }
+    /* 4c7494: imul ecx, ecx */
+    p = (int64_t)(int32_t)(ecx) * (int64_t)(int32_t)(ecx);
+    r = (uint32_t)p;
+    CF = OF = p != (int64_t)(int32_t)r;
+    ZF = r == 0;
+    SF = (r >> 31) != 0;
+    ecx = r;
+    /* 4c7497: add edx, esi */
+    a = edx;
+    b = esi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c7499: add edx, ecx */
+    a = edx;
+    b = ecx & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c749b: mov ecx, dword ptr [esp + 0x10] */
+    ecx = vertrix_lift_read(L, esp + 0x10u, 32, 0);
+    /* 4c749f: xor esi, esi */
+    a = esi;
+    b = esi & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    esi = r;
+    /* 4c74a1: mov dword ptr [ecx + 0x18], edx */
+    vertrix_lift_write(L, ecx + 0x18u, 32, edx, ecx);
+    /* 4c74a4: mov edx, dword ptr [esp + 0x60] */
+    edx = vertrix_lift_read(L, esp + 0x60u, 32, 0);
+    /* 4c74a8: mov ecx, dword ptr [esp + 0xb0] */
+    ecx = vertrix_lift_read(L, esp + 0xb0u, 32, 0);
+    /* 4c74af: mov dword ptr [esp + 0x38], edx */
+    vertrix_lift_write(L, esp + 0x38u, 32, edx, 0);
+    /* 4c74b3: cmp edx, ecx */
+    a = edx;
+    b = ecx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c74b5: jg 0x4c7505 */
+    if (!ZF && SF == OF)
+    {
+        goto L_4c7505;
+    }
+    /* 4c74b7: lea edx, [ebp + ebp] */
+    edx = (ebp + ebp);
+    /* 4c74bb: mov dword ptr [esp + 0x6c], edx */
+    vertrix_lift_write(L, esp + 0x6cu, 32, edx, 0);
+    /* 4c74bf: mov edx, dword ptr [esp + 0x60] */
+    edx = vertrix_lift_read(L, esp + 0x60u, 32, 0);
+    /* 4c74c3: mov edi, dword ptr [esp + 0x5c] */
+    edi = vertrix_lift_read(L, esp + 0x5cu, 32, 0);
+    /* 4c74c7: shl edx, 2 */
+    a = edx;
+    c = 0x2u & 31u;
+    if (c)
+    {
+        r = (a << c) & 0xffffffffu;
+        CF = (a >> (32 - c)) & 1u;
+        OF = ((r & 0x80000000u) != 0) != CF;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 4c74ca: add edx, edi */
+    a = edx;
+    b = edi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c74cc: mov dword ptr [esp + 0x3c], edx */
+    vertrix_lift_write(L, esp + 0x3cu, 32, edx, 0);
+L_4c74d0:;
+    /* 4c74d0: mov edx, dword ptr [esp + 0xb4] */
+    edx = vertrix_lift_read(L, esp + 0xb4u, 32, 0);
+    /* 4c74d7: mov dword ptr [esp + 0x8c], edx */
+    vertrix_lift_write(L, esp + 0x8cu, 32, edx, 0);
+    /* 4c74de: cmp ebx, edx */
+    a = ebx;
+    b = edx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c74e0: jge 0x4c77cc */
+    if (SF == OF)
+    {
+        goto L_4c77cc;
+    }
+L_4c74e6:;
+    /* 4c74e6: mov edi, dword ptr [esp + 0x3c] */
+    edi = vertrix_lift_read(L, esp + 0x3cu, 32, 0);
+    /* 4c74ea: mov edx, dword ptr [esp + 0x38] */
+    edx = vertrix_lift_read(L, esp + 0x38u, 32, 0);
+    /* 4c74ee: mov ecx, dword ptr [esp + 0xb0] */
+    ecx = vertrix_lift_read(L, esp + 0xb0u, 32, 0);
+    /* 4c74f5: add edi, 4 */
+    a = edi;
+    b = 0x4u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edi = r;
+    /* 4c74f8: inc edx */
+    a = edx;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    edx = r;
+    /* 4c74f9: mov dword ptr [esp + 0x3c], edi */
+    vertrix_lift_write(L, esp + 0x3cu, 32, edi, 0);
+    /* 4c74fd: mov dword ptr [esp + 0x38], edx */
+    vertrix_lift_write(L, esp + 0x38u, 32, edx, 0);
+    /* 4c7501: cmp edx, ecx */
+    a = edx;
+    b = ecx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c7503: jle 0x4c74d0 */
+    if (ZF || SF != OF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_4c74d0;
+    }
+L_4c7505:;
+    /* 4c7505: mov eax, dword ptr [esp + 0x10] */
+    eax = vertrix_lift_read(L, esp + 0x10u, 32, 0);
+    /* 4c7509: mov dword ptr [eax + 0x1c], esi */
+    vertrix_lift_write(L, eax + 0x1cu, 32, esi, eax);
+    /* 4c750c: add esp, 0xb8 */
+    a = esp;
+    b = 0xb8u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    esp = r;
+    /* 4c7512: pop ebp */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ebp = t;
+    /* 4c7513: pop edi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edi = t;
+    /* 4c7514: pop esi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    esi = t;
+    /* 4c7515: pop ecx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ecx = t;
+    /* 4c7516: pop ebx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ebx = t;
+    /* 4c7517: ret  */
+    return eax;
+L_4c7518:;
+    /* 4c7518: mov dword ptr [esp + 0x48], ecx */
+    vertrix_lift_write(L, esp + 0x48u, 32, ecx, 0);
+    /* 4c751c: cmp ecx, edx */
+    a = ecx;
+    b = edx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c751e: jg 0x4c7142 */
+    if (!ZF && SF == OF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_4c7142;
+    }
+    /* 4c7524: lea edx, [ebp + ebp] */
+    edx = (ebp + ebp);
+    /* 4c7528: mov esi, dword ptr [esp + 0x5c] */
+    esi = vertrix_lift_read(L, esp + 0x5cu, 32, 0);
+    /* 4c752c: mov dword ptr [esp + 0x78], edx */
+    vertrix_lift_write(L, esp + 0x78u, 32, edx, 0);
+    /* 4c7530: lea edx, [ecx*4] */
+    edx = (ecx * 4u);
+    /* 4c7537: add edx, esi */
+    a = edx;
+    b = esi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c7539: mov dword ptr [esp + 0x40], edx */
+    vertrix_lift_write(L, esp + 0x40u, 32, edx, 0);
+L_4c753d:;
+    /* 4c753d: mov edx, dword ptr [esp + 0xb4] */
+    edx = vertrix_lift_read(L, esp + 0xb4u, 32, 0);
+    /* 4c7544: mov dword ptr [esp + 0xac], edx */
+    vertrix_lift_write(L, esp + 0xacu, 32, edx, 0);
+    /* 4c754b: cmp ebx, edx */
+    a = ebx;
+    b = edx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c754d: jl 0x4c7594 */
+    if (SF != OF)
+    {
+        goto L_4c7594;
+    }
+    /* 4c754f: mov ecx, dword ptr [esp + 0x40] */
+    ecx = vertrix_lift_read(L, esp + 0x40u, 32, 0);
+    /* 4c7553: shl edx, 6 */
+    a = edx;
+    c = 0x6u & 31u;
+    if (c)
+    {
+        r = (a << c) & 0xffffffffu;
+        CF = (a >> (32 - c)) & 1u;
+        OF = ((r & 0x80000000u) != 0) != CF;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 4c7556: mov ecx, dword ptr [ecx] */
+    ecx = vertrix_lift_read(L, ecx, 32, ecx);
+    /* 4c7558: add edx, ecx */
+    a = edx;
+    b = ecx & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c755a: mov dword ptr [esp + 0xa4], edx */
+    vertrix_lift_write(L, esp + 0xa4u, 32, edx, 0);
+L_4c7561:;
+    /* 4c7561: mov edx, dword ptr [esp + 0xa4] */
+    edx = vertrix_lift_read(L, esp + 0xa4u, 32, 0);
+    /* 4c7568: mov edi, dword ptr [esp + 0x78] */
+    edi = vertrix_lift_read(L, esp + 0x78u, 32, 0);
+    /* 4c756c: mov ecx, ebp */
+    ecx = ebp;
+    /* 4c756e: add edx, edi */
+    a = edx;
+    b = edi & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c7570: cmp ebp, eax */
+    a = ebp;
+    b = eax & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c7572: jg 0x4c75b8 */
+    if (!ZF && SF == OF)
+    {
+        goto L_4c75b8;
+    }
+L_4c7574:;
+    /* 4c7574: mov esi, edx */
+    esi = edx;
+    /* 4c7576: mov di, word ptr [esi] */
+    edi = (edi & 0xffff0000u) | ((vertrix_lift_read(L, esi, 16, esi)) & 0xffffu);
+    /* 4c7579: add edx, 2 */
+    a = edx;
+    b = 0x2u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c757c: test di, di */
+    a = (edi & 0xffffu);
+    b = (edi & 0xffffu) & 0xffffu;
+    r = (a & b) & 0xffffu;
+    ZF = r == 0;
+    SF = (r & 0x8000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 4c757f: je 0x4c75de */
+    if (ZF)
+    {
+        goto L_4c75de;
+    }
+    /* 4c7581: mov edx, dword ptr [esp + 0x48] */
+    edx = vertrix_lift_read(L, esp + 0x48u, 32, 0);
+    /* 4c7585: mov ecx, dword ptr [esp + 0x10] */
+    ecx = vertrix_lift_read(L, esp + 0x10u, 32, 0);
+    /* 4c7589: mov dword ptr [esp + 0x60], edx */
+    vertrix_lift_write(L, esp + 0x60u, 32, edx, 0);
+    /* 4c758d: mov dword ptr [ecx], edx */
+    vertrix_lift_write(L, ecx, 32, edx, ecx);
+    /* 4c758f: jmp 0x4c7142 */
+    if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+    {
+        L->failed = 1;
+        return 0;
+    }
+    goto L_4c7142;
+L_4c7594:;
+    /* 4c7594: mov edi, dword ptr [esp + 0x40] */
+    edi = vertrix_lift_read(L, esp + 0x40u, 32, 0);
+    /* 4c7598: mov edx, dword ptr [esp + 0x48] */
+    edx = vertrix_lift_read(L, esp + 0x48u, 32, 0);
+    /* 4c759c: mov ecx, dword ptr [esp + 0xb0] */
+    ecx = vertrix_lift_read(L, esp + 0xb0u, 32, 0);
+    /* 4c75a3: add edi, 4 */
+    a = edi;
+    b = 0x4u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edi = r;
+    /* 4c75a6: inc edx */
+    a = edx;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    edx = r;
+    /* 4c75a7: mov dword ptr [esp + 0x40], edi */
+    vertrix_lift_write(L, esp + 0x40u, 32, edi, 0);
+    /* 4c75ab: mov dword ptr [esp + 0x48], edx */
+    vertrix_lift_write(L, esp + 0x48u, 32, edx, 0);
+    /* 4c75af: cmp edx, ecx */
+    a = edx;
+    b = ecx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c75b1: jle 0x4c753d */
+    if (ZF || SF != OF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_4c753d;
+    }
+    /* 4c75b3: jmp 0x4c7142 */
+    if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+    {
+        L->failed = 1;
+        return 0;
+    }
+    goto L_4c7142;
+L_4c75b8:;
+    /* 4c75b8: mov edx, dword ptr [esp + 0xa4] */
+    edx = vertrix_lift_read(L, esp + 0xa4u, 32, 0);
+    /* 4c75bf: mov ecx, dword ptr [esp + 0xac] */
+    ecx = vertrix_lift_read(L, esp + 0xacu, 32, 0);
+    /* 4c75c6: add edx, 0x40 */
+    a = edx;
+    b = 0x40u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c75c9: inc ecx */
+    a = ecx;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    ecx = r;
+    /* 4c75ca: mov dword ptr [esp + 0xa4], edx */
+    vertrix_lift_write(L, esp + 0xa4u, 32, edx, 0);
+    /* 4c75d1: mov dword ptr [esp + 0xac], ecx */
+    vertrix_lift_write(L, esp + 0xacu, 32, ecx, 0);
+    /* 4c75d8: cmp ebx, ecx */
+    a = ebx;
+    b = ecx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c75da: jge 0x4c7561 */
+    if (SF == OF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_4c7561;
+    }
+    /* 4c75dc: jmp 0x4c7594 */
+    if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+    {
+        L->failed = 1;
+        return 0;
+    }
+    goto L_4c7594;
+L_4c75de:;
+    /* 4c75de: inc ecx */
+    a = ecx;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    ecx = r;
+    /* 4c75df: cmp ecx, eax */
+    a = ecx;
+    b = eax & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c75e1: jle 0x4c7574 */
+    if (ZF || SF != OF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_4c7574;
+    }
+    /* 4c75e3: jmp 0x4c75b8 */
+    if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+    {
+        L->failed = 1;
+        return 0;
+    }
+    goto L_4c75b8;
+L_4c75e5:;
+    /* 4c75e5: inc ecx */
+    a = ecx;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    ecx = r;
+    /* 4c75e6: cmp ecx, eax */
+    a = ecx;
+    b = eax & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c75e8: jle 0x4c71ba */
+    if (ZF || SF != OF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_4c71ba;
+    }
+L_4c75ee:;
+    /* 4c75ee: mov edx, dword ptr [esp + 0x90] */
+    edx = vertrix_lift_read(L, esp + 0x90u, 32, 0);
+    /* 4c75f5: mov ecx, dword ptr [esp + 0x9c] */
+    ecx = vertrix_lift_read(L, esp + 0x9cu, 32, 0);
+    /* 4c75fc: add edx, 0x40 */
+    a = edx;
+    b = 0x40u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c75ff: inc ecx */
+    a = ecx;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    ecx = r;
+    /* 4c7600: mov dword ptr [esp + 0x90], edx */
+    vertrix_lift_write(L, esp + 0x90u, 32, edx, 0);
+    /* 4c7607: mov dword ptr [esp + 0x9c], ecx */
+    vertrix_lift_write(L, esp + 0x9cu, 32, ecx, 0);
+    /* 4c760e: cmp ebx, ecx */
+    a = ebx;
+    b = ecx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c7610: jge 0x4c71a3 */
+    if (SF == OF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_4c71a3;
+    }
+L_4c7616:;
+    /* 4c7616: mov edi, dword ptr [esp + 0x34] */
+    edi = vertrix_lift_read(L, esp + 0x34u, 32, 0);
+    /* 4c761a: mov edx, dword ptr [esp + 0x44] */
+    edx = vertrix_lift_read(L, esp + 0x44u, 32, 0);
+    /* 4c761e: mov ecx, dword ptr [esp + 0x60] */
+    ecx = vertrix_lift_read(L, esp + 0x60u, 32, 0);
+    /* 4c7622: sub edi, 4 */
+    a = edi;
+    b = 0x4u & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edi = r;
+    /* 4c7625: dec edx */
+    a = edx;
+    r = (a - 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u - 1u);
+    edx = r;
+    /* 4c7626: mov dword ptr [esp + 0x34], edi */
+    vertrix_lift_write(L, esp + 0x34u, 32, edi, 0);
+    /* 4c762a: mov dword ptr [esp + 0x44], edx */
+    vertrix_lift_write(L, esp + 0x44u, 32, edx, 0);
+    /* 4c762e: cmp edx, ecx */
+    a = edx;
+    b = ecx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c7630: jge 0x4c717b */
+    if (SF == OF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_4c717b;
+    }
+    /* 4c7636: jmp 0x4c71dd */
+    if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+    {
+        L->failed = 1;
+        return 0;
+    }
+    goto L_4c71dd;
+L_4c763b:;
+    /* 4c763b: inc ecx */
+    a = ecx;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    ecx = r;
+    /* 4c763c: cmp ecx, eax */
+    a = ecx;
+    b = eax & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c763e: jle 0x4c726d */
+    if (ZF || SF != OF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_4c726d;
+    }
+L_4c7644:;
+    /* 4c7644: mov edi, dword ptr [esp + 0x94] */
+    edi = vertrix_lift_read(L, esp + 0x94u, 32, 0);
+    /* 4c764b: mov edx, dword ptr [esp + 8] */
+    edx = vertrix_lift_read(L, esp + 0x8u, 32, 0);
+    /* 4c764f: mov ecx, dword ptr [esp + 0xb0] */
+    ecx = vertrix_lift_read(L, esp + 0xb0u, 32, 0);
+    /* 4c7656: add edi, 4 */
+    a = edi;
+    b = 0x4u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edi = r;
+    /* 4c7659: inc edx */
+    a = edx;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    edx = r;
+    /* 4c765a: mov dword ptr [esp + 0x94], edi */
+    vertrix_lift_write(L, esp + 0x94u, 32, edi, 0);
+    /* 4c7661: mov dword ptr [esp + 8], edx */
+    vertrix_lift_write(L, esp + 0x8u, 32, edx, 0);
+    /* 4c7665: cmp edx, ecx */
+    a = edx;
+    b = ecx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c7667: jle 0x4c724b */
+    if (ZF || SF != OF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_4c724b;
+    }
+L_4c766d:;
+    /* 4c766d: mov esi, dword ptr [esp + 0x58] */
+    esi = vertrix_lift_read(L, esp + 0x58u, 32, 0);
+    /* 4c7671: mov edi, dword ptr [esp + 0x30] */
+    edi = vertrix_lift_read(L, esp + 0x30u, 32, 0);
+    /* 4c7675: mov ecx, dword ptr [esp + 0x20] */
+    ecx = vertrix_lift_read(L, esp + 0x20u, 32, 0);
+    /* 4c7679: add esi, 0x40 */
+    a = esi;
+    b = 0x40u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    esi = r;
+    /* 4c767c: inc edi */
+    a = edi;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    edi = r;
+    /* 4c767d: mov dword ptr [esp + 0x58], esi */
+    vertrix_lift_write(L, esp + 0x58u, 32, esi, 0);
+    /* 4c7681: mov dword ptr [esp + 0x30], edi */
+    vertrix_lift_write(L, esp + 0x30u, 32, edi, 0);
+    /* 4c7685: cmp esi, ecx */
+    a = esi;
+    b = ecx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c7687: jle 0x4c7215 */
+    if (ZF || SF != OF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_4c7215;
+    }
+    /* 4c768d: jmp 0x4c7290 */
+    if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+    {
+        L->failed = 1;
+        return 0;
+    }
+    goto L_4c7290;
+L_4c7692:;
+    /* 4c7692: inc edx */
+    a = edx;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    edx = r;
+    /* 4c7693: cmp edx, eax */
+    a = edx;
+    b = eax & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c7695: jle 0x4c7313 */
+    if (ZF || SF != OF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_4c7313;
+    }
+L_4c769b:;
+    /* 4c769b: mov edx, dword ptr [esp + 0xa8] */
+    edx = vertrix_lift_read(L, esp + 0xa8u, 32, 0);
+    /* 4c76a2: mov ecx, dword ptr [esp + 0xc] */
+    ecx = vertrix_lift_read(L, esp + 0xcu, 32, 0);
+    /* 4c76a6: mov esi, dword ptr [esp + 0xb0] */
+    esi = vertrix_lift_read(L, esp + 0xb0u, 32, 0);
+    /* 4c76ad: add edx, 4 */
+    a = edx;
+    b = 0x4u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c76b0: inc ecx */
+    a = ecx;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    ecx = r;
+    /* 4c76b1: mov dword ptr [esp + 0xa8], edx */
+    vertrix_lift_write(L, esp + 0xa8u, 32, edx, 0);
+    /* 4c76b8: mov dword ptr [esp + 0xc], ecx */
+    vertrix_lift_write(L, esp + 0xcu, 32, ecx, 0);
+    /* 4c76bc: cmp ecx, esi */
+    a = ecx;
+    b = esi & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c76be: jle 0x4c72f5 */
+    if (ZF || SF != OF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_4c72f5;
+    }
+L_4c76c4:;
+    /* 4c76c4: mov edx, dword ptr [esp + 0x54] */
+    edx = vertrix_lift_read(L, esp + 0x54u, 32, 0);
+    /* 4c76c8: mov ecx, dword ptr [esp + 0x2c] */
+    ecx = vertrix_lift_read(L, esp + 0x2cu, 32, 0);
+    /* 4c76cc: mov esi, dword ptr [esp + 0x14] */
+    esi = vertrix_lift_read(L, esp + 0x14u, 32, 0);
+    /* 4c76d0: sub edx, 0x40 */
+    a = edx;
+    b = 0x40u & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c76d3: dec ecx */
+    a = ecx;
+    r = (a - 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u - 1u);
+    ecx = r;
+    /* 4c76d4: mov dword ptr [esp + 0x54], edx */
+    vertrix_lift_write(L, esp + 0x54u, 32, edx, 0);
+    /* 4c76d8: mov dword ptr [esp + 0x2c], ecx */
+    vertrix_lift_write(L, esp + 0x2cu, 32, ecx, 0);
+    /* 4c76dc: cmp edx, esi */
+    a = edx;
+    b = esi & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c76de: jge 0x4c72c3 */
+    if (SF == OF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_4c72c3;
+    }
+    /* 4c76e4: jmp 0x4c732f */
+    if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+    {
+        L->failed = 1;
+        return 0;
+    }
+    goto L_4c732f;
+L_4c76e9:;
+    /* 4c76e9: inc edx */
+    a = edx;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    edx = r;
+    /* 4c76ea: add ecx, 0x40 */
+    a = ecx;
+    b = 0x40u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    ecx = r;
+    /* 4c76ed: cmp edx, ebx */
+    a = edx;
+    b = ebx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c76ef: jle 0x4c73b2 */
+    if (ZF || SF != OF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_4c73b2;
+    }
+L_4c76f5:;
+    /* 4c76f5: mov edi, dword ptr [esp + 0xa0] */
+    edi = vertrix_lift_read(L, esp + 0xa0u, 32, 0);
+    /* 4c76fc: mov ecx, dword ptr [esp + 0xb0] */
+    ecx = vertrix_lift_read(L, esp + 0xb0u, 32, 0);
+    /* 4c7703: inc edi */
+    a = edi;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    edi = r;
+    /* 4c7704: add esi, 4 */
+    a = esi;
+    b = 0x4u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    esi = r;
+    /* 4c7707: mov dword ptr [esp + 0xa0], edi */
+    vertrix_lift_write(L, esp + 0xa0u, 32, edi, 0);
+    /* 4c770e: cmp edi, ecx */
+    a = edi;
+    b = ecx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c7710: jle 0x4c7392 */
+    if (ZF || SF != OF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_4c7392;
+    }
+L_4c7716:;
+    /* 4c7716: mov esi, dword ptr [esp + 0x50] */
+    esi = vertrix_lift_read(L, esp + 0x50u, 32, 0);
+    /* 4c771a: mov edi, dword ptr [esp + 0x28] */
+    edi = vertrix_lift_read(L, esp + 0x28u, 32, 0);
+    /* 4c771e: mov ecx, dword ptr [esp + 0x1c] */
+    ecx = vertrix_lift_read(L, esp + 0x1cu, 32, 0);
+    /* 4c7722: add esi, 2 */
+    a = esi;
+    b = 0x2u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    esi = r;
+    /* 4c7725: inc edi */
+    a = edi;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    edi = r;
+    /* 4c7726: mov dword ptr [esp + 0x50], esi */
+    vertrix_lift_write(L, esp + 0x50u, 32, esi, 0);
+    /* 4c772a: mov dword ptr [esp + 0x28], edi */
+    vertrix_lift_write(L, esp + 0x28u, 32, edi, 0);
+    /* 4c772e: cmp esi, ecx */
+    a = esi;
+    b = ecx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c7730: jle 0x4c7360 */
+    if (ZF || SF != OF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_4c7360;
+    }
+    /* 4c7736: jmp 0x4c73c7 */
+    if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+    {
+        L->failed = 1;
+        return 0;
+    }
+    goto L_4c73c7;
+L_4c773b:;
+    /* 4c773b: inc ecx */
+    a = ecx;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    ecx = r;
+    /* 4c773c: add edx, 0x40 */
+    a = edx;
+    b = 0x40u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c773f: cmp ecx, ebx */
+    a = ecx;
+    b = ebx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c7741: jle 0x4c744d */
+    if (ZF || SF != OF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_4c744d;
+    }
+L_4c7747:;
+    /* 4c7747: mov edx, dword ptr [esp + 0x98] */
+    edx = vertrix_lift_read(L, esp + 0x98u, 32, 0);
+    /* 4c774e: mov ecx, dword ptr [esp + 0xb0] */
+    ecx = vertrix_lift_read(L, esp + 0xb0u, 32, 0);
+    /* 4c7755: add edx, 4 */
+    a = edx;
+    b = 0x4u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c7758: inc esi */
+    a = esi;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    esi = r;
+    /* 4c7759: mov dword ptr [esp + 0x98], edx */
+    vertrix_lift_write(L, esp + 0x98u, 32, edx, 0);
+    /* 4c7760: cmp esi, ecx */
+    a = esi;
+    b = ecx & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c7762: jle 0x4c7426 */
+    if (ZF || SF != OF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_4c7426;
+    }
+L_4c7768:;
+    /* 4c7768: mov edx, dword ptr [esp + 0x4c] */
+    edx = vertrix_lift_read(L, esp + 0x4cu, 32, 0);
+    /* 4c776c: mov ecx, dword ptr [esp + 0x24] */
+    ecx = vertrix_lift_read(L, esp + 0x24u, 32, 0);
+    /* 4c7770: mov esi, dword ptr [esp + 0x18] */
+    esi = vertrix_lift_read(L, esp + 0x18u, 32, 0);
+    /* 4c7774: sub edx, 2 */
+    a = edx;
+    b = 0x2u & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c7777: dec ecx */
+    a = ecx;
+    r = (a - 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u - 1u);
+    ecx = r;
+    /* 4c7778: mov dword ptr [esp + 0x4c], edx */
+    vertrix_lift_write(L, esp + 0x4cu, 32, edx, 0);
+    /* 4c777c: mov dword ptr [esp + 0x24], ecx */
+    vertrix_lift_write(L, esp + 0x24u, 32, ecx, 0);
+    /* 4c7780: cmp edx, esi */
+    a = edx;
+    b = esi & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c7782: jge 0x4c73f6 */
+    if (SF == OF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_4c73f6;
+    }
+    /* 4c7788: jmp 0x4c7462 */
+    if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+    {
+        L->failed = 1;
+        return 0;
+    }
+    goto L_4c7462;
+L_4c778d:;
+    /* 4c778d: mov ecx, dword ptr [esp + 4] */
+    ecx = vertrix_lift_read(L, esp + 0x4u, 32, 0);
+    /* 4c7791: mov edi, dword ptr [esp + 0x8c] */
+    edi = vertrix_lift_read(L, esp + 0x8cu, 32, 0);
+    /* 4c7798: add ecx, 0x40 */
+    a = ecx;
+    b = 0x40u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    ecx = r;
+    /* 4c779b: inc edi */
+    a = edi;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    edi = r;
+    /* 4c779c: mov dword ptr [esp + 4], ecx */
+    vertrix_lift_write(L, esp + 0x4u, 32, ecx, 0);
+    /* 4c77a0: mov dword ptr [esp + 0x8c], edi */
+    vertrix_lift_write(L, esp + 0x8cu, 32, edi, 0);
+    /* 4c77a7: cmp ebx, edi */
+    a = ebx;
+    b = edi & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c77a9: jl 0x4c74e6 */
+    if (SF != OF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_4c74e6;
+    }
+L_4c77af:;
+    /* 4c77af: mov edx, dword ptr [esp + 4] */
+    edx = vertrix_lift_read(L, esp + 0x4u, 32, 0);
+    /* 4c77b3: add edx, dword ptr [esp + 0x6c] */
+    a = edx;
+    b = vertrix_lift_read(L, esp + 0x6cu, 32, 0) & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c77b7: mov ecx, ebp */
+    ecx = ebp;
+    /* 4c77b9: cmp ebp, eax */
+    a = ebp;
+    b = eax & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+L_4c77bb:;
+    /* 4c77bb: jg 0x4c778d */
+    if (!ZF && SF == OF)
+    {
+        if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+        {
+            L->failed = 1;
+            return 0;
+        }
+        goto L_4c778d;
+    }
+    /* 4c77bd: cmp word ptr [edx], 0 */
+    a = vertrix_lift_read(L, edx, 16, edx);
+    b = 0x0u & 0xffffu;
+    r = (a - b) & 0xffffu;
+    ZF = r == 0;
+    SF = (r & 0x8000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffu) < ((b) & 0xffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x8000u) != 0;
+    /* 4c77c1: je 0x4c77c4 */
+    if (ZF)
+    {
+        goto L_4c77c4;
+    }
+    /* 4c77c3: inc esi */
+    a = esi;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    esi = r;
+L_4c77c4:;
+    /* 4c77c4: inc ecx */
+    a = ecx;
+    r = (a + 1u) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    OF = (r == 0x80000000u);
+    ecx = r;
+    /* 4c77c5: add edx, 2 */
+    a = edx;
+    b = 0x2u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c77c8: cmp ecx, eax */
+    a = ecx;
+    b = eax & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4c77ca: jmp 0x4c77bb */
+    if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+    {
+        L->failed = 1;
+        return 0;
+    }
+    goto L_4c77bb;
+L_4c77cc:;
+    /* 4c77cc: mov ecx, dword ptr [esp + 0x3c] */
+    ecx = vertrix_lift_read(L, esp + 0x3cu, 32, 0);
+    /* 4c77d0: shl edx, 6 */
+    a = edx;
+    c = 0x6u & 31u;
+    if (c)
+    {
+        r = (a << c) & 0xffffffffu;
+        CF = (a >> (32 - c)) & 1u;
+        OF = ((r & 0x80000000u) != 0) != CF;
+        ZF = r == 0;
+        SF = (r & 0x80000000u) != 0;
+        PF = !__builtin_parity(r & 0xffu);
+        edx = r;
+    }
+    /* 4c77d3: mov ecx, dword ptr [ecx] */
+    ecx = vertrix_lift_read(L, ecx, 32, ecx);
+    /* 4c77d5: add edx, ecx */
+    a = edx;
+    b = ecx & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    edx = r;
+    /* 4c77d7: mov dword ptr [esp + 4], edx */
+    vertrix_lift_write(L, esp + 0x4u, 32, edx, 0);
+    /* 4c77db: jmp 0x4c77af */
+    if (++L->steps > VERTRIX_LIFT_STEP_LIMIT)
+    {
+        L->failed = 1;
+        return 0;
+    }
+    goto L_4c77af;
+}
+
 uint32_t vertrix_lift_4c9b6a(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp)
 {
@@ -294349,6 +307992,212 @@ L_4cd863:;
     goto L_4cd850;
 }
 
+uint32_t vertrix_lift_4cdb70(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
+                             uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp)
+{
+    uint32_t a;
+    uint32_t b;
+    uint32_t c;
+    uint32_t d;
+    uint32_t k;
+    uint32_t r;
+    uint32_t t;
+    uint64_t u;
+    int64_t p;
+    int32_t s;
+    unsigned ZF = 0;
+    unsigned SF = 0;
+    unsigned CF = 0;
+    unsigned OF = 0;
+    unsigned PF = 0;
+    (void)a;
+    (void)b;
+    (void)c;
+    (void)d;
+    (void)k;
+    (void)r;
+    (void)t;
+    (void)u;
+    (void)p;
+    (void)s;
+    (void)ZF;
+    (void)SF;
+    (void)CF;
+    (void)OF;
+    (void)PF;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)L;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esp;
+    /* 4cdb70: push ecx */
+    t = ecx;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4cdb71: push esi */
+    t = esi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4cdb72: push edi */
+    t = edi;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4cdb73: sub esp, 0x14 */
+    a = esp;
+    b = 0x14u & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    esp = r;
+    /* 4cdb76: mov edi, eax */
+    edi = eax;
+    /* 4cdb78: mov esi, edx */
+    esi = edx;
+    /* 4cdb7a: mov eax, esp */
+    eax = esp;
+    /* 4cdb7c: push dword ptr fs:[0] */
+    t = vertrix_lift_read(L, 0x0u, 32, 0);
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4cdb83: pop dword ptr [eax] */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    vertrix_lift_write(L, eax, 32, t, eax);
+    /* 4cdb85: mov dword ptr fs:[0], eax */
+    vertrix_lift_write(L, 0x0u, 32, eax, 0);
+    /* 4cdb8b: mov dword ptr [esp + 4], 0x4ec1ec */
+    vertrix_lift_write(L, esp + 0x4u, 32, 0x4ec1ecu, 0);
+    /* 4cdb93: mov dword ptr [esp + 8], 0x518f60 */
+    vertrix_lift_write(L, esp + 0x8u, 32, 0x518f60u, 0);
+    /* 4cdb9b: mov dword ptr [esp + 0xc], 0 */
+    vertrix_lift_write(L, esp + 0xcu, 32, 0x0u, 0);
+    /* 4cdba3: test ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a & b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    /* 4cdba5: jge 0x4cdbab */
+    if (SF == OF)
+    {
+        goto L_4cdbab;
+    }
+    /* 4cdba7: xor ebx, ebx */
+    a = ebx;
+    b = ebx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ebx = r;
+    /* 4cdba9: jmp 0x4cdbb8 */
+    goto L_4cdbb8;
+L_4cdbab:;
+    /* 4cdbab: mov eax, dword ptr [edi] */
+    eax = vertrix_lift_read(L, edi, 32, edi);
+    /* 4cdbad: sub eax, 0xc */
+    a = eax;
+    b = 0xcu & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    eax = r;
+    /* 4cdbb0: cmp ebx, dword ptr [eax + 4] */
+    a = ebx;
+    b = vertrix_lift_read(L, eax + 0x4u, 32, eax) & 0xffffffffu;
+    r = (a - b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = ((a) & 0xffffffffu) < ((b) & 0xffffffffu);
+    OF = ((((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    /* 4cdbb3: jle 0x4cdbb8 */
+    if (ZF || SF != OF)
+    {
+        goto L_4cdbb8;
+    }
+    /* 4cdbb5: mov ebx, dword ptr [eax + 4] */
+    ebx = vertrix_lift_read(L, eax + 0x4u, 32, eax);
+L_4cdbb8:;
+    /* 4cdbb8: mov eax, esi */
+    eax = esi;
+    /* 4cdbba: call 0x4ca070 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4cdbbfu, 0);
+    eax = vertrix_lift_call(L, 0x4ca070, eax, edx, ebx, ecx, esp, 0);
+    esp += 0u;
+    if (L->failed)
+        return 0;
+    /* 4cdbbf: mov edx, esi */
+    edx = esi;
+    /* 4cdbc1: push 0 */
+    t = 0x0u;
+    esp -= 4;
+    vertrix_lift_write(L, esp, 32, t, 0);
+    /* 4cdbc3: xor ecx, ecx */
+    a = ecx;
+    b = ecx & 0xffffffffu;
+    r = (a ^ b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = 0;
+    OF = 0;
+    ecx = r;
+    /* 4cdbc5: mov eax, edi */
+    eax = edi;
+    /* 4cdbc7: call 0x4ca240 */
+    vertrix_lift_write(L, esp - 4u, 32, 0x4cdbccu, 0);
+    eax = vertrix_lift_call(L, 0x4ca240, eax, edx, ebx, ecx, esp, 1);
+    esp += 4u;
+    if (L->failed)
+        return 0;
+    /* 4cdbcc: mov eax, dword ptr [esp] */
+    eax = vertrix_lift_read(L, esp, 32, 0);
+    /* 4cdbcf: mov dword ptr fs:[0], eax */
+    vertrix_lift_write(L, 0x0u, 32, eax, 0);
+    /* 4cdbd5: mov eax, esi */
+    eax = esi;
+    /* 4cdbd7: add esp, 0x14 */
+    a = esp;
+    b = 0x14u & 0xffffffffu;
+    r = (a + b) & 0xffffffffu;
+    ZF = r == 0;
+    SF = (r & 0x80000000u) != 0;
+    PF = !__builtin_parity(r & 0xffu);
+    CF = (uint64_t)(a) + (uint64_t)(b) > (uint64_t)0xffffffffu;
+    OF = ((~((a) ^ (b)) & ((a) ^ r)) & 0x80000000u) != 0;
+    esp = r;
+    /* 4cdbda: pop edi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    edi = t;
+    /* 4cdbdb: pop esi */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    esi = t;
+    /* 4cdbdc: pop ecx */
+    t = vertrix_lift_read(L, esp, 32, 0);
+    esp += 4;
+    ecx = t;
+    /* 4cdbdd: ret  */
+    return eax;
+}
+
 uint32_t vertrix_lift_4cea15(LiftContext *L, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                              uint32_t esi, uint32_t edi, uint32_t ebp, uint32_t esp)
 {
@@ -294679,7 +308528,8 @@ static const struct
     {0x4112d0, vertrix_lift_4112d0}, {0x4120a0, vertrix_lift_4120a0},
     {0x4122f0, vertrix_lift_4122f0}, {0x412390, vertrix_lift_412390},
     {0x412430, vertrix_lift_412430}, {0x412510, vertrix_lift_412510},
-    {0x4125e0, vertrix_lift_4125e0}, {0x4138b0, vertrix_lift_4138b0},
+    {0x4125e0, vertrix_lift_4125e0}, {0x412650, vertrix_lift_412650},
+    {0x412690, vertrix_lift_412690}, {0x4138b0, vertrix_lift_4138b0},
     {0x413a40, vertrix_lift_413a40}, {0x413bd0, vertrix_lift_413bd0},
     {0x414a90, vertrix_lift_414a90}, {0x414b10, vertrix_lift_414b10},
     {0x414b90, vertrix_lift_414b90}, {0x415330, vertrix_lift_415330},
@@ -294727,53 +308577,54 @@ static const struct
     {0x41e5e0, vertrix_lift_41e5e0}, {0x423d70, vertrix_lift_423d70},
     {0x423dc0, vertrix_lift_423dc0}, {0x423ea0, vertrix_lift_423ea0},
     {0x425ae0, vertrix_lift_425ae0}, {0x425de0, vertrix_lift_425de0},
-    {0x425f40, vertrix_lift_425f40}, {0x427850, vertrix_lift_427850},
-    {0x4279b0, vertrix_lift_4279b0}, {0x429530, vertrix_lift_429530},
-    {0x429600, vertrix_lift_429600}, {0x429880, vertrix_lift_429880},
-    {0x42a310, vertrix_lift_42a310}, {0x42a540, vertrix_lift_42a540},
-    {0x42a8b0, vertrix_lift_42a8b0}, {0x42a8e0, vertrix_lift_42a8e0},
-    {0x42a960, vertrix_lift_42a960}, {0x42a970, vertrix_lift_42a970},
-    {0x42a9d0, vertrix_lift_42a9d0}, {0x42aa20, vertrix_lift_42aa20},
-    {0x42aab0, vertrix_lift_42aab0}, {0x42acf0, vertrix_lift_42acf0},
-    {0x42af30, vertrix_lift_42af30}, {0x42af80, vertrix_lift_42af80},
-    {0x42b000, vertrix_lift_42b000}, {0x42b050, vertrix_lift_42b050},
-    {0x42b070, vertrix_lift_42b070}, {0x42b0f0, vertrix_lift_42b0f0},
-    {0x42b110, vertrix_lift_42b110}, {0x42b150, vertrix_lift_42b150},
-    {0x42b370, vertrix_lift_42b370}, {0x42b5c0, vertrix_lift_42b5c0},
-    {0x42b6b0, vertrix_lift_42b6b0}, {0x42ba70, vertrix_lift_42ba70},
-    {0x42bab0, vertrix_lift_42bab0}, {0x42ebc0, vertrix_lift_42ebc0},
-    {0x42ebe0, vertrix_lift_42ebe0}, {0x42ec00, vertrix_lift_42ec00},
-    {0x42ec20, vertrix_lift_42ec20}, {0x42ec40, vertrix_lift_42ec40},
-    {0x42ec60, vertrix_lift_42ec60}, {0x42ec80, vertrix_lift_42ec80},
-    {0x42eca0, vertrix_lift_42eca0}, {0x42ecc0, vertrix_lift_42ecc0},
-    {0x42ed40, vertrix_lift_42ed40}, {0x42ed70, vertrix_lift_42ed70},
-    {0x42eda0, vertrix_lift_42eda0}, {0x42edf0, vertrix_lift_42edf0},
-    {0x42eee0, vertrix_lift_42eee0}, {0x42ef00, vertrix_lift_42ef00},
-    {0x42ef10, vertrix_lift_42ef10}, {0x42ef20, vertrix_lift_42ef20},
-    {0x42ef30, vertrix_lift_42ef30}, {0x42ef40, vertrix_lift_42ef40},
-    {0x42ef50, vertrix_lift_42ef50}, {0x42ef60, vertrix_lift_42ef60},
-    {0x42ef80, vertrix_lift_42ef80}, {0x42f3d0, vertrix_lift_42f3d0},
-    {0x42f410, vertrix_lift_42f410}, {0x42f7d0, vertrix_lift_42f7d0},
-    {0x42f7f0, vertrix_lift_42f7f0}, {0x42f810, vertrix_lift_42f810},
-    {0x42f830, vertrix_lift_42f830}, {0x42f850, vertrix_lift_42f850},
-    {0x42f860, vertrix_lift_42f860}, {0x42f870, vertrix_lift_42f870},
-    {0x42f880, vertrix_lift_42f880}, {0x42f890, vertrix_lift_42f890},
-    {0x42f8a0, vertrix_lift_42f8a0}, {0x42f8b0, vertrix_lift_42f8b0},
-    {0x42f8e0, vertrix_lift_42f8e0}, {0x430850, vertrix_lift_430850},
-    {0x431180, vertrix_lift_431180}, {0x4311a0, vertrix_lift_4311a0},
-    {0x4311c0, vertrix_lift_4311c0}, {0x431280, vertrix_lift_431280},
-    {0x431390, vertrix_lift_431390}, {0x4314a0, vertrix_lift_4314a0},
-    {0x431b80, vertrix_lift_431b80}, {0x431d60, vertrix_lift_431d60},
-    {0x432110, vertrix_lift_432110}, {0x432160, vertrix_lift_432160},
-    {0x4321b0, vertrix_lift_4321b0}, {0x4323d0, vertrix_lift_4323d0},
-    {0x432980, vertrix_lift_432980}, {0x432a30, vertrix_lift_432a30},
-    {0x432c00, vertrix_lift_432c00}, {0x433840, vertrix_lift_433840},
-    {0x433e20, vertrix_lift_433e20}, {0x4344e0, vertrix_lift_4344e0},
-    {0x4387b0, vertrix_lift_4387b0}, {0x438b90, vertrix_lift_438b90},
-    {0x438c60, vertrix_lift_438c60}, {0x438cd0, vertrix_lift_438cd0},
-    {0x438dd0, vertrix_lift_438dd0}, {0x438ef0, vertrix_lift_438ef0},
-    {0x439080, vertrix_lift_439080}, {0x439140, vertrix_lift_439140},
-    {0x439190, vertrix_lift_439190}, {0x439510, vertrix_lift_439510},
+    {0x425f40, vertrix_lift_425f40}, {0x425f60, vertrix_lift_425f60},
+    {0x427850, vertrix_lift_427850}, {0x4279b0, vertrix_lift_4279b0},
+    {0x429530, vertrix_lift_429530}, {0x429600, vertrix_lift_429600},
+    {0x429880, vertrix_lift_429880}, {0x42a310, vertrix_lift_42a310},
+    {0x42a540, vertrix_lift_42a540}, {0x42a8b0, vertrix_lift_42a8b0},
+    {0x42a8e0, vertrix_lift_42a8e0}, {0x42a960, vertrix_lift_42a960},
+    {0x42a970, vertrix_lift_42a970}, {0x42a9d0, vertrix_lift_42a9d0},
+    {0x42aa20, vertrix_lift_42aa20}, {0x42aab0, vertrix_lift_42aab0},
+    {0x42acf0, vertrix_lift_42acf0}, {0x42af30, vertrix_lift_42af30},
+    {0x42af80, vertrix_lift_42af80}, {0x42b000, vertrix_lift_42b000},
+    {0x42b050, vertrix_lift_42b050}, {0x42b070, vertrix_lift_42b070},
+    {0x42b0f0, vertrix_lift_42b0f0}, {0x42b110, vertrix_lift_42b110},
+    {0x42b150, vertrix_lift_42b150}, {0x42b370, vertrix_lift_42b370},
+    {0x42b5c0, vertrix_lift_42b5c0}, {0x42b6b0, vertrix_lift_42b6b0},
+    {0x42ba70, vertrix_lift_42ba70}, {0x42bab0, vertrix_lift_42bab0},
+    {0x42ebc0, vertrix_lift_42ebc0}, {0x42ebe0, vertrix_lift_42ebe0},
+    {0x42ec00, vertrix_lift_42ec00}, {0x42ec20, vertrix_lift_42ec20},
+    {0x42ec40, vertrix_lift_42ec40}, {0x42ec60, vertrix_lift_42ec60},
+    {0x42ec80, vertrix_lift_42ec80}, {0x42eca0, vertrix_lift_42eca0},
+    {0x42ecc0, vertrix_lift_42ecc0}, {0x42ed40, vertrix_lift_42ed40},
+    {0x42ed70, vertrix_lift_42ed70}, {0x42eda0, vertrix_lift_42eda0},
+    {0x42edf0, vertrix_lift_42edf0}, {0x42eee0, vertrix_lift_42eee0},
+    {0x42ef00, vertrix_lift_42ef00}, {0x42ef10, vertrix_lift_42ef10},
+    {0x42ef20, vertrix_lift_42ef20}, {0x42ef30, vertrix_lift_42ef30},
+    {0x42ef40, vertrix_lift_42ef40}, {0x42ef50, vertrix_lift_42ef50},
+    {0x42ef60, vertrix_lift_42ef60}, {0x42ef80, vertrix_lift_42ef80},
+    {0x42f3d0, vertrix_lift_42f3d0}, {0x42f410, vertrix_lift_42f410},
+    {0x42f7d0, vertrix_lift_42f7d0}, {0x42f7f0, vertrix_lift_42f7f0},
+    {0x42f810, vertrix_lift_42f810}, {0x42f830, vertrix_lift_42f830},
+    {0x42f850, vertrix_lift_42f850}, {0x42f860, vertrix_lift_42f860},
+    {0x42f870, vertrix_lift_42f870}, {0x42f880, vertrix_lift_42f880},
+    {0x42f890, vertrix_lift_42f890}, {0x42f8a0, vertrix_lift_42f8a0},
+    {0x42f8b0, vertrix_lift_42f8b0}, {0x42f8e0, vertrix_lift_42f8e0},
+    {0x430850, vertrix_lift_430850}, {0x431180, vertrix_lift_431180},
+    {0x4311a0, vertrix_lift_4311a0}, {0x4311c0, vertrix_lift_4311c0},
+    {0x431280, vertrix_lift_431280}, {0x431390, vertrix_lift_431390},
+    {0x4314a0, vertrix_lift_4314a0}, {0x431b80, vertrix_lift_431b80},
+    {0x431d60, vertrix_lift_431d60}, {0x432110, vertrix_lift_432110},
+    {0x432160, vertrix_lift_432160}, {0x4321b0, vertrix_lift_4321b0},
+    {0x4323d0, vertrix_lift_4323d0}, {0x432980, vertrix_lift_432980},
+    {0x432a30, vertrix_lift_432a30}, {0x432c00, vertrix_lift_432c00},
+    {0x433840, vertrix_lift_433840}, {0x433e20, vertrix_lift_433e20},
+    {0x4344e0, vertrix_lift_4344e0}, {0x4387b0, vertrix_lift_4387b0},
+    {0x438b90, vertrix_lift_438b90}, {0x438c60, vertrix_lift_438c60},
+    {0x438cd0, vertrix_lift_438cd0}, {0x438dd0, vertrix_lift_438dd0},
+    {0x438ef0, vertrix_lift_438ef0}, {0x439080, vertrix_lift_439080},
+    {0x439140, vertrix_lift_439140}, {0x439190, vertrix_lift_439190},
+    {0x4393f0, vertrix_lift_4393f0}, {0x439510, vertrix_lift_439510},
     {0x439690, vertrix_lift_439690}, {0x4398c0, vertrix_lift_4398c0},
     {0x43a6f0, vertrix_lift_43a6f0}, {0x43ab60, vertrix_lift_43ab60},
     {0x43abd0, vertrix_lift_43abd0}, {0x43ad70, vertrix_lift_43ad70},
@@ -294859,50 +308710,51 @@ static const struct
     {0x461360, vertrix_lift_461360}, {0x4614c0, vertrix_lift_4614c0},
     {0x461610, vertrix_lift_461610}, {0x461790, vertrix_lift_461790},
     {0x4657f0, vertrix_lift_4657f0}, {0x465a70, vertrix_lift_465a70},
-    {0x466d60, vertrix_lift_466d60}, {0x469480, vertrix_lift_469480},
-    {0x46a410, vertrix_lift_46a410}, {0x46a9c0, vertrix_lift_46a9c0},
-    {0x46b800, vertrix_lift_46b800}, {0x46b810, vertrix_lift_46b810},
-    {0x46c500, vertrix_lift_46c500}, {0x46c5d0, vertrix_lift_46c5d0},
-    {0x46f440, vertrix_lift_46f440}, {0x470960, vertrix_lift_470960},
-    {0x470b20, vertrix_lift_470b20}, {0x470d20, vertrix_lift_470d20},
-    {0x471020, vertrix_lift_471020}, {0x4711a0, vertrix_lift_4711a0},
-    {0x471340, vertrix_lift_471340}, {0x4713c0, vertrix_lift_4713c0},
-    {0x4717f0, vertrix_lift_4717f0}, {0x471820, vertrix_lift_471820},
-    {0x4718a0, vertrix_lift_4718a0}, {0x471920, vertrix_lift_471920},
-    {0x471940, vertrix_lift_471940}, {0x471960, vertrix_lift_471960},
-    {0x471980, vertrix_lift_471980}, {0x4719a0, vertrix_lift_4719a0},
-    {0x4719e0, vertrix_lift_4719e0}, {0x4719f0, vertrix_lift_4719f0},
-    {0x471a20, vertrix_lift_471a20}, {0x471a40, vertrix_lift_471a40},
-    {0x471a50, vertrix_lift_471a50}, {0x471a60, vertrix_lift_471a60},
-    {0x471a90, vertrix_lift_471a90}, {0x471aa0, vertrix_lift_471aa0},
-    {0x471ab0, vertrix_lift_471ab0}, {0x471ad0, vertrix_lift_471ad0},
-    {0x471ae0, vertrix_lift_471ae0}, {0x471af0, vertrix_lift_471af0},
-    {0x471b10, vertrix_lift_471b10}, {0x471b20, vertrix_lift_471b20},
-    {0x471b30, vertrix_lift_471b30}, {0x471b50, vertrix_lift_471b50},
-    {0x471b60, vertrix_lift_471b60}, {0x471b70, vertrix_lift_471b70},
-    {0x471b90, vertrix_lift_471b90}, {0x471ba0, vertrix_lift_471ba0},
-    {0x471c40, vertrix_lift_471c40}, {0x471c90, vertrix_lift_471c90},
-    {0x471cd0, vertrix_lift_471cd0}, {0x471d10, vertrix_lift_471d10},
-    {0x471d50, vertrix_lift_471d50}, {0x471ee0, vertrix_lift_471ee0},
-    {0x472020, vertrix_lift_472020}, {0x472090, vertrix_lift_472090},
-    {0x472100, vertrix_lift_472100}, {0x472170, vertrix_lift_472170},
-    {0x4721e0, vertrix_lift_4721e0}, {0x472250, vertrix_lift_472250},
-    {0x4722c0, vertrix_lift_4722c0}, {0x472330, vertrix_lift_472330},
-    {0x472360, vertrix_lift_472360}, {0x4723a0, vertrix_lift_4723a0},
-    {0x472440, vertrix_lift_472440}, {0x472460, vertrix_lift_472460},
-    {0x472620, vertrix_lift_472620}, {0x4726d0, vertrix_lift_4726d0},
-    {0x472ad0, vertrix_lift_472ad0}, {0x472bd0, vertrix_lift_472bd0},
-    {0x472d50, vertrix_lift_472d50}, {0x472d90, vertrix_lift_472d90},
-    {0x472db0, vertrix_lift_472db0}, {0x473490, vertrix_lift_473490},
-    {0x473cd0, vertrix_lift_473cd0}, {0x473f10, vertrix_lift_473f10},
-    {0x473fc0, vertrix_lift_473fc0}, {0x4741a0, vertrix_lift_4741a0},
-    {0x474490, vertrix_lift_474490}, {0x474540, vertrix_lift_474540},
-    {0x474e00, vertrix_lift_474e00}, {0x4754e0, vertrix_lift_4754e0},
-    {0x475510, vertrix_lift_475510}, {0x4756d0, vertrix_lift_4756d0},
-    {0x475700, vertrix_lift_475700}, {0x475790, vertrix_lift_475790},
-    {0x4757e0, vertrix_lift_4757e0}, {0x475840, vertrix_lift_475840},
-    {0x475b20, vertrix_lift_475b20}, {0x475b80, vertrix_lift_475b80},
-    {0x475be0, vertrix_lift_475be0}, {0x475de0, vertrix_lift_475de0},
+    {0x465af0, vertrix_lift_465af0}, {0x466d60, vertrix_lift_466d60},
+    {0x469480, vertrix_lift_469480}, {0x46a410, vertrix_lift_46a410},
+    {0x46a9c0, vertrix_lift_46a9c0}, {0x46b800, vertrix_lift_46b800},
+    {0x46b810, vertrix_lift_46b810}, {0x46c500, vertrix_lift_46c500},
+    {0x46c5d0, vertrix_lift_46c5d0}, {0x46f440, vertrix_lift_46f440},
+    {0x470960, vertrix_lift_470960}, {0x470b20, vertrix_lift_470b20},
+    {0x470d20, vertrix_lift_470d20}, {0x471020, vertrix_lift_471020},
+    {0x4711a0, vertrix_lift_4711a0}, {0x471340, vertrix_lift_471340},
+    {0x4713c0, vertrix_lift_4713c0}, {0x4717f0, vertrix_lift_4717f0},
+    {0x471820, vertrix_lift_471820}, {0x4718a0, vertrix_lift_4718a0},
+    {0x471920, vertrix_lift_471920}, {0x471940, vertrix_lift_471940},
+    {0x471960, vertrix_lift_471960}, {0x471980, vertrix_lift_471980},
+    {0x4719a0, vertrix_lift_4719a0}, {0x4719e0, vertrix_lift_4719e0},
+    {0x4719f0, vertrix_lift_4719f0}, {0x471a20, vertrix_lift_471a20},
+    {0x471a40, vertrix_lift_471a40}, {0x471a50, vertrix_lift_471a50},
+    {0x471a60, vertrix_lift_471a60}, {0x471a90, vertrix_lift_471a90},
+    {0x471aa0, vertrix_lift_471aa0}, {0x471ab0, vertrix_lift_471ab0},
+    {0x471ad0, vertrix_lift_471ad0}, {0x471ae0, vertrix_lift_471ae0},
+    {0x471af0, vertrix_lift_471af0}, {0x471b10, vertrix_lift_471b10},
+    {0x471b20, vertrix_lift_471b20}, {0x471b30, vertrix_lift_471b30},
+    {0x471b50, vertrix_lift_471b50}, {0x471b60, vertrix_lift_471b60},
+    {0x471b70, vertrix_lift_471b70}, {0x471b90, vertrix_lift_471b90},
+    {0x471ba0, vertrix_lift_471ba0}, {0x471c40, vertrix_lift_471c40},
+    {0x471c90, vertrix_lift_471c90}, {0x471cd0, vertrix_lift_471cd0},
+    {0x471d10, vertrix_lift_471d10}, {0x471d50, vertrix_lift_471d50},
+    {0x471ee0, vertrix_lift_471ee0}, {0x472020, vertrix_lift_472020},
+    {0x472090, vertrix_lift_472090}, {0x472100, vertrix_lift_472100},
+    {0x472170, vertrix_lift_472170}, {0x4721e0, vertrix_lift_4721e0},
+    {0x472250, vertrix_lift_472250}, {0x4722c0, vertrix_lift_4722c0},
+    {0x472330, vertrix_lift_472330}, {0x472360, vertrix_lift_472360},
+    {0x4723a0, vertrix_lift_4723a0}, {0x472440, vertrix_lift_472440},
+    {0x472460, vertrix_lift_472460}, {0x472620, vertrix_lift_472620},
+    {0x4726d0, vertrix_lift_4726d0}, {0x472ad0, vertrix_lift_472ad0},
+    {0x472bd0, vertrix_lift_472bd0}, {0x472d50, vertrix_lift_472d50},
+    {0x472d90, vertrix_lift_472d90}, {0x472db0, vertrix_lift_472db0},
+    {0x473490, vertrix_lift_473490}, {0x473cd0, vertrix_lift_473cd0},
+    {0x473f10, vertrix_lift_473f10}, {0x473fc0, vertrix_lift_473fc0},
+    {0x4741a0, vertrix_lift_4741a0}, {0x474490, vertrix_lift_474490},
+    {0x474540, vertrix_lift_474540}, {0x474e00, vertrix_lift_474e00},
+    {0x4754e0, vertrix_lift_4754e0}, {0x475510, vertrix_lift_475510},
+    {0x4756d0, vertrix_lift_4756d0}, {0x475700, vertrix_lift_475700},
+    {0x475790, vertrix_lift_475790}, {0x4757e0, vertrix_lift_4757e0},
+    {0x475840, vertrix_lift_475840}, {0x475b20, vertrix_lift_475b20},
+    {0x475b80, vertrix_lift_475b80}, {0x475be0, vertrix_lift_475be0},
+    {0x475c80, vertrix_lift_475c80}, {0x475de0, vertrix_lift_475de0},
     {0x475e30, vertrix_lift_475e30}, {0x476400, vertrix_lift_476400},
     {0x476440, vertrix_lift_476440}, {0x476480, vertrix_lift_476480},
     {0x4764d0, vertrix_lift_4764d0}, {0x476500, vertrix_lift_476500},
@@ -294939,56 +308791,58 @@ static const struct
     {0x47e780, vertrix_lift_47e780}, {0x47ed30, vertrix_lift_47ed30},
     {0x47f160, vertrix_lift_47f160}, {0x47f320, vertrix_lift_47f320},
     {0x47f370, vertrix_lift_47f370}, {0x47f3d0, vertrix_lift_47f3d0},
-    {0x47f750, vertrix_lift_47f750}, {0x47f770, vertrix_lift_47f770},
-    {0x47f9e0, vertrix_lift_47f9e0}, {0x47fa20, vertrix_lift_47fa20},
-    {0x47fa40, vertrix_lift_47fa40}, {0x47fa90, vertrix_lift_47fa90},
-    {0x47fce0, vertrix_lift_47fce0}, {0x47fe20, vertrix_lift_47fe20},
-    {0x47fe50, vertrix_lift_47fe50}, {0x480990, vertrix_lift_480990},
-    {0x480b20, vertrix_lift_480b20}, {0x480ff0, vertrix_lift_480ff0},
-    {0x481340, vertrix_lift_481340}, {0x481460, vertrix_lift_481460},
-    {0x4816f0, vertrix_lift_4816f0}, {0x481b30, vertrix_lift_481b30},
-    {0x481e10, vertrix_lift_481e10}, {0x4823b0, vertrix_lift_4823b0},
-    {0x482550, vertrix_lift_482550}, {0x4826c0, vertrix_lift_4826c0},
-    {0x4827c0, vertrix_lift_4827c0}, {0x482860, vertrix_lift_482860},
-    {0x4828f0, vertrix_lift_4828f0}, {0x482930, vertrix_lift_482930},
-    {0x4829c0, vertrix_lift_4829c0}, {0x482a60, vertrix_lift_482a60},
-    {0x482aa0, vertrix_lift_482aa0}, {0x482b40, vertrix_lift_482b40},
+    {0x47f4b0, vertrix_lift_47f4b0}, {0x47f750, vertrix_lift_47f750},
+    {0x47f770, vertrix_lift_47f770}, {0x47f9e0, vertrix_lift_47f9e0},
+    {0x47fa20, vertrix_lift_47fa20}, {0x47fa40, vertrix_lift_47fa40},
+    {0x47fa90, vertrix_lift_47fa90}, {0x47fce0, vertrix_lift_47fce0},
+    {0x47fe20, vertrix_lift_47fe20}, {0x47fe50, vertrix_lift_47fe50},
+    {0x480990, vertrix_lift_480990}, {0x480b20, vertrix_lift_480b20},
+    {0x480ff0, vertrix_lift_480ff0}, {0x481340, vertrix_lift_481340},
+    {0x481460, vertrix_lift_481460}, {0x4816f0, vertrix_lift_4816f0},
+    {0x481b30, vertrix_lift_481b30}, {0x481e10, vertrix_lift_481e10},
+    {0x4823b0, vertrix_lift_4823b0}, {0x482550, vertrix_lift_482550},
+    {0x4826c0, vertrix_lift_4826c0}, {0x4827c0, vertrix_lift_4827c0},
+    {0x482860, vertrix_lift_482860}, {0x4828f0, vertrix_lift_4828f0},
+    {0x482930, vertrix_lift_482930}, {0x4829c0, vertrix_lift_4829c0},
+    {0x482a60, vertrix_lift_482a60}, {0x482aa0, vertrix_lift_482aa0},
+    {0x482b40, vertrix_lift_482b40}, {0x482d00, vertrix_lift_482d00},
     {0x482f80, vertrix_lift_482f80}, {0x4830f0, vertrix_lift_4830f0},
-    {0x483790, vertrix_lift_483790}, {0x484550, vertrix_lift_484550},
-    {0x4845d0, vertrix_lift_4845d0}, {0x484680, vertrix_lift_484680},
-    {0x484700, vertrix_lift_484700}, {0x4848f0, vertrix_lift_4848f0},
-    {0x4856d0, vertrix_lift_4856d0}, {0x485700, vertrix_lift_485700},
-    {0x4872f0, vertrix_lift_4872f0}, {0x487750, vertrix_lift_487750},
-    {0x487790, vertrix_lift_487790}, {0x4877d0, vertrix_lift_4877d0},
-    {0x487860, vertrix_lift_487860}, {0x487920, vertrix_lift_487920},
-    {0x4879f0, vertrix_lift_4879f0}, {0x487a10, vertrix_lift_487a10},
-    {0x487be0, vertrix_lift_487be0}, {0x487df0, vertrix_lift_487df0},
-    {0x488050, vertrix_lift_488050}, {0x489170, vertrix_lift_489170},
-    {0x489230, vertrix_lift_489230}, {0x4893c0, vertrix_lift_4893c0},
-    {0x489790, vertrix_lift_489790}, {0x489950, vertrix_lift_489950},
-    {0x489b40, vertrix_lift_489b40}, {0x489fa0, vertrix_lift_489fa0},
-    {0x48a100, vertrix_lift_48a100}, {0x48a2d0, vertrix_lift_48a2d0},
-    {0x48ac00, vertrix_lift_48ac00}, {0x48ac50, vertrix_lift_48ac50},
-    {0x48ad00, vertrix_lift_48ad00}, {0x48ae00, vertrix_lift_48ae00},
-    {0x48b240, vertrix_lift_48b240}, {0x48b770, vertrix_lift_48b770},
-    {0x48c390, vertrix_lift_48c390}, {0x48c3b0, vertrix_lift_48c3b0},
-    {0x48c3d0, vertrix_lift_48c3d0}, {0x48c460, vertrix_lift_48c460},
-    {0x48c480, vertrix_lift_48c480}, {0x48c610, vertrix_lift_48c610},
-    {0x48c9d0, vertrix_lift_48c9d0}, {0x48c9f0, vertrix_lift_48c9f0},
-    {0x48d530, vertrix_lift_48d530}, {0x48d600, vertrix_lift_48d600},
-    {0x48d620, vertrix_lift_48d620}, {0x48d6c0, vertrix_lift_48d6c0},
-    {0x4ac1c0, vertrix_lift_4ac1c0}, {0x4ac1e0, vertrix_lift_4ac1e0},
-    {0x4ac250, vertrix_lift_4ac250}, {0x4ac2b0, vertrix_lift_4ac2b0},
-    {0x4ac590, vertrix_lift_4ac590}, {0x4ac610, vertrix_lift_4ac610},
-    {0x4accc0, vertrix_lift_4accc0}, {0x4acd30, vertrix_lift_4acd30},
-    {0x4ad2c0, vertrix_lift_4ad2c0}, {0x4ad630, vertrix_lift_4ad630},
-    {0x4ad870, vertrix_lift_4ad870}, {0x4adf70, vertrix_lift_4adf70},
-    {0x4adfa0, vertrix_lift_4adfa0}, {0x4adfb0, vertrix_lift_4adfb0},
-    {0x4adfe0, vertrix_lift_4adfe0}, {0x4ae110, vertrix_lift_4ae110},
-    {0x4ae150, vertrix_lift_4ae150}, {0x4ae1f0, vertrix_lift_4ae1f0},
-    {0x4af8c0, vertrix_lift_4af8c0}, {0x4b0b70, vertrix_lift_4b0b70},
-    {0x4b17b0, vertrix_lift_4b17b0}, {0x4b17e0, vertrix_lift_4b17e0},
-    {0x4b2300, vertrix_lift_4b2300}, {0x4b2340, vertrix_lift_4b2340},
+    {0x483110, vertrix_lift_483110}, {0x483790, vertrix_lift_483790},
+    {0x484550, vertrix_lift_484550}, {0x4845d0, vertrix_lift_4845d0},
+    {0x484680, vertrix_lift_484680}, {0x484700, vertrix_lift_484700},
+    {0x4848f0, vertrix_lift_4848f0}, {0x4856d0, vertrix_lift_4856d0},
+    {0x485700, vertrix_lift_485700}, {0x4872f0, vertrix_lift_4872f0},
+    {0x487750, vertrix_lift_487750}, {0x487790, vertrix_lift_487790},
+    {0x4877d0, vertrix_lift_4877d0}, {0x487860, vertrix_lift_487860},
+    {0x487920, vertrix_lift_487920}, {0x4879f0, vertrix_lift_4879f0},
+    {0x487a10, vertrix_lift_487a10}, {0x487be0, vertrix_lift_487be0},
+    {0x487df0, vertrix_lift_487df0}, {0x488050, vertrix_lift_488050},
+    {0x489170, vertrix_lift_489170}, {0x489230, vertrix_lift_489230},
+    {0x4893c0, vertrix_lift_4893c0}, {0x489790, vertrix_lift_489790},
+    {0x489950, vertrix_lift_489950}, {0x489b40, vertrix_lift_489b40},
+    {0x489fa0, vertrix_lift_489fa0}, {0x48a100, vertrix_lift_48a100},
+    {0x48a2d0, vertrix_lift_48a2d0}, {0x48ac00, vertrix_lift_48ac00},
+    {0x48ac50, vertrix_lift_48ac50}, {0x48ad00, vertrix_lift_48ad00},
+    {0x48ae00, vertrix_lift_48ae00}, {0x48b240, vertrix_lift_48b240},
+    {0x48b770, vertrix_lift_48b770}, {0x48c390, vertrix_lift_48c390},
+    {0x48c3b0, vertrix_lift_48c3b0}, {0x48c3d0, vertrix_lift_48c3d0},
+    {0x48c460, vertrix_lift_48c460}, {0x48c480, vertrix_lift_48c480},
+    {0x48c610, vertrix_lift_48c610}, {0x48c9d0, vertrix_lift_48c9d0},
+    {0x48c9f0, vertrix_lift_48c9f0}, {0x48d530, vertrix_lift_48d530},
+    {0x48d600, vertrix_lift_48d600}, {0x48d620, vertrix_lift_48d620},
+    {0x48d6c0, vertrix_lift_48d6c0}, {0x4ac1c0, vertrix_lift_4ac1c0},
+    {0x4ac1e0, vertrix_lift_4ac1e0}, {0x4ac250, vertrix_lift_4ac250},
+    {0x4ac2b0, vertrix_lift_4ac2b0}, {0x4ac590, vertrix_lift_4ac590},
+    {0x4ac610, vertrix_lift_4ac610}, {0x4accc0, vertrix_lift_4accc0},
+    {0x4acd30, vertrix_lift_4acd30}, {0x4ad2c0, vertrix_lift_4ad2c0},
+    {0x4ad630, vertrix_lift_4ad630}, {0x4ad870, vertrix_lift_4ad870},
+    {0x4adf70, vertrix_lift_4adf70}, {0x4adfa0, vertrix_lift_4adfa0},
+    {0x4adfb0, vertrix_lift_4adfb0}, {0x4adfe0, vertrix_lift_4adfe0},
+    {0x4ae110, vertrix_lift_4ae110}, {0x4ae150, vertrix_lift_4ae150},
+    {0x4ae1f0, vertrix_lift_4ae1f0}, {0x4af8c0, vertrix_lift_4af8c0},
+    {0x4b0b70, vertrix_lift_4b0b70}, {0x4b17b0, vertrix_lift_4b17b0},
+    {0x4b17e0, vertrix_lift_4b17e0}, {0x4b2300, vertrix_lift_4b2300},
+    {0x4b2340, vertrix_lift_4b2340}, {0x4b2a00, vertrix_lift_4b2a00},
     {0x4b2d90, vertrix_lift_4b2d90}, {0x4b3100, vertrix_lift_4b3100},
     {0x4b3140, vertrix_lift_4b3140}, {0x4b3210, vertrix_lift_4b3210},
     {0x4b3340, vertrix_lift_4b3340}, {0x4b3390, vertrix_lift_4b3390},
@@ -295008,9 +308862,10 @@ static const struct
     {0x4b9330, vertrix_lift_4b9330}, {0x4b9c20, vertrix_lift_4b9c20},
     {0x4b9cf0, vertrix_lift_4b9cf0}, {0x4bc050, vertrix_lift_4bc050},
     {0x4c5400, vertrix_lift_4c5400}, {0x4c5a40, vertrix_lift_4c5a40},
-    {0x4c5bb0, vertrix_lift_4c5bb0}, {0x4c9b6a, vertrix_lift_4c9b6a},
-    {0x4ca060, vertrix_lift_4ca060}, {0x4ca5a0, vertrix_lift_4ca5a0},
-    {0x4cd847, vertrix_lift_4cd847}, {0x4cea15, vertrix_lift_4cea15},
+    {0x4c5bb0, vertrix_lift_4c5bb0}, {0x4c70f0, vertrix_lift_4c70f0},
+    {0x4c9b6a, vertrix_lift_4c9b6a}, {0x4ca060, vertrix_lift_4ca060},
+    {0x4ca5a0, vertrix_lift_4ca5a0}, {0x4cd847, vertrix_lift_4cd847},
+    {0x4cdb70, vertrix_lift_4cdb70}, {0x4cea15, vertrix_lift_4cea15},
     {0x4cf880, vertrix_lift_4cf880},
 };
 
