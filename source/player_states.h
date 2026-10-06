@@ -128,4 +128,23 @@ uint32_t vertrix_state_advance_452770(const VertrixCalls *calls,
 uint32_t vertrix_state_pair_453050(const VertrixCalls *calls,
                                    const VertrixFactoryServices *services,
                                    const VertrixGlobals *globals, uint32_t player);
+
+/* Original 0x453320 (eax = player; ebx and ecx are the caller's registers). 0x43c0e0 plays the
+ * sound dword 0x4f81ac on the opponent (+0x3b0), 0x436aa0 takes the dword +0x3dc for the player's
+ * board and the opponent's, 0x436d80 (edx = the opponent's board, ebx = +0x3dc, ecx = +0x43c,
+ * stack +0x440) combines them, then the handler 0x4533b0 is set and the board's virtual call
+ * runs. */
+uint32_t vertrix_state_combine_453320(const VertrixCalls *calls,
+                                      const VertrixFactoryServices *services,
+                                      const VertrixGlobals *globals, uint32_t player, uint32_t ebx,
+                                      uint32_t ecx);
+
+/* Original 0x4533b0 (eax = player). The board (+0x15c) and the opponent's board answer 0x42eca0
+ * and 0x42ecc0 about the descriptor 0x44c860 (board, board, opponent's, opponent's); a zero ends
+ * the check. When all hold 0x42ebe0 runs on both boards (the second with ebx = 1) and the flag is
+ * set. The board's virtual call follows with ebx = the board's table; a set flag ends with
+ * 0x43bbf0 on the player and the opponent. */
+uint32_t vertrix_state_pair_4533b0(const VertrixCalls *calls,
+                                   const VertrixFactoryServices *services,
+                                   const VertrixGlobals *globals, uint32_t player);
 #endif

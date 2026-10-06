@@ -186,3 +186,21 @@ run_screen('state-pair-453050', 0x453050, ['player_states.c'], 'vertrix_state_pa
            U, PAIR, pair_case, TEXT,
            **{**MORE, 'choices': {0x42eca0: [1, 1, 1, 0], 0x42ecc0: [1, 1, 1, 0],
                                   0x42edf0: [1, 0, 1, 1, 0]}})
+
+
+COMBINE = {address: 0 for address in (0x43c0e0, 0x436aa0, 0x4ac8f0, LEAF)}
+COMBINE[0x436d80] = 1
+
+
+def combine_case(rng, pool, cpu):
+    player, ebx, ecx = rng.choice(pool.handles), rng.getrandbits(32), rng.getrandbits(32)
+    return {'eax': player, 'ebx': ebx, 'ecx': ecx}, (), (player, ebx, ecx)
+
+
+run_screen('state-combine-453320', 0x453320, ['player_states.c'], 'vertrix_state_combine_453320',
+           [U, U, U], U, COMBINE, combine_case, TEXT, **MORE)
+
+
+run_screen('state-pair-4533b0', 0x4533b0, ['player_states.c'], 'vertrix_state_pair_4533b0', [U],
+           U, PAIR, pair_case, TEXT,
+           **{**MORE, 'choices': {0x42eca0: [1, 1, 1, 0], 0x42ecc0: [1, 1, 1, 0]}})
