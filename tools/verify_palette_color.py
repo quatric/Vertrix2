@@ -33,11 +33,11 @@ def main():
         output = (c.c_uint16 * 3)()
         assert native.vertrix_palette_color(h, s, v, output) == 1
         assert tuple(output) == expected, (case, (h, s, v), tuple(output), expected)
-        try:
-            original.call(0x474cd0)
-        except RuntimeError:
-            original.cpu.emu_start(original.cpu.reg_read(UC_X86_REG_EIP), 0x700000, count=100_000_000)
-        assert original.cpu.reg_read(UC_X86_REG_EIP) == 0x700000
+    try:
+        original.call(0x474cd0)
+    except RuntimeError:
+        original.cpu.emu_start(original.cpu.reg_read(UC_X86_REG_EIP), 0x700000, count=100_000_000)
+    assert original.cpu.reg_read(UC_X86_REG_EIP) == 0x700000
     channels = c.create_string_buffer(201 * 101)
     assert native.vertrix_palette_channels(channels, len(channels)) == 1
     expected_channels = bytes(original.cpu.mem_read(0x5468b0, len(channels)))

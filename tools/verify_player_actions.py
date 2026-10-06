@@ -101,8 +101,8 @@ def main():
                 assert changed.value == result & 0xff, (case, name, result)
             else:
                 assert function(pool.buffers[player], SIZE, pool.resolve, None)
-                assert pool.same(), (case, name, pool.diff())
-                count('0x%x' % address)
+            assert pool.same(), (case, name, pool.diff())
+            count('0x%x' % address)
         fresh()
         struct.pack_into('<I', pool.buffers[player], 0x488, rng.randrange(0, 4))
         cpu.mem_write(player, bytes(pool.buffers[player].raw))

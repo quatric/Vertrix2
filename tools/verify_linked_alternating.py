@@ -64,8 +64,8 @@ def main():
         state.phase = rng.choice([0, 1, 2, 0xffffffff])
         if case % 12 == 1:
             state.y = state.target_y
-            if case % 12 == 3:
-                state.effect = state.effect_target
+        if case % 12 == 3:
+            state.effect = state.effect_target
         for name in ['primary', 'secondary']:
             setattr(state, name, Timer(rng.getrandbits(32), rng.choice([0, 1, 100, 0xffffffff])))
         state.animation = Animation(Timer(rng.getrandbits(32), rng.getrandbits(32)), rng.randrange(4), 4)

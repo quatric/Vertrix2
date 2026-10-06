@@ -41,13 +41,13 @@ def main():
         assert cpu.reg_read(UC_X86_REG_EAX) == MASK
         if kind == 0:
             value = (value - 36) & 0xffffffff
-            if kind in (2, 6):
-                value = 0
-                events.append((kind, value))
-                stack = cpu.reg_read(UC_X86_REG_ESP)
-                target = struct.unpack('<I', cpu.mem_read(stack, 4))[0]
-                cpu.reg_write(UC_X86_REG_ESP, stack + 4)
-                cpu.reg_write(UC_X86_REG_EIP, target)
+        if kind in (2, 6):
+            value = 0
+        events.append((kind, value))
+        stack = cpu.reg_read(UC_X86_REG_ESP)
+        target = struct.unpack('<I', cpu.mem_read(stack, 4))[0]
+        cpu.reg_write(UC_X86_REG_ESP, stack + 4)
+        cpu.reg_write(UC_X86_REG_EIP, target)
     hooks = [original.cpu.hook_add(UC_HOOK_CODE, capture, begin=a, end=a) for a in addresses]
     effects = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 25, 29, 30, 33, 18, 19, 21, 22, 23, 24, 26, 28, 31, 32, 34, 36, 255)
     for index in range(sequences):

@@ -38,9 +38,9 @@ def main():
         target = struct.unpack('<I', cpu.mem_read(stack, 4))[0]
         cpu.reg_write(UC_X86_REG_ESP, stack + 4)
         cpu.reg_write(UC_X86_REG_EIP, target)
-        o.cpu.hook_add(UC_HOOK_CODE, measure, begin=0x4b14c0, end=0x4b14c0)
-        rng = random.Random(0x430930)
-        comparisons = 0
+    o.cpu.hook_add(UC_HOOK_CODE, measure, begin=0x4b14c0, end=0x4b14c0)
+    rng = random.Random(0x430930)
+    comparisons = 0
     for case in range(512):
         scene = Scene()
         raw = bytearray(0xd00)
@@ -67,8 +67,8 @@ def main():
             struct.pack_into('<h', data, 22, obj.y)
             data[0x44] = obj.mode
             o.cpu.mem_write(handle, bytes(data))
-            o.cpu.mem_write(BOARD, bytes(raw))
-            o.call(0x430930, eax=BOARD)
+        o.cpu.mem_write(BOARD, bytes(raw))
+        o.call(0x430930, eax=BOARD)
         assert n.vertrix_scene_layout(c.byref(scene), ox, oy, resolve, None)
         for handle, obj in objects.items():
             x = struct.unpack('<h', o.cpu.mem_read(handle + 14, 2))[0]

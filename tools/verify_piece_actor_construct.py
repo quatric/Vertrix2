@@ -79,12 +79,12 @@ def main():
             assert parent.raw == bytes(cpu.mem_read(0x800000, len(raw))), case
             for i, address in enumerate(addresses):
                 assert children.raw[i * 0x15c: (i + 1) * 0x15c] == bytes(cpu.mem_read(address, 0x15c)), (case, i)
-                children_checked += count
-                before = parent.raw, children.raw
-                assert not construct(parent, 0x18b, children, len(child_raw), frames, handles, side, difficulty, level, spacing)
-                assert not construct(parent, len(raw), children, len(child_raw), frames, handles, side, 3, level, spacing)
-                assert not placed(parent, len(raw), children, len(child_raw), frames, handles, side, difficulty, level, None)
-                assert (parent.raw, children.raw) == before
+            children_checked += count
+            before = parent.raw, children.raw
+            assert not construct(parent, 0x18b, children, len(child_raw), frames, handles, side, difficulty, level, spacing)
+            assert not construct(parent, len(raw), children, len(child_raw), frames, handles, side, 3, level, spacing)
+            assert not placed(parent, len(raw), children, len(child_raw), frames, handles, side, difficulty, level, None)
+            assert (parent.raw, children.raw) == before
     finally:
         cpu.hook_del(hook)
     report = {'status': 'passed', 'complete_original_piece_construction_cases': 512, 'constructed_children': children_checked, 'failure_preservation_cases': 1536, 'runtime_placement_cases': 256, 'default_placement_cases': 256, 'scope': 'Complete42acf0 with only heap allocation supplied. Parent/child bytes ' 'match original count scan, default/runtime placement globals, all difficulty/level ' 'timing, clipping, child construction and parent handles. Zero counts and ' 'sentinel gaps covered. Resource publication ' 'and full player/game-loop/Wii execution remain separate.'}

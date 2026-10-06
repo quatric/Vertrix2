@@ -60,19 +60,19 @@ def main():
                 expected[0:: 4], expected[2:: 4] = payload[2:: 4], payload[0:: 4]
                 frame = SpriteFrame()
                 assert native.vertrix_image_sprite(archive, name, frame_index, ctypes.byref(frame)), (name, frame_index)
-            try:
-                assert (frame.image.width, frame.image.height, frame.frame_count) == (width, height, count)
-                assert tuple(frame.metadata) == struct.unpack_from("<10I", header, 8)
-                actual = ctypes.string_at(frame.image.rgba, len(expected))
-                assert actual == expected
-                saved = bytes(frame)
-                assert not native.vertrix_image_sprite(archive, name, frame_index, ctypes.byref(frame))
-                assert bytes(frame) == saved
-                pixels += width * height
-                frames.append({"name": name.decode("cp1252"), "frame": frame_index, "rgba_sha256": hashlib.sha256(actual).hexdigest()})
-            finally:
-                native.vertrix_sprite_free(ctypes.byref(frame))
-                assert bytes(frame) == bytes(ctypes.sizeof(frame))
+                try:
+                    assert (frame.image.width, frame.image.height, frame.frame_count) == (width, height, count)
+                    assert tuple(frame.metadata) == struct.unpack_from("<10I", header, 8)
+                    actual = ctypes.string_at(frame.image.rgba, len(expected))
+                    assert actual == expected
+                    saved = bytes(frame)
+                    assert not native.vertrix_image_sprite(archive, name, frame_index, ctypes.byref(frame))
+                    assert bytes(frame) == saved
+                    pixels += width * height
+                    frames.append({"name": name.decode("cp1252"), "frame": frame_index, "rgba_sha256": hashlib.sha256(actual).hexdigest()})
+                finally:
+                    native.vertrix_sprite_free(ctypes.byref(frame))
+                    assert bytes(frame) == bytes(ctypes.sizeof(frame))
             assert cursor == len(blob)
             assert not native.vertrix_image_sprite(archive, name, count, ctypes.byref(SpriteFrame()))
     finally:

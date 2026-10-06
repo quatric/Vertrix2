@@ -40,11 +40,11 @@ def main():
             events.append(('tempo', value))
         else:
             events.append(('register', value))
-            stack = cpu.reg_read(UC_X86_REG_ESP)
-            target = struct.unpack('<I', cpu.mem_read(stack, 4))[0]
-            cpu.reg_write(UC_X86_REG_ESP, stack + 4)
-            cpu.reg_write(UC_X86_REG_EIP, target)
-            cpu.reg_write(UC_X86_REG_EAX, 0)
+        stack = cpu.reg_read(UC_X86_REG_ESP)
+        target = struct.unpack('<I', cpu.mem_read(stack, 4))[0]
+        cpu.reg_write(UC_X86_REG_ESP, stack + 4)
+        cpu.reg_write(UC_X86_REG_EIP, target)
+        cpu.reg_write(UC_X86_REG_EAX, 0)
     hooks = [original.cpu.hook_add(UC_HOOK_CODE, capture, begin=a, end=a) for a in addresses]
     cases = 4000
     success = active = invalid = 0

@@ -48,19 +48,19 @@ def main():
             fill = rng.randbytes(32)
             cpu.mem_write(BUFFER, fill)
             calls.clear()
-        native.clear()
-        buffer = (c.c_uint8 * 32).from_buffer_copy(fill)
-        ptr = c.cast(buffer, B)
-        if fixed is None:
-            result = original.call(address, eax=BUFFER, edx=count)
-            got = n.vertrix_file_read_exact(file, ptr, count, read, None)
-        else:
-            result = original.call(address, eax=BUFFER)
-            got = getattr(n, 'vertrix_file_read_' + name)(file, ptr, read, None)
+            native.clear()
+            buffer = (c.c_uint8 * 32).from_buffer_copy(fill)
+            ptr = c.cast(buffer, B)
+            if fixed is None:
+                result = original.call(address, eax=BUFFER, edx=count)
+                got = n.vertrix_file_read_exact(file, ptr, count, read, None)
+            else:
+                result = original.call(address, eax=BUFFER)
+                got = getattr(n, 'vertrix_file_read_' + name)(file, ptr, read, None)
             assert result == got == 0, (case, address)
             assert calls == native, (case, address)
             assert bytes(buffer) == bytes(cpu.mem_read(BUFFER, 32)), (case, address)
             totals[hex(address)] = totals.get(hex(address), 0) + 1
-            common.report(args, 'file-reads', totals, 'Complete 40c360 (byte-swapped word), 40c220, 40c260, 40c2a0, 40c2e0 and 40c320 run in the original with the real ' '4eb5c0 zero fill; the runtime read 4ebec0 is a data-driven stub (full and short ' 'reads). Read arguments and the whole buffer compare.')
+    common.report(args, 'file-reads', totals, 'Complete 40c360 (byte-swapped word), 40c220, 40c260, 40c2a0, 40c2e0 and 40c320 run in the original with the real ' '4eb5c0 zero fill; the runtime read 4ebec0 is a data-driven stub (full and short ' 'reads). Read arguments and the whole buffer compare.')
 if __name__ == '__main__':
     main()

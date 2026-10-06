@@ -111,12 +111,12 @@ def main():
         first = nodes[0] if nodes else 0
         for entry in (0x4ade60, 0x4ae140):
             events.clear()
-        native.clear()
-        original.call(entry, eax=first, edx=arg)
-        assert n.vertrix_actor_chain_walk(first, arg, visit_a, visit_b, follow, None)
-        assert events == native, (case, events, native)
-        totals['chain'] += 1
-        totals['chain_nodes'] += count
+            native.clear()
+            original.call(entry, eax=first, edx=arg)
+            assert n.vertrix_actor_chain_walk(first, arg, visit_a, visit_b, follow, None)
+            assert events == native, (case, events, native)
+            totals['chain'] += 1
+            totals['chain_nodes'] += count
         links[NODES] = NODES
         native.clear()
         assert not n.vertrix_actor_chain_walk(NODES, 0, visit_a, visit_b, follow, None)

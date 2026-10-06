@@ -19,7 +19,7 @@ def main():
     n = build(args.build_dir, 'actor-value-steps', ['actor_value_steps.c', 'actor_storage.c'])
     n.vertrix_step_toward.argtypes = [c.c_int32] * 4
     n.vertrix_step_toward.restype = c.c_int32
-    n.vertrix_actor_progress_quotient.argtypes = [c.c_void_p, c.c_size_t, c.POINTER(U)]
+    n.vertrix_actor_step_quotient.argtypes = [c.c_void_p, c.c_size_t, c.POINTER(U)]
     n.vertrix_actor_consume_progress.argtypes = [c.c_void_p, c.c_size_t]
     for name in ('randomize_period', 'randomize_d0'):
         getattr(n, 'vertrix_actor_' + name).argtypes = [c.c_void_p, c.c_size_t, Draw, c.c_void_p]
@@ -104,7 +104,7 @@ def main():
 # 4ac3b0
         result, _ = run(0x4ac3b0)
         out = U()
-        assert n.vertrix_actor_progress_quotient(fresh(), SIZE, c.byref(out)) and out.value == result, case
+        assert n.vertrix_actor_step_quotient(fresh(), SIZE, c.byref(out)) and out.value == result, case
         count('progress_quotient')
 # 4ac420 : no return contract(falls off with residue in eax), so only
 #the whole object compares.

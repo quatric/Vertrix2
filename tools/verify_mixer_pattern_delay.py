@@ -35,14 +35,14 @@ def main():
                 expected = (struct.unpack("<I", original.cpu.mem_read(0x531B78, 4))[0], original.cpu.mem_read(0x531B44, 1)[0])
                 delay = ctypes.c_uint32(prior_delay)
                 flags = ctypes.c_uint8(prior_flags)
-            assert native.vertrix_mixer_pattern_delay(parameter, tick, ctypes.byref(delay), ctypes.byref(flags))
-            assert (delay.value, flags.value) == expected
-            assert bytes(original.cpu.mem_read(BOARD, 192)) == bytes(data)
-            cases += 1
-            before = (delay.value, flags.value)
-            assert not native.vertrix_mixer_pattern_delay(0xd0, 0, ctypes.byref(delay), ctypes.byref(flags)) and (delay.value, flags.value) == before
-            assert not native.vertrix_mixer_pattern_delay(0xe0, 0, None, ctypes.byref(flags))
-            assert not native.vertrix_mixer_pattern_delay(0xe0, 0, ctypes.byref(delay), None)
+                assert native.vertrix_mixer_pattern_delay(parameter, tick, ctypes.byref(delay), ctypes.byref(flags))
+                assert (delay.value, flags.value) == expected
+                assert bytes(original.cpu.mem_read(BOARD, 192)) == bytes(data)
+                cases += 1
+                before = (delay.value, flags.value)
+                assert not native.vertrix_mixer_pattern_delay(0xd0, 0, ctypes.byref(delay), ctypes.byref(flags)) and (delay.value, flags.value) == before
+                assert not native.vertrix_mixer_pattern_delay(0xe0, 0, None, ctypes.byref(flags))
+                assert not native.vertrix_mixer_pattern_delay(0xe0, 0, ctypes.byref(delay), None)
     report = {"status": "passed", "effect_cases": cases, "scope": "Full original extended dispatcher selecting case 14. Exhaustive low nibbles/prior " "sequencer flags at ticks 0/1/-1, random pending delays, channel preservation. " "Excludes pending-delay consumption and full sequencing."}
     (build / "mixer-pattern-delay-verification.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report, indent=2))

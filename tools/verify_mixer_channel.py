@@ -61,11 +61,11 @@ def main():
                 samples = (ctypes.c_uint8 * len(data)).from_buffer_copy(data)
                 output = (ctypes.c_int32 * values)(* existing)
                 state = Channel(Cursor(position, 16 << 12, 64 << 12, flags), step, volume, pan, last)
-            assert native.vertrix_mixer_channel(samples, len(data), 255, stereo, interpolate, ctypes.byref(state), output, frames, values), (stereo, interpolate, index)
-            assert bytes(output) == expected, (stereo, interpolate, index, "audio")
-            assert (state.cursor.position, state.cursor.flags, state.step, state.last) == (struct.unpack_from("<I", final, 4)[0], final[22], struct.unpack_from("<I", final, 8)[0], final[23]), (stereo, interpolate, index, "state")
-            cases += 1
-            total += frames
+                assert native.vertrix_mixer_channel(samples, len(data), 255, stereo, interpolate, ctypes.byref(state), output, frames, values), (stereo, interpolate, index)
+                assert bytes(output) == expected, (stereo, interpolate, index, "audio")
+                assert (state.cursor.position, state.cursor.flags, state.step, state.last) == (struct.unpack_from("<I", final, 4)[0], final[22], struct.unpack_from("<I", final, 8)[0], final[23]), (stereo, interpolate, index, "state")
+                cases += 1
+                total += frames
     report = {"status": "passed", "channel_cases": cases, "frames": total, "scope": "Complete original 0x40c460 channel traversal, all eight kernel modes, forward/reverse, " "nonloop/forward-loop/ping-pong, repeated crossings and stopping. Output and final " "position/flags/step/cache match. Music scheduling and output delivery excluded."}
     (build / "mixer-channel-verification.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report, indent=2))

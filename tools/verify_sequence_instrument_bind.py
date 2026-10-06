@@ -54,9 +54,9 @@ def main():
                 try:
                     for sample in range(metadata.samples):
                         assert native.vertrix_xm_sample_load(vf, name, index, sample, ctypes.byref(samples[sample]))
-                        assert native.vertrix_sequence_instrument_bind(ctypes.byref(metadata), samples, metadata.samples, first, ctypes.byref(output))
-                        base = ctypes.addressof(output)
-                        trigger = output.instrument.trigger
+                    assert native.vertrix_sequence_instrument_bind(ctypes.byref(metadata), samples, metadata.samples, first, ctypes.byref(output))
+                    base = ctypes.addressof(output)
+                    trigger = output.instrument.trigger
                     assert address(trigger.mapping) == base + Storage.mapping.offset and bytes(output.mapping) == bytes(metadata.mapping)
                     assert address(trigger.samples) == base + Storage.pitches.offset
                     assert trigger.count == metadata.samples and trigger.fade == metadata.fade and trigger.volume == metadata.volume.flags and trigger.pan == metadata.pan.flags
@@ -78,11 +78,11 @@ def main():
                         assert address(view.points) == base + getattr(Storage, points).offset and view.storage == 12
                         assert (view.count, view.flags, view.sustain, view.start, view.end) == (original.count, original.flags, original.sustain, original.start, original.end)
                         assert bytes(getattr(output, points)) == bytes(original.points)
-                        prior = bytes(output)
-                        assert not native.vertrix_sequence_instrument_bind(ctypes.byref(metadata), samples, metadata.samples + 1, first, ctypes.byref(output)) and bytes(output) == prior
-                        first += metadata.samples
-                        samples_checked += metadata.samples
-                        instruments += 1
+                    prior = bytes(output)
+                    assert not native.vertrix_sequence_instrument_bind(ctypes.byref(metadata), samples, metadata.samples + 1, first, ctypes.byref(output)) and bytes(output) == prior
+                    first += metadata.samples
+                    samples_checked += metadata.samples
+                    instruments += 1
                 finally:
                     for sample in samples:
                         native.vertrix_xm_sample_free(ctypes.byref(sample))

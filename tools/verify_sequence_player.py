@@ -39,11 +39,11 @@ def main():
     o.cpu.mem_map(0x2020000, 0x10000)
     def write(address, value):
         o.cpu.mem_write(address, struct.pack('<I', value))
-        write(0x52f910, 0x2000000)
-        write(0x52f914, 0x2020000)
-        write(0x52fc2c, 1)
-        write(0x52f044, 0x40cd30)
-        write(0x52f048, 0x40cd40)
+    write(0x52f910, 0x2000000)
+    write(0x52f914, 0x2020000)
+    write(0x52fc2c, 1)
+    write(0x52f044, 0x40cd30)
+    write(0x52f048, 0x40cd40)
     for addr, target in zip(range(0x52f060, 0x52f07c, 4), (0x40c9d0, 0x40ca70, 0x40caa0, 0x40cad0, 0x40cb10, 0x40cb70, 0x40cbb0)):
         write(addr, target)
     slots = []
@@ -56,9 +56,9 @@ def main():
         cpu.reg_write(UC_X86_REG_ESP, stack + 4)
         cpu.reg_write(UC_X86_REG_EIP, target)
         cpu.reg_write(UC_X86_REG_EAX, 0)
-        o.cpu.hook_add(UC_HOOK_CODE, allocate, begin=0x40acf0, end=0x40acf0)
-        songs = []
-        total = 0
+    o.cpu.hook_add(UC_HOOK_CODE, allocate, begin=0x40acf0, end=0x40acf0)
+    songs = []
+    total = 0
     for index, path in enumerate(sorted(a.music.glob('*.xm'))):
         vf = n.vertrix_vf_open(str(a.archive.resolve()).encode())
         assert vf
@@ -129,7 +129,8 @@ def main():
             n.vertrix_sequence_player_free(player)
             n.vertrix_sequence_module_free(module)
     report = {'status': 'passed', 'modules': len(songs), 'buffers': len(songs) * a.buffers, 'pcm_values': total, 'encoded_pcm': a.encoded, 'songs': songs, 'scope': 'Exact original 0x40c5c0 scheduler, real tempo setter and tick callback; VF-backed native player compared across varying buffer sizes. Optional encoding executes original 0x401010/0x401054. Only original mixer slot allocation intercepted. Hardware audio and whole game integration remain unverified.'}
-    filename = 'sequence-player-pcm-verification.json' if a.encoded else 'sequence-player-verification.json' (a.build_dir / filename).write_text(json.dumps(report, indent=2) + '\n')
+    filename = 'sequence-player-pcm-verification.json' if a.encoded else 'sequence-player-verification.json'
+    (a.build_dir / filename).write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps({k: v for k, v in report.items() if k != 'songs'}, indent=2))
 if __name__ == '__main__':
     main()

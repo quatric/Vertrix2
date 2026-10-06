@@ -157,25 +157,25 @@ def main():
             assert not native.vertrix_player_piece_release(player, len(player_raw), resolve, None, destroy, None)
             assert player.raw == before
 #release preview
-            player = c.create_string_buffer(bytes(player_raw), len(player_raw))
-            cpu.mem_write(PLAYER, bytes(player_raw))
-            preview = bytearray(rng.randbytes(0x1a0))
-            struct.pack_into('<I', preview, 0x158, VTABLE)
-            actors[PARENT] = c.create_string_buffer(bytes(preview), len(preview))
-            cpu.mem_write(PARENT, bytes(preview))
-            player_raw2 = bytearray(player_raw)
-            struct.pack_into('<I', player_raw2, 0xb70, 0 if case % 3 == 0 else PARENT)
-            player = c.create_string_buffer(bytes(player_raw2), len(player_raw2))
-            cpu.mem_write(PLAYER, bytes(player_raw2))
-            destroyed.clear()
-            destroyed_native.clear()
-            original.call(0x432110, eax=PLAYER)
-            assert native.vertrix_player_preview_release(player, len(player_raw2), resolve, None, destroy, None)
-            assert player.raw == bytes(cpu.mem_read(PLAYER, len(player_raw2))), case
-            empty_preview = case % 3 == 0
-            assert destroyed == ([] if empty_preview else [(PARENT, 2)])
-            assert destroyed_native == ([] if empty_preview else [PARENT])
-            counts['preview_empty' if empty_preview else 'preview'] += 1
+        player = c.create_string_buffer(bytes(player_raw), len(player_raw))
+        cpu.mem_write(PLAYER, bytes(player_raw))
+        preview = bytearray(rng.randbytes(0x1a0))
+        struct.pack_into('<I', preview, 0x158, VTABLE)
+        actors[PARENT] = c.create_string_buffer(bytes(preview), len(preview))
+        cpu.mem_write(PARENT, bytes(preview))
+        player_raw2 = bytearray(player_raw)
+        struct.pack_into('<I', player_raw2, 0xb70, 0 if case % 3 == 0 else PARENT)
+        player = c.create_string_buffer(bytes(player_raw2), len(player_raw2))
+        cpu.mem_write(PLAYER, bytes(player_raw2))
+        destroyed.clear()
+        destroyed_native.clear()
+        original.call(0x432110, eax=PLAYER)
+        assert native.vertrix_player_preview_release(player, len(player_raw2), resolve, None, destroy, None)
+        assert player.raw == bytes(cpu.mem_read(PLAYER, len(player_raw2))), case
+        empty_preview = case % 3 == 0
+        assert destroyed == ([] if empty_preview else [(PARENT, 2)])
+        assert destroyed_native == ([] if empty_preview else [PARENT])
+        counts['preview_empty' if empty_preview else 'preview'] += 1
     report = {'status': 'passed', 'cases': 2048, ** counts, 'scope': 'Complete 432160, 4321b0 and 432110 execute in the original with heap allocation ' 'and the virtual destructor supplied as boundaries (identity and flag-2 argument ' 'asserted). Whole player, parent and child storage compare. Destructor bodies, ' 'preview construction 4320d0/42b6b0 and game-loop integration remain separate.'}
     (build / 'player-piece-verification.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))

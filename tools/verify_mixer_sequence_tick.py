@@ -32,10 +32,10 @@ def main():
             rows.append(1)
         else:
             tempos.append(cpu.reg_read(UC_X86_REG_EAX))
-            stack = cpu.reg_read(UC_X86_REG_ESP)
-            target = struct.unpack('<I', cpu.mem_read(stack, 4))[0]
-            cpu.reg_write(UC_X86_REG_ESP, stack + 4)
-            cpu.reg_write(UC_X86_REG_EIP, target)
+        stack = cpu.reg_read(UC_X86_REG_ESP)
+        target = struct.unpack('<I', cpu.mem_read(stack, 4))[0]
+        cpu.reg_write(UC_X86_REG_ESP, stack + 4)
+        cpu.reg_write(UC_X86_REG_EIP, target)
     def stopped(cpu, address, size, data):
         cpu.reg_write(UC_X86_REG_EIP, 0x40eb3a)
     hooks = [original.cpu.hook_add(UC_HOOK_CODE, called, begin=a, end=a) for a in (0x40e940, 0x40ac20)]
