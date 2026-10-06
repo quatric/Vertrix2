@@ -96,10 +96,18 @@ a follow-up handler to the opponent (0x4ac8f0), a dword copy, the opponent board
 slot 1 / 0x43bbf0. 2048 cases per routine. (`vertrix_effect_copy_speed` for 0x453c00 is the earlier
 standalone port; both are verified.)
 
+## Check-and-bind handlers
+
+`vertrix_effect_check_bind` with `vertrix_check_binds`: 0x4554a0, 0x455600 (field kind, sound 11,
+follow-up 0x455510), 0x455670, 0x4558e0, 0x455a00 (board kind, sounds 1 and 12, board `+0xb8c`) and
+0x455790 (slide kind, register roles swapped, table entry `0x4f7c78[dword 0x532bbc]` read through
+the new `global` service). `vertrix_effect_field_bind` is the follow-up handler 0x455510.
+2048 cases per routine.
+
 ## Wiring note
 
 The dispatcher 0x43c140 does not call an effect: it stores the effect address as the player's
 actor handler with 0x4ac8f0 (`43cc74: edx = handler; eax = player; call 0x4ac8f0`). The effects run
 later from the actor update, so their entry ebx/edx come from that caller, not from the dispatcher.
 
-Not yet ported: the remaining effects behind 0x43c140 (0x4528e0.. is done; open are 0x4554a0.. (the stone-style handlers), 0x455e50, 0x45b4c0 and the follow-up handlers).
+Not yet ported: the remaining effects behind 0x43c140 (0x4528e0.. is done; open are 0x455e50, 0x45b4c0 and the follow-up handlers bound by the effects above (0x453c90, 0x453fd0, 0x454090, 0x4542e0, ...)).

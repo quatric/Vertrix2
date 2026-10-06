@@ -19,7 +19,8 @@ DRAW = 0x4826c0
 CALLEES = (0x43acd0, 0x43ac00, 0x43bb60, 0x4ac8f0, 0x43bbf0, 0x43c0e0)
 ALLOCATE = 0x4ca000
 # 0x452e00 callees; the first four steer its flow and return small values
-FLOW = {0x437060: (0, 1, 1), 0x42eca0: (0, 1, 1, 1), 0x42ecc0: (0, 1, 1, 1),
+FLOW = {0x437350: (0, 1, 1), 0x4375f0: (0, 1, 1), 0x4378c0: (0, 1, 1), 0x437be0: (0, 1, 1),
+        0x437d70: (0, 1, 1), 0x437060: (0, 1, 1), 0x42eca0: (0, 1, 1, 1), 0x42ecc0: (0, 1, 1, 1),
         0x4371b0: (0, 1, 1), 0x43b720: (0, 1, 1, 2), 0x43b800: (0, 1, 1, 2), 0x43b7c0: (0, 1, 1), 0x43d3b0: (0, 1), 0x438cd0: (0, 1), 0x43ab60: (0, 1, 1, 2), 0x4320c0: (1, 1, 1, 0), 0x4330d0: (1, 1, 1, 0)}
 MATCH_CALLEES = (0x438cd0, 0x43ab60, 0x4320c0, 0x4330d0, 0x431d80, 0x42ee20, 0x42eda0, 0x42ee80,
                  0x433040, 0x43a560)
@@ -28,6 +29,9 @@ GRID, COMPANION, MARKERS = 0x220, 0x87c, 0xb94
 Draw = c.CFUNCTYPE(c.c_uint16, c.c_uint16, c.c_void_p)
 Allocate = c.CFUNCTYPE(c.c_uint32, c.c_uint32, c.c_void_p)
 Range = c.CFUNCTYPE(c.c_int, c.c_uint32, c.POINTER(c.c_uint32), c.POINTER(c.c_uint32), c.c_void_p)
+
+
+Global = c.CFUNCTYPE(U, U, c.c_void_p)
 
 
 class Factory(c.Structure):
@@ -62,6 +66,10 @@ class Attack(c.Structure):
                 ('clear_b90', c.c_int), ('count', c.c_uint), ('calls', AttackCall * 8)]
 
 
+class CheckBind(c.Structure):
+    _fields_ = [('routine', U), ('first', U), ('second', U), ('kind', c.c_int), ('token', U)]
+
+
 class Site(c.Structure):
     _fields_ = [(name, U) for name in ('target', 'eax', 'edx', 'ebx', 'ecx', 'stack', 'stack_next',
                                        'stack_third', 'out_ebx', 'out_ecx')] + [
@@ -78,7 +86,8 @@ class Calls(c.Structure):
 class Services(c.Structure):
     _fields_ = [('calls', c.POINTER(Calls)), ('resolve', Resolve), ('resolve_context', c.c_void_p),
                 ('virtual_call', Virtual), ('virtual_context', c.c_void_p), ('draw', Draw),
-                ('draw_context', c.c_void_p), ('factory', c.POINTER(Factory))]
+                ('draw_context', c.c_void_p), ('factory', c.POINTER(Factory)),
+                ('global_read', Global), ('global_context', c.c_void_p)]
 
 
 def main():
@@ -167,9 +176,13 @@ def main():
         hi[0] = struct.unpack('<I', bytes(cpu.mem_read((0x53bcd4 + 8 * index) & 0xffffffff, 4)))[0]
         return 1
 
+    @Global
+    def global_read(address, context):
+        return struct.unpack('<I', bytes(cpu.mem_read(address, 4)))[0]
+
     factory = Factory(pool.resolve, allocate, draw, table_range, None)
     services = Services(c.pointer(calls), pool.resolve, None, virtual, None, draw, None,
-                        c.pointer(factory))
+                        c.pointer(factory), global_read, None)
     totals = {'forced_choice': 0, 'no_choice': 0, 'unresolved': 0}
     player, opponent, own_board, opponent_board, grid_handle, other = pool.handles[:6]
     cpu.mem_write(VTABLE + 4, struct.pack('<I', SLOT_ONE))
@@ -506,6 +519,46 @@ def main():
             assert got == result, (hex(attack.routine), case, hex(got), hex(result))
             assert not replay, case
             assert pool.same(), (hex(attack.routine), case, pool.diff())
+    # The check-and-bind handlers and their field follow-up
+    n.vertrix_effect_check_bind.argtypes = [c.POINTER(Services), U, U, c.POINTER(CheckBind)]
+    n.vertrix_effect_check_bind.restype = U
+    n.vertrix_effect_field_bind.argtypes = [c.POINTER(Services), U]
+    n.vertrix_effect_field_bind.restype = U
+    checks = (CheckBind * 6).in_dll(n, 'vertrix_check_binds')
+    for address in (0x4372c0, 0x437240, 0x437350, 0x4375a0, 0x4375f0, 0x4378c0, 0x437be0,
+                    0x437d70, 0x4ac7b0, 0x4ac510, 0x437460):
+        stubs.add(address, 0)
+    for check in checks:
+        for case in range(args.cases):
+            cpu.mem_write(0x532bbc, struct.pack('<I', rng.randrange(0, 4)))
+            pool.fill(rng, patch_attack)
+            stubs.log.clear()
+            returns.clear()
+            draws.clear()
+            native_log.clear()
+            entry_edx = rng.getrandbits(32)
+            result = original.call(check.routine, eax=player, edx=entry_edx) & 0xffffffff
+            replay[:] = list(returns)
+            got = n.vertrix_effect_check_bind(c.byref(services), player, entry_edx, c.byref(check))
+            expected = normalized(stubs.log)
+            assert native_log == expected, (hex(check.routine), case, native_log, expected)
+            assert got == result, (hex(check.routine), case, hex(got), hex(result))
+            assert not replay, case
+            assert pool.same(), (hex(check.routine), case, pool.diff())
+    for case in range(args.cases):
+        pool.fill(rng, patch_attack)
+        stubs.log.clear()
+        returns.clear()
+        draws.clear()
+        native_log.clear()
+        result = original.call(0x455510, eax=player) & 0xffffffff
+        replay[:] = list(returns)
+        got = n.vertrix_effect_field_bind(c.byref(services), player)
+        expected = normalized(stubs.log)
+        assert native_log == expected, ('0x455510', case, native_log, expected)
+        assert got == result, ('0x455510', case, hex(got), hex(result))
+        assert not replay, case
+        assert pool.same(), ('0x455510', case, pool.diff())
     # Objects that do not resolve: the effect stops where the original would have read them. Before
     # the first call (player, opponent, grid) nothing is called or stored; later failures still
     # never reach the final 0x43bbf0.
@@ -551,7 +604,8 @@ def main():
                                             0x453460, 0x4534e0, 0x453570,
                                             0x453f40, 0x454250, 0x454560, 0x4547b0, 0x4549d0,
                                             0x454c30, 0x454e90, 0x455020, 0x455b20, 0x455ca0,
-                                            0x45b9c0)}},
+                                            0x45b9c0, 0x4554a0, 0x455600, 0x455670, 0x455790,
+                                            0x4558e0, 0x455a00, 0x455510)}},
         'paths': totals,
         'convert_paths': convert_totals,
         'match_paths': match_totals,

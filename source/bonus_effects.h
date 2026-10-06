@@ -21,6 +21,9 @@ typedef struct
     VertrixChoiceDraw draw;
     void *draw_context;
     const VertrixFactoryServices *factory;
+    /* Reads a dword of the original's static data or globals (0x532bbc, tables) at the boundary. */
+    uint32_t (*global)(uint32_t address, void *context);
+    void *global_context;
 } VertrixEffectServices;
 
 /* Original 0x453ad0 (eax = player, the effect behind dispatcher id 3): reads the opponent
@@ -212,4 +215,40 @@ extern const VertrixAttack vertrix_attacks[VERTRIX_ATTACK_COUNT];
 
 uint32_t vertrix_effect_attack(const VertrixEffectServices *services, uint32_t player,
                                uint32_t entry_edx, const VertrixAttack *attack);
+
+/* The check-and-bind handlers 0x4554a0, 0x455600, 0x455670, 0x455790, 0x4558e0 and 0x455a00
+ * (eax = player). The two checks run on the player's board with the entry edx (first, second);
+ * a second result of 1 plays sounds and binds the follow-up handler token to the player, anything
+ * else calls 0x43acd0 and makes the handler end with 0x43bbf0 on the player after slot 1 of the
+ * board (edx the vtable). Kinds: VERTRIX_CHECK_FIELD plays sound 11 (0x4f81ac); VERTRIX_CHECK_BOARD
+ * plays sounds 1 (0x4f8184) and 12 (0x4f81b0), binds the token and sets the board's +0xb8c to one;
+ * VERTRIX_CHECK_SLIDE does the same with the register roles of the board and the player swapped,
+ * and calls 0x4ac7b0 with the table entry 0x4f7c78[dword 0x532bbc] and 0x4ac510 on the board
+ * before +0xb8c. Returns 0x43bbf0 when it ended with it, else the result of slot 1. */
+typedef enum
+{
+    VERTRIX_CHECK_FIELD,
+    VERTRIX_CHECK_BOARD,
+    VERTRIX_CHECK_SLIDE
+} VertrixCheckKind;
+
+typedef struct
+{
+    uint32_t routine;
+    uint32_t first;
+    uint32_t second;
+    VertrixCheckKind kind;
+    uint32_t token;
+} VertrixCheckBind;
+
+#define VERTRIX_CHECK_BIND_COUNT 6
+extern const VertrixCheckBind vertrix_check_binds[VERTRIX_CHECK_BIND_COUNT];
+
+uint32_t vertrix_effect_check_bind(const VertrixEffectServices *services, uint32_t player,
+                                   uint32_t entry_edx, const VertrixCheckBind *check);
+
+/* Original 0x455510 (eax = player): when 0x42eca0 and 0x42ecc0 (board, 0x44c860) are both
+ * non-zero, plays sound 1, calls 0x437460 on the board with the token 0x455580 and binds the same
+ * token to the player (0x4ac8f0). Slot 1 of the board is called last and its result returned. */
+uint32_t vertrix_effect_field_bind(const VertrixEffectServices *services, uint32_t player);
 #endif
