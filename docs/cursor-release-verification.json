@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x477c90": 4096
+  },
+  "scope": "The original executes completely with the COM methods of a fake vtable stubbed and logged; the descriptor handed to the vtable +0x18 method is logged with its five dwords. Every call, the returned eax and every pool object compare."
+}

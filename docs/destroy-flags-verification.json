@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x475700": 4096
+  },
+  "scope": "The original executes completely with its callees stubbed and logged; edx covers every flag combination. Every call, the returned eax and every pool object compare."
+}

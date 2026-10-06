@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x477c30": 4096
+  },
+  "scope": "The original executes completely with the COM methods of a fake vtable and the imports SetCursor and ShowCursor (called through their import slots) stubbed and logged; ShowCursor returns random values until one is negative. Every call, the returned eax and every pool object compare."
+}

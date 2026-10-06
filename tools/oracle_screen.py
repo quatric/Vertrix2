@@ -50,7 +50,8 @@ def write_report(build_dir, name, report):
 
 def run_screen(name, address, sources, function, argtypes, restype, callees, generate, scope,
                *, wrappers=(), allocator=0x4ca000, globals_ranges=(), patch=None, compare=True,
-               result_mask=0xffffffff, description='', table_targets=(), lookups=(), pool_size=0x200,
+               result_mask=0xffffffff, description='', table_targets=(), lookups=(), pool_size=0x200, effects=None, fixed_returns=None, handle_returns=(),
+               setup=None, extras=None, native_extras_arg=None,
                leading=('calls', 'services', 'globals')):
     """Run `function` against the original routine at `address`.
 
@@ -81,10 +82,17 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
     cpu = original.cpu
     rng = random.Random(address)
     pool = Pool(cpu, 4, pool_size)
-    returns, native_log, replay = [], [], []
+    returns, native_log, replay, replay_out = [], [], [], []
+    native_extras = native_extras_arg or {}
 
     def handler(target, eax, edx, ebx, ecx, stack):
-        if target in lookups:
+        if target in effects:
+            outs.append(effects[target](cpu, rng, eax, edx, ebx, ecx, stack))
+        if target in fixed_returns:
+            returns.append(fixed_returns[target])
+        elif target in handle_returns:
+            returns.append(rng.choice(pool.handles))
+        elif target in lookups:
             returns.append(rng.choice(pool.handles + [0] * 2))
         elif target == allocator:
             returns.append(rng.choice(pool.handles))
@@ -94,17 +102,26 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
             returns.append(rng.getrandbits(32))
         return returns[-1]
 
+    if setup:
+        setup(cpu)
+    effects = effects or {}
+    fixed_returns = fixed_returns or {}
+    outs = []
     callees = dict(callees)
     for table in table_targets:
         callees[struct.unpack('<I', bytes(cpu.mem_read(table, 4)))[0]] = 0
     stubs = Stubs(cpu, handler)
     for target, count in callees.items():
         stubs.add(target, count)
+    stubs.extras.update(extras or {})
 
     @Call
     def call(site, context):
         s = site.contents
-        native_log.append(site_log(s, callees[s.target]))
+        native_log.append(site_log(s, callees[s.target]) + tuple(
+            native_extras[s.target](s) if s.target in native_extras else ()))
+        if s.target in effects:
+            s.out_value = replay_out.pop(0)
         return replay.pop(0)
 
     calls = Calls(call, None)
@@ -121,9 +138,11 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
         kwargs, stack_args, native_args = generate(rng, pool, cpu)
         stubs.log.clear()
         returns.clear()
+        outs.clear()
         native_log.clear()
         result = original.call(address, args=tuple(stack_args), **kwargs) & 0xffffffff
         replay[:] = list(returns)
+        replay_out[:] = list(outs)
         objects = {'calls': calls, 'services': services, 'globals': globals_}
         got = fn(*[c.byref(objects[name_]) for name_ in leading], *native_args)
         if compare:
@@ -131,7 +150,7 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
         else:
             assert got == 1, (case, got)
         assert native_log == stubs.log, (case, native_log, stubs.log)
-        assert not replay and pool.same(), (case, pool.diff())
+        assert not replay and not replay_out and pool.same(), (case, pool.diff())
     write_report(args.build_dir, name, {
         'status': 'passed', 'complete_original_executions': {hex(address): args.cases},
         'scope': scope})

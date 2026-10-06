@@ -29,9 +29,13 @@ recovered (or have unmodeled global state):
 - ~~`0x471e10`~~, ~~`0x4725f0`~~ RECOVERED (`source/scene_lookups.c`,
   `tools/verify_scene_lookups.py`, `docs/scene-lookup-pair-verification.json`,
   `docs/scene-clear-marker-verification.json`). `0x4123d0` stays a call boundary.
-- `0x475510`, `0x475700`, `0x4759e0`, `0x475c80`, `0x476160`, `0x476810`, `0x4774e0`,
-  `0x477c30`, `0x477c90`, `0x477b10`, `0x477390`, `0x476aa0`, `0x47e680`..`0x47fd70`:
-  exception frames, imported API calls and COM setup chains.
+- ~~`0x475510`, `0x475700`, `0x4759e0`, `0x475c80`, `0x476160`, `0x476810`, `0x477c30`,
+  `0x477c90`~~ RECOVERED (`source/device_glue.c`, `tools/verify_device_glue.py`,
+  `docs/{release-pair,destroy-flags,queue-drain,queue-next,string-table-assign,resource-entry,
+  cursor-capture,cursor-release}-verification.json`); COM methods run through the call boundary
+  with fake vtables and imports through their import slots.
+- `0x4774e0`, `0x477b10`, `0x477390`, `0x476aa0`, `0x47e680`..`0x47fd70`: exception frames,
+  imported API calls and COM setup chains.
 - ~~`0x47c930`~~, ~~`0x47cb40`~~ RECOVERED (`source/surface_blend.c`,
   `tools/verify_surface_blend.py`, `docs/surface-blend-verification.json`; the table at
   `0x558cf0` is supplied, 4,096 executions of each, including every scratch global).

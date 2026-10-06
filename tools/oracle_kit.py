@@ -38,6 +38,7 @@ class Stubs:
         self.log = []
         self.arguments = {}
         self.cdecl = set()
+        self.extras = {}
 
     def add(self, address, stack_args=0, cdecl=False):
         self.arguments[address] = stack_args
@@ -52,7 +53,8 @@ class Stubs:
         count = self.arguments[address]
         stack = struct.unpack('<' + 'I' * (1 + count), bytes(cpu.mem_read(esp, 4 * (1 + count))))
         args = stack[1:]
-        self.log.append((address, *regs, *args))
+        extra = self.extras[address](cpu, regs, args) if address in self.extras else ()
+        self.log.append((address, *regs, *args, *extra))
         result = self.handler(address, *regs, args)
         if result is not None:
             cpu.reg_write(UC_X86_REG_EAX, result & 0xffffffff)

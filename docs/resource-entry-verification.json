@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x476810": 4096
+  },
+  "scope": "The original executes completely with 0x4cea15 stubbed and logged."
+}

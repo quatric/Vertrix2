@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4759e0": 4096
+  },
+  "scope": "The original executes completely with 0x4d8540 stubbed (it stores a new random count at +0x2c, carried through the call site), the entries deleted through fake COM vtables. Every call, the returned eax and every pool object compare."
+}
