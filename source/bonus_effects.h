@@ -513,4 +513,25 @@ uint32_t vertrix_effect_field_bind_next(const VertrixEffectServices *services, u
  * makes the handler end, after slot 1 of the board, with 0x43bbf0 on the player (ebx 1) and the
  * board's +0xb8c cleared; otherwise the slot's result is returned. */
 uint32_t vertrix_effect_field_check_end(const VertrixEffectServices *services, uint32_t player);
+
+/* Original 0x45b4c0 (eax = player): 0x438d50 on the player's board (edx 0, ebx the player's
+ * +0x400; +0x420 is cleared first) decides. Result 1 adds it to +0x420, runs 0x4ac7b0 with
+ * 0x4f7d2c[dword 0x532bbc], clears the board's +0x58, runs 0x4ac510 and 0x438dd0, plays sound 11
+ * (0x4f81ac), binds 0x45b590 and, when 0x439080 reports one, 0x45b5f0. Anything else calls 0x43acd0
+ * and makes the handler end with 0x43bbf0. Slot 1 of the board comes between. */
+uint32_t vertrix_effect_count_start(const VertrixEffectServices *services, uint32_t player);
+
+/* Original 0x45b590 (eax = player; edx the caller's): 0x4ac500 and 0x4ac520 on the board; result 1
+ * adds 0x4ac5b0 and 0x439080, whose result 1 binds 0x45b5f0. Returns the result of slot 1. */
+uint32_t vertrix_effect_count_wait(const VertrixEffectServices *services, uint32_t player,
+                                   uint32_t entry_edx);
+
+/* Original 0x45b5f0 (eax = player; ebx and edx the caller's): 0x4ac500, 0x4ac520 (result 1 adds
+ * 0x4ac540 and 0x4ac5b0), then 0x42ec80 and 0x42eca0 (0x44c860) on the board, both non-zero run
+ * 0x439190 and 0x438d50 (edx +0x420, ebx +0x400); result 1 repeats the 0x45b4c0 step (+0x420 grows,
+ * tables, 0x4ac7b0, +0x58 cleared, 0x4ac510, 0x438dd0, sound 11, bind 0x45b590, 0x439080 binds
+ * 0x45b5f0); any other result makes the handler end with 0x43bbf0. Slot 1 of the board comes
+ * between. */
+uint32_t vertrix_effect_count_step(const VertrixEffectServices *services, uint32_t player,
+                                   uint32_t entry_ebx, uint32_t entry_edx);
 #endif

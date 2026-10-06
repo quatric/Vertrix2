@@ -175,12 +175,17 @@ returns the result of its last call, 0x43bae0. 0x455970 is identical to 0x455700
 `vertrix_effect_pair_check` with `vertrix_pair_checks` (bound by 0x455b20 and 0x455ca0),
 `vertrix_effect_field_end_slide` (0x455c30) and `vertrix_effect_field_bind_next` (0x455db0) and `vertrix_effect_field_check_end` (0x455e00).
 
+## 0x45b4c0, 0x45b590, 0x45b5f0
+
+`vertrix_effect_count_start`, `_count_wait`, `_count_step`: the counting chain (`+0x400`, `+0x420`,
+table `0x4f7d2c[dword 0x532bbc]`, callees 0x438d50, 0x439080, 0x438dd0, 0x42ec80, 0x439190).
+
 ## Tally
 
 Distinct direct `call` targets in 0x401000..0x4d0000: 1827. Named in `source/` (ported): 1139.
 Not named: 688, listed in `docs/unported-call-targets.txt` (about 260 of them in 0x452830..0x45bd00,
 the follow-up and animation handlers of the bonus effects). Handlers reached only through tokens or
-vtables are not in this count. Oracle-verified bonus-effect routines: 81.
+vtables are not in this count. Oracle-verified bonus-effect routines: 84.
 
 ## Wiring note
 
