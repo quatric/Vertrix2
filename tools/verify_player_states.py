@@ -154,3 +154,20 @@ run_screen('state-match-452160', 0x452160, ['player_states.c'], 'vertrix_state_m
            [U, U], U, MATCH, player_edx, TEXT, **{**MORE, 'choices': MORE_CHOICES})
 run_screen('state-attack-452440', 0x452440, ['player_states.c'], 'vertrix_state_attack_452440',
            [U], U, ATTACK, attack_case, TEXT, **{**MORE, 'choices': MORE_CHOICES})
+
+
+ADVANCE = {address: 0 for address in (0x4328a0, 0x4ac500, 0x4ac510, 0x432a30, 0x432b10, 0x4ac8f0,
+                                      LEAF)}
+ADVANCE[0x4ac590] = 0
+
+
+def patch_advance(rng, handle, data):
+    patch(rng, handle, data)
+    data[0x58:0x5c] = struct.pack('<i', rng.randrange(-5, 120))
+    data[0x18:0x1c] = rng.getrandbits(32).to_bytes(4, 'little')
+
+
+run_screen('state-advance-452770', 0x452770, ['player_states.c'], 'vertrix_state_advance_452770',
+           [U, U], U, ADVANCE, player_edx, TEXT,
+           **{**COMMON, 'patch': patch_advance,
+              'choices': {0x4328a0: [1, 1, 0, 2], 0x4ac590: [0, 1, 2, 5]}})

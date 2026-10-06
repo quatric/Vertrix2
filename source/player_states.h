@@ -108,4 +108,13 @@ uint32_t vertrix_state_match_452160(const VertrixCalls *calls,
 uint32_t vertrix_state_attack_452440(const VertrixCalls *calls,
                                      const VertrixFactoryServices *services,
                                      const VertrixGlobals *globals, uint32_t player);
+
+/* Original 0x452770 (eax = player, edx the caller's register). 0x4328a0 on the board (+0x15c)
+ * not one sets the handler 0x451920. Otherwise 0x4ac500, then 0x4ac590 with edx = the board dword
+ * +0x18 shifted right by 16 (arithmetic); a nonzero result runs 0x4ac510 and adds it to +0x58.
+ * A +0x58 of 0x18 or more (signed) runs 0x432a30 and loses 0x18 until it is below 0x18, a smaller
+ * one runs 0x432b10. All end with the board's virtual call. */
+uint32_t vertrix_state_advance_452770(const VertrixCalls *calls,
+                                      const VertrixFactoryServices *services,
+                                      const VertrixGlobals *globals, uint32_t player, uint32_t edx);
 #endif

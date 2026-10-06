@@ -744,3 +744,83 @@ uint32_t vertrix_state_attack_452440(const VertrixCalls *calls,
     }
     return regs.eax;
 }
+
+enum
+{
+    ADVANCE_FALLBACK_HANDLER = 0x451920,
+    ADVANCE_PREPARE = 0x4ac500,
+    ADVANCE_STEP = 0x4ac590,
+    ADVANCE_STEPS_FIELD = 0x18,
+    ADVANCE_WRAP = 0x432a30,
+    ADVANCE_NO_WRAP = 0x432b10,
+    ADVANCE_LIMIT = 0x18
+};
+
+uint32_t vertrix_state_advance_452770(const VertrixCalls *calls,
+                                      const VertrixFactoryServices *services,
+                                      const VertrixGlobals *globals, uint32_t player, uint32_t edx)
+{
+    VertrixRegs regs = {player, edx, player, 0};
+    uint32_t board;
+    uint32_t steps;
+    uint32_t counter;
+    if (!read_value(services, player, STATE_BOARD, DWORD_WIDTH, &board))
+    {
+        return 0;
+    }
+    regs.ecx = board;
+    regs.eax = board;
+    vertrix_regs_call(calls, &regs, MATCH_BOARD);
+    if (regs.eax != 1)
+    {
+        regs.edx = ADVANCE_FALLBACK_HANDLER;
+        regs.eax = player;
+        vertrix_regs_call(calls, &regs, STATE_SET_HANDLER);
+        return finish_edx(calls, services, globals, &regs, board);
+    }
+    regs.eax = board;
+    vertrix_regs_call(calls, &regs, ADVANCE_PREPARE);
+    if (!read_value(services, board, ADVANCE_STEPS_FIELD, DWORD_WIDTH, &steps))
+    {
+        return 0;
+    }
+    regs.edx = (uint32_t)((int32_t)steps >> 16);
+    regs.eax = board;
+    vertrix_regs_call(calls, &regs, ADVANCE_STEP);
+    regs.ebx = regs.eax;
+    if (regs.eax != 0)
+    {
+        regs.eax = board;
+        vertrix_regs_call(calls, &regs, MATCH_TIMER);
+        if (!read_value(services, board, MATCH_COUNTER, DWORD_WIDTH, &counter) ||
+            !vertrix_build_store(services, board, MATCH_COUNTER, DWORD_WIDTH, counter + regs.ebx))
+        {
+            return 0;
+        }
+    }
+    if (!read_value(services, board, MATCH_COUNTER, DWORD_WIDTH, &counter))
+    {
+        return 0;
+    }
+    if ((int32_t)counter < ADVANCE_LIMIT)
+    {
+        regs.eax = board;
+        vertrix_regs_call(calls, &regs, ADVANCE_NO_WRAP);
+        return finish_edx(calls, services, globals, &regs, board);
+    }
+    regs.eax = board;
+    vertrix_regs_call(calls, &regs, ADVANCE_WRAP);
+    if (!read_value(services, board, MATCH_COUNTER, DWORD_WIDTH, &counter))
+    {
+        return 0;
+    }
+    while ((int32_t)counter >= ADVANCE_LIMIT)
+    {
+        counter -= ADVANCE_LIMIT;
+        if (!vertrix_build_store(services, board, MATCH_COUNTER, DWORD_WIDTH, counter))
+        {
+            return 0;
+        }
+    }
+    return finish_edx(calls, services, globals, &regs, board);
+}
