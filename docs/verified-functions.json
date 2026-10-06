@@ -1,6 +1,6 @@
 {
  "definition": "Entry points run to completion in the original by a passing verifier (Original.call), compared with the native recovery.",
- "count": 1390,
+ "count": 1840,
  "functions": {
   "0x401010": [
    "verify_mixer_output"
@@ -43,17 +43,54 @@
    "verify_mixer_dispatch",
    "verify_mixer_pcm16_interpolated_stereo"
   ],
+  "0x404580": [
+   "verify_lifted"
+  ],
+  "0x405680": [
+   "verify_lifted"
+  ],
+  "0x4056c0": [
+   "verify_lifted"
+  ],
+  "0x405d60": [
+   "verify_lifted"
+  ],
+  "0x405f30": [
+   "verify_lifted"
+  ],
+  "0x405f70": [
+   "verify_lifted"
+  ],
+  "0x406170": [
+   "verify_lifted"
+  ],
+  "0x407020": [
+   "verify_lifted"
+  ],
   "0x407280": [
    "verify_bits_header"
   ],
   "0x4074a0": [
    "verify_bits_fill"
   ],
+  "0x40a190": [
+   "verify_lifted"
+  ],
   "0x40a590": [
    "verify_window_tables"
   ],
+  "0x40a8f0": [
+   "verify_lifted"
+  ],
+  "0x40a950": [
+   "verify_lifted"
+  ],
   "0x40ab10": [
-   "verify_call_glue"
+   "verify_call_glue",
+   "verify_lifted"
+  ],
+  "0x40acf0": [
+   "verify_lifted"
   ],
   "0x40ae80": [
    "verify_call_glue"
@@ -72,6 +109,9 @@
   ],
   "0x40c210": [
    "verify_call_glue"
+  ],
+  "0x40c430": [
+   "verify_lifted"
   ],
   "0x40c460": [
    "verify_mixer_channel",
@@ -321,8 +361,14 @@
   "0x40f910": [
    "verify_attach_item"
   ],
+  "0x40f9e0": [
+   "verify_lifted"
+  ],
   "0x410890": [
    "verify_flip_bits"
+  ],
+  "0x4108a0": [
+   "verify_lifted"
   ],
   "0x410ffd": [
    "verify_audio_format"
@@ -332,6 +378,9 @@
   ],
   "0x411280": [
    "verify_audio_delta"
+  ],
+  "0x4112d0": [
+   "verify_lifted"
   ],
   "0x4117e0": [
    "verify_sequence_module_differential",
@@ -344,6 +393,12 @@
    "verify_object_dwords",
    "verify_record_stream"
   ],
+  "0x4122f0": [
+   "verify_lifted"
+  ],
+  "0x412390": [
+   "verify_lifted"
+  ],
   "0x4123d0": [
    "verify_actor_style_storage"
   ],
@@ -353,14 +408,33 @@
   "0x4126f0": [
    "verify_object_scalars"
   ],
+  "0x413bd0": [
+   "verify_lifted"
+  ],
+  "0x414b90": [
+   "verify_lifted"
+  ],
   "0x415180": [
    "verify_text_table"
   ],
   "0x415330": [
-   "verify_assets"
+   "verify_assets",
+   "verify_lifted"
+  ],
+  "0x415350": [
+   "verify_lifted"
+  ],
+  "0x4154b0": [
+   "verify_lifted"
   ],
   "0x415530": [
    "verify_object_scalars"
+  ],
+  "0x415580": [
+   "verify_lifted"
+  ],
+  "0x415860": [
+   "verify_lifted"
   ],
   "0x415b10": [
    "verify_object_scalars"
@@ -380,11 +454,20 @@
   "0x415d90": [
    "verify_object_scalars"
   ],
+  "0x415db0": [
+   "verify_lifted"
+  ],
   "0x415e10": [
    "verify_call_glue"
   ],
   "0x416010": [
    "verify_notice"
+  ],
+  "0x4163b0": [
+   "verify_lifted"
+  ],
+  "0x416500": [
+   "verify_lifted"
   ],
   "0x416a80": [
    "verify_list_text"
@@ -392,11 +475,26 @@
   "0x416c10": [
    "verify_call_glue"
   ],
+  "0x417150": [
+   "verify_lifted"
+  ],
   "0x4174f0": [
    "verify_sfx_dispatch"
   ],
   "0x417550": [
    "verify_sfx_dispatch"
+  ],
+  "0x4175b0": [
+   "verify_lifted"
+  ],
+  "0x417620": [
+   "verify_lifted"
+  ],
+  "0x417690": [
+   "verify_lifted"
+  ],
+  "0x417710": [
+   "verify_lifted"
   ],
   "0x417790": [
    "verify_score_text"
@@ -818,7 +916,8 @@
    "verify_xm",
    "verify_xm_instrument_header",
    "verify_xm_instruments",
-   "verify_xm_seek_row"
+   "verify_xm_seek_row",
+   "verify_lifted"
   ],
   "0x417f40": [
    "verify_object_scalars"
@@ -859,38 +958,161 @@
   "0x418870": [
    "verify_object_scalars"
   ],
+  "0x4189f0": [
+   "verify_lifted"
+  ],
+  "0x418a10": [
+   "verify_lifted"
+  ],
+  "0x418ae0": [
+   "verify_lifted"
+  ],
+  "0x418af0": [
+   "verify_lifted"
+  ],
+  "0x418d50": [
+   "verify_lifted"
+  ],
+  "0x4191b0": [
+   "verify_lifted"
+  ],
+  "0x4192a0": [
+   "verify_lifted"
+  ],
+  "0x4193b0": [
+   "verify_lifted"
+  ],
   "0x419490": [
    "verify_call_glue"
   ],
   "0x4194b0": [
    "verify_call_glue"
   ],
+  "0x419ef0": [
+   "verify_lifted"
+  ],
+  "0x41a040": [
+   "verify_lifted"
+  ],
+  "0x41a2b0": [
+   "verify_lifted"
+  ],
   "0x41a2f0": [
    "verify_surface_blit"
+  ],
+  "0x41a320": [
+   "verify_lifted"
+  ],
+  "0x41a440": [
+   "verify_lifted"
+  ],
+  "0x41a4e0": [
+   "verify_lifted"
   ],
   "0x41a930": [
    "verify_object_scalars"
   ],
+  "0x41a940": [
+   "verify_lifted"
+  ],
+  "0x41a960": [
+   "verify_lifted"
+  ],
+  "0x41a9a0": [
+   "verify_lifted"
+  ],
   "0x41a9e0": [
    "verify_resource_record"
+  ],
+  "0x41aa20": [
+   "verify_lifted"
+  ],
+  "0x41aaa0": [
+   "verify_lifted"
+  ],
+  "0x41aaf0": [
+   "verify_lifted"
+  ],
+  "0x41ab00": [
+   "verify_lifted"
+  ],
+  "0x41ab30": [
+   "verify_lifted"
+  ],
+  "0x41ab60": [
+   "verify_lifted"
   ],
   "0x41ab90": [
    "verify_surface_blit"
   ],
+  "0x41abe0": [
+   "verify_lifted"
+  ],
+  "0x41ac00": [
+   "verify_lifted"
+  ],
+  "0x41ac20": [
+   "verify_lifted"
+  ],
+  "0x41ac40": [
+   "verify_lifted"
+  ],
   "0x41ac70": [
    "verify_surface_clear"
+  ],
+  "0x41ac80": [
+   "verify_lifted"
+  ],
+  "0x41aca0": [
+   "verify_lifted"
+  ],
+  "0x41b310": [
+   "verify_lifted"
+  ],
+  "0x41c020": [
+   "verify_lifted"
   ],
   "0x41d5b0": [
    "verify_call_glue"
   ],
+  "0x41d640": [
+   "verify_lifted"
+  ],
   "0x41d660": [
    "verify_object_scalars"
+  ],
+  "0x41d6d0": [
+   "verify_lifted"
+  ],
+  "0x41dd60": [
+   "verify_lifted"
+  ],
+  "0x41ddf0": [
+   "verify_lifted"
   ],
   "0x41de80": [
    "verify_object_tails"
   ],
+  "0x41e280": [
+   "verify_lifted"
+  ],
+  "0x41e5e0": [
+   "verify_lifted"
+  ],
+  "0x423d70": [
+   "verify_lifted"
+  ],
+  "0x423dc0": [
+   "verify_lifted"
+  ],
+  "0x423ea0": [
+   "verify_lifted"
+  ],
   "0x424760": [
    "verify_object_glue"
+  ],
+  "0x425ae0": [
+   "verify_lifted"
   ],
   "0x425b8d": [
    "verify_input"
@@ -907,6 +1129,9 @@
   "0x425ef0": [
    "verify_piece_children"
   ],
+  "0x425f40": [
+   "verify_lifted"
+  ],
   "0x4261b0": [
    "verify_ai_features"
   ],
@@ -922,6 +1147,9 @@
   ],
   "0x427380": [
    "verify_ai_bomb"
+  ],
+  "0x4279b0": [
+   "verify_lifted"
   ],
   "0x427ae0": [
    "verify_regions"
@@ -956,6 +1184,9 @@
   "0x4293e0": [
    "verify_record_stream"
   ],
+  "0x429530": [
+   "verify_lifted"
+  ],
   "0x429660": [
    "verify_object_slots"
   ],
@@ -963,7 +1194,8 @@
    "verify_object_slots"
   ],
   "0x429880": [
-   "verify_constructors"
+   "verify_constructors",
+   "verify_lifted"
   ],
   "0x429bf0": [
    "verify_slot_objects"
@@ -998,20 +1230,28 @@
   "0x42a1b0": [
    "verify_choice_grid"
   ],
+  "0x42a310": [
+   "verify_lifted"
+  ],
   "0x42a480": [
    "verify_object_slots"
   ],
   "0x42a4a0": [
    "verify_object_slots"
   ],
+  "0x42a540": [
+   "verify_lifted"
+  ],
   "0x42a800": [
    "verify_piece_children"
   ],
   "0x42a8b0": [
-   "verify_piece"
+   "verify_piece",
+   "verify_lifted"
   ],
   "0x42a8e0": [
-   "verify_piece"
+   "verify_piece",
+   "verify_lifted"
   ],
   "0x42a940": [
    "verify_object_scalars"
@@ -1022,8 +1262,12 @@
   "0x42a980": [
    "verify_piece_children"
   ],
+  "0x42aa20": [
+   "verify_lifted"
+  ],
   "0x42aab0": [
-   "verify_piece_actor_layout"
+   "verify_piece_actor_layout",
+   "verify_lifted"
   ],
   "0x42ab10": [
    "verify_piece_actor_destroy"
@@ -1050,10 +1294,12 @@
    "verify_piece_actor_layout"
   ],
   "0x42b000": [
-   "verify_player_preview_state"
+   "verify_player_preview_state",
+   "verify_lifted"
   ],
   "0x42b050": [
-   "verify_player_preview_state"
+   "verify_player_preview_state",
+   "verify_lifted"
   ],
   "0x42b070": [
    "verify_player_preview_state"
@@ -1065,13 +1311,16 @@
    "verify_player_preview_state"
   ],
   "0x42b0f0": [
-   "verify_player_preview_state"
+   "verify_player_preview_state",
+   "verify_lifted"
   ],
   "0x42b110": [
-   "verify_player_preview_state"
+   "verify_player_preview_state",
+   "verify_lifted"
   ],
   "0x42b150": [
-   "verify_ui_preview_pair"
+   "verify_ui_preview_pair",
+   "verify_lifted"
   ],
   "0x42b290": [
    "verify_actor_render_draw"
@@ -1091,7 +1340,8 @@
    "verify_ui_preview_pair"
   ],
   "0x42b5c0": [
-   "verify_constructors"
+   "verify_constructors",
+   "verify_lifted"
   ],
   "0x42b920": [
    "verify_piece_children"
@@ -1107,6 +1357,12 @@
   ],
   "0x42ba40": [
    "verify_object_scalars"
+  ],
+  "0x42ba70": [
+   "verify_lifted"
+  ],
+  "0x42bab0": [
+   "verify_lifted"
   ],
   "0x42bb00": [
    "verify_block_factory"
@@ -1155,6 +1411,9 @@
   "0x42f310": [
    "verify_shift"
   ],
+  "0x42f410": [
+   "verify_lifted"
+  ],
   "0x42f440": [
    "verify_board_cells"
   ],
@@ -1181,6 +1440,12 @@
   ],
   "0x42f760": [
    "verify_board_cells"
+  ],
+  "0x42f890": [
+   "verify_lifted"
+  ],
+  "0x42f8a0": [
+   "verify_lifted"
   ],
   "0x42fb60": [
    "verify_board_effects",
@@ -1232,6 +1497,9 @@
   "0x430800": [
    "verify_block_factory"
   ],
+  "0x430850": [
+   "verify_lifted"
+  ],
   "0x430930": [
    "verify_render_geometry",
    "verify_scene_layout"
@@ -1242,6 +1510,18 @@
   "0x431140": [
    "verify_descent"
   ],
+  "0x431180": [
+   "verify_lifted"
+  ],
+  "0x4311a0": [
+   "verify_lifted"
+  ],
+  "0x4311c0": [
+   "verify_lifted"
+  ],
+  "0x431280": [
+   "verify_lifted"
+  ],
   "0x431340": [
    "verify_board_piece"
   ],
@@ -1249,7 +1529,8 @@
    "verify_board_fields"
   ],
   "0x431390": [
-   "verify_timing"
+   "verify_timing",
+   "verify_lifted"
   ],
   "0x431400": [
    "verify_player_level_side",
@@ -1277,7 +1558,8 @@
    "verify_board_piece"
   ],
   "0x431b80": [
-   "verify_coordinates"
+   "verify_coordinates",
+   "verify_lifted"
   ],
   "0x431c10": [
    "verify_board_piece"
@@ -1285,6 +1567,9 @@
   "0x431c60": [
    "verify_scene_lock",
    "verify_shift"
+  ],
+  "0x431d60": [
+   "verify_lifted"
   ],
   "0x431d80": [
    "verify_board_fields"
@@ -1317,10 +1602,12 @@
    "verify_piece_spawn"
   ],
   "0x432110": [
-   "verify_player_piece"
+   "verify_player_piece",
+   "verify_lifted"
   ],
   "0x432160": [
-   "verify_player_piece"
+   "verify_player_piece",
+   "verify_lifted"
   ],
   "0x4321b0": [
    "verify_player_piece"
@@ -1354,7 +1641,11 @@
   ],
   "0x432980": [
    "verify_board",
-   "verify_board_collapse_bytes"
+   "verify_board_collapse_bytes",
+   "verify_lifted"
+  ],
+  "0x432a30": [
+   "verify_lifted"
   ],
   "0x432b10": [
    "verify_board_markers"
@@ -1518,6 +1809,12 @@
   "0x438d50": [
    "verify_board_markers"
   ],
+  "0x438ef0": [
+   "verify_lifted"
+  ],
+  "0x439080": [
+   "verify_lifted"
+  ],
   "0x439140": [
    "verify_board_markers"
   ],
@@ -1526,6 +1823,9 @@
   ],
   "0x439370": [
    "verify_board_markers"
+  ],
+  "0x439510": [
+   "verify_lifted"
   ],
   "0x43a080": [
    "verify_constructors"
@@ -1566,6 +1866,9 @@
   "0x43ab80": [
    "verify_regions"
   ],
+  "0x43abd0": [
+   "verify_lifted"
+  ],
   "0x43ac00": [
    "verify_object_chain_select"
   ],
@@ -1577,6 +1880,9 @@
   ],
   "0x43b1a0": [
    "verify_player_slots"
+  ],
+  "0x43b260": [
+   "verify_lifted"
   ],
   "0x43b430": [
    "verify_player_ai_tick"
@@ -1755,6 +2061,9 @@
   "0x43d0f0": [
    "verify_player_modes"
   ],
+  "0x43d130": [
+   "verify_lifted"
+  ],
   "0x43d180": [
    "verify_piece"
   ],
@@ -1772,6 +2081,9 @@
   ],
   "0x43d3d0": [
    "verify_player_slots"
+  ],
+  "0x43d3f0": [
+   "verify_lifted"
   ],
   "0x43d6a0": [
    "verify_object_construct"
@@ -1819,6 +2131,9 @@
   ],
   "0x43f460": [
    "verify_call_glue"
+  ],
+  "0x43f480": [
+   "verify_lifted"
   ],
   "0x43f550": [
    "verify_key_maps"
@@ -1870,6 +2185,9 @@
   "0x440ca0": [
    "verify_corner_call"
   ],
+  "0x440fc0": [
+   "verify_lifted"
+  ],
   "0x441120": [
    "verify_call_glue"
   ],
@@ -1879,12 +2197,21 @@
   "0x441530": [
    "verify_resource_record"
   ],
+  "0x441600": [
+   "verify_lifted"
+  ],
   "0x441a80": [
    "verify_resource_record"
   ],
   "0x441b30": [
    "verify_resource_record",
    "verify_surface_blit"
+  ],
+  "0x441b70": [
+   "verify_lifted"
+  ],
+  "0x441d60": [
+   "verify_lifted"
   ],
   "0x441e30": [
    "verify_color_table"
@@ -1895,14 +2222,41 @@
   "0x442110": [
    "verify_release_tables"
   ],
+  "0x442140": [
+   "verify_lifted"
+  ],
+  "0x4429a0": [
+   "verify_lifted"
+  ],
   "0x442b00": [
    "verify_resource_record"
+  ],
+  "0x444e00": [
+   "verify_lifted"
+  ],
+  "0x445350": [
+   "verify_lifted"
+  ],
+  "0x445900": [
+   "verify_lifted"
+  ],
+  "0x447f40": [
+   "verify_lifted"
   ],
   "0x449360": [
    "verify_actor_frame_switch"
   ],
   "0x449390": [
    "verify_actor_frame_switch"
+  ],
+  "0x4493d0": [
+   "verify_lifted"
+  ],
+  "0x449460": [
+   "verify_lifted"
+  ],
+  "0x44a720": [
+   "verify_lifted"
   ],
   "0x44c2a0": [
    "verify_piece_child_update"
@@ -2333,6 +2687,9 @@
    "verify_object_attack",
    "verify_object_attack_composed"
   ],
+  "0x452770": [
+   "verify_lifted"
+  ],
   "0x452830": [
    "verify_bonus_effects"
   ],
@@ -2534,14 +2891,296 @@
   "0x456060": [
    "verify_bonus_effects"
   ],
+  "0x456d80": [
+   "verify_lifted"
+  ],
+  "0x456de0": [
+   "verify_lifted"
+  ],
+  "0x456e40": [
+   "verify_lifted"
+  ],
+  "0x456ea0": [
+   "verify_lifted"
+  ],
+  "0x456f10": [
+   "verify_lifted"
+  ],
+  "0x456fa0": [
+   "verify_lifted"
+  ],
+  "0x457000": [
+   "verify_lifted"
+  ],
+  "0x457060": [
+   "verify_lifted"
+  ],
+  "0x4570b0": [
+   "verify_lifted"
+  ],
+  "0x457170": [
+   "verify_lifted"
+  ],
+  "0x4571f0": [
+   "verify_lifted"
+  ],
+  "0x4572b0": [
+   "verify_lifted"
+  ],
+  "0x457420": [
+   "verify_lifted"
+  ],
+  "0x457460": [
+   "verify_lifted"
+  ],
+  "0x457550": [
+   "verify_lifted"
+  ],
+  "0x4575b0": [
+   "verify_lifted"
+  ],
+  "0x457670": [
+   "verify_lifted"
+  ],
+  "0x4576d0": [
+   "verify_lifted"
+  ],
+  "0x457730": [
+   "verify_lifted"
+  ],
+  "0x457770": [
+   "verify_lifted"
+  ],
   "0x457810": [
    "verify_object_events"
+  ],
+  "0x457a00": [
+   "verify_lifted"
+  ],
+  "0x457b70": [
+   "verify_lifted"
+  ],
+  "0x457c10": [
+   "verify_lifted"
+  ],
+  "0x457d10": [
+   "verify_lifted"
+  ],
+  "0x457f40": [
+   "verify_lifted"
+  ],
+  "0x4580b0": [
+   "verify_lifted"
+  ],
+  "0x458100": [
+   "verify_lifted"
+  ],
+  "0x458150": [
+   "verify_lifted"
+  ],
+  "0x458260": [
+   "verify_lifted"
+  ],
+  "0x4582d0": [
+   "verify_lifted"
+  ],
+  "0x458330": [
+   "verify_lifted"
+  ],
+  "0x4583c0": [
+   "verify_lifted"
+  ],
+  "0x458450": [
+   "verify_lifted"
+  ],
+  "0x458490": [
+   "verify_lifted"
+  ],
+  "0x4584f0": [
+   "verify_lifted"
+  ],
+  "0x458560": [
+   "verify_lifted"
+  ],
+  "0x4585c0": [
+   "verify_lifted"
+  ],
+  "0x458710": [
+   "verify_lifted"
+  ],
+  "0x4587a0": [
+   "verify_lifted"
+  ],
+  "0x458880": [
+   "verify_lifted"
+  ],
+  "0x4589e0": [
+   "verify_lifted"
+  ],
+  "0x458a70": [
+   "verify_lifted"
+  ],
+  "0x458c20": [
+   "verify_lifted"
+  ],
+  "0x458d40": [
+   "verify_lifted"
+  ],
+  "0x458e30": [
+   "verify_lifted"
+  ],
+  "0x458f00": [
+   "verify_lifted"
+  ],
+  "0x458fd0": [
+   "verify_lifted"
+  ],
+  "0x4590a0": [
+   "verify_lifted"
+  ],
+  "0x459100": [
+   "verify_lifted"
+  ],
+  "0x459200": [
+   "verify_lifted"
+  ],
+  "0x459290": [
+   "verify_lifted"
+  ],
+  "0x4593b0": [
+   "verify_lifted"
+  ],
+  "0x4594a0": [
+   "verify_lifted"
+  ],
+  "0x459760": [
+   "verify_lifted"
+  ],
+  "0x4597e0": [
+   "verify_lifted"
+  ],
+  "0x459860": [
+   "verify_lifted"
+  ],
+  "0x4598a0": [
+   "verify_lifted"
+  ],
+  "0x459900": [
+   "verify_lifted"
+  ],
+  "0x459950": [
+   "verify_lifted"
+  ],
+  "0x4599e0": [
+   "verify_lifted"
+  ],
+  "0x459a30": [
+   "verify_lifted"
+  ],
+  "0x459ab0": [
+   "verify_lifted"
+  ],
+  "0x459b00": [
+   "verify_lifted"
+  ],
+  "0x459b60": [
+   "verify_lifted"
+  ],
+  "0x45aa20": [
+   "verify_lifted"
+  ],
+  "0x45abd0": [
+   "verify_lifted"
+  ],
+  "0x45ac70": [
+   "verify_lifted"
+  ],
+  "0x45ad20": [
+   "verify_lifted"
+  ],
+  "0x45aea0": [
+   "verify_lifted"
+  ],
+  "0x45af40": [
+   "verify_lifted"
   ],
   "0x45afe0": [
    "verify_actor_refresh"
   ],
+  "0x45b0b0": [
+   "verify_lifted"
+  ],
+  "0x45b0f0": [
+   "verify_lifted"
+  ],
+  "0x45b130": [
+   "verify_lifted"
+  ],
+  "0x45b150": [
+   "verify_lifted"
+  ],
+  "0x45b190": [
+   "verify_lifted"
+  ],
+  "0x45b410": [
+   "verify_lifted"
+  ],
+  "0x45b710": [
+   "verify_lifted"
+  ],
+  "0x45b790": [
+   "verify_lifted"
+  ],
+  "0x45b7f0": [
+   "verify_lifted"
+  ],
+  "0x45b860": [
+   "verify_lifted"
+  ],
+  "0x45b8d0": [
+   "verify_lifted"
+  ],
+  "0x45b950": [
+   "verify_lifted"
+  ],
   "0x45b9c0": [
    "verify_bonus_effects"
+  ],
+  "0x45bad0": [
+   "verify_lifted"
+  ],
+  "0x45bc00": [
+   "verify_lifted"
+  ],
+  "0x45bc80": [
+   "verify_lifted"
+  ],
+  "0x45bd00": [
+   "verify_lifted"
+  ],
+  "0x45bd60": [
+   "verify_lifted"
+  ],
+  "0x45bdd0": [
+   "verify_lifted"
+  ],
+  "0x45be40": [
+   "verify_lifted"
+  ],
+  "0x45beb0": [
+   "verify_lifted"
+  ],
+  "0x45bf20": [
+   "verify_lifted"
+  ],
+  "0x45bf80": [
+   "verify_lifted"
+  ],
+  "0x45bff0": [
+   "verify_lifted"
+  ],
+  "0x45c2f0": [
+   "verify_lifted"
   ],
   "0x45cdc0": [
    "verify_actor_refresh"
@@ -2553,7 +3192,8 @@
    "verify_object_glue"
   ],
   "0x45dca0": [
-   "verify_sprite_load_plan"
+   "verify_sprite_load_plan",
+   "verify_lifted"
   ],
   "0x45dd52": [
    "verify_ui_sprite_bank"
@@ -2561,11 +3201,20 @@
   "0x45e260": [
    "verify_table_release"
   ],
+  "0x45e3c0": [
+   "verify_lifted"
+  ],
+  "0x45e400": [
+   "verify_lifted"
+  ],
   "0x45e440": [
    "verify_table_release"
   ],
   "0x45e490": [
    "verify_ui_artwork"
+  ],
+  "0x45e530": [
+   "verify_lifted"
   ],
   "0x45e630": [
    "verify_table_release"
@@ -2624,11 +3273,23 @@
   "0x45ea80": [
    "verify_table_release"
   ],
+  "0x45eac0": [
+   "verify_lifted"
+  ],
+  "0x45ec00": [
+   "verify_lifted"
+  ],
   "0x45ecd0": [
    "verify_call_glue"
   ],
   "0x45ed40": [
    "verify_table_release"
+  ],
+  "0x45ed60": [
+   "verify_lifted"
+  ],
+  "0x45ef40": [
+   "verify_lifted"
   ],
   "0x45f0a0": [
    "verify_call_glue"
@@ -2639,12 +3300,106 @@
   "0x45f1e0": [
    "verify_field_accessors"
   ],
+  "0x45f3f0": [
+   "verify_lifted"
+  ],
+  "0x45f500": [
+   "verify_lifted"
+  ],
   "0x45f540": [
    "verify_sprite_files",
    "verify_string_append"
   ],
+  "0x45f590": [
+   "verify_lifted"
+  ],
+  "0x45f770": [
+   "verify_lifted"
+  ],
+  "0x45fb00": [
+   "verify_lifted"
+  ],
+  "0x45fc80": [
+   "verify_lifted"
+  ],
+  "0x45fe10": [
+   "verify_lifted"
+  ],
+  "0x45fee0": [
+   "verify_lifted"
+  ],
+  "0x45ffb0": [
+   "verify_lifted"
+  ],
+  "0x4601c0": [
+   "verify_lifted"
+  ],
+  "0x4602a0": [
+   "verify_lifted"
+  ],
+  "0x460440": [
+   "verify_lifted"
+  ],
+  "0x460630": [
+   "verify_lifted"
+  ],
+  "0x460840": [
+   "verify_lifted"
+  ],
+  "0x460a40": [
+   "verify_lifted"
+  ],
+  "0x460ad0": [
+   "verify_lifted"
+  ],
+  "0x460b60": [
+   "verify_lifted"
+  ],
+  "0x460c50": [
+   "verify_lifted"
+  ],
+  "0x460df0": [
+   "verify_lifted"
+  ],
+  "0x460ed0": [
+   "verify_lifted"
+  ],
+  "0x460fa0": [
+   "verify_lifted"
+  ],
+  "0x461090": [
+   "verify_lifted"
+  ],
+  "0x461360": [
+   "verify_lifted"
+  ],
+  "0x4614c0": [
+   "verify_lifted"
+  ],
+  "0x461610": [
+   "verify_lifted"
+  ],
+  "0x461790": [
+   "verify_lifted"
+  ],
+  "0x4657f0": [
+   "verify_lifted"
+  ],
+  "0x465a70": [
+   "verify_lifted"
+  ],
+  "0x469480": [
+   "verify_lifted"
+  ],
   "0x46b800": [
-   "verify_call_glue"
+   "verify_call_glue",
+   "verify_lifted"
+  ],
+  "0x46c500": [
+   "verify_lifted"
+  ],
+  "0x46c5d0": [
+   "verify_lifted"
   ],
   "0x46e022": [
    "verify_sprite_actor_storage"
@@ -2681,6 +3436,18 @@
   "0x46f220": [
    "verify_letter_row"
   ],
+  "0x470960": [
+   "verify_lifted"
+  ],
+  "0x470b20": [
+   "verify_lifted"
+  ],
+  "0x470d20": [
+   "verify_lifted"
+  ],
+  "0x471020": [
+   "verify_lifted"
+  ],
   "0x4710d0": [
    "verify_ui_actor_place"
   ],
@@ -2688,11 +3455,53 @@
    "verify_sprite_actor_storage",
    "verify_ui_companion_spawn"
   ],
+  "0x4711a0": [
+   "verify_lifted"
+  ],
+  "0x471340": [
+   "verify_lifted"
+  ],
+  "0x4713c0": [
+   "verify_lifted"
+  ],
   "0x4713d0": [
    "verify_title_letter"
   ],
   "0x4715a0": [
    "verify_title_letter"
+  ],
+  "0x4718a0": [
+   "verify_lifted"
+  ],
+  "0x471920": [
+   "verify_lifted"
+  ],
+  "0x471940": [
+   "verify_lifted"
+  ],
+  "0x471960": [
+   "verify_lifted"
+  ],
+  "0x471980": [
+   "verify_lifted"
+  ],
+  "0x4719e0": [
+   "verify_lifted"
+  ],
+  "0x4719f0": [
+   "verify_lifted"
+  ],
+  "0x471a20": [
+   "verify_lifted"
+  ],
+  "0x471a40": [
+   "verify_lifted"
+  ],
+  "0x471a50": [
+   "verify_lifted"
+  ],
+  "0x471a60": [
+   "verify_lifted"
   ],
   "0x471a70": [
    "verify_call_glue"
@@ -2700,11 +3509,53 @@
   "0x471a80": [
    "verify_call_glue"
   ],
+  "0x471a90": [
+   "verify_lifted"
+  ],
+  "0x471aa0": [
+   "verify_lifted"
+  ],
+  "0x471ab0": [
+   "verify_lifted"
+  ],
+  "0x471ad0": [
+   "verify_lifted"
+  ],
+  "0x471ae0": [
+   "verify_lifted"
+  ],
+  "0x471af0": [
+   "verify_lifted"
+  ],
   "0x471b00": [
    "verify_call_glue"
   ],
+  "0x471b10": [
+   "verify_lifted"
+  ],
+  "0x471b20": [
+   "verify_lifted"
+  ],
+  "0x471b30": [
+   "verify_lifted"
+  ],
+  "0x471b50": [
+   "verify_lifted"
+  ],
+  "0x471b60": [
+   "verify_lifted"
+  ],
+  "0x471b70": [
+   "verify_lifted"
+  ],
   "0x471b80": [
    "verify_call_glue"
+  ],
+  "0x471b90": [
+   "verify_lifted"
+  ],
+  "0x471ba0": [
+   "verify_lifted"
   ],
   "0x471bb0": [
    "verify_object_slots"
@@ -2739,8 +3590,44 @@
   "0x471ed0": [
    "verify_field_accessors"
   ],
+  "0x471ee0": [
+   "verify_lifted"
+  ],
+  "0x472020": [
+   "verify_lifted"
+  ],
+  "0x472090": [
+   "verify_lifted"
+  ],
+  "0x472100": [
+   "verify_lifted"
+  ],
+  "0x472170": [
+   "verify_lifted"
+  ],
+  "0x4721e0": [
+   "verify_lifted"
+  ],
+  "0x472250": [
+   "verify_lifted"
+  ],
+  "0x4722c0": [
+   "verify_lifted"
+  ],
+  "0x472330": [
+   "verify_lifted"
+  ],
   "0x472350": [
    "verify_call_glue"
+  ],
+  "0x4723a0": [
+   "verify_lifted"
+  ],
+  "0x472440": [
+   "verify_lifted"
+  ],
+  "0x472460": [
+   "verify_lifted"
   ],
   "0x472470": [
    "verify_actor_spawn"
@@ -2755,11 +3642,29 @@
   "0x4725f0": [
    "verify_object_tails"
   ],
+  "0x472620": [
+   "verify_lifted"
+  ],
+  "0x472ad0": [
+   "verify_lifted"
+  ],
+  "0x472bd0": [
+   "verify_lifted"
+  ],
   "0x472d00": [
    "verify_call_glue"
   ],
+  "0x472d90": [
+   "verify_lifted"
+  ],
+  "0x472db0": [
+   "verify_lifted"
+  ],
   "0x4731a0": [
    "verify_icons"
+  ],
+  "0x473490": [
+   "verify_lifted"
   ],
   "0x4735e0": [
    "verify_call_glue"
@@ -2780,10 +3685,29 @@
    "verify_pair_sync"
   ],
   "0x473cd0": [
-   "verify_call_glue"
+   "verify_call_glue",
+   "verify_lifted"
   ],
   "0x473cf0": [
    "verify_bitmap_load"
+  ],
+  "0x473e60": [
+   "verify_lifted"
+  ],
+  "0x473f10": [
+   "verify_lifted"
+  ],
+  "0x473fc0": [
+   "verify_lifted"
+  ],
+  "0x4741a0": [
+   "verify_lifted"
+  ],
+  "0x474490": [
+   "verify_lifted"
+  ],
+  "0x474540": [
+   "verify_lifted"
   ],
   "0x474560": [
    "verify_palette_rgb"
@@ -2791,8 +3715,12 @@
   "0x474910": [
    "verify_palette_color"
   ],
+  "0x474cd0": [
+   "verify_lifted"
+  ],
   "0x474e00": [
-   "verify_render_color_bank"
+   "verify_render_color_bank",
+   "verify_lifted"
   ],
   "0x475183": [
    "verify_palette_lookup_entry"
@@ -2807,10 +3735,20 @@
   "0x4754e0": [
    "verify_actor_render_draw",
    "verify_palette_cycle",
-   "verify_render_pixel"
+   "verify_render_pixel",
+   "verify_lifted"
+  ],
+  "0x475510": [
+   "verify_lifted"
+  ],
+  "0x475700": [
+   "verify_lifted"
   ],
   "0x4757b0": [
    "verify_field_accessors"
+  ],
+  "0x4757e0": [
+   "verify_lifted"
   ],
   "0x475800": [
    "verify_field_accessors"
@@ -2823,6 +3761,9 @@
   ],
   "0x475830": [
    "verify_field_accessors"
+  ],
+  "0x475840": [
+   "verify_lifted"
   ],
   "0x4759d0": [
    "verify_field_accessors"
@@ -2845,6 +3786,12 @@
   "0x475b00": [
    "verify_field_accessors"
   ],
+  "0x475b20": [
+   "verify_lifted"
+  ],
+  "0x475be0": [
+   "verify_lifted"
+  ],
   "0x475c30": [
    "verify_input"
   ],
@@ -2866,11 +3813,17 @@
   "0x475dd0": [
    "verify_field_accessors"
   ],
+  "0x475de0": [
+   "verify_lifted"
+  ],
   "0x475df0": [
    "verify_field_accessors"
   ],
   "0x475e10": [
    "verify_field_accessors"
+  ],
+  "0x475e30": [
+   "verify_lifted"
   ],
   "0x475e40": [
    "verify_field_accessors"
@@ -2920,8 +3873,17 @@
   "0x4763c0": [
    "verify_input"
   ],
+  "0x476400": [
+   "verify_lifted"
+  ],
   "0x4764a0": [
    "verify_call_glue"
+  ],
+  "0x4764d0": [
+   "verify_lifted"
+  ],
+  "0x476500": [
+   "verify_lifted"
   ],
   "0x476530": [
    "verify_call_glue"
@@ -2938,14 +3900,26 @@
   "0x4766f0": [
    "verify_call_glue"
   ],
+  "0x476810": [
+   "verify_lifted"
+  ],
+  "0x476d70": [
+   "verify_lifted"
+  ],
   "0x477240": [
    "verify_field_accessors"
+  ],
+  "0x477610": [
+   "verify_lifted"
   ],
   "0x4777c0": [
    "verify_call_glue"
   ],
   "0x477870": [
    "verify_field_accessors"
+  ],
+  "0x477930": [
+   "verify_lifted"
   ],
   "0x477d70": [
    "verify_object_glue"
@@ -2959,8 +3933,23 @@
   "0x477ed0": [
    "verify_object_glue"
   ],
+  "0x477f10": [
+   "verify_lifted"
+  ],
   "0x478460": [
    "verify_field_accessors"
+  ],
+  "0x478860": [
+   "verify_lifted"
+  ],
+  "0x4788f0": [
+   "verify_lifted"
+  ],
+  "0x478910": [
+   "verify_lifted"
+  ],
+  "0x478ae0": [
+   "verify_lifted"
   ],
   "0x478b40": [
    "verify_call_glue"
@@ -3020,10 +4009,34 @@
   "0x47a040": [
    "verify_surface_fade"
   ],
+  "0x47ab70": [
+   "verify_lifted"
+  ],
+  "0x47bd80": [
+   "verify_lifted"
+  ],
+  "0x47c250": [
+   "verify_lifted"
+  ],
+  "0x47c3b0": [
+   "verify_lifted"
+  ],
+  "0x47c520": [
+   "verify_lifted"
+  ],
+  "0x47c710": [
+   "verify_lifted"
+  ],
   "0x47ce10": [
    "verify_font_crop",
    "verify_font_sheet",
    "verify_surface_blit"
+  ],
+  "0x47e360": [
+   "verify_lifted"
+  ],
+  "0x47e780": [
+   "verify_lifted"
   ],
   "0x47e990": [
    "verify_field_accessors"
@@ -3036,6 +4049,9 @@
   ],
   "0x47ecf0": [
    "verify_object_dwords"
+  ],
+  "0x47ed30": [
+   "verify_lifted"
   ],
   "0x47ed50": [
    "verify_call_glue"
@@ -3052,6 +4068,9 @@
   "0x47ed90": [
    "verify_object_dwords"
   ],
+  "0x47eda0": [
+   "verify_lifted"
+  ],
   "0x47f070": [
    "verify_object_glue"
   ],
@@ -3064,20 +4083,53 @@
   "0x47f280": [
    "verify_pick_entry"
   ],
+  "0x47f3d0": [
+   "verify_lifted"
+  ],
+  "0x47f4b0": [
+   "verify_lifted"
+  ],
+  "0x47f750": [
+   "verify_lifted"
+  ],
+  "0x47f770": [
+   "verify_lifted"
+  ],
+  "0x47f790": [
+   "verify_lifted"
+  ],
+  "0x47f830": [
+   "verify_lifted"
+  ],
   "0x47f8d0": [
    "verify_call_glue"
   ],
   "0x47f8e0": [
    "verify_object_dwords"
   ],
+  "0x47f8f0": [
+   "verify_lifted"
+  ],
   "0x47f9b0": [
    "verify_call_glue"
+  ],
+  "0x47f9e0": [
+   "verify_lifted"
+  ],
+  "0x47fa20": [
+   "verify_lifted"
+  ],
+  "0x47fa90": [
+   "verify_lifted"
   ],
   "0x47faf0": [
    "verify_object_glue"
   ],
   "0x47fbb0": [
    "verify_call_glue"
+  ],
+  "0x47fce0": [
+   "verify_lifted"
   ],
   "0x480070": [
    "verify_object_dwords"
@@ -3092,17 +4144,38 @@
   "0x480890": [
    "verify_color_conversion"
   ],
+  "0x480990": [
+   "verify_lifted"
+  ],
+  "0x480b20": [
+   "verify_lifted"
+  ],
   "0x480ca0": [
    "verify_color_conversion"
   ],
+  "0x480ec0": [
+   "verify_lifted"
+  ],
+  "0x480ff0": [
+   "verify_lifted"
+  ],
+  "0x481340": [
+   "verify_lifted"
+  ],
   "0x481420": [
    "verify_engine_helpers"
+  ],
+  "0x481460": [
+   "verify_lifted"
   ],
   "0x481480": [
    "verify_rtl_glue"
   ],
   "0x481580": [
    "verify_rtl_glue"
+  ],
+  "0x481850": [
+   "verify_lifted"
   ],
   "0x481b20": [
    "verify_object_dwords"
@@ -3174,11 +4247,35 @@
   "0x482770": [
    "verify_random"
   ],
+  "0x4827c0": [
+   "verify_lifted"
+  ],
+  "0x482860": [
+   "verify_lifted"
+  ],
+  "0x4828a0": [
+   "verify_lifted"
+  ],
+  "0x4828f0": [
+   "verify_lifted"
+  ],
+  "0x482930": [
+   "verify_lifted"
+  ],
+  "0x4829c0": [
+   "verify_lifted"
+  ],
   "0x482a40": [
    "verify_call_glue"
   ],
+  "0x482aa0": [
+   "verify_lifted"
+  ],
   "0x482b30": [
    "verify_object_tails"
+  ],
+  "0x482b40": [
+   "verify_lifted"
   ],
   "0x482bb0": [
    "verify_call_glue"
@@ -3191,6 +4288,9 @@
   ],
   "0x482f00": [
    "verify_event_frame_draw"
+  ],
+  "0x482f80": [
+   "verify_lifted"
   ],
   "0x4831b0": [
    "verify_font_stencil"
@@ -3211,11 +4311,20 @@
   "0x484410": [
    "verify_object_dwords"
   ],
+  "0x4848f0": [
+   "verify_lifted"
+  ],
   "0x484a60": [
    "verify_object_tails"
   ],
   "0x4856a0": [
    "verify_surface_clear"
+  ],
+  "0x4856d0": [
+   "verify_lifted"
+  ],
+  "0x485700": [
+   "verify_lifted"
   ],
   "0x487280": [
    "verify_object_glue"
@@ -3225,6 +4334,9 @@
   ],
   "0x4872c0": [
    "verify_object_glue"
+  ],
+  "0x4872f0": [
+   "verify_lifted"
   ],
   "0x4874f0": [
    "verify_array_list"
@@ -3248,10 +4360,12 @@
    "verify_object_dwords"
   ],
   "0x487790": [
-   "verify_sprite_clone"
+   "verify_sprite_clone",
+   "verify_lifted"
   ],
   "0x4877d0": [
-   "verify_sprite_clone"
+   "verify_sprite_clone",
+   "verify_lifted"
   ],
   "0x4877e0": [
    "verify_object_dwords"
@@ -3262,20 +4376,31 @@
   "0x487870": [
    "verify_engine_helpers"
   ],
+  "0x487920": [
+   "verify_lifted"
+  ],
   "0x4879e0": [
    "verify_object_dwords"
   ],
   "0x4879f0": [
-   "verify_object_glue"
+   "verify_object_glue",
+   "verify_lifted"
   ],
   "0x487a10": [
-   "verify_call_glue"
+   "verify_call_glue",
+   "verify_lifted"
   ],
   "0x487a20": [
    "verify_object_dwords"
   ],
   "0x487b00": [
    "verify_object_glue"
+  ],
+  "0x487be0": [
+   "verify_lifted"
+  ],
+  "0x487df0": [
+   "verify_lifted"
   ],
   "0x487fd0": [
    "verify_find_name"
@@ -3286,8 +4411,14 @@
   "0x488040": [
    "verify_object_dwords"
   ],
+  "0x488050": [
+   "verify_lifted"
+  ],
   "0x4885a0": [
    "verify_path_text"
+  ],
+  "0x4886f0": [
+   "verify_lifted"
   ],
   "0x488940": [
    "verify_path_text"
@@ -3300,6 +4431,15 @@
   ],
   "0x488d80": [
    "verify_kind_text"
+  ],
+  "0x489170": [
+   "verify_lifted"
+  ],
+  "0x489230": [
+   "verify_lifted"
+  ],
+  "0x4893c0": [
+   "verify_lifted"
   ],
   "0x489470": [
    "verify_rtl_glue"
@@ -3322,6 +4462,15 @@
   "0x489760": [
    "verify_call_glue"
   ],
+  "0x489790": [
+   "verify_lifted"
+  ],
+  "0x489950": [
+   "verify_lifted"
+  ],
+  "0x489b40": [
+   "verify_lifted"
+  ],
   "0x489ba0": [
    "verify_rtl_glue"
   ],
@@ -3330,6 +4479,18 @@
   ],
   "0x489f90": [
    "verify_object_tails"
+  ],
+  "0x489fa0": [
+   "verify_lifted"
+  ],
+  "0x48a050": [
+   "verify_lifted"
+  ],
+  "0x48a100": [
+   "verify_lifted"
+  ],
+  "0x48a2d0": [
+   "verify_lifted"
   ],
   "0x48a2e0": [
    "verify_object_dwords"
@@ -3404,6 +4565,21 @@
   "0x48abf0": [
    "verify_object_dwords"
   ],
+  "0x48ac50": [
+   "verify_lifted"
+  ],
+  "0x48ad00": [
+   "verify_lifted"
+  ],
+  "0x48ae00": [
+   "verify_lifted"
+  ],
+  "0x48b240": [
+   "verify_lifted"
+  ],
+  "0x48b770": [
+   "verify_lifted"
+  ],
   "0x48c260": [
    "verify_object_glue"
   ],
@@ -3425,8 +4601,35 @@
   "0x48c370": [
    "verify_call_glue"
   ],
+  "0x48c390": [
+   "verify_lifted"
+  ],
+  "0x48c3b0": [
+   "verify_lifted"
+  ],
+  "0x48c3d0": [
+   "verify_lifted"
+  ],
+  "0x48c460": [
+   "verify_lifted"
+  ],
+  "0x48c480": [
+   "verify_lifted"
+  ],
+  "0x48c610": [
+   "verify_lifted"
+  ],
+  "0x48c860": [
+   "verify_lifted"
+  ],
   "0x48c9b0": [
    "verify_object_glue"
+  ],
+  "0x48c9d0": [
+   "verify_lifted"
+  ],
+  "0x48c9f0": [
+   "verify_lifted"
   ],
   "0x48d330": [
    "verify_object_tails"
@@ -3443,20 +4646,31 @@
   "0x48d520": [
    "verify_object_glue"
   ],
+  "0x48d530": [
+   "verify_lifted"
+  ],
   "0x48d5f0": [
    "verify_object_dwords"
   ],
   "0x48d600": [
-   "verify_object_glue"
+   "verify_object_glue",
+   "verify_lifted"
   ],
   "0x48d620": [
-   "verify_call_glue"
+   "verify_call_glue",
+   "verify_lifted"
   ],
   "0x48d630": [
    "verify_object_dwords"
   ],
+  "0x48d650": [
+   "verify_lifted"
+  ],
   "0x48d6b0": [
    "verify_call_glue"
+  ],
+  "0x48d6c0": [
+   "verify_lifted"
   ],
   "0x48d720": [
    "verify_render_pixel",
@@ -3805,17 +5019,23 @@
   "0x4ac130": [
    "verify_piece_actor_destroy"
   ],
+  "0x4ac1c0": [
+   "verify_lifted"
+  ],
   "0x4ac1f0": [
    "verify_animation"
   ],
   "0x4ac250": [
-   "verify_animation"
+   "verify_animation",
+   "verify_lifted"
   ],
   "0x4ac2b0": [
-   "verify_animation"
+   "verify_animation",
+   "verify_lifted"
   ],
   "0x4ac310": [
-   "verify_animation"
+   "verify_animation",
+   "verify_lifted"
   ],
   "0x4ac370": [
    "verify_actor_counters"
@@ -3865,7 +5085,8 @@
    "verify_call_glue"
   ],
   "0x4ac590": [
-   "verify_timer"
+   "verify_timer",
+   "verify_lifted"
   ],
   "0x4ac5b0": [
    "verify_actor_wrap",
@@ -3873,6 +5094,9 @@
   ],
   "0x4ac600": [
    "verify_timer"
+  ],
+  "0x4ac610": [
+   "verify_lifted"
   ],
   "0x4ac620": [
    "verify_timer"
@@ -4005,6 +5229,9 @@
   "0x4ad260": [
    "verify_actor_angle"
   ],
+  "0x4ad2c0": [
+   "verify_lifted"
+  ],
   "0x4ad3c0": [
    "verify_actor_double_orbit"
   ],
@@ -4027,7 +5254,8 @@
    "verify_word_transition"
   ],
   "0x4ad630": [
-   "verify_word_transition"
+   "verify_word_transition",
+   "verify_lifted"
   ],
   "0x4ad6e0": [
    "verify_actor_dword_transition",
@@ -4042,12 +5270,22 @@
   "0x4ad790": [
    "verify_actor_dword_transition"
   ],
+  "0x4ad870": [
+   "verify_lifted"
+  ],
   "0x4ade60": [
    "verify_actor_draw_slot",
-   "verify_actor_render_draw"
+   "verify_actor_render_draw",
+   "verify_lifted"
   ],
   "0x4adf20": [
    "verify_block_factory"
+  ],
+  "0x4adf70": [
+   "verify_lifted"
+  ],
+  "0x4adfa0": [
+   "verify_lifted"
   ],
   "0x4ae010": [
    "verify_actor_draw_slot"
@@ -4058,13 +5296,18 @@
   "0x4ae150": [
    "verify_linked_alternating",
    "verify_linked_movement",
-   "verify_piece_child_update"
+   "verify_piece_child_update",
+   "verify_lifted"
   ],
   "0x4ae170": [
    "verify_engine_helpers"
   ],
+  "0x4ae1f0": [
+   "verify_lifted"
+  ],
   "0x4ae250": [
-   "verify_render_preparation"
+   "verify_render_preparation",
+   "verify_lifted"
   ],
   "0x4ae26d": [
    "verify_render_weights"
@@ -4136,7 +5379,11 @@
   "0x4af8c0": [
    "verify_actor_chain_visit",
    "verify_actor_render_draw",
-   "verify_ui_artwork"
+   "verify_ui_artwork",
+   "verify_lifted"
+  ],
+  "0x4b0b70": [
+   "verify_lifted"
   ],
   "0x4b14c0": [
    "verify_actor_image_bounds",
@@ -4150,6 +5397,12 @@
    "verify_font_scaled_draw",
    "verify_font_scaled_text",
    "verify_render_geometry"
+  ],
+  "0x4b17b0": [
+   "verify_lifted"
+  ],
+  "0x4b17e0": [
+   "verify_lifted"
   ],
   "0x4b1a99": [
    "verify_actor_image_clip",
@@ -4167,11 +5420,38 @@
   "0x4b2290": [
    "verify_object_dwords"
   ],
+  "0x4b23c0": [
+   "verify_lifted"
+  ],
   "0x4b2400": [
    "verify_object_glue"
   ],
   "0x4b25b0": [
    "verify_text_wrap"
+  ],
+  "0x4b2d90": [
+   "verify_lifted"
+  ],
+  "0x4b3100": [
+   "verify_lifted"
+  ],
+  "0x4b3140": [
+   "verify_lifted"
+  ],
+  "0x4b3210": [
+   "verify_lifted"
+  ],
+  "0x4b3360": [
+   "verify_lifted"
+  ],
+  "0x4b3390": [
+   "verify_lifted"
+  ],
+  "0x4b34d0": [
+   "verify_lifted"
+  ],
+  "0x4b3500": [
+   "verify_lifted"
   ],
   "0x4b35b0": [
    "verify_object_dwords"
@@ -4188,11 +5468,23 @@
   "0x4b3940": [
    "verify_list_text"
   ],
+  "0x4b3a00": [
+   "verify_lifted"
+  ],
   "0x4b3c30": [
    "verify_object_dwords"
   ],
   "0x4b3c40": [
    "verify_list_text"
+  ],
+  "0x4b3ce0": [
+   "verify_lifted"
+  ],
+  "0x4b3d60": [
+   "verify_lifted"
+  ],
+  "0x4b3fb0": [
+   "verify_lifted"
   ],
   "0x4b4270": [
    "verify_object_bounds"
@@ -4257,14 +5549,24 @@
   "0x4b4cd0": [
    "verify_object_glue"
   ],
+  "0x4b4cf0": [
+   "verify_lifted"
+  ],
   "0x4b4fa0": [
    "verify_object_dwords"
   ],
   "0x4b4fb0": [
    "verify_list_text"
   ],
+  "0x4b5050": [
+   "verify_lifted"
+  ],
+  "0x4b50d0": [
+   "verify_lifted"
+  ],
   "0x4b5400": [
-   "verify_constructors"
+   "verify_constructors",
+   "verify_lifted"
   ],
   "0x4b5420": [
    "verify_object_glue"
@@ -4274,6 +5576,12 @@
   ],
   "0x4b5500": [
    "verify_object_tails"
+  ],
+  "0x4b5550": [
+   "verify_lifted"
+  ],
+  "0x4b5580": [
+   "verify_lifted"
   ],
   "0x4b58a0": [
    "verify_number_text"
@@ -4298,6 +5606,12 @@
   ],
   "0x4b6020": [
    "verify_object_tails"
+  ],
+  "0x4b6070": [
+   "verify_lifted"
+  ],
+  "0x4b60c0": [
+   "verify_lifted"
   ],
   "0x4b6200": [
    "verify_actor_render_draw",
@@ -4357,6 +5671,12 @@
   "0x4b6a10": [
    "verify_object_glue"
   ],
+  "0x4b6a30": [
+   "verify_lifted"
+  ],
+  "0x4b6ea0": [
+   "verify_lifted"
+  ],
   "0x4b6f70": [
    "verify_object_glue"
   ],
@@ -4384,6 +5704,12 @@
   "0x4b7420": [
    "verify_list_text"
   ],
+  "0x4b74c0": [
+   "verify_lifted"
+  ],
+  "0x4b7600": [
+   "verify_lifted"
+  ],
   "0x4b76d0": [
    "verify_list_text"
   ],
@@ -4396,8 +5722,12 @@
   "0x4b78d0": [
    "verify_object_glue"
   ],
+  "0x4b78e0": [
+   "verify_lifted"
+  ],
   "0x4b79a0": [
-   "verify_object_glue"
+   "verify_object_glue",
+   "verify_lifted"
   ],
   "0x4b79c0": [
    "verify_object_dwords"
@@ -4408,17 +5738,29 @@
   "0x4b7a80": [
    "verify_object_glue"
   ],
+  "0x4b7b00": [
+   "verify_lifted"
+  ],
   "0x4b7d10": [
    "verify_timer"
   ],
   "0x4b7da0": [
    "verify_call_glue"
   ],
+  "0x4b7dd0": [
+   "verify_lifted"
+  ],
   "0x4b7e80": [
    "verify_wave_load"
   ],
   "0x4b8170": [
    "verify_call_glue"
+  ],
+  "0x4b8187": [
+   "verify_lifted"
+  ],
+  "0x4b826f": [
+   "verify_lifted"
   ],
   "0x4b8fbc": [
    "verify_rtl_glue"
@@ -4442,6 +5784,18 @@
    "verify_surface",
    "verify_ui_artwork"
   ],
+  "0x4b9310": [
+   "verify_lifted"
+  ],
+  "0x4b9330": [
+   "verify_lifted"
+  ],
+  "0x4b9cf0": [
+   "verify_lifted"
+  ],
+  "0x4b9d70": [
+   "verify_lifted"
+  ],
   "0x4c0990": [
    "verify_object_dwords"
   ],
@@ -4450,6 +5804,15 @@
   ],
   "0x4c3fa0": [
    "verify_object_glue"
+  ],
+  "0x4c5400": [
+   "verify_lifted"
+  ],
+  "0x4c5a40": [
+   "verify_lifted"
+  ],
+  "0x4c5bb0": [
+   "verify_lifted"
   ],
   "0x4c5bc0": [
    "verify_call_glue"
@@ -4466,8 +5829,20 @@
   "0x4c5c10": [
    "verify_call_glue"
   ],
+  "0x4c5c20": [
+   "verify_lifted"
+  ],
   "0x4c5d60": [
    "verify_object_dwords"
+  ],
+  "0x4c69c0": [
+   "verify_lifted"
+  ],
+  "0x4c70f0": [
+   "verify_lifted"
+  ],
+  "0x4c9820": [
+   "verify_lifted"
   ],
   "0x4c9840": [
    "verify_rtl_glue"
@@ -4529,6 +5904,9 @@
   "0x4cb460": [
    "verify_rtl_glue"
   ],
+  "0x4cb4f0": [
+   "verify_lifted"
+  ],
   "0x4cba60": [
    "verify_rtl_glue"
   ],
@@ -4550,6 +5928,9 @@
   "0x4cd0a4": [
    "verify_rtl_glue"
   ],
+  "0x4cd0c0": [
+   "verify_lifted"
+  ],
   "0x4cd520": [
    "verify_rtl_glue"
   ],
@@ -4558,6 +5939,9 @@
   ],
   "0x4cd836": [
    "verify_rtl_glue"
+  ],
+  "0x4cd847": [
+   "verify_lifted"
   ],
   "0x4cd9f0": [
    "verify_rtl_glue"
@@ -4592,8 +5976,14 @@
   "0x4cf3a0": [
    "verify_rtl_glue"
   ],
+  "0x4cf480": [
+   "verify_lifted"
+  ],
   "0x4cf8e0": [
    "verify_rtl_glue"
+  ],
+  "0x4cf910": [
+   "verify_lifted"
   ],
   "0x4cf980": [
    "verify_rtl_glue"

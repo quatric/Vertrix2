@@ -70,7 +70,7 @@ class Services(c.Structure):
 
 class Context(c.Structure):
     _fields_ = [('services', c.POINTER(Services)), ('stack', c.c_void_p), ('stack_low', U),
-                ('stack_size', U), ('failed', c.c_int)]
+                ('stack_size', U), ('failed', c.c_int), ('steps', U)]
 
 
 class LocalStubs(Stubs):
@@ -125,6 +125,11 @@ def main():
     original = Original(args.executable)
     cpu = original.cpu
     cpu.mem_map(0x900000, 0x40000)
+    cpu.mem_map(0x950000, 0x20000)
+    try:
+        cpu.mem_map(0, 0x1000)  # fs:[0], the exception chain, reads and writes page zero
+    except UcError:
+        pass
     pool = Pool(cpu, OBJECTS, SIZE)
     pool.handles = [0x900000 + SIZE * i for i in range(OBJECTS)]
     handles = pool.handles
@@ -136,7 +141,7 @@ def main():
             return
         if pool.handles[0] <= address < pool.handles[-1] + SIZE:
             return
-        if STACK - STACK_SPAN <= address < STACK + 0x40 or address >= 0x700000:
+        if STACK - STACK_SPAN <= address < STACK + 0x40 or 0x700000 <= address < 0x710000:
             return
         old = bytes(uc.mem_read(address, size))
         state['writes'].append((address, size, old, value & ((1 << (8 * size)) - 1)))
@@ -153,9 +158,12 @@ def main():
     stack_low = STACK - STACK_SPAN
     outs_pending = []
 
+    def scratch_pointer():
+        return 0x950000 + rng.randrange(0, 0x10000)
+
     def value_mix():
         return rng.choice([0, 1, 2, 3, 0xffffffff, rng.getrandbits(32), rng.randrange(0, 64),
-                           rng.choice(handles)])
+                           rng.choice(handles), scratch_pointer(), scratch_pointer()])
 
     def handler(address, eax, edx, ebx, ecx, stack):
         if address in OUTPUTS:
@@ -251,12 +259,15 @@ def main():
         cpu.ctl_flush_tb()  # code translated before the hooks existed must be re-translated
         passed = skipped = 0
         failure = None
+        reasons = {}
         for case in range(args.cases):
             def patch(handle, data):
                 for offset in range(0, SIZE, 4):
                     choice = rng.random()
-                    if choice < 0.3:
+                    if choice < 0.25:
                         value = rng.choice(handles)
+                    elif choice < 0.35:
+                        value = scratch_pointer()
                     elif choice < 0.55:
                         value = 0
                     elif choice < 0.8:
@@ -266,6 +277,7 @@ def main():
                     struct.pack_into('<I', data, offset, value)
                 struct.pack_into('<I', data, 0x158, VTABLE)
             pool.fill(rng, patch)
+            cpu.mem_write(0x950000, rng.randbytes(0x20000))
             for offset in range(0, STACK_SPAN, 4):
                 struct.pack_into('<I', stack_buffer, offset, rng.getrandbits(32))
             cpu.mem_write(stack_low, bytes(stack_buffer[:STACK_SPAN]))
@@ -283,8 +295,12 @@ def main():
             try:
                 result = original.call(address, eax=entry_eax, args=arguments, **registers)
                 completed = True
-            except (UcError, RuntimeError):
+            except UcError as error:
                 completed = False
+                reasons[str(error)] = reasons.get(str(error), 0) + 1
+            except RuntimeError:
+                completed = False
+                reasons['step limit'] = reasons.get('step limit', 0) + 1
             state['recording'] = False
             oracle_writes = list(state['writes'])
             after = {}
@@ -299,9 +315,14 @@ def main():
                     pass
             if not completed:
                 skipped += 1
+                if skipped >= 25 and passed < 5:
+                    break
                 continue
             stack_buffer[STACK_SPAN:STACK_SPAN + 20] = (c.c_uint8 * 20).from_buffer_copy(
                 struct.pack('<I', 0) + struct.pack('<IIII', *arguments))
+            above = bytes(cpu.mem_read(STACK + 20, 0x40 - 20))
+            for index, byte in enumerate(above):
+                stack_buffer[STACK_SPAN + 20 + index] = byte
             expected = []
             for entry in stubs.log:
                 if entry[0] >= SLOT_BASE and entry[0] < SLOT_BASE + 0x10 * SLOTS:
@@ -315,18 +336,19 @@ def main():
             native_writes.clear()
             unsupported[0] = False
             context = Context(c.pointer(services), c.addressof(stack_buffer), stack_low,
-                              STACK_SPAN + 0x40, 0)
+                              STACK_SPAN + 0x40, 0, 0)
             got = function(c.byref(context), entry_eax, registers['edx'], registers['ebx'],
                            registers['ecx'], esi, edi, ebp, STACK)
             if unsupported[0]:
                 skipped += 1
+                reasons['pointer into an object'] = reasons.get('pointer into an object', 0) + 1
                 continue
             problems = []
             if native_log != expected:
                 first = next((i for i, (x, y) in enumerate(zip(native_log, expected)) if x != y),
                              min(len(native_log), len(expected)))
                 problems.append(('calls', 'first difference', first, len(native_log), len(expected),
-                                 native_log[:first + 3], expected[:first + 3]))
+                                 native_log[first:first + 2], expected[first:first + 2]))
             elif (got & 0xffffffff) != (result & 0xffffffff):
                 problems.append(('result', hex(got), hex(result)))
             elif context.failed:
@@ -356,7 +378,7 @@ def main():
                 failure = (case, problems[0])
                 break
             passed += 1
-        results[hex(address)] = {'passed': passed, 'skipped': skipped,
+        results[hex(address)] = {'passed': passed, 'skipped': skipped, 'reasons': reasons,
                                  'failure': None if failure is None else str(failure)[:600]}
         print(hex(address), results[hex(address)], flush=True)
     if args.report:

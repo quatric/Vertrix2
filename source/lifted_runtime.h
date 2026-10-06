@@ -18,7 +18,12 @@ typedef struct
     uint32_t stack_low;
     uint32_t stack_size;
     int failed;
+    uint32_t steps;
 } LiftContext;
+
+/* A lifted routine stops (failed) after this many backward jumps, so that data the original
+ * would not loop on cannot hang the caller. */
+#define VERTRIX_LIFT_STEP_LIMIT 150000u
 
 /* Reads or writes the original memory at an effective address. base is the register that formed
  * it (zero when the address is absolute or indexed): an object handle resolves to storage, the

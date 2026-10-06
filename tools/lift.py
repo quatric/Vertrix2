@@ -75,6 +75,8 @@ class Lifter:
 
     def address(self, insn, op):
         mem = op.mem
+        if mem.segment and insn.reg_name(mem.segment) != "fs":
+            raise Unsupported("segment override")
         parts = []
         if mem.base:
             parts.append(insn.reg_name(mem.base))
@@ -154,14 +156,73 @@ class Lifter:
             out.append("CF = 0; OF = 0;")
         return " ".join(out)
 
+    def jump(self, insn, goto, condition):
+        """A jump; a backward one counts against the step limit of the routine."""
+        target = insn.operands[0].imm
+        guard = ("if (++L->steps > VERTRIX_LIFT_STEP_LIMIT) { L->failed = 1; return 0; } "
+                 if target <= insn.address else "")
+        if condition is None:
+            return [guard + goto]
+        return [f"if ({condition}) {{ {guard}{goto} }}"]
+
+    def string_operation(self, insn):
+        parts = insn.mnemonic.split()
+        prefix = parts[0] if len(parts) > 1 else None
+        base = parts[-1]
+        width = {"b": 8, "w": 16, "d": 32}[base[-1]]
+        step = width // 8
+        mask = f"{(1 << width) - 1:#x}u"
+        sign = f"{1 << (width - 1):#x}u"
+        kind = base[:-1]
+        regs = {8: "(eax & 0xffu)", 16: "(eax & 0xffffu)", 32: "eax"}[width]
+        if kind == "movs":
+            body = [f"vertrix_lift_write(L, edi, {width}, vertrix_lift_read(L, esi, {width}, 0), 0);",
+                    f"esi += {step}u; edi += {step}u;"]
+        elif kind == "stos":
+            body = [f"vertrix_lift_write(L, edi, {width}, {regs}, 0);", f"edi += {step}u;"]
+        elif kind == "lods":
+            body = [self.write_register("eax", f"vertrix_lift_read(L, esi, {width}, 0)", width),
+                    f"esi += {step}u;"]
+        elif kind in ("scas", "cmps"):
+            left, right = ((regs, f"vertrix_lift_read(L, edi, {width}, 0)") if kind == "scas" else
+                           (f"vertrix_lift_read(L, esi, {width}, 0)", f"vertrix_lift_read(L, edi, {width}, 0)"))
+            body = [f"a = {left}; b = {right}; r = (a - b) & {mask}; ZF = r == 0; "
+                    f"SF = (r & {sign}) != 0; CF = a < b; OF = (((a ^ b) & (a ^ r)) & {sign}) != 0; "
+                    f"PF = !__builtin_parity(r & 0xffu);",
+                    f"edi += {step}u;" + (f" esi += {step}u;" if kind == "cmps" else "")]
+        else:
+            raise Unsupported(insn.mnemonic)
+        if prefix is None:
+            return body
+        stop = ""
+        if kind in ("scas", "cmps"):
+            stop = " if (ZF != %d) break;" % (1 if prefix in ("repe", "repz") else 0)
+            if prefix in ("rep",):
+                raise Unsupported("rep with a comparison")
+        return ["while (ecx != 0)", "{"] + body + ["ecx -= 1;" + stop, "if (L->failed) return 0;", "}"]
+
+    def write_register(self, name, value, width):
+        if width == 32:
+            return f"{name} = {value};"
+        if width == 16:
+            return f"{name} = ({name} & 0xffff0000u) | (({value}) & 0xffffu);"
+        return f"{name} = ({name} & 0xffffff00u) | (({value}) & 0xffu);"
+
     def translate(self, insn, labels, nxt):
         mn = insn.mnemonic
+        if any(mn.endswith(x) for x in ("movsb", "movsw", "movsd", "stosb", "stosw", "stosd", "lodsb",
+                                        "lodsw", "lodsd", "scasb", "scasw", "scasd", "cmpsb",
+                                        "cmpsw", "cmpsd")) and insn.op_str.find("[") >= 0 and \
+                "xmm" not in insn.op_str:
+            return self.string_operation(insn)
+        if mn == "cld":
+            return []
         ops = insn.operands
         w = self.width(insn)
         m = f"{(1 << w) - 1:#x}u"
         if mn == "push":
             value = self.read(insn, ops[0], 32)
-            return [f"esp -= 4; vertrix_lift_write(L, esp, 32, {value}, 0);"]
+            return [f"t = {value}; esp -= 4; vertrix_lift_write(L, esp, 32, t, 0);"]
         if mn == "pop":
             return ["t = vertrix_lift_read(L, esp, 32, 0); esp += 4; " + self.write(insn, ops[0], "t", 32)]
         if mn in ("mov",):
@@ -175,9 +236,19 @@ class Lifter:
         if mn == "lea":
             addr, _ = self.address(insn, ops[1])
             return [self.write(insn, ops[0], f"({addr})", 32)]
-        if mn in ("add", "sub", "cmp", "and", "or", "xor", "test", "adc", "sbb"):
-            if mn in ("adc", "sbb"):
-                raise Unsupported(mn)
+        if mn in ("adc", "sbb"):
+            a = self.read(insn, ops[0], w)
+            b = self.read(insn, ops[1], w)
+            sign = f"{1 << (w - 1):#x}u"
+            if mn == "sbb":
+                body = (f"r = (a - b - k) & {m}; CF = (uint64_t)a < (uint64_t)b + k; "
+                        f"OF = (((a ^ b) & (a ^ r)) & {sign}) != 0;")
+            else:
+                body = (f"r = (a + b + k) & {m}; CF = (uint64_t)a + (uint64_t)b + k > {m}; "
+                        f"OF = ((~(a ^ b) & (a ^ r)) & {sign}) != 0;")
+            return [f"a = {a}; b = {b} & {m}; k = CF; {body} ZF = r == 0; SF = (r & {sign}) != 0; "
+                    f"PF = !__builtin_parity(r & 0xffu);", self.write(insn, ops[0], "r", w)]
+        if mn in ("add", "sub", "cmp", "and", "or", "xor", "test"):
             a = self.read(insn, ops[0], w)
             b = self.read(insn, ops[1], w)
             if mn == "xor" and ops[0].type == X86_OP_REG and ops[1].type == X86_OP_REG and \
@@ -254,7 +325,11 @@ class Lifter:
         if mn == "call":
             if ops[0].type == X86_OP_IMM:
                 target = ops[0].imm
+                if target == self.start:
+                    raise Unsupported("recursive call")
                 count = self.callee_arguments(target)
+                if count > 11:
+                    raise Unsupported("callee with more than eleven stack arguments")
                 return [f"eax = vertrix_lift_call(L, {target:#x}, eax, edx, ebx, ecx, esp, {count}); "
                         f"esp += {4 * count}u; if (L->failed) return 0;"]
             if ops[0].type == X86_OP_MEM and ops[0].mem.base and not ops[0].mem.index:
@@ -266,12 +341,13 @@ class Lifter:
         if mn == "jmp":
             if ops[0].type != X86_OP_IMM:
                 raise Unsupported("indirect jmp")
-            return [f"goto L_{ops[0].imm:x};"]
+            return self.jump(insn, f"goto L_{ops[0].imm:x};", None)
         if mn in JCC:
-            return [f"if ({JCC[mn]}) goto L_{ops[0].imm:x};"]
+            return self.jump(insn, f"goto L_{ops[0].imm:x};", JCC[mn])
         raise Unsupported(mn)
 
     def lift(self, start):
+        self.start = start
         instructions = {}
         work = [start]
         targets = set()
@@ -330,6 +406,7 @@ FUNCTION = """uint32_t vertrix_lift_{address:06x}(LiftContext *L, uint32_t eax, 
     uint32_t b;
     uint32_t c;
     uint32_t d;
+    uint32_t k;
     uint32_t r;
     uint32_t t;
     uint64_t u;
@@ -340,7 +417,7 @@ FUNCTION = """uint32_t vertrix_lift_{address:06x}(LiftContext *L, uint32_t eax, 
     unsigned CF = 0;
     unsigned OF = 0;
     unsigned PF = 0;
-    (void)a; (void)b; (void)c; (void)d; (void)r; (void)t; (void)u; (void)p; (void)s;
+    (void)a; (void)b; (void)c; (void)d; (void)k; (void)r; (void)t; (void)u; (void)p; (void)s;
     (void)ZF; (void)SF; (void)CF; (void)OF; (void)PF; (void)esi; (void)edi; (void)ebp;
     (void)L; (void)eax; (void)edx; (void)ebx; (void)ecx; (void)esp;
 {body}

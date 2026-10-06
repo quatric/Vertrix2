@@ -14,15 +14,19 @@ separately.
 | | |
 |---|---|
 | verifier scripts run | 438 (427 pass, 4 REVIEW, 1 SKIP, 6 PARTIAL) |
-| entry points verified end to end | 1390 |
+| entry points verified end to end | 1840 |
 | direct `call` targets in 0x401000..0x4d0000 | 1827 |
-| of those, verified | 902 |
+| of those, verified | 1258 |
 | of those, named in `source/` but not verified end to end | 294 (`docs/named-but-unverified.txt`) |
-| of those, not named in `source/` (not ported) | 688 (`docs/unported-call-targets.txt`) |
-| verified entry points outside the direct-call set (handlers reached by token or vtable, library) | 488 |
+| of those, lifted but too few cases complete to count | 158 (`docs/unverified-lifted.txt`) |
+| of those, lifted but failing the comparison | 5 |
+| of those, calling the Win32 import table (not portable) | 105 |
+| of those, refused by the lifter for another reason | 7 |
+| of those, not yet reached by any tool | 0 |
 
-The bonus-effect verifier alone covers 73 routines (`docs/BONUS-EFFECTS.md`); the run above started
-before the last ones were added, so the total is a little higher now.
+The bonus-effect verifier covers 105 hand-recovered routines (`docs/BONUS-EFFECTS.md`) and
+`tools/verify_lifted.py` another 490 lifted ones (`docs/LIFTED.md`); both are in the counts above
+(the 438-script run predates them; their entries were merged into `verified-functions.json`).
 
 ## Not counted
 
@@ -35,5 +39,7 @@ before the last ones were added, so the total is a little higher now.
 
 ## Not at 1:1
 
-688 directly-called functions are not ported at all, about 260 of them in 0x452830..0x45bd00, and
-the dispatcher 0x43c140 and the wiring into the game are open.
+569 directly-called functions are not verified end to end: 294 are named in `source/` but were
+never run against the original, 158 are lifted but their inputs could not be modelled well enough
+(pointer arguments, buffers), 5 fail the comparison, 105 call the Win32 import table and 7 use
+constructs the lifter refuses. The dispatcher 0x43c140 and the wiring into the game are open.
