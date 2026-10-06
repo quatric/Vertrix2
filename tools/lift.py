@@ -330,11 +330,13 @@ class Lifter:
                 count = self.callee_arguments(target)
                 if count > 11:
                     raise Unsupported("callee with more than eleven stack arguments")
-                return [f"eax = vertrix_lift_call(L, {target:#x}, eax, edx, ebx, ecx, esp, {count}); "
+                return [f"vertrix_lift_write(L, esp - 4u, 32, {insn.address + insn.size:#x}u, 0);",
+                        f"eax = vertrix_lift_call(L, {target:#x}, eax, edx, ebx, ecx, esp, {count}); "
                         f"esp += {4 * count}u; if (L->failed) return 0;"]
             if ops[0].type == X86_OP_MEM and ops[0].mem.base and not ops[0].mem.index:
                 slot = (ops[0].mem.disp & 0xffffffff) // 4
-                return [f"eax = vertrix_lift_virtual(L, eax, {slot}u); if (L->failed) return 0;"]
+                return [f"vertrix_lift_write(L, esp - 4u, 32, {insn.address + insn.size:#x}u, 0);",
+                        f"eax = vertrix_lift_virtual(L, eax, {slot}u); if (L->failed) return 0;"]
             raise Unsupported("indirect call")
         if mn == "ret":
             return ["return eax;"]

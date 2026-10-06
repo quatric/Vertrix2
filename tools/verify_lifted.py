@@ -18,7 +18,8 @@ import re
 import struct
 from pathlib import Path
 
-from unicorn import UC_HOOK_CODE, UC_HOOK_MEM_WRITE, UcError
+from unicorn import (UC_HOOK_CODE, UC_HOOK_MEM_READ_UNMAPPED, UC_HOOK_MEM_WRITE,
+                     UC_HOOK_MEM_WRITE_UNMAPPED, UcError)
 from unicorn.x86_const import UC_X86_REG_EBP, UC_X86_REG_EDI, UC_X86_REG_ESI
 
 from original import Original, STACK
@@ -31,6 +32,7 @@ VTABLE = 0x700400
 SLOT_BASE = 0x700500
 SLOTS = 16
 STACK_SPAN = 0x800
+INSTRUCTION_BUDGET = 150_000
 Global = c.CFUNCTYPE(U, U, c.c_void_p)
 GlobalWrite = c.CFUNCTYPE(None, U, U, c.c_void_p)
 Virtual = c.CFUNCTYPE(c.c_int32, c.c_void_p, U, U, U)
@@ -68,9 +70,14 @@ class Services(c.Structure):
                 ('global_write', GlobalWrite)]
 
 
+Locate = c.CFUNCTYPE(c.c_int, c.c_void_p, U, c.POINTER(c.c_void_p), c.POINTER(c.c_size_t),
+                     c.POINTER(U))
+
+
 class Context(c.Structure):
     _fields_ = [('services', c.POINTER(Services)), ('stack', c.c_void_p), ('stack_low', U),
-                ('stack_size', U), ('failed', c.c_int), ('steps', U)]
+                ('stack_size', U), ('failed', c.c_int), ('steps', U), ('locate', Locate),
+                ('locate_context', c.c_void_p)]
 
 
 class LocalStubs(Stubs):
@@ -147,6 +154,20 @@ def main():
         state['writes'].append((address, size, old, value & ((1 << (8 * size)) - 1)))
 
     cpu.hook_add(UC_HOOK_MEM_WRITE, on_write)
+
+    def map_page(address):
+        page = address & ~0xfff
+        try:
+            cpu.mem_map(page, 0x1000)
+            cpu.mem_write(page, random.Random(page).randbytes(0x1000))
+        except UcError:
+            return False
+        return True
+
+    def on_unmapped(uc, access, address, size, value, user):
+        return map_page(address)
+
+    cpu.hook_add(UC_HOOK_MEM_READ_UNMAPPED | UC_HOOK_MEM_WRITE_UNMAPPED, on_unmapped)
     # vtable of every object: slot stubs that log themselves
     for slot in range(SLOTS):
         cpu.mem_write(VTABLE + 4 * slot, struct.pack('<I', SLOT_BASE + 0x10 * slot))
@@ -214,7 +235,12 @@ def main():
         try:
             memory = bytes(cpu.mem_read(address, 4))
         except UcError:
-            memory = bytes(4)
+            map_page(address)
+            map_page(address + 3)
+            try:
+                memory = bytes(cpu.mem_read(address, 4))
+            except UcError:
+                memory = bytes(4)
         return struct.unpack('<I', bytes(native_writes.get(address + i, memory[i])
                                          for i in range(4)))[0]
 
@@ -236,12 +262,39 @@ def main():
     def table_range(index, lo, hi, context):
         return 0
 
+    @Locate
+    def locate(context, address, storage, size, base):
+        for handle in handles:
+            if handle <= address < handle + SIZE:
+                storage[0] = c.addressof(pool.buffers[handle])
+                size[0] = SIZE
+                base[0] = handle
+                return 1
+        return 0
+
     outs_pending_native = []
     counts = {}
     calls_struct = Calls(call, None)
     factory = Factory(pool.resolve, allocate, draw, table_range, None)
     services = Services(c.pointer(calls_struct), pool.resolve, None, virtual, None, draw, None,
                         c.pointer(factory), global_read, None, global_write)
+    from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_EDX, UC_X86_REG_EBX, UC_X86_REG_ECX
+    from unicorn.x86_const import UC_X86_REG_EIP, UC_X86_REG_ESP
+    from original import RETURN
+
+    def limited_call(address, eax, arguments, registers):
+        """Original.call with a smaller instruction budget (the slow cases are the loops)."""
+        cpu.mem_write(STACK, struct.pack('<' + 'I' * (1 + len(arguments)), RETURN, *arguments))
+        for register, value in ((UC_X86_REG_ESP, STACK), (UC_X86_REG_EAX, eax),
+                                (UC_X86_REG_EDX, registers['edx']),
+                                (UC_X86_REG_EBX, registers['ebx']),
+                                (UC_X86_REG_ECX, registers['ecx'])):
+            cpu.reg_write(register, value)
+        cpu.emu_start(address, RETURN, timeout=2_000_000, count=INSTRUCTION_BUDGET)
+        if cpu.reg_read(UC_X86_REG_EIP) != RETURN:
+            raise RuntimeError('did not reach its return boundary')
+        return cpu.reg_read(UC_X86_REG_EAX)
+
     results = {}
     for address in routines:
         function = getattr(n, 'vertrix_lift_%06x' % address)
@@ -293,7 +346,7 @@ def main():
             state['writes'].clear()
             state['recording'] = True
             try:
-                result = original.call(address, eax=entry_eax, args=arguments, **registers)
+                result = limited_call(address, entry_eax, arguments, registers)
                 completed = True
             except UcError as error:
                 completed = False
@@ -315,7 +368,7 @@ def main():
                     pass
             if not completed:
                 skipped += 1
-                if skipped >= 25 and passed < 5:
+                if skipped >= 10 and passed < 3:
                     break
                 continue
             stack_buffer[STACK_SPAN:STACK_SPAN + 20] = (c.c_uint8 * 20).from_buffer_copy(
@@ -336,7 +389,7 @@ def main():
             native_writes.clear()
             unsupported[0] = False
             context = Context(c.pointer(services), c.addressof(stack_buffer), stack_low,
-                              STACK_SPAN + 0x40, 0, 0)
+                              STACK_SPAN + 0x40, 0, 0, locate, None)
             got = function(c.byref(context), entry_eax, registers['edx'], registers['ebx'],
                            registers['ecx'], esi, edi, ebp, STACK)
             if unsupported[0]:

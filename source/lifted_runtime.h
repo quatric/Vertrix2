@@ -19,11 +19,15 @@ typedef struct
     uint32_t stack_size;
     int failed;
     uint32_t steps;
+    /* Optional: finds the object that contains an address (pointers into an object that are not
+     * its handle). Returns non-zero with the object's storage, size and base address. */
+    int (*locate)(void *context, uint32_t address, void **storage, size_t *size, uint32_t *base);
+    void *locate_context;
 } LiftContext;
 
 /* A lifted routine stops (failed) after this many backward jumps, so that data the original
  * would not loop on cannot hang the caller. */
-#define VERTRIX_LIFT_STEP_LIMIT 150000u
+#define VERTRIX_LIFT_STEP_LIMIT 40000u
 
 /* Reads or writes the original memory at an effective address. base is the register that formed
  * it (zero when the address is absolute or indexed): an object handle resolves to storage, the

@@ -58,6 +58,21 @@ uint32_t vertrix_lift_read(LiftContext *context, uint32_t address, unsigned widt
             return 0;
         }
     }
+    if (context->locate)
+    {
+        void *storage;
+        size_t size;
+        uint32_t object;
+        if (context->locate(context->locate_context, address, &storage, &size, &object))
+        {
+            if (vertrix_actor_storage_read(storage, size, address - object, width / 8, &value))
+            {
+                return value;
+            }
+            context->failed = 1;
+            return 0;
+        }
+    }
     return global_read(context, address, width);
 }
 
@@ -77,6 +92,20 @@ void vertrix_lift_write(LiftContext *context, uint32_t address, unsigned width, 
         if (services->resolve(base, &storage, &size, services->resolve_context))
         {
             if (!vertrix_actor_storage_write(storage, size, address - base, width / 8, value))
+            {
+                context->failed = 1;
+            }
+            return;
+        }
+    }
+    if (context->locate)
+    {
+        void *storage;
+        size_t size;
+        uint32_t object;
+        if (context->locate(context->locate_context, address, &storage, &size, &object))
+        {
+            if (!vertrix_actor_storage_write(storage, size, address - object, width / 8, value))
             {
                 context->failed = 1;
             }
