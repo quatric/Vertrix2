@@ -585,18 +585,30 @@ typedef struct
     int swapped; /* 0x456390 passes frame - 0x14 in ecx and frame - 0x18 on the stack */
 } VertrixCursor;
 
-#define VERTRIX_CURSOR_COUNT 3
+#define VERTRIX_CURSOR_COUNT 4
 extern const VertrixCursor vertrix_cursors[VERTRIX_CURSOR_COUNT];
 
 uint32_t vertrix_effect_cursor(const VertrixEffectServices *services, uint32_t object,
                                uint32_t entry_ebx, uint32_t entry_edx, uint32_t frame,
                                const VertrixCursor *cursor);
 
-/* The waits 0x456490 and 0x456670 (eax = obj; ebx the caller's): 0x4ac500 and 0x4ac520 with edx
- * obj, result 1 adds 0x4ac510; 0x476480 on the point list (0x74) non-zero returns. Zero runs, for
- * 0x456490, 0x478bd0 and binds 0x456390, and for 0x456670 flips the global 0x5589dc (1 - value),
- * runs 0x478b40 with the global 0x532b98 and the token 0x456570 and binds that token. Returns the
- * result of 0x4ac8f0. */
+/* The waits 0x456490, 0x456670 and 0x456860 (eax = obj; ebx the caller's): 0x4ac500 and 0x4ac520
+ * with edx obj, result 1 adds 0x4ac510; 0x476480 on the point list (0x74) non-zero returns. Zero
+ * runs, for a plain wait (flip_global 0), the callee (0x478bd0, eax the zero result) and binds the
+ * token; for a flipping wait the global flip_global becomes 1 - value, the callee runs with the
+ * global selection_global and the token, and the token is bound. Returns the result of 0x4ac8f0. */
+typedef struct
+{
+    uint32_t routine;
+    uint32_t flip_global;
+    uint32_t selection_global;
+    uint32_t callee;
+    uint32_t token;
+} VertrixObjectWait;
+
+#define VERTRIX_OBJECT_WAIT_COUNT 3
+extern const VertrixObjectWait vertrix_object_waits[VERTRIX_OBJECT_WAIT_COUNT];
+
 uint32_t vertrix_effect_object_wait(const VertrixEffectServices *services, uint32_t object,
-                                    uint32_t entry_ebx, int flip);
+                                    uint32_t entry_ebx, const VertrixObjectWait *wait);
 #endif

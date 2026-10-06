@@ -201,12 +201,17 @@ round.
 (0x456570). The verifier restores the global before the native run, because the original already
 changed it.
 
+## 0x456760 and 0x456860
+
+0x456760 is another `vertrix_cursors` row; 0x456860 a flipping wait (`vertrix_object_waits`, globals
+0x598da8 / 0x532b9c, callee 0x4828f0).
+
 ## Tally
 
 Distinct direct `call` targets in 0x401000..0x4d0000: 1827. Named in `source/` (ported): 1139.
 Not named: 688, listed in `docs/unported-call-targets.txt` (about 260 of them in 0x452830..0x45bd00,
 the follow-up and animation handlers of the bonus effects). Handlers reached only through tokens or
-vtables are not in this count. Oracle-verified bonus-effect routines: 94.
+vtables are not in this count. Oracle-verified bonus-effect routines: 96.
 
 ## Wiring note
 

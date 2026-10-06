@@ -3477,8 +3477,10 @@ uint32_t vertrix_effect_object_begin(const VertrixEffectServices *services, uint
     return vertrix_call(calls, 0x4ac7b0, object, 2, n, object, 0);
 }
 
-const VertrixCursor vertrix_cursors[VERTRIX_CURSOR_COUNT] = {
-    {0x456170, 0x456290, 1, 0}, {0x456390, 0x456490, 0, 1}, {0x456570, 0x456670, 0, 1}};
+const VertrixCursor vertrix_cursors[VERTRIX_CURSOR_COUNT] = {{0x456170, 0x456290, 1, 0},
+                                                             {0x456390, 0x456490, 0, 1},
+                                                             {0x456570, 0x456670, 0, 1},
+                                                             {0x456760, 0x456860, 0, 1}};
 
 uint32_t vertrix_effect_cursor(const VertrixEffectServices *services, uint32_t object,
                                uint32_t entry_ebx, uint32_t entry_edx, uint32_t frame,
@@ -3571,13 +3573,18 @@ uint32_t vertrix_effect_cursor(const VertrixEffectServices *services, uint32_t o
     return value;
 }
 
+const VertrixObjectWait vertrix_object_waits[VERTRIX_OBJECT_WAIT_COUNT] = {
+    {0x456490, 0, 0, 0x478bd0, 0x456390},
+    {0x456670, 0x5589dc, 0x532b98, 0x478b40, 0x456570},
+    {0x456860, 0x598da8, 0x532b9c, 0x4828f0, 0x456760}};
+
 uint32_t vertrix_effect_object_wait(const VertrixEffectServices *services, uint32_t object,
-                                    uint32_t entry_ebx, int flip)
+                                    uint32_t entry_ebx, const VertrixObjectWait *wait)
 {
     uint32_t edx = object;
     uint32_t result;
     const VertrixCalls *calls;
-    if (!services || !services->calls || !services->global || !services->global_write)
+    if (!services || !services->calls || !services->global || !services->global_write || !wait)
     {
         return 0;
     }
@@ -3592,15 +3599,17 @@ uint32_t vertrix_effect_object_wait(const VertrixEffectServices *services, uint3
     {
         return result;
     }
-    if (flip)
+    if (wait->flip_global)
     {
-        uint32_t current = services->global(GLOBAL_FLIP, services->global_context);
+        uint32_t current = services->global(wait->flip_global, services->global_context);
         uint32_t selection;
-        services->global_write(GLOBAL_FLIP, 1u - current, services->global_context);
-        selection = services->global(GLOBAL_SELECTION, services->global_context);
-        vertrix_call(calls, 0x478b40, selection, HANDLER_WAIT_FLIP, entry_ebx, object, 0);
-        return vertrix_call(calls, 0x4ac8f0, object, HANDLER_WAIT_FLIP, entry_ebx, object, 0);
+        services->global_write(wait->flip_global, 1u - current, services->global_context);
+        selection = services->global(wait->selection_global, services->global_context);
+        vertrix_call(calls, wait->callee, selection, wait->token, entry_ebx, object, 0);
     }
-    vertrix_call(calls, 0x478bd0, result, POINT_KIND, entry_ebx, object, 0);
-    return vertrix_call(calls, 0x4ac8f0, object, HANDLER_WAIT_NEXT, entry_ebx, object, 0);
+    else
+    {
+        vertrix_call(calls, wait->callee, result, POINT_KIND, entry_ebx, object, 0);
+    }
+    return vertrix_call(calls, 0x4ac8f0, object, wait->token, entry_ebx, object, 0);
 }
