@@ -187,12 +187,19 @@ to a different subsystem (menu cursor / point list 0x54d640, mouse globals 0x558
 They store to the global 0x532a60, so `VertrixEffectServices` gained a `global_write` service; the
 verifier compares the stored value with the oracle's memory.
 
+## 0x456170 and 0x456390 (cursor handlers)
+
+`vertrix_effect_cursor` with `vertrix_cursors`: mouse globals 0x558944 / 0x558946 / 0x558958 read
+through `global`, 0x4b0b70 hit test, 0x4764a0 storing through two frame pointers and a stack
+pointer (new `vertrix_call_out_stack`). 0x456390 passes the ecx and stack pointers the other way
+round.
+
 ## Tally
 
 Distinct direct `call` targets in 0x401000..0x4d0000: 1827. Named in `source/` (ported): 1139.
 Not named: 688, listed in `docs/unported-call-targets.txt` (about 260 of them in 0x452830..0x45bd00,
 the follow-up and animation handlers of the bonus effects). Handlers reached only through tokens or
-vtables are not in this count. Oracle-verified bonus-effect routines: 87.
+vtables are not in this count. Oracle-verified bonus-effect routines: 89.
 
 ## Wiring note
 

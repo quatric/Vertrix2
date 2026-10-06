@@ -103,6 +103,10 @@ class PairCheck(c.Structure):
     _fields_ = [(name, U) for name in ('routine', 'first', 'second', 'token')]
 
 
+class Cursor(c.Structure):
+    _fields_ = [('routine', U), ('token', U), ('poll', c.c_int), ('swapped', c.c_int)]
+
+
 class Site(c.Structure):
     _fields_ = [(name, U) for name in ('target', 'eax', 'edx', 'ebx', 'ecx', 'stack', 'stack_next',
                                        'stack_third', 'out_ebx', 'out_ecx')] + [
@@ -158,6 +162,14 @@ def main():
             value = rng.randrange(max(1, edx & 0xffff))
             draws.append(value)
             return value
+        if address == 0x4764a0:
+            outs = [rng.getrandbits(32) for _ in range(3)]
+            for pointer, out in zip((ebx, ecx, stack[0]), outs):
+                cpu.mem_write(pointer, struct.pack('<I', out))
+            point_effects.append(outs)
+            value = rng.getrandbits(32)
+            returns.append(value)
+            return value
         if address == 0x43a5b0:
             kinds = [rng.choice([5, 5, 5, 0, 1, 2, 3, 4, 6]) for _ in range(3)]
             if rng.random() < 0.5:
@@ -183,6 +195,7 @@ def main():
 
     allocations, alloc_replay = [], []
     kind_effects = []
+    point_effects = []
     progress_effects = None
     targets = pool.handles[6:]
     stubs = Gate(cpu, handler)
@@ -195,7 +208,10 @@ def main():
     def call(site, context):
         s = site.contents
         native_log.append((s.target, s.eax, s.edx, s.ebx, s.ecx) + (
-            (s.stack, s.stack_next, s.stack_third) if s.target == 0x43a5f0 else ()))
+            (s.stack, s.stack_next, s.stack_third) if s.target == 0x43a5f0 else
+            (s.stack,) if s.target == 0x4764a0 else ()))
+        if s.target == 0x4764a0:
+            s.out_ebx, s.out_ecx, s.out_value = point_effects.pop(0)
         if s.target == 0x43a5b0:
             kinds = kind_effects.pop(0)
             s.out_value, s.out_ebx, s.out_ecx = kinds
@@ -265,6 +281,8 @@ def main():
                 result.append(('virtual', entry[1], 1))
             elif entry[0] == 0x43a5f0:
                 result.append(tuple(entry[:8]))
+            elif entry[0] == 0x4764a0:
+                result.append(tuple(entry[:6]))
             else:
                 result.append(tuple(entry[:5]))
         return result
@@ -1115,6 +1133,41 @@ def main():
         assert got == result, ('0x456300', case, hex(got), hex(result))
         assert not replay, case
         assert pool.same(), ('0x456300', case, pool.diff())
+    # 0x456170 and 0x456390: the cursor handlers
+    for address in (0x4b0b70, 0x4ad530):
+        stubs.add(address, 0)
+    stubs.add(0x4764a0, 1)
+    FLOW[0x4b0b70] = (0, 1, 0x100, 0x2300)
+    FLOW[0x476480] = (0, 1, 1)
+    n.vertrix_effect_cursor.argtypes = [c.POINTER(Services), U, U, U, U, c.POINTER(Cursor)]
+    n.vertrix_effect_cursor.restype = U
+    cursors = (Cursor * 2).in_dll(n, 'vertrix_cursors')
+    for cursor in cursors:
+        for case in range(args.cases):
+            pool.fill(rng, patch_slide)
+            before = rng.getrandbits(32)
+            cpu.mem_write(0x532a60, struct.pack('<I', before))
+            cpu.mem_write(0x558944, struct.pack('<HHI', rng.getrandbits(16), rng.getrandbits(16), 0))
+            cpu.mem_write(0x558958, struct.pack('<I', rng.choice([0, 0, 1])))
+            global_writes.clear()
+            stubs.log.clear()
+            returns.clear()
+            draws.clear()
+            kind_effects.clear()
+            point_effects.clear()
+            native_log.clear()
+            ebx, edx = rng.getrandbits(32), rng.getrandbits(32)
+            result = original.call(cursor.routine, eax=player, ebx=ebx, edx=edx) & 0xffffffff
+            replay[:] = list(returns)
+            got = n.vertrix_effect_cursor(c.byref(services), player, ebx, edx, FRAME,
+                                          c.byref(cursor))
+            expected = normalized(stubs.log)
+            assert native_log == expected, (hex(cursor.routine), case, native_log, expected)
+            assert got == result, (hex(cursor.routine), case, hex(got), hex(result))
+            assert not replay and not point_effects, case
+            assert pool.same(), (hex(cursor.routine), case, pool.diff())
+            after = struct.unpack('<I', bytes(cpu.mem_read(0x532a60, 4)))[0]
+            assert global_writes.get(0x532a60, before) == after, (hex(cursor.routine), case)
     # Objects that do not resolve: the effect stops where the original would have read them. Before
     # the first call (player, opponent, grid) nothing is called or stored; later failures still
     # never reach the final 0x43bbf0.
@@ -1163,7 +1216,7 @@ def main():
                                             0x45b9c0, 0x4554a0, 0x455600, 0x455670, 0x455790,
                                             0x4558e0, 0x455a00, 0x455510, 0x455e50, 0x455f10,
                                             0x455f80, 0x456060, 0x453c90, 0x453fd0, 0x4542e0, 0x453ef0, 0x454200, 0x454510, 0x454760, 0x453d50, 0x454830, 0x454a50, 0x454cb0, 0x454090, 0x4543a0, 0x454600, 0x4546a0, 0x4548e0, 0x454970, 0x454b20, 0x454bd0, 0x454d80, 0x454e30, 0x454f00, 0x454fc0, 0x4552b0, 0x455320, 0x4553a0, 0x4550a0, 0x455580, 0x455700, 0x455830, 0x455970, 0x455a90, 0x455b90, 0x455d10, 0x455c30, 0x455db0, 0x455e00, 0x45b4c0, 0x45b590,
-                                            0x45b5f0, 0x4560c0, 0x456290, 0x456300)}},
+                                            0x45b5f0, 0x4560c0, 0x456290, 0x456300, 0x456170, 0x456390)}},
         'paths': totals,
         'convert_paths': convert_totals,
         'match_paths': match_totals,

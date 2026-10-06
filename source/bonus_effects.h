@@ -558,4 +558,28 @@ uint32_t vertrix_effect_object_poll(const VertrixEffectServices *services, uint3
  * edx 2; otherwise 0x4acb00's result is returned. */
 uint32_t vertrix_effect_object_begin(const VertrixEffectServices *services, uint32_t object,
                                      uint32_t entry_ebx);
+
+/* The cursor handlers 0x456170 and 0x456390 (eax = obj; ebx and edx the caller's; frame the entry
+ * ebp token). 0x4ac500 and 0x4ac520 on obj; result 1 adds 0x4ac540 (n), 0x4ac5b0, the words +0x4a
+ * = 0 and +0x4c = 5 and 0x4ad530 with n. The pointer position is read from the globals 0x558944
+ * (x) and 0x558946 (y), both 0x7d00 when the dword 0x558958 is non-zero, and 0x4b0b70 with them
+ * (a non-zero low byte stores 0x23 in obj's word +0x48). 0x476480 on the point list 0x54d640 with
+ * 0x74 reporting one runs 0x4764a0, which stores two values through the frame; their low words
+ * (signed) go to 0x4b0b70 again and a non-zero low byte binds the token and stores 0x3c at +0x48.
+ * 0x456170 then runs 0x4b5500 and, when it is non-zero, stores obj's +0x14c to the global 0x532a60
+ * and returns it; 0x456390 returns without it. */
+typedef struct
+{
+    uint32_t routine;
+    uint32_t token;
+    int poll;
+    int swapped; /* 0x456390 passes frame - 0x14 in ecx and frame - 0x18 on the stack */
+} VertrixCursor;
+
+#define VERTRIX_CURSOR_COUNT 2
+extern const VertrixCursor vertrix_cursors[VERTRIX_CURSOR_COUNT];
+
+uint32_t vertrix_effect_cursor(const VertrixEffectServices *services, uint32_t object,
+                               uint32_t entry_ebx, uint32_t entry_edx, uint32_t frame,
+                               const VertrixCursor *cursor);
 #endif

@@ -123,6 +123,16 @@ enum
     HANDLER_OBJECT_POLL = 0x456170,
     POINT_LIST = 0x54d640,
     POINT_KIND = 0x74,
+    OBJECT_WORD_A = 0x4a,
+    OBJECT_WORD_B = 0x4c,
+    OBJECT_STATE = 0x48,
+    GLOBAL_POINTER_X = 0x558944,
+    GLOBAL_POINTER_Y = 0x558946,
+    GLOBAL_POINTER_OFF = 0x558958,
+    POINTER_OFF_VALUE = 0x7d00,
+    LOCAL_FIRST = 0x1c,
+    LOCAL_SECOND = 0x18,
+    LOCAL_THIRD = 0x14,
     PLAYER_CHAIN = 0x184,
     HANDLER_ARMED_CLEAR = 0x455320,
     HANDLER_ARMED_GATE = 0x4553a0,
@@ -3458,4 +3468,98 @@ uint32_t vertrix_effect_object_begin(const VertrixEffectServices *services, uint
     }
     vertrix_call(calls, 0x4ac8f0, object, 0x456390, n, object, 0);
     return vertrix_call(calls, 0x4ac7b0, object, 2, n, object, 0);
+}
+
+const VertrixCursor vertrix_cursors[VERTRIX_CURSOR_COUNT] = {{0x456170, 0x456290, 1, 0},
+                                                             {0x456390, 0x456490, 0, 1}};
+
+uint32_t vertrix_effect_cursor(const VertrixEffectServices *services, uint32_t object,
+                               uint32_t entry_ebx, uint32_t entry_edx, uint32_t frame,
+                               const VertrixCursor *cursor)
+{
+    void *storage;
+    size_t size;
+    uint32_t edx = entry_edx;
+    uint32_t ebx = entry_ebx;
+    uint32_t ecx = object;
+    uint32_t flag;
+    uint32_t x;
+    uint32_t y;
+    uint32_t value;
+    uint32_t out_first;
+    uint32_t out_second;
+    uint32_t out_third;
+    uint32_t result;
+    uint32_t last;
+    const VertrixCalls *calls;
+    if (!services || !services->calls || !services->global || !services->global_write || !cursor ||
+        !resolve_object(services, object, &storage, &size))
+    {
+        return 0;
+    }
+    calls = services->calls;
+    vertrix_call(calls, 0x4ac500, object, edx, ebx, ecx, 0);
+    if (vertrix_call(calls, 0x4ac520, object, edx, ebx, ecx, 0) == 1)
+    {
+        edx = vertrix_call(calls, 0x4ac540, object, edx, ebx, ecx, 0);
+        vertrix_call(calls, 0x4ac5b0, object, edx, ebx, ecx, 0);
+        if (!vertrix_actor_storage_write(storage, size, OBJECT_WORD_A, 2, 0) ||
+            !vertrix_actor_storage_write(storage, size, OBJECT_WORD_B, 2, 5))
+        {
+            return 0;
+        }
+        vertrix_call(calls, 0x4ad530, object, edx, ebx, ecx, 0);
+    }
+    flag = services->global(GLOBAL_POINTER_OFF, services->global_context);
+    x = flag ? POINTER_OFF_VALUE
+             : (uint32_t)(int32_t)(int16_t)services->global(GLOBAL_POINTER_X,
+                                                            services->global_context);
+    y = flag ? POINTER_OFF_VALUE
+             : (uint32_t)(int32_t)(int16_t)services->global(GLOBAL_POINTER_Y,
+                                                            services->global_context);
+    ebx = y;
+    edx = x;
+    ecx = services->global(GLOBAL_POINTER_OFF, services->global_context);
+    if ((vertrix_call(calls, 0x4b0b70, object, edx, ebx, ecx, 0) & 0xffu) != 0 &&
+        !vertrix_actor_storage_write(storage, size, OBJECT_STATE, 2, 0x23))
+    {
+        return 0;
+    }
+    edx = POINT_KIND;
+    last = vertrix_call(calls, 0x476480, POINT_LIST, edx, ebx, ecx, 0);
+    if (last == 1)
+    {
+        ebx = frame - LOCAL_FIRST;
+        ecx = frame - (cursor->swapped ? LOCAL_THIRD : LOCAL_SECOND);
+        vertrix_call_out_stack(calls, 0x4764a0, POINT_LIST, edx, ebx, ecx,
+                               frame - (cursor->swapped ? LOCAL_SECOND : LOCAL_THIRD), &out_first,
+                               &out_second, &out_third);
+        ebx = (uint32_t)(int32_t)(int16_t)(out_second & 0xffffu);
+        edx = (uint32_t)(int32_t)(int16_t)(out_first & 0xffffu);
+        last = vertrix_call(calls, 0x4b0b70, object, edx, ebx, ecx, 0);
+        if ((last & 0xffu) != 0)
+        {
+            edx = cursor->token;
+            last = vertrix_call(calls, 0x4ac8f0, object, edx, ebx, ecx, 0);
+            if (!vertrix_actor_storage_write(storage, size, OBJECT_STATE, 2, 0x3c))
+            {
+                return 0;
+            }
+        }
+    }
+    if (!cursor->poll)
+    {
+        return last;
+    }
+    result = vertrix_call(calls, 0x4b5500, object, edx, ebx, ecx, 0);
+    if (result == 0)
+    {
+        return 0;
+    }
+    if (!vertrix_actor_storage_read(storage, size, OBJECT_VALUE, DWORD_WIDTH, &value))
+    {
+        return 0;
+    }
+    services->global_write(GLOBAL_OBJECT_VALUE, value, services->global_context);
+    return value;
 }
