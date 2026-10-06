@@ -123,6 +123,8 @@ def supports_cases(script):
 
 def run(script, extra, build, scratch, env, timeout):
     build.mkdir(parents=True, exist_ok=True)
+    env = dict(env, VERTRIX_CALL_LOG=str(build / 'original-calls.txt'))
+    (build / 'original-calls.txt').write_text('')
     return subprocess.run([sys.executable, str(script), *extra, "--build-dir", str(build)],
                           capture_output=True, text=True, cwd=scratch, env=env, timeout=timeout)
 
@@ -180,6 +182,16 @@ def default_cases(script):
     return int(match.group(1)) if match else 4096
 
 
+CALLED = {}
+
+
+def record_calls(name, build):
+    """Entry points the passing verifier ran to completion in the original (Original.call)."""
+    path = build / 'original-calls.txt'
+    if path.exists():
+        CALLED[name] = sorted(set(path.read_text().split()))
+
+
 def classify(script, assets, work, env, timeout):
     name = script.stem
     scratch = work / "cwd" / name
@@ -200,6 +212,7 @@ def classify(script, assets, work, env, timeout):
             return name, "PARTIAL", "host part passed; PowerPC build needs devkitPPC"
         return name, "FAIL", tail[0][:200]
     reports = reports_of(build, scratch, before)
+    record_calls(name, build)
     kinds = verdict(name, reports)
     if not kinds:
         return name, "ok", "no report"
@@ -231,6 +244,8 @@ def main():
     parser.add_argument("--only", default="", help="substring of the verifier name")
     parser.add_argument("--timeout", type=int, default=1800)
     parser.add_argument("--report", type=Path, default=None, help="write the table as JSON")
+    parser.add_argument("--verified", type=Path, default=None,
+                        help="write the functions verified end to end as JSON")
     args = parser.parse_args()
     assets = args.assets.resolve()
     work = (args.work or Path(tempfile.mkdtemp(prefix="vertrix-verify-"))).resolve()
@@ -252,6 +267,18 @@ def main():
     summary = collections.Counter(
         "pass" if r[1] not in ("FAIL", "REVIEW", "SKIP", "PARTIAL") else r[1] for r in rows)
     print(dict(summary))
+    if args.verified:
+        passed = {r[0] for r in rows if r[1] not in ('FAIL', 'REVIEW', 'SKIP', 'PARTIAL')}
+        functions = collections.defaultdict(list)
+        for verifier, addresses in CALLED.items():
+            if verifier in passed:
+                for address in addresses:
+                    functions[address].append(verifier)
+        args.verified.write_text(json.dumps({
+            'definition': 'Entry points run to completion in the original by a passing verifier '
+                          '(Original.call), compared with the native recovery.',
+            'count': len(functions),
+            'functions': {a: sorted(v) for a, v in sorted(functions.items())}}, indent=1) + '\n')
     if args.report:
         args.report.write_text(json.dumps(
             [{"verifier": n, "result": r, "detail": d} for n, r, d in rows], indent=2) + "\n")

@@ -4,6 +4,7 @@ The Wii code does not depend on this module or execute x86 instructions.
 """
 
 import hashlib
+import os
 import struct
 from pathlib import Path
 
@@ -80,6 +81,10 @@ class Original:
         self.cpu.emu_start(address, stop, count=1_000_000)
         if self.cpu.reg_read(UC_X86_REG_EIP) != stop:
             raise RuntimeError(f"Original routine {address:#x} did not reach its return boundary")
+        log = os.environ.get("VERTRIX_CALL_LOG")
+        if log:
+            with open(log, "a") as handle:
+                handle.write(f"{address:#x}\n")
         return self.cpu.reg_read(UC_X86_REG_EAX)
 
     def read_mask(self):
