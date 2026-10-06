@@ -551,4 +551,11 @@ uint32_t vertrix_effect_object_start(const VertrixEffectServices *services, uint
  * zero is returned. */
 uint32_t vertrix_effect_object_poll(const VertrixEffectServices *services, uint32_t object,
                                     uint32_t entry_ebx);
+
+/* Original 0x456300 (eax = obj; ebx the caller's): the start of 0x4560c0 without the poll: 0x4ac7b0
+ * (edx 1), 0x4ac500 and 0x4ac520; a result other than 1 is returned. Then 0x4ac540 (n), 0x4ac5b0
+ * and 0x4aca60, 0x4acab0, 0x4acb00 with n. All three zero bind 0x456390 and return 0x4ac7b0 with
+ * edx 2; otherwise 0x4acb00's result is returned. */
+uint32_t vertrix_effect_object_begin(const VertrixEffectServices *services, uint32_t object,
+                                     uint32_t entry_ebx);
 #endif

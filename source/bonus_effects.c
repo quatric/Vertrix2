@@ -3425,3 +3425,37 @@ uint32_t vertrix_effect_object_poll(const VertrixEffectServices *services, uint3
     services->global_write(GLOBAL_OBJECT_VALUE, value, services->global_context);
     return value;
 }
+
+uint32_t vertrix_effect_object_begin(const VertrixEffectServices *services, uint32_t object,
+                                     uint32_t entry_ebx)
+{
+    uint32_t result;
+    uint32_t n;
+    uint32_t first;
+    uint32_t second;
+    uint32_t third;
+    const VertrixCalls *calls;
+    if (!services || !services->calls)
+    {
+        return 0;
+    }
+    calls = services->calls;
+    vertrix_call(calls, 0x4ac7b0, object, 1, entry_ebx, object, 0);
+    vertrix_call(calls, 0x4ac500, object, 1, entry_ebx, object, 0);
+    result = vertrix_call(calls, 0x4ac520, object, 1, entry_ebx, object, 0);
+    if (result != 1)
+    {
+        return result;
+    }
+    n = vertrix_call(calls, 0x4ac540, object, 1, entry_ebx, object, 0);
+    vertrix_call(calls, 0x4ac5b0, object, 1, n, object, 0);
+    first = vertrix_call(calls, 0x4aca60, object, n, n, object, 0);
+    second = vertrix_call(calls, 0x4acab0, object, n, n, object, 0);
+    third = vertrix_call(calls, 0x4acb00, object, n, n, object, 0);
+    if (first != 0 || second != 0 || third != 0)
+    {
+        return third;
+    }
+    vertrix_call(calls, 0x4ac8f0, object, 0x456390, n, object, 0);
+    return vertrix_call(calls, 0x4ac7b0, object, 2, n, object, 0);
+}

@@ -1097,6 +1097,24 @@ def main():
             assert pool.same(), (hex(address), case, pool.diff())
             after = struct.unpack('<I', bytes(cpu.mem_read(0x532a60, 4)))[0]
             assert global_writes.get(0x532a60, before) == after, (hex(address), case)
+    # 0x456300
+    n.vertrix_effect_object_begin.argtypes = [c.POINTER(Services), U, U]
+    n.vertrix_effect_object_begin.restype = U
+    for case in range(args.cases):
+        pool.fill(rng, patch_slide)
+        stubs.log.clear()
+        returns.clear()
+        draws.clear()
+        native_log.clear()
+        ebx = rng.getrandbits(32)
+        result = original.call(0x456300, eax=player, ebx=ebx) & 0xffffffff
+        replay[:] = list(returns)
+        got = n.vertrix_effect_object_begin(c.byref(services), player, ebx)
+        expected = normalized(stubs.log)
+        assert native_log == expected, ('0x456300', case, native_log, expected)
+        assert got == result, ('0x456300', case, hex(got), hex(result))
+        assert not replay, case
+        assert pool.same(), ('0x456300', case, pool.diff())
     # Objects that do not resolve: the effect stops where the original would have read them. Before
     # the first call (player, opponent, grid) nothing is called or stored; later failures still
     # never reach the final 0x43bbf0.
@@ -1145,7 +1163,7 @@ def main():
                                             0x45b9c0, 0x4554a0, 0x455600, 0x455670, 0x455790,
                                             0x4558e0, 0x455a00, 0x455510, 0x455e50, 0x455f10,
                                             0x455f80, 0x456060, 0x453c90, 0x453fd0, 0x4542e0, 0x453ef0, 0x454200, 0x454510, 0x454760, 0x453d50, 0x454830, 0x454a50, 0x454cb0, 0x454090, 0x4543a0, 0x454600, 0x4546a0, 0x4548e0, 0x454970, 0x454b20, 0x454bd0, 0x454d80, 0x454e30, 0x454f00, 0x454fc0, 0x4552b0, 0x455320, 0x4553a0, 0x4550a0, 0x455580, 0x455700, 0x455830, 0x455970, 0x455a90, 0x455b90, 0x455d10, 0x455c30, 0x455db0, 0x455e00, 0x45b4c0, 0x45b590,
-                                            0x45b5f0, 0x4560c0, 0x456290)}},
+                                            0x45b5f0, 0x4560c0, 0x456290, 0x456300)}},
         'paths': totals,
         'convert_paths': convert_totals,
         'match_paths': match_totals,
