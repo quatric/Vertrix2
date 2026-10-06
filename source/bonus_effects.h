@@ -419,4 +419,11 @@ extern const VertrixBurstStep vertrix_burst_steps[VERTRIX_BURST_STEP_COUNT];
 uint32_t vertrix_effect_counted_burst_step(const VertrixEffectServices *services, uint32_t player,
                                            uint32_t entry_ebx, uint32_t entry_edx,
                                            const VertrixBurstStep *step);
+
+/* Original 0x454f00 (eax = player): the handler bound by 0x454e90. 0x436850 on the player's board
+ * (edx 0), then 0x436720 with edx 5. Result 1 calls 0x4ac7b0 with 0x4f7c6c[dword 0x532bbc],
+ * 0x4ac510 with the token 0x454fc0, binds the token to the player (0x4ac8f0), plays sound 5
+ * (0x4f8194) and calls 0x43ac00 on the opponent. Anything else calls 0x43acd0 on the opponent
+ * (edx 5, ebx 1) and makes the handler end with 0x43bbf0. Slot 1 of the board comes between. */
+uint32_t vertrix_effect_marked_start(const VertrixEffectServices *services, uint32_t player);
 #endif

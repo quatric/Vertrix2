@@ -19,7 +19,7 @@ DRAW = 0x4826c0
 CALLEES = (0x43acd0, 0x43ac00, 0x43bb60, 0x4ac8f0, 0x43bbf0, 0x43c0e0)
 ALLOCATE = 0x4ca000
 # 0x452e00 callees; the first four steer its flow and return small values
-FLOW = {0x4ad750: (0, 0, 1), 0x43b970: (0, 1),
+FLOW = {0x436720: (0, 1, 1), 0x4ad750: (0, 0, 1), 0x43b970: (0, 1),
         0x432040: (0, 1, 1), 0x431780: (0, 0, 1), 0x436150: (0, 1, 1), 0x436440: (0, 1, 1), 0x4365c0: (0, 1, 1),
         0x431d60: (0, 0, 1), 0x432010: (0, 0, 1), 0x4320c0: (1, 1, 1, 0),
         0x4ac540: (0, 1, 2, 3, 0xffffffff),
@@ -515,7 +515,8 @@ def main():
                             (0x453570, n.vertrix_effect_stone_clear),
                             (0x454970, n.vertrix_effect_stone_clear),
                             (0x454bd0, n.vertrix_effect_stone_clear),
-                            (0x454e30, n.vertrix_effect_stone_clear)):
+                            (0x454e30, n.vertrix_effect_stone_clear),
+                            (0x454fc0, n.vertrix_effect_stone_clear)):
         for case in range(args.cases):
             check_one(hex(address), case, address, native)
     # The twelve attack handlers that bind a follow-up handler to the opponent
@@ -855,6 +856,26 @@ def main():
             assert got == result, (hex(burst.routine), case, hex(got), hex(result))
             assert not replay, case
             assert pool.same(), (hex(burst.routine), case, pool.diff())
+    # 0x454f00 (0x454fc0 is identical to 0x453570)
+    for address in (0x436850, 0x436720):
+        stubs.add(address, 0)
+    n.vertrix_effect_marked_start.argtypes = [c.POINTER(Services), U]
+    n.vertrix_effect_marked_start.restype = U
+    for case in range(args.cases):
+        cpu.mem_write(0x532bbc, struct.pack('<I', rng.randrange(0, 4)))
+        pool.fill(rng, patch_slide)
+        stubs.log.clear()
+        returns.clear()
+        draws.clear()
+        native_log.clear()
+        result = original.call(0x454f00, eax=player) & 0xffffffff
+        replay[:] = list(returns)
+        got = n.vertrix_effect_marked_start(c.byref(services), player)
+        expected = normalized(stubs.log)
+        assert native_log == expected, ('0x454f00', case, native_log, expected)
+        assert got == result, ('0x454f00', case, hex(got), hex(result))
+        assert not replay, case
+        assert pool.same(), ('0x454f00', case, pool.diff())
     # Objects that do not resolve: the effect stops where the original would have read them. Before
     # the first call (player, opponent, grid) nothing is called or stored; later failures still
     # never reach the final 0x43bbf0.
@@ -902,7 +923,7 @@ def main():
                                             0x454c30, 0x454e90, 0x455020, 0x455b20, 0x455ca0,
                                             0x45b9c0, 0x4554a0, 0x455600, 0x455670, 0x455790,
                                             0x4558e0, 0x455a00, 0x455510, 0x455e50, 0x455f10,
-                                            0x455f80, 0x456060, 0x453c90, 0x453fd0, 0x4542e0, 0x453ef0, 0x454200, 0x454510, 0x454760, 0x453d50, 0x454830, 0x454a50, 0x454cb0, 0x454090, 0x4543a0, 0x454600, 0x4546a0, 0x4548e0, 0x454970, 0x454b20, 0x454bd0, 0x454d80, 0x454e30)}},
+                                            0x455f80, 0x456060, 0x453c90, 0x453fd0, 0x4542e0, 0x453ef0, 0x454200, 0x454510, 0x454760, 0x453d50, 0x454830, 0x454a50, 0x454cb0, 0x454090, 0x4543a0, 0x454600, 0x4546a0, 0x4548e0, 0x454970, 0x454b20, 0x454bd0, 0x454d80, 0x454e30, 0x454f00, 0x454fc0)}},
         'paths': totals,
         'convert_paths': convert_totals,
         'match_paths': match_totals,
