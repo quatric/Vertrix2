@@ -115,7 +115,7 @@ def main():
     parser.add_argument('executable', type=Path)
     parser.add_argument('--build-dir', type=Path, required=True)
     parser.add_argument('--source', type=Path,
-                        default=Path(__file__).resolve().parents[1] / 'source' / 'bonus_lifted.c')
+                        default=Path(__file__).resolve().parents[1] / 'reference' / 'lifted' / 'bonus_lifted.c')
     parser.add_argument('--routines', nargs='*', default=None)
     parser.add_argument('--cases', type=int, default=300)
     parser.add_argument('--seed', type=int, default=0x1f7)
@@ -125,7 +125,7 @@ def main():
     routines = ([int(a, 16) for a in args.routines] if args.routines else
                 sorted(int(a, 16) for a in re.findall(r"uint32_t vertrix_lift_([0-9a-f]{6})\(", source)))
     n = build(args.build_dir, 'lifted',
-              [str(args.source.name), 'lifted_runtime.c', 'call_glue.c', 'actor_storage.c',
+              [str(args.source.resolve()), 'lifted_runtime.c', 'call_glue.c', 'actor_storage.c',
                'bonus_effects.c', 'choice_grid.c', 'actor_fields.c', 'board_conversions.c',
                'block_factory.c', 'board_markers.c', 'board.c', 'board_cells.c', 'fixed_point.c',
                'board_actions.c', 'random.c'])

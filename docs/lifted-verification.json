@@ -1,3389 +1,5229 @@
 {
- "cases_requested": 60,
+ "cases_requested": 30,
  "kept": {
-  "0x404580": {
-   "passed": 60,
+  "0x404480": {
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x404580": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x404610": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x404680": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x4046e0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x404730": {
+   "passed": 16,
+   "skipped": 14,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 14
+   },
    "failure": null
   },
   "0x405680": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4056c0": {
-   "passed": 22,
-   "skipped": 38,
+   "passed": 12,
+   "skipped": 18,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 18
+   },
+   "failure": null
+  },
+  "0x405720": {
+   "passed": 11,
+   "skipped": 19,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 19
+   },
    "failure": null
   },
   "0x405d60": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x405e00": {
+   "passed": 20,
+   "skipped": 10,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 10
+   },
+   "failure": null
+  },
+  "0x405ea0": {
+   "passed": 18,
+   "skipped": 12,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 12
+   },
    "failure": null
   },
   "0x405f30": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x405f70": {
-   "passed": 50,
-   "skipped": 10,
+   "passed": 22,
+   "skipped": 8,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 2,
+    "step limit": 6
+   },
    "failure": null
   },
-  "0x406170": {
-   "passed": 60,
+  "0x4060e0": {
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x407020": {
-   "passed": 16,
-   "skipped": 44,
+   "passed": 20,
+   "skipped": 10,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 10
+   },
+   "failure": null
+  },
+  "0x407720": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x40a190": {
-   "passed": 59,
-   "skipped": 1,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x40a800": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x40a860": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x40a890": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x40a8f0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x40a950": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x40ab10": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x40acf0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x40ad50": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x40c1c0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x40c220": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x40c260": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x40c2a0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x40c2e0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x40c320": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x40c360": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x40c430": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x40ede0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x40ee30": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x40ee60": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x40eea0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x40ef00": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x40ef40": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x40f170": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x40f9e0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x410150": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4108a0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4112d0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x4120a0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4122f0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x412390": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x412430": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x412510": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x4125e0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x4138b0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x413a40": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x413bd0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x414a90": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x414b10": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x414b90": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x415330": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x415350": {
-   "passed": 42,
-   "skipped": 18,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x4153e0": {
+   "passed": 27,
+   "skipped": 3,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 3
+   },
+   "failure": null
+  },
+  "0x415470": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4154b0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
-  "0x415580": {
-   "passed": 45,
-   "skipped": 15,
+  "0x415550": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x415860": {
-   "passed": 40,
-   "skipped": 20,
+   "passed": 24,
+   "skipped": 6,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 6
+   },
+   "failure": null
+  },
+  "0x415b50": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x415b90": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x415bd0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x415c00": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x415c30": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x415db0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x415e40": {
+   "passed": 15,
+   "skipped": 15,
+   "reasons": {
+    "step limit": 15
+   },
+   "failure": null
+  },
+  "0x415e80": {
+   "passed": 17,
+   "skipped": 13,
+   "reasons": {
+    "step limit": 13
+   },
+   "failure": null
+  },
+  "0x415eb0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x415ed0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4163b0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x416500": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x417150": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x4171a0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x4171e0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x417220": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x417260": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x417290": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x4172c0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x417350": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x4173d0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x417460": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4175b0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x417620": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x417690": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x417710": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x417930": {
+   "passed": 25,
+   "skipped": 5,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 5
+   },
+   "failure": null
+  },
+  "0x417970": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x417c80": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x417cf0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x417d10": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x417d40": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x417d70": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x417da0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x417df0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x417e20": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x417e60": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x417ed0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4189f0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x418a10": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x418ae0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x418af0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x418d50": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4191b0": {
-   "passed": 34,
-   "skipped": 26,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4192a0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4193b0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x419ef0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x41a040": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x41a2b0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x41a320": {
-   "passed": 28,
-   "skipped": 32,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x41a440": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x41a4e0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x41a940": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x41a960": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x41a9a0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x41aa20": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x41aaa0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x41aaf0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x41ab00": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x41ab30": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x41ab60": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x41abe0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x41ac00": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x41ac20": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x41ac40": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x41ac80": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x41aca0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x41b310": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x41c020": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x41d640": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x41d670": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x41d6d0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x41dd60": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x41ddf0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x41df30": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x41e280": {
-   "passed": 29,
-   "skipped": 31,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x41e5e0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x423d70": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x423dc0": {
-   "passed": 29,
-   "skipped": 31,
+   "passed": 28,
+   "skipped": 2,
+   "reasons": {
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 2
+   },
    "failure": null
   },
   "0x423ea0": {
-   "passed": 31,
-   "skipped": 29,
+   "passed": 26,
+   "skipped": 4,
+   "reasons": {
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 4
+   },
    "failure": null
   },
   "0x425ae0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x425de0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x425f40": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x427850": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4279b0": {
-   "passed": 42,
-   "skipped": 18,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x429530": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x429600": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x429880": {
-   "passed": 52,
-   "skipped": 8,
+   "passed": 26,
+   "skipped": 4,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 4
+   },
    "failure": null
   },
   "0x42a310": {
-   "passed": 50,
-   "skipped": 10,
+   "passed": 29,
+   "skipped": 1,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 1
+   },
    "failure": null
   },
   "0x42a540": {
-   "passed": 46,
-   "skipped": 14,
+   "passed": 26,
+   "skipped": 4,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 4
+   },
    "failure": null
   },
   "0x42a8b0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x42a8e0": {
-   "passed": 49,
-   "skipped": 11,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42a960": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42a970": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42a9d0": {
+   "passed": 16,
+   "skipped": 14,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 14
+   },
    "failure": null
   },
   "0x42aa20": {
-   "passed": 56,
-   "skipped": 4,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x42aab0": {
-   "passed": 49,
-   "skipped": 11,
+   "passed": 25,
+   "skipped": 5,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 5
+   },
+   "failure": null
+  },
+  "0x42acf0": {
+   "passed": 15,
+   "skipped": 15,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 15
+   },
+   "failure": null
+  },
+  "0x42af80": {
+   "passed": 13,
+   "skipped": 17,
+   "reasons": {
+    "step limit": 17
+   },
    "failure": null
   },
   "0x42b000": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x42b050": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42b070": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x42b0f0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x42b110": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x42b150": {
-   "passed": 46,
-   "skipped": 14,
+   "passed": 28,
+   "skipped": 2,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 2
+   },
+   "failure": null
+  },
+  "0x42b370": {
+   "passed": 15,
+   "skipped": 15,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 15
+   },
    "failure": null
   },
   "0x42b5c0": {
-   "passed": 58,
-   "skipped": 2,
+   "passed": 25,
+   "skipped": 5,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 5
+   },
+   "failure": null
+  },
+  "0x42b6b0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x42ba70": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x42bab0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42ebc0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42ebe0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42ec00": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42ec20": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42ec40": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42ec60": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42ec80": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42eca0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42ecc0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42ed40": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42ed70": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42eda0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42edf0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42eee0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42ef00": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42ef10": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42ef20": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42ef30": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42ef40": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42ef50": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42ef60": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42ef80": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42f3d0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x42f410": {
-   "passed": 59,
-   "skipped": 1,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42f7d0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42f7f0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42f810": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42f830": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42f850": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42f860": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42f870": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42f880": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x42f890": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x42f8a0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42f8b0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x42f8e0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x430850": {
-   "passed": 53,
-   "skipped": 7,
+   "passed": 28,
+   "skipped": 2,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 2
+   },
    "failure": null
   },
   "0x431180": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4311a0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4311c0": {
-   "passed": 41,
-   "skipped": 19,
+   "passed": 25,
+   "skipped": 5,
+   "reasons": {
+    "step limit": 5
+   },
    "failure": null
   },
   "0x431280": {
-   "passed": 32,
-   "skipped": 28,
+   "passed": 24,
+   "skipped": 6,
+   "reasons": {
+    "step limit": 6
+   },
    "failure": null
   },
   "0x431390": {
-   "passed": 49,
-   "skipped": 11,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x4314a0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x431b80": {
-   "passed": 37,
-   "skipped": 23,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x431d60": {
-   "passed": 45,
-   "skipped": 15,
-   "failure": null
-  },
-  "0x432110": {
-   "passed": 26,
-   "skipped": 34,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x432160": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x432980": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x432a30": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x433840": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x433e20": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x4344e0": {
+   "passed": 27,
+   "skipped": 3,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 3
+   },
+   "failure": null
+  },
+  "0x4387b0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x438b90": {
+   "passed": 14,
+   "skipped": 16,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 16
+   },
+   "failure": null
+  },
+  "0x438c60": {
+   "passed": 10,
+   "skipped": 20,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 20
+   },
+   "failure": null
+  },
+  "0x438cd0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x438dd0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x438ef0": {
-   "passed": 52,
-   "skipped": 8,
+   "passed": 23,
+   "skipped": 7,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 7
+   },
    "failure": null
   },
   "0x439080": {
-   "passed": 26,
-   "skipped": 34,
+   "passed": 14,
+   "skipped": 16,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 16
+   },
+   "failure": null
+  },
+  "0x439140": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x439190": {
+   "passed": 29,
+   "skipped": 1,
+   "reasons": {
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 1
+   },
    "failure": null
   },
   "0x439510": {
-   "passed": 46,
-   "skipped": 14,
+   "passed": 27,
+   "skipped": 3,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 3
+   },
+   "failure": null
+  },
+  "0x439690": {
+   "passed": 24,
+   "skipped": 6,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 6
+   },
+   "failure": null
+  },
+  "0x4398c0": {
+   "passed": 27,
+   "skipped": 3,
+   "reasons": {
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 3
+   },
+   "failure": null
+  },
+  "0x43a6f0": {
+   "passed": 26,
+   "skipped": 4,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 4
+   },
+   "failure": null
+  },
+  "0x43ab60": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x43abd0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x43ad70": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x43b260": {
-   "passed": 51,
-   "skipped": 9,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x43c140": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x43d130": {
-   "passed": 51,
-   "skipped": 9,
+   "passed": 27,
+   "skipped": 3,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 3
+   },
+   "failure": null
+  },
+  "0x43d260": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x43d330": {
+   "passed": 28,
+   "skipped": 2,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 2
+   },
    "failure": null
   },
   "0x43d3f0": {
-   "passed": 56,
-   "skipped": 4,
+   "passed": 25,
+   "skipped": 5,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 5
+   },
+   "failure": null
+  },
+  "0x43eab0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x43f110": {
+   "passed": 15,
+   "skipped": 15,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 14,
+    "step limit": 1
+   },
+   "failure": null
+  },
+  "0x43f190": {
+   "passed": 12,
+   "skipped": 18,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 18
+   },
    "failure": null
   },
   "0x43f480": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x440fc0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x441600": {
-   "passed": 59,
-   "skipped": 1,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x441b70": {
-   "passed": 52,
-   "skipped": 8,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x441d60": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x442140": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4429a0": {
-   "passed": 43,
-   "skipped": 17,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x444e00": {
-   "passed": 50,
-   "skipped": 10,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x445350": {
-   "passed": 37,
-   "skipped": 23,
+   "passed": 27,
+   "skipped": 3,
+   "reasons": {
+    "Invalid instruction (UC_ERR_INSN_INVALID)": 1,
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 2
+   },
    "failure": null
   },
   "0x445900": {
-   "passed": 58,
-   "skipped": 2,
+   "passed": 29,
+   "skipped": 1,
+   "reasons": {
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 1
+   },
    "failure": null
   },
   "0x447f40": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4493d0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x449460": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x44a720": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
-  "0x452770": {
-   "passed": 16,
-   "skipped": 44,
+  "0x452960": {
+   "passed": 10,
+   "skipped": 20,
+   "reasons": {
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 2,
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 7,
+    "step limit": 11
+   },
    "failure": null
   },
   "0x456d80": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x456de0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x456e40": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x456ea0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x456f10": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x456fa0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x457000": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x457060": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4570b0": {
-   "passed": 56,
-   "skipped": 4,
+   "passed": 29,
+   "skipped": 1,
+   "reasons": {
+    "step limit": 1
+   },
    "failure": null
   },
   "0x457170": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4571f0": {
-   "passed": 56,
-   "skipped": 4,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4572b0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x457420": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x457460": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x457550": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4575b0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x457670": {
-   "passed": 59,
-   "skipped": 1,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4576d0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x457730": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x457770": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x457890": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x457a00": {
-   "passed": 60,
-   "skipped": 0,
+   "passed": 29,
+   "skipped": 1,
+   "reasons": {
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 1
+   },
    "failure": null
   },
   "0x457b70": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x457c10": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x457d10": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x457f40": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4580b0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x458100": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x458150": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x458260": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4582d0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x458330": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4583c0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x458450": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x458490": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4584f0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x458560": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4585c0": {
-   "passed": 59,
-   "skipped": 1,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x458710": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4587a0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x458880": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4589e0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x458a70": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x458c20": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x458d40": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x458e30": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x458f00": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x458fd0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4590a0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x459100": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x459200": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x459290": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4593b0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4594a0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x459760": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4597e0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x459860": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4598a0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x459900": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x459950": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4599e0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x459a30": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x459ab0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x459b00": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x459b60": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45aa20": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45abd0": {
-   "passed": 27,
-   "skipped": 33,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45ac70": {
-   "passed": 57,
-   "skipped": 3,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45ad20": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45aea0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45af40": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45b0b0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45b0f0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45b130": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45b150": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45b190": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45b410": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45b710": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45b790": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45b7f0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45b860": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45b8d0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45b950": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x45bad0": {
-   "passed": 17,
-   "skipped": 43,
+   "reasons": {},
    "failure": null
   },
   "0x45bc00": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45bc80": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45bd00": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x45bd60": {
-   "passed": 60,
-   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45bdd0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45be40": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45beb0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x45bf20": {
-   "passed": 60,
-   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45bf80": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45bff0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45c2f0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x45dca0": {
-   "passed": 60,
-   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45e3c0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45e400": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45e530": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x45e6b0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45eac0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45ec00": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x45ed10": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45ed60": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
-  "0x45ef40": {
-   "passed": 60,
+  "0x45ee30": {
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x45f020": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x45f140": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x45f1f0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45f3f0": {
-   "passed": 59,
-   "skipped": 1,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45f500": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45f590": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
-  "0x45f770": {
-   "passed": 45,
-   "skipped": 15,
+  "0x45f9f0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x45fb00": {
-   "passed": 52,
-   "skipped": 8,
+   "passed": 25,
+   "skipped": 5,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 5
+   },
    "failure": null
   },
   "0x45fc80": {
-   "passed": 48,
-   "skipped": 12,
-   "failure": null
-  },
-  "0x45fe10": {
-   "passed": 59,
-   "skipped": 1,
+   "passed": 26,
+   "skipped": 4,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 4
+   },
    "failure": null
   },
   "0x45fee0": {
-   "passed": 56,
-   "skipped": 4,
+   "passed": 28,
+   "skipped": 2,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 2
+   },
    "failure": null
   },
   "0x45ffb0": {
-   "passed": 41,
-   "skipped": 19,
+   "passed": 19,
+   "skipped": 11,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 11
+   },
    "failure": null
   },
   "0x4601c0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x4602a0": {
-   "passed": 50,
-   "skipped": 10,
+   "reasons": {},
    "failure": null
   },
   "0x460440": {
-   "passed": 38,
-   "skipped": 22,
+   "passed": 19,
+   "skipped": 11,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 11
+   },
    "failure": null
   },
   "0x460630": {
-   "passed": 28,
-   "skipped": 32,
+   "passed": 16,
+   "skipped": 14,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 14
+   },
    "failure": null
   },
   "0x460840": {
-   "passed": 23,
-   "skipped": 37,
-   "failure": null
-  },
-  "0x460a40": {
-   "passed": 60,
-   "skipped": 0,
+   "passed": 12,
+   "skipped": 18,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 18
+   },
    "failure": null
   },
   "0x460ad0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x460b60": {
-   "passed": 56,
-   "skipped": 4,
+   "passed": 28,
+   "skipped": 2,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 2
+   },
    "failure": null
   },
   "0x460c50": {
-   "passed": 53,
-   "skipped": 7,
-   "failure": null
-  },
-  "0x460df0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x460ed0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x460fa0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x461090": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x461360": {
-   "passed": 60,
-   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4614c0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x461610": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x461790": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x4657f0": {
-   "passed": 44,
-   "skipped": 16,
+   "reasons": {},
    "failure": null
   },
   "0x465a70": {
-   "passed": 52,
-   "skipped": 8,
+   "passed": 29,
+   "skipped": 1,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 1
+   },
    "failure": null
   },
   "0x469480": {
-   "passed": 21,
-   "skipped": 39,
+   "passed": 16,
+   "skipped": 14,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 14
+   },
    "failure": null
   },
   "0x46b800": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x46c500": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x46c5d0": {
-   "passed": 58,
+   "passed": 28,
    "skipped": 2,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 2
+   },
    "failure": null
   },
   "0x470960": {
-   "passed": 39,
-   "skipped": 21,
-   "failure": null
-  },
-  "0x470b20": {
-   "passed": 57,
-   "skipped": 3,
+   "passed": 16,
+   "skipped": 14,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 14
+   },
    "failure": null
   },
   "0x470d20": {
-   "passed": 42,
-   "skipped": 18,
+   "passed": 24,
+   "skipped": 6,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 6
+   },
    "failure": null
   },
   "0x471020": {
-   "passed": 16,
-   "skipped": 44,
+   "passed": 11,
+   "skipped": 19,
+   "reasons": {
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 19
+   },
    "failure": null
   },
   "0x4711a0": {
-   "passed": 47,
-   "skipped": 13,
-   "failure": null
-  },
-  "0x471340": {
-   "passed": 48,
-   "skipped": 12,
+   "passed": 25,
+   "skipped": 5,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 5
+   },
    "failure": null
   },
   "0x4713c0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
-  "0x4718a0": {
-   "passed": 52,
-   "skipped": 8,
+  "0x4717f0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x471820": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x471920": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x471940": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x471960": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
-  "0x471980": {
-   "passed": 60,
+  "0x4719a0": {
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4719e0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4719f0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x471a20": {
-   "passed": 60,
-   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x471a40": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x471a50": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x471a60": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x471a90": {
-   "passed": 60,
-   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x471aa0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x471ab0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x471ad0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x471ae0": {
-   "passed": 60,
-   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x471af0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x471b10": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x471b20": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x471b30": {
-   "passed": 60,
-   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x471b50": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x471b60": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x471b70": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x471b90": {
-   "passed": 60,
-   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x471ba0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x471c40": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x471c90": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x471d10": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x471d50": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x471ee0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x472020": {
-   "passed": 50,
-   "skipped": 10,
+   "reasons": {},
    "failure": null
   },
   "0x472090": {
-   "passed": 50,
-   "skipped": 10,
+   "passed": 28,
+   "skipped": 2,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 2
+   },
    "failure": null
   },
   "0x472100": {
-   "passed": 47,
-   "skipped": 13,
+   "passed": 28,
+   "skipped": 2,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 2
+   },
    "failure": null
   },
   "0x472170": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x4721e0": {
-   "passed": 52,
-   "skipped": 8,
+   "reasons": {},
    "failure": null
   },
   "0x472250": {
-   "passed": 48,
-   "skipped": 12,
+   "passed": 29,
+   "skipped": 1,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 1
+   },
    "failure": null
   },
   "0x4722c0": {
-   "passed": 47,
-   "skipped": 13,
+   "passed": 29,
+   "skipped": 1,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 1
+   },
    "failure": null
   },
   "0x472330": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4723a0": {
-   "passed": 50,
-   "skipped": 10,
+   "passed": 27,
+   "skipped": 3,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 3
+   },
    "failure": null
   },
   "0x472440": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x472460": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
-  "0x472620": {
-   "passed": 52,
-   "skipped": 8,
+  "0x4726d0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x472ad0": {
-   "passed": 44,
-   "skipped": 16,
+   "passed": 28,
+   "skipped": 2,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 2
+   },
    "failure": null
   },
   "0x472bd0": {
-   "passed": 49,
-   "skipped": 11,
+   "passed": 29,
+   "skipped": 1,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 1
+   },
    "failure": null
   },
   "0x472d90": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x472db0": {
-   "passed": 46,
-   "skipped": 14,
+   "passed": 25,
+   "skipped": 5,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 5
+   },
    "failure": null
   },
   "0x473490": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x473cd0": {
-   "passed": 60,
-   "skipped": 0,
-   "failure": null
-  },
-  "0x473e60": {
-   "passed": 16,
-   "skipped": 44,
+   "reasons": {},
    "failure": null
   },
   "0x473f10": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x473fc0": {
-   "passed": 45,
-   "skipped": 15,
-   "failure": null
-  },
-  "0x4741a0": {
-   "passed": 52,
-   "skipped": 8,
-   "failure": null
-  },
-  "0x474490": {
-   "passed": 60,
-   "skipped": 0,
+   "passed": 28,
+   "skipped": 2,
+   "reasons": {
+    "step limit": 1,
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 1
+   },
    "failure": null
   },
   "0x474540": {
-   "passed": 48,
-   "skipped": 12,
-   "failure": null
-  },
-  "0x474cd0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x474e00": {
-   "passed": 60,
-   "skipped": 0,
-   "failure": null
-  },
-  "0x4754e0": {
-   "passed": 60,
-   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x475510": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
-  "0x475700": {
-   "passed": 60,
+  "0x4756d0": {
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4757e0": {
-   "passed": 47,
-   "skipped": 13,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x475840": {
-   "passed": 18,
-   "skipped": 42,
-   "failure": null
-  },
-  "0x475b20": {
-   "passed": 60,
-   "skipped": 0,
+   "passed": 27,
+   "skipped": 3,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 3
+   },
    "failure": null
   },
   "0x475be0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x475de0": {
-   "passed": 60,
-   "skipped": 0,
-   "failure": null
-  },
-  "0x475e30": {
-   "passed": 60,
-   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x476400": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4764d0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x476500": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x476810": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
-  "0x476d70": {
-   "passed": 36,
-   "skipped": 24,
-   "failure": null
-  },
-  "0x477610": {
-   "passed": 60,
+  "0x4768e0": {
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
-  "0x477930": {
-   "passed": 60,
-   "skipped": 0,
-   "failure": null
-  },
-  "0x477f10": {
-   "passed": 45,
+  "0x476cc0": {
+   "passed": 15,
    "skipped": 15,
+   "reasons": {
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 14,
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 1
+   },
    "failure": null
   },
-  "0x478860": {
-   "passed": 60,
+  "0x476d20": {
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
-  "0x4788f0": {
-   "passed": 60,
+  "0x476fe0": {
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x477010": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x4770a0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x4770d0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x477160": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x4772f0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x4776a0": {
+   "passed": 23,
+   "skipped": 7,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 7
+   },
+   "failure": null
+  },
+  "0x477910": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x477af0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x477d10": {
+   "passed": 19,
+   "skipped": 11,
+   "reasons": {
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 11
+   },
+   "failure": null
+  },
+  "0x4784d0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x478520": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x478610": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x478660": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x478750": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x4787a0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x478910": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x478ae0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x478d80": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x479a40": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x47ab70": {
-   "passed": 49,
-   "skipped": 11,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x47bd80": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x47c250": {
-   "passed": 59,
-   "skipped": 1,
-   "failure": null
-  },
-  "0x47c3b0": {
-   "passed": 60,
-   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x47c520": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x47c710": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
-  "0x47e360": {
-   "passed": 17,
-   "skipped": 43,
+  "0x47cd60": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
-  "0x47e780": {
-   "passed": 60,
+  "0x47e200": {
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x47ed30": {
-   "passed": 49,
-   "skipped": 11,
+   "passed": 29,
+   "skipped": 1,
+   "reasons": {
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 1
+   },
    "failure": null
   },
-  "0x47eda0": {
-   "passed": 24,
-   "skipped": 36,
+  "0x47f370": {
+   "passed": 14,
+   "skipped": 16,
+   "reasons": {
+    "step limit": 16
+   },
    "failure": null
   },
   "0x47f3d0": {
-   "passed": 20,
-   "skipped": 40,
-   "failure": null
-  },
-  "0x47f4b0": {
-   "passed": 25,
-   "skipped": 35,
-   "failure": null
-  },
-  "0x47f750": {
-   "passed": 60,
-   "skipped": 0,
+   "passed": 12,
+   "skipped": 18,
+   "reasons": {
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 18
+   },
    "failure": null
   },
   "0x47f770": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x47f790": {
-   "passed": 16,
-   "skipped": 44,
-   "failure": null
-  },
-  "0x47f830": {
-   "passed": 18,
-   "skipped": 42,
-   "failure": null
-  },
-  "0x47f8f0": {
-   "passed": 60,
-   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x47f9e0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x47fa20": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x47fa90": {
-   "passed": 48,
-   "skipped": 12,
+   "reasons": {},
    "failure": null
   },
   "0x47fce0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x480990": {
-   "passed": 60,
-   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x480b20": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x480ec0": {
-   "passed": 47,
-   "skipped": 13,
-   "failure": null
-  },
-  "0x480ff0": {
-   "passed": 25,
-   "skipped": 35,
-   "failure": null
-  },
-  "0x481340": {
-   "passed": 25,
-   "skipped": 35,
+   "reasons": {},
    "failure": null
   },
   "0x481460": {
-   "passed": 47,
-   "skipped": 13,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
-  "0x481850": {
-   "passed": 21,
-   "skipped": 39,
+  "0x4816f0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x481e10": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x4823b0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4827c0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x482860": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x4828a0": {
-   "passed": 60,
-   "skipped": 0,
-   "failure": null
-  },
-  "0x4828f0": {
-   "passed": 60,
-   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x482930": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4829c0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x482aa0": {
-   "passed": 60,
-   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x482b40": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x482f80": {
-   "passed": 40,
-   "skipped": 20,
+   "passed": 27,
+   "skipped": 3,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 3
+   },
+   "failure": null
+  },
+  "0x483790": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x484550": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x484700": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4848f0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x4856d0": {
-   "passed": 60,
-   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x485700": {
-   "passed": 49,
-   "skipped": 11,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4872f0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x487790": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4877d0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x487920": {
-   "passed": 46,
-   "skipped": 14,
+   "passed": 28,
+   "skipped": 2,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 2
+   },
    "failure": null
   },
   "0x4879f0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x487a10": {
-   "passed": 60,
-   "skipped": 0,
-   "failure": null
-  },
-  "0x487be0": {
-   "passed": 55,
-   "skipped": 5,
+   "reasons": {},
    "failure": null
   },
   "0x487df0": {
-   "passed": 53,
-   "skipped": 7,
+   "passed": 26,
+   "skipped": 4,
+   "reasons": {
+    "step limit": 4
+   },
    "failure": null
   },
   "0x488050": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x4886f0": {
-   "passed": 60,
-   "skipped": 0,
-   "failure": null
-  },
-  "0x489170": {
-   "passed": 60,
-   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x489230": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4893c0": {
-   "passed": 59,
-   "skipped": 1,
-   "failure": null
-  },
-  "0x489790": {
-   "passed": 60,
-   "skipped": 0,
-   "failure": null
-  },
-  "0x489950": {
-   "passed": 41,
-   "skipped": 19,
+   "passed": 27,
+   "skipped": 3,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 3
+   },
    "failure": null
   },
   "0x489b40": {
-   "passed": 44,
-   "skipped": 16,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x489fa0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x48a050": {
-   "passed": 60,
-   "skipped": 0,
-   "failure": null
-  },
-  "0x48a100": {
-   "passed": 55,
-   "skipped": 5,
+   "reasons": {},
    "failure": null
   },
   "0x48a2d0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
-  "0x48ac50": {
-   "passed": 60,
+  "0x48ac00": {
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x48ad00": {
-   "passed": 60,
-   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x48ae00": {
-   "passed": 55,
-   "skipped": 5,
+   "passed": 27,
+   "skipped": 3,
+   "reasons": {
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 3
+   },
    "failure": null
   },
   "0x48b240": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x48b770": {
-   "passed": 60,
-   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x48c390": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x48c3b0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x48c3d0": {
-   "passed": 60,
-   "skipped": 0,
-   "failure": null
-  },
-  "0x48c460": {
-   "passed": 60,
-   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x48c480": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x48c610": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x48c860": {
-   "passed": 23,
-   "skipped": 37,
-   "failure": null
-  },
-  "0x48c9d0": {
-   "passed": 60,
-   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x48c9f0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x48d530": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x48d600": {
-   "passed": 60,
-   "skipped": 0,
-   "failure": null
-  },
-  "0x48d620": {
-   "passed": 60,
-   "skipped": 0,
-   "failure": null
-  },
-  "0x48d650": {
-   "passed": 17,
-   "skipped": 43,
-   "failure": null
-  },
-  "0x48d6c0": {
-   "passed": 17,
-   "skipped": 43,
-   "failure": null
-  },
-  "0x4ac1c0": {
-   "passed": 60,
-   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4ac250": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4ac2b0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x4ac310": {
-   "passed": 56,
-   "skipped": 4,
-   "failure": null
-  },
-  "0x4ac590": {
-   "passed": 60,
-   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4ac610": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
-  "0x4ad2c0": {
-   "passed": 38,
-   "skipped": 22,
+  "0x4accc0": {
+   "passed": 18,
+   "skipped": 12,
+   "reasons": {
+    "step limit": 12
+   },
    "failure": null
   },
   "0x4ad630": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4ad870": {
-   "passed": 23,
-   "skipped": 37,
-   "failure": null
-  },
-  "0x4ade60": {
-   "passed": 29,
-   "skipped": 31,
-   "failure": null
-  },
-  "0x4adf70": {
-   "passed": 60,
-   "skipped": 0,
+   "passed": 28,
+   "skipped": 2,
+   "reasons": {
+    "step limit": 2
+   },
    "failure": null
   },
   "0x4adfa0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
+   "failure": null
+  },
+  "0x4adfb0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4ae150": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4ae1f0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x4ae250": {
-   "passed": 60,
-   "skipped": 0,
-   "failure": null
-  },
-  "0x4af8c0": {
-   "passed": 60,
-   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4b0b70": {
-   "passed": 54,
-   "skipped": 6,
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4b17b0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
-  "0x4b17e0": {
-   "passed": 60,
-   "skipped": 0,
-   "failure": null
-  },
-  "0x4b23c0": {
-   "passed": 17,
-   "skipped": 43,
-   "failure": null
-  },
-  "0x4b2d90": {
-   "passed": 19,
-   "skipped": 41,
+  "0x4b2340": {
+   "passed": 20,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
   "0x4b3100": {
-   "passed": 56,
-   "skipped": 4,
+   "passed": 27,
+   "skipped": 3,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 3
+   },
    "failure": null
   },
   "0x4b3140": {
-   "passed": 29,
-   "skipped": 31,
-   "failure": null
-  },
-  "0x4b3210": {
-   "passed": 54,
-   "skipped": 6,
-   "failure": null
-  },
-  "0x4b3360": {
-   "passed": 60,
-   "skipped": 0,
+   "passed": 15,
+   "skipped": 15,
+   "reasons": {
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 7,
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 5,
+    "step limit": 3
+   },
    "failure": null
   },
   "0x4b3390": {
-   "passed": 30,
-   "skipped": 30,
+   "passed": 17,
+   "skipped": 13,
+   "reasons": {
+    "step limit": 7,
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 2,
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 4
+   },
    "failure": null
   },
   "0x4b34d0": {
-   "passed": 54,
-   "skipped": 6,
-   "failure": null
-  },
-  "0x4b3500": {
-   "passed": 60,
-   "skipped": 0,
-   "failure": null
-  },
-  "0x4b3a00": {
-   "passed": 56,
-   "skipped": 4,
+   "passed": 27,
+   "skipped": 3,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 3
+   },
    "failure": null
   },
   "0x4b3ce0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4b3d60": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x4b3fb0": {
-   "passed": 54,
-   "skipped": 6,
+   "reasons": {},
    "failure": null
   },
   "0x4b4cf0": {
-   "passed": 59,
+   "passed": 29,
    "skipped": 1,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 1
+   },
    "failure": null
   },
   "0x4b5050": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x4b50d0": {
-   "passed": 60,
-   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4b5400": {
-   "passed": 50,
-   "skipped": 10,
+   "passed": 26,
+   "skipped": 4,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 4
+   },
    "failure": null
   },
   "0x4b5550": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
-  "0x4b5580": {
-   "passed": 59,
-   "skipped": 1,
+  "0x4b5db0": {
+   "passed": 28,
+   "skipped": 2,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 2
+   },
    "failure": null
   },
-  "0x4b6070": {
-   "passed": 17,
-   "skipped": 43,
+  "0x4b5fc0": {
+   "passed": 11,
+   "skipped": 19,
+   "reasons": {
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 18,
+    "step limit": 1
+   },
    "failure": null
   },
-  "0x4b60c0": {
-   "passed": 21,
-   "skipped": 39,
+  "0x4b65d0": {
+   "passed": 30,
+   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4b6a30": {
-   "passed": 18,
-   "skipped": 42,
-   "failure": null
-  },
-  "0x4b6ea0": {
-   "passed": 52,
-   "skipped": 8,
-   "failure": null
-  },
-  "0x4b74c0": {
-   "passed": 16,
-   "skipped": 44,
+   "passed": 26,
+   "skipped": 4,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 4
+   },
    "failure": null
   },
   "0x4b7600": {
-   "passed": 47,
-   "skipped": 13,
+   "passed": 26,
+   "skipped": 4,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 4
+   },
    "failure": null
   },
   "0x4b78e0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x4b79a0": {
-   "passed": 60,
-   "skipped": 0,
-   "failure": null
-  },
-  "0x4b7b00": {
-   "passed": 26,
-   "skipped": 34,
+   "reasons": {},
    "failure": null
   },
   "0x4b7dd0": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4b8187": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x4b826f": {
-   "passed": 60,
-   "skipped": 0,
-   "failure": null
-  },
-  "0x4b9310": {
-   "passed": 60,
-   "skipped": 0,
+   "reasons": {},
    "failure": null
   },
   "0x4b9330": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
-  "0x4b9cf0": {
-   "passed": 36,
-   "skipped": 24,
-   "failure": null
-  },
-  "0x4b9d70": {
-   "passed": 50,
-   "skipped": 10,
+  "0x4b9c20": {
+   "passed": 27,
+   "skipped": 3,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 1,
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 1,
+    "step limit": 1
+   },
    "failure": null
   },
   "0x4c5400": {
-   "passed": 55,
-   "skipped": 5,
+   "passed": 29,
+   "skipped": 1,
+   "reasons": {
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 1
+   },
    "failure": null
   },
   "0x4c5a40": {
-   "passed": 28,
-   "skipped": 32,
+   "passed": 24,
+   "skipped": 6,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 6
+   },
    "failure": null
   },
-  "0x4c5bb0": {
-   "passed": 60,
+  "0x4ca060": {
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
-  "0x4c5c20": {
-   "passed": 60,
-   "skipped": 0,
-   "failure": null
-  },
-  "0x4c69c0": {
-   "passed": 21,
-   "skipped": 39,
-   "failure": null
-  },
-  "0x4c70f0": {
-   "passed": 23,
-   "skipped": 37,
-   "failure": null
-  },
-  "0x4c9820": {
-   "passed": 55,
-   "skipped": 5,
-   "failure": null
-  },
-  "0x4cb4f0": {
-   "passed": 25,
-   "skipped": 35,
-   "failure": null
-  },
-  "0x4cd0c0": {
-   "passed": 60,
-   "skipped": 0,
+  "0x4ca5a0": {
+   "passed": 27,
+   "skipped": 3,
+   "reasons": {
+    "pointer into an object": 2,
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 1
+   },
    "failure": null
   },
   "0x4cd847": {
-   "passed": 60,
+   "passed": 30,
    "skipped": 0,
+   "reasons": {},
    "failure": null
   },
-  "0x4cf480": {
-   "passed": 60,
+  "0x4cea15": {
+   "passed": 30,
    "skipped": 0,
-   "failure": null
-  },
-  "0x4cf910": {
-   "passed": 60,
-   "skipped": 0,
+   "reasons": {},
    "failure": null
   }
  },
  "weak": {
-  "0x404730": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x405720": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
   "0x405ee0": {
-   "passed": 3,
-   "skipped": 25,
+   "passed": 9,
+   "skipped": 21,
+   "reasons": {
+    "step limit": 21
+   },
    "failure": null
   },
-  "0x407720": {
+  "0x406170": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
   "0x407830": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4083a0": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x408800": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4088e0": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4095d0": {
-   "passed": 0,
-   "skipped": 25,
+   "passed": 8,
+   "skipped": 22,
+   "reasons": {
+    "step limit": 22
+   },
    "failure": null
   },
   "0x409f00": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x40f780": {
-   "passed": 2,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x412240": {
-   "passed": 3,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4138b0": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x413a40": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x416c30": {
-   "passed": 12,
-   "skipped": 48,
-   "failure": null
-  },
-  "0x4171a0": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4172c0": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x417350": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4173d0": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x417460": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x41df30": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x41e310": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4288d0": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x429460": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x429600": {
-   "passed": 0,
-   "skipped": 60,
-   "failure": null
-  },
-  "0x42a200": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x42a9d0": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x42acf0": {
-   "passed": 10,
-   "skipped": 50,
+   "passed": 6,
+   "skipped": 24,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 15,
+    "step limit": 9
+   },
    "failure": null
   },
   "0x42af30": {
-   "passed": 0,
-   "skipped": 25,
+   "passed": 9,
+   "skipped": 21,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 21
+   },
    "failure": null
   },
-  "0x42af80": {
-   "passed": 11,
-   "skipped": 49,
+  "0x432110": {
+   "passed": 1,
+   "skipped": 10,
+   "reasons": {
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+   },
    "failure": null
   },
-  "0x42b070": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x42b290": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x42b370": {
-   "passed": 0,
-   "skipped": 27,
-   "failure": null
-  },
-  "0x42ef60": {
-   "passed": 0,
-   "skipped": 60,
-   "failure": null
-  },
-  "0x42ef80": {
-   "passed": 0,
-   "skipped": 60,
-   "failure": null
-  },
-  "0x42f620": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x42f7d0": {
-   "passed": 0,
-   "skipped": 60,
-   "failure": null
-  },
-  "0x42f7f0": {
-   "passed": 0,
-   "skipped": 60,
-   "failure": null
-  },
-  "0x42f810": {
-   "passed": 0,
-   "skipped": 60,
-   "failure": null
-  },
-  "0x42f830": {
-   "passed": 0,
-   "skipped": 60,
-   "failure": null
-  },
-  "0x42f8b0": {
-   "passed": 0,
-   "skipped": 60,
-   "failure": null
-  },
-  "0x42f8e0": {
-   "passed": 0,
-   "skipped": 60,
-   "failure": null
-  },
-  "0x431ae0": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4323d0": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x432c00": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x433840": {
-   "passed": 0,
-   "skipped": 60,
-   "failure": null
-  },
-  "0x433e20": {
-   "passed": 0,
-   "skipped": 60,
-   "failure": null
-  },
-  "0x4374e0": {
+  "0x4321b0": {
    "passed": 2,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 4,
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 6
+   },
    "failure": null
   },
-  "0x438dd0": {
+  "0x452770": {
+   "passed": 9,
+   "skipped": 21,
+   "reasons": {
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 19,
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 1,
+    "step limit": 1
+   },
+   "failure": null
+  },
+  "0x45bad0": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 1,
+    "step limit": 9
+   },
    "failure": null
   },
-  "0x439140": {
+  "0x45bd60": {
    "passed": 0,
-   "skipped": 31,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4393f0": {
-   "passed": 11,
-   "skipped": 49,
+  "0x45bf20": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x439690": {
+  "0x45dca0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x45e590": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x45ec50": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x45ef40": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x45f250": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x45f770": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x45fe10": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4602a0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x460a40": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x460df0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x461360": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4657f0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x46b810": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x470b20": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x471340": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4718a0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x471980": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x471a20": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x471a90": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 9,
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 1
+   },
+   "failure": null
+  },
+  "0x471ae0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x471b30": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x471b90": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x471cd0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x472020": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4721e0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x472360": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x472620": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x472d50": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x473cd0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x473e60": {
    "passed": 1,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 6,
+    "step limit": 4
+   },
    "failure": null
   },
-  "0x43a6f0": {
-   "passed": 12,
-   "skipped": 48,
-   "failure": null
-  },
-  "0x43d370": {
+  "0x4741a0": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x43f110": {
-   "passed": 1,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x43f190": {
-   "passed": 4,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x440490": {
+  "0x474490": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x440d50": {
+  "0x474cd0": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x452440": {
+  "0x474e00": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x452520": {
-   "passed": 1,
-   "skipped": 25,
+  "0x4754e0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4526e0": {
-   "passed": 1,
-   "skipped": 25,
+  "0x475700": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x453050": {
-   "passed": 13,
-   "skipped": 47,
+  "0x475790": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x453320": {
+  "0x475b20": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x475b80": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x475c80": {
    "passed": 8,
-   "skipped": 52,
+   "skipped": 22,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 3,
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 19
+   },
    "failure": null
   },
-  "0x4533b0": {
+  "0x475de0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x475e30": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x476440": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x476480": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x476650": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x476720": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x476a00": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x476c80": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x476d70": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x476fb0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x477040": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x477070": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x477100": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x477130": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x477320": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x477610": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x477930": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4779c0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x477f10": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x478480": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x478570": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4785c0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4786b0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x478700": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x478860": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4788f0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x478b70": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x478d10": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x479b50": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x479d70": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x47c250": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x47c3b0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x47c930": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x47cb40": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x47e360": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x47e780": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x47eda0": {
+   "passed": 6,
+   "skipped": 24,
+   "reasons": {
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 21,
+    "Unhandled CPU exception (UC_ERR_EXCEPTION)": 1,
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 1,
+    "step limit": 1
+   },
+   "failure": null
+  },
+  "0x47f160": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x47f320": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x47f4b0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x47f750": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x47f790": {
    "passed": 2,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+   },
    "failure": null
   },
-  "0x45bb80": {
-   "passed": 3,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x45c9a0": {
-   "passed": 12,
-   "skipped": 48,
-   "failure": null
-  },
-  "0x465af0": {
+  "0x47f830": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x466d60": {
+  "0x47f8f0": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x46a410": {
-   "passed": 1,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x46a9c0": {
+  "0x47fa40": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x46f440": {
+  "0x47fa90": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x472c10": {
-   "passed": 3,
-   "skipped": 25,
+  "0x47fe50": {
+   "passed": 2,
+   "skipped": 10,
+   "reasons": {
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 10
+   },
    "failure": null
   },
-  "0x472f80": {
+  "0x47fe80": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x474560": {
+  "0x480990": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x474910": {
+  "0x480ff0": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x475090": {
+  "0x481340": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4774e0": {
-   "passed": 3,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x477c90": {
+  "0x481850": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x47e9b0": {
-   "passed": 1,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x47ed10": {
+  "0x481b30": {
    "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x47f430": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x47f900": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x480030": {
-   "passed": 8,
-   "skipped": 52,
-   "failure": null
-  },
-  "0x480730": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4808f0": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x480940": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x480d60": {
-   "passed": 12,
-   "skipped": 48,
-   "failure": null
-  },
-  "0x4817a0": {
-   "passed": 13,
-   "skipped": 47,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
   "0x482550": {
-   "passed": 4,
-   "skipped": 25,
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x483110": {
+  "0x4826c0": {
    "passed": 0,
-   "skipped": 26,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x484520": {
+  "0x4828a0": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4828f0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x482a60": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x482aa0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x483060": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4830f0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4845d0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x484680": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
   "0x484b60": {
    "passed": 0,
-   "skipped": 36,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4854a0": {
+  "0x4856d0": {
    "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x485520": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x485550": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x486d00": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x486da0": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x486e00": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x486e20": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x486ed0": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x487020": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x487060": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x487080": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x487130": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4871d0": {
-   "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
   "0x4873d0": {
-   "passed": 11,
-   "skipped": 49,
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x487d30": {
+  "0x487750": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x488c50": {
+  "0x487850": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x489040": {
+  "0x487860": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x489a10": {
+  "0x487a10": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x489b20": {
+  "0x487be0": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x48a710": {
+  "0x4886f0": {
    "passed": 0,
-   "skipped": 58,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x489170": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x489790": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x489950": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x48a050": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x48a100": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x48ac50": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 1,
+    "step limit": 9
+   },
+   "failure": null
+  },
+  "0x48ad00": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
   "0x48b550": {
-   "passed": 11,
-   "skipped": 49,
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x48c970": {
-   "passed": 12,
-   "skipped": 48,
+  "0x48b770": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x48ca20": {
-   "passed": 4,
+  "0x48c3d0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x48c460": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x48c860": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x48c9d0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x48d600": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x48d620": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x48d650": {
+   "passed": 9,
+   "skipped": 21,
+   "reasons": {
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 21
+   },
+   "failure": null
+  },
+  "0x48d6c0": {
+   "passed": 5,
    "skipped": 25,
+   "reasons": {
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 21,
+    "step limit": 4
+   },
+   "failure": null
+  },
+  "0x4ac1c0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
   "0x4ac1e0": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4ade20": {
-   "passed": 4,
-   "skipped": 25,
+  "0x4ac310": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4b2380": {
-   "passed": 14,
-   "skipped": 46,
+  "0x4ac590": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4acd30": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4ad2c0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4ade60": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4adf70": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4adfe0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4ae110": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4ae250": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4af8c0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4b17e0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4b2300": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4b23c0": {
+   "passed": 2,
+   "skipped": 10,
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 3,
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 7
+   },
    "failure": null
   },
   "0x4b2a00": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4b2d90": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4b3210": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4b3360": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4b3500": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4b3a00": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4b3fb0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
   "0x4b42e0": {
-   "passed": 4,
-   "skipped": 25,
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4b50d0": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
   "0x4b5150": {
-   "passed": 3,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4b5560": {
-   "passed": 10,
-   "skipped": 50,
-   "failure": null
-  },
-  "0x4b5fc0": {
-   "passed": 4,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4b6120": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4b6170": {
-   "passed": 14,
-   "skipped": 46,
-   "failure": null
-  },
-  "0x4b61c0": {
-   "passed": 3,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4b7020": {
+  "0x4b5580": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4b9170": {
+  "0x4b5700": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4b91b0": {
-   "passed": 4,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4b91e0": {
+  "0x4b6070": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4b9200": {
+  "0x4b60c0": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4b9220": {
+  "0x4b6ea0": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4b9540": {
+  "0x4b74c0": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4b9710": {
+  "0x4b79a0": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4b97c0": {
+  "0x4b7b00": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4b98b0": {
+  "0x4b826f": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4b99b0": {
+  "0x4b9310": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4b9c20": {
+  "0x4b9cf0": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4bb040": {
+  "0x4b9d70": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4bb170": {
+  "0x4c5bb0": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4bb9b0": {
+  "0x4c5c20": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4bbc00": {
+  "0x4c69c0": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "Invalid memory fetch (UC_ERR_FETCH_UNMAPPED)": 1,
+    "step limit": 9
+   },
    "failure": null
   },
-  "0x4bc050": {
+  "0x4c9820": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4bc6c0": {
+  "0x4c9b6a": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4bcbc0": {
+  "0x4c9e2f": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4bd210": {
+  "0x4ca070": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4bdde0": {
+  "0x4ca0d0": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4be0b0": {
+  "0x4ca2e0": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4bef10": {
+  "0x4cb4f0": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4bf190": {
+  "0x4ccfe0": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4bf6a0": {
+  "0x4cd0c0": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4bf770": {
+  "0x4cdb70": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4c09e0": {
+  "0x4cdfb0": {
    "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4c17da": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4c2280": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4c26f0": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4c31a0": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4c3540": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4c3be0": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4c4d00": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4c4d20": {
-   "passed": 4,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4c4ea0": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4c4f60": {
-   "passed": 3,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4c5030": {
-   "passed": 3,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4c54d0": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4c58e0": {
-   "passed": 1,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4c5c00": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4c6020": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4c6c80": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4c8500": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4c9030": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4c96a0": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4ca650": {
-   "passed": 3,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4cafd0": {
-   "passed": 10,
-   "skipped": 50,
-   "failure": null
-  },
-  "0x4cc870": {
-   "passed": 0,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4cd819": {
-   "passed": 3,
-   "skipped": 25,
-   "failure": null
-  },
-  "0x4ce080": {
-   "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
   "0x4ce230": {
    "passed": 0,
-   "skipped": 60,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4cf650": {
+  "0x4cf480": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   },
-  "0x4cf940": {
+  "0x4cf880": {
    "passed": 0,
-   "skipped": 25,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
+   "failure": null
+  },
+  "0x4cf910": {
+   "passed": 0,
+   "skipped": 10,
+   "reasons": {
+    "step limit": 10
+   },
    "failure": null
   }
  },
  "failed": {
-  "0x4321b0": {
-   "passed": 14,
-   "skipped": 20,
-   "failure": "(34, ('calls', 'first difference', 1, 2, 1, [('virtual', 30, 0)], []))"
+  "0x415580": {
+   "passed": 5,
+   "skipped": 0,
+   "reasons": {},
+   "failure": "(5, ('global', '0x532b4d', 215, 212))"
   },
-  "0x482d00": {
+  "0x425f60": {
    "passed": 0,
    "skipped": 0,
-   "failure": "(0, ('global', '0x19', None, 154))"
+   "reasons": {},
+   "failure": "(0, ('objects', ['0x905000']))"
   },
-  "0x48b2f0": {
-   "passed": 0,
-   "skipped": 2,
-   "failure": "(2, ('global native', '0x701860', 216))"
+  "0x4393f0": {
+   "passed": 21,
+   "skipped": 0,
+   "reasons": {},
+   "failure": "(21, ('calls', 'first difference', 0, 0, 1, [], [(4428656, 9437184, 9785197, 61152, 1)]))"
   },
-  "0x4b3340": {
-   "passed": 18,
-   "skipped": 24,
-   "failure": "(42, ('calls', 'first difference', 1, 2, 1, [('virtual', 30, 2)], []))"
-  },
-  "0x4b5630": {
-   "passed": 11,
-   "skipped": 19,
-   "failure": "(30, ('calls', 'first difference', 0, 2, 1, [('virtual', 26, 0), (4940896, 9519104, 1, 2316463848, 9519104)], [(4940896, 11098920, 1, 2316463848, 11098920)]))"
-  },
-  "0x4bbf30": {
-   "passed": 0,
+  "0x476160": {
+   "passed": 21,
    "skipped": 1,
-   "failure": "(1, ('result', '0x91e000', '0x1'))"
+   "reasons": {
+    "Invalid memory read (UC_ERR_READ_UNMAPPED)": 1
+   },
+   "failure": "(22, ('global', '0x4', 49, 127))"
+  },
+  "0x480ec0": {
+   "passed": 23,
+   "skipped": 0,
+   "reasons": {},
+   "failure": "(23, ('calls', 'first difference', 4, 5, 5, [(4722016, 3979466744, 9498624, 1227624678, 4294967295)], [(4722016, 248, 9498624, 1227624678, 4294967295)]))"
+  },
+  "0x4c70f0": {
+   "passed": 4,
+   "skipped": 2,
+   "reasons": {
+    "step limit": 2
+   },
+   "failure": "(6, ('result', '0x0', '0xffffffff'))"
   }
  }
 }

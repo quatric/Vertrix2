@@ -28,7 +28,7 @@ def main():
     kept = sorted(a for a, r in merged.items() if not r["failure"] and r["passed"] >= need)
     weak = sorted(a for a, r in merged.items() if not r["failure"] and r["passed"] < need)
     failed = sorted(a for a, r in merged.items() if r["failure"])
-    output = REPO / "source" / "bonus_lifted.c"
+    output = REPO / "reference" / "lifted" / "bonus_lifted.c"
     subprocess.run([sys.executable, str(REPO / "tools" / "lift.py"), str(args.executable), *kept,
                     "--output", str(output)], check=True)
     for path in (output, output.with_suffix(".h")):
