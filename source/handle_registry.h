@@ -45,8 +45,8 @@ typedef uint32_t (*VertrixGuardedCall)(uint32_t argument, void *context);
 
 /* Original0x40ab20: unless disabled, run the call only when no other guarded call is active
  * (depth 1 after incrementing). Returns the call's result, else 0. */
-uint32_t vertrix_guarded_call(VertrixCallGuard *guard, uint32_t argument, VertrixGuardedCall call,
-                              void *context);
+uint32_t vertrix_registry_guarded_call(VertrixCallGuard *guard, uint32_t argument,
+                                       VertrixGuardedCall call, void *context);
 
 /* Supplied boundaries: library entry 0x52f058 (no arguments) and release 0x4ea190. */
 typedef uint32_t (*VertrixCloseCall)(void *context);

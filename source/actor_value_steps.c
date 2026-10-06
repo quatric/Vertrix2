@@ -43,7 +43,7 @@ int32_t vertrix_step_toward(int32_t current, int32_t target, int32_t step, int32
     return moved;
 }
 
-int vertrix_actor_progress_quotient(const void *actor, size_t size, uint32_t *quotient)
+int vertrix_actor_step_quotient(const void *actor, size_t size, uint32_t *quotient)
 {
     uint32_t counter;
     uint32_t divisor;
@@ -155,7 +155,7 @@ int vertrix_actor_consume_progress(void *actor, size_t size)
     uint32_t counter;
     uint32_t divisor;
     uint32_t product;
-    if (!vertrix_actor_progress_quotient(actor, size, &quotient) ||
+    if (!vertrix_actor_step_quotient(actor, size, &quotient) ||
         !vertrix_actor_storage_read(actor, size, ACTOR_CC, 4, &counter) ||
         !vertrix_actor_storage_read(actor, size, ACTOR_D0, 4, &divisor))
     {

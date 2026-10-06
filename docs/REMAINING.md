@@ -214,9 +214,11 @@ verified in the two scripts above.
 
 Open: the object creation glue that starts these letters (0x46f000/0x46f220 are recovered as
 `letter_row`; 0x46eda0/0x46ea30 as the grid and menu) and the wiring into a title scene. Note:
-`actor_fields.c` and `actor_value_steps.c` both define `vertrix_actor_progress_quotient`, so they
-cannot be linked into one library; the letter code uses `dword_transition.c` for 0x4ad750 for that
-reason.
+`actor_fields.c` and `actor_value_steps.c` used to define the same symbol
+`vertrix_actor_progress_quotient` (two different originals: 0x4ac640 with the dwords at +0xdc/+0xe0,
+and 0x4ac3b0 with +0xcc/+0xd0); the second is now `vertrix_actor_step_quotient`, and the guarded
+call of `handle_registry.c` (0x40ab20) is `vertrix_registry_guarded_call`, so every recovered module
+links into one image.
 
 ## Bonus selection (traced)
 

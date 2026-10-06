@@ -14,7 +14,7 @@ int32_t vertrix_step_toward(int32_t current, int32_t target, int32_t step, int32
 
 /* Original0x4ac3b0: counter at +0xcc divided (unsigned) by the divisor at +0xd0, where a
  * zero divisor counts as one. Returns 0 for short storage. */
-int vertrix_actor_progress_quotient(const void *actor, size_t size, uint32_t *quotient);
+int vertrix_actor_step_quotient(const void *actor, size_t size, uint32_t *quotient);
 
 /* Original0x4ac420: reduce the counter at +0xcc by whole divisor steps (the
  * quotient at +0xd0, zero divisor counting as one): when the product reaches
