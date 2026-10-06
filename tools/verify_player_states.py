@@ -303,3 +303,12 @@ run_screen('state-guard-4553a0', 0x4553a0, ['player_states.c'], 'vertrix_state_g
            [U, U, U], U, GUARD, guard_case, TEXT,
            **{**MORE, 'patch': patch_guard,
               'choices': {0x42ed40: [1, 1, 0], 0x42ed70: [1, 1, 0]}})
+
+run_screen('state-done-455c30', 0x455c30, ['player_states.c'], 'vertrix_state_done_455c30', [U],
+           U, PAIR, pair_case, TEXT,
+           **{**MORE, 'choices': {0x42eca0: [1, 1, 0], 0x42ecc0: [1, 1, 0]}})
+run_screen('state-ask-455e00', 0x455e00, ['player_states.c'], 'vertrix_state_ask_455e00', [U], U,
+           PAIR, pair_case, TEXT, **{**MORE, 'choices': {0x42eca0: [1, 0, 1]}})
+REPLACE = {address: 0 for address in (0x42eca0, 0x4387b0, 0x4ac8f0, LEAF)}
+run_screen('state-replace-455db0', 0x455db0, ['player_states.c'], 'vertrix_state_replace_455db0',
+           [U], U, REPLACE, pair_case, TEXT, **{**MORE, 'choices': {0x42eca0: [1, 0, 1]}})

@@ -231,4 +231,19 @@ uint32_t vertrix_state_guard_4553a0(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services,
                                     const VertrixGlobals *globals, uint32_t player, uint32_t ebx,
                                     uint32_t ecx);
+
+/* Original 0x455c30 is 0x454bd0 and 0x455e00 is 0x453ef0 with the board's +0xb8c zeroed after the
+ * final 0x43bbf0. */
+uint32_t vertrix_state_done_455c30(const VertrixCalls *calls,
+                                   const VertrixFactoryServices *services,
+                                   const VertrixGlobals *globals, uint32_t player);
+uint32_t vertrix_state_ask_455e00(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                  const VertrixGlobals *globals, uint32_t player);
+
+/* Original 0x455db0 (eax = player). Unless 0x42eca0 on the board (+0x15c) accepts 0x44c860 only the
+ * board's virtual call runs (through ebx = the table). Otherwise 0x4387b0 (edx = 0x455e00) runs on
+ * the board and 0x4ac8f0 sets that handler on the player before the virtual call. */
+uint32_t vertrix_state_replace_455db0(const VertrixCalls *calls,
+                                      const VertrixFactoryServices *services,
+                                      const VertrixGlobals *globals, uint32_t player);
 #endif
