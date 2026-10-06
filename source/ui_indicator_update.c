@@ -9,7 +9,10 @@ typedef struct
     unsigned width;
 } IndicatorField;
 
-#define FIELD(member, original, width) {offsetof(VertrixLinkedIndicator, member), original, width}
+#define FIELD(member, original, width)                                                             \
+    {                                                                                              \
+        offsetof(VertrixLinkedIndicator, member), original, width                                  \
+    }
 static const IndicatorField fields[] = {
     FIELD(threshold, 0x58, 4),     FIELD(source, 0x134, 4),      FIELD(handler, 0x154, 4),
     FIELD(timer.counter, 0xbc, 4), FIELD(timer.period, 0xc0, 4), FIELD(amount, 0x4e, 1),

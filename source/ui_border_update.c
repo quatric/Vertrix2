@@ -9,7 +9,10 @@ typedef struct
     unsigned width;
 } BurstField;
 
-#define FIELD(member, original, width) {offsetof(VertrixLinkedBurst, member), original, width}
+#define FIELD(member, original, width)                                                             \
+    {                                                                                              \
+        offsetof(VertrixLinkedBurst, member), original, width                                      \
+    }
 static const BurstField fields[] = {
     FIELD(repetitions, 0x58, 4),   FIELD(source, 0x134, 4),      FIELD(handler, 0x154, 4),
     FIELD(effect, 0x48, 2),        FIELD(target, 0x4a, 2),       FIELD(step, 0x4c, 2),

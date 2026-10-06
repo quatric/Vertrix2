@@ -25,7 +25,10 @@ typedef struct
     uint8_t width;
 } MovementField;
 
-#define FIELD(member, original, width) {offsetof(VertrixLinkedMovement, member), original, width}
+#define FIELD(member, original, width)                                                             \
+    {                                                                                              \
+        offsetof(VertrixLinkedMovement, member), original, width                                   \
+    }
 
 static const MovementField fields[] = {FIELD(threshold, 0x58, 4),
                                        FIELD(source, 0x134, 4),
