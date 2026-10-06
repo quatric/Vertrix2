@@ -170,12 +170,16 @@ returns the result of its last call, 0x43bae0. 0x455970 is identical to 0x455700
 0x42ebc0 before the callee; 0x455830 (`vertrix_effect_field_finish_after`) adds a 0x4ac500 /
 0x4ac520 prefix with 0x4ac540, 0x4ac5b0 and 0x437b70.
 
+## 0x455b90
+
+`vertrix_effect_pair_check` (bound by 0x455b20).
+
 ## Tally
 
 Distinct direct `call` targets in 0x401000..0x4d0000: 1827. Named in `source/` (ported): 1139.
 Not named: 688, listed in `docs/unported-call-targets.txt` (about 260 of them in 0x452830..0x45bd00,
 the follow-up and animation handlers of the bonus effects). Handlers reached only through tokens or
-vtables are not in this count. Oracle-verified bonus-effect routines: 76.
+vtables are not in this count. Oracle-verified bonus-effect routines: 77.
 
 ## Wiring note
 

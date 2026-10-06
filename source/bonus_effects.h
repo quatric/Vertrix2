@@ -479,4 +479,11 @@ uint32_t vertrix_effect_field_finish(const VertrixEffectServices *services, uint
  * edx). Then the 0x455700 flow of vertrix_effect_field_finish runs. */
 uint32_t vertrix_effect_field_finish_after(const VertrixEffectServices *services, uint32_t player,
                                            uint32_t entry_edx);
+
+/* Original 0x455b90 (eax = player): the handler bound by 0x455b20. 0x437f60 (edx 0) and 0x437fe0
+ * on the player's board. Result 1 binds the token 0x455c30 to the player, plays sound 11
+ * (0x4f81ac), sets the board's +0xb8c to one and calls 0x43ac00 on the opponent. Anything else
+ * calls 0x43acd0 on the opponent (ecx 1) and makes the handler end with 0x43bbf0 on the player
+ * (ebx 1, ecx 1). Slot 1 of the board comes between. */
+uint32_t vertrix_effect_pair_check(const VertrixEffectServices *services, uint32_t player);
 #endif

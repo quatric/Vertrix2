@@ -112,6 +112,7 @@ enum
     HANDLER_MARKED_END = 0x454fc0,
     HANDLER_GATE_CLEAR = 0x4552b0,
     HANDLER_FINISH = 0x452160,
+    HANDLER_PAIR_END = 0x455c30,
     PLAYER_CHAIN = 0x184,
     HANDLER_ARMED_CLEAR = 0x455320,
     HANDLER_ARMED_GATE = 0x4553a0,
@@ -2973,4 +2974,56 @@ uint32_t vertrix_effect_field_finish_after(const VertrixEffectServices *services
         vertrix_call(calls, 0x437b70, board, entry_edx, player, board, 0);
     }
     return vertrix_effect_field_finish(services, player, &vertrix_field_finishes[1]);
+}
+
+uint32_t vertrix_effect_pair_check(const VertrixEffectServices *services, uint32_t player)
+{
+    void *player_storage;
+    void *board_storage;
+    size_t player_size;
+    size_t board_size;
+    uint32_t board;
+    uint32_t opponent;
+    uint32_t vtable;
+    uint32_t result;
+    uint32_t ecx = player;
+    uint32_t ebx;
+    int ended = 0;
+    if (!services || !services->calls ||
+        !resolve_object(services, player, &player_storage, &player_size) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_BOARD, DWORD_WIDTH,
+                                    &board) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_OPPONENT, DWORD_WIDTH,
+                                    &opponent) ||
+        !resolve_object(services, board, &board_storage, &board_size))
+    {
+        return 0;
+    }
+    ebx = board;
+    vertrix_call(services->calls, 0x437f60, board, 0, ebx, ecx, 0);
+    if (vertrix_call(services->calls, 0x437fe0, board, 0, ebx, ecx, 0) == 1)
+    {
+        vertrix_call(services->calls, 0x4ac8f0, player, HANDLER_PAIR_END, ebx, ecx, 0);
+        vertrix_call(services->calls, 0x43c0e0, player, SOUND_KINDS, ebx, ecx, 0);
+        if (!vertrix_actor_storage_write(board_storage, board_size, BOARD_FLAG_SLIDE, DWORD_WIDTH,
+                                         1))
+        {
+            return 0;
+        }
+        vertrix_call(services->calls, 0x43ac00, opponent, SOUND_KINDS, ebx, ecx, 0);
+    }
+    else
+    {
+        ended = 1;
+        ecx = 1;
+        vertrix_call(services->calls, 0x43acd0, opponent, 0, ebx, ecx, 0);
+    }
+    if (!vertrix_actor_storage_read(board_storage, board_size, BOARD_VTABLE, DWORD_WIDTH, &vtable))
+    {
+        return 0;
+    }
+    result = services->virtual_call ? (uint32_t)services->virtual_call(services->virtual_context,
+                                                                       board, SLOT_RELEASE, 0)
+                                    : 0;
+    return ended ? vertrix_call(services->calls, 0x43bbf0, player, vtable, 1, ecx, 0) : result;
 }
