@@ -63,7 +63,7 @@ def main():
                'board_actions.c', 'surface.c', 'render_pixel.c', 'palette_map.c',
                'palette_tables.c', 'palette_color.c', 'render_dispatch.c', 'render_color.c',
                'render_palette.c', 'render_weights.c', 'render_color_bank.c', 'render_geometry.c',
-               'render_row.c', 'render_rectangle.c', 'render_preparation.c', 'image.c', 'vf.c'])
+               'render_row.c', 'render_rectangle.c', 'render_preparation.c', 'image.c', 'vf.c', 'random.c'])
     n.vertrix_board_particles_setup.argtypes = [
         c.c_void_p, c.c_size_t, U, U, c.POINTER(Screen), c.POINTER(Services), c.POINTER(Hooks),
         c.POINTER(Loader), c.POINTER(Scratch), c.POINTER(Scratch)]

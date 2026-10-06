@@ -1,9 +1,9 @@
-""
-    "Host integration check; GX calls are recorded stubs, never GPU validation."
-    "" import argparse import json import subprocess from pathlib import Path
-
-        HEADER = r ""
-                   "
+"""Host integration check; GX calls are recorded stubs, never GPU validation."""
+import argparse
+import json
+import subprocess
+from pathlib import Path
+HEADER = r"""
 #ifndef TEST_GCCORE_H
 #define TEST_GCCORE_H
 #include <stdint.h>
@@ -27,10 +27,8 @@ void GX_InitTexObjFilterMode(GXTexObj *, uint8_t, uint8_t);
 void GX_LoadTexObj(GXTexObj *, uint32_t);
 void GX_DrawDone(void);
 #endif
-""
-    "
-    HARNESS = r ""
-                "
+"""
+HARNESS = r"""
 #include "wii_assets.h"
 #include <assert.h>
 #include <stdio.h>
@@ -174,6 +172,7 @@ int main(int argc, char **argv)
 }
 """
 
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("archive", type=Path)
@@ -184,14 +183,8 @@ def main():
     (build / "gccore.h").write_text(HEADER)
     (build / "harness.c").write_text(HARNESS)
     source = Path(__file__).resolve().parents[1] / "source"
-    subprocess.run(["cc", "-std=c11", "-Wall", "-Wextra", "-Werror", "-fsanitize=address,undefined",
-                    "-I"+str(build), "-I"+str(source), str(build/"harness.c"),
-                    *[str(source/name) for name in ("wii_assets.c", "wii_texture.c", "texture.c", "assets.c", "image.c", "vf.c")],
-                    "-o", str(build/"verify-wii-assets")], check=True)
-    subprocess.run([str(build/"verify-wii-assets"), str(args.archive.resolve())], check=True)
-    (build/"wii-assets-verification.json").write_text(json.dumps({"status":"passed", "characters":18,
-        "block_frames":1008,"block_pixels":580608,"sprite_files":20,"sprite_frames":216,"missing_or_invalid_character_rows":3,
-        "scope":"Actual VF decoding and Wii asset/texture ownership code under ASan/UBSan. GX/cache calls are host stubs; no GPU or hardware validation."},indent=2)+"\n")
-
+    subprocess.run(["cc", "-std=c11", "-Wall", "-Wextra", "-Werror", "-fsanitize=address,undefined", "-I" + str(build), "-I" + str(source), str(build / "harness.c"), * [str(source / name) for name in ("wii_assets.c", "wii_texture.c", "texture.c", "assets.c", "image.c", "vf.c")], "-o", str(build / "verify-wii-assets")], check=True)
+    subprocess.run([str(build / "verify-wii-assets"), str(args.archive.resolve())], check=True)
+    (build / "wii-assets-verification.json").write_text(json.dumps({"status": "passed", "characters": 18, "block_frames": 1008, "block_pixels": 580608, "sprite_files": 20, "sprite_frames": 216, "missing_or_invalid_character_rows": 3, "scope": "Actual VF decoding and Wii asset/texture ownership code under ASan/UBSan. GX/cache calls are host stubs; no GPU or hardware validation."}, indent=2) + "\n")
 if __name__ == "__main__":
     main()

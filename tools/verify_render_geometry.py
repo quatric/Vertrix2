@@ -30,7 +30,7 @@ def main():
     args.build_dir.mkdir(parents=True, exist_ok=True)
     root = Path(__file__).resolve().parents[1]
     library = args.build_dir.resolve() / "render-geometry.dylib"
-    subprocess.run(["rtk", "proxy", "cc", "-shared", "-fPIC", "-O2", "-Wall", "-Wextra", "-Werror",
+    subprocess.run(["cc", "-shared", "-fPIC", "-O2", "-Wall", "-Wextra", "-Werror",
                     str(root / "source/render_geometry.c"), str(root / "source/surface.c"), str(root / "source/render_dispatch.c"), "-o", str(library)], check=True)
     native = ctypes.CDLL(str(library))
     native.vertrix_board_clip.argtypes = [ctypes.c_int16, ctypes.c_int16]

@@ -49,7 +49,7 @@ def main():
     n = build(args.build_dir, 'object-attack-composed',
               ['object_events.c', 'call_glue.c', 'actor_storage.c', 'player_actions.c',
                'player_slots.c', 'event_stack.c', 'actor_fields.c', 'board_cells.c',
-               'object_scalars.c', 'timing.c', 'random.c', 'piece.c', 'piece_children.c'])
+               'object_scalars.c', 'timing.c', 'random.c', 'piece.c', 'piece_children.c', 'piece_actor_construct.c', 'sfx_dispatch.c', 'piece_child_update.c', 'dword_transition.c', 'frame_resource.c', 'timer.c'])
     P, V, S = c.POINTER(Calls), c.c_void_p, c.c_size_t
     n.vertrix_object_enter_attack.argtypes = [P, c.POINTER(Services), U, V, S, Method, V]
     n.vertrix_object_enter_attack.restype = U

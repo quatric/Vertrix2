@@ -19,7 +19,7 @@ def main():
     args.build_dir.mkdir(parents=True, exist_ok=True)
     root = Path(__file__).resolve().parents[1]
     library = args.build_dir.resolve() / "animation.dylib"
-    subprocess.run(["rtk", "proxy", "cc", "-shared", "-fPIC", "-O2", "-Wall", "-Wextra", "-Werror",
+    subprocess.run(["cc", "-shared", "-fPIC", "-O2", "-Wall", "-Wextra", "-Werror",
                     str(root / "source/animation.c"), str(root / "source/timer.c"), "-o", str(library)], check=True)
     native = ctypes.CDLL(str(library))
     native.vertrix_animation_tick.argtypes = [ctypes.POINTER(Animation), ctypes.c_uint32, ctypes.c_int]

@@ -4,14 +4,12 @@ from pathlib import Path
 from original import Original, BOARD
 from oracle_kit import build
 from verify_random import NativeRandom
-
 OBJECT, DATA, CURSOR = 0x801000, 0x804000, 0x5bb73c
 U = c.c_uint32
 
 
 class Cursor(c.Structure):
-    _fields_ = [('index', c.c_int32), ('x', c.c_int16), ('y', c.c_int16), ('width', c.c_int16),
-                ('height', c.c_int16)]
+    _fields_ = [('index', c.c_int32), ('x', c.c_int16), ('y', c.c_int16), ('width', c.c_int16), ('height', c.c_int16)]
 
 
 def main():
@@ -32,37 +30,39 @@ def main():
     cpu = original.cpu
     rng = random.Random(0x482480)
     totals, faults = {}, 0
-
     def count(name):
         totals[name] = totals.get(name, 0) + 1
-
     for case in range(args.cases):
-raw = rng.randbytes(0x40) cpu.mem_write(OBJECT, raw) original.call(0x482480, eax = OBJECT)
-          native = c.create_string_buffer(raw, 0x40)
-                       assert n.vertrix_random_object_construct(native, 0x40) assert native.raw
-                   == bytes(cpu.mem_read(OBJECT, 0x40)),
-          case assert not n.vertrix_random_object_construct(native, 0x13)
-              count('random_object_construct') default =
-              rng.getrandbits(32) cpu.mem_write(0x4f81cc, struct.pack('<I', default)) cpu
-                  .mem_write(OBJECT, raw) original.call(0x487870, eax = OBJECT) native =
-                  c.create_string_buffer(raw, 0x40) assert n
-                      .vertrix_table_object_construct(native, 0x40, default) assert native.raw
-                  == bytes(cpu.mem_read(OBJECT, 0x40)),
-          case count('table_object_construct')
+        raw = rng.randbytes(0x40)
+        cpu.mem_write(OBJECT, raw)
+        original.call(0x482480, eax=OBJECT)
+        native = c.create_string_buffer(raw, 0x40)
+        assert n.vertrix_random_object_construct(native, 0x40)
+        assert native.raw == bytes(cpu.mem_read(OBJECT, 0x40)), case
+        assert not n.vertrix_random_object_construct(native, 0x13)
+        count('random_object_construct')
+        default = rng.getrandbits(32)
+        cpu.mem_write(0x4f81cc, struct.pack('<I', default))
+        cpu.mem_write(OBJECT, raw)
+        original.call(0x487870, eax=OBJECT)
+        native = c.create_string_buffer(raw, 0x40)
+        assert n.vertrix_table_object_construct(native, 0x40, default)
+        assert native.raw == bytes(cpu.mem_read(OBJECT, 0x40)), case
+        count('table_object_construct')
 #run - length size
-              length = rng.choice([ 0, 1, 2, 3, 10, 70, 150, rng.randrange(300) ]) data =
-                  bytearray() while len(data) < length:
+        length = rng.choice([0, 1, 2, 3, 10, 70, 150, rng.randrange(300)])
+        data = bytearray()
+        while len(data) < length:
             value = rng.choice([0, 1, 0xbf, 0xc0, 0xff, rng.getrandbits(8)])
             data += bytes([value]) * rng.choice([1, 1, 2, 3, 62, 63, 64, 65, rng.randrange(1, 130)])
-        data = bytes(data[:length]) + rng.randbytes(2)
+        data = bytes(data[: length]) + rng.randbytes(2)
         cpu.mem_write(DATA, data)
         result = original.call(0x481420, eax=DATA, edx=length)
         assert n.vertrix_rle_encoded_length(data, length) == result, (case, length)
         count('rle_encoded_length')
 #cursor clamp
-        words = [rng.choice([0, 1, -1, 5, 100, -300, 32767, -32768, rng.randrange(-20, 20), rng.randrange(-32768, 32768)])
-                 for _ in range(4)]
-        state = struct.pack('<ihhhh', rng.randrange(-1000, 1000), *words)
+        words = [rng.choice([0, 1, - 1, 5, 100, - 300, 32767, - 32768, rng.randrange(- 20, 20), rng.randrange(- 32768, 32768)]) for _ in range(4)]
+        state = struct.pack('<ihhhh', rng.randrange(- 1000, 1000), * words)
         cpu.mem_write(CURSOR, state)
         original.call(0x4ae170)
         cursor = Cursor.from_buffer_copy(state)
@@ -84,32 +84,22 @@ raw = rng.randbytes(0x40) cpu.mem_write(OBJECT, raw) original.call(0x482480, eax
             ok = n.vertrix_random_inclusive(c.byref(native), minimum, maximum, c.byref(value))
             if width == 0:
                 assert not ok and value.value == 0xdeadbeef
-            try : original
-            .call(0x482750, eax = BOARD, edx = minimum, ebx = maximum) except Exception
-                : faults += 1 else
-                : raise
-                  AssertionError('zero width did not fault in the original') original.random_seed(
-                      seed) native = NativeRandom() n.vertrix_random_seed(c.byref(native),
-                                                                          seed) continue result =
-                original.call(0x482750, eax = BOARD, edx = minimum, ebx = maximum) position =
-                    struct.unpack('<H',
-                                  bytes(cpu.mem_read(BOARD + 12, 2)))[0] assert ok and value.value
-                    == result and native.position == position,
-                            (seed, draw)count('random_inclusive') report = {
-                                'status' : 'passed',
-                                'complete_original_executions' : totals,
-                                'zero_width_ranges_matched_as_faults' : faults,
-                                'scope' :
-                                    'Complete 482480, 487870, 481420, 4ae170 and 482750 execute in the original; objects, ' 'cursor globals, run-length sizes, draw values and sample positions compare ' '(three seeds, including buffer wrap). Zero-width ranges fault in the original and ' 'are rejected natively.'
-                            }(args.build_dir / 'engine-helpers-verification.json')
-                                                                               .write_text(
-                                                                                   json.dumps(
-                                                                                       report,
-                                                                                       indent = 2) +
-                                                                                   '\n')
-                                                                                   print(json.dumps(
-                                                                                       report,
-                                                                                       indent = 2))
-
-                                                                                       if __name__
-                                                                           == '__main__' : main()
+                try:
+                    original.call(0x482750, eax=BOARD, edx=minimum, ebx=maximum)
+                except Exception:
+                    faults += 1
+                else:
+                    raise AssertionError('zero width did not fault in the original')
+                original.random_seed(seed)
+                native = NativeRandom()
+                n.vertrix_random_seed(c.byref(native), seed)
+                continue
+            result = original.call(0x482750, eax=BOARD, edx=minimum, ebx=maximum)
+            position = struct.unpack('<H', bytes(cpu.mem_read(BOARD + 12, 2)))[0]
+            assert ok and value.value == result and native.position == position, (seed, draw)
+            count('random_inclusive')
+    report = {'status': 'passed', 'complete_original_executions': totals, 'zero_width_ranges_matched_as_faults': faults, 'scope': 'Complete 482480, 487870, 481420, 4ae170 and 482750 execute in the original; objects, ' 'cursor globals, run-length sizes, draw values and sample positions compare ' '(three seeds, including buffer wrap). Zero-width ranges fault in the original and ' 'are rejected natively.'}
+    (args.build_dir / 'engine-helpers-verification.json').write_text(json.dumps(report, indent=2) + '\n')
+    print(json.dumps(report, indent=2))
+if __name__ == '__main__':
+    main()

@@ -30,7 +30,7 @@ def main():
     args.build_dir.mkdir(parents=True, exist_ok=True)
     library = args.build_dir.resolve() / "recovered-random.dylib"
     subprocess.run([
-        "rtk", "proxy", "cc", "-shared", "-fPIC", "-O2", "-Wall", "-Wextra", "-Werror",
+        "cc", "-shared", "-fPIC", "-O2", "-Wall", "-Wextra", "-Werror",
         str(root / "source/random.c"), "-o", str(library),
     ], check=True)
     native = ctypes.CDLL(str(library))

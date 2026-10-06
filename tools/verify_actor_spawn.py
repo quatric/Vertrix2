@@ -48,7 +48,7 @@ def main():
     parser.add_argument('--build-dir', type=Path, required=True)
     parser.add_argument('--cases', type=int, default=512)
     args = parser.parse_args()
-    n = build(args.build_dir, 'actor-spawn', ['actor_spawn.c', 'call_glue.c', 'actor_storage.c'])
+    n = build(args.build_dir, 'actor-spawn', ['actor_spawn.c', 'call_glue.c', 'actor_storage.c', 'block_factory.c', 'actor_fields.c', 'board_cells.c'])
     n.vertrix_actor_spawn.argtypes = [c.POINTER(Calls), c.POINTER(Services), c.POINTER(Spec), U, U,
                                       U]
     n.vertrix_actor_spawn.restype = U

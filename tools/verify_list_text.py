@@ -55,7 +55,7 @@ def main():
     parser.add_argument('--build-dir', type=Path, required=True)
     parser.add_argument('--cases', type=int, default=2048)
     args = parser.parse_args()
-    n = build(args.build_dir, 'list-text', ['list_text.c', 'call_glue.c', 'actor_storage.c'])
+    n = build(args.build_dir, 'list-text', ['list_text.c', 'call_glue.c', 'actor_storage.c', 'rtl_glue.c'])
     P, S = c.POINTER(Calls), c.POINTER(Services)
     n.vertrix_list_text_dword.argtypes = [P, S, c.POINTER(Spec), U, U, U]
     n.vertrix_list_text_name.argtypes = [P, U, U, U]

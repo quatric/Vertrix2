@@ -42,8 +42,8 @@ uint32_t vertrix_handles_init(uint32_t table[VERTRIX_HANDLE_SLOTS], uint32_t *st
     return result;
 }
 
-uint32_t vertrix_guarded_call(VertrixCallGuard *guard, uint32_t argument, VertrixGuardedCall call,
-                              void *context)
+uint32_t vertrix_registry_guarded_call(VertrixCallGuard *guard, uint32_t argument,
+                                       VertrixGuardedCall call, void *context)
 {
     if (guard->disabled_id == VERTRIX_GUARD_DISABLED)
     {

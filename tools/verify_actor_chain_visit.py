@@ -55,44 +55,49 @@ def main():
 
     totals = {'lookup': 0, 'lookup_called': 0, 'paint': 0, 'painted': 0}
     for case in range(4096):
-raw = bytearray(rng.randbytes(0x200)) if rng.random() < 0.3
-    : struct
-          .pack_into('<I', raw, 0xb0, 0)
-#lookup stub returns 0, so make b4 distinguishable beforehand
-              cpu.mem_write(ACTOR, bytes(raw))
-                  actor = c.create_string_buffer(bytes(raw), len(raw)) events.clear();
-native.clear() original.call(0x4ac8a0, eax = ACTOR) assert n
-            .vertrix_actor_lookup_image(actor, len(actor), lookup, None) assert actor.raw
-        == bytes(cpu.mem_read(ACTOR, len(actor))) and
-    events == native,
-    case totals['lookup'] += 1 totals['lookup_called'] += bool(events) before =
-        actor.raw assert not n.vertrix_actor_lookup_image(actor, 0xb4, lookup, None) and actor.raw
-        == before result = rng.getrandbits(1) gate_result[0] =
-            result cpu.mem_write(0x800ff0, struct.pack('<I', result)) cpu.mem_write(
-                ACTOR, bytes(raw)) arg = rng.getrandbits(32) events.clear();
-    native.clear() original.call(0x4af8c0, eax = ACTOR, edx = arg) g =
-        U(0) assert n
-            .vertrix_actor_chain_paint(ACTOR, actor, len(actor), arg, c.byref(g), gate, paint,
-                                       None) assert g.value
-        == struct.unpack('<I', bytes(cpu.mem_read(GLOBAL, 4)))[0] == arg assert events == native,
-                                                                       (case, events, native)assert
-                                                                           bytes(cpu.mem_read(
-                                                                               ACTOR,
-                                                                               len(actor))) == raw
-                                                                           totals['paint'] +=
-                                                                       1 totals['painted'] +=
-                                                                       result assert not n
-                                                                           .vertrix_actor_chain_paint(
-                                                                               ACTOR, actor, 0x100,
-                                                                               arg, c.byref(g),
-                                                                               gate, paint,
-                                                                               None) report = {
-                                                                           'status':
-'passed', 'complete_original_cases' : totals,
-                                      'scope'
-    : 'Complete 4ac8a0 and 4af8c0 execute in the original. 4877f0, 4ae3e0 and 4af560 are ' 'recorded stubs; call order and registers, actor storage and global 5bc010 match.'
-}
-(build / 'actor-chain-visit-verification.json')
-        .write_text(json.dumps(report, indent = 2) + '\n') print(json.dumps(report, indent = 2))
+        raw = bytearray(rng.randbytes(0x200))
+        if rng.random() < 0.3:
+            struct.pack_into('<I', raw, 0xb0, 0)
+        cpu.mem_write(ACTOR, bytes(raw))
+        actor = c.create_string_buffer(bytes(raw), len(raw))
+        events.clear()
+        native.clear()
+        original.call(0x4ac8a0, eax=ACTOR)
+        assert n.vertrix_actor_lookup_image(actor, len(actor), lookup, None)
+        assert actor.raw == bytes(cpu.mem_read(ACTOR, len(actor))) and events == native, case
+        totals['lookup'] += 1
+        totals['lookup_called'] += bool(events)
+        before = actor.raw
+        assert not n.vertrix_actor_lookup_image(actor, 0xb4, lookup, None) and actor.raw == before
+        result = rng.getrandbits(1)
+        gate_result[0] = result
+        cpu.mem_write(0x800ff0, struct.pack('<I', result))
+        cpu.mem_write(ACTOR, bytes(raw))
+        arg = rng.getrandbits(32)
+        events.clear()
+        native.clear()
+        original.call(0x4af8c0, eax=ACTOR, edx=arg)
+        g = U(0)
+        actor = c.create_string_buffer(bytes(raw), len(raw))
+        assert n.vertrix_actor_chain_paint(ACTOR, actor, len(actor), arg, c.byref(g), gate, paint,
+                                           None)
+        assert g.value == struct.unpack('<I', bytes(cpu.mem_read(GLOBAL, 4)))[0] == arg
+        assert events == native, (case, events, native)
+        assert bytes(cpu.mem_read(ACTOR, len(actor))) == raw
+        totals['paint'] += 1
+        totals['painted'] += result
+        assert not n.vertrix_actor_chain_paint(ACTOR, actor, 0x100, arg, c.byref(g), gate, paint,
+                                               None)
+    report = {
+        'status': 'passed',
+        'complete_original_cases': totals,
+        'scope': 'Complete 4ac8a0 and 4af8c0 execute in the original. 4877f0, 4ae3e0 and 4af560 '
+                 'are recorded stubs; call order and registers, actor storage and global 5bc010 '
+                 'match.'
+    }
+    (build / 'actor-chain-visit-verification.json').write_text(json.dumps(report, indent=2) + '\n')
+    print(json.dumps(report, indent=2))
 
-            if __name__ == '__main__' : main()
+
+if __name__ == '__main__':
+    main()

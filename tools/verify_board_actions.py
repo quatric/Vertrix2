@@ -30,7 +30,7 @@ def main():
     args = parser.parse_args()
     n = build(args.build_dir, 'board-actions',
               ['board_actions.c', 'block_factory.c', 'board_markers.c', 'board.c', 'board_cells.c',
-               'actor_storage.c', 'actor_fields.c'])
+               'actor_storage.c', 'actor_fields.c', 'random.c'])
     S = c.POINTER(Services)
     P, SZ, UP = c.c_void_p, c.c_size_t, c.POINTER(U)
     n.vertrix_board_piece_hits_grid.argtypes = [P, SZ, S, UP, UP]

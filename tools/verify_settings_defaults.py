@@ -38,13 +38,16 @@ def main():
         total += 1
     short = c.create_string_buffer(0x100)
     assert not n.vertrix_settings_defaults(short, 0x100, c.byref(Globals(0, 0, 0, 0)))
-    report = {'status':
-        'passed', 'complete_original_executions' : {'0x4290c0' : total},
-                                                   'scope'
-            : 'Complete 4290c0 executes in the original with random globals and random ' 'prior object bytes; the whole settings object compares byte for byte.'
-        }
-        (args.build_dir / 'settings-defaults-verification.json')
-                .write_text(json.dumps(report, indent = 2) + '\n')
-                    print(json.dumps(report, indent = 2))
+    report = {
+        'status': 'passed',
+        'complete_original_executions': {'0x4290c0': total},
+        'scope': 'Complete 4290c0 executes in the original with random globals and random '
+                 'prior object bytes; the whole settings object compares byte for byte.'
+    }
+    (args.build_dir / 'settings-defaults-verification.json').write_text(
+        json.dumps(report, indent=2) + '\n')
+    print(json.dumps(report, indent=2))
 
-                        if __name__ == '__main__' : main()
+
+if __name__ == '__main__':
+    main()

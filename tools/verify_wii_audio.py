@@ -1,9 +1,9 @@
-""
-    "Verify real Wii PCM ownership code with recorded ASND/cache stubs."
-    "" import argparse import json import subprocess from pathlib import Path
-
-        ASND = r ""
-                 "
+"""Verify real Wii PCM ownership code with recorded ASND/cache stubs."""
+import argparse
+import json
+import subprocess
+from pathlib import Path
+ASND = r"""
 #ifndef TEST_ASND
 #define TEST_ASND
 #define MAX_PITCH 144000
@@ -15,10 +15,9 @@
 int ASND_SetVoice(int voice, int format, int pitch, int delay, void *data, int size, int left,
                   int right, void (*callback)(int));
 #endif
-""
-    "
-    GX = "#include <stdint.h>\nvoid DCFlushRange(void *data,uint32_t size);\n" HARNESS = r ""
-                                                                                           "
+"""
+GX = "#include <stdint.h>\nvoid DCFlushRange(void *data,uint32_t size);\n"
+HARNESS = r"""
 #include "wii_audio.h"
 #include <assert.h>
 #include <stdio.h>
@@ -116,24 +115,23 @@ int main(int argc, char **argv)
            "%u stops\n",
            files, samples, padding, plays, stops);
 }
-""
-    "
+"""
 
-    def
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("archive", type=Path)
+    parser.add_argument("--build-dir", type=Path, required=True)
+    args = parser.parse_args()
+    build = args.build_dir.resolve()
+    build.mkdir(parents=True, exist_ok=True)
+    (build / "asndlib.h").write_text(ASND)
+    (build / "gccore.h").write_text(GX)
+    (build / "harness.c").write_text(HARNESS)
+    source = Path(__file__).resolve().parents[1] / "source"
+    subprocess.run(["cc", "-std=c11", "-Wall", "-Wextra", "-Werror", "-fsanitize=address,undefined", "-I" + str(build), "-I" + str(source), str(build / "harness.c"), * [str(source / name) for name in ("wii_audio.c", "audio.c", "vf.c")], "-o", str(build / "verify-wii-audio")], check=True)
+    subprocess.run([str(build / "verify-wii-audio"), str(args.archive.resolve())], check=True)
+    report = {"status": "passed", "wav_effects": 13, "samples": 149076, "asnd_submissions": 52, "stop_calls": 39, "scope": "Real VF/WAV/Wii ownership code under ASan/UBSan; ASND/cache calls are recorded host stubs, no audible or DSP validation."}
+    (build / "wii-audio-verification.json").write_text(json.dumps(report, indent=2) + "\n")
+if __name__ == "__main__":
     main()
-    : parser = argparse.ArgumentParser(description = __doc__) parser
-                   .add_argument("archive", type = Path) parser.add_argument(
-                       "--build-dir", type = Path, required = True) args = parser.parse_args();
-build = args.build_dir.resolve();
-build.mkdir(parents = True, exist_ok = True)(build / "asndlib.h").write_text(ASND);
-(build / "gccore.h").write_text(GX);(build/"harness.c").write_text(HARNESS)
-    source=Path(__file__).resolve().parents[1]/"source"
-    subprocess.run(["cc","-std=c11","-Wall","-Wextra","-Werror","-fsanitize=address,undefined",
-                    "-I"+str(build),"-I"+str(source),str(build/"harness.c"),
-                    *[str(source/name) for name in ("wii_audio.c","audio.c","vf.c")],"-o",str(build/"verify-wii-audio")],check=True)
-    subprocess.run([str(build/"verify-wii-audio"),str(args.archive.resolve())],check=True)
-    report={"status":"passed","wav_effects":13,"samples":149076,"asnd_submissions":52,"stop_calls":39,
-            "scope":"Real VF/WAV/Wii ownership code under ASan/UBSan; ASND/cache calls are recorded host stubs, no audible or DSP validation."}
-    (build/"wii-audio-verification.json").write_text(json.dumps(report,indent=2)+"\n")
-
-if __name__=="__main__":main()

@@ -21,7 +21,7 @@ def main():
     library = args.build_dir.resolve() / "recovered-board.dylib"
     subprocess.run(
         [
-            "rtk", "proxy", "cc", "-shared", "-fPIC", "-O2", "-Wall", "-Wextra", "-Werror",
+            "cc", "-shared", "-fPIC", "-O2", "-Wall", "-Wextra", "-Werror",
             str(root / "source/match.c"), str(root / "source/board.c"), "-o", str(library),
         ],
         check=True,

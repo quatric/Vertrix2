@@ -25,7 +25,7 @@ def main():
     names = ['block_orbit.c', 'block_update.c', 'animation.c', 'timer.c',
              'rotation.c', 'rotation_tables.c', 'vf.c', 'byte_transition.c',
              'word_transition.c', 'dword_transition.c', 'render_geometry.c',
-             'surface.c', 'render_dispatch.c']
+             'surface.c', 'render_dispatch.c', 'actor_storage.c']
     subprocess.run(['cc', '-std=c11', '-Wall', '-Wextra', '-Werror', '-shared',
                     '-fPIC', *[str(source / name) for name in names],
                     '-o', str(library)], check=True)

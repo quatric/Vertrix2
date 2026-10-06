@@ -1,9 +1,10 @@
-""
-    "Verify presentation sequencing with recorded calls, without executing a GPU."
-    "" import argparse import json from pathlib import Path import subprocess from verify_wii_assets
-        import HEADER
-
-            EXTRA = r''' typedef float Mtx[3][4];
+"""Verify presentation sequencing with recorded calls, without executing a GPU."""
+import argparse
+import json
+from pathlib import Path
+import subprocess
+from verify_wii_assets import HEADER
+EXTRA = r''' typedef float Mtx[3][4];
 typedef float Mtx44[4][4];
 typedef struct
 {
@@ -27,8 +28,7 @@ void VIDEO_SetNextFramebuffer(void *);
 void VIDEO_Flush(void);
 void VIDEO_WaitVSync(void);
 '''
-
-    HARNESS = r'''
+HARNESS = r'''
 #include "wii_frame_present.h"
 #include <assert.h>
 #include <math.h>
@@ -181,40 +181,22 @@ int main(void)
 }
 '''
 
-    def
-    main()
-    : parser = argparse.ArgumentParser(description = __doc__) parser.add_argument(
-          '--build-dir', type = Path, required = True) args = parser.parse_args() build =
-          args.build_dir.resolve() build.mkdir(parents = True, exist_ok = True) root =
-              Path(__file__)
-                  .resolve()
-                  .parents[1](build / 'gccore.h')
-                  .write_text(HEADER + EXTRA)(build / 'harness.c')
-                  .write_text(HARNESS) executable =
-                  build /
-                  'verify-present' subprocess
-                      .run(
-                          [
-                              'cc', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-I',
-                              str(build), '-I', str(root / 'source'), str(build / 'harness.c'),
-                              str(root / 'source/wii_frame_present.c'), '-o', str(executable)
-                          ],
-                          check = True) subprocess.run([str(executable)], check = True)
-                          subprocess.run(
-                              [
-                                  'make', '-s', '-C', str(root), 'wii-frame-present',
-                                  f 'BUILD={build / "powerpc"}'
-                              ],
-                              check = True) report = {
-                      'status' : 'passed',
-                      'recorded_presentations' : 2048,
-                      'invalid_preservation_cases' : 8192,
-                      'scope' :
-                          'Host records projection setup, progressive/field viewport selection, ' 'draw/copy/completion/display/flush/vsync ordering and alternating XFBs. ' 'Actual PowerPC/libogc compilation passes. GPU execution, allocated XFB ' 'sizes, video/copy initialization, timing and complete game remain unverified.'
-                  }(build / 'wii-frame-present-verification.json')
-                                                         .write_text(
-                                                             json.dumps(report, indent = 2) + '\n')
-                                                             print(json.dumps(report, indent = 2))
 
-                                                                 if __name__
-                                                     == '__main__' : main()
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--build-dir', type=Path, required=True)
+    args = parser.parse_args()
+    build = args.build_dir.resolve()
+    build.mkdir(parents=True, exist_ok=True)
+    root = Path(__file__).resolve().parents[1]
+    (build / 'gccore.h').write_text(HEADER + EXTRA)
+    (build / 'harness.c').write_text(HARNESS)
+    executable = build / 'verify-present'
+    subprocess.run(['cc', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-I', str(build), '-I', str(root / 'source'), str(build / 'harness.c'), str(root / 'source/wii_frame_present.c'), '-o', str(executable)], check=True)
+    subprocess.run([str(executable)], check=True)
+    subprocess.run(['make', '-s', '-C', str(root), 'wii-frame-present', f'BUILD={build / "powerpc"}'], check=True)
+    report = {'status': 'passed', 'recorded_presentations': 2048, 'invalid_preservation_cases': 8192, 'scope': 'Host records projection setup, progressive/field viewport selection, ' 'draw/copy/completion/display/flush/vsync ordering and alternating XFBs. ' 'Actual PowerPC/libogc compilation passes. GPU execution, allocated XFB ' 'sizes, video/copy initialization, timing and complete game remain unverified.'}
+    (build / 'wii-frame-present-verification.json').write_text(json.dumps(report, indent=2) + '\n')
+    print(json.dumps(report, indent=2))
+if __name__ == '__main__':
+    main()

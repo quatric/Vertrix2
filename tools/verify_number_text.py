@@ -19,11 +19,9 @@ def main():
     args.build_dir.mkdir(parents=True, exist_ok=True)
     source = Path(__file__).resolve().parents[1] / 'source/number_text.c'
     library = args.build_dir.resolve() / 'number.dylib'
-    subprocess.run(['cc', '-shared', '-fPIC', '-Wall', '-Wextra', '-Werror',
-                    str(source), '-o', str(library)], check=True)
+    subprocess.run(['cc', '-shared', '-fPIC', '-Wall', '-Wextra', '-Werror', str(source), '-o', str(library)], check=True)
     native = c.CDLL(str(library))
-    native.vertrix_number_text.argtypes = [c.c_uint32, c.c_uint32, c.c_uint32,
-                                          c.c_uint32, c.c_void_p, c.c_size_t]
+    native.vertrix_number_text.argtypes = [c.c_uint32, c.c_uint32, c.c_uint32, c.c_uint32, c.c_void_p, c.c_size_t]
     original = Original(args.executable)
     cpu = original.cpu
     strings = {}
@@ -72,31 +70,30 @@ def main():
     cpu.hook_add(UC_HOOK_CODE, hook)
     rng = random.Random(0x4b58a0)
     for case in range(1024):
-value =
-    0 if case % 8 == 0 else rng.getrandbits(32)
-                         mode = rng.choice([ 0, 1, 2, 0xffffffff ])
-                                    width = rng.randrange(65) show_zero = rng.randrange(2) raw =
-        bytearray(rng.randbytes(0x194)) struct.pack_into('<I', raw, 0x184, mode) struct
-            .pack_into('<I', raw, 0x188, width) struct.pack_into('<I', raw, 0x190, show_zero)
-                cpu.mem_write(BOARD, bytes(raw)) strings.clear() captured.clear()
-                    heap[0] = 0x805000 original.call(0x4b58a0, eax = BOARD, edx = value) output =
-            c.create_string_buffer(80)
-                assert native.vertrix_number_text(value, mode, width, show_zero, output,
-                                                  len(output)) assert captured
-            == [output.value],
-                         (case, captured, output.value) struct.pack_into('<I', raw, 0x180,
-                                                                         value) assert bytes(raw) ==
-                             bytes(cpu.mem_read(BOARD, len(raw))) short = c.create_string_buffer(
-                             b 'unchanged',
-                             10) before = bytes(short) assert
-                                          not native.vertrix_number_text(0xffffffff, 1, 64, 1,
-                                                                         short, len(short)) assert
-                                          bytes(short) == before report = {'status':
-'passed', 'cases' : 1024,
-    'scope'
-    : 'Original 0x4b58a0 numeric selection/control flow, with hooks for ' 'string construction/format/append/free and final font binding. ' 'Those services and font rendering are not verified by this comparison.'
-}
-(args.build_dir / 'number-text-verification.json')
-        .write_text(json.dumps(report, indent = 2) + '\n') print(json.dumps(report, indent = 2))
-
-            if __name__ == '__main__' : main()
+        value = 0 if case % 8 == 0 else rng.getrandbits(32)
+        mode = rng.choice([0, 1, 2, 0xffffffff])
+        width = rng.randrange(65)
+        show_zero = rng.randrange(2)
+        raw = bytearray(rng.randbytes(0x194))
+        struct.pack_into('<I', raw, 0x184, mode)
+        struct.pack_into('<I', raw, 0x188, width)
+        struct.pack_into('<I', raw, 0x190, show_zero)
+        cpu.mem_write(BOARD, bytes(raw))
+        strings.clear()
+        captured.clear()
+        heap[0] = 0x805000
+        original.call(0x4b58a0, eax=BOARD, edx=value)
+        output = c.create_string_buffer(80)
+        assert native.vertrix_number_text(value, mode, width, show_zero, output, len(output))
+        assert captured == [output.value], (case, captured, output.value)
+        struct.pack_into('<I', raw, 0x180, value)
+        assert bytes(raw) == bytes(cpu.mem_read(BOARD, len(raw)))
+        short = c.create_string_buffer(b'unchanged', 10)
+        before = bytes(short)
+        assert not native.vertrix_number_text(0xffffffff, 1, 64, 1, short, len(short))
+        assert bytes(short) == before
+    report = {'status': 'passed', 'cases': 1024, 'scope': 'Original 0x4b58a0 numeric selection/control flow, with hooks for ' 'string construction/format/append/free and final font binding. ' 'Those services and font rendering are not verified by this comparison.'}
+    (args.build_dir / 'number-text-verification.json').write_text(json.dumps(report, indent=2) + '\n')
+    print(json.dumps(report, indent=2))
+if __name__ == '__main__':
+    main()

@@ -1,36 +1,42 @@
-""
-    "Verify bounded frame packing and recorded Wii upload synchronization."
-    "" import argparse import ctypes as c
-        import itertools import json from pathlib import Path import random import subprocess from
-            verify_render_rectangle import Surface from verify_wii_assets import HEADER
+"""Verify bounded frame packing and recorded Wii upload synchronization."""
+import argparse
+import ctypes as c
+import itertools
+import json
+from pathlib import Path
+import random
+import subprocess
 
-    class Texture(c.Structure)
-    : _fields_ =
-          [
-              ('width', c.c_uint32), ('height', c.c_uint32), ('sw', c.c_uint32), ('sh', c.c_uint32),
-              ('size', c.c_size_t), ('data', c.c_void_p), ('allocation', c.c_void_p)
-          ]
+from verify_render_rectangle import Surface
+from verify_wii_assets import HEADER
 
-      class Object(c.Structure)
-    : _fields_ =
-          [
-              ('data', c.c_void_p), ('width', c.c_uint16), ('height', c.c_uint16),
-              ('min', c.c_uint8), ('mag', c.c_uint8)
-          ]
 
-      class WiiTexture(c.Structure)
-    : _fields_ =
-          [
-              ('pixels', Texture), ('object', Object), ('u', c.c_float), ('v', c.c_float),
-              ('ready', c.c_uint)
-          ]
+class Texture(c.Structure):
+    _fields_ = [
+        ('width', c.c_uint32), ('height', c.c_uint32), ('sw', c.c_uint32), ('sh', c.c_uint32),
+        ('size', c.c_size_t), ('data', c.c_void_p), ('allocation', c.c_void_p)
+    ]
 
-      STUBS = r'''
+
+class Object(c.Structure):
+    _fields_ = [
+        ('data', c.c_void_p), ('width', c.c_uint16), ('height', c.c_uint16),
+        ('min', c.c_uint8), ('mag', c.c_uint8)
+    ]
+
+
+class WiiTexture(c.Structure):
+    _fields_ = [
+        ('pixels', Texture), ('object', Object), ('u', c.c_float), ('v', c.c_float),
+        ('ready', c.c_uint)
+    ]
+
+
+STUBS = r'''
 #include <assert.h>
 #include <gccore.h>
 #include <stddef.h>
-      unsigned flushes,
-      finishes, events[64], event_count;
+unsigned flushes, finishes, events[64], event_count;
 static unsigned char *watch;
 static size_t watch_size;
 static unsigned watch_sum;

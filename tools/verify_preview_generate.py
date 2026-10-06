@@ -44,7 +44,7 @@ def main():
     subprocess.run(['cc', '-shared', '-fPIC', '-O2', '-Wall', '-Wextra', '-Werror',
                     str(root / 'source/player_slots.c'), str(root / 'source/piece.c'),
                     str(root / 'source/piece_children.c'), str(root / 'source/actor_storage.c'),
-                    str(root / 'source/actor_fields.c'), str(root / 'source/random.c'), '-o',
+                    str(root / 'source/actor_fields.c'), str(root / 'source/random.c'), str(root / 'source/timing.c'), str(root / 'source/piece_actor_construct.c'), str(root / 'source/object_scalars.c'), str(root / 'source/piece_child_update.c'), str(root / 'source/dword_transition.c'), str(root / 'source/frame_resource.c'), str(root / 'source/timer.c'), '-o',
                     str(library)], check=True)
     n = c.CDLL(str(library))
     Resolve = c.CFUNCTYPE(c.c_int, U, c.POINTER(c.c_void_p), c.POINTER(c.c_size_t), c.c_void_p)

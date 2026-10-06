@@ -5,10 +5,8 @@ import json
 import random
 import struct
 from pathlib import Path
-
 from original import Original
 from oracle_kit import Pool, Resolve, build
-
 U, I = c.c_uint32, c.c_int32
 SIZE = 0x600
 CELLS = 8
@@ -58,13 +56,10 @@ def main():
     pool = Pool(cpu, 3, SIZE)
     obj, partner = pool.handles[0], pool.handles[1]
     totals = {}
-
     def count(name):
         totals[name] = totals.get(name, 0) + 1
-
     def buf():
         return pool.buffers[obj]
-
     def fill():
         def patch(handle, data):
             if handle == obj:
@@ -76,18 +71,15 @@ def main():
             elif handle == partner:
                 data[0x4cc] = rng.choice([0, 1, 2, rng.getrandbits(8)])
         pool.fill(rng, patch)
-
-    def mutate(address, name, native, **registers):
-        original.call(address, eax=obj, **registers)
+    def mutate(address, name, native, ** registers):
+        original.call(address, eax=obj, ** registers)
         assert native(), (name, 'rejected')
         assert pool.same(), (name, pool.diff())
         count(name)
-
     for case in range(args.cases):
         fill()
         index = rng.randrange(0, 2)
-        mutate(0x4126d0, '0x4126d0',
-               lambda: n.vertrix_object_toggle_flag(buf(), SIZE, index), edx=index)
+        mutate(0x4126d0, '0x4126d0', lambda: n.vertrix_object_toggle_flag(buf(), SIZE, index), edx=index)
         fill()
         index = rng.randrange(0, 2)
         out = U()
@@ -96,11 +88,9 @@ def main():
         count('0x4126f0')
         value = rng.getrandbits(32)
         fill()
-        mutate(0x418820, '0x418820', lambda: n.vertrix_object_set_period(buf(), SIZE, value),
-               edx=value)
+        mutate(0x418820, '0x418820', lambda: n.vertrix_object_set_period(buf(), SIZE, value), edx=value)
         fill()
-        mutate(0x418840, '0x418840', lambda: n.vertrix_object_set_counter(buf(), SIZE, value),
-               edx=value)
+        mutate(0x418840, '0x418840', lambda: n.vertrix_object_set_counter(buf(), SIZE, value), edx=value)
         fill()
         mutate(0x418830, '0x418830', lambda: n.vertrix_object_counter_to_period(buf(), SIZE))
         fill()
@@ -110,23 +100,16 @@ def main():
         fill()
         mutate(0x42a950, '0x42a950', lambda: n.vertrix_piece_clear_offset_y(buf(), SIZE))
         fill()
-        mutate(0x43b860, '0x43b860', lambda: n.vertrix_player_set_e0(buf(), SIZE, value),
-               edx=value)
+        mutate(0x43b860, '0x43b860', lambda: n.vertrix_player_set_e0(buf(), SIZE, value), edx=value)
         fill()
         byte = rng.getrandbits(8)
-        mutate(0x43bad0, '0x43bad0', lambda: n.vertrix_player_set_cd(buf(), SIZE, byte),
-               edx=byte)
+        mutate(0x43bad0, '0x43bad0', lambda: n.vertrix_player_set_cd(buf(), SIZE, byte), edx=byte)
         fill()
-        mutate(0x43bae0, '0x43bae0', lambda: n.vertrix_player_set_cc(buf(), SIZE, byte),
-               edx=byte)
+        mutate(0x43bae0, '0x43bae0', lambda: n.vertrix_player_set_cc(buf(), SIZE, byte), edx=byte)
         fill()
         mutate(0x43cde0, '0x43cde0', lambda: n.vertrix_player_enter_state(buf(), SIZE))
         fill()
-        for address, name, fn in (
-                (0x42ba40, 'y_above_limit', n.vertrix_object_y_above_limit),
-                (0x43b870, 'e0', n.vertrix_player_e0),
-                (0x43b970, 'has_e8', n.vertrix_player_has_e8),
-                (0x43bd40, 'c4_is_one', n.vertrix_player_c4_is_one)):
+        for address, name, fn in ((0x42ba40, 'y_above_limit', n.vertrix_object_y_above_limit), (0x43b870, 'e0', n.vertrix_player_e0), (0x43b970, 'has_e8', n.vertrix_player_has_e8), (0x43bd40, 'c4_is_one', n.vertrix_player_c4_is_one)):
             out = U()
             expect = original.call(address, eax=obj)
             if name != 'e0':
@@ -141,28 +124,28 @@ def main():
 #global cells
         for address, base in ((0x415b30, 0x5344a4), (0x415b40, 0x5344f0)):
             cells = [rng.getrandbits(32) for _ in range(CELLS)]
-            cpu.mem_write(base, struct.pack('<%dI' % CELLS, *cells))
+            cpu.mem_write(base, struct.pack('<%dI' % CELLS, * cells))
             index = rng.randrange(CELLS)
             original.call(address, eax=index)
-            native = (U * CELLS)(*cells)
+            native = (U * CELLS)(* cells)
             assert n.vertrix_global_set_cell(native, CELLS, index)
             assert bytes(native) == bytes(cpu.mem_read(base, 4 * CELLS)), case
             count(hex(address))
         cells = [rng.getrandbits(32) for _ in range(CELLS)]
-        cpu.mem_write(0x53bad8, struct.pack('<%dI' % CELLS, *cells))
+        cpu.mem_write(0x53bad8, struct.pack('<%dI' % CELLS, * cells))
         index = rng.randrange(7)
         cpu.mem_write(0x53bb10, struct.pack('<I', index))
         expect = original.call(0x415d60)
         out = U()
-        native = (U * CELLS)(*cells)
+        native = (U * CELLS)(* cells)
         assert n.vertrix_global_cell(native, 7, index, c.byref(out)) and out.value == expect
         count('0x415d60')
         index = rng.randrange(4)
         cpu.mem_write(0x53bb10, struct.pack('<I', index))
         cells = [rng.getrandbits(32) for _ in range(4)]
-        cpu.mem_write(0x53baf4, struct.pack('<4I', *cells))
+        cpu.mem_write(0x53baf4, struct.pack('<4I', * cells))
         cpu.mem_write(0x53bb10, struct.pack('<I', index))
-        native = (U * 4)(*cells)
+        native = (U * 4)(* cells)
         original.call(0x415d90)
         assert n.vertrix_global_set_cell(native, 4, index)
         assert bytes(native) == bytes(cpu.mem_read(0x53baf4, 16)), case
@@ -189,13 +172,12 @@ def main():
         count('0x43bd60')
         a = [rng.getrandbits(32) for _ in range(19)]
         b = [rng.getrandbits(32) for _ in range(19)]
-        cpu.mem_write(0x5344a4, struct.pack('<19I', *a))
-        cpu.mem_write(0x5344f0, struct.pack('<19I', *b))
+        cpu.mem_write(0x5344a4, struct.pack('<19I', * a))
+        cpu.mem_write(0x5344f0, struct.pack('<19I', * b))
         original.call(0x415b10)
-        na, nb = (U * 19)(*a), (U * 19)(*b)
+        na, nb = (U * 19)(* a), (U * 19)(* b)
         n.vertrix_global_clear_tables(na, nb)
-        assert bytes(na) == bytes(cpu.mem_read(0x5344a4, 76)) and bytes(nb) == bytes(
-            cpu.mem_read(0x5344f0, 76)), case
+        assert bytes(na) == bytes(cpu.mem_read(0x5344a4, 76)) and bytes(nb) == bytes(cpu.mem_read(0x5344f0, 76)), case
         count('0x415b10')
         value = rng.choice([6, 5, 7, 0xffffffff, rng.getrandbits(32)])
         cpu.mem_write(0x53bb10, struct.pack('<I', value))
@@ -207,12 +189,11 @@ def main():
         mode = rng.choice([0, 1, 2, rng.getrandbits(32)])
         pair = [rng.getrandbits(32) for _ in range(2)]
         cpu.mem_write(0x532b40, struct.pack('<I', mode))
-        cpu.mem_write(0x532b44, struct.pack('<2I', *pair))
+        cpu.mem_write(0x532b44, struct.pack('<2I', * pair))
         original.call(0x415530)
         first, second = U(pair[0]), U(pair[1])
         n.vertrix_global_reset_pair(mode, c.byref(first), c.byref(second))
-        assert [first.value, second.value] == list(struct.unpack(
-            '<2I', bytes(cpu.mem_read(0x532b44, 8)))), case
+        assert [first.value, second.value] == list(struct.unpack('<2I', bytes(cpu.mem_read(0x532b44, 8)))), case
         count('0x415530')
         left = rng.choice([0, 1, 0xffffffff, rng.getrandbits(32)])
         right = rng.choice([left, rng.getrandbits(32), 0x80000000])
@@ -220,19 +201,14 @@ def main():
         assert n.vertrix_compare_unsigned(left, right) == c.c_int32(expect).value, case
         count('0x418150')
         table = [rng.choice([0xffffffff, rng.getrandbits(32), 0]) for _ in range(7)]
-        cpu.mem_write(0x80c000, struct.pack('<7I', *table))
+        cpu.mem_write(0x80c000, struct.pack('<7I', * table))
         expect = original.call(0x425e00, eax=0x80c000)
-        assert n.vertrix_table_used_count((U * 7)(*table)) == expect, case
+        assert n.vertrix_table_used_count((U * 7)(* table)) == expect, case
         count('0x425e00')
     assert not n.vertrix_object_toggle_flag(buf(), 0x5cf, 0)
     assert not n.vertrix_player_enter_state(buf(), 0x473)
-    report = {'status':
-            'passed', 'complete_original_executions' : totals,
-                                                       'scope'
-                : 'Complete one-field accessors 4126d0, 4126f0, 415b10, 415530, 415b30, 415b40, 415d40, 415d60, ' '415d90, 417f40, 418820, 418830, 418840, 418870, 41a930, 41d660, 42a940, ' '42a950, 42ba40, 43b860, 43b870, 43b970, 43bad0, 43bae0, 43bd40, 43cc90 ' '43bd60, 418150, 425e00 and 43cde0 execute in the original; whole objects, global cells and ' 'returned values compare.'
-            }
-            (args.build_dir / 'object-scalars-verification.json')
-                    .write_text(json.dumps(report, indent = 2) + '\n')
-                        print(json.dumps(report, indent = 2))
-
-                            if __name__ == '__main__' : main()
+    report = {'status': 'passed', 'complete_original_executions': totals, 'scope': 'Complete one-field accessors 4126d0, 4126f0, 415b10, 415530, 415b30, 415b40, 415d40, 415d60, ' '415d90, 417f40, 418820, 418830, 418840, 418870, 41a930, 41d660, 42a940, ' '42a950, 42ba40, 43b860, 43b870, 43b970, 43bad0, 43bae0, 43bd40, 43cc90 ' '43bd60, 418150, 425e00 and 43cde0 execute in the original; whole objects, global cells and ' 'returned values compare.'}
+    (args.build_dir / 'object-scalars-verification.json').write_text(json.dumps(report, indent=2) + '\n')
+    print(json.dumps(report, indent=2))
+if __name__ == '__main__':
+    main()

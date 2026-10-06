@@ -20,7 +20,7 @@ def main():
     root = Path(__file__).resolve().parents[1]
     library = args.build_dir.resolve() / "recovered-piece.dylib"
     subprocess.run([
-        "rtk", "proxy", "cc", "-shared", "-fPIC", "-O2", "-Wall", "-Wextra", "-Werror",
+        "cc", "-shared", "-fPIC", "-O2", "-Wall", "-Wextra", "-Werror",
         str(root / "source/random.c"), str(root / "source/piece.c"), "-o", str(library),
     ], check=True)
     native = ctypes.CDLL(str(library))

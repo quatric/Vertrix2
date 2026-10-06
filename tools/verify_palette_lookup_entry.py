@@ -18,11 +18,9 @@ def main():
     args.build_dir.mkdir(parents=True, exist_ok=True)
     source = Path(__file__).resolve().parents[1] / 'source'
     library = args.build_dir.resolve() / 'lookup-entry.dylib'
-    subprocess.run(['cc', '-shared', '-fPIC', '-Wall', '-Wextra', '-Werror',
-        str(source / 'palette_color.c'), '-o', str(library)], check=True)
+    subprocess.run(['cc', '-shared', '-fPIC', '-Wall', '-Wextra', '-Werror', str(source / 'palette_color.c'), '-o', str(library)], check=True)
     native = c.CDLL(str(library))
-    native.vertrix_palette_lookup_entry.argtypes = [c.c_void_p, c.c_size_t,
-        c.c_uint16, c.POINTER(c.c_uint8), c.POINTER(c.c_uint32)]
+    native.vertrix_palette_lookup_entry.argtypes = [c.c_void_p, c.c_size_t, c.c_uint16, c.POINTER(c.c_uint8), c.POINTER(c.c_uint32)]
     native.vertrix_palette_channels.argtypes = [c.c_void_p, c.c_size_t]
     original = Original(args.executable)
     rng = random.Random(0x475183)
@@ -30,11 +28,10 @@ def main():
     assert native.vertrix_palette_channels(maps, len(maps)) == 1
     frame = 0x709000
     for case in range(4096):
-if
-case == 2048:
+        if case == 2048:
             maps = c.create_string_buffer(rng.randbytes(201 * 101), 201 * 101)
         row = rng.randrange(201)
-        channels = (c.c_uint8 * 3)(*[rng.randrange(256) for _ in range(3)])
+        channels = (c.c_uint8 * 3)(* [rng.randrange(256) for _ in range(3)])
         original.cpu.mem_write(0x5468b0, maps.raw)
         original.cpu.mem_write(frame - 0x100, bytes(0x100))
         original.cpu.mem_write(frame - 0x50, struct.pack('<I', row))
@@ -46,24 +43,15 @@ case == 2048:
         original.call(0x475183, stop=0x47525e)
         expected = struct.unpack('<I', original.cpu.mem_read(0x804000, 4))[0]
         output = c.c_uint32(0xdeadbeef)
-        assert native.vertrix_palette_lookup_entry(maps, len(maps), row,
-            channels, c.byref(output)) == 1
+        assert native.vertrix_palette_lookup_entry(maps, len(maps), row, channels, c.byref(output)) == 1
         assert output.value == expected, (case, row, tuple(channels), output.value, expected)
     before = output.value
-    assert native.vertrix_palette_lookup_entry(maps, len(maps), 201,
-        channels, c.byref(output)) == 0
+    assert native.vertrix_palette_lookup_entry(maps, len(maps), 201, channels, c.byref(output)) == 0
     assert output.value == before
-    assert native.vertrix_palette_lookup_entry(maps, 0, 0,
-        channels, c.byref(output)) == 0
+    assert native.vertrix_palette_lookup_entry(maps, 0, 0, channels, c.byref(output)) == 0
     assert output.value == before
-    report = {'status': 'passed', 'cases': 4096,
-        'scope': 'Unchanged original475183..47525c nearest-channel lookup assembly '
-                 'matches native using recovered and random channel tables, including '
-                 'first-entry ties. RGB-to-HSV and complete lookup generation remain unfinished.'}
-    (args.build_dir / 'palette-lookup-entry-verification.json').write_text(
-        json.dumps(report, indent=2) + '\n')
+    report = {'status': 'passed', 'cases': 4096, 'scope': 'Unchanged original475183..47525c nearest-channel lookup assembly ' 'matches native using recovered and random channel tables, including ' 'first-entry ties. RGB-to-HSV and complete lookup generation remain unfinished.'}
+    (args.build_dir / 'palette-lookup-entry-verification.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))
-
-
 if __name__ == '__main__':
     main()

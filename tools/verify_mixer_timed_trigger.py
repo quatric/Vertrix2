@@ -12,28 +12,33 @@ class Instrument(ctypes.Structure):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('executable', type=Path);
-parser.add_argument('--build-dir', type = Path, required = True) args = parser.parse_args();
-build = args.build_dir.resolve();
-build.mkdir(parents = True, exist_ok = True) source = Path(__file__).resolve().parents[1] /
-                                                      'source';
-library =
-    build / 'timed-trigger.dylib' subprocess.run(
-                [
-                    'cc', '-std=c11', '-Wall', '-Wextra', '-Werror', '-shared', '-fPIC',
-                    str(source / 'mixer.c'), '-o', str(library)
-                ],
-                check = True) native = ctypes.CDLL(str(library)) tail =
+    parser.add_argument('executable', type=Path)
+    parser.add_argument('--build-dir', type=Path, required=True)
+    args = parser.parse_args()
+    build = args.build_dir.resolve()
+    build.mkdir(parents=True, exist_ok=True)
+    source = Path(__file__).resolve().parents[1] / 'source'
+    library = build / 'timed-trigger.dylib'
+    subprocess.run(
         [
-            ctypes.POINTER(Instrument), ctypes.c_int, ctypes.POINTER(Selection),
-            ctypes.POINTER(Reset)
-        ] native.vertrix_mixer_trigger.argtypes = tail native.vertrix_mixer_timed_trigger.argtypes =
-            [ ctypes.c_uint8, ctypes.c_int32 ] + tail original = Original(args.executable);
-rng = random.Random(0x40e670); cases = 24000
+            'cc', '-std=c11', '-Wall', '-Wextra', '-Werror', '-shared', '-fPIC',
+            str(source / 'mixer.c'), '-o', str(library)
+        ],
+        check=True)
+    native = ctypes.CDLL(str(library))
+    tail = [
+        ctypes.POINTER(Instrument), ctypes.c_int, ctypes.POINTER(Selection),
+        ctypes.POINTER(Reset)
+    ]
+    native.vertrix_mixer_trigger.argtypes = tail
+    native.vertrix_mixer_timed_trigger.argtypes = [ctypes.c_uint8, ctypes.c_int32] + tail
+    original = Original(args.executable)
+    rng = random.Random(0x40e670); cases = 24000
     for mode in (0, 9, 13):
         for index in range(cases):
             data = bytearray(rng.randbytes(192));
-instrument = bytearray(rng.randbytes(252)) data[7] = index % 256; data[4] = mode * 16 + index % 16
+            instrument = bytearray(rng.randbytes(252))
+            data[7] = index % 256; data[4] = mode * 16 + index % 16
             data[3] = (3, 5, rng.randrange(256))[index % 3]
             data[2] = 0xf0 | rng.randrange(16) if index % 5 == 0 else rng.randrange(256)
             data[60] = (index // 2) % 256

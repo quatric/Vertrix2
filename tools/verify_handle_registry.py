@@ -21,8 +21,8 @@ def main():
     n.vertrix_registry_add.argtypes, n.vertrix_registry_add.restype = [PU, U], U
     n.vertrix_handles_release.argtypes, n.vertrix_handles_release.restype = [PU, U, U], U
     n.vertrix_handles_init.argtypes, n.vertrix_handles_init.restype = [PU, PU, U, Start, c.c_void_p], U
-    n.vertrix_guarded_call.argtypes = [c.POINTER(Guard), U, Start, c.c_void_p]
-    n.vertrix_guarded_call.restype = U
+    n.vertrix_registry_guarded_call.argtypes = [c.POINTER(Guard), U, Start, c.c_void_p]
+    n.vertrix_registry_guarded_call.restype = U
     n.vertrix_close_cell.argtypes = [PU, Close, Release, c.c_void_p]
     n.vertrix_close_cell.restype = U
     n.vertrix_handles_shutdown.argtypes, n.vertrix_handles_shutdown.restype = [PU, PU, Close, c.c_void_p], U
@@ -124,7 +124,7 @@ def main():
         arg = rng.getrandbits(32)
         events.clear(); native.clear()
         guard = Guard(disabled, depth)
-        assert original.call(0x40ab20, eax=arg) == n.vertrix_guarded_call(c.byref(guard), arg, guarded, None), case
+        assert original.call(0x40ab20, eax=arg) == n.vertrix_registry_guarded_call(c.byref(guard), arg, guarded, None), case
         assert guard.depth == struct.unpack('<I', cpu.mem_read(0x4f644c, 4))[0], case
         assert events == native, case
         count('guarded_call')

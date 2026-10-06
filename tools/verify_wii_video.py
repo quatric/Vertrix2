@@ -1,9 +1,10 @@
-""
-    "Record video initialization and allocation failures; no hardware execution."
-    "" import argparse import json from pathlib import Path import subprocess from verify_wii_assets
-        import HEADER
-
-            EXTRA = r'''
+"""Record video initialization and allocation failures; no hardware execution."""
+import argparse
+import json
+from pathlib import Path
+import subprocess
+from verify_wii_assets import HEADER
+EXTRA = r'''
 #include <stdbool.h>
     typedef struct
 {
@@ -43,7 +44,8 @@ void GX_SetCopyFilter(unsigned char, unsigned char[12][2], unsigned char, unsign
 void GX_SetFieldMode(unsigned char, unsigned char);
 void GX_SetPixelFmt(unsigned char, unsigned char);
 void GX_SetDispCopyGamma(unsigned char);
-''' HARNESS = r'''
+'''
+HARNESS = r'''
 #include "wii_video.h"
 #include <assert.h>
 #include <stdlib.h>
@@ -238,50 +240,22 @@ int main(void)
 }
 '''
 
-    def
-    main()
-    : parser = argparse.ArgumentParser(description = __doc__) parser.add_argument(
-          '--build-dir', type = Path,
-          required =
-              True) build = parser.parse_args().build_dir.resolve() build.mkdir(parents = True,
-                                                                                exist_ok =
-                                                                                    True) root =
-          Path(__file__)
-              .resolve()
-              .parents[1](build / 'gccore.h')
-              .write_text(HEADER + EXTRA)(build / 'malloc.h')
-              .write_text(
-                  '#include <stddef.h>\nvoid *recorded_memalign(size_t,size_t);\nvoid recorded_free(void*);\n#define memalign recorded_memalign\n#define free recorded_free\n')(
-                  build / 'harness.c')
-              .write_text(HARNESS)
-                  executable = build /
-                               'verify-video' subprocess
-                                   .run(
-                                       [
-                                           'cc', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror',
-                                           '-I', str(build), '-I', str(root / 'source'),
-                                           str(build / 'harness.c'),
-                                           str(root / 'source/wii_video.c'), '-o', str(executable)
-                                       ],
-                                       check = True) subprocess
-                                   .run([str(executable)], check = True) subprocess.run(
-                                       [
-                                           'make', '-s', '-C', str(root), 'wii-video',
-                                           f 'BUILD={build / "powerpc"}'
-                                       ],
-                                       check = True) report = {
-              'status' : 'passed',
-              'recorded_mode_configurations' : 64,
-              'allocation_failure_cases' : 192,
-              'scope' :
-                  'Host assertions check preferred-mode propagation, XFB reserve, allocation rollback, ' 'zeroed FIFO, initial buffer separation, copy-height rounding, filtering, field ' 'and pixel format selection. Actual PowerPC/libogc compilation passes. ' 'Hardware output and the complete application remain unverified.'
-          }(build / 'wii-video-verification.json')
-                                                                  .write_text(
-                                                                      json.dumps(report,
-                                                                                 indent = 2) +
-                                                                      '\n')
-                                                                      print(json.dumps(report,
-                                                                                       indent = 2))
 
-                                                                          if __name__
-                                                              == '__main__' : main()
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--build-dir', type=Path, required=True)
+    build = parser.parse_args().build_dir.resolve()
+    build.mkdir(parents=True, exist_ok=True)
+    root = Path(__file__).resolve().parents[1]
+    (build / 'gccore.h').write_text(HEADER + EXTRA)
+    (build / 'malloc.h').write_text('#include <stddef.h>\nvoid *recorded_memalign(size_t,size_t);\nvoid recorded_free(void*);\n#define memalign recorded_memalign\n#define free recorded_free\n')
+    (build / 'harness.c').write_text(HARNESS)
+    executable = build / 'verify-video'
+    subprocess.run(['cc', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-I', str(build), '-I', str(root / 'source'), str(build / 'harness.c'), str(root / 'source/wii_video.c'), '-o', str(executable)], check=True)
+    subprocess.run([str(executable)], check=True)
+    subprocess.run(['make', '-s', '-C', str(root), 'wii-video', f'BUILD={build / "powerpc"}'], check=True)
+    report = {'status': 'passed', 'recorded_mode_configurations': 64, 'allocation_failure_cases': 192, 'scope': 'Host assertions check preferred-mode propagation, XFB reserve, allocation rollback, ' 'zeroed FIFO, initial buffer separation, copy-height rounding, filtering, field ' 'and pixel format selection. Actual PowerPC/libogc compilation passes. ' 'Hardware output and the complete application remain unverified.'}
+    (build / 'wii-video-verification.json').write_text(json.dumps(report, indent=2) + '\n')
+    print(json.dumps(report, indent=2))
+if __name__ == '__main__':
+    main()

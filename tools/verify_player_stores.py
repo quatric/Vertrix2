@@ -21,7 +21,7 @@ def main():
     args = parser.parse_args()
     n = build(args.build_dir, 'player-stores',
               ['player_slots.c', 'piece.c', 'piece_children.c', 'actor_storage.c', 'actor_fields.c',
-               'object_scalars.c', 'timing.c', 'random.c'])
+               'object_scalars.c', 'timing.c', 'random.c', 'piece_actor_construct.c', 'piece_child_update.c', 'dword_transition.c', 'frame_resource.c', 'timer.c'])
     n.vertrix_player_clear_field_18c.argtypes = [c.c_void_p, c.c_size_t]
     n.vertrix_player_set_b08.argtypes = [c.c_void_p, c.c_size_t, c.c_uint8]
     n.vertrix_player_set_b14.argtypes = [c.c_void_p, c.c_size_t, c.c_uint8]

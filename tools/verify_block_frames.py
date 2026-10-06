@@ -9,13 +9,13 @@ from verify_assets import BlockFiles
 from verify_image import NativeImage
 from verify_spawn import AnimationRange
 
+
 class BlockSet(ctypes.Structure):
     _fields_ = [("frames", (NativeImage * 8) * 7), ("delays", AnimationRange * 7)]
 
+
 class Texture(ctypes.Structure):
-    _fields_ = [("width", ctypes.c_uint32), ("height", ctypes.c_uint32),
-               ("storage_width", ctypes.c_uint32), ("storage_height", ctypes.c_uint32),
-               ("size", ctypes.c_size_t), ("data", ctypes.c_void_p), ("allocation", ctypes.c_void_p)]
+    _fields_ = [("width", ctypes.c_uint32), ("height", ctypes.c_uint32), ("storage_width", ctypes.c_uint32), ("storage_height", ctypes.c_uint32), ("size", ctypes.c_size_t), ("data", ctypes.c_void_p), ("allocation", ctypes.c_void_p)]
 
 
 def main():
@@ -27,20 +27,16 @@ def main():
     args.build_dir.mkdir(parents=True, exist_ok=True)
     root = Path(__file__).resolve().parents[1]
     library = args.build_dir.resolve() / "block-frames.dylib"
-    subprocess.run(["rtk", "proxy", "cc", "-shared", "-fPIC", "-O2", "-Wall", "-Wextra", "-Werror",
-                    *(str(root / "source" / name) for name in ("image.c", "assets.c", "vf.c", "texture.c")),
-                    "-o", str(library)], check=True)
+    subprocess.run(["cc", "-shared", "-fPIC", "-O2", "-Wall", "-Wextra", "-Werror", * (str(root / "source" / name) for name in ("image.c", "assets.c", "vf.c", "texture.c")), "-o", str(library)], check=True)
     native = ctypes.CDLL(str(library))
     native.vertrix_vf_open.argtypes = [ctypes.c_char_p]
     native.vertrix_vf_open.restype = ctypes.c_void_p
     native.vertrix_vf_close.argtypes = [ctypes.c_void_p]
     native.vertrix_asset_block_files.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(BlockFiles)]
     native.vertrix_image_bmp_masked.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(NativeImage)]
-    native.vertrix_image_block_frame.argtypes = [ctypes.POINTER(NativeImage), ctypes.c_uint32,
-                                               ctypes.c_uint32, ctypes.POINTER(NativeImage)]
+    native.vertrix_image_block_frame.argtypes = [ctypes.POINTER(NativeImage), ctypes.c_uint32, ctypes.c_uint32, ctypes.POINTER(NativeImage)]
     native.vertrix_image_free.argtypes = [ctypes.POINTER(NativeImage)]
-    native.vertrix_asset_block_set.argtypes = [ctypes.c_void_p, ctypes.c_uint32,
-                                              ctypes.POINTER(ctypes.c_uint32), ctypes.POINTER(BlockSet)]
+    native.vertrix_asset_block_set.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32), ctypes.POINTER(BlockSet)]
     native.vertrix_block_set_free.argtypes = [ctypes.POINTER(BlockSet)]
     native.vertrix_asset_animation_ranges.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(AnimationRange)]
     native.vertrix_texture_rgba8.argtypes = [ctypes.POINTER(NativeImage), ctypes.POINTER(Texture)]
@@ -48,7 +44,8 @@ def main():
     def verify_texture(image):
         texture = Texture()
         assert native.vertrix_texture_rgba8(ctypes.byref(image), ctypes.byref(texture))
-try : assert texture.data % 32 == 0
+        try:
+            assert texture.data % 32 == 0
             raw = ctypes.string_at(texture.data, texture.size)
             source = ctypes.string_at(image.rgba, image.width * image.height * 4)
             for y in range(texture.storage_height):
@@ -56,7 +53,7 @@ try : assert texture.data % 32 == 0
                     block = ((y // 4) * (texture.storage_width // 4) + x // 4) * 64
                     offset = block + ((y % 4) * 4 + x % 4) * 2
                     decoded = bytes((raw[offset + 1], raw[offset + 32], raw[offset + 33], raw[offset]))
-                    expected = source[(y * image.width + x) * 4:(y * image.width + x + 1) * 4] if x < image.width and y < image.height else bytes(4)
+                    expected = source[(y * image.width + x) * 4: (y * image.width + x + 1) * 4] if x < image.width and y < image.height else bytes(4)
                     assert decoded == expected
         finally:
             native.vertrix_texture_free(ctypes.byref(texture))
@@ -93,9 +90,7 @@ try : assert texture.data % 32 == 0
                     image = NativeImage()
                     assert native.vertrix_image_block_frame(ctypes.byref(sheet), color, frame, ctypes.byref(image))
                     try:
-                        expected = b"".join(data[((y + row) * sheet.width + x) * 4:
-                                                 ((y + row) * sheet.width + x + 24) * 4]
-                                            for row in range(24))
+                        expected = b"".join(data[((y + row) * sheet.width + x) * 4: ((y + row) * sheet.width + x + 24) * 4] for row in range(24))
                         assert (image.width, image.height) == (24, 24)
                         assert ctypes.string_at(image.rgba, 24 * 24 * 4) == expected
                         loaded = resources.frames[color][frame]
@@ -125,14 +120,8 @@ try : assert texture.data % 32 == 0
         assert bytes(resources) == saved
     finally:
         native.vertrix_vf_close(archive)
-    report = {"status": "passed", "original_frame_layouts_verified": len(layout),
-              "character_sheets_verified": 18, "frames_verified": frames, "pixels_verified": pixels,
-              "integrated_character_sets_verified": 18,
-              "gx_texture_frames_verified": frames, "gx_padding_layouts_verified": 5,
-              "scope": "Original 0x45f0c0 resource/frame/coordinate selection executes with allocation, copy and color-conversion boundaries intercepted. Native crops match these rectangles in directly loaded VF sheets. Renderer remains separate."}
+    report = {"status": "passed", "original_frame_layouts_verified": len(layout), "character_sheets_verified": 18, "frames_verified": frames, "pixels_verified": pixels, "integrated_character_sets_verified": 18, "gx_texture_frames_verified": frames, "gx_padding_layouts_verified": 5, "scope": "Original 0x45f0c0 resource/frame/coordinate selection executes with allocation, copy and color-conversion boundaries intercepted. Native crops match these rectangles in directly loaded VF sheets. Renderer remains separate."}
     (args.build_dir / "block-frames-verification.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report, indent=2))
-
-
 if __name__ == "__main__":
     main()

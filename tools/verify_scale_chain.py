@@ -23,7 +23,7 @@ def main():
     library = a.build_dir.resolve() / 'chain.dylib'
     subprocess.run(['cc', '-shared', '-fPIC', '-Wall', '-Wextra', '-Werror',
                     *[str(source / name) for name in ['block_scale.c','dword_transition.c', 'block_byte_pulse.c',
-                    'block_update.c', 'animation.c', 'timer.c']], '-o', str(library)], check=True)
+                    'block_update.c', 'animation.c', 'timer.c', 'actor_storage.c']], '-o', str(library)], check=True)
     n = c.CDLL(str(library))
     common = [c.POINTER(Animation), c.POINTER(c.c_uint32), c.c_size_t,
               c.c_uint32, c.POINTER(c.c_uint32)]

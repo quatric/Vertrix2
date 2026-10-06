@@ -45,7 +45,7 @@ def main():
                'surface.c', 'render_pixel.c', 'palette_map.c', 'palette_tables.c', 'palette_color.c',
                'render_dispatch.c', 'render_color.c', 'render_palette.c', 'render_weights.c',
                'render_color_bank.c', 'render_geometry.c', 'render_row.c', 'render_rectangle.c',
-               'render_preparation.c', 'image.c', 'vf.c', 'board_burst.c'])
+               'render_preparation.c', 'image.c', 'vf.c', 'board_burst.c', 'random.c'])
     P = c.POINTER(Calls)
     for name in ('board_construct', 'slot_object_construct', 'chain_object_construct'):
         function = getattr(n, 'vertrix_' + name)

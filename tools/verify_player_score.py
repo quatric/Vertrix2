@@ -27,7 +27,7 @@ def main():
 
     native = build(args.build_dir, 'player-score',
                    ['player_slots.c', 'piece.c', 'piece_children.c', 'actor_storage.c',
-                    'actor_fields.c', 'object_scalars.c', 'timing.c', 'random.c'])
+                    'actor_fields.c', 'object_scalars.c', 'timing.c', 'random.c', 'piece_actor_construct.c', 'piece_child_update.c', 'dword_transition.c', 'frame_resource.c', 'timer.c'])
     native.vertrix_player_add_score.argtypes = [c.c_void_p, c.c_size_t, c.c_int32, c.c_uint32,
                                                 c.POINTER(c.c_uint32), c.c_size_t]
     native.vertrix_player_add_score.restype = c.c_int

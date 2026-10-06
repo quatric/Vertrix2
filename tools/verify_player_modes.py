@@ -61,7 +61,7 @@ def main():
     args = parser.parse_args()
     n = build(args.build_dir, 'player-modes',
               ['player_slots.c', 'piece.c', 'piece_children.c', 'actor_storage.c', 'actor_fields.c',
-               'object_scalars.c', 'timing.c', 'random.c'])
+               'object_scalars.c', 'timing.c', 'random.c', 'piece_actor_construct.c', 'piece_child_update.c', 'dword_transition.c', 'frame_resource.c', 'timer.c'])
     Allocate = c.CFUNCTYPE(U, U, c.c_void_p)
     Destroy = c.CFUNCTYPE(None, U, c.c_void_p)
     Refresh = c.CFUNCTYPE(None, U, c.c_void_p)

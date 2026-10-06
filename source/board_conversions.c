@@ -592,7 +592,7 @@ int vertrix_piece_replace_children(void *board, size_t board_size, const uint32_
 
 /* One step of 0x436b40 on a board: the first pending marker is taken. */
 static int convert_first_marker(void *board, size_t board_size,
-                                const VertrixFactoryServices *services)
+                                const VertrixFactoryServices *services, uint32_t *retired)
 {
     uint8_t *markers = (uint8_t *)board + MARKERS;
     uint32_t column, row, handle, new_handle, d0, frame;
@@ -609,6 +609,10 @@ static int convert_first_marker(void *board, size_t board_size,
         !vertrix_actor_set_period_steps(old.storage, old.size, STEPS))
     {
         return 0;
+    }
+    if (retired)
+    {
+        *retired = handle;
     }
     uint32_t kind = (uint16_t)services->draw(COUNTED_DRAW, services->context);
     return vertrix_block_spawn(board, board_size, kind, services, &new_handle) &&
@@ -627,9 +631,11 @@ static int convert_first_marker(void *board, size_t board_size,
            vertrix_actor_set_handler(replacement.storage, replacement.size, COUNTED_NEW_HANDLER);
 }
 
-int vertrix_boards_convert_counts(void *first, size_t first_size, void *second, size_t second_size,
-                                  uint32_t count_first, uint32_t count_second,
-                                  const VertrixFactoryServices *services)
+int vertrix_boards_convert_counts_traced(void *first, size_t first_size, void *second,
+                                         size_t second_size, uint32_t count_first,
+                                         uint32_t count_second,
+                                         const VertrixFactoryServices *services,
+                                         uint32_t *last_second_old)
 {
     if (!first || !second || first_size < MARKERS + CELL_COUNT ||
         second_size < MARKERS + CELL_COUNT)
@@ -638,19 +644,27 @@ int vertrix_boards_convert_counts(void *first, size_t first_size, void *second, 
     }
     for (uint32_t n = 0; n < count_first; ++n)
     {
-        if (!convert_first_marker(first, first_size, services))
+        if (!convert_first_marker(first, first_size, services, NULL))
         {
             return 0;
         }
     }
     for (uint32_t n = 0; n < count_second; ++n)
     {
-        if (!convert_first_marker(second, second_size, services))
+        if (!convert_first_marker(second, second_size, services, last_second_old))
         {
             return 0;
         }
     }
     return 1;
+}
+
+int vertrix_boards_convert_counts(void *first, size_t first_size, void *second, size_t second_size,
+                                  uint32_t count_first, uint32_t count_second,
+                                  const VertrixFactoryServices *services)
+{
+    return vertrix_boards_convert_counts_traced(first, first_size, second, second_size, count_first,
+                                                count_second, services, NULL);
 }
 
 /* One round of 0x436d80 on a board: a drawn pending marker, if any. */

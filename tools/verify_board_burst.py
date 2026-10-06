@@ -36,7 +36,7 @@ def main():
     n = build(args.build_dir, 'board-burst',
               ['board_burst.c', 'block_factory.c', 'board_cells.c', 'board_markers.c',
                'actor_storage.c', 'actor_fields.c', 'board.c', 'fixed_point.c',
-               'board_actions.c'])
+               'board_actions.c', 'random.c'])
     for name in ('burst', 'rings'):
         getattr(n, 'vertrix_board_' + name).argtypes = [
             c.c_void_p, c.c_size_t, U, c.c_int32, c.c_int32, c.POINTER(Services),

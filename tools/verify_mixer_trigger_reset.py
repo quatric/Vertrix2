@@ -17,22 +17,26 @@ def main():
     parser.add_argument('executable', type=Path)
     parser.add_argument('--build-dir', type=Path, required=True)
     args = parser.parse_args()
-    build = args.build_dir.resolve();
-build.mkdir(parents = True, exist_ok = True) source =
-    Path(__file__).resolve().parents[1] /
-    'source' library = build / 'trigger-reset.dylib' subprocess.run(
-                                   [
-                                       'cc', '-std=c11', '-Wall', '-Wextra', '-Werror', '-shared',
-                                       '-fPIC', str(source / 'mixer.c'), '-o', str(library)
-                                   ],
-                                   check = True) native =
-                           ctypes.CDLL(str(library)) native.vertrix_mixer_trigger_reset.argtypes = [
-                               ctypes.c_int, ctypes.c_uint8, ctypes.c_uint8, ctypes.c_uint16,
-                               ctypes.c_uint8, ctypes.c_uint8, ctypes.POINTER(State)
-                           ] original = Original(args.executable);
-rng = random.Random(0x40df20); cases = 40000
+    build = args.build_dir.resolve()
+    build.mkdir(parents=True, exist_ok=True)
+    source = Path(__file__).resolve().parents[1] / 'source'
+    library = build / 'trigger-reset.dylib'
+    subprocess.run(
+        [
+            'cc', '-std=c11', '-Wall', '-Wextra', '-Werror', '-shared', '-fPIC',
+            str(source / 'mixer.c'), '-o', str(library)
+        ],
+        check=True)
+    native = ctypes.CDLL(str(library))
+    native.vertrix_mixer_trigger_reset.argtypes = [
+        ctypes.c_int, ctypes.c_uint8, ctypes.c_uint8, ctypes.c_uint16,
+        ctypes.c_uint8, ctypes.c_uint8, ctypes.POINTER(State)
+    ]
+    original = Original(args.executable)
+    rng = random.Random(0x40df20); cases = 40000
     for index in range(cases):
-        data = bytearray(rng.randbytes(192)); instrument = bytearray(rng.randbytes(248))
+        data = bytearray(rng.randbytes(192))
+        instrument = bytearray(rng.randbytes(248))
         present = index % 2
         data[60] = (index // 2) % 256
         instrument[131] = 0 if index % 5 == 0 else rng.randrange(256)

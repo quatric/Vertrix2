@@ -45,7 +45,7 @@ def main():
                     str(root / 'source/player_slots.c'), str(root / 'source/piece.c'),
                     str(root / 'source/piece_children.c'), str(root / 'source/actor_storage.c'),
                     str(root / 'source/actor_fields.c'), str(root / 'source/timing.c'),
-                    str(root / 'source/random.c'), '-o', str(library)], check=True)
+                    str(root / 'source/random.c'), str(root / 'source/piece_actor_construct.c'), str(root / 'source/object_scalars.c'), str(root / 'source/piece_child_update.c'), str(root / 'source/dword_transition.c'), str(root / 'source/frame_resource.c'), str(root / 'source/timer.c'), '-o', str(library)], check=True)
     n = c.CDLL(str(library))
     n.vertrix_player_draw_delay_0.argtypes = [c.c_void_p, c.c_size_t, c.POINTER(NativeRandom), U]
     n.vertrix_player_draw_delay_1.argtypes = [c.c_void_p, c.c_size_t, c.POINTER(NativeRandom), U]

@@ -50,14 +50,12 @@ def main():
             if not declarations:
                 unknown.append('dynamic argument declaration')
                 continue
-            required = any(k.arg == 'required' and isinstance(k.value, ast.Constant) and k.value.value
-                           for k in node.keywords)
+            required = any(k.arg == 'required' and isinstance(k.value, ast.Constant) and k.value.value for k in node.keywords)
             for name in declarations:
                 if name.startswith('-') and not required:
                     continue
                 key = name.lstrip('-').replace('-', '_')
-                value = (str(build / script.stem) if key == 'build_dir' else
-                         str(build / (script.stem+'-output.json')) if key == 'output' else inputs.get(key))
+                value = (str(build / script.stem) if key == 'build_dir' else str(build / (script.stem + '-output.json')) if key == 'output' else inputs.get(key))
                 if value is None:
                     unknown.append(name)
                 elif name.startswith('-'):
@@ -67,40 +65,33 @@ def main():
         if unknown:
             skipped.append({'script': script.name, 'unresolved_inputs': unknown})
         else:
-            plans.append((script.name, ['rtk', 'proxy', sys.executable, str(script), *positional, *optional]))
+            plans.append((script.name, [sys.executable, str(script), * positional, * optional]))
     report_path = build / 'original-recheck.json'
-    previous = json.loads(report_path.read_text()) if args.resume and report_path.exists() else
-{
-}
+    previous = json.loads(report_path.read_text()) if args.resume and report_path.exists() else {}
     eligible = {name for name, _ in plans}
     retained = [r for r in previous.get('results', []) if not r['exit_code'] and r['script'] in eligible]
     report = {'status': 'running', 'eligible_checks': len(plans), 'skipped': skipped, 'results': retained}
     completed = {r['script'] for r in retained}
     plans = [p for p in plans if p[0] not in completed]
-    report_path.write_text(json.dumps(report, indent=2)+'\n')
+    report_path.write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps({'checks_to_run': len(plans), 'retained_successes': len(retained), 'skipped': skipped}), flush=True)
-
     def run(plan):
         name, command = plan
         start = time.monotonic()
-        with (build / (name+'.log')).open('w') as log:
+        with (build / (name + '.log')).open('w') as log:
             result = subprocess.run(command, cwd=root, stdout=log, stderr=subprocess.STDOUT)
-        return {'script': name, 'exit_code': result.returncode,
-                'seconds': round(time.monotonic()-start, 2)}
-
+        return {'script': name, 'exit_code': result.returncode, 'seconds': round(time.monotonic() - start, 2)}
     with ThreadPoolExecutor(max_workers=2) as pool:
         for future in as_completed([pool.submit(run, plan) for plan in plans]):
             result = future.result()
             report['results'].append(result)
-            report_path.write_text(json.dumps(report, indent=2)+'\n')
+            report_path.write_text(json.dumps(report, indent=2) + '\n')
             print(json.dumps(result), flush=True)
     report['status'] = 'failed' if any(r['exit_code'] for r in report['results']) else 'passed'
     report['scope'] = 'Original-execution verifier entry points with recognized required inputs; '
     report['scope'] += 'skipped scripts are explicitly listed and are not established by this run.'
-    report_path.write_text(json.dumps(report, indent=2)+'\n')
+    report_path.write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps({'status': report['status'], 'completed': len(report['results'])}), flush=True)
     return int(report['status'] != 'passed')
-
-
 if __name__ == '__main__':
     raise SystemExit(main())

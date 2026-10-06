@@ -48,7 +48,7 @@ def main():
                'board_markers.c', 'actor_storage.c', 'actor_fields.c', 'board.c', 'fixed_point.c',
                'board_actions.c', 'surface.c', 'render_pixel.c', 'render_weights.c',
                'palette_map.c', 'palette_color.c', 'palette_tables.c', 'render_dispatch.c',
-               'render_palette.c'])
+               'render_palette.c', 'random.c'])
     for name in ('drift', 'fall'):
         getattr(n, 'vertrix_particle_init_' + name).argtypes = [
             c.c_void_p, c.c_size_t, U, c.POINTER(Screen), c.POINTER(Services), c.POINTER(Hooks),

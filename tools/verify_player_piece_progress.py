@@ -24,7 +24,7 @@ def main():
 
     native = build(args.build_dir, 'player-piece-progress',
                    ['player_slots.c', 'piece.c', 'piece_children.c', 'actor_storage.c',
-                    'actor_fields.c', 'object_scalars.c', 'timing.c', 'random.c'])
+                    'actor_fields.c', 'object_scalars.c', 'timing.c', 'random.c', 'piece_actor_construct.c', 'piece_child_update.c', 'dword_transition.c', 'frame_resource.c', 'timer.c'])
     Resolve = c.CFUNCTYPE(c.c_int, c.c_uint32, c.POINTER(c.c_void_p),
                          c.POINTER(c.c_size_t), c.c_void_p)
     native.vertrix_player_reset_piece_progress.argtypes = [c.c_void_p, c.c_size_t, Resolve,

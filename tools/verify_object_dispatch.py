@@ -38,7 +38,7 @@ def main():
     args = parser.parse_args()
     n = build(args.build_dir, 'object-dispatch',
               ['object_glue.c', 'call_glue.c', 'actor_storage.c', 'block_factory.c',
-               'board_cells.c', 'particle_spawn.c', 'actor_fields.c', 'actor_chain_visit.c'])
+               'board_cells.c', 'particle_spawn.c', 'actor_fields.c', 'actor_chain_visit.c', 'table_queries.c'])
     P = c.POINTER(Calls)
     n.vertrix_object_virtual_slot6.argtypes = [P, Read, c.c_void_p, c.c_void_p, c.c_size_t, U, U]
     n.vertrix_object_virtual_slot6.restype = U
