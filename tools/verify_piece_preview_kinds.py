@@ -41,13 +41,16 @@ def main():
     short = c.create_string_buffer(b'\xaa' * OFFSET, OFFSET)
     assert not n.vertrix_piece_store_preview_kinds(short, OFFSET, 1, 2, 3)
     assert short.raw == b'\xaa' * OFFSET
-    report = {'status':
-        'passed', 'complete_original_executions' : totals,
-                                                   'scope'
-            : 'Complete 43a4f0 executes in the original over random piece storage; ' 'whole objects compare, plus a short-storage preservation check.'
-        }
-        (args.build_dir / 'piece-preview-kinds-verification.json')
-                .write_text(json.dumps(report, indent = 2) + '\n')
-                    print(json.dumps(report, indent = 2))
+    report = {
+        'status': 'passed',
+        'complete_original_executions': totals,
+        'scope': 'Complete 43a4f0 executes in the original over random piece storage; '
+                 'whole objects compare, plus a short-storage preservation check.'
+    }
+    (args.build_dir / 'piece-preview-kinds-verification.json').write_text(
+        json.dumps(report, indent=2) + '\n')
+    print(json.dumps(report, indent=2))
 
-                        if __name__ == '__main__' : main()
+
+if __name__ == '__main__':
+    main()

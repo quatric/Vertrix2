@@ -41,13 +41,17 @@ def main():
         assert struct.pack('<h', y.value) + raw_y[2:] == bytes(original.cpu.mem_read(MASK, 16)), case
         early += x.value < 0 or y.value < 0
     assert not native.vertrix_text_layout(1, 1, 0, 1, 0, 1, None, c.byref(y))
-    report = {'status':
-            'passed', 'cases' : 4096,
-                'scope'
-                : 'Original 0x440990 without hooks, full signed-word dimensions/bounds, ' 'narrowing, truncation and early-return origin behavior. Font measurement/rendering remain unfinished.'
-            }
-            (a.build_dir / 'text-layout-verification.json')
-                    .write_text(json.dumps(report, indent = 2) + '\n')
-                        print(json.dumps(report, indent = 2))
+    report = {
+        'status': 'passed',
+        'cases': 4096,
+        'scope': 'Original 0x440990 without hooks, full signed-word dimensions/bounds, '
+                 'narrowing, truncation and early-return origin behavior. Font '
+                 'measurement/rendering remain unfinished.'
+    }
+    (a.build_dir / 'text-layout-verification.json').write_text(
+        json.dumps(report, indent=2) + '\n')
+    print(json.dumps(report, indent=2))
 
-                            if __name__ == '__main__' : main()
+
+if __name__ == '__main__':
+    main()

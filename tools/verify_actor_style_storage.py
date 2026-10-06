@@ -24,29 +24,33 @@ def main():
     original = Original(args.executable)
     rng = random.Random(0x4123d0)
     for case in range(2048):
-records = rng.randbytes(128 * 12)
-              index = rng.randrange(128)
-                          raw = rng.randbytes(0x160)
-                                    original.cpu.mem_write(0x804000, records)
-                                        original.cpu.mem_write(BOARD, raw)
-                                            original.call(0x4123d0, eax = 0x804000, edx = index,
-                                                          ebx = BOARD) storage =
-    c.create_string_buffer(raw, len(raw))
-        record = c.create_string_buffer(records [index * 12:index * 12 + 12], 12) assert
-                     native.vertrix_actor_storage_style(storage, len(raw),
-                                                        record) assert storage.raw
-                 == bytes(original.cpu.mem_read(BOARD, len(raw))),
-              case prior =
-                  storage.raw assert
-                  not native.vertrix_actor_storage_style(storage, 0x15b, record) assert
-                  not native.vertrix_actor_storage_style(storage, len(storage),
-                                                         None) assert storage.raw
-                  == prior report = {'status':
-'passed', 'cases' : 2048,
-    'scope'
-    : 'Complete original4123d0 executes without hooks. Whole actor bytes ' 'match native12-byte record styling with randomized table indices and ' 'records, preserving unrelated fields. Short/null inputs preserve storage. ' 'Configuration loading, companion constructor471100 and full application ' 'integration remain unfinished.'
-}
-(args.build_dir / 'actor-style-storage-verification.json')
-        .write_text(json.dumps(report, indent = 2) + '\n') print(json.dumps(report, indent = 2))
+        records = rng.randbytes(128 * 12)
+        index = rng.randrange(128)
+        raw = rng.randbytes(0x160)
+        original.cpu.mem_write(0x804000, records)
+        original.cpu.mem_write(BOARD, raw)
+        original.call(0x4123d0, eax=0x804000, edx=index, ebx=BOARD)
+        storage = c.create_string_buffer(raw, len(raw))
+        record = c.create_string_buffer(records[index * 12:index * 12 + 12], 12)
+        assert native.vertrix_actor_storage_style(storage, len(raw), record)
+        assert storage.raw == bytes(original.cpu.mem_read(BOARD, len(raw))), case
+        prior = storage.raw
+        assert not native.vertrix_actor_storage_style(storage, 0x15b, record)
+        assert not native.vertrix_actor_storage_style(storage, len(storage), None)
+        assert storage.raw == prior
+    report = {
+        'status': 'passed',
+        'cases': 2048,
+        'scope': 'Complete original4123d0 executes without hooks. Whole actor bytes '
+                 'match native12-byte record styling with randomized table indices and '
+                 'records, preserving unrelated fields. Short/null inputs preserve storage. '
+                 'Configuration loading, companion constructor471100 and full application '
+                 'integration remain unfinished.'
+    }
+    (args.build_dir / 'actor-style-storage-verification.json').write_text(
+        json.dumps(report, indent=2) + '\n')
+    print(json.dumps(report, indent=2))
 
-            if __name__ == '__main__' : main()
+
+if __name__ == '__main__':
+    main()
