@@ -1197,3 +1197,117 @@ uint32_t vertrix_state_cycle_4546a0(const VertrixCalls *calls,
     vertrix_regs_call(calls, &regs, STATE_SET_HANDLER);
     return finish_edx(calls, services, globals, &regs, board);
 }
+
+enum
+{
+    DRAIN_COUNTER = 0x438,
+    DRAIN_TRY = 0x436440,
+    DRAIN_TRY_ARGUMENT = 5,
+    DRAIN_SOUND = 0x4f8194,
+    DRAIN_HANDLER = 0x454bd0
+};
+
+uint32_t vertrix_state_drain_454b20(const VertrixCalls *calls,
+                                    const VertrixFactoryServices *services,
+                                    const VertrixGlobals *globals, uint32_t player, uint32_t edx,
+                                    uint32_t ebx)
+{
+    VertrixRegs regs = {0, edx, ebx, player};
+    uint32_t board;
+    uint32_t counter;
+    if (!read_value(services, player, STATE_BOARD, DWORD_WIDTH, &board))
+    {
+        return 0;
+    }
+    regs.eax = board;
+    vertrix_regs_call(calls, &regs, CYCLE_TIMER_STEP);
+    regs.eax = board;
+    vertrix_regs_call(calls, &regs, CYCLE_DUE);
+    if (regs.eax != 1)
+    {
+        return finish_edx(calls, services, globals, &regs, board);
+    }
+    regs.eax = board;
+    vertrix_regs_call(calls, &regs, CYCLE_COUNT);
+    regs.edx = regs.eax;
+    regs.ebx = regs.eax;
+    regs.eax = board;
+    vertrix_regs_call(calls, &regs, CYCLE_RESET);
+    if (regs.edx != 0)
+    {
+        for (;;)
+        {
+            if (!read_value(services, player, DRAIN_COUNTER, DWORD_WIDTH, &counter) ||
+                (int32_t)counter <= 0)
+            {
+                break;
+            }
+            regs.edx = DRAIN_TRY_ARGUMENT;
+            regs.eax = board;
+            vertrix_regs_call(calls, &regs, DRAIN_TRY);
+            if (regs.eax != 1)
+            {
+                break;
+            }
+            regs.edx = globals->read(DRAIN_SOUND, globals->context);
+            if (!read_value(services, player, DRAIN_COUNTER, DWORD_WIDTH, &counter) ||
+                !vertrix_build_store(services, player, DRAIN_COUNTER, DWORD_WIDTH, counter - 1))
+            {
+                return 0;
+            }
+            regs.ebx--;
+            regs.eax = player;
+            vertrix_regs_call(calls, &regs, STATE_SOUND);
+            if (regs.ebx == 0)
+            {
+                break;
+            }
+        }
+    }
+    if (regs.ebx == 0)
+    {
+        return finish_edx(calls, services, globals, &regs, board);
+    }
+    regs.edx = DRAIN_HANDLER;
+    regs.eax = player;
+    vertrix_regs_call(calls, &regs, STATE_SET_HANDLER);
+    return finish_edx(calls, services, globals, &regs, board);
+}
+
+uint32_t vertrix_state_done_454bd0(const VertrixCalls *calls,
+                                   const VertrixFactoryServices *services,
+                                   const VertrixGlobals *globals, uint32_t player)
+{
+    VertrixRegs regs = {0, PAIR_MARK, player, 0};
+    uint32_t board;
+    uint32_t flag = 0;
+    if (!read_value(services, player, STATE_BOARD, DWORD_WIDTH, &board))
+    {
+        return 0;
+    }
+    regs.ecx = board;
+    regs.eax = board;
+    vertrix_regs_call(calls, &regs, PAIR_ASK_FIRST);
+    if (regs.eax != 0)
+    {
+        regs.edx = PAIR_MARK;
+        regs.eax = board;
+        vertrix_regs_call(calls, &regs, PAIR_ASK_SECOND);
+    }
+    if (regs.eax != 0)
+    {
+        regs.eax = board;
+        flag = 1;
+        vertrix_regs_call(calls, &regs, PAIR_DONE);
+    }
+    if (!finish_edx_ok(calls, services, globals, &regs, board))
+    {
+        return 0;
+    }
+    if (flag == 1)
+    {
+        regs.eax = player;
+        vertrix_regs_call(calls, &regs, CHOICE_FINISH);
+    }
+    return regs.eax;
+}

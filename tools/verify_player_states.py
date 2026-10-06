@@ -232,3 +232,27 @@ run_screen('state-cycle-4546a0', 0x4546a0, ['player_states.c'], 'vertrix_state_c
            **{**MORE, 'patch': patch_cycle,
               'choices': {0x4ac520: [1, 1, 0, 2], 0x4ac540: [0, 1, 2, 3], 0x4ad750: [0, 0, 1],
                           0x43b970: [0, 1]}})
+
+
+DRAIN = {address: 0 for address in (0x4ac500, 0x4ac520, 0x4ac540, 0x4ac5b0, 0x436440, 0x43c0e0,
+                                    0x4ac8f0, LEAF)}
+
+
+def patch_drain(rng, handle, data):
+    patch_more(rng, handle, data)
+    data[0x438:0x43c] = struct.pack('<i', rng.randrange(-1, 6))
+
+
+def drain_case(rng, pool, cpu):
+    player, edx, ebx = rng.choice(pool.handles), rng.getrandbits(32), rng.getrandbits(32)
+    return {'eax': player, 'edx': edx, 'ebx': ebx}, (), (player, edx, ebx)
+
+
+run_screen('state-drain-454b20', 0x454b20, ['player_states.c'], 'vertrix_state_drain_454b20',
+           [U, U, U], U, DRAIN, drain_case, TEXT,
+           **{**MORE, 'patch': patch_drain,
+              'choices': {0x4ac520: [1, 1, 1, 0], 0x4ac540: [0, 1, 2, 3, 6],
+                          0x436440: [1, 1, 1, 0]}})
+run_screen('state-done-454bd0', 0x454bd0, ['player_states.c'], 'vertrix_state_done_454bd0', [U],
+           U, PAIR, pair_case, TEXT,
+           **{**MORE, 'choices': {0x42eca0: [1, 1, 0], 0x42ecc0: [1, 1, 0]}})

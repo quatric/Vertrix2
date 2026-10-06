@@ -173,4 +173,21 @@ uint32_t vertrix_state_ask_454760(const VertrixCalls *calls, const VertrixFactor
 uint32_t vertrix_state_cycle_4546a0(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services,
                                     const VertrixGlobals *globals, uint32_t player, uint32_t edx);
+
+/* Original 0x454b20 (eax = player; edx and ebx the caller's registers, ecx = the player). Unless
+ * 0x4ac520 on the board (+0x15c) answers one only the board's virtual call runs. Otherwise 0x4ac540
+ * gives the count (edx and ebx) for 0x4ac5b0; while a count remains, the player's +0x438 is
+ * positive and 0x436440 (edx = 5) answers one, +0x438 and the count drop and 0x43c0e0 plays the
+ * sound dword 0x4f8194. A count left over sets the handler 0x454bd0; the virtual call ends all. */
+uint32_t vertrix_state_drain_454b20(const VertrixCalls *calls,
+                                    const VertrixFactoryServices *services,
+                                    const VertrixGlobals *globals, uint32_t player, uint32_t edx,
+                                    uint32_t ebx);
+
+/* Original 0x454bd0 (eax = player). The board's 0x42eca0 and 0x42ecc0 about 0x44c860 both
+ * accepting runs 0x42ebe0 on it and sets the flag. The board's virtual call follows and a set flag
+ * ends with 0x43bbf0 on the player. */
+uint32_t vertrix_state_done_454bd0(const VertrixCalls *calls,
+                                   const VertrixFactoryServices *services,
+                                   const VertrixGlobals *globals, uint32_t player);
 #endif
