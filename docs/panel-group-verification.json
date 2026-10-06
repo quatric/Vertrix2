@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x470d20": 4096
+  },
+  "scope": "The original executes completely with its callees stubbed and logged (0x4b25b0 with its ten stack arguments, 0x4adf20 with five); each of the four texts is zero in half of the cases and the layout globals hold random data. Every call with the registers the previous call left, the returned eax and every pool object compare."
+}
