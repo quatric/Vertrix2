@@ -28,6 +28,18 @@ uint32_t vertrix_call_out(const VertrixCalls *calls, uint32_t target, uint32_t e
     return result;
 }
 
+uint32_t vertrix_call_out3(const VertrixCalls *calls, uint32_t target, uint32_t eax, uint32_t edx,
+                           uint32_t ebx, uint32_t ecx, uint32_t *out_edx, uint32_t *out_ebx,
+                           uint32_t *out_ecx)
+{
+    VertrixCallSite site = {target, eax, edx, ebx, ecx, 0, 0, 0, 0, 0, {0}, 0};
+    uint32_t result = calls->call(&site, calls->context);
+    *out_edx = site.out_value;
+    *out_ebx = site.out_ebx;
+    *out_ecx = site.out_ecx;
+    return result;
+}
+
 uint32_t vertrix_calln(const VertrixCalls *calls, uint32_t target, uint32_t eax, uint32_t edx,
                        uint32_t ebx, uint32_t ecx, const uint32_t *stack, unsigned count,
                        uint32_t *out_value)

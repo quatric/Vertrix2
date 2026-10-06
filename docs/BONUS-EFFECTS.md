@@ -156,12 +156,19 @@ byte-identical to 0x453ef0 and are verified against `vertrix_effect_field_end`.
 
 `vertrix_effect_marked_start` (bound by 0x454e90); 0x454fc0 is identical to 0x453570.
 
+## 0x4550a0, 0x4552b0, 0x455320, 0x4553a0
+
+`vertrix_effect_kinds_start` (bound by 0x455020), `_gate_clear`, `_armed_clear`, `_armed_gate`.
+0x43a5b0 stores three kind bytes through the pointers it gets in edx, ebx and ecx (locals of the
+caller's frame): the new `vertrix_call_out3` brings them back, and the verifier's stub writes them
+into the oracle's stack. All branch paths are exercised (`kinds_paths` in the report).
+
 ## Tally
 
 Distinct direct `call` targets in 0x401000..0x4d0000: 1827. Named in `source/` (ported): 1139.
 Not named: 688, listed in `docs/unported-call-targets.txt` (about 260 of them in 0x452830..0x45bd00,
 the follow-up and animation handlers of the bonus effects). Handlers reached only through tokens or
-vtables are not in this count. Oracle-verified bonus-effect routines: 67.
+vtables are not in this count. Oracle-verified bonus-effect routines: 71.
 
 ## Wiring note
 

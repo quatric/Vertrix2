@@ -41,6 +41,12 @@ uint32_t vertrix_call(const VertrixCalls *calls, uint32_t target, uint32_t eax, 
 uint32_t vertrix_call_out(const VertrixCalls *calls, uint32_t target, uint32_t eax, uint32_t edx,
                           uint32_t ebx, uint32_t ecx, uint32_t *out_ebx, uint32_t *out_ecx);
 
+/* The same for a callee that stores a byte or dword through each of the pointers in edx, ebx and
+ * ecx (the caller's locals); the stored values come back in *out_edx, *out_ebx and *out_ecx. */
+uint32_t vertrix_call_out3(const VertrixCalls *calls, uint32_t target, uint32_t eax, uint32_t edx,
+                           uint32_t ebx, uint32_t ecx, uint32_t *out_edx, uint32_t *out_ebx,
+                           uint32_t *out_ecx);
+
 /* The same with up to eleven stack arguments (the first three in stack, stack_next and
  * stack_third, the rest in stack_rest), the nearest to the stack pointer first. The callee may
  * store one dword through a pointer it was given in the arguments; it returns in *out_value. */

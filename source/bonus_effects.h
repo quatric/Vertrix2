@@ -426,4 +426,31 @@ uint32_t vertrix_effect_counted_burst_step(const VertrixEffectServices *services
  * (0x4f8194) and calls 0x43ac00 on the opponent. Anything else calls 0x43acd0 on the opponent
  * (edx 5, ebx 1) and makes the handler end with 0x43bbf0. Slot 1 of the board comes between. */
 uint32_t vertrix_effect_marked_start(const VertrixEffectServices *services, uint32_t player);
+
+/* Original 0x4552b0 (eax = player): when 0x42ed40 and 0x42ed70 (board, 0x44c860) are both non-zero,
+ * 0x42eba0 runs and the handler ends with 0x43bbf0 after slot 1 of the board, then clears the
+ * board's +0xb90; otherwise the slot's result is returned. */
+uint32_t vertrix_effect_gate_clear(const VertrixEffectServices *services, uint32_t player);
+
+/* Original 0x455320 (eax = player): with the player's +0x4d0, +0x4d4 and +0x4d8 all zero, 0x43a510
+ * runs with the player's +0x3b4 (edx, ebx and ecx 5) and 0x42eba0 on the board with edx 1; slot 1
+ * of the board follows and, for the zero case, 0x43bbf0 on the player and the board's +0xb90
+ * cleared. Otherwise only the slot's result is returned. */
+uint32_t vertrix_effect_armed_clear(const VertrixEffectServices *services, uint32_t player);
+
+/* Original 0x4553a0 (eax = player; ebx and ecx the caller's): like 0x455320 with the arm dwords
+ * zero: 0x43a510, then 0x42ed40 and 0x42ed70 on the board; both non-zero run 0x42eba0 (ecx 1) and
+ * end with 0x43bbf0 and +0xb90 cleared; otherwise 0x4552b0 is bound. With a non-zero arm dword
+ * both tests non-zero bind 0x455320. */
+uint32_t vertrix_effect_armed_gate(const VertrixEffectServices *services, uint32_t player,
+                                   uint32_t entry_ebx, uint32_t entry_ecx);
+
+/* Original 0x4550a0 (eax = player; ebx the caller's; frame the entry ebp token): the board's three
+ * slot kinds are read through 0x431c10 or, when 0x4320c0 does not report one, through 0x43a5b0
+ * (three bytes stored in the caller's frame); see the original for the five outcomes: all kinds
+ * five end with 0x43acd0 on the opponent and 0x43bbf0, otherwise the arm dwords +0x4d0, +0x4d4 and
+ * +0x4d8 become kind != 5 and 0x455320, 0x4553a0 or 0x4552b0 is bound (0x4368e0 with five on the
+ * board, 0x43ac00 on the opponent and sound 11). Returns the result of 0x43bbf0 or of slot 1. */
+uint32_t vertrix_effect_kinds_start(const VertrixEffectServices *services, uint32_t player,
+                                    uint32_t entry_ebx, uint32_t frame);
 #endif

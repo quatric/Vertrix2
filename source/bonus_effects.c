@@ -110,6 +110,14 @@ enum
     CYCLE_LIMIT = 10,
     TABLE_MARKED_START = 0x4f7c6c,
     HANDLER_MARKED_END = 0x454fc0,
+    HANDLER_GATE_CLEAR = 0x4552b0,
+    HANDLER_ARMED_CLEAR = 0x455320,
+    HANDLER_ARMED_GATE = 0x4553a0,
+    SOUND_KINDS = 11,
+    KIND_FIVE = 5,
+    LOCAL_KIND_FIRST = 0x1c,
+    LOCAL_KIND_SECOND = 0x18,
+    LOCAL_KIND_THIRD = 0x20,
     HANDLER_BURST_END = 0x454970
 };
 
@@ -2566,4 +2574,328 @@ uint32_t vertrix_effect_marked_start(const VertrixEffectServices *services, uint
                                                                        board, SLOT_RELEASE, 0)
                                     : 0;
     return ended ? vertrix_call(services->calls, 0x43bbf0, player, vtable, ebx, board, 0) : result;
+}
+
+/* The two field tests of 0x42ed40 and 0x42ed70, as field_tests does for 0x42eca0 and 0x42ecc0. */
+static int gate_tests(const VertrixEffectServices *services, uint32_t ebx, uint32_t ecx,
+                      uint32_t board)
+{
+    return vertrix_call(services->calls, 0x42ed40, board, HANDLER_FIELD, ebx, ecx, 0) != 0 &&
+           vertrix_call(services->calls, 0x42ed70, board, HANDLER_FIELD, ebx, ecx, 0) != 0;
+}
+
+uint32_t vertrix_effect_gate_clear(const VertrixEffectServices *services, uint32_t player)
+{
+    void *player_storage;
+    void *board_storage;
+    size_t player_size;
+    size_t board_size;
+    uint32_t board;
+    uint32_t vtable;
+    uint32_t result;
+    int ended = 0;
+    if (!services || !services->calls ||
+        !resolve_object(services, player, &player_storage, &player_size) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_BOARD, DWORD_WIDTH,
+                                    &board) ||
+        !resolve_object(services, board, &board_storage, &board_size))
+    {
+        return 0;
+    }
+    if (gate_tests(services, player, board, board))
+    {
+        ended = 1;
+        vertrix_call(services->calls, 0x42eba0, board, HANDLER_FIELD, player, board, 0);
+    }
+    if (!vertrix_actor_storage_read(board_storage, board_size, BOARD_VTABLE, DWORD_WIDTH, &vtable))
+    {
+        return 0;
+    }
+    result = services->virtual_call ? (uint32_t)services->virtual_call(services->virtual_context,
+                                                                       board, SLOT_RELEASE, 0)
+                                    : 0;
+    if (!ended)
+    {
+        return result;
+    }
+    result = vertrix_call(services->calls, 0x43bbf0, player, vtable, player, board, 0);
+    return vertrix_actor_storage_write(board_storage, board_size, BOARD_FLAG_FOURTH, DWORD_WIDTH, 0)
+               ? result
+               : 0;
+}
+
+uint32_t vertrix_effect_armed_clear(const VertrixEffectServices *services, uint32_t player)
+{
+    void *player_storage;
+    void *board_storage;
+    size_t player_size;
+    size_t board_size;
+    uint32_t board;
+    uint32_t extra;
+    uint32_t vtable;
+    uint32_t first;
+    uint32_t second;
+    uint32_t third;
+    uint32_t result;
+    int armed = 0;
+    if (!services || !services->calls ||
+        !resolve_object(services, player, &player_storage, &player_size) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_BOARD, DWORD_WIDTH,
+                                    &board) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_ARM_FIRST, DWORD_WIDTH,
+                                    &first) ||
+        !resolve_object(services, board, &board_storage, &board_size))
+    {
+        return 0;
+    }
+    if (first == 0 &&
+        vertrix_actor_storage_read(player_storage, player_size, PLAYER_ARM_SECOND, DWORD_WIDTH,
+                                   &second) &&
+        second == 0 &&
+        vertrix_actor_storage_read(player_storage, player_size, PLAYER_ARM_THIRD, DWORD_WIDTH,
+                                   &third) &&
+        third == 0)
+    {
+        if (!vertrix_actor_storage_read(player_storage, player_size, PLAYER_EXTRA, DWORD_WIDTH,
+                                        &extra))
+        {
+            return 0;
+        }
+        armed = 1;
+        vertrix_call(services->calls, 0x43a510, extra, 5, 5, 5, 0);
+        vertrix_call(services->calls, 0x42eba0, board, 1, 5, 5, 0);
+    }
+    if (!vertrix_actor_storage_read(board_storage, board_size, BOARD_VTABLE, DWORD_WIDTH, &vtable))
+    {
+        return 0;
+    }
+    result = services->virtual_call ? (uint32_t)services->virtual_call(services->virtual_context,
+                                                                       board, SLOT_RELEASE, 0)
+                                    : 0;
+    if (!armed)
+    {
+        return result;
+    }
+    result = vertrix_call(services->calls, 0x43bbf0, player, 1, 5, vtable, 0);
+    return vertrix_actor_storage_write(board_storage, board_size, BOARD_FLAG_FOURTH, DWORD_WIDTH, 0)
+               ? result
+               : 0;
+}
+
+uint32_t vertrix_effect_armed_gate(const VertrixEffectServices *services, uint32_t player,
+                                   uint32_t entry_ebx, uint32_t entry_ecx)
+{
+    void *player_storage;
+    void *board_storage;
+    size_t player_size;
+    size_t board_size;
+    uint32_t board;
+    uint32_t extra;
+    uint32_t vtable;
+    uint32_t first;
+    uint32_t second;
+    uint32_t third;
+    uint32_t result;
+    uint32_t ebx = entry_ebx;
+    uint32_t ecx = entry_ecx;
+    int ended = 0;
+    if (!services || !services->calls ||
+        !resolve_object(services, player, &player_storage, &player_size) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_ARM_FIRST, DWORD_WIDTH,
+                                    &first) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_BOARD, DWORD_WIDTH,
+                                    &board) ||
+        !resolve_object(services, board, &board_storage, &board_size))
+    {
+        return 0;
+    }
+    if (first == 0 &&
+        vertrix_actor_storage_read(player_storage, player_size, PLAYER_ARM_SECOND, DWORD_WIDTH,
+                                   &second) &&
+        second == 0 &&
+        vertrix_actor_storage_read(player_storage, player_size, PLAYER_ARM_THIRD, DWORD_WIDTH,
+                                   &third) &&
+        third == 0)
+    {
+        if (!vertrix_actor_storage_read(player_storage, player_size, PLAYER_EXTRA, DWORD_WIDTH,
+                                        &extra))
+        {
+            return 0;
+        }
+        vertrix_call(services->calls, 0x43a510, extra, 5, 5, 5, 0);
+        if (gate_tests(services, 5, 5, board))
+        {
+            vertrix_call(services->calls, 0x42eba0, board, HANDLER_FIELD, 5, 1, 0);
+            ended = 1;
+            ebx = 1;
+            ecx = 1;
+        }
+        else
+        {
+            vertrix_call(services->calls, 0x4ac8f0, player, HANDLER_GATE_CLEAR, 5, 5, 0);
+        }
+    }
+    else if (gate_tests(services, ebx, ecx, board))
+    {
+        vertrix_call(services->calls, 0x4ac8f0, player, HANDLER_ARMED_CLEAR, ebx, ecx, 0);
+    }
+    if (!vertrix_actor_storage_read(board_storage, board_size, BOARD_VTABLE, DWORD_WIDTH, &vtable))
+    {
+        return 0;
+    }
+    result = services->virtual_call ? (uint32_t)services->virtual_call(services->virtual_context,
+                                                                       board, SLOT_RELEASE, 0)
+                                    : 0;
+    if (!ended)
+    {
+        return result;
+    }
+    result = vertrix_call(services->calls, 0x43bbf0, player, vtable, ebx, ecx, 0);
+    return vertrix_actor_storage_write(board_storage, board_size, BOARD_FLAG_FOURTH, DWORD_WIDTH, 0)
+               ? result
+               : 0;
+}
+
+/* Slot kind k of the board through 0x431c10 (edx = k), as 0x4550a0 calls it. */
+static uint32_t slot_kind(const VertrixEffectServices *services, uint32_t board, uint32_t k,
+                          uint32_t ebx, uint32_t ecx)
+{
+    return vertrix_call(services->calls, 0x431c10, board, k, ebx, ecx, 0);
+}
+
+uint32_t vertrix_effect_kinds_start(const VertrixEffectServices *services, uint32_t player,
+                                    uint32_t entry_ebx, uint32_t frame)
+{
+    void *player_storage;
+    void *board_storage;
+    size_t player_size;
+    size_t board_size;
+    uint32_t board;
+    uint32_t extra;
+    uint32_t opponent;
+    uint32_t vtable;
+    uint32_t result;
+    uint32_t ebx = entry_ebx;
+    uint32_t ecx = player;
+    uint32_t edx;
+    int ended = 0;
+    const VertrixCalls *calls;
+    if (!services || !services->calls ||
+        !resolve_object(services, player, &player_storage, &player_size) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_BOARD, DWORD_WIDTH,
+                                    &board) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_EXTRA, DWORD_WIDTH,
+                                    &extra) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_OPPONENT, DWORD_WIDTH,
+                                    &opponent) ||
+        !resolve_object(services, board, &board_storage, &board_size))
+    {
+        return 0;
+    }
+    calls = services->calls;
+    if (vertrix_call(calls, 0x4320c0, board, 0, ebx, ecx, 0) != 1)
+    {
+        uint32_t first;
+        uint32_t second;
+        uint32_t third;
+        uint32_t pointer_first = frame - LOCAL_KIND_FIRST;
+        uint32_t pointer_second = frame - LOCAL_KIND_SECOND;
+        uint32_t pointer_third = frame - LOCAL_KIND_THIRD;
+        vertrix_call_out3(calls, 0x43a5b0, extra, pointer_first, pointer_second, pointer_third,
+                          &first, &second, &third);
+        first &= 0xffu;
+        second &= 0xffu;
+        third &= 0xffu;
+        if (first == KIND_FIVE && second == KIND_FIVE && third == KIND_FIVE)
+        {
+            vertrix_call(calls, 0x43acd0, opponent, pointer_first, pointer_second, 1, 0);
+            ended = 1;
+            ebx = pointer_second;
+            ecx = 1;
+        }
+        else
+        {
+            if (!vertrix_actor_storage_write(player_storage, player_size, PLAYER_ARM_FIRST,
+                                             DWORD_WIDTH, first != KIND_FIVE) ||
+                !vertrix_actor_storage_write(player_storage, player_size, PLAYER_ARM_SECOND,
+                                             DWORD_WIDTH, second != KIND_FIVE) ||
+                !vertrix_actor_storage_write(player_storage, player_size, PLAYER_ARM_THIRD,
+                                             DWORD_WIDTH, third != KIND_FIVE))
+            {
+                return 0;
+            }
+            ebx = pointer_second;
+            ecx = pointer_third;
+            vertrix_call(calls, 0x4ac8f0, player, HANDLER_ARMED_CLEAR, ebx, ecx, 0);
+            vertrix_call(calls, 0x43ac00, opponent, HANDLER_ARMED_CLEAR, ebx, ecx, 0);
+            vertrix_call(calls, 0x43c0e0, player, SOUND_KINDS, ebx, ecx, 0);
+        }
+    }
+    else
+    {
+        uint32_t first;
+        uint32_t second;
+        uint32_t third;
+        vertrix_call(calls, 0x43bad0, player, 0, ebx, ecx, 0);
+        edx = 0;
+        first = slot_kind(services, board, 0, ebx, ecx);
+        if (first == KIND_FIVE)
+        {
+            edx = 1;
+            first = slot_kind(services, board, 1, ebx, ecx);
+            if (first == KIND_FIVE)
+            {
+                edx = 2;
+                first = slot_kind(services, board, 2, ebx, ecx);
+                if (first == KIND_FIVE)
+                {
+                    ebx = 1;
+                    vertrix_call(calls, 0x43acd0, opponent, 2, ebx, ecx, 0);
+                    ended = 1;
+                    goto finish;
+                }
+            }
+        }
+        if (vertrix_call(calls, 0x431d60, board, edx, ebx, ecx, 0) != 0)
+        {
+            vertrix_call(calls, 0x4ac8f0, player, HANDLER_GATE_CLEAR, ebx, ecx, 0);
+        }
+        else
+        {
+            first = slot_kind(services, board, 0, ebx, ecx);
+            second = slot_kind(services, board, 1, ebx, ecx);
+            third = slot_kind(services, board, 2, ebx, ecx);
+            if (!vertrix_actor_storage_write(player_storage, player_size, PLAYER_ARM_FIRST,
+                                             DWORD_WIDTH, first != KIND_FIVE) ||
+                !vertrix_actor_storage_write(player_storage, player_size, PLAYER_ARM_SECOND,
+                                             DWORD_WIDTH, second != KIND_FIVE) ||
+                !vertrix_actor_storage_write(player_storage, player_size, PLAYER_ARM_THIRD,
+                                             DWORD_WIDTH, third != KIND_FIVE))
+            {
+                return 0;
+            }
+            vertrix_call(calls, 0x4ac8f0, player, HANDLER_ARMED_GATE, ebx, ecx, 0);
+        }
+        ebx = 5;
+        ecx = 5;
+        vertrix_call(calls, 0x4368e0, board, 5, ebx, ecx, 0);
+        vertrix_call(calls, 0x43ac00, opponent, 5, ebx, ecx, 0);
+        vertrix_call(calls, 0x43c0e0, player, SOUND_KINDS, ebx, ecx, 0);
+    }
+finish:
+    if (!vertrix_actor_storage_read(board_storage, board_size, BOARD_VTABLE, DWORD_WIDTH, &vtable))
+    {
+        return 0;
+    }
+    result = services->virtual_call ? (uint32_t)services->virtual_call(services->virtual_context,
+                                                                       board, SLOT_RELEASE, 0)
+                                    : 0;
+    if (!ended)
+    {
+        return result;
+    }
+    result = vertrix_call(calls, 0x43bbf0, player, vtable, ebx, ecx, 0);
+    return vertrix_actor_storage_write(board_storage, board_size, BOARD_FLAG_FOURTH, DWORD_WIDTH, 0)
+               ? result
+               : 0;
 }
