@@ -29,4 +29,19 @@ boundary calls carry them, so `vertrix_boards_convert_counts_traced` reports the
 
 Evidence: same verifier, 2048 more cases (993 equal, 533 a > b, 522 a < b), real 0x436b40.
 
-Not yet ported: 0x452e00 (id 1), 0x453b90.
+## 0x452e00 (dispatcher id 1): board match
+
+Native: `vertrix_effect_board_match(services, player, entry_ebx)`. `entry_ebx` is the caller's ebx,
+which the original forwards in its first boundary calls. 0x438cd0 (not portable: its result depends
+on uninitialised stack, see `BOARD-MARKERS.md`) is a boundary call, as are 0x43ab60 and the
+recovered board routines 0x4320c0, 0x4330d0, 0x431d80, 0x42ee20, 0x42eda0, 0x42ee80, 0x433040 and
+0x43a560 (their results steer the flow, so the wiring supplies them). Flow: see the header comment
+in `source/bonus_effects.h`. The sign-extended kinds of the opponent piece's three children go to
+0x43a560.
+
+Evidence: same verifier, 2048 more cases (equal boards, chain, pending-flag clear, plain paths
+counted in the report) with all callees stubbed and logged with registers. Limit: registers a
+stubbed callee would clobber in the original are not modelled (the stub leaves them), exactly as
+for the other effects.
+
+Not yet ported: 0x453b90.

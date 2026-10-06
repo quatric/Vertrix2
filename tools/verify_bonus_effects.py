@@ -18,6 +18,10 @@ SLOT_ONE = 0x700300
 DRAW = 0x4826c0
 CALLEES = (0x43acd0, 0x43ac00, 0x43bb60, 0x4ac8f0, 0x43bbf0, 0x43c0e0)
 ALLOCATE = 0x4ca000
+# 0x452e00 callees; the first four steer its flow and return small values
+FLOW = {0x438cd0: (0, 1), 0x43ab60: (0, 1, 1, 2), 0x4320c0: (1, 1, 1, 0), 0x4330d0: (1, 1, 1, 0)}
+MATCH_CALLEES = (0x438cd0, 0x43ab60, 0x4320c0, 0x4330d0, 0x431d80, 0x42ee20, 0x42eda0, 0x42ee80,
+                 0x433040, 0x43a560)
 EFFECT_CODE = 0x450000
 GRID, COMPANION, MARKERS = 0x220, 0x87c, 0xb94
 Draw = c.CFUNCTYPE(c.c_uint16, c.c_uint16, c.c_void_p)
@@ -77,6 +81,8 @@ def main():
     n.vertrix_effect_forced_choice.restype = U
     n.vertrix_effect_convert_blocks.argtypes = [c.POINTER(Services), U, U]
     n.vertrix_effect_convert_blocks.restype = U
+    n.vertrix_effect_board_match.argtypes = [c.POINTER(Services), U, U]
+    n.vertrix_effect_board_match.restype = U
     original = Original(args.executable)
     cpu = original.cpu
     rng = random.Random(0x453ad0)
@@ -92,7 +98,7 @@ def main():
             handle = targets[len(allocations) % len(targets)]
             allocations.append(handle)
             return handle
-        value = rng.getrandbits(32)
+        value = rng.choice(FLOW[address]) if address in FLOW else rng.getrandbits(32)
         returns.append(value)
         return value
 
@@ -227,6 +233,48 @@ def main():
             convert_totals['first_more' if expected[0][0] == 0x43ac00 else 'first_fewer'] += 1
             struct_second = struct.unpack_from('<I', pool.buffers[player].raw, 0x440)[0]
             convert_totals['converted_second'] += struct_second > 0
+    # 0x452e00: the board match effect (id 1)
+    for address in MATCH_CALLEES:
+        stubs.add(address, 0)
+
+    def patch_match(handle, data):
+        patch_convert(handle, data)
+        if handle == player:
+            struct.pack_into('<I', data, 0x3dc, 0)
+        elif handle == opponent:
+            struct.pack_into('<I', data, 0x3b4, rng.getrandbits(32))
+            struct.pack_into('<I', data, 0x170, rng.choice([1, 1, 0, 2]))
+        elif handle == opponent_board:
+            struct.pack_into('<I', data, 0xa60, targets[0])
+        elif handle == targets[0]:
+            struct.pack_into('<III', data, 0x15c, *targets[1:4])
+        elif handle in targets[1:4]:
+            data[0x15c] = rng.choice([0, 1, 2, 3, 4, 5, 6, 0xff, 0x80])
+    match_totals = {'equal_boards': 0, 'chain': 0, 'pending_cleared': 0, 'plain': 0}
+    for case in range(args.cases):
+        pool.fill(rng, patch_match)
+        stubs.log.clear()
+        returns.clear()
+        draws.clear()
+        native_log.clear()
+        entry_ebx = rng.getrandbits(32)
+        result = original.call(0x452e00, eax=player, ebx=entry_ebx) & 0xffffffff
+        replay[:] = list(returns)
+        got = n.vertrix_effect_board_match(c.byref(services), player, entry_ebx)
+        expected = normalized(stubs.log)
+        assert native_log == expected, (case, native_log, expected)
+        assert got == result, (case, hex(got), hex(result))
+        assert not replay, case
+        assert pool.same(), (case, pool.diff())
+        targets_hit = {e[0] for e in expected if e[0] != 'virtual'}
+        if 0x43ab60 not in targets_hit:
+            match_totals['equal_boards'] += 1
+        elif 0x43a560 in targets_hit:
+            match_totals['pending_cleared'] += 1
+        elif 0x431d80 in targets_hit:
+            match_totals['chain'] += 1
+        else:
+            match_totals['plain'] += 1
     # Objects that do not resolve: the effect stops where the original would have read them. Before
     # the first call (player, opponent, grid) nothing is called or stored; later failures still
     # never reach the final 0x43bbf0.
@@ -260,9 +308,11 @@ def main():
         totals['unresolved'] += 1
     report = {
         'status': 'passed',
-        'complete_original_executions': {'0x453ad0': args.cases, '0x453150': args.cases},
+        'complete_original_executions': {'0x453ad0': args.cases, '0x453150': args.cases,
+                                        '0x452e00': args.cases},
         'paths': totals,
         'convert_paths': convert_totals,
+        'match_paths': match_totals,
         'scope': 'Complete original 0x453ad0 executes with 0x429fe0 running for real (its 0x4826c0 '
                  'draws stubbed and replayed) and the boundaries 0x43acd0, 0x43ac00, 0x43bb60, '
                  '0x4ac8f0, 0x43bbf0 and virtual slot 1 of the player board stubbed and logged; '
@@ -270,7 +320,11 @@ def main():
                  'with vertrix_effect_forced_choice. Unresolvable objects are rejected. Complete original 0x453150 runs the same way with the '
                  'real 0x436b40 and its callees (0x4ac8f0 only counts as a boundary where 0x453150 '
                  'calls it; allocation 0x4ca000 and draws are replayed) and 0x43c0e0 stubbed; the '
-                 'registers left by 0x436b40 are compared through the boundary log.'
+                 'registers left by 0x436b40 are compared through the boundary log. Complete original '
+                 '0x452e00 runs with every callee (0x438cd0, 0x43ab60, 0x4320c0, 0x4330d0, 0x431d80, '
+                 '0x42ee20, 0x42eda0, 0x42ee80, 0x433040, 0x43a560, 0x43bb60, 0x4ac8f0, 0x43c0e0, '
+                 '0x43acd0, 0x43ac00, 0x43bbf0) stubbed and logged with registers; the flow '
+                 'callees return replayed small values.'
     }
     (args.build_dir / 'bonus-effects-verification.json').write_text(
         json.dumps(report, indent=2) + '\n')

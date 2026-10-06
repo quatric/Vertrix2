@@ -48,4 +48,21 @@ uint32_t vertrix_effect_forced_choice(const VertrixEffectServices *services, uin
  * result of that slot. Zero when an object does not resolve. frame is the entry ebp token. */
 uint32_t vertrix_effect_convert_blocks(const VertrixEffectServices *services, uint32_t player,
                                        uint32_t frame);
+
+/* Original 0x452e00 (eax = player, the effect behind dispatcher id 1). Everything not recovered
+ * here, and the recovered board routines whose results steer the flow, are boundary calls with the
+ * registers the original holds; entry_ebx is the caller's ebx, which the original passes on to its
+ * first calls. With the opponent's +0x3b0 board and the player's board (+0x15c each) 0x438cd0
+ * decides: non-zero only calls 0x43acd0 (ecx 1) and slot 1 of the player's board, then returns
+ * 0x43bbf0. Otherwise 0x43ab60 chooses 0x43ac00 (result 1) or 0x43acd0 on the player; sound 11
+ * goes to the opponent (0x43c0e0); when 0x4320c0 on the opponent's board and 0x4330d0 (opponent's
+ * board, player's board) both return 1 and the opponent's +0x170 is 1, the kinds of the three
+ * children of the opponent board's active piece (+0xa60) go, sign-extended, to 0x43a560 with the
+ * opponent's +0x3b4 and +0x170 is cleared; then 0x431d80 and 0x42ee20 follow on the opponent's
+ * board, 0x42eda0 (0x44f040) and 0x42ee80 (5) on both boards, 0x433040, 0x43bb60 on the opponent,
+ * its board's +0xb80, +0xb84 and +0xb88 are set to one, and 0x4ac8f0 takes 0x452050 for the
+ * opponent and 0x452fc0 for the player. Slot 1 of the player's board is called last and its result
+ * returned. Zero when an object does not resolve. */
+uint32_t vertrix_effect_board_match(const VertrixEffectServices *services, uint32_t player,
+                                    uint32_t entry_ebx);
 #endif
