@@ -67,11 +67,9 @@ def main():
         if unknown:
             skipped.append({'script': script.name, 'unresolved_inputs': unknown})
         else:
-            plans.append((script.name, ['rtk', 'proxy', sys.executable, str(script), *positional, *optional]))
+            plans.append((script.name, [sys.executable, str(script), *positional, *optional]))
     report_path = build / 'original-recheck.json'
-    previous = json.loads(report_path.read_text()) if args.resume and report_path.exists() else
-{
-}
+    previous = json.loads(report_path.read_text()) if args.resume and report_path.exists() else {}
     eligible = {name for name, _ in plans}
     retained = [r for r in previous.get('results', []) if not r['exit_code'] and r['script'] in eligible]
     report = {'status': 'running', 'eligible_checks': len(plans), 'skipped': skipped, 'results': retained}
