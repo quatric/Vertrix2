@@ -65,7 +65,7 @@ def main():
         if unknown:
             skipped.append({'script': script.name, 'unresolved_inputs': unknown})
         else:
-            plans.append((script.name, [sys.executable, str(script), * positional, * optional]))
+            plans.append((script.name, [sys.executable, str(script), *positional, *optional]))
     report_path = build / 'original-recheck.json'
     previous = json.loads(report_path.read_text()) if args.resume and report_path.exists() else {}
     eligible = {name for name, _ in plans}
