@@ -72,6 +72,14 @@ int vertrix_boards_convert_counts(void *first, size_t first_size, void *second, 
                                   uint32_t count_first, uint32_t count_second,
                                   const VertrixFactoryServices *services);
 
+/* 0x436b40 as above, additionally reporting through last_second_old (when not NULL) the old block
+ * of the last conversion on the second board, which the original leaves in ebx. */
+int vertrix_boards_convert_counts_traced(void *first, size_t first_size, void *second,
+                                         size_t second_size, uint32_t count_first,
+                                         uint32_t count_second,
+                                         const VertrixFactoryServices *services,
+                                         uint32_t *last_second_old);
+
 /* Original0x436d80: count_first times on the first board and then count_second times on the
  * second, when a pending marker exists: draw one of the pending markers (a draw below their count),
  * mark it 2, move its block to the companion grid with handler 0x44e510, power 0x64 and a period of

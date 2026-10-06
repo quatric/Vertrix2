@@ -1,5 +1,7 @@
 #include "bonus_effects.h"
 #include "actor_storage.h"
+#include "board_conversions.h"
+#include "board_markers.h"
 
 enum
 {
@@ -20,7 +22,17 @@ enum
     GRID_SECOND_BYTES = 0x258,
     LOCAL_COLUMN = 0x18,
     SLOT_RELEASE = 1,
-    HANDLER_APPLY = 0x451f10
+    HANDLER_APPLY = 0x451f10,
+    PLAYER_KIND = 0x3dc,
+    PLAYER_FIRST_COUNT = 0x43c,
+    PLAYER_SECOND_COUNT = 0x440,
+    BOARD_SLOTS = 0x220,
+    BOARD_KINDS = 0x1de,
+    BOARD_MARKERS = 0xb94,
+    EFFECT_SOUND = 11,
+    LOCAL_SECOND_COUNT = 0x24,
+    HANDLER_PLAYER = 0x453280,
+    HANDLER_OPPONENT = 0x452050
 };
 
 static int resolve_object(const VertrixEffectServices *services, uint32_t handle, void **storage,
@@ -153,4 +165,143 @@ uint32_t vertrix_effect_forced_choice(const VertrixEffectServices *services, uin
         services->virtual_call(services->virtual_context, own_board, SLOT_RELEASE, 0);
     }
     return vertrix_call(services->calls, 0x43bbf0, player, vtable, left_ebx, player, 0);
+}
+
+/* 0x436a10 on one board: snapshot the kinds of its 65 slots into +0x1de, then mark the cells of
+ * the wanted kind at +0xb94 and report how many. */
+static int mark_kind(const VertrixEffectServices *services, void *board, size_t size,
+                     uint32_t wanted, uint32_t *count)
+{
+    uint32_t slots[VERTRIX_MARKER_CELLS];
+    uint8_t kinds[VERTRIX_MARKER_CELLS];
+    uint8_t markers[VERTRIX_MARKER_CELLS];
+    unsigned cell;
+    for (cell = 0; cell < VERTRIX_MARKER_CELLS; ++cell)
+    {
+        if (!vertrix_actor_storage_read(board, size, BOARD_SLOTS + 4u * cell, DWORD_WIDTH,
+                                        &slots[cell]))
+        {
+            return 0;
+        }
+    }
+    if (!vertrix_board_snapshot_kinds(slots, VERTRIX_MARKER_CELLS, services->resolve,
+                                      services->resolve_context, kinds))
+    {
+        return 0;
+    }
+    *count = vertrix_board_markers_kind(kinds, wanted, markers);
+    for (cell = 0; cell < VERTRIX_MARKER_CELLS; ++cell)
+    {
+        if (!vertrix_actor_storage_write(board, size, BOARD_KINDS + cell, BYTE_WIDTH,
+                                         kinds[cell]) ||
+            !vertrix_actor_storage_write(board, size, BOARD_MARKERS + cell, BYTE_WIDTH,
+                                         markers[cell]))
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+uint32_t vertrix_effect_convert_blocks(const VertrixEffectServices *services, uint32_t player,
+                                       uint32_t frame)
+{
+    void *player_storage;
+    void *opponent_storage;
+    void *own_storage;
+    void *opponent_board_storage;
+    size_t player_size;
+    size_t opponent_size;
+    size_t own_size;
+    size_t opponent_board_size;
+    uint32_t opponent;
+    uint32_t own_board;
+    uint32_t opponent_board;
+    uint32_t kind;
+    uint32_t vtable;
+    uint32_t first;
+    uint32_t second;
+    uint32_t last_old = 0;
+    uint32_t left_ebx;
+    uint32_t left_ecx;
+    uint32_t result;
+    uint32_t left_edx = frame - LOCAL_SECOND_COUNT;
+    if (!services || !services->calls || !services->factory ||
+        !resolve_object(services, player, &player_storage, &player_size) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_OPPONENT, DWORD_WIDTH,
+                                    &opponent) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_BOARD, DWORD_WIDTH,
+                                    &own_board) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_KIND, DWORD_WIDTH, &kind) ||
+        !resolve_object(services, opponent, &opponent_storage, &opponent_size) ||
+        !vertrix_actor_storage_read(opponent_storage, opponent_size, PLAYER_BOARD, DWORD_WIDTH,
+                                    &opponent_board) ||
+        !resolve_object(services, own_board, &own_storage, &own_size) ||
+        !resolve_object(services, opponent_board, &opponent_board_storage, &opponent_board_size) ||
+        !mark_kind(services, own_storage, own_size, kind, &first) ||
+        !mark_kind(services, opponent_board_storage, opponent_board_size, kind, &second))
+    {
+        return 0;
+    }
+    if (first == second)
+    {
+        vertrix_call(services->calls, 0x43acd0, player, left_edx, 1, player, 0);
+    }
+    else
+    {
+        vertrix_call(services->calls, first > second ? 0x43ac00 : 0x43acd0, player, left_edx,
+                     second, player, 0);
+        vertrix_call(services->calls, 0x43c0e0, opponent, EFFECT_SOUND, second, player, 0);
+        if (!vertrix_actor_storage_write(player_storage, player_size, PLAYER_FIRST_COUNT,
+                                         DWORD_WIDTH, first) ||
+            !vertrix_actor_storage_write(player_storage, player_size, PLAYER_SECOND_COUNT,
+                                         DWORD_WIDTH, second) ||
+            !vertrix_boards_convert_counts_traced(own_storage, own_size, opponent_board_storage,
+                                                  opponent_board_size, first, second,
+                                                  services->factory, &last_old))
+        {
+            return 0;
+        }
+        /* 0x436b40 leaves ebx and ecx as its loops did: the last old block of the second board
+         * and its count, else the first count twice, else the kind and zero. */
+        if (second > 0)
+        {
+            left_ebx = last_old;
+            left_ecx = second;
+        }
+        else if (first > 0)
+        {
+            left_ebx = first;
+            left_ecx = first;
+        }
+        else
+        {
+            left_ebx = kind;
+            left_ecx = 0;
+        }
+        vertrix_call(services->calls, 0x4ac8f0, player, HANDLER_PLAYER, left_ebx, left_ecx, 0);
+        vertrix_call(services->calls, 0x43bb60, opponent, HANDLER_PLAYER, left_ebx, left_ecx, 0);
+        if (!vertrix_actor_storage_write(opponent_board_storage, opponent_board_size,
+                                         BOARD_FLAG_FIRST, DWORD_WIDTH, 1) ||
+            !vertrix_actor_storage_write(opponent_board_storage, opponent_board_size,
+                                         BOARD_FLAG_SECOND, DWORD_WIDTH, 1) ||
+            !vertrix_actor_storage_write(opponent_board_storage, opponent_board_size,
+                                         BOARD_FLAG_THIRD, DWORD_WIDTH, 1))
+        {
+            return 0;
+        }
+        vertrix_call(services->calls, 0x4ac8f0, opponent, HANDLER_OPPONENT, left_ebx, left_ecx, 0);
+    }
+    if (!vertrix_actor_storage_read(own_storage, own_size, BOARD_VTABLE, DWORD_WIDTH, &vtable))
+    {
+        return 0;
+    }
+    result = services->virtual_call ? (uint32_t)services->virtual_call(services->virtual_context,
+                                                                       own_board, SLOT_RELEASE, 0)
+                                    : 0;
+    if (first == second)
+    {
+        return vertrix_call(services->calls, 0x43bbf0, player, vtable, 1, player, 0);
+    }
+    return result;
 }

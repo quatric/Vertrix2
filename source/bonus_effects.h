@@ -1,5 +1,6 @@
 #ifndef VERTRIX_BONUS_EFFECTS_H
 #define VERTRIX_BONUS_EFFECTS_H
+#include "block_factory.h"
 #include "board_cells.h"
 #include "call_glue.h"
 #include "choice_grid.h"
@@ -19,6 +20,7 @@ typedef struct
     void *virtual_context;
     VertrixChoiceDraw draw;
     void *draw_context;
+    const VertrixFactoryServices *factory;
 } VertrixEffectServices;
 
 /* Original 0x453ad0 (eax = player, the effect behind dispatcher id 3): reads the opponent
@@ -32,4 +34,18 @@ typedef struct
  * 0x43bbf0, zero when an object does not resolve (nothing is done after that point). */
 uint32_t vertrix_effect_forced_choice(const VertrixEffectServices *services, uint32_t player,
                                       uint32_t frame);
+
+/* Original 0x453150 (eax = player, the effect behind dispatcher ids 4 and 5; the player's +0x3dc
+ * is the wanted block kind, 5 or 6): marks the blocks of that kind on the player's board and on
+ * the opponent's (0x436a10, which also snapshots the kinds) and counts them as a and b. Equal
+ * counts only call 0x43acd0 on the player. Otherwise 0x43ac00 (a > b, unsigned) or 0x43acd0 runs
+ * on the player, the sound 11 plays for the opponent (0x43c0e0), a and b are stored at the
+ * player's +0x43c and +0x440, a markers of the player's board and b of the opponent's are
+ * converted (0x436b40, vertrix_boards_convert_counts_traced), 0x4ac8f0 takes the handler token
+ * 0x453280 for the player, 0x43bb60 runs on the opponent, the opponent board's +0xb80, +0xb84
+ * and +0xb88 become one and 0x4ac8f0 takes 0x452050 for the opponent. Slot 1 of the player's
+ * board is then called. With equal counts the result is 0x43bbf0 on the player, otherwise the
+ * result of that slot. Zero when an object does not resolve. frame is the entry ebp token. */
+uint32_t vertrix_effect_convert_blocks(const VertrixEffectServices *services, uint32_t player,
+                                       uint32_t frame);
 #endif
