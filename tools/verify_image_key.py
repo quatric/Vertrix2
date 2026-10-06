@@ -19,9 +19,7 @@ def main():
     args.build_dir.mkdir(parents=True, exist_ok=True)
     root = Path(__file__).resolve().parents[1]
     library = args.build_dir.resolve() / 'key.dylib'
-    subprocess.run(['cc', '-shared', '-fPIC', '-Wall', '-Wextra', '-Werror',
-                    *[str(root / 'source' / name) for name in ('image_key.c', 'image.c', 'vf.c')],
-                    '-o', str(library)], check=True)
+    subprocess.run(['cc', '-shared', '-fPIC', '-Wall', '-Wextra', '-Werror', * [str(root / 'source' / name) for name in ('image_key.c', 'image.c', 'vf.c')], '-o', str(library)], check=True)
     native = c.CDLL(str(library))
     native.vertrix_image_color_key.argtypes = [c.POINTER(NativeImage), c.c_uint32]
     native.vertrix_vf_open.argtypes = [c.c_char_p]
@@ -36,38 +34,33 @@ def main():
     original = Original(args.executable)
     original.cpu.mem_map(0x900000, 0x1000000)
     rng = random.Random(0x4799f0)
-
     def expected(raw, width, height, key):
         original.cpu.mem_write(0x804000, struct.pack('<3I', 0x900000, width, height))
         original.cpu.mem_write(0x900000, raw)
         original.call(0x4799f0, eax=0x804000, edx=key)
         return bytes(original.cpu.mem_read(0x900000, len(raw)))
-
     for case in range(1024):
         width, height = rng.randrange(1, 17), rng.randrange(1, 17)
         key = rng.getrandbits(32)
-        words = [rng.choice([key, key ^ 0xff000000, rng.getrandbits(32)])
-                 for _ in range(width * height)]
-        raw = struct.pack('<' + 'I' * len(words), *words)
+        words = [rng.choice([key, key ^ 0xff000000, rng.getrandbits(32)]) for _ in range(width * height)]
+        raw = struct.pack('<' + 'I' * len(words), * words)
         storage = c.create_string_buffer(raw)
         image = NativeImage(width, height, c.addressof(storage))
         assert native.vertrix_image_color_key(c.byref(image), key)
-        assert storage.raw[:len(raw)] == expected(raw, width, height, key)
+        assert storage.raw[: len(raw)] == expected(raw, width, height, key)
     archive = native.vertrix_vf_open(str(args.archive.resolve()).encode())
     assert archive
     owned = []
     pixels = 0
-        try:
-        for
-            index in range(native.vertrix_vf_count(archive))
-                : name = native.vertrix_vf_name(archive, index) if '/font' not in name.decode()
-                             .lower()
-                             .replace('\\', '/') or
-                         not name.lower().endswith(b '.bmp')
-                : continue before,
-                  output = NativeImage(),
-                  NativeImage() assert native.vertrix_image_bmp(archive, name, c.byref(before))
-            try : raw = c.string_at(before.rgba, before.width * before.height * 4)
+    try:
+        for index in range(native.vertrix_vf_count(archive)):
+            name = native.vertrix_vf_name(archive, index)
+            if '/font' not in name.decode().lower().replace('\\', '/') or not name.lower().endswith(b'.bmp'):
+                continue
+                before, output = NativeImage(), NativeImage()
+                assert native.vertrix_image_bmp(archive, name, c.byref(before))
+            try:
+                raw = c.string_at(before.rgba, before.width * before.height * 4)
                 reference = expected(raw, before.width, before.height, struct.unpack_from('<I', raw)[0])
                 assert native.vertrix_image_bmp_keyed(archive, name, c.byref(output))
                 assert c.string_at(output.rgba, len(raw)) == reference, name
@@ -84,15 +77,8 @@ def main():
         assert c.string_at(output.rgba, len(reference)) == reference
         native.vertrix_image_free(c.byref(output))
     assert len(owned) == 29, len(owned)
-    report = {'status': 'passed', 'kernel_cases': 1024, 'vf_font_sheets': len(owned),
-              'vf_pixels': pixels, 'scope': 'Actual4799f0 without hooks; full32-bit key '
-                       'comparison including alpha. Direct VF BMP/top-left-key composition '
-                       'matches original kernel across all29 font sheets; owned pixels remain '
-                       'valid after archive close. Mask-present selection, configuration parsing, '
-                       'glyph resource construction and text rendering remain separate.'}
+    report = {'status': 'passed', 'kernel_cases': 1024, 'vf_font_sheets': len(owned), 'vf_pixels': pixels, 'scope': 'Actual4799f0 without hooks; full32-bit key ' 'comparison including alpha. Direct VF BMP/top-left-key composition ' 'matches original kernel across all29 font sheets; owned pixels remain ' 'valid after archive close. Mask-present selection, configuration parsing, ' 'glyph resource construction and text rendering remain separate.'}
     (args.build_dir / 'image-key-verification.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))
-
-
 if __name__ == '__main__':
     main()

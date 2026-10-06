@@ -58,13 +58,17 @@ def main():
         n.vertrix_release_table_b((U * 115)(*b), release, None)
         assert [e[1] for e in stubs.log] == native, case
         totals['table_b'] += 1
-    report = {'status':
-        'passed', 'complete_original_executions' : totals,
-                                                   'scope'
-            : 'Complete 43f3f0 and 442110 execute in the original with the release ' 'routines 4830f0 and 4ea190 stubbed; the ordered release events, the ' 'state dword and the unchanged tables compare.'
-        }
-        (args.build_dir / 'release-tables-verification.json')
-                .write_text(json.dumps(report, indent = 2) + '\n')
-                    print(json.dumps(report, indent = 2))
+    report = {
+        'status': 'passed',
+        'complete_original_executions': totals,
+        'scope': 'Complete 43f3f0 and 442110 execute in the original with the release '
+                 'routines 4830f0 and 4ea190 stubbed; the ordered release events, the '
+                 'state dword and the unchanged tables compare.'
+    }
+    (args.build_dir / 'release-tables-verification.json').write_text(
+        json.dumps(report, indent=2) + '\n')
+    print(json.dumps(report, indent=2))
 
-                        if __name__ == '__main__' : main()
+
+if __name__ == '__main__':
+    main()

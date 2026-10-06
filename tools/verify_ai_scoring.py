@@ -5,10 +5,8 @@ import json
 import random
 import struct
 from pathlib import Path
-
 from original import Original
 from oracle_kit import Pool, build
-
 U = c.c_uint32
 BASE = 0x80c000
 
@@ -21,8 +19,7 @@ def column(rng):
 
 def board(rng):
     density = rng.random()
-    return b''.join(column(rng) if rng.random() < density + 0.2 else bytes([0xff] * 13)
-                    for _ in range(5))
+    return b''.join(column(rng) if rng.random() < density + 0.2 else bytes([0xff] * 13) for _ in range(5))
 
 
 def main():
@@ -40,10 +37,8 @@ def main():
     rng = random.Random(0x428110)
     pool = Pool(cpu, 2, 0x1000)
     totals = {}
-
     def count(name):
         totals[name] = totals.get(name, 0) + 1
-
     for case in range(args.cases):
         a, b = board(rng), board(rng)
         level = rng.choice([0, 0, 1, 2, 255])
@@ -62,38 +57,25 @@ def main():
         assert bytes(out) == bytes(cpu.mem_read(BASE + 0x200, 0x13)), case
         count('compare_boards')
 # 428610 : record score
-        table = bytes(rng.choice([0, 4, 4, 1, 2, 3, 5, 100, 200, 255, rng.randrange(256)])
-                      for _ in range(256))
+        table = bytes(rng.choice([0, 4, 4, 1, 2, 3, 5, 100, 200, 255, rng.randrange(256)]) for _ in range(256))
         records = rng.randrange(0, 9)
         header = bytes([rng.choice([0, 1, 2, 2, 3, 255]), records, 0, 0, 0])
         body = bytearray()
         for _ in range(records):
-        kind = rng.choice([ 0, 1, 2, 3, 4, 5, 2, 3, 6, 255 ])
-                   slot = rng.randrange(6) if kind in(2, 3, 4, 5) else rng.randrange(256) body +=
-            bytes([ slot, rng.randrange(256), kind, rng.randrange(8),
-                    rng.randrange(8) ]) record_data =
-                header + bytes(body)
-                             max_limit = rng.randrange(10) cpu.mem_write(BASE + 0x400, table)
-                                             cpu.mem_write(BASE + 0x600, record_data) result =
-                    original.call(0x428610, edx = BASE + 0x400, ebx = max_limit, ecx = BASE + 0x600)
-                        score = c.c_int32(0x7777) assert
-                                    n.vertrix_ai_record_score(record_data,
-                                                              (B * 256).from_buffer_copy(table),
-                                                              max_limit,
-                                                              c.byref(score)) assert score.value
-                                == struct.unpack('<i', struct.pack('<I', result & 0xffffffff))[0],
-        (case, score.value, result)count('record_score') report = {
-            'status' : 'passed',
-            'complete_original_executions' : totals,
-            'scope' :
-                'Complete 428110 and 428610 execute in the original (4eb5c0 fill runs for ' 'real); every output byte and the signed score compare over random boards, ' 'levels, record lists, tables and limits.'
-        }(args.build_dir / 'ai-scoring-verification.json')
-                                                                      .write_text(
-                                                                          json.dumps(report,
-                                                                                     indent = 2) +
-                                                                          '\n')
-                                                                          print(json.dumps(
-                                                                              report, indent = 2))
-
-                                                                              if __name__
-                                                                  == '__main__' : main()
+            kind = rng.choice([0, 1, 2, 3, 4, 5, 2, 3, 6, 255])
+            slot = rng.randrange(6) if kind in (2, 3, 4, 5) else rng.randrange(256)
+            body += bytes([slot, rng.randrange(256), kind, rng.randrange(8), rng.randrange(8)])
+            record_data = header + bytes(body)
+            max_limit = rng.randrange(10)
+            cpu.mem_write(BASE + 0x400, table)
+            cpu.mem_write(BASE + 0x600, record_data)
+            result = original.call(0x428610, edx=BASE + 0x400, ebx=max_limit, ecx=BASE + 0x600)
+            score = c.c_int32(0x7777)
+            assert n.vertrix_ai_record_score(record_data, (B * 256).from_buffer_copy(table), max_limit, c.byref(score))
+            assert score.value == struct.unpack('<i', struct.pack('<I', result & 0xffffffff))[0], (case, score.value, result)
+            count('record_score')
+    report = {'status': 'passed', 'complete_original_executions': totals, 'scope': 'Complete 428110 and 428610 execute in the original (4eb5c0 fill runs for ' 'real); every output byte and the signed score compare over random boards, ' 'levels, record lists, tables and limits.'}
+    (args.build_dir / 'ai-scoring-verification.json').write_text(json.dumps(report, indent=2) + '\n')
+    print(json.dumps(report, indent=2))
+if __name__ == '__main__':
+    main()

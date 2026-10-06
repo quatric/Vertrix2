@@ -12,31 +12,41 @@ class State(ctypes.Structure):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('executable',type=Path);
-parser.add_argument('--build-dir', type = Path, required = True) args = parser.parse_args();
-build = args.build_dir.resolve();
-build.mkdir(parents = True, exist_ok = True) source = Path(__file__).resolve().parents[1] /
-                                                      'source';
-library = build / 'retrigger.dylib' subprocess.run(
-                      [
-                          'cc', '-std=c11', '-Wall', '-Wextra', '-Werror', '-shared', '-fPIC',
-                          str(source / 'mixer.c'), '-o', str(library)
-                      ],
-                      check = True) native = ctypes.CDLL(str(library));
-function = native.vertrix_mixer_retrigger function.argtypes = [
-    ctypes.c_uint8, ctypes.c_int32, ctypes.POINTER(Instrument), ctypes.c_int,
-    ctypes.POINTER(Selection), ctypes.POINTER(State)
-] original = Original(args.executable);
-rng = random.Random(0x40da20); cases = 40000
+    parser.add_argument('--build-dir', type=Path, required=True)
+    args = parser.parse_args()
+    build = args.build_dir.resolve()
+    build.mkdir(parents=True, exist_ok=True)
+    source = Path(__file__).resolve().parents[1] / 'source'
+    library = build / 'retrigger.dylib'
+    subprocess.run(
+        [
+            'cc', '-std=c11', '-Wall', '-Wextra', '-Werror', '-shared', '-fPIC',
+            str(source / 'mixer.c'), '-o', str(library)
+        ],
+        check=True)
+    native = ctypes.CDLL(str(library))
+    function = native.vertrix_mixer_retrigger
+    function.argtypes = [
+        ctypes.c_uint8, ctypes.c_int32, ctypes.POINTER(Instrument), ctypes.c_int,
+        ctypes.POINTER(Selection), ctypes.POINTER(State)
+    ]
+    original = Original(args.executable)
+    rng = random.Random(0x40da20)
+    cases = 40000
     assert bytes(original.cpu.mem_read(0x4f7324,16)) == bytes((0,255,254,252,248,240,0,0,0,1,2,4,8,16,0,0))
     assert bytes(original.cpu.mem_read(0x4f7334,16)) == bytes((16,16,16,16,16,16,11,8,16,16,16,16,16,16,24,32))
     for index in range(cases):
-        data = bytearray(rng.randbytes(192));
-descriptor = bytearray(rng.randbytes(252)); samples = rng.randbytes(16 * 60)
+        data = bytearray(rng.randbytes(192))
+        descriptor = bytearray(rng.randbytes(252))
+        samples = rng.randbytes(16 * 60)
         mapping = (ctypes.c_uint8 * 96)(*[rng.randrange(21) for _ in range(96)])
         pitches = (Pitch * 16)(*[Pitch(*struct.unpack_from('<bb',samples,i * 60 + 34)) for i in range(16)])
-        descriptor[32:128] = bytes(mapping);
-struct.pack_into('<H', descriptor, 128, 16);
-struct.pack_into('<I', descriptor, 248, BLOCKS) present = index % 2; linear = (index // 256) % 2; parameter = index % 256
+        descriptor[32:128] = bytes(mapping)
+        struct.pack_into('<H', descriptor, 128, 16)
+        struct.pack_into('<I', descriptor, 248, BLOCKS)
+        present = index % 2
+        linear = (index // 256) % 2
+        parameter = index % 256
         data[3] = 27; data[4] = parameter; data[7] = rng.randrange(256)
         data[110] = (index // 3) % 16; data[111] = rng.randrange(256)
         data[112] = (0,255,data[111],rng.randrange(256))[index % 4]

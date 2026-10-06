@@ -18,7 +18,7 @@ def main():
     args.build_dir.mkdir(parents=True, exist_ok=True)
     root = Path(__file__).resolve().parents[1]
     library = args.build_dir.resolve() / "alpha.dylib"
-    subprocess.run(["rtk", "proxy", "cc", "-shared", "-fPIC", "-O2", "-Wall", "-Wextra", "-Werror",
+    subprocess.run(["cc", "-shared", "-fPIC", "-O2", "-Wall", "-Wextra", "-Werror",
                     str(root / "source/image.c"), str(root / "source/vf.c"), "-o", str(library)], check=True)
     native = ctypes.CDLL(str(library))
     native.vertrix_image_binary_alpha.argtypes = [ctypes.POINTER(NativeImage)]

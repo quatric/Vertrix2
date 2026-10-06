@@ -5,17 +5,14 @@ import json
 import random
 import struct
 from pathlib import Path
-
 from original import Original
 from oracle_kit import Pool, build
-
 U = c.c_uint32
 BASE = 0x80c000
 
 
 class Grid(c.Structure):
-    _fields_ = [('cells', U * 28), ('values', U * 28), ('first', c.c_uint8 * 28),
-                ('second', c.c_uint8 * 28)]
+    _fields_ = [('cells', U * 28), ('values', U * 28), ('first', c.c_uint8 * 28), ('second', c.c_uint8 * 28)]
 
 
 def main():
@@ -35,14 +32,10 @@ def main():
     rng = random.Random(0x4261b0)
     pool = Pool(cpu, 6, 0x1000)
     totals = {}
-
     def count(name):
         totals[name] = totals.get(name, 0) + 1
-
     def small():
-        return rng.choice([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 0x7fffffff, 0xffffffff,
-                           0x80000000, rng.getrandbits(32)])
-
+        return rng.choice([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 0x7fffffff, 0xffffffff, 0x80000000, rng.getrandbits(32)])
     for case in range(args.cases):
 # 4261b0 : row reach
         cells = bytes(rng.choice([0xff, 0xff, 0, 1, 2, 3, 5, 6]) for _ in range(65))
@@ -71,8 +64,7 @@ def main():
         count('features')
 # 427e10 : mode flags
         def patch(handle, data):
-            struct.pack_into('<I', data, 0x4c8, rng.choice(
-                [rng.randrange(0x20, 0x38), rng.randrange(0x20, 0x38), rng.getrandbits(32)]))
+            struct.pack_into('<I', data, 0x4c8, rng.choice([rng.randrange(0x20, 0x38), rng.randrange(0x20, 0x38), rng.getrandbits(32)]))
             struct.pack_into('<I', data, 0x3b0, rng.choice(pool.handles))
         pool.fill(rng, patch)
         player = pool.handles[0]
@@ -82,7 +74,7 @@ def main():
         data = bytes(rng.randrange(256) for _ in range(0x30))
         cpu.mem_write(BASE + 0x300, data)
         original.call(0x427e10, edx=player, ebx=BASE + 0x300)
-        flags = (B * 0x2f).from_buffer_copy(data[:0x2f])
+        flags = (B * 0x2f).from_buffer_copy(data[: 0x2f])
         n.vertrix_ai_mode_flags(own, opponent_mode, flags)
         assert bytes(flags) == bytes(cpu.mem_read(BASE + 0x300, 0x2f)), case
         assert data[0x2f] == cpu.mem_read(BASE + 0x32f, 1)[0], case
@@ -100,20 +92,14 @@ def main():
         cpu.mem_write(BASE + 0x400, bytes(grid.values))
         cpu.mem_write(BASE + 0x500, bytes(grid.first))
         cpu.mem_write(BASE + 0x600, bytes([0xaa] * 8))
-        result = original.call(0x428e70, edx=BASE + 0x500, ebx=BASE + 0x600, ecx=BASE + 0x400,
-                               args=(mode,))
-        scores = (B * 8)(*[0xaa] * 8)
+        result = original.call(0x428e70, edx=BASE + 0x500, ebx=BASE + 0x600, ecx=BASE + 0x400, args=(mode,))
+        scores = (B * 8)(* [0xaa] * 8)
         found = n.vertrix_ai_choice_scores(c.byref(grid), mode, c.cast(scores, c.POINTER(B * 7)).contents)
         assert found == result & 0xffffffff, case
         assert bytes(scores) == bytes(cpu.mem_read(BASE + 0x600, 8)), (case, mode)
         count('choice_scores')
-    report = {'status':
-            'passed', 'complete_original_executions' : totals,
-                                                       'scope'
-                : 'Complete 4261b0, 427c10, 427e10 and 428e70 execute in the original (the ' 'fill routine 4eb5c0 runs for real); outputs, results and untouched bytes ' 'compare, including both players of 427e10 and every pool object.'
-            }
-            (args.build_dir / 'ai-features-verification.json')
-                    .write_text(json.dumps(report, indent = 2) + '\n')
-                        print(json.dumps(report, indent = 2))
-
-                            if __name__ == '__main__' : main()
+    report = {'status': 'passed', 'complete_original_executions': totals, 'scope': 'Complete 4261b0, 427c10, 427e10 and 428e70 execute in the original (the ' 'fill routine 4eb5c0 runs for real); outputs, results and untouched bytes ' 'compare, including both players of 427e10 and every pool object.'}
+    (args.build_dir / 'ai-features-verification.json').write_text(json.dumps(report, indent=2) + '\n')
+    print(json.dumps(report, indent=2))
+if __name__ == '__main__':
+    main()

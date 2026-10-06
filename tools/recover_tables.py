@@ -57,7 +57,7 @@ def main():
     text.extend(["#endif", ""])
     header = root / "source/recovered.h"
     header.write_text("\n".join(text))
-    subprocess.run(["rtk", "proxy", "clang-format", "-i", str(header)], check=True)
+    subprocess.run(["clang-format", "-i", str(header)], check=True)
     (root / "docs/character-powers.json").write_text(json.dumps(powers, indent=2) + "\n")
     (root / "docs/character-delays.json").write_text(json.dumps({
         "speeds": speeds,

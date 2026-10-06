@@ -12,27 +12,34 @@ class State(ctypes.Structure):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('executable', type=Path);
-parser.add_argument('--build-dir', type = Path, required = True) args = parser.parse_args();
-build = args.build_dir.resolve();
-build.mkdir(parents = True, exist_ok = True) source = Path(__file__).resolve().parents[1] /
-                                                      'source';
-library = build / 'sample-selection.dylib' subprocess.run(
-                      [
-                          'cc', '-std=c11', '-Wall', '-Wextra', '-Werror', '-shared', '-fPIC',
-                          str(source / 'mixer.c'), '-o', str(library)
-                      ],
-                      check = True) native = ctypes.CDLL(str(library));
-function = native.vertrix_mixer_select_sample function.argtypes = [
-    ctypes.c_int, ctypes.POINTER(ctypes.c_uint8), ctypes.POINTER(Pitch), ctypes.c_uint16,
-    ctypes.c_int, ctypes.POINTER(State)
-] original = Original(args.executable);
-rng = random.Random(0x40e580); cases = 40000
+    parser.add_argument('executable', type=Path)
+    parser.add_argument('--build-dir', type=Path, required=True)
+    args = parser.parse_args()
+    build = args.build_dir.resolve()
+    build.mkdir(parents=True, exist_ok=True)
+    source = Path(__file__).resolve().parents[1] / 'source'
+    library = build / 'sample-selection.dylib'
+    subprocess.run(
+        [
+            'cc', '-std=c11', '-Wall', '-Wextra', '-Werror', '-shared', '-fPIC',
+            str(source / 'mixer.c'), '-o', str(library)
+        ],
+        check=True)
+    native = ctypes.CDLL(str(library))
+    function = native.vertrix_mixer_select_sample
+    function.argtypes = [
+        ctypes.c_int, ctypes.POINTER(ctypes.c_uint8), ctypes.POINTER(Pitch), ctypes.c_uint16,
+        ctypes.c_int, ctypes.POINTER(State)
+    ]
+    original = Original(args.executable)
+    rng = random.Random(0x40e580); cases = 40000
     for index in range(cases):
         data = bytearray(rng.randbytes(192));
-instrument = bytearray(rng.randbytes(252)) data[7] = index % 256;
-data[3] = (3, 5, rng.randrange(256))[index % 3] data[2] =
-    0xf0 | rng.randrange(16) if index % 5 == 0 else rng.randrange(256) count = index % 257; present = (index // 256) % 2; linear = index % 2
+        instrument = bytearray(rng.randbytes(252))
+        data[7] = index % 256
+        data[3] = (3, 5, rng.randrange(256))[index % 3]
+        data[2] = 0xf0 | rng.randrange(16) if index % 5 == 0 else rng.randrange(256)
+        count = index % 257; present = (index // 256) % 2; linear = index % 2
         mapping = rng.randbytes(96); instrument[32:128] = mapping
         struct.pack_into('<H', instrument, 128, count); struct.pack_into('<I', instrument, 248, BLOCKS)
         struct.pack_into('<I', data, 52, MASK if present else 0)

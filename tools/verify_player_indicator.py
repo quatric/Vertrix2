@@ -13,8 +13,7 @@ from verify_number_transition import Timer
 
 
 class Indicator(c.Structure):
-    _fields_ = [('value', c.c_uint32), ('state', c.c_uint32), ('handler', c.c_uint32),
-               ('primary', Timer), ('secondary', Timer)]
+    _fields_ = [('value', c.c_uint32), ('state', c.c_uint32), ('handler', c.c_uint32), ('primary', Timer), ('secondary', Timer)]
 
 
 def main():
@@ -25,12 +24,9 @@ def main():
     a.build_dir.mkdir(parents=True, exist_ok=True)
     source = Path(__file__).resolve().parents[1] / 'source'
     library = a.build_dir.resolve() / 'player-indicator.dylib'
-    subprocess.run(['cc', '-shared', '-fPIC', '-Wall', '-Wextra', '-Werror',
-                    str(source / 'player_indicator.c'), str(source / 'timer.c'),
-                    '-o', str(library)], check=True)
+    subprocess.run(['cc', '-shared', '-fPIC', '-Wall', '-Wextra', '-Werror', str(source / 'player_indicator.c'), str(source / 'timer.c'), '-o', str(library)], check=True)
     native = c.CDLL(str(library))
-    native.vertrix_player_indicator_update.argtypes = [c.POINTER(Indicator), c.c_uint32,
-                                                       c.c_uint32, c.POINTER(c.c_int)]
+    native.vertrix_player_indicator_update.argtypes = [c.POINTER(Indicator), c.c_uint32, c.c_uint32, c.POINTER(c.c_int)]
     original = Original(a.executable)
     cpu = original.cpu
     requests = []
@@ -46,9 +42,7 @@ def main():
         handler = [0x44fe80, 0x44fed0, 0x44ff30, 0x44ff60][case % 4]
         player_state = rng.choice([0, 1, 2, 3, 4, 0xffffffff])
         elapsed = rng.choice([0, 1, 100, rng.getrandbits(32)])
-        state = Indicator(rng.getrandbits(32), rng.getrandbits(32), handler,
-                          Timer(rng.getrandbits(32), rng.choice([0, 1, 100, 0xffffffff])),
-                          Timer(rng.getrandbits(32), rng.choice([0, 1, 100, 0xffffffff])))
+        state = Indicator(rng.getrandbits(32), rng.getrandbits(32), handler, Timer(rng.getrandbits(32), rng.choice([0, 1, 100, 0xffffffff])), Timer(rng.getrandbits(32), rng.choice([0, 1, 100, 0xffffffff])))
         raw = bytearray(rng.randbytes(0x160))
         offsets = [('value', 0x58), ('state', 0x64), ('handler', 0x154)]
         for name, offset in offsets:
@@ -65,9 +59,8 @@ def main():
         cpu.mem_write(0x4f81a0, struct.pack('<I', command))
         requests.clear()
         original.call(handler, eax=BOARD)
-        notify = c.c_int(-1)
-        assert native.vertrix_player_indicator_update(c.byref(state), player_state, elapsed,
-                                                     c.byref(notify))
+        notify = c.c_int(- 1)
+        assert native.vertrix_player_indicator_update(c.byref(state), player_state, elapsed, c.byref(notify))
         assert requests == ([(0x804000, command)] if notify.value else []), case
         audio_count += notify.value
         for name, offset in offsets:
@@ -75,13 +68,8 @@ def main():
         for timer, offset in [(state.primary, 0xbc), (state.secondary, 0xdc)]:
             struct.pack_into('<2I', raw, offset, timer.counter, timer.period)
         assert bytes(raw) == bytes(cpu.mem_read(BOARD, len(raw))), case
-    report = {'status':
-            'passed', 'cases' : 8192, 'audio_requests' : audio_count,
-                                                         'scope'
-                : 'All four original indicator handlers with actual player-state predicate ' 'and timer helpers. Whole object and audio request match; only43c0e0 ' 'audio routing is intercepted. Full player/application scheduling remains unfinished.'
-            }
-            (a.build_dir / 'player-indicator-verification.json')
-                    .write_text(json.dumps(report, indent = 2) + '\n')
-                        print(json.dumps(report, indent = 2))
-
-                            if __name__ == '__main__' : main()
+    report = {'status': 'passed', 'cases': 8192, 'audio_requests': audio_count, 'scope': 'All four original indicator handlers with actual player-state predicate ' 'and timer helpers. Whole object and audio request match; only43c0e0 ' 'audio routing is intercepted. Full player/application scheduling remains unfinished.'}
+    (a.build_dir / 'player-indicator-verification.json').write_text(json.dumps(report, indent=2) + '\n')
+    print(json.dumps(report, indent=2))
+if __name__ == '__main__':
+    main()
