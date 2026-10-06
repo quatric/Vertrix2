@@ -15,7 +15,7 @@ separately.
 |---|---|
 | verifier scripts run | 438 (427 pass, 4 REVIEW, 1 SKIP, 6 PARTIAL) |
 | entry points verified end to end (hand-recovered code) | 1390 |
-| entry points verified end to end (machine translation, reference only) | 534 more |
+| entry points verified end to end (machine translation, reference only) | about 675 more (706 translated routines kept, see docs/lifted-verification.json) |
 | direct `call` targets in 0x401000..0x4d0000 | 1827 |
 | of those, with a verified hand recovery | 902 |
 | of those, only a verified machine translation (`reference/lifted/`, to be recovered by hand) | 444 |
