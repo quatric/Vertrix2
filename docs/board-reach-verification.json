@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "mode_4": 1107,
+    "mode_2": 599,
+    "mode_1": 543,
+    "mode_0": 565,
+    "mode_5": 588,
+    "mode_3": 598
+  },
+  "scope": "Complete 433550 executes in the original over random boards, kinds and mode bytes; the result, the board (kind snapshot included) and every object compare."
+}

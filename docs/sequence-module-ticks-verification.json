@@ -1,0 +1,212 @@
+{
+  "status": "passed",
+  "modules": 29,
+  "executed_ticks": 59392,
+  "emitted_commands": 67799,
+  "songs": [
+    {
+      "name": "Abraham.xm",
+      "ticks": 2048,
+      "orders_visited": 10,
+      "commands": 1285,
+      "stopped": false
+    },
+    {
+      "name": "Albert.xm",
+      "ticks": 2048,
+      "orders_visited": 6,
+      "commands": 1771,
+      "stopped": false
+    },
+    {
+      "name": "Bill.xm",
+      "ticks": 2048,
+      "orders_visited": 6,
+      "commands": 1747,
+      "stopped": false
+    },
+    {
+      "name": "Choose.xm",
+      "ticks": 2048,
+      "orders_visited": 7,
+      "commands": 3722,
+      "stopped": false
+    },
+    {
+      "name": "Clara.xm",
+      "ticks": 2048,
+      "orders_visited": 6,
+      "commands": 1215,
+      "stopped": false
+    },
+    {
+      "name": "Credit.xm",
+      "ticks": 2048,
+      "orders_visited": 3,
+      "commands": 2853,
+      "stopped": false
+    },
+    {
+      "name": "Doc.xm",
+      "ticks": 2048,
+      "orders_visited": 6,
+      "commands": 1477,
+      "stopped": false
+    },
+    {
+      "name": "Draw.xm",
+      "ticks": 2048,
+      "orders_visited": 7,
+      "commands": 3505,
+      "stopped": false
+    },
+    {
+      "name": "Enigma.xm",
+      "ticks": 2048,
+      "orders_visited": 6,
+      "commands": 2703,
+      "stopped": false
+    },
+    {
+      "name": "Glouk.xm",
+      "ticks": 2048,
+      "orders_visited": 6,
+      "commands": 1516,
+      "stopped": false
+    },
+    {
+      "name": "Intro.xm",
+      "ticks": 2048,
+      "orders_visited": 6,
+      "commands": 5762,
+      "stopped": false
+    },
+    {
+      "name": "Lee.xm",
+      "ticks": 2048,
+      "orders_visited": 6,
+      "commands": 3300,
+      "stopped": false
+    },
+    {
+      "name": "Loser.xm",
+      "ticks": 2048,
+      "orders_visited": 4,
+      "commands": 2294,
+      "stopped": false
+    },
+    {
+      "name": "Max.xm",
+      "ticks": 2048,
+      "orders_visited": 6,
+      "commands": 1062,
+      "stopped": false
+    },
+    {
+      "name": "Mike.xm",
+      "ticks": 2048,
+      "orders_visited": 6,
+      "commands": 3118,
+      "stopped": false
+    },
+    {
+      "name": "Musnull.xm",
+      "ticks": 2048,
+      "orders_visited": 1,
+      "commands": 12,
+      "stopped": false
+    },
+    {
+      "name": "Pamela.xm",
+      "ticks": 2048,
+      "orders_visited": 6,
+      "commands": 2952,
+      "stopped": false
+    },
+    {
+      "name": "Present.xm",
+      "ticks": 2048,
+      "orders_visited": 6,
+      "commands": 3615,
+      "stopped": false
+    },
+    {
+      "name": "Regis.xm",
+      "ticks": 2048,
+      "orders_visited": 7,
+      "commands": 5213,
+      "stopped": false
+    },
+    {
+      "name": "Rose.xm",
+      "ticks": 2048,
+      "orders_visited": 6,
+      "commands": 1510,
+      "stopped": false
+    },
+    {
+      "name": "Sandra.xm",
+      "ticks": 2048,
+      "orders_visited": 4,
+      "commands": 2241,
+      "stopped": false
+    },
+    {
+      "name": "Space.xm",
+      "ticks": 2048,
+      "orders_visited": 6,
+      "commands": 1231,
+      "stopped": false
+    },
+    {
+      "name": "Stan.xm",
+      "ticks": 2048,
+      "orders_visited": 6,
+      "commands": 3830,
+      "stopped": false
+    },
+    {
+      "name": "Stories.xm",
+      "ticks": 2048,
+      "orders_visited": 6,
+      "commands": 3201,
+      "stopped": false
+    },
+    {
+      "name": "Tod.xm",
+      "ticks": 2048,
+      "orders_visited": 6,
+      "commands": 2104,
+      "stopped": false
+    },
+    {
+      "name": "Tommy.xm",
+      "ticks": 2048,
+      "orders_visited": 6,
+      "commands": 957,
+      "stopped": false
+    },
+    {
+      "name": "Valerie.xm",
+      "ticks": 2048,
+      "orders_visited": 4,
+      "commands": 999,
+      "stopped": false
+    },
+    {
+      "name": "Vick.xm",
+      "ticks": 2048,
+      "orders_visited": 6,
+      "commands": 2258,
+      "stopped": false
+    },
+    {
+      "name": "Winner.xm",
+      "ticks": 2048,
+      "orders_visited": 2,
+      "commands": 346,
+      "stopped": false
+    }
+  ],
+  "scope": "Complete native startup/ticks over all original VF-loaded modules after archive closure; row/effect/envelope execution and bounded sample handles. Each song runs up to requested ticks. Underlying routines and synthetic complete ticks have original-executable proofs; this run is a native real-resource integration check, not an end-to-end x86 differential comparison. Excludes mixer command execution and audio."
+}

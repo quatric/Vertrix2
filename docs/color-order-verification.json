@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "destination_layouts_verified": 12,
+  "random_pixels_verified": 12288,
+  "original_sprite_frames_verified": 216,
+  "original_sprite_pixels_verified": 337657,
+  "processed_vf_sprite_frames_verified": 216,
+  "scope": "Original full 0x483ed0 and its format constructor/conversion execute unchanged; fixed four-byte source, nonzero masks with distinct trailing bit positions. Screen format selection and renderer blending remain separate."
+}

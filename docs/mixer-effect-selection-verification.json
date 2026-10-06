@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "dispatch_selection_cases": 65536,
+  "callback_cases": 20000,
+  "scope": "Complete original 0x40dc50 selection over every effect/parameter pair; hooks capture selected target without executing it. Complete callback effect executes with a return-only callback and captured arguments. Verifies tick gate, callback presence, parameter/order/row and channel preservation. Excludes unified effect execution."
+}

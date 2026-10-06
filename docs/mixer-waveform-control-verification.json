@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "effect_cases": 24576,
+  "scope": "Complete original 0x40d540 selecting waveform controls 4/7, exhaustive low nibbles and prior waveform bytes at ticks 0/1/-1. Full channel comparison verifies nibble replacement and all unrelated state preservation. Excludes later note-trigger reset interpretation."
+}

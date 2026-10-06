@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "parameter_draw_and_position_comparisons": 10260,
+  "native_character_power_entries": 532,
+  "active_piece_motion_updates": 360,
+  "fast_descent_updates": 360,
+  "scope": "Player +0x458/+0x45c/+0x460 draw routines; game-loop scheduling remains unverified"
+}

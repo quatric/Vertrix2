@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "skipped": 1979,
+    "swapped": 2021
+  },
+  "scope": "Complete 436150 executes in the original (operator new 4ca000 and the draw 4826c0 stubbed and replayed); the result, the board and every object compare."
+}

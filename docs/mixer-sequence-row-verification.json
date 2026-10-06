@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "row_decision_cases": 40000,
+  "result_counts": [
+    20000,
+    4333,
+    8977,
+    6690
+  ],
+  "scope": "Complete original 0x40e940 with zero channels, whole sequencer state and packed-pointer changes. Covers delay, row boundary, jump/break precedence, restarts, invalid-pattern fallback and signed row values. Excludes nonzero-channel packed skipping/row initialization."
+}

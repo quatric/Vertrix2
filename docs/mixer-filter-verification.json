@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "original_kernel_cases": 28192,
+  "scope": "Complete original PCM8 mono interpolated kernel 0x401cd0, one output frame per fixture, previous filtered byte varied, all 32 quantized weights, forward/reverse/zero sub-sample steps. Output contribution and persisted filtered byte match. Excludes long batches, large-step fallback, other kernels and loop traversal."
+}

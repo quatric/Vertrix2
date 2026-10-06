@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4b6930": {
+      "converted": 1010,
+      "empty": 1038
+    }
+  },
+  "scope": "The routine executes completely in the original with the string runtime stubbed and logged (0x4cdb70 and 0x440610 storing their out dwords); the returned value compares; every callee call and every pool object compare."
+}

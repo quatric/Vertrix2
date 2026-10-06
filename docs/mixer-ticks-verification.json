@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "buffer_cases": 5000,
+  "native_batches": 25747,
+  "tick_callbacks": 20911,
+  "scope": "Complete original 0x40c5c0 with zero channels and counting callback, random periods 64..4096, phases below period, buffer lengths 1..8192 values. Final phase and callback count match repeated native scheduling. Excludes channel mixing during callbacks, callback effect logic and hardware timing."
+}

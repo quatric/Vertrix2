@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x43b5b0": 4098,
+    "0x43b660": 4098,
+    "0x43b680": 4098,
+    "0x43b590": 4098
+  },
+  "scope": "Complete 43b5b0, 43b660, 43b680 and 43b590 execute in the original with seeded RNG; stored delay fields and RNG position compare, plus short-storage preservation checks."
+}

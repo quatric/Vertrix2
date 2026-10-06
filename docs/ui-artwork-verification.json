@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "cases": 8,
+  "pixels": 525312,
+  "scope": "Complete original45e490 with actual4877f0 lookup,4831b0 stencil and487850 publication. Hooks supply empty resource construction and image allocation only. Input pixels come from separately verified VF bank decoding/configuration. Solid/hollow output pixels, dimensions and origins match. Ownership after VF closure verified. VF display assets bind solid/hollow images through actual recovered animation attach branches and resolve pixels/origins after VF closure. All24 portable actor-storage creations/updates resolve both VF images and origins after archive closure, preserving untouched bytes. Invalid descriptor and freed assets reject resolution/updates. Filename and first-source remain caller-selected.",
+  "original_generated_artwork_mapped_draw_cases": 1024,
+  "original_border_builder_cases": 8,
+  "constructed_generated_artwork_update_draw_frames": 128,
+  "constructed_generated_artwork_visible_frames": 88,
+  "constructed_generated_artwork_bank_switches": 384,
+  "generated_visible_frames_packed_for_wii": 16,
+  "constructed_generated_scope": "Original base constructor and complete UI position/setup fragments compare all24 actors. Complete4b6200 update and4b6240 draw match persistent 640x480 frames using actual45e490-generated VF artwork and two supplied idle linked-state actors. Whole destination/actor storage/refresh compare; no update or drawing hooks. Final player implementation, scheduling, menus and Wii execution remain unfinished.",
+  "generated_draw_scope": "Actual45e490-generated banks and descriptor metadata feed complete original4ac8a0/4af8c0 rendering comparisons. Native view borrows VF-generated solid/hollow pixels; clipping, anchors, displacement and scale8/16. Builder allocation boundaries are supplied as in artwork recovery; draw has no hooks."
+}

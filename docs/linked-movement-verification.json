@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 12288,
+  "handler_changes": 5574,
+  "scope": "All six complete original handlers without hooks. Whole effect object, unchanged linked object and local/shared refresh match; actual lookup, timers and signed-word movement execute. Portable companion-storage dispatch also matches entire original actor and shared refresh storage in every case. Invalid required refresh index and short actor preserve both outputs. Scene-linked storage dispatch also matches all cases with duplicate IDs/different values, selecting first field0 match; unresolved handles preserve both outputs. Complete virtual frame wrapper4ae150/4ade20 also matches actor/refresh output in12288 no-interaction/no-chain cases with conditional refresh clearing. Full scene/application remains unfinished."
+}

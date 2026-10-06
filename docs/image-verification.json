@@ -1,0 +1,290 @@
+{
+  "status": "passed",
+  "original_bitmaps_verified": 70,
+  "original_pixels_verified": 986317,
+  "layout_fixtures_verified": 24,
+  "invalid_bitmaps_rejected": 14,
+  "scope": "All original 24-bit BMP pixels read directly from VF, compared with Pillow; masks, JPG/PCX decoding and Wii texture/render integration remain separate",
+  "images": [
+    {
+      "name": ".\\image\\Bombes\\Bomb_Doc.bmp",
+      "rgba_sha256": "ea93351fee7c6699266c0d6c35915da1c17703eac31abb15c11dba434c7be74a"
+    },
+    {
+      "name": ".\\image\\Bombes\\Bomb_Abraham.bmp",
+      "rgba_sha256": "7ea72ffded4e89617180a67c70a39bdcca98eca7bff64c3f299877dd08eae708"
+    },
+    {
+      "name": ".\\image\\Bombes\\Bomb_Tommy.bmp",
+      "rgba_sha256": "345a0cdceb62f72b4bbd7f669d9228d982fbab36e57707ec7cb1033764564e6a"
+    },
+    {
+      "name": ".\\image\\Bombes\\Bomb_Tod.bmp",
+      "rgba_sha256": "bbf3617d727f355c6b0dc5a921f972be153da8a6b082db99b95136c0962b0fc7"
+    },
+    {
+      "name": ".\\image\\Bombes\\Bomb_Stan.bmp",
+      "rgba_sha256": "22090f807c237c891d14410df7deecc51e30fae0270ce8979b3614e277ccf6b8"
+    },
+    {
+      "name": ".\\image\\Bombes\\Bomb_Valerie.bmp",
+      "rgba_sha256": "6d345db146c4ab0e47b63e913fbb6fb74c19f6dd4b5bff4206699031cd3dc29d"
+    },
+    {
+      "name": ".\\image\\Bombes\\Bomb_Rose.bmp",
+      "rgba_sha256": "cb3dd7059d63f04b88fc05e7761a684b71ab1ab9d26126edb8c72886c586a8a7"
+    },
+    {
+      "name": ".\\image\\Bombes\\Bomb_Lee.bmp",
+      "rgba_sha256": "298db895c53641038512d3eb1a8e7f6aa417112759b27a1d1e44cdf007ba0bdf"
+    },
+    {
+      "name": ".\\image\\Bombes\\Bomb_Bill.bmp",
+      "rgba_sha256": "c369dcb284306b492a093d789258cc6c6164deabf8e66840651f16311ae4f3e8"
+    },
+    {
+      "name": ".\\image\\Bombes\\Bomb_Glouk.bmp",
+      "rgba_sha256": "1b4d3def1378c777bb6d38c914f0e0af57511843a6117121308ab15cf9f82489"
+    },
+    {
+      "name": ".\\image\\Bombes\\Bomb_Pamela.bmp",
+      "rgba_sha256": "877f348222d9f2440eb901b9f0edeac8d4999ec0713ded729972793c374a2e61"
+    },
+    {
+      "name": ".\\image\\Bombes\\Bomb_Regis.bmp",
+      "rgba_sha256": "b531cfbb00498e6587d26b4ca93edb41c6f99eb382f8def1f4c5b90159a7f829"
+    },
+    {
+      "name": ".\\image\\Bombes\\Bomb_Clara.bmp",
+      "rgba_sha256": "b753d2720c043ad4fa41056735bf851a15bdac2e8431b987428a86ce08d4f5f0"
+    },
+    {
+      "name": ".\\image\\Bombes\\Bomb_Albert.bmp",
+      "rgba_sha256": "3631878b5a7258b59db64bc76f17ec86a87d2cb450d155817d202802e49a786c"
+    },
+    {
+      "name": ".\\image\\Bombes\\Bomb_Vick.bmp",
+      "rgba_sha256": "79c6be8de87c9946d66eb833647efec74b206ce13953c7e11347b4f93cdeb00c"
+    },
+    {
+      "name": ".\\image\\Bombes\\Bomb_Mike.bmp",
+      "rgba_sha256": "b753d2720c043ad4fa41056735bf851a15bdac2e8431b987428a86ce08d4f5f0"
+    },
+    {
+      "name": ".\\image\\Bombes\\Bomb_Max.bmp",
+      "rgba_sha256": "798d5063acc34fab6f70b080289e721f79a45310293c56db857f3a0c53281de3"
+    },
+    {
+      "name": ".\\image\\Bombes\\Bomb_Sandra.bmp",
+      "rgba_sha256": "594bb2a7e50b316ed620099f50a94616e71ec151d518f85c5e603504dc681444"
+    },
+    {
+      "name": ".\\image\\systeme\\AMBarre.bmp",
+      "rgba_sha256": "95dedc92d0f79cc8b12f68f5497f3cb0b9a0738f65e2157ca9da2cf8fe03f123"
+    },
+    {
+      "name": ".\\image\\systeme\\FxFigures.bmp",
+      "rgba_sha256": "e194f4b1dfda89f08f28df3fcd5782a9e148673bc1b6da65bf2d48d9035e2a3c"
+    },
+    {
+      "name": ".\\image\\systeme\\FontFutur.bmp",
+      "rgba_sha256": "bc067e2a444af9635ffa6dc62d75b6cb59241d5677bb79dba79a2076511bcf50"
+    },
+    {
+      "name": ".\\image\\systeme\\FontFuturNumbers.bmp",
+      "rgba_sha256": "3a5e609e35b5fd1fef3a4b4dcc857118eb4b84b9b78e735584a997fd587f507a"
+    },
+    {
+      "name": ".\\image\\systeme\\FontCommon.bmp",
+      "rgba_sha256": "85a351d0adf8f1b242a858d9a76cf45b8e786bb60dbfea77234fc9cdcad99877"
+    },
+    {
+      "name": ".\\image\\systeme\\FontNormal.bmp",
+      "rgba_sha256": "dc7e279cb1d87dcd39c93c336ca34a6a2a3bf1755ec795d4415362b7e55f9936"
+    },
+    {
+      "name": ".\\image\\systeme\\FontNormalNumbers.bmp",
+      "rgba_sha256": "0c02bc43b5634605122484fd38d7401156897113fec13f55efb5cd5eeda31a73"
+    },
+    {
+      "name": ".\\image\\systeme\\FontGameNumbers.bmp",
+      "rgba_sha256": "141afe5aea8fc57aaa32a1f6588359e82124d4289b5932857ff7e07b651ac5fa"
+    },
+    {
+      "name": ".\\image\\systeme\\FontNormalNumbers_6.bmp",
+      "rgba_sha256": "d1d92cdcf840b6b5d74dd71ada8638eee8427c1e8d8448d48d66a757eee592c9"
+    },
+    {
+      "name": ".\\image\\systeme\\FontCommon_6.bmp",
+      "rgba_sha256": "71747913a70e5c79dbe49f2bee784aacab8af87ff8015959fa303a3d65eba5fb"
+    },
+    {
+      "name": ".\\image\\systeme\\FontGameNumbers_7.bmp",
+      "rgba_sha256": "f540ec157cc5a5d619af0d47b0c4b51dad5205bd352f702da45c98a2690b2c71"
+    },
+    {
+      "name": ".\\image\\systeme\\FontGame_7.bmp",
+      "rgba_sha256": "d1566626c77187dbc1fa79d0ce60f5a55684500156338b8a60f3ed092def1fec"
+    },
+    {
+      "name": ".\\image\\systeme\\Bonus3.bmp",
+      "rgba_sha256": "e84b417e721ebd3c673a8680e2a4ded2aa0eaf47b948eff3e73454a8c27b91f1"
+    },
+    {
+      "name": ".\\image\\systeme\\Bonus.bmp",
+      "rgba_sha256": "b4e579449e0b640d893b47e4fdf6b5f1d1a309b6638b23bb23c5b2fd4ea98379"
+    },
+    {
+      "name": ".\\image\\systeme\\Bonus2.bmp",
+      "rgba_sha256": "a4ed8e42fec82a08055c5fe6119e69a1b94ef6fcf29963406ead82d3a84b9a3b"
+    },
+    {
+      "name": ".\\image\\systeme\\FontNormal_6.bmp",
+      "rgba_sha256": "d2194b27617ce38370b0389c1fe86fbdfe0dec6bfc98938ad245ddb250e0bd6a"
+    },
+    {
+      "name": ".\\image\\systeme\\FontNormal_8.bmp",
+      "rgba_sha256": "006e6212d31b58663293fca15723c5502a24a6b511c7318d383d60b0d1535ee2"
+    },
+    {
+      "name": ".\\image\\systeme\\FontNormalNumbers_8.bmp",
+      "rgba_sha256": "4b7e7dd85fbbd4c49a04bea63f3c5b4a588e68a0c7e7d74448891f2d47027f22"
+    },
+    {
+      "name": ".\\image\\systeme\\FontCommon_8.bmp",
+      "rgba_sha256": "89dd27711444ebb27f54ca5238d8ec97db4dd36511407790048a19d58f0eca6d"
+    },
+    {
+      "name": ".\\image\\systeme\\FontNormal_6_I.bmp",
+      "rgba_sha256": "b379bbf7758c0408ef33579aab2300b4913ccf6caf2c9342d7b51f6fa078a9f6"
+    },
+    {
+      "name": ".\\image\\systeme\\FontNormalNumbers_6_I.bmp",
+      "rgba_sha256": "764ce6c39f951d6c2e39a1cc1117b0659be349bae2eb3f92d1216378052739d7"
+    },
+    {
+      "name": ".\\image\\systeme\\FontCommon_6_I.bmp",
+      "rgba_sha256": "784390da2a0f67d11402cf8667a88f43459272f714b1a5fd0807ea6010538035"
+    },
+    {
+      "name": ".\\image\\systeme\\FontNormal_8_B.bmp",
+      "rgba_sha256": "295f248b0c9cd9d82a460cd6cdfb4ed8902183d182dedfca5eb3d0eaa222bb9c"
+    },
+    {
+      "name": ".\\image\\systeme\\FontCommon_8_B.bmp",
+      "rgba_sha256": "a0481914c25680436fd169f2c57a5888378e034d8a0fd55cc31fd2d5e0b38282"
+    },
+    {
+      "name": ".\\image\\systeme\\FontNormalNumbers_8_B.bmp",
+      "rgba_sha256": "28ea1ef2855e1e2051627569e19c69fbb93f43db11cf80d9952e4b5f90056f34"
+    },
+    {
+      "name": ".\\image\\systeme\\FontCommon_6_B.bmp",
+      "rgba_sha256": "4cf57b10f04f59261940d0a485889d1d357409dfb64e0abf0cfb622a5f05de6f"
+    },
+    {
+      "name": ".\\image\\systeme\\FontNormal_6_B.bmp",
+      "rgba_sha256": "b280f3e2bc9c782d933a5eb852a545fdea64c74cbbb97d232db5abcbefc498e0"
+    },
+    {
+      "name": ".\\image\\systeme\\FontNormalNumbers_6_B.bmp",
+      "rgba_sha256": "5d0b59a788dd2851708f4e0032be222b04e582362edb7cfef5c75f84400a249a"
+    },
+    {
+      "name": ".\\image\\systeme\\FontNormal_8_C.bmp",
+      "rgba_sha256": "ab22ee8025a054755a15d1507f9f15d0082b2bf4043792037b632fdf0c9eb78e"
+    },
+    {
+      "name": ".\\image\\systeme\\FontCommon_8_C.bmp",
+      "rgba_sha256": "1fe839943caa9d0cb7dcf49792bf5e07503f857a0a806cf62572df294a2d9923"
+    },
+    {
+      "name": ".\\image\\systeme\\FontNormal_6_C.bmp",
+      "rgba_sha256": "43215685ece3c94c3df7fbc6160bb5d7bc275d960a1a7508705e47006cee883b"
+    },
+    {
+      "name": ".\\image\\systeme\\FontNormalNumbers_8_C.bmp",
+      "rgba_sha256": "ff3b9936c74f5c843a0c43cf8f693c4ae3aa3fb7df18de86788d57a99a5fb074"
+    },
+    {
+      "name": ".\\image\\systeme\\FontNormalNumbers_6_C.bmp",
+      "rgba_sha256": "e68c572dacacc51c10125a2f6d9d585576b1d7a2de6f62faba445fc76bb48938"
+    },
+    {
+      "name": ".\\image\\systeme\\FontCommon_6_C.bmp",
+      "rgba_sha256": "e85ceb77e47af4de91e80383dccd0a11630fea9cd788e51547f097f66256c5fa"
+    },
+    {
+      "name": ".\\image\\Blocs\\Bloc_Doc.bmp",
+      "rgba_sha256": "5cb0cfbf1e12656e517bc30ab6dc422ed7dabe6f7d095d7eaf18b83e91e81c66"
+    },
+    {
+      "name": ".\\image\\Blocs\\Bloc_Abraham.bmp",
+      "rgba_sha256": "ba426ff8a5bb43d5b87c971592acaa3a325c3521e07dd20741852074462afe4d"
+    },
+    {
+      "name": ".\\image\\Blocs\\Bloc_Tod.bmp",
+      "rgba_sha256": "66cbd8de06bee34b8f4730f531540dc157a1f16bd950b17853589f35053fd533"
+    },
+    {
+      "name": ".\\image\\Blocs\\Bloc_Stan.bmp",
+      "rgba_sha256": "4e0fe3e481028e85a4118b0850512d85a53fa8ea0c6d675e81d07e0da1dd1bec"
+    },
+    {
+      "name": ".\\image\\Blocs\\Bloc_Valerie.bmp",
+      "rgba_sha256": "a076466855041bf78cf05083d9d3b62195f37064032a7bd2cb610edf997d660b"
+    },
+    {
+      "name": ".\\image\\Blocs\\Bloc_Rose.bmp",
+      "rgba_sha256": "55bc3e6d8361588681d67d21306ccece8f244c7d58d7fecd721f63fac00bac61"
+    },
+    {
+      "name": ".\\image\\Blocs\\Bloc_Lee.bmp",
+      "rgba_sha256": "89aec5c843b33aa64b97fff42a74c9530ebb55a50fbaf04f256b1a8564f49517"
+    },
+    {
+      "name": ".\\image\\Blocs\\Bloc_Bill.bmp",
+      "rgba_sha256": "f49c0918dd99aafdc80c7deba20844632ef363f5dbf74090340c944e66036583"
+    },
+    {
+      "name": ".\\image\\Blocs\\Bloc_Glouk.bmp",
+      "rgba_sha256": "666098af490ec8b03776c4abc7385d086b12f98c107e234a61a9096cc9944631"
+    },
+    {
+      "name": ".\\image\\Blocs\\Bloc_Sandra.bmp",
+      "rgba_sha256": "739e18fe9d432d254dea1957ea49f37962bc6efa0c5d7419900e9339f8bdebb3"
+    },
+    {
+      "name": ".\\image\\Blocs\\Bloc_Max.bmp",
+      "rgba_sha256": "faddb636a55a04cadb7d7c3f93cfcb7a33aae1bf11f1dd38754c86c83e68bb20"
+    },
+    {
+      "name": ".\\image\\Blocs\\Bloc_Mike.bmp",
+      "rgba_sha256": "b9ca9c2d421e3cd22f8ae48ae5e0dc6f8806f6a5bb8f4d51b84d1ab2cb1ab98f"
+    },
+    {
+      "name": ".\\image\\Blocs\\Bloc_Vick.bmp",
+      "rgba_sha256": "f33e8acce4708a6e879cb73cfadee94ab4e66097372309f24ab90bd9ac3d7aa4"
+    },
+    {
+      "name": ".\\image\\Blocs\\Bloc_Albert.bmp",
+      "rgba_sha256": "2d441b75185934c7b7332d7dc49d48e2b7fa72fa1398c5ba7822b21973b98f90"
+    },
+    {
+      "name": ".\\image\\Blocs\\Bloc_Clara.bmp",
+      "rgba_sha256": "ac4afbc5342513fdbc57dff7ac043cec267adfafb068ad13112ea836311016bd"
+    },
+    {
+      "name": ".\\image\\Blocs\\Bloc_Regis.bmp",
+      "rgba_sha256": "fa348e8dda45b04a0a41894511d01f6637da52dd20be1af4e038378f61cf7cdf"
+    },
+    {
+      "name": ".\\image\\Blocs\\Bloc_Pamela.bmp",
+      "rgba_sha256": "81244a315b99334010badc73d38173ceca1c2c299a5674bb0be93f891dce8864"
+    },
+    {
+      "name": ".\\image\\Blocs\\Bloc_Tommy.bmp",
+      "rgba_sha256": "c75b5657598925624a4d2087b204b80c253837cae8511f7f7d721e76e9dc1f87"
+    }
+  ]
+}

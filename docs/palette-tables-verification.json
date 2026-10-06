@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "lookup_entries": 262144,
+  "hue_bytes": 262144,
+  "channel_bytes": 20301,
+  "auxiliary_entries": 255,
+  "bound_pixel_cases": 8192,
+  "scope": "Complete original475090 executes with only calloc replaced. All conversion, nearest matching, table loops and software math remain original. Native owned tables match all outputs and8192 pixel cases using the original builder default pointer selection. Other global pointer-table selection, complete rendering and playable application remain unfinished."
+}

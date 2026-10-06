@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x43d260": 4104
+  },
+  "scope": "Complete 43d260 executes in the original with seeded RNG; preview kind bytes and RNG position compare across modes and buffer wrap."
+}

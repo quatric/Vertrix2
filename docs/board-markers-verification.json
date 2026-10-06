@@ -1,0 +1,29 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "snapshot": 4096,
+    "mark_filled": 4096,
+    "mark_stones": 4096,
+    "mark_stones_not_bombs": 4096,
+    "any_falling": 4096,
+    "snapshot_first_grid": 4096,
+    "mark_falling_cells": 4096,
+    "clear_mask": 4096,
+    "markers_for_mode": 4096,
+    "markers_top": 4096,
+    "marker_count": 8192,
+    "marker_nth": 12288,
+    "first_marker_in_column": 4096,
+    "marker_in_column": 8192,
+    "any_bottom": 4096,
+    "any_block": 4096,
+    "marker_checker0": 4096,
+    "marker_checker1": 4096,
+    "marker_stones": 8192,
+    "marker_kind": 4096,
+    "marker_power": 4096,
+    "marker_equal": 4096,
+    "0x437b70": 4096
+  },
+  "scope": "Complete 4327e0, 432820, 432b10, 4328a0, 4375a0, 432840, 435e80, 435f30, 435fe0, 436030, 436070, 4360b0 and 436100, 436850, 4372c0, 436fe0, 437240, 436a10, 436aa0, 439370, 438830, 4388a0, 438910, 438d50, 439140 and 437b70 execute in the original; kind snapshots, marker grids, counts, found cells and companion stamps compare, including unfound requests leaving outputs untouched."
+}

@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "module_passes": 58,
+  "instrument_records": 1436,
+  "empty_instruments": 10,
+  "scope": "All original VF XM instrument metadata loaded natively and compared with original 0x4117e0..0x411a00 conversion of independently located original header bytes. Two passes cover zero initial scratch per song and carried scratch across songs. Whole 252-byte records, sample maps, bounded names, envelopes and vibrato/fade metadata match. Invalid index preserves output. Excludes runtime view construction and audio."
+}

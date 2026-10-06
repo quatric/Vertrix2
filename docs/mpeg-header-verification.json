@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "decoded": 4038,
+    "frame_size": 424
+  },
+  "scope": "Complete 404480 runs in the original (4eb4d4 stubbed) over random header words, including every version, layer, bitrate and sample rate combination; all stored fields, the result and the invalid-rate call compare."
+}

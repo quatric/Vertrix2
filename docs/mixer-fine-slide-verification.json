@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "effect_cases": 60000,
+  "scope": "Full original extended dispatcher 0x40d540 selecting fine pitch slides 1/2, all low nibbles, byte memory, zero/nonzero signed ticks, whole channel preservation, signed clamps and wrapping. Excludes other extended selectors and full sequencing."
+}

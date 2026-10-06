@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 1024,
+  "pixels_compared": 154478,
+  "scope": "Actual0x483400 EBX=1 with only clone/allocation483110 hooked. Source mutation and output pixels match, passes0..4, diagonal0..2, sizes1..16 and all-opaque fixtures. Resource allocation, EBX=0 ownership path and VF font integration remain separate."
+}

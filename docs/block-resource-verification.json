@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "cases": 1024,
+  "linked_resources": 682,
+  "attachment_and_binding_cases": 1024,
+  "last_frame_cases": 1024,
+  "scope": "Actual complete original 0x44c860 including animation and 0x4ac8a0/0x4877f0 frame binding, with no routine hooks. Whole block state matches direct and one/two-level linked resource tables. Attachment 0x4ac8d0 and binding 0x4ac8a0 also match whole objects, including NULL detach and retained descriptors. Last-frame selection 0x4ac720 also matches, including zero and full-width counts. Native traverses live resource nodes while updating the block; resource graph construction, actual VF actor binding and complete object runtime/game remain unfinished."
+}

@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "fonts": 19,
+  "scale_modes": 17,
+  "text_draws": 969,
+  "scope": "Complete basic scaled text over real owned VF glyphs independently matches pixels, spacing, origins, clipping, row padding, screen overrides and output positions against actual original measurement/bounds and sampling tables. Components have separate original traversal proofs. Parent effects/custom clipping/viewport offsets and playable application remain unfinished."
+}

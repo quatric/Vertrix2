@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "original_anchor_cases": 2048,
+  "draw_cases": 512,
+  "scope": "Actual4aed56..4aee28 measured dimensions and scaled anchors match without hooks. Basic scaled binary image integration checks pixels against actual original4b15e0 bounds and4b9050 sample tables, all scale0..16, clipping and nonzero alpha values. Original full sprite preparation, parent effects/custom clips and complete styled text/application integration remain separate."
+}

@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 1024,
+  "linked_resources": 682,
+  "scope": "Actual complete original 0x44c880 including animation, primary timer, signed/wrapped motion 0x4acab0, handler transition and frame binding, with no routine hooks. Whole block state matches direct and one/two-level linked resource tables. Native receives independently resolved descriptor order; does not implement resource graph construction, actual VF actor binding or complete object runtime/game."
+}

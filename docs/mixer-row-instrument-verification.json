@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "instrument_selection_cases": 40000,
+  "sample_default_cases": 40000,
+  "scope": "Original 0x40e7ba..0x40e7f8 selection and 0x40e82c..0x40e89d defaults. Whole channel comparisons with one-based handles translated to original instrument addresses; note/sample initialization remains separate. Defaults hooks only bypass final register restores."
+}

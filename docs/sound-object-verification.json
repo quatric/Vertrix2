@@ -1,0 +1,21 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4756d0": 4096,
+    "0x4768e0": 4096,
+    "0x476d20": 4096,
+    "0x4779c0": 4096,
+    "0x477910": 4096,
+    "0x475790": 4096,
+    "0x476650": 4096,
+    "0x476c80": 4096,
+    "virtual_calls": 15737,
+    "0x476cc0": 4096,
+    "0x477320": 4096,
+    "0x477d10": 4096,
+    "0x476a00": 4096,
+    "0x4772f0": 4096,
+    "0x477af0": 4096
+  },
+  "scope": "Complete 4756d0, 475790, 4768e0, 476d20, 4779c0, 477910, 476650, 476c80, 476cc0, 477320, 477d10, 476a00, 4772f0 and 477af0 execute in the original with COM-style vtable stubs (data-driven results) and neutralised builders 476aa0/477390/477b10; object bytes, every virtual call, builder invocation and return value compare."
+}

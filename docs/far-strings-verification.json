@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4df884": 1000,
+    "0x4df8a8": 1000,
+    "0x4df914": 1000
+  },
+  "scope": "Each routine executes completely in the original with its callees stubbed and logged; every callee call, the returned eax and the padded text compare. es and ds hold a flat data descriptor."
+}

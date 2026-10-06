@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4874f0": 1000,
+    "0x4876c0": 1000,
+    "0x487660": 1000,
+    "0x4875a0": 1000
+  },
+  "scope": "0x4874f0, 0x4876c0 and 0x487660 execute completely in the original with 0x4830f0, 0x4ea190 and 0x483790, 0x483060 stubbed and logged; the callee registers, eax and every object compare."
+}

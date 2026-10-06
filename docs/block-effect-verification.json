@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 12288,
+  "linked_resources": 8192,
+  "scope": "Complete original 0x44f120/0x44f180/0x44f1e0/0x44f240/0x44f2b0/0x44f320/0x44f4a0/0x44f500/0x44f560/0x44f5d0/0x44f630/0x44f690 whole-object comparison without hooks, including existing step preservation, target and handler handoffs, pre-tick flag and frame binding. Gameplay construction remains incomplete."
+}

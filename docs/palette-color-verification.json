@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 15977,
+  "channel_table_bytes": 20301,
+  "scope": "Complete original474910 runs unchanged, including software floating point helpers. Native matches all hue-zero channel-map inputs and random saturation/value combinations for every hue0..360. Complete original474cd0 also matches all20301 channel table bytes. Complete lookup generation and draw integration remain unfinished."
+}

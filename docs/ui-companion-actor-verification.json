@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "original_companion_setup_cases": 2048,
+  "failure_preservation_cases": 4096,
+  "scope": "Original base constructor and42b3f3..42b499 execute without hooks. Entire extended actor storage compares. Allocation, parent attachment, subsequent image/callback binding and full gameplay remain separate."
+}

@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "tremor_cases": 40000,
+  "extra_fine_slide_cases": 40000,
+  "scope": "Complete original main dispatcher 0x40dc50 effects 29/33, whole channel comparisons, every parameter byte, signed first/later ticks, tremor counter wrapping and arbitrary gate bytes, pitch memory and signed clamps. Excludes remaining effects and scheduling."
+}

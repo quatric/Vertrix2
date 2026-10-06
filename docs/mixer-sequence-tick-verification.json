@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "tick_decision_cases": 40000,
+  "pending_update_cases": 40000,
+  "scope": "Original 0x40eb10..0x40eb3a decision, row call captured without executing row advancement; original 0x40eb6e..0x40ebf3 pending phase with captured tempo setter. Whole globals/channels, signed wrapping, stopped gate, delay flags and dirty-channel propagation. Excludes row body and effects/envelope/publication orchestration."
+}

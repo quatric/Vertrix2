@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "cases": 12288,
+  "handlers": [
+    "450750",
+    "4507e0",
+    "450830"
+  ],
+  "scope": "All three original countdown handlers without hooks. Whole objects and player flag match signed comparisons, timers, reset, phase handoff and return. Full application remains unfinished."
+}

@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "palette_expand_vga": 4096,
+    "palette_cube": 4096,
+    "pixel_convert": 16384
+  },
+  "scope": "Complete 480890, 480ca0 and 481d90 execute in the original over random inputs; palette tables and converted pixels compare exactly (random shift counts included)."
+}

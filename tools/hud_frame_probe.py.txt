@@ -1,0 +1,80 @@
+import ctypes as c, struct, subprocess, sys
+from pathlib import Path
+sys.path.insert(0,'tools')
+from verify_render_geometry import Clip
+from verify_sprite_clone import Frame, Image
+class Surface(c.Structure):
+    _fields_=[('data',c.c_void_p),('size',c.c_size_t),('width',c.c_uint32),('height',c.c_uint32),('stride',c.c_uint32),('bytes_per_pixel',c.c_uint8)]
+class Color(c.Structure):
+    _fields_=[('lookup_entry',c.c_uint32),('color',c.c_uint32),('half_color',c.c_uint32),('indices',c.c_uint16*3),('channels',c.c_uint8*3),('hue',c.c_uint8)]
+class Preparation(c.Structure):
+    _fields_=[('color',Color),('source_weights',c.c_void_p),('destination_weights',c.c_void_p),('source_words',c.c_void_p),('destination_words',c.c_void_p),('map_shift',c.c_int16),('cycle_enabled',c.c_uint8),('cycle',c.c_uint8)]
+class Weights(c.Structure):
+    _fields_=[('bytes',(c.c_uint8*256)*101),('words',(c.c_uint16*512)*101),('alpha',(c.c_uint8*256)*256),('inverse_alpha',(c.c_uint8*256)*256)]
+class Tables(c.Structure):
+    _fields_=[('lookup',c.POINTER(c.c_uint32)),('hue',c.POINTER(c.c_uint8)),('channels',c.c_uint8*20301),('auxiliary',c.c_uint32*255)]
+class Bank(c.Structure):
+    _fields_=[('lookup',c.c_uint32*13),('colors',c.c_uint32*13),('format_colors',c.c_uint32*12)]
+from PIL import Image as PI
+root=Path('.').resolve(); source=root/'source'
+build=Path('/Volumes/SSD/larsen/claude-tmp/hud')
+names=('actor_render_draw','actor_render_geometry','actor_render_style','actor_image_bounds','actor_image_clip','actor_storage','render_geometry','surface','render_dispatch','render_row','render_pixel','render_preparation','render_color','palette_map','palette_tables','palette_color','render_palette','render_weights','image','vf','sprite_actor_image','sprite_actor_draw','sprite_chain_draw','sprite_scene_draw','ui_scene_render','ui_scene_frame','ui_actor_frame','ui_actor_update','ui_companion_update','actor_lookup','object_list','linked_movement','linked_alternating','block_resource','frame_resource','animation','timer','word_transition','dword_transition','ui_player_preview_draw','ui_indicator_update','linked_indicator','byte_transition','ui_border_update','linked_burst','random')
+lib=build/'hud.dylib'
+subprocess.run(['cc','-shared','-fPIC','-O2','-ffp-contract=off','-Wall','-Wextra','-Werror',*[str(source/(n+'.c')) for n in names],'-o',str(lib)],check=True)
+native=c.CDLL(str(lib))
+native.vertrix_actor_render_draw32.argtypes=[c.c_void_p,c.c_size_t,c.POINTER(Frame),c.POINTER(Surface),Clip,c.c_void_p,c.c_void_p,c.c_void_p,c.POINTER(Preparation)]
+native.vertrix_vf_open.argtypes=[c.c_char_p]; native.vertrix_vf_open.restype=c.c_void_p
+native.vertrix_image_sprite_processed.argtypes=[c.c_void_p,c.c_char_p,c.c_uint32,c.POINTER(c.c_uint32),c.POINTER(Frame)]
+native.vertrix_render_weights_build.argtypes=[c.POINTER(Weights)]
+native.vertrix_palette_tables_build.argtypes=[c.POINTER(Tables)]
+archive=native.vertrix_vf_open(b'../../work/extraction-check/original/Vertrix2.vf')
+assert archive
+masks=(c.c_uint32*3)(0xff0000,0xff00,0xff)
+weights=Weights(); assert native.vertrix_render_weights_build(c.byref(weights))
+tables=Tables(); assert native.vertrix_palette_tables_build(c.byref(tables))
+bank=Bank()
+def items(character):
+    b=open('../../work/extraction-check/assets/Filtre/%s.flt'%character,'rb').read()
+    return [b[8+12*i:20+12*i] for i in range(122)]
+def draw(bg,frame_index,item,x,y,scale=1):
+    fr=Frame()
+    assert native.vertrix_image_sprite_processed(archive,b'sprite/damier.spr',frame_index,masks,c.byref(fr))
+    w,h=fr.image.width,fr.image.height
+    actor=bytearray(0x15c)
+    struct.pack_into('<H',actor,0xe,x&0xffff); struct.pack_into('<H',actor,0x16,y&0xffff); struct.pack_into('<H',actor,0x1e,0)
+    actor[0x44]=scale; actor[0x8e]=1
+    actor[0x93]=item[0]; actor[0x95]=item[1]; actor[0x4e]=item[2]
+    struct.pack_into('<h',actor,0x48,struct.unpack_from('<h',item,4)[0])
+    actor[0x52]=item[6]; actor[0x94]=item[7]; actor[0x8c]=item[8]; actor[0x80]=item[10]
+    struct.pack_into('<I',actor,0xb4,0x801000); struct.pack_into('<I',actor,0x134,0x804000)
+    struct.pack_into('<I',actor,0x13c,1); struct.pack_into('<I',actor,0x144,1)
+    struct.pack_into('<I',actor,0xb0,0x5449fc); struct.pack_into('<I',actor,0xb8,1)
+    prep=Preparation()
+    amt=item[2]
+    prep.source_weights=c.addressof(weights.bytes[amt]); prep.destination_weights=c.addressof(weights.bytes[100-amt])
+    prep.source_words=c.addressof(weights.words[amt]); prep.destination_words=c.addressof(weights.words[100-amt])
+    storage=c.create_string_buffer(bytes(actor),len(actor))
+    surf=Surface(c.addressof(bg),len(bg),640,480,640*4,4)
+    st=native.vertrix_actor_render_draw32(storage,len(actor),c.byref(fr),c.byref(surf),Clip(0,639,0,479),c.byref(weights),c.byref(bank),c.byref(tables),c.byref(prep))
+    return st
+dec=PI.open('../../work/extraction-check/assets/image/background/vd_Glouk.jpg').convert('RGB').resize((640,480))
+def surface_from(im):
+    raw=bytearray()
+    for r,g,b in im.getdata(): raw+=bytes((b,g,r,255))
+    return c.create_string_buffer(bytes(raw),len(raw))
+bg=surface_from(dec)
+its=items('Glouk')
+print('item36',its[36].hex(),'item110',its[110].hex())
+for k,(fi,idx,x,y) in enumerate([(4,36,186,81),(16,110,100,300),(17,114,130,300),(18,118,160,300),(4,38,334,81),(0,36,200,140)]):
+    print(draw(bg,fi,its[idx],x,y))
+out=PI.frombytes('RGBA',(640,480),bytes(bg.raw),'raw','BGRA').convert('RGB')
+out.save('/Volumes/SSD/larsen/claude-tmp/hud/out.png')
+# diagnostics
+orig=surface_from(dec)
+diff=sum(1 for i in range(0,len(bg.raw),4) if bg.raw[i:i+3]!=orig.raw[i:i+3])
+print('changed pixels',diff)
+fr=Frame(); native.vertrix_image_sprite_processed(archive,b'sprite/damier.spr',4,masks,c.byref(fr))
+w,h=fr.image.width,fr.image.height
+px=c.string_at(fr.image.rgba,w*h*4)
+from collections import Counter
+print(w,h,Counter(px[i:i+4] for i in range(0,len(px),4)).most_common(6), list(fr.metadata))

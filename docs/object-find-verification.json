@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 2048,
+  "matches": 1342,
+  "scope": "Original 0x4b5eb0 without hooks; first duplicate ID, missing/empty lists, read order and unchanged list storage. Player/resource integration remains unfinished."
+}

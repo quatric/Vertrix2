@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "asset_sha256": "25c7fde3c798794cdf919465e46bf131ce1f3f8940a422403117d9a389d71cc3",
+  "characters_verified": 20,
+  "block_filename_rows_verified": 20,
+  "available_block_pairs": 18,
+  "configured_missing_block_pairs": 2,
+  "original_range_comparisons": 140,
+  "malformed_assets_rejected": 8,
+  "scope": "Direct VF text loading and all original color-delay mappings; original text parser is not emulated, graphics decoding and runtime rendering remain separate"
+}

@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "sheets": 256,
+  "cells": 4220,
+  "scope": "Actual0x43f200 traversal. File/string/image creation, fallback alpha, crop allocation/pixels, color conversion and destruction are explicit service hooks. All crop rectangles/order/counts compared, including empty grids, partial borders and arbitrary progress counts. Actual VF font pixels remain separate."
+}

@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "sample_selection_cases": 40000,
+  "scope": "Complete original 0x40e580, whole 192-byte channel comparison with native indices translated to original sample pointers; notes 0..255, missing instruments, invalid mappings, signed sample tuning, both period modes and pitch-preserving effects. Excludes envelope reset and full sequencing."
+}

@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "retrigger_cases": 40000,
+  "scope": "Complete original main dispatcher effect 27 with real sample selection, whole channel comparisons, exact executable volume tables, nibble memories, byte counter wrapping, volume-column overrides, signed arithmetic/clamps and envelope preservation. Excludes scheduling and remaining dispatch integration."
+}

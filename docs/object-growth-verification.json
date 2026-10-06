@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 512,
+  "native_append_sequence": 2048,
+  "scope": "Complete original4d8770 resize with allocation/free and CRT copy supplied. Original allocation policy, count/capacity and all active slots match native initial/shrink/grow/zero behavior including adaptive/fixed growth. Original memset executes unchanged. Newly unused allocation tail is unspecified and not compared. Native ordered append sequence and ownership disposal pass. Full scene/application execution remains unfinished."
+}

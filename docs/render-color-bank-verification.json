@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "cases": 256,
+  "scope": "Complete original474e00 executes without hooks, including original format setup/conversion. Native13 lookup/colors and12 format colors match across RGB32/RGB565 mask permutations and selected channel rows. Complete render preparation and playable application remain unfinished."
+}

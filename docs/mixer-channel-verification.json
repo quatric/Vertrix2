@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "channel_cases": 8000,
+  "frames": 1020369,
+  "scope": "Complete original 0x40c460 channel traversal, all eight kernel modes, forward/reverse, nonloop/forward-loop/ping-pong, repeated crossings and stopping. Output and final position/flags/step/cache match. Music scheduling and output delivery excluded."
+}

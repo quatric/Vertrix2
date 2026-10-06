@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 2048,
+  "linked_resources": 1365,
+  "scope": "Actual complete original 0x44e920 and 0x44e9f0 including centered measurement, origin movement, mode transition, effect derivation, completion initialization and frame binding, with no routine hooks. Whole block state matches direct and one/two-level linked resource tables. Native receives independently resolved descriptor order; does not implement resource graph construction, actual VF actor binding or complete object runtime/game."
+}

@@ -1,0 +1,9 @@
+{
+  "routine": "0x4174f0, 0x417550, 0x43c0e0, 0x43c110",
+  "cases": 4096,
+  "complete_original_executions": 8224,
+  "channel_allocation_exhaustive": true,
+  "event_dispatch_compared": true,
+  "sentinel_filtered": true,
+  "short_storage_preserved": true
+}

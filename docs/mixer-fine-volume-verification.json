@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "effect_cases": 46240,
+  "scope": "Full original extended dispatcher selecting fine-volume cases 10/11. Exhaustive low nibbles/valid volumes at ticks 0/1/-1 plus 20000 full-width states per selector. Whole channel comparison checks output, flags, memory and unrelated preservation. Excludes full sequencing."
+}

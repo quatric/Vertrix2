@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "push": 4096,
+    "pop": 4096,
+    "replace_top": 4096,
+    "empty": 4096,
+    "0x478cd0": 4096,
+    "0x478da0": 4096
+  },
+  "scope": "Complete 482060, 482110, 482210, 482300, 478cd0 and 478da0 execute in the original; whole object and every output pointer compare for random counts (0..255), contents and random null/non-null pointer subsets."
+}

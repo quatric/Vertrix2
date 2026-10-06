@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "update": 4096,
+    "reported": 3075
+  },
+  "scope": "Complete 41d670 runs unmodified in the original over windows below, at and above 1000 ms (including clock wrap); all four state dwords compare."
+}

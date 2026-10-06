@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "timer_sequence_comparisons": 24802,
+  "frame_clock_comparisons": 10100,
+  "scope": "Both integer timers and supplied-clock elapsed calculation; platform clock integration and frame scheduling remain separate"
+}

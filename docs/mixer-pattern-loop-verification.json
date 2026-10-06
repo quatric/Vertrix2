@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "effect_cases": 30000,
+  "scope": "Full original extended dispatcher selecting pattern-loop case 6, all low nibbles, zero/nonzero signed ticks, realistic/full-width counters, saved/current row and order, pending change flags. Whole channel and pending change comparison. Excludes sequencer consumption."
+}

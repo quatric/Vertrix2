@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "sequences": 4000,
+  "ticks_per_sequence": 6,
+  "channels_per_tick": 3,
+  "integrated_global_effects": 72000,
+  "integrated_pending_phases": 24000,
+  "scope": "Complete original 0x40dc50 for effects 11/13/15/16/17 across three ordered channels and six consecutive ticks, without hooks. Whole global/channel records match; pending jump/break state, speed/tempo/volume flags and memory synchronize. Signed ticks, all parameter bytes and arbitrary song lengths. Unsupported native effect preserves state. Also compares post-envelope pending consumption after each tick: delay, global-volume propagation and captured tempo updates. Invalid pending storage preserves state. Row advancement and audio excluded."
+}

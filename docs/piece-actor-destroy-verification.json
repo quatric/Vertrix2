@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_piece_destructor_cases": 4096,
+  "complete_original_base_destructor_cases": 4096,
+  "rejected_cases": 16384,
+  "scope": "Complete 42ab10 and 4ac130 execute with only the child virtual destructor and heap free supplied as recorded boundaries (stub ret). Whole parent storage, child destruction order/identity/flag2 and free argument match. Flag4 virtual-base cleanup is not modelled. Child destructor bodies remain separate."
+}

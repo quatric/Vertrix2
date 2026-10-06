@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "lookups": 8192,
+  "missing": 4063,
+  "scope": "Original 0x43f420 and 0x48ac00 without hooks across20 font slots, all256 byte codes, shared selected index and resource handles. Maps/resources are fixtures; original initialization and VF font loading remain unfinished."
+}

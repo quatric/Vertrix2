@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "complete_original_cases": {
+    "lookup": 4096,
+    "lookup_called": 2889,
+    "paint": 4096,
+    "painted": 2034
+  },
+  "scope": "Complete 4ac8a0 and 4af8c0 execute in the original. 4877f0, 4ae3e0 and 4af560 are recorded stubs; call order and registers, actor storage and global 5bc010 match."
+}

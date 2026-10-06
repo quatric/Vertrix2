@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "pitch_cases": 89222,
+  "scope": "Complete original 0x40ce20 in reciprocal and linear modes, exhaustive periods -32..24576 covering all 768 table entries and shift-count wrap at octave 32, signed extrema and 20000 random full-width periods per mode. Excludes note-to-period generation, sequencer effects and output playback."
+}

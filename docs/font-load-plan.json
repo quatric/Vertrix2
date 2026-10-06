@@ -1,0 +1,345 @@
+{
+  "status": "recorded",
+  "resource_count": 548,
+  "operations": [
+    {
+      "address": "0x43f200",
+      "eax": 22,
+      "edx": 0,
+      "ebx": 35,
+      "ecx": 30,
+      "stack_argument": 12,
+      "vf_image": "image/systeme/FontCommon.bmp"
+    },
+    {
+      "address": "0x43f200",
+      "eax": 23,
+      "edx": 12,
+      "ebx": 35,
+      "ecx": 30,
+      "stack_argument": 26,
+      "vf_image": "image/systeme/FontFutur.bmp"
+    },
+    {
+      "address": "0x43f200",
+      "eax": 24,
+      "edx": 38,
+      "ebx": 35,
+      "ecx": 30,
+      "stack_argument": 10,
+      "vf_image": "image/systeme/FontFuturNumbers.bmp"
+    },
+    {
+      "address": "0x43f200",
+      "eax": 25,
+      "edx": 48,
+      "ebx": 35,
+      "ecx": 30,
+      "stack_argument": 26,
+      "vf_image": "image/systeme/FontNormal.bmp"
+    },
+    {
+      "address": "0x43f200",
+      "eax": 26,
+      "edx": 74,
+      "ebx": 35,
+      "ecx": 30,
+      "stack_argument": 10,
+      "vf_image": "image/systeme/FontNormalNumbers.bmp"
+    },
+    {
+      "address": "0x43f200",
+      "eax": 27,
+      "edx": 84,
+      "ebx": 28,
+      "ecx": 30,
+      "stack_argument": 10,
+      "vf_image": "image/systeme/FontGameNumbers.bmp"
+    },
+    {
+      "address": "0x43f200",
+      "eax": 28,
+      "edx": 94,
+      "ebx": 13,
+      "ecx": 12,
+      "stack_argument": 12,
+      "vf_image": "image/systeme/FontCommon_6.bmp"
+    },
+    {
+      "address": "0x43f200",
+      "eax": 29,
+      "edx": 106,
+      "ebx": 13,
+      "ecx": 12,
+      "stack_argument": 26,
+      "vf_image": "image/systeme/FontNormal_6.bmp"
+    },
+    {
+      "address": "0x43f200",
+      "eax": 30,
+      "edx": 132,
+      "ebx": 13,
+      "ecx": 12,
+      "stack_argument": 10,
+      "vf_image": "image/systeme/FontNormalNumbers_6.bmp"
+    },
+    {
+      "address": "0x43f200",
+      "eax": 31,
+      "edx": 142,
+      "ebx": 14,
+      "ecx": 16,
+      "stack_argument": 10,
+      "vf_image": "image/systeme/FontGameNumbers_7.bmp"
+    },
+    {
+      "address": "0x43f200",
+      "eax": 32,
+      "edx": 152,
+      "ebx": 14,
+      "ecx": 16,
+      "stack_argument": 26,
+      "vf_image": "image/systeme/FontGame_7.bmp"
+    },
+    {
+      "address": "0x43f110",
+      "eax": 178,
+      "edx": 12,
+      "ebx": 26,
+      "ecx": 6,
+      "stack_argument": 1
+    },
+    {
+      "address": "0x43f110",
+      "eax": 204,
+      "edx": 38,
+      "ebx": 10,
+      "ecx": 6,
+      "stack_argument": 1
+    },
+    {
+      "address": "0x43f110",
+      "eax": 214,
+      "edx": 0,
+      "ebx": 12,
+      "ecx": 6,
+      "stack_argument": 1
+    },
+    {
+      "address": "0x43f110",
+      "eax": 226,
+      "edx": 54,
+      "ebx": 1,
+      "ecx": 9,
+      "stack_argument": 0
+    },
+    {
+      "address": "0x43f110",
+      "eax": 227,
+      "edx": 62,
+      "ebx": 1,
+      "ecx": 9,
+      "stack_argument": 0
+    },
+    {
+      "address": "0x43f110",
+      "eax": 228,
+      "edx": 33,
+      "ebx": 1,
+      "ecx": 9,
+      "stack_argument": 0
+    },
+    {
+      "address": "0x43f110",
+      "eax": 229,
+      "edx": 30,
+      "ebx": 1,
+      "ecx": 9,
+      "stack_argument": 0
+    },
+    {
+      "address": "0x43f200",
+      "eax": 36,
+      "edx": 230,
+      "ebx": 18,
+      "ecx": 14,
+      "stack_argument": 12,
+      "vf_image": "image/systeme/FontCommon_8.bmp"
+    },
+    {
+      "address": "0x43f200",
+      "eax": 37,
+      "edx": 242,
+      "ebx": 18,
+      "ecx": 14,
+      "stack_argument": 26,
+      "vf_image": "image/systeme/FontNormal_8.bmp"
+    },
+    {
+      "address": "0x43f200",
+      "eax": 38,
+      "edx": 268,
+      "ebx": 18,
+      "ecx": 14,
+      "stack_argument": 10,
+      "vf_image": "image/systeme/FontNormalNumbers_8.bmp"
+    },
+    {
+      "address": "0x43f200",
+      "eax": 39,
+      "edx": 278,
+      "ebx": 13,
+      "ecx": 12,
+      "stack_argument": 12,
+      "vf_image": "image/systeme/FontCommon_6_C.bmp"
+    },
+    {
+      "address": "0x43f200",
+      "eax": 40,
+      "edx": 290,
+      "ebx": 13,
+      "ecx": 12,
+      "stack_argument": 26,
+      "vf_image": "image/systeme/FontNormal_6_C.bmp"
+    },
+    {
+      "address": "0x43f200",
+      "eax": 41,
+      "edx": 316,
+      "ebx": 13,
+      "ecx": 12,
+      "stack_argument": 10,
+      "vf_image": "image/systeme/FontNormalNumbers_6_C.bmp"
+    },
+    {
+      "address": "0x43f200",
+      "eax": 42,
+      "edx": 326,
+      "ebx": 18,
+      "ecx": 14,
+      "stack_argument": 12,
+      "vf_image": "image/systeme/FontCommon_8_C.bmp"
+    },
+    {
+      "address": "0x43f200",
+      "eax": 43,
+      "edx": 338,
+      "ebx": 18,
+      "ecx": 14,
+      "stack_argument": 26,
+      "vf_image": "image/systeme/FontNormal_8_C.bmp"
+    },
+    {
+      "address": "0x43f200",
+      "eax": 44,
+      "edx": 364,
+      "ebx": 18,
+      "ecx": 14,
+      "stack_argument": 10,
+      "vf_image": "image/systeme/FontNormalNumbers_8_C.bmp"
+    },
+    {
+      "address": "0x43f200",
+      "eax": 45,
+      "edx": 374,
+      "ebx": 13,
+      "ecx": 12,
+      "stack_argument": 12,
+      "vf_image": "image/systeme/FontCommon_6_B.bmp"
+    },
+    {
+      "address": "0x43f200",
+      "eax": 46,
+      "edx": 386,
+      "ebx": 13,
+      "ecx": 12,
+      "stack_argument": 26,
+      "vf_image": "image/systeme/FontNormal_6_B.bmp"
+    },
+    {
+      "address": "0x43f200",
+      "eax": 47,
+      "edx": 412,
+      "ebx": 13,
+      "ecx": 12,
+      "stack_argument": 10,
+      "vf_image": "image/systeme/FontNormalNumbers_6_B.bmp"
+    },
+    {
+      "address": "0x43f200",
+      "eax": 48,
+      "edx": 422,
+      "ebx": 18,
+      "ecx": 14,
+      "stack_argument": 12,
+      "vf_image": "image/systeme/FontCommon_8_B.bmp"
+    },
+    {
+      "address": "0x43f200",
+      "eax": 49,
+      "edx": 434,
+      "ebx": 18,
+      "ecx": 14,
+      "stack_argument": 26,
+      "vf_image": "image/systeme/FontNormal_8_B.bmp"
+    },
+    {
+      "address": "0x43f200",
+      "eax": 50,
+      "edx": 460,
+      "ebx": 18,
+      "ecx": 14,
+      "stack_argument": 10,
+      "vf_image": "image/systeme/FontNormalNumbers_8_B.bmp"
+    },
+    {
+      "address": "0x43f200",
+      "eax": 51,
+      "edx": 470,
+      "ebx": 13,
+      "ecx": 12,
+      "stack_argument": 12,
+      "vf_image": "image/systeme/FontCommon_6_I.bmp"
+    },
+    {
+      "address": "0x43f200",
+      "eax": 52,
+      "edx": 482,
+      "ebx": 13,
+      "ecx": 12,
+      "stack_argument": 26,
+      "vf_image": "image/systeme/FontNormal_6_I.bmp"
+    },
+    {
+      "address": "0x43f200",
+      "eax": 53,
+      "edx": 508,
+      "ebx": 13,
+      "ecx": 12,
+      "stack_argument": 10,
+      "vf_image": "image/systeme/FontNormalNumbers_6_I.bmp"
+    },
+    {
+      "address": "0x43f190",
+      "eax": 538,
+      "edx": 84,
+      "ebx": 10,
+      "ecx": 0
+    },
+    {
+      "address": "0x43f190",
+      "eax": 528,
+      "edx": 84,
+      "ebx": 10,
+      "ecx": 1
+    },
+    {
+      "address": "0x43f190",
+      "eax": 518,
+      "edx": 84,
+      "ebx": 10,
+      "ecx": 0
+    }
+  ],
+  "scope": "Actual0x43eab0 control flow. Initializer, sheet loading and transform services hooked. Sheet identifiers come from original static constants; optional paths follow PictureFileName.ini row order. The original configuration parser is not executed by this tool. 43f200 uses cell width/height EBX/ECX with one-pixel gutters; 43f110 and43f190 transform existing resources. No image pixels verified."
+}

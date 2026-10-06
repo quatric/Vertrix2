@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x42e870": 4000,
+    "0x43d6a0": 4000,
+    "0x4413b0": 4000,
+    "0x472570": 4000
+  },
+  "scope": "Each constructor executes completely in the original, exception frame included, with its callees stubbed and logged; every callee call, the returned object and every pool object compare."
+}

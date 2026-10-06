@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "speed_tempo_cases": 30000,
+  "global_volume_cases": 30000,
+  "global_slide_cases": 30000,
+  "scope": "Complete original main effect dispatcher 0x40dc50 for effects 15/16/17; whole global-state and channel comparisons, all parameters, zero/later signed ticks, memory preservation, clamps, dirty flags and wrapping. Excludes consuming pending tempo/volume changes and sequencing."
+}

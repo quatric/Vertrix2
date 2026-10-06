@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "kernel_batches": 22500,
+  "accumulated_frames": 737775,
+  "scope": "Complete original noninterpolated PCM16 stereo kernel 0x402C18: random signed accumulator contents, raw samples, fractional forward/reverse/zero steps, all batch lengths 1..65, volumes 0..32, all 256 pan positions, nine master gains. Output bytes, final position and prefetched last sample match. Native transactional prefetch/capacity rejection and zero-count guard. Excludes loop traversal, PCM8 sources and interpolation."
+}

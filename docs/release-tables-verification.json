@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "table_a": 2048,
+    "table_b": 2048
+  },
+  "scope": "Complete 43f3f0 and 442110 execute in the original with the release routines 4830f0 and 4ea190 stubbed; the ordered release events, the state dword and the unchanged tables compare."
+}

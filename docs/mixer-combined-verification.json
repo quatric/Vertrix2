@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "effect_cases": 40000,
+  "scope": "Complete original 0x40d2d0/0x40d300 combined effects. Whole 128-byte channel comparison checks pitch/volume state, first-tick memory and flags, later application order, and preservation of unrelated fields. All parameter bytes and random full-width states. Excludes sequencer dispatch."
+}

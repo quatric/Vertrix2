@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "effect_cases": 30000,
+  "scope": "Full original 0x40d540 selecting finetune case 5: all low nibbles, both tuning modes, zero/nonzero signed ticks, full-width relative notes and prior state. Whole channel preservation checked. Excludes instrument reset and full sequencing."
+}

@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "cases": 4096,
+  "scope": "Complete original4ae250 executes unchanged including4754e0. Fixed color, conditional weight bindings, signed map shifts and auxiliary cycling decisions match native preparation. Native bindings borrow table arrays rather than original addresses. Full actor draw preparation, selected map resolution and playable application remain unfinished."
+}

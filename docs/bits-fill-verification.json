@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4074a0": {
+      "mode2": 3041,
+      "flags": 890,
+      "wide": 165
+    }
+  },
+  "scope": "The routine executes completely in the original with 0x404680 stubbed and logged; every bit read (width and the loop registers), the returned bit total and the output array compare."
+}

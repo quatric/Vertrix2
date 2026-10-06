@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "cases": 1024,
+  "scope": "Original 0x4b58a0 numeric selection/control flow, with hooks for string construction/format/append/free and final font binding. Those services and font rendering are not verified by this comparison."
+}

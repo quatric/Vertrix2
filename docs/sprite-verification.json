@@ -1,0 +1,1090 @@
+{
+  "status": "passed",
+  "sprite_resources_verified": 20,
+  "sprite_frames_verified": 216,
+  "sprite_pixels_verified": 337657,
+  "invalid_resources_rejected": 9,
+  "scope": "All original SPR raw frame channels/descriptors checked by independent serialization parsing; original postprocessing, blending and Wii rendering remain separate",
+  "frames": [
+    {
+      "name": ".\\sprite\\asteroid.spr",
+      "frame": 0,
+      "rgba_sha256": "f1e471e176e413d3a7f652768b80685c6c97232c75f3894685154d6a71cdc967"
+    },
+    {
+      "name": ".\\sprite\\asteroid.spr",
+      "frame": 1,
+      "rgba_sha256": "2c63c373ec7ed66630ae90c278f526679b4b08ead38153590a1873af6dada676"
+    },
+    {
+      "name": ".\\sprite\\asteroid.spr",
+      "frame": 2,
+      "rgba_sha256": "dde200c43e660d2e91337180edfcc1b790feb6b72f73b6521ac9917c811f6f16"
+    },
+    {
+      "name": ".\\sprite\\asteroid.spr",
+      "frame": 3,
+      "rgba_sha256": "9e9eb59e4d2cdc9e0da894aa963ac5548b81e0cd1cc1d50584bf89f96c718fe2"
+    },
+    {
+      "name": ".\\sprite\\asteroid.spr",
+      "frame": 4,
+      "rgba_sha256": "ce7ea6d967a1a098953805deae2cc36cede45fe2b3b3a6bd7efc015606bc747c"
+    },
+    {
+      "name": ".\\sprite\\asteroid.spr",
+      "frame": 5,
+      "rgba_sha256": "f9354f585d8e0c01190d6001b2888ef0f3ba66f42a1f9d2fa94198322ad8044e"
+    },
+    {
+      "name": ".\\sprite\\asteroid.spr",
+      "frame": 6,
+      "rgba_sha256": "372a9249baeb6fa4581a13b45b69064cf5d11ee27f1b323f6c839a00cac9ee64"
+    },
+    {
+      "name": ".\\sprite\\asteroid.spr",
+      "frame": 7,
+      "rgba_sha256": "4d4b5a614067611c0b231201befced5313fa070ee6f7f2c814bb3fdb45cac836"
+    },
+    {
+      "name": ".\\sprite\\bigstar.spr",
+      "frame": 0,
+      "rgba_sha256": "a378da6cb27ad4b8a9d6792778efb18707c08c190f7fd85bf1b35942678033f1"
+    },
+    {
+      "name": ".\\sprite\\bigstar.spr",
+      "frame": 1,
+      "rgba_sha256": "e77de09f91f2ee9a258458be685f0f37d3e424a7ff573726d2e470ffc92b33da"
+    },
+    {
+      "name": ".\\sprite\\bigstar.spr",
+      "frame": 2,
+      "rgba_sha256": "b88662b649d6ac4121aa39f153373ff344f62b2f636ff0201afbc6f2fd1cd1f4"
+    },
+    {
+      "name": ".\\sprite\\bigstar.spr",
+      "frame": 3,
+      "rgba_sha256": "43401a0b10b4f5b70d668ce14249713882323191d889b1831c6b6e34015dd49e"
+    },
+    {
+      "name": ".\\sprite\\bigstar.spr",
+      "frame": 4,
+      "rgba_sha256": "6e2a582058a7217fea2f1c71d4c1c5143ff54639c22d0997694aa63f7ff78e22"
+    },
+    {
+      "name": ".\\sprite\\bigstar.spr",
+      "frame": 5,
+      "rgba_sha256": "af85b0ba294d9a7e3fe196eeacc294951a799c0e25580b34fe3df6d8cf4fc701"
+    },
+    {
+      "name": ".\\sprite\\bigstar.spr",
+      "frame": 6,
+      "rgba_sha256": "bee533956d28fadf6b616f7c7c63697046ecbd00495149ca7c08c47ae9076e4f"
+    },
+    {
+      "name": ".\\sprite\\bigstar.spr",
+      "frame": 7,
+      "rgba_sha256": "8c9fda46f66e051fd704f9ed52764a9efc3dd423443f004612b01496200cadf7"
+    },
+    {
+      "name": ".\\sprite\\bigstar.spr",
+      "frame": 8,
+      "rgba_sha256": "d272c4a0cb60304feee8304f03c055898621e387f6252a11aa1ed965194c10f5"
+    },
+    {
+      "name": ".\\sprite\\bigstar.spr",
+      "frame": 9,
+      "rgba_sha256": "538006a631d22d1b99fb452eddc1ac4734d64d0bbc1b457e2ad311860de93318"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 0,
+      "rgba_sha256": "cef683ca6b1abe60dfc91e3ea782d1fcb307bafd8778f56e8bb06f6982563aa9"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 1,
+      "rgba_sha256": "6d075bf46a4aa4eb5a2065a0c5d7c1786a80c11740eaa8bf1933b05245d8a8a1"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 2,
+      "rgba_sha256": "b0d6ffc9b9a814464c67791ed940ff00ec01c94b02bec1b48508130542e75ef0"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 3,
+      "rgba_sha256": "47e9605c5200c113029dce11bdf399756022211322f0e3a802e5e908875c1036"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 4,
+      "rgba_sha256": "ed32da2aba41fc3e794b20beccdc1b9bfb056007f20bd19c7745863739584a31"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 5,
+      "rgba_sha256": "4921d00d1b9105d7b61f139a1208fbb11065ac92e38ec55e16154015564955a2"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 6,
+      "rgba_sha256": "3af02bea32f3c2d8948ba1647326d87e3cb1ef71f2a74fbb83d02a4d88a7bb28"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 7,
+      "rgba_sha256": "ac3ece33414905a3b57003bb96990e4965b6597b5b2c82bd49ba409f593b8bc3"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 8,
+      "rgba_sha256": "545aba9a85e3fa602a2b67bb7db09ac9dd8007af6ea6f516b596189968b79f4d"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 9,
+      "rgba_sha256": "20516002706c6281357cbf59f69ab8fd008372ef0cb6d2762751b9c2b58e4a59"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 10,
+      "rgba_sha256": "f48775c5f3df8891a2dbb0436e108518abbd1b699643931e2c29965f749a6073"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 11,
+      "rgba_sha256": "2fb6f2a792b100db6234ff696c178b93577f153fdf5f9dc4bbc2b66e60e704af"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 12,
+      "rgba_sha256": "f48775c5f3df8891a2dbb0436e108518abbd1b699643931e2c29965f749a6073"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 13,
+      "rgba_sha256": "ce79033801f36d8b76d76d6ed2ec833e6f6427947de3e48a5a4187a2ddd4950d"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 14,
+      "rgba_sha256": "3375feba57fe024981eceff1eebb2b91ae989ae991e2718808b4e919b6103640"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 15,
+      "rgba_sha256": "3df4112eb3c720a59f26f3ca5262dac9d0b6246e2d26641ceded93ca3b7296d7"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 16,
+      "rgba_sha256": "dcd90091a74cba059fb5c3049b1d545451d5686a5c1f5aa34f2e672a71ec1fd9"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 17,
+      "rgba_sha256": "297728c3d3c50a1922f8474f7ca617c10229c385aa1a8e0fed619919fbc50bd2"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 18,
+      "rgba_sha256": "1d16d2f231ccd82f1921e98cd5274452a1b82fcfd544a9f6e61a04d44b34a653"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 19,
+      "rgba_sha256": "b09782febb0e764f85fa459edbfccc72da89e27fc94780a61bf0a602b8813fde"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 20,
+      "rgba_sha256": "d0ef251eeb6e28c38eead6649d69b070b60a8317fc1857a7855acd3387a8aa63"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 21,
+      "rgba_sha256": "d0ef251eeb6e28c38eead6649d69b070b60a8317fc1857a7855acd3387a8aa63"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 22,
+      "rgba_sha256": "d0ef251eeb6e28c38eead6649d69b070b60a8317fc1857a7855acd3387a8aa63"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 23,
+      "rgba_sha256": "6950425920729626e8eef40df2074efb93286b06f7dbc22c380514aa5f4986dd"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 24,
+      "rgba_sha256": "11a4a4706dcf9e5cb46a60d03d979b6155cc1940d2c0717ae156aa8194ec3e90"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 25,
+      "rgba_sha256": "f48775c5f3df8891a2dbb0436e108518abbd1b699643931e2c29965f749a6073"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 26,
+      "rgba_sha256": "becca40afc72420b5f16fed57e85dff981c4bbba5e2bfb2f61b4644b15a89038"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 27,
+      "rgba_sha256": "538b960b063c536a0c481db1d804936c16935bd52b1146a4df167bc08193e17a"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 28,
+      "rgba_sha256": "5bc25db17b02f9c30ff2acb7e74f6caae775bdc5071d3d3ca4d6a5c703812a57"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 29,
+      "rgba_sha256": "f48775c5f3df8891a2dbb0436e108518abbd1b699643931e2c29965f749a6073"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 30,
+      "rgba_sha256": "362278ed055010b434bee7d94066cefadc9a0e713b37b061a3d424c45a949964"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 31,
+      "rgba_sha256": "af63d69fe51447d088fd89f84af7b70df4d509da588aef716310d19e8adcc85e"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 32,
+      "rgba_sha256": "acfab4d0518fd55071082c7d3e3d9cf6bc82c80ce9110f252f88901f25b68fb2"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 33,
+      "rgba_sha256": "fdbffa437773b542f974aca1183f3add045c1361e406a20ea8ee34feb82a18cf"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 34,
+      "rgba_sha256": "620c1594d7b20046754efaf2a04c6680761c42a7b01d7e16c0e19811603471a5"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 35,
+      "rgba_sha256": "441d9a06974aaa1f8858381f0a05d45ba57e98531cb7cb730febc656aa7ac199"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 36,
+      "rgba_sha256": "92d683f636be7fa3242ff2c5362e14ccbfbdbd0cbd19e8d402762d4b8dced9bd"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 37,
+      "rgba_sha256": "9e338fd0a9ddc6bda28e348b4a988e2a792dcd877a4c6402d0dce3360c2521bf"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 38,
+      "rgba_sha256": "9a24cd13fcb36a5e04bc8fa2f4789e505ddffcee8f02b9410baf3f6b6e80c7d2"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 39,
+      "rgba_sha256": "3c3091e6f882c487376844789d516eacf121b444804abb0e058b50da19e1b023"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 40,
+      "rgba_sha256": "a2de761741f856f4b48319bade84f5a44df34e7cf6f2815aad7a2eee1f68d72c"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 41,
+      "rgba_sha256": "978703a1e29b1324a7a2b92b2c7030d229ef8562c63dc11cb4745895d3666784"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 42,
+      "rgba_sha256": "43745a93c25f03f6fbac841ee08fd5fefbddf32de8434dbdec07f528fa34dbaf"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 43,
+      "rgba_sha256": "15fb4393f6d329f90b384e14d18051629a96d7a03fc53b12ced50d4fac3b6d71"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 44,
+      "rgba_sha256": "dcda9ac16e5ad64563c3f29bbac64d357527b1bb677792b7496d9bc3650f7efe"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 45,
+      "rgba_sha256": "0177c45ba8a250d6f9e671cb85bfc93839af5f4b8e68999d277916a7cd0b6aef"
+    },
+    {
+      "name": ".\\sprite\\damier.spr",
+      "frame": 46,
+      "rgba_sha256": "a89cee3b3fb17f9b7e786b400a5d5acbd1593500f84de48b5d7dadc1d0025fd8"
+    },
+    {
+      "name": ".\\sprite\\flare.spr",
+      "frame": 0,
+      "rgba_sha256": "473babd6f689ce68c7bd7e3c1c1d2b5ab0df3b602f3e96843f444a114834cf3f"
+    },
+    {
+      "name": ".\\sprite\\flare.spr",
+      "frame": 1,
+      "rgba_sha256": "c974eb919372746ac03d75827f23af71a92f851b51b779910dfc08d4fd56b8bc"
+    },
+    {
+      "name": ".\\sprite\\flare.spr",
+      "frame": 2,
+      "rgba_sha256": "8c81c6a97e612faf6744c1575a758c467bd70fdbda943bdb530a3a80c5fd1c9f"
+    },
+    {
+      "name": ".\\sprite\\flare.spr",
+      "frame": 3,
+      "rgba_sha256": "0f81206b0e7d79c44ce302295d2d0d141007fcb18821604bf3fa78887b6e7283"
+    },
+    {
+      "name": ".\\sprite\\flare.spr",
+      "frame": 4,
+      "rgba_sha256": "0502b283572f637fbdb5d5b2625fcf086013cac79990948bf7224469c9a13351"
+    },
+    {
+      "name": ".\\sprite\\hermeyes.spr",
+      "frame": 0,
+      "rgba_sha256": "287b73e2983b4345eb446d9290cd7ee989a6bb7aa837fea9cfb72d9db3bdd95d"
+    },
+    {
+      "name": ".\\sprite\\planete.spr",
+      "frame": 0,
+      "rgba_sha256": "2a6e5f8f45d1146d8c0b7b6048ab6fcabd53f104fbe686242bbde11f7e69679a"
+    },
+    {
+      "name": ".\\sprite\\planete.spr",
+      "frame": 1,
+      "rgba_sha256": "6946b12747032093cb58c0d683e6343f919b59d8e13e2d141b8498c10dd53ae0"
+    },
+    {
+      "name": ".\\sprite\\planete.spr",
+      "frame": 2,
+      "rgba_sha256": "8f7ac29371e60fd2d114f8e546387249ba14dd370c3494f05c5c27febee60864"
+    },
+    {
+      "name": ".\\sprite\\planete.spr",
+      "frame": 3,
+      "rgba_sha256": "413b022f46cb0a949e10dd50a6bc9d10e000d8a7ec9b5e2b9785d2debc947c8b"
+    },
+    {
+      "name": ".\\sprite\\planete.spr",
+      "frame": 4,
+      "rgba_sha256": "cde2ea1e2756f0cf28540b8aab1e924c189f2c201f585a2bbd1ce18c3e462831"
+    },
+    {
+      "name": ".\\sprite\\planete.spr",
+      "frame": 5,
+      "rgba_sha256": "c29d3cbb64ef9fb8dd32acb2bf3caf7b1b30d5a5edf309b19002cf5c4fbb6794"
+    },
+    {
+      "name": ".\\sprite\\planete.spr",
+      "frame": 6,
+      "rgba_sha256": "caf7e8e3a9d85149c62bf22425eec81d368107f791bba106e74f95b21a2909f4"
+    },
+    {
+      "name": ".\\sprite\\planete.spr",
+      "frame": 7,
+      "rgba_sha256": "960068aa320aaf176cd63a949d5a0eb5212c7c474a9e83960f843a0a6447e739"
+    },
+    {
+      "name": ".\\sprite\\planete.spr",
+      "frame": 8,
+      "rgba_sha256": "c99688f9fcf57134dbe86e1eb7e8397529aacf4ee4c4158f0b795e8ab9632bd5"
+    },
+    {
+      "name": ".\\sprite\\planete.spr",
+      "frame": 9,
+      "rgba_sha256": "121e8f11f458288812db3a181a762a244e5ffc640f78f2ab06e78a64a35a0483"
+    },
+    {
+      "name": ".\\sprite\\planete.spr",
+      "frame": 10,
+      "rgba_sha256": "47d095a85e10fc5ddd6cf89227b00a037e19a0fc4462981a661e1945876d891f"
+    },
+    {
+      "name": ".\\sprite\\planete.spr",
+      "frame": 11,
+      "rgba_sha256": "f395964c07f7b8ef245521f47e47310750308f429e587927adc23f127c10cc00"
+    },
+    {
+      "name": ".\\sprite\\select.spr",
+      "frame": 0,
+      "rgba_sha256": "7ed8a4b1f94a27e442f2d82f1e4c76f46026c193aea09510ba66253d5706f171"
+    },
+    {
+      "name": ".\\sprite\\select.spr",
+      "frame": 1,
+      "rgba_sha256": "1297f813d9b884dc495672760c14367b1a3edc8312c28bf9c5a7d1ed2d848df6"
+    },
+    {
+      "name": ".\\sprite\\select.spr",
+      "frame": 2,
+      "rgba_sha256": "589870eefd2de37f02cc00cbbcbb6b4cf128c126c30814501ec22e5bd14a9c55"
+    },
+    {
+      "name": ".\\sprite\\select.spr",
+      "frame": 3,
+      "rgba_sha256": "149003dac1e61cb4a36908766bd27ad6fa1f065c5f2c8f2e8bd81fedccafa917"
+    },
+    {
+      "name": ".\\sprite\\select.spr",
+      "frame": 4,
+      "rgba_sha256": "21dae200775d47fc5a50ff636a06e2ae76d78fabfd10b750cb5cc860de1a09c2"
+    },
+    {
+      "name": ".\\sprite\\select.spr",
+      "frame": 5,
+      "rgba_sha256": "d54101f51aac9b949d9e4a24f2bbf525c76897e204a1983b6732e566039ffc51"
+    },
+    {
+      "name": ".\\sprite\\select.spr",
+      "frame": 6,
+      "rgba_sha256": "dd9d0104b560e5c32839ed6bde2d654cc320f18a127348e9a3e10f23136a5db4"
+    },
+    {
+      "name": ".\\sprite\\select.spr",
+      "frame": 7,
+      "rgba_sha256": "39c3011ea4c498a0526efefc392113ad0bef40876689f1a26a9eb3aec412622a"
+    },
+    {
+      "name": ".\\sprite\\select.spr",
+      "frame": 8,
+      "rgba_sha256": "97cc6b6d10da9a236d2e8ef93bff4333eb4fe41c7153804e6cbdae44c657187e"
+    },
+    {
+      "name": ".\\sprite\\select.spr",
+      "frame": 9,
+      "rgba_sha256": "6518676030dba4370e608be2375b53bdad6c5f0024a3f8673e477e8a27cd7642"
+    },
+    {
+      "name": ".\\sprite\\select.spr",
+      "frame": 10,
+      "rgba_sha256": "6215fdda89ebbd4ee373dbec7042f9820bee6f599a572f2b035960ad44faf798"
+    },
+    {
+      "name": ".\\sprite\\select.spr",
+      "frame": 11,
+      "rgba_sha256": "8cb096112c36e7a23a6bd24b7606dc1508cf76fed7e5fff5c6103924fcf56691"
+    },
+    {
+      "name": ".\\sprite\\select.spr",
+      "frame": 12,
+      "rgba_sha256": "69b1dba1084ccf2a566d96c2a279678cb3b070674ab41fd9c1a787e9142fd4d7"
+    },
+    {
+      "name": ".\\sprite\\select.spr",
+      "frame": 13,
+      "rgba_sha256": "2b2e688e3e29714a00494cfc7b356d1eda01e7f1c1866306bd71806a65fceb2d"
+    },
+    {
+      "name": ".\\sprite\\select.spr",
+      "frame": 14,
+      "rgba_sha256": "66550ab9b91040010d7ad97d5becac5da6e7d3e2dea55f4f1cea39fb9118512d"
+    },
+    {
+      "name": ".\\sprite\\select.spr",
+      "frame": 15,
+      "rgba_sha256": "5f673390591659cf49ae57c0a2017f6a215911b297c70f0721e154367416a864"
+    },
+    {
+      "name": ".\\sprite\\select.spr",
+      "frame": 16,
+      "rgba_sha256": "d6972086ecbc95c88e5a10f5c49a49d619348d40f3a0eaba910700336475a87e"
+    },
+    {
+      "name": ".\\sprite\\select.spr",
+      "frame": 17,
+      "rgba_sha256": "285e6fac52f41901d9d1f806521af82df271be3e015bf92471df2e36df522356"
+    },
+    {
+      "name": ".\\sprite\\select.spr",
+      "frame": 18,
+      "rgba_sha256": "1a46bb415aff30aca6e9903175fd2cef099acd7884eb1e0271ab7790c94da64b"
+    },
+    {
+      "name": ".\\sprite\\select.spr",
+      "frame": 19,
+      "rgba_sha256": "a32f8e6b28967b006bc452e8ee4e042724de267d4735e002f38680e1a751393c"
+    },
+    {
+      "name": ".\\sprite\\select.spr",
+      "frame": 20,
+      "rgba_sha256": "c4b7751ad637ba6e346c82283c67e6a2cb145f6a38fb045a3bee79d2f8c1a984"
+    },
+    {
+      "name": ".\\sprite\\select.spr",
+      "frame": 21,
+      "rgba_sha256": "f2027114a72d7b82a69e97bd10a7ad573cb046f27325fc7564643781d8c8503f"
+    },
+    {
+      "name": ".\\sprite\\select.spr",
+      "frame": 22,
+      "rgba_sha256": "eaa578c40559a7712f2336d816bab93383cbb8305ff0129a2b9974fa2b8c94c9"
+    },
+    {
+      "name": ".\\sprite\\debrit.spr",
+      "frame": 0,
+      "rgba_sha256": "80268e57baab95bc39682d3af52cc1e949d2cca936183d0790ad6aad719ed1cf"
+    },
+    {
+      "name": ".\\sprite\\ArrowL.spr",
+      "frame": 0,
+      "rgba_sha256": "2bdf49cb140e695c5b98f1defe260a98dbb89f82eeeb3c0231a73e3c78afbb38"
+    },
+    {
+      "name": ".\\sprite\\ArrowL.spr",
+      "frame": 1,
+      "rgba_sha256": "d0cca7ace6fce9ee9d75f8bd7261894c8097237c08d8c56865d015cb22cf1d74"
+    },
+    {
+      "name": ".\\sprite\\ArrowL.spr",
+      "frame": 2,
+      "rgba_sha256": "bdae430edab94e5442a900b270e61a440cc65b3a06091bd8fedb8dd19b3984f9"
+    },
+    {
+      "name": ".\\sprite\\ArrowR.spr",
+      "frame": 0,
+      "rgba_sha256": "bd0794caaf1633f1ca77ef7fef212bd2f3652f7f294751edfc907cfdcf49a807"
+    },
+    {
+      "name": ".\\sprite\\ArrowR.spr",
+      "frame": 1,
+      "rgba_sha256": "5082a9b47094971c25682f7980d799f7d6cabb5855051089dc151f15d42a53e2"
+    },
+    {
+      "name": ".\\sprite\\ArrowR.spr",
+      "frame": 2,
+      "rgba_sha256": "8a4cc60636c6f4e8509e5f778afde769d31a8b66c36709d33612a133a8637e1d"
+    },
+    {
+      "name": ".\\sprite\\ArrowU.spr",
+      "frame": 0,
+      "rgba_sha256": "23e54114850b3b9319104f37e2b51dff32ca03b40786b994ef67fea1a7dd010a"
+    },
+    {
+      "name": ".\\sprite\\ArrowU.spr",
+      "frame": 1,
+      "rgba_sha256": "8e273cbfc865bc81ed4df30b297f4439655aa7e24d87d2207caa37bea8e97280"
+    },
+    {
+      "name": ".\\sprite\\ArrowU.spr",
+      "frame": 2,
+      "rgba_sha256": "213908f0cc2ce01be11fcc0f34f5d031f5ab924603718e7479a03b54d8536438"
+    },
+    {
+      "name": ".\\sprite\\ArrowD.spr",
+      "frame": 0,
+      "rgba_sha256": "c0544ab13a8c7291f13b413481837e23ffcafa425059de05794ecc25bc0f429a"
+    },
+    {
+      "name": ".\\sprite\\ArrowD.spr",
+      "frame": 1,
+      "rgba_sha256": "e01778a02865f54991195e63238acb1c600b7b919cb584c27f324ee2d2f4a527"
+    },
+    {
+      "name": ".\\sprite\\ArrowD.spr",
+      "frame": 2,
+      "rgba_sha256": "947072c484eedd67748e50acea1695dbd7a3f1df89f44397db58a61318113bf1"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 0,
+      "rgba_sha256": "a7cf83eda9ba3f1b15d737969178ebfdd2637ae2d14a4bd49d36d1bc94b44334"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 1,
+      "rgba_sha256": "c96a46e3bb9fdc4883452f9b450d0a35112e6711e665bf01f1ef903c4fdfce8b"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 2,
+      "rgba_sha256": "17f2e466b923e297efcf925a9a3d983e14b026cc80ea60e691d39e10008c8023"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 3,
+      "rgba_sha256": "f9074634ccd86becc6b17693e500fca25a550844f404fca6b4022cef566f6810"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 4,
+      "rgba_sha256": "8743bb4f4c6b5959e227e14d392579462f101b7b347671047ab122d4a3a547c5"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 5,
+      "rgba_sha256": "a471f938d8b903a29a15dcff04ca17f983b98dc5a816ccc76344879328fe2d7d"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 6,
+      "rgba_sha256": "907cb358dd0dcf7b9c50d8467acc9abf745f11ce503ea3fe71dc2732d312c92a"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 7,
+      "rgba_sha256": "cfb982336be92e9c9b5ece6d9ad0b146371b7671f7e4aadeebdd8a1d1f926d8d"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 8,
+      "rgba_sha256": "7fe4d0ce480253ced1602746e1e27ff1b32d503d8ff00695240dad1e43607720"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 9,
+      "rgba_sha256": "60237215c9fa7296bad1026f5c102c48a9af34edec44bba9eb35bcad8ec0a718"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 10,
+      "rgba_sha256": "d1866ea2cb1541e51c3a9f99bb8d8341dbd58819bdfc41bbe880d5ed2138fad6"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 11,
+      "rgba_sha256": "574119cff6ffa9c463d4abfb1bf05611cd3e0bfb93ef3a7e97fe147a8d26f396"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 12,
+      "rgba_sha256": "320a8e255235d62ccc213da787513e0a910ee374fbc833175cf28d901169183b"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 13,
+      "rgba_sha256": "922be2130cb2be66c85cb434514cadf50dce9f0fb445a68880cca35aab01374a"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 14,
+      "rgba_sha256": "7040e04357673745392b5bde6c821506f0ab064f03a94316d397902b0dfd8c20"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 15,
+      "rgba_sha256": "7040e04357673745392b5bde6c821506f0ab064f03a94316d397902b0dfd8c20"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 16,
+      "rgba_sha256": "575f5afd5cdce4a7febcc65cacb5e443c70461a8aefb43fff6de6cdd0db1cef7"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 17,
+      "rgba_sha256": "8dd2d34fe541d4c8c48a69137b28f9977a78f30b2be6544f685c233f29b8bddc"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 18,
+      "rgba_sha256": "861bb9ab90d85924f9e2c1ef9d9ae563fa3f9ad3ca368448609bb76eaad04762"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 19,
+      "rgba_sha256": "26e3faf152144e8d5c3dd48e40e70e260fc892565e042856eeba88746e0b8c7c"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 20,
+      "rgba_sha256": "9ee8b12dfc77211c0fedea391fb587c55ac8bda4c3480b7b8321fa549d521498"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 21,
+      "rgba_sha256": "238963f8b763cc4b684c081043dc56a2af31a7d3fd03c369d172b88d9fa95ddd"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 22,
+      "rgba_sha256": "3217eee537b7acc5b7221e21864858f6f50c65f9623234c2c291cda64fcdccf8"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 23,
+      "rgba_sha256": "6a7ae43a8380dd5c0755f7cc6ff7519d5f09f4a324c858342353eb3f817d2622"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 24,
+      "rgba_sha256": "a9ef6a7b175bfca86025f944952df88f1d3622f662f254ad7f6f4fbe99c4887e"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 25,
+      "rgba_sha256": "b73c1cca85092450241c2456d0d7d7d32ca65d7296dbb9ce88e602bd54b32ef0"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 26,
+      "rgba_sha256": "6bd5f4e2a3af66867978fa17a7ef58bdb6c2ef2da97254a11c7fb093f76258d1"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 27,
+      "rgba_sha256": "d22629d304bb7466031f604b7246581a687ac1f96559378c58d72a9b5cd45bb7"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 28,
+      "rgba_sha256": "175f9fb09069b7f9e19c86570b3c135aca0cf53e1c701d065ab25f08c603499a"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 29,
+      "rgba_sha256": "e40e548ed8f6059f6c7ee114b92b711a7ecf1918d881550167f19d7ced642bfd"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 30,
+      "rgba_sha256": "3e8fa461d03c0d32fb628cbf58d564e892ade76d9323790694650278a6f6d78d"
+    },
+    {
+      "name": ".\\sprite\\debrit2.spr",
+      "frame": 31,
+      "rgba_sha256": "aacc3a0f1420c10c87d10abad7323801f171237c7082deee85c2883605619e43"
+    },
+    {
+      "name": ".\\sprite\\mousec.spr",
+      "frame": 0,
+      "rgba_sha256": "c910cf484ccc906bc78d2a75556bc90ef6ee6472514522bce0399d183322a1ed"
+    },
+    {
+      "name": ".\\sprite\\mousec.spr",
+      "frame": 1,
+      "rgba_sha256": "dc13b082465442d4e58861353a58d7eddbf869e93cda548d194d089a1f2598d7"
+    },
+    {
+      "name": ".\\sprite\\mousec.spr",
+      "frame": 2,
+      "rgba_sha256": "22a2e65d99930c01e01ece0d35ade9110ce0d917f99a4455e60c8f344efc54de"
+    },
+    {
+      "name": ".\\sprite\\mousec.spr",
+      "frame": 3,
+      "rgba_sha256": "346a58d113ba5b0b8234708f1cecea6d77668d2a5b74ce068c3e1e3abb374a31"
+    },
+    {
+      "name": ".\\sprite\\mousec.spr",
+      "frame": 4,
+      "rgba_sha256": "9e7398a495fce2354251e536cc2a1ac457ad155982240c267a6a8be14c772f3b"
+    },
+    {
+      "name": ".\\sprite\\mousec.spr",
+      "frame": 5,
+      "rgba_sha256": "54c86ac00bce77c7ab9e9f3ed637747aa81c56e4a0d56539e9a06a03bfd62990"
+    },
+    {
+      "name": ".\\sprite\\mousec.spr",
+      "frame": 6,
+      "rgba_sha256": "9e7398a495fce2354251e536cc2a1ac457ad155982240c267a6a8be14c772f3b"
+    },
+    {
+      "name": ".\\sprite\\mousec.spr",
+      "frame": 7,
+      "rgba_sha256": "346a58d113ba5b0b8234708f1cecea6d77668d2a5b74ce068c3e1e3abb374a31"
+    },
+    {
+      "name": ".\\sprite\\mousec.spr",
+      "frame": 8,
+      "rgba_sha256": "22a2e65d99930c01e01ece0d35ade9110ce0d917f99a4455e60c8f344efc54de"
+    },
+    {
+      "name": ".\\sprite\\mousec.spr",
+      "frame": 9,
+      "rgba_sha256": "dc13b082465442d4e58861353a58d7eddbf869e93cda548d194d089a1f2598d7"
+    },
+    {
+      "name": ".\\sprite\\mousea.spr",
+      "frame": 0,
+      "rgba_sha256": "5f1b357e85e842a971ad885cc63b134288fc0f7404846e0b029593a23916ff05"
+    },
+    {
+      "name": ".\\sprite\\mousea.spr",
+      "frame": 1,
+      "rgba_sha256": "41263152a2e6962d083c4332c6b513f662ea10dd3f345e2cac4ef46d8ef9bf09"
+    },
+    {
+      "name": ".\\sprite\\mousea.spr",
+      "frame": 2,
+      "rgba_sha256": "ab93fbfdcfece56da74748df167ba8015131012b8b303ba9612180b1392c1efa"
+    },
+    {
+      "name": ".\\sprite\\mousea.spr",
+      "frame": 3,
+      "rgba_sha256": "0d8cde56820a9fec05dcb17f66afe66b3608fc4f79a96457cf729a61a227e5c3"
+    },
+    {
+      "name": ".\\sprite\\mousea.spr",
+      "frame": 4,
+      "rgba_sha256": "85e8d443c9e69159cb42139a87282d60e09c0bec7722a2789c8209133805a3fa"
+    },
+    {
+      "name": ".\\sprite\\mousea.spr",
+      "frame": 5,
+      "rgba_sha256": "a091efd61fe18f8f60d1ef09ebe8d98eb0bc2663c282ea4b4499feff36ba35b7"
+    },
+    {
+      "name": ".\\sprite\\mousea.spr",
+      "frame": 6,
+      "rgba_sha256": "9662d6df57eb1cb0f05e1ebc1d8bbde963e6f37d161c033706502500d078f7ce"
+    },
+    {
+      "name": ".\\sprite\\mousea.spr",
+      "frame": 7,
+      "rgba_sha256": "7ca43e869e1b6c563874f28277eac518780c65a84169af704f8016e0e7269ef5"
+    },
+    {
+      "name": ".\\sprite\\mousea.spr",
+      "frame": 8,
+      "rgba_sha256": "558bc0eaab8025777d15cc8fc0c3f048e0c5005e0e8e9f07da8537999bee1881"
+    },
+    {
+      "name": ".\\sprite\\mousea.spr",
+      "frame": 9,
+      "rgba_sha256": "ffb302ca6de3e5d514aa4134502072c5392b4425c5e889000f32f94bdaf6cdcd"
+    },
+    {
+      "name": ".\\sprite\\Circle.spr",
+      "frame": 0,
+      "rgba_sha256": "588c73ea549786097419206e59f3d10cc26b4d9104b9c220e437f20afe873e47"
+    },
+    {
+      "name": ".\\sprite\\Circle.spr",
+      "frame": 1,
+      "rgba_sha256": "3b78fad795c0bd4c834abe4ede1e9c2c9526e07759218fef10281bfb12739a3f"
+    },
+    {
+      "name": ".\\sprite\\Circle.spr",
+      "frame": 2,
+      "rgba_sha256": "caa823357f58412f3610f2a7747a9675d4333a6d97b7d30e99d829360ba7b775"
+    },
+    {
+      "name": ".\\sprite\\Circle.spr",
+      "frame": 3,
+      "rgba_sha256": "7062911c3fca2d7fe9a2ff7c1a53ede1a18bc6a4920824ba52c571541ebb2b9b"
+    },
+    {
+      "name": ".\\sprite\\Circle.spr",
+      "frame": 4,
+      "rgba_sha256": "d89171ffd6265199931b3df7e25dad9944bd0d41432fd2fedae91212efbfa05f"
+    },
+    {
+      "name": ".\\sprite\\Circle.spr",
+      "frame": 5,
+      "rgba_sha256": "d229f5e2ed88fe6164d54a7f26311023abb01a35dc0278d8dacaf8ae834524b4"
+    },
+    {
+      "name": ".\\sprite\\Circle.spr",
+      "frame": 6,
+      "rgba_sha256": "d117d40e4039da9a170a759e953552e6c0cc06540f30b8abeee24f9a12176a70"
+    },
+    {
+      "name": ".\\sprite\\Circle.spr",
+      "frame": 7,
+      "rgba_sha256": "8ae7b8a9d0a341e52aa4acd6a70502dee4a8b79a8ad9520430b3055fa9f1533f"
+    },
+    {
+      "name": ".\\sprite\\Circle.spr",
+      "frame": 8,
+      "rgba_sha256": "847bb05057750d3c7536a2e4963e2a20bbbf9e6810bf365cf10e2cb946b6c4a6"
+    },
+    {
+      "name": ".\\sprite\\Circle.spr",
+      "frame": 9,
+      "rgba_sha256": "7cb3ed8bb2399f671f1a0fb918d6d0ed71b16ffed200a7554cd68ce2e3aceced"
+    },
+    {
+      "name": ".\\sprite\\BlocType.spr",
+      "frame": 0,
+      "rgba_sha256": "96f8458bfd6f8e34f682d1bf5665f101b8c138329730cd6bc786d16b41e09509"
+    },
+    {
+      "name": ".\\sprite\\BlocType.spr",
+      "frame": 1,
+      "rgba_sha256": "b61a5613bdbd1f336d3b15260fcd55278956d003a4316d0e5fbd542c4431a6b0"
+    },
+    {
+      "name": ".\\sprite\\BlocType.spr",
+      "frame": 2,
+      "rgba_sha256": "7cf293977e35e4aff007f5cede1ce033645f71be6d7a0590faae8b4ed5043dec"
+    },
+    {
+      "name": ".\\sprite\\Oeil2.spr",
+      "frame": 0,
+      "rgba_sha256": "b0e5bf172d6d4ad4472b63685d5a07c7e7412830c118fe2d4a2af13197697e2c"
+    },
+    {
+      "name": ".\\sprite\\Oeil2.spr",
+      "frame": 1,
+      "rgba_sha256": "c98b3561ec26d41a1a0dbfec37e6cdabd108cf4a452bc18dbdf858d141acb2f8"
+    },
+    {
+      "name": ".\\sprite\\Oeil2.spr",
+      "frame": 2,
+      "rgba_sha256": "5b8eb7c272ce9e4cbd059a96a2dedcfed847f4d492fe7ce6edb99bb7732b1842"
+    },
+    {
+      "name": ".\\sprite\\Oeil2.spr",
+      "frame": 3,
+      "rgba_sha256": "4853d6b5089b0371316ecd3b53dbd86b0ee4045eea2ad071c318dbf64a009813"
+    },
+    {
+      "name": ".\\sprite\\Oeil2.spr",
+      "frame": 4,
+      "rgba_sha256": "9e53c68163de3cd69cf41cf79d94dee9fa4969e7d2d90f78429031dbdf637bc0"
+    },
+    {
+      "name": ".\\sprite\\Oeil2.spr",
+      "frame": 5,
+      "rgba_sha256": "66809d0191e24a797af2c406eca02d27370dfa08606f2f1af89bb3b019e3bbb9"
+    },
+    {
+      "name": ".\\sprite\\Oeil2.spr",
+      "frame": 6,
+      "rgba_sha256": "8eaa36afaeb2630a8e2acbeadddec9c0ff8fde8c5558f5a858c191a91f780c8d"
+    },
+    {
+      "name": ".\\sprite\\Oeil2.spr",
+      "frame": 7,
+      "rgba_sha256": "191b6971fc3179707a7c286f8970f137cc21cc4186c29b133fcdbfd18caaea37"
+    },
+    {
+      "name": ".\\sprite\\Oeil1.spr",
+      "frame": 0,
+      "rgba_sha256": "f1a584bb263ca7b8acc67b0b2564d55992ced8857a7357feb0126511608d7f2b"
+    },
+    {
+      "name": ".\\sprite\\Oeil1.spr",
+      "frame": 1,
+      "rgba_sha256": "d40cc065f8a7c3824653169f4ee6740e73ad0a0e04baba3580a246f91987a8fb"
+    },
+    {
+      "name": ".\\sprite\\Oeil1.spr",
+      "frame": 2,
+      "rgba_sha256": "eab803808f96ed98d2abae01fc000e9d96417205610035f3b6462978e6e51859"
+    },
+    {
+      "name": ".\\sprite\\Oeil1.spr",
+      "frame": 3,
+      "rgba_sha256": "4fde26c3547bac0758c11819da9ed007fcdb7e7a1f543812eba19ea9970aeb52"
+    },
+    {
+      "name": ".\\sprite\\Oeil1.spr",
+      "frame": 4,
+      "rgba_sha256": "2139cb0fbd1842240b01d97914453d51ba5492c453f74d1f697e002b8db681ed"
+    },
+    {
+      "name": ".\\sprite\\Oeil1.spr",
+      "frame": 5,
+      "rgba_sha256": "45a131c44a1cc9ae39e9f9722709e46f30b8f038f7cbb52514945bbdb0b06de3"
+    },
+    {
+      "name": ".\\sprite\\Oeil1.spr",
+      "frame": 6,
+      "rgba_sha256": "bf0c78207f583b2d9f08b26e9497d7c59baad4130ebaa4d2d81d45bcd0b1e636"
+    },
+    {
+      "name": ".\\sprite\\Oeil1.spr",
+      "frame": 7,
+      "rgba_sha256": "deeea20446707b50ab8d26ea409fc93610b93f7ba75509eee290266cff487280"
+    },
+    {
+      "name": ".\\sprite\\star.spr",
+      "frame": 0,
+      "rgba_sha256": "5d5e8b70d08ee68c1d3ef6d02e46d1a12f7b7d4d63cc43944a090d06e3af1bec"
+    },
+    {
+      "name": ".\\sprite\\star.spr",
+      "frame": 1,
+      "rgba_sha256": "09e09bb82da5f3328c47222bdc6cde925d668c5a2fa82ae4f38fb013eff5518e"
+    },
+    {
+      "name": ".\\sprite\\star.spr",
+      "frame": 2,
+      "rgba_sha256": "4e64b71637a6e007889c013c3626beaa49a8ea848528de378e5cd4be79d34e8e"
+    },
+    {
+      "name": ".\\sprite\\star.spr",
+      "frame": 3,
+      "rgba_sha256": "e0c61433cc93be666d3fc4ff527163d7ddc6f8ca9689c72e2981e96c5541f91e"
+    },
+    {
+      "name": ".\\sprite\\star.spr",
+      "frame": 4,
+      "rgba_sha256": "eadcbc9e274ff7bffb1246f79c0391a7ef492be0d1971e68671e13aeba6b9397"
+    },
+    {
+      "name": ".\\sprite\\star.spr",
+      "frame": 5,
+      "rgba_sha256": "759c9c46e6b3c575dfb1598b93fb796f95ee071936b488317b2dabed5e2ad5b0"
+    },
+    {
+      "name": ".\\sprite\\star.spr",
+      "frame": 6,
+      "rgba_sha256": "b1f5dfb4cf57a4690a992bdc332456431b9788864d98b5c1f14196707778e0d1"
+    },
+    {
+      "name": ".\\sprite\\star.spr",
+      "frame": 7,
+      "rgba_sha256": "c35e6b432c353a3074ef8c960a048f87210ba81851bd2d67581c33053a341a5b"
+    },
+    {
+      "name": ".\\sprite\\star.spr",
+      "frame": 8,
+      "rgba_sha256": "8055f738719c8fb46598c59cc922fcac1ca6c34cdb098bb8ffe81ac9bd355340"
+    },
+    {
+      "name": ".\\sprite\\star.spr",
+      "frame": 9,
+      "rgba_sha256": "a1a3aede408ea7c5580a928e6dbec29d289b43940db3fb874db1fd357ca3a52b"
+    },
+    {
+      "name": ".\\sprite\\star.spr",
+      "frame": 10,
+      "rgba_sha256": "6103800ff9945e2e405d6f6fe752ff833dba01920053677c33a8906e64e018f4"
+    },
+    {
+      "name": ".\\sprite\\star.spr",
+      "frame": 11,
+      "rgba_sha256": "6bd18eefe4f75ea84d2bc2780978f8f094dc8b9fbbc82ebe5fffd32add7f8267"
+    },
+    {
+      "name": ".\\sprite\\star.spr",
+      "frame": 12,
+      "rgba_sha256": "9cab8eac020fe64d03dd043cded182a9ec7794bc6742649821e8aaefe61739c2"
+    },
+    {
+      "name": ".\\sprite\\star.spr",
+      "frame": 13,
+      "rgba_sha256": "87aedcf754a2bef4b7f4003bfabe8583ba8270e3e6d5f6d7e3724584f0e00d31"
+    },
+    {
+      "name": ".\\sprite\\star.spr",
+      "frame": 14,
+      "rgba_sha256": "4a628fb065062b67c45b7a14c47a913e9839b6392f92aa2da6b15e9a6b2b5c43"
+    },
+    {
+      "name": ".\\sprite\\star.spr",
+      "frame": 15,
+      "rgba_sha256": "2106b09f01dd8d0444718c90c09122bcd83bbfec25053faa3eba8351c04a6bb6"
+    }
+  ]
+}

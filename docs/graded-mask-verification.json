@@ -1,0 +1,23 @@
+{
+  "status": "passed",
+  "channel_alpha_pairs_verified": 65536,
+  "offsets_verified": [
+    -2147483648,
+    -65537,
+    -65536,
+    -256,
+    -255,
+    -1,
+    0,
+    1,
+    254,
+    255,
+    65534,
+    65535,
+    65536,
+    2147483647
+  ],
+  "pcx_assets_verified": 529,
+  "pcx_pixels_verified": 7677516,
+  "scope": "Original table initializer 0x4807ea..0x48087a and mask routine 0x4798b0 execute unchanged. Decoder/free boundaries supplied; runtime effect selection and rendering remain separate."
+}

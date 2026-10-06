@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "complete_original_callback_cases": 16384,
+  "handler_changes": 6314,
+  "short_storage_preservation_cases": 16384,
+  "complete_original_child_virtual_update_cases": 16384,
+  "unsupported_class_preservation_cases": 16384,
+  "original_piece_child_setup_cases": 2048,
+  "child_setup_failure_preservation_cases": 4096,
+  "scope": "Complete44c2a0/44c2b0/44c310/44c370 without hooks, including actual timers, signed DWORD transitions and4877f0 binding. Entire extended actor storage matches direct resource/null-resource fixtures. Complete4ae150 virtual updates also match conditional refresh and callbacks. Resource publication, full player scheduling and Wii game remain separate."
+}

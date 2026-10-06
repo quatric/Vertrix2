@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "coordinate_comparisons": 24641,
+  "downward_probe_comparisons": 20000,
+  "side_contact_comparisons": 20000,
+  "original_shift_mask_comparisons": 60000,
+  "original_address": "0x00431ae0",
+  "scope": "Coordinate conversion, supplied-mask contacts and original first-step shift patterns 0..2; full movement remains incomplete"
+}

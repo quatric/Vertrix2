@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "direct_trigger_cases": 24000,
+  "retrigger_cases": 24000,
+  "note_delay_cases": 24000,
+  "scope": "Complete original 0x40e670 and complete extended dispatcher 0x40d540 selectors 9/D; whole 192-byte channel comparisons, signed ticks, zero intervals, invalid notes, absent instruments and combined selection/envelope reset. Excludes sequencing and envelope advancement."
+}

@@ -1,0 +1,25 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4c9921": {
+      "1": 736,
+      "2": 870,
+      "4": 1012,
+      "7": 38,
+      "8": 1077,
+      "9": 95,
+      "10": 39,
+      "11": 56,
+      "12": 46,
+      "13": 37,
+      "14": 35,
+      "15": 21,
+      "16": 15,
+      "17": 5,
+      "18": 10,
+      "19": 3,
+      "20": 1
+    }
+  },
+  "scope": "The routine executes completely in the original with every float helper stubbed and logged (double results returned in eax and edx, the compare answering through the flags it sets, the split writing its integer part in the frame, mirrored for the native); every call with its registers, the returned edx:eax and the stack locals compare."
+}

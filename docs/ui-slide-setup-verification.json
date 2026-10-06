@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4717f0": 4096,
+    "0x4719a0": 4096,
+    "0x471820": 4096,
+    "0x457890": 4096
+  },
+  "scope": "Complete 4717f0, 4719a0, 471820 and 457890 (including the real 4b14c0 measurement with and without a descriptor) execute in the original; the whole 256-byte actor storage compares after every call."
+}

@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 2048,
+  "linked_resources": 1365,
+  "scope": "Complete original 0x44e6e0 whole-object comparison without hooks, including signed period division, animation-before-period ordering, effect completion and frame binding. Gameplay construction remains incomplete."
+}

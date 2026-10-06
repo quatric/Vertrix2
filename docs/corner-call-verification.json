@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x440ca0": 1000
+  },
+  "scope": "The routine executes completely in the original with its callees stubbed and logged (0x4408e0 storing two result dwords through its stack pointers); every callee call (registers and seven or two stack arguments) and every pool object compare. The original eax is the restored exception chain."
+}

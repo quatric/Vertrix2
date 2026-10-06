@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "cases": 4096,
+  "transferred_blocks": 6865,
+  "destructor_calls": 6927,
+  "failed_lock_results": 864,
+  "scope": "Complete original 0x431c60 including original coordinate conversion and block metadata writes; only virtual destructors captured. Cell handles, ownership observed at each destructor, child clearing, active clearing, lock result and whole block records match. Actual object destructors, surrounding descent/scene composition and complete game remain unfinished."
+}

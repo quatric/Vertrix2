@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "random_object_construct": 4096,
+    "table_object_construct": 4096,
+    "rle_encoded_length": 4096,
+    "cursor_clamp": 4096,
+    "random_inclusive": 17927
+  },
+  "zero_width_ranges_matched_as_faults": 73,
+  "scope": "Complete 482480, 487870, 481420, 4ae170 and 482750 execute in the original; objects, cursor globals, run-length sizes, draw values and sample positions compare (three seeds, including buffer wrap). Zero-width ranges fault in the original and are rejected natively."
+}

@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4ac8d0": 4096,
+    "0x4adf20": 4096,
+    "0x42bb00": 4096,
+    "0x42bbd0": 4096,
+    "0x430800": 4096
+  },
+  "scope": "Complete 4ac8d0, 4adf20, 42bb00, 42bbd0 and 430800 execute in the original (operator new 4ca000 and the random draw 4826c0 stubbed and replayed, the recovered 4abd70, 4ac490, 4ac7b0 and 42ff10 executed); returned handles, whole objects and the draws consumed compare."
+}

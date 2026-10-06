@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "decay": 8192,
+    "switch": 8192
+  },
+  "scope": "Complete 449360 and 449390 execute in the original (4ac8d0, 4ac710 and 4ac8a0 stubbed and logged; 4ad530 and 4adfe0 run for real); the whole actor, the refresh state at 5bb710 and the ordered calls compare."
+}

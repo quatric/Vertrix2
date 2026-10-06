@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "effect_cases": 60000,
+  "scope": "Complete original 0x40d410/0x40d430/0x40d490, all parameter bytes and zero/nonzero signed ticks. Whole-channel comparison verifies changed fields/flags and preservation of unrelated state. Native invalid-effect/null checks. Excludes effect dispatch and sample-offset interpretation."
+}

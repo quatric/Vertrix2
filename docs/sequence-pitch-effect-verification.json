@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "sequences": 12000,
+  "integrated_ticks": 72000,
+  "scope": "Original complete volume-column dispatch followed by main dispatch for effects 0..10, 12, 25, 29, 30, 33 and no-op entries; whole 180-byte channel comparisons, persistent shared memories and flags, both pitch modes. Unsupported effect preserves all native state. Other main effects, instrument playback and audio excluded."
+}

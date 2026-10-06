@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "cases": 4096,
+  "scope": "Original direct-preparation fragments execute unchanged. All extracted render flags, effect/amount/stage/word, scale, clip bytes and cycle match portable actor state, including amount100 disabling blend. Whole actor storage remains unchanged. Complete preparation/clipping/pixels and application integration remain unfinished."
+}

@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "original_helper_calls": 28672,
+  "failure_preservation_cases": 12288,
+  "original_preview_snapshot_cases": 4096,
+  "snapshot_failure_preservation_cases": 12288,
+  "original_motion_start_cases": 4096,
+  "original_signed_limit_cases": 4096,
+  "motion_failure_preservation_cases": 8192,
+  "scope": "Complete42b070/42b090/42b0e0/42b0f0/42b110 without hooks. Entire player bytes match mode and wrapping toggle operations; selected preview frame matches for valid counts1..3. Seven-DWORD snapshots match counts0..3 with extra destination entries preserved. Caller supplies identity resolution. Full player construction, game-loop integration and Wii execution remain unfinished."
+}

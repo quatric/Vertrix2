@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "format_cases": 20000,
+  "buffer_size_cases": 20000,
+  "scope": "Original 0x410ffd..0x41106a output format builder, including 8-bit branch 0x41110d. Also executes buffer sizing 0x41108a..0x4110b3 and stereo branch 0x41111e. Device capability negotiation and playback excluded."
+}

@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "complete_original_cases": {
+    "draw": 8192,
+    "draw_drawn": 424,
+    "draw_companion": 228,
+    "chain": 4096,
+    "chain_nodes": 16242
+  },
+  "scope": "Complete 4ae010, 4ade60 and 4ae140 execute in the original. Draw 47ce10 and chain visits 4ac8a0/4af8c0 are recorded stubs; their eax/edx/ecx and four stack arguments and call order match. Actor storage and 5bb710..5bb728 compare whole. Native cyclic chains and short storage are rejected."
+}

@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4df220": {
+      "first": 1435,
+      "next": 2472
+    }
+  },
+  "scope": "The routine executes completely in the original over random bucket arrays and chains; the cursor cell and both outputs compare through the pool."
+}

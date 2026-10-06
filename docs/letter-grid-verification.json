@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "complete_original_executions": 1024,
+  "row_counts": {
+    "0": 215,
+    "2": 191,
+    "4": 213,
+    "1": 195,
+    "3": 210
+  },
+  "scope": "The routine executes completely in the original with the string runtime, the allocation and the actor setters stubbed and logged (0x440610 storing the width through its ecx pointer, 0x4ca310 storing the copied string); every call with its registers and stack arguments and every actor object compare."
+}

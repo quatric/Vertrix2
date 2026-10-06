@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "cases": 4096,
+  "zero_cycle_completions": 64,
+  "linked_resources": 2730,
+  "scope": "Actual complete original 0x44ece0/0x44ee20 including independent timers, radius transition, angle, original table coordinates, fade, scale, measurement and frame binding, with no routine hooks. Whole block state matches direct and one/two-level linked resource tables. Native receives independently resolved descriptor order; does not implement resource graph construction, actual VF actor binding or complete object runtime/game."
+}

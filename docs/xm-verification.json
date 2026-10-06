@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "xm_files": 29,
+  "patterns": 967,
+  "original_events": 610816,
+  "random_events": 20000,
+  "truncated_events_rejected": 112,
+  "scope": "Original complete 0x40e690 event decoder; all original XM pattern events. No music tick, instrument playback or effects execution."
+}

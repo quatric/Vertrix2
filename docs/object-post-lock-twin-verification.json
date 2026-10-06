@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x451920": 1024
+  },
+  "scope": "0x451920 executes completely in the original with the match scan, the event machine, the cursor method, the letter, the win handler, the allocator, the refresh leaves and the sfx dispatch stubbed and logged (win values replayed) and the level-side handler 0x431400 executing for real with the side object compared; return value, every call log, all seven objects, the loser flag and the RNG position compare."
+}

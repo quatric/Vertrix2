@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "delivery_cases": 30000,
+  "scope": "Final persistent playback through complete original 0x40e8a0 and actual wrapper calls/mixer setters, no hooks. Row/default/playback flags synchronize; other native fields preserved. Whole sequencer and mixer channel comparisons cover every flag byte, missing/rejected sample attachment, all sample flag bytes, invalid setters, both pitch modes and continued command execution. Excludes slot indexing, sequencing and real-time audio."
+}

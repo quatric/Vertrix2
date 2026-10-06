@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "frames": [
+    {
+      "frame": 6,
+      "width": 15,
+      "height": 15
+    },
+    {
+      "frame": 9,
+      "width": 21,
+      "height": 21
+    }
+  ],
+  "color_orders": 2,
+  "scope": "Original static sprite index513c5d=17 matches VF SpriteFileName.ini Circle.spr. Frames6/9 independently parsed and owned pixels/metadata match binary alpha and RGB ordering in both directions, including lifetime after archive close and invalid masks. Original resource graph construction and complete derived glyph bank remain separate."
+}

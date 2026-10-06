@@ -1,0 +1,22 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x45e740": 200,
+    "0x45e810": 200,
+    "0x45e820": 200,
+    "0x45e670": 400,
+    "0x45ed40": 200,
+    "0x45e830": 200,
+    "0x45e8f0": 200,
+    "0x45e910": 200,
+    "0x45e260": 200,
+    "0x45e440": 200,
+    "0x45e630": 400,
+    "0x45ea80": 200,
+    "0x45e750": 200,
+    "0x45e7b0": 200,
+    "0x45e850": 200,
+    "0x45e9e0": 200
+  },
+  "scope": "Each wrapper executes completely in the original with 0x4830f0, 0x4ea190 and 0x483790 stubbed and logged; every callee call, the returned eax, all array list objects and arrays compare."
+}

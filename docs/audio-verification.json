@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "wav_files": 13,
+  "samples": 149076,
+  "sample_rates": [
+    11025,
+    11111,
+    22050
+  ],
+  "unsupported_mp3_files_rejected": 63,
+  "scope": "VF-backed original PCM samples compared with Python wave decoding. No playback, mixing, resampling or MP3 decoding."
+}

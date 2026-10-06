@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "original_frame_layouts_verified": 56,
+  "character_sheets_verified": 18,
+  "frames_verified": 1008,
+  "pixels_verified": 580608,
+  "integrated_character_sets_verified": 18,
+  "gx_texture_frames_verified": 1008,
+  "gx_padding_layouts_verified": 5,
+  "scope": "Original 0x45f0c0 resource/frame/coordinate selection executes with allocation, copy and color-conversion boundaries intercepted. Native crops match these rectangles in directly loaded VF sheets. Renderer remains separate."
+}

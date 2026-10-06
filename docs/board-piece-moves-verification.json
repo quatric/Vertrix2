@@ -1,0 +1,21 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x42efa0": 2048,
+    "0x42f030": 2048,
+    "0x42f120": 2048,
+    "0x42f280_changed": 951,
+    "0x42f280": 2048,
+    "0x42f2b0_changed": 1820,
+    "0x42f2b0": 2048,
+    "0x42f520_changed": 1150,
+    "0x42f520": 2048,
+    "0x42f550": 2048,
+    "0x42f6e0_changed": 1167,
+    "0x42f6e0": 2048,
+    "0x42f720": 2048,
+    "0x42f550_changed": 909,
+    "0x42f720_changed": 952
+  },
+  "scope": "Complete 42efa0, 42f030, 42f120, 42f280, 42f2b0, 42f520, 42f550, 42f6e0 and 42f720 execute in the original with shape tables read from original memory; return values, whole boards and pieces compare."
+}

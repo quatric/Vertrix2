@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "score_comparisons": 30147,
+  "original_address": "0x0043ba90",
+  "scope": "Score arithmetic and cap only; level/bonus/state transitions separate"
+}

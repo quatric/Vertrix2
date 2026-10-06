@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "operation_selection_cases": 1536,
+  "invalid_preservation_cases": 1536,
+  "scope": "Original 0x4af786..0x4af86d selects and invokes the observed address. Preparation and drawing calls are supplied boundaries; their bodies, full actor dispatch and playable application are not verified here."
+}

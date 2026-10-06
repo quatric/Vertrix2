@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x43d320": 4096,
+    "0x418850": 4096
+  },
+  "scope": "Complete 43d320 and 418850 execute in the original (method stubbed and logged); returns, register arguments and storage compare, plus short-storage preservation checks."
+}

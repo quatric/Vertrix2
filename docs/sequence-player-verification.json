@@ -1,0 +1,212 @@
+{
+  "status": "passed",
+  "modules": 29,
+  "buffers": 29696,
+  "pcm_values": 12470860,
+  "songs": [
+    {
+      "name": "Abraham.xm",
+      "buffers": 1024,
+      "stereo": 0,
+      "interpolate": 0,
+      "rate": 32000
+    },
+    {
+      "name": "Albert.xm",
+      "buffers": 1024,
+      "stereo": 0,
+      "interpolate": 1,
+      "rate": 48000
+    },
+    {
+      "name": "Bill.xm",
+      "buffers": 1024,
+      "stereo": 1,
+      "interpolate": 0,
+      "rate": 32000
+    },
+    {
+      "name": "Choose.xm",
+      "buffers": 1024,
+      "stereo": 1,
+      "interpolate": 1,
+      "rate": 48000
+    },
+    {
+      "name": "Clara.xm",
+      "buffers": 1024,
+      "stereo": 0,
+      "interpolate": 0,
+      "rate": 32000
+    },
+    {
+      "name": "Credit.xm",
+      "buffers": 1024,
+      "stereo": 0,
+      "interpolate": 1,
+      "rate": 48000
+    },
+    {
+      "name": "Doc.xm",
+      "buffers": 1024,
+      "stereo": 1,
+      "interpolate": 0,
+      "rate": 32000
+    },
+    {
+      "name": "Draw.xm",
+      "buffers": 1024,
+      "stereo": 1,
+      "interpolate": 1,
+      "rate": 48000
+    },
+    {
+      "name": "Enigma.xm",
+      "buffers": 1024,
+      "stereo": 0,
+      "interpolate": 0,
+      "rate": 32000
+    },
+    {
+      "name": "Glouk.xm",
+      "buffers": 1024,
+      "stereo": 0,
+      "interpolate": 1,
+      "rate": 48000
+    },
+    {
+      "name": "Intro.xm",
+      "buffers": 1024,
+      "stereo": 1,
+      "interpolate": 0,
+      "rate": 32000
+    },
+    {
+      "name": "Lee.xm",
+      "buffers": 1024,
+      "stereo": 1,
+      "interpolate": 1,
+      "rate": 48000
+    },
+    {
+      "name": "Loser.xm",
+      "buffers": 1024,
+      "stereo": 0,
+      "interpolate": 0,
+      "rate": 32000
+    },
+    {
+      "name": "Max.xm",
+      "buffers": 1024,
+      "stereo": 0,
+      "interpolate": 1,
+      "rate": 48000
+    },
+    {
+      "name": "Mike.xm",
+      "buffers": 1024,
+      "stereo": 1,
+      "interpolate": 0,
+      "rate": 32000
+    },
+    {
+      "name": "Musnull.xm",
+      "buffers": 1024,
+      "stereo": 1,
+      "interpolate": 1,
+      "rate": 48000
+    },
+    {
+      "name": "Pamela.xm",
+      "buffers": 1024,
+      "stereo": 0,
+      "interpolate": 0,
+      "rate": 32000
+    },
+    {
+      "name": "Present.xm",
+      "buffers": 1024,
+      "stereo": 0,
+      "interpolate": 1,
+      "rate": 48000
+    },
+    {
+      "name": "Regis.xm",
+      "buffers": 1024,
+      "stereo": 1,
+      "interpolate": 0,
+      "rate": 32000
+    },
+    {
+      "name": "Rose.xm",
+      "buffers": 1024,
+      "stereo": 1,
+      "interpolate": 1,
+      "rate": 48000
+    },
+    {
+      "name": "Sandra.xm",
+      "buffers": 1024,
+      "stereo": 0,
+      "interpolate": 0,
+      "rate": 32000
+    },
+    {
+      "name": "Space.xm",
+      "buffers": 1024,
+      "stereo": 0,
+      "interpolate": 1,
+      "rate": 48000
+    },
+    {
+      "name": "Stan.xm",
+      "buffers": 1024,
+      "stereo": 1,
+      "interpolate": 0,
+      "rate": 32000
+    },
+    {
+      "name": "Stories.xm",
+      "buffers": 1024,
+      "stereo": 1,
+      "interpolate": 1,
+      "rate": 48000
+    },
+    {
+      "name": "Tod.xm",
+      "buffers": 1024,
+      "stereo": 0,
+      "interpolate": 0,
+      "rate": 32000
+    },
+    {
+      "name": "Tommy.xm",
+      "buffers": 1024,
+      "stereo": 0,
+      "interpolate": 1,
+      "rate": 48000
+    },
+    {
+      "name": "Valerie.xm",
+      "buffers": 1024,
+      "stereo": 1,
+      "interpolate": 0,
+      "rate": 32000
+    },
+    {
+      "name": "Vick.xm",
+      "buffers": 1024,
+      "stereo": 1,
+      "interpolate": 1,
+      "rate": 48000
+    },
+    {
+      "name": "Winner.xm",
+      "buffers": 1024,
+      "stereo": 0,
+      "interpolate": 0,
+      "rate": 32000
+    }
+  ],
+  "scope": "Exact original 0x40c5c0 scheduler, real tempo setter and tick callback; VF-backed native player compared across varying buffer sizes. Only original mixer slot allocation intercepted. Hardware audio and whole game integration remain unverified."
+}

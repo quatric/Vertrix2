@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "effect_cases": 40000,
+  "scope": "Complete original 0x40cff0: first-tick speed memory and target generation, cleared flags, later signed comparisons and wrapping movement, target clamps, output and flags. Both tuning modes, realistic/full-width states and exact-target cases. Excludes sequencer dispatch."
+}

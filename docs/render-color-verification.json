@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "cases": 4096,
+  "scope": "Original4ae2ff..4ae3b3 executes unchanged with explicit palette banks and hue table. All fixed-color globals match native fields. Palette color-bank creation and complete draw preparation remain unfinished."
+}

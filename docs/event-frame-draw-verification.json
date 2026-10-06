@@ -1,0 +1,9 @@
+{
+  "routine": "0x482e10, 0x482e80, 0x482f00",
+  "cases": 4096,
+  "complete_original_executions": 12288,
+  "registers_compared": true,
+  "stack_arguments_compared": true,
+  "event_buffer_compared": true,
+  "short_storage_preserved": true
+}

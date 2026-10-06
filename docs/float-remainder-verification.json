@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4db250": 20000
+  },
+  "scope": "The routine executes completely in the original over random doubles of nearby exponents and special mantissas; the quotient bits and both result dwords compare."
+}

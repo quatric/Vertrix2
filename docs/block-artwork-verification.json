@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "characters": 18,
+  "bound_frames": 1008,
+  "scope": "Original VF character sets bound to native runtime resources; all frames match the separately verified asset loader after archive closure. Animation periods in this binding harness are fixtures, not gameplay defaults. No complete actor lifecycle, renderer integration or playable game is claimed."
+}

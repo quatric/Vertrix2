@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "archive_sha256": "bdae74e10f8674b3c12e68d744a19e902a0a3185627782ede0c8e8abd5864090",
+  "diagnostic_frame_pixels_checked": 307200,
+  "visible_sprite_pixels": 872,
+  "dol_sha256": "e30be5a3540cbec08addae8ef78c024e734b1df47fc6fc5463e7c72f822bf639",
+  "dol_bytes": 478816,
+  "dol_populated_sections": 2,
+  "entry": "0x80003f00",
+  "scope": "Actual diagnostic composition helper reads original VF; every CPU pixel matches independent VF/SPR decoding. Wii executable fully links without undefined symbols; PowerPC ELF and DOL segment/entry bounds validate. Not executed on Wii; controller/SD/video hardware and complete game unverified."
+}

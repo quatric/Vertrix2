@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "modules": 29,
+  "patterns": 967,
+  "instruments": 718,
+  "samples": 713,
+  "pcm_bytes": 8739249,
+  "scope": "Complete original VF modules remain readable after archive closure. Original packed bytes, owned PCM including interpolation guards, song/order data, tuning/defaults, stable instrument views and flat sample binding offsets match independent source parsing. Missing-resource/null cleanup checked. Underlying decoders have separate original-executable proofs. Excludes music ticks and audio delivery.",
+  "asan_ubsan": "Passed all 29 module loads, archive closure, every packed/PCM/guard byte read and cleanup."
+}

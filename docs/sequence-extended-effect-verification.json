@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "sequences": 12000,
+  "integrated_ticks": 72000,
+  "scope": "Complete original volume-column and extended main dispatch across all 256 parameters, whole 180-byte channels and 64-byte globals, six consecutive ticks, both pitch modes, present/absent instruments, sample-owner changes and persistent memories/reset state. Unsupported native effect preserves state. Excludes full instrument playback and audio."
+}

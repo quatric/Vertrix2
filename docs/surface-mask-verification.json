@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4ab200": 1500
+  },
+  "scope": "The routine executes completely in the original with 0x478eb0 stubbed (returning the mask) and logged; the call registers and the mask bytes compare, with zero and 16 bit wrapped counts."
+}

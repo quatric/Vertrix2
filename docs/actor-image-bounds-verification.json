@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "cases": 4096,
+  "scope": "Complete original4b15e0 descriptor bounds execute unchanged. Native actor storage/image integration matches modes0..16, screen overrides, wrapped positions and low-word descriptor origins. Invalid short storage preserves output. Clipping/effects/drawing and full application remain unfinished."
+}

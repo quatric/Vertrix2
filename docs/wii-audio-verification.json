@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "wav_effects": 13,
+  "samples": 149076,
+  "asnd_submissions": 52,
+  "stop_calls": 39,
+  "scope": "Real VF/WAV/Wii ownership code under ASan/UBSan; ASND/cache calls are recorded host stubs, no audible or DSP validation."
+}

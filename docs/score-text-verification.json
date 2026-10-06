@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "cases": 4096,
+  "scope": "Complete 417790 executes in the original with the C runtime format call 4cdfb0 (%08lu) hooked; output bytes compare."
+}

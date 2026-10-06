@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "sequences": 4000,
+  "integrated_ticks": 24000,
+  "processed_channels": 17502,
+  "stopped_ticks": 12275,
+  "row_advance_requests": 3157,
+  "callback_calls": 12,
+  "mixer_commands_checked": 38676,
+  "scope": "Complete original 0x40eb10 tick, including real row advancement/packed decode, zero to three channels and six consecutive ticks. Whole 180-byte channels, 60-byte globals and packed pointers; all effects, envelopes, pending updates and final command order. Application callback, tempo setter and mixer wrappers captured; row/effect/envelope routines execute normally. Excludes command/audio execution and real VF music runtime views."
+}

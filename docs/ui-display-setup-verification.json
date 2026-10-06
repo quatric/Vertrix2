@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "cases": 512,
+  "scope": "Both complete post-position initialization fragments46e101..46e16e and46e290..46e302 execute without hooks. Whole object bytes match IDs, thresholds, periods, phase/source, flags, handler and real resource attachment/descriptor binding. Primary/secondary counters are preserved; animation counter resets. Both preceding coordinate setup fragments and actual4adf20 position setter also execute without hooks. Native layout matches original coordinates including wrapping; whole position-initialized object matches. Native full UI storage creation additionally matches actual4abd70 followed by position and setup, including untouched bytes. Allocation and list insertion remain external; this is not full application execution."
+}

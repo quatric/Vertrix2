@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "attachment_cases": 30000,
+  "scope": "Complete original 0x40c9d0, null descriptor/source rejection and whole channel comparisons with all sample flag bytes and arbitrary counts/loop geometry; verifies source binding and preservation of step/volume/pan/cache. Excludes buffer lifetime, slot indexing and publication integration."
+}

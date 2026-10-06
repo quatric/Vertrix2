@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4daed8": {
+      "software": 2872,
+      "hardware": 549,
+      "tiny": 382,
+      "range": 293
+    }
+  },
+  "scope": "The routine executes completely in the original with every float helper stubbed and logged (double results returned in eax and edx, the compare answering through the flags it sets, the split writing its integer part in the frame, mirrored for the native); every call with its registers and the returned edx:eax compare."
+}

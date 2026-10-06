@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "frame_upload_cases": 768,
+  "frame_update_cases": 768,
+  "pixels_checked_per_phase": 1133536,
+  "channel_permutations": 24,
+  "invalid_backing_preservation_cases": 768,
+  "invalid_mask_preservation_cases": 768,
+  "scope": "Independent GX tile decoding checks every source/padded channel. Strides include overlapping rows; full640x480 included. Recorded GX stubs verify synchronization before writes, cache flush/invalidation, retained allocation/object, bind/free. Wii upload modules compile against actual libogc for PowerPC. GPU execution, final quad/video presentation and full application remain unverified."
+}

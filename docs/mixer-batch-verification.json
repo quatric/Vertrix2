@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "batch_cases": 30000,
+  "scope": "Actual original 0x40c518..0x40c547: batch length, unsigned wrapped product comparison, signed wrapped numerator division, temporary reverse-step negation. 10000 realistic-range and 20000 full-width fixtures, including equality. Excludes kernel dispatch, repeated traversal and music scheduling."
+}

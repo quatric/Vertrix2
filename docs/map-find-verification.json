@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4df160": {
+      "added": 2761,
+      "found": 1335
+    }
+  },
+  "scope": "The routine executes completely in the original with 0x4df0f0, 0x4def50 and 0x4e23e0 stubbed and logged (0x4df070 unstubbed); every callee call, the returned value address and every pool object compare."
+}

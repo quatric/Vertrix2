@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "init": 4096,
+    "release": 4096,
+    "draw": 4096,
+    "text_width": 4096,
+    "0x41a9e0": 4096
+  },
+  "scope": "Complete 441530, 441a80, 441b30, 442b00 and 41a9e0 execute in the original (release 478d80 and draw 47ce10 stubbed and logged, methods stubbed); the whole record, every pool object, the global cell, events and the 16-bit text width compare."
+}

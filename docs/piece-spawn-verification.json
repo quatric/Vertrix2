@@ -1,0 +1,8 @@
+{
+  "routine": "0x4320d0",
+  "cases": 4096,
+  "complete_original_executions": 4096,
+  "whole_object_compared": true,
+  "call_logs_compared": true,
+  "short_storage_preserved": true
+}

@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x479450": 4096,
+    "0x479d70": 4083,
+    "0x479b50": 4096,
+    "0x47e200": 4096,
+    "0x47cd60": 4096,
+    "0x479d70_rejected": 13
+  },
+  "scope": "Complete 479450, 479d70, 479b50, 47e200 and 47cd60 execute in the original over guest surface storage; every pixel byte of both surfaces and the decimation output compare. Cases where the original would touch bytes outside the supplied storage are not executed and must leave the native storage unchanged (counted as rejected). Scratch globals 0x5589xx..0x558cxx are not modeled."
+}

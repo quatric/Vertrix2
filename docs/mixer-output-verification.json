@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "converted_samples": 367704,
+  "scope": "Complete original 0x401010 and 0x401054 output routines. Exhaustive -65536..65536, all positive signed overflow inputs for the PCM8 bias addition, 20000 random signed 32-bit values, plus INT_MIN. Native capacity/null/zero-count guards. Excludes accumulation and complete playback."
+}

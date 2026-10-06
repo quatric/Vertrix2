@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "seeds": [
+    0,
+    1,
+    12345,
+    305419896,
+    2147483648,
+    4294967295
+  ],
+  "sample_words": 24582,
+  "range_and_position_comparisons": 60000,
+  "clock_range_and_position_comparisons": 39000,
+  "clock_sample_words": 36873,
+  "scope": "Seeded repeating and clock-reseeded modes, including wrap/refill",
+  "oracle_platform_seam": "Single-thread CRT storage and supplied time(); original rand unchanged"
+}

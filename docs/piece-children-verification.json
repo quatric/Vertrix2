@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "child_kinds": 4096,
+    "child_kinds_alias": 4096,
+    "setup": 4096,
+    "setup_registers": 4096,
+    "remember_and_setup": 4096,
+    "restore_and_clear": 4096,
+    "arm_once": 4096,
+    "set_variant": 4096,
+    "snap_to_left": 4096,
+    "snap_to_origin": 4096,
+    "setup_selected": 4096,
+    "place": 4096,
+    "init_from_kind": 4096
+  },
+  "scope": "Complete 42b950, 42b990, 42a980, 43a5b0, 43a410, 43a510, 43a520, 43a560, 43a5f0, 42a800, 42b920, 42b9f0 and 425ef0 execute in the original (resource attach 4ac8d0 stubbed and logged); results, attach events and every pool object compare, including children that alias the piece or each other."
+}

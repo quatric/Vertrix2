@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4270a0": 4096
+  },
+  "cases": {
+    "found": 830,
+    "none": 1876,
+    "level": 1390
+  },
+  "scope": "The complete search runs in the original with its figure pass, row reach and every callee executing for real over random boards, pieces, starts, rows and levels (start 0..5 and row 0..12, the inputs the game produces); the answer and both output words compare with the native search."
+}

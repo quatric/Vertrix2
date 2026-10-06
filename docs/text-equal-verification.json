@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x489d00": 4096
+  },
+  "results": {
+    "0": 1713,
+    "1": 2383
+  },
+  "scope": "The routine executes completely in the original (0x4dabb0 unstubbed) over random strings including last character mismatches; the result compares."
+}

@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "latch": 4096,
+    "reset": 4096,
+    "reset_open": 4096,
+    "reset_secondary": 4096
+  },
+  "scope": "Complete 415550, 415b50, 415b90 and 415bd0 run unmodified in the original over random register memory; all fields compare, and the leftover eax equals the source dword."
+}

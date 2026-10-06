@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "1": 692,
+    "3": 669,
+    "2/565": 664,
+    "4": 1323,
+    "2/555": 652
+  },
+  "scope": "Complete 47a040 runs in the original (allocation included) over random rectangles, percentages and tables; the pixel memory compares."
+}

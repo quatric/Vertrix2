@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x45e590": 4000,
+    "0x45e6b0": 4000,
+    "0x45ec50": 4000,
+    "0x45ed10": 4000,
+    "0x45ee30": 4000,
+    "0x45f020": 4000,
+    "0x45f140": 4000,
+    "0x45f1f0": 4000,
+    "0x45f250": 4000
+  },
+  "scope": "Each loop executes completely in the original with its callees stubbed and logged; every callee call (address and registers) and the returned eax compare."
+}

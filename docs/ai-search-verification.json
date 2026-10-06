@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4270a0": {
+      "short": 862,
+      "found": 1135,
+      "none": 51
+    }
+  },
+  "scope": "The routine executes completely in the original with 0x434ee0 stubbed and logged (storing its score word through its stack pointer, mirrored for the native; 0x4261b0 and the fill run unstubbed); the returned eax, the selected column and rotation, every call with its registers and the copied board, the reach, best and rotation frame locals compare."
+}

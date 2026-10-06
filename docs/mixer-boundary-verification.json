@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "boundary_cases": 50000,
+  "outcomes_stopped_ready_adjusted": [
+    5009,
+    30031,
+    14960
+  ],
+  "scope": "Original 0x40c483/0x40c4d6 single boundary decisions: signed comparisons, exact-boundary equality, wrapping/reflection arithmetic, direction toggles and stop bits. Random full-width positions and flags. Excludes repeated traversal, batch sizing and kernel dispatch."
+}

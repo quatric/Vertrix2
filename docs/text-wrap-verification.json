@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4b25b0": 2048
+  },
+  "lines": {
+    "0": 142,
+    "1": 651,
+    "2": 641,
+    "3": 387,
+    "4": 159,
+    "5": 53,
+    "6": 15
+  },
+  "scope": "The routine executes completely in the original with the string runtime and the font measure stubbed and logged (the string pointers and widths mirrored for the native; the frame word above the width local is also mirrored); every call with its registers, the stored arguments, the line counts, starts and lengths compare."
+}

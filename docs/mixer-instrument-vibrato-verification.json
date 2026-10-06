@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "instrument_vibrato_cases": 60000,
+  "scope": "Original 0x40e1db through each output epilogue; whole channel comparison, all waveform selectors, absent instruments, zero depth/step, signed wrapping and period clamps. Epilogue hooks only bypass register restores. Excludes sequencing and preceding envelope integration."
+}

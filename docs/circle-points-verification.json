@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x479e50": 2048
+  },
+  "plot_steps": 71239,
+  "scope": "The routine executes completely in the original with 0x479df0 stubbed and logged; every plot call with its registers and the scratch word region compare."
+}

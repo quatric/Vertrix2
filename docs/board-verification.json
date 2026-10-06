@@ -1,0 +1,35 @@
+{
+  "status": "passed",
+  "seed": 1203,
+  "boards": 1000,
+  "comparisons": {
+    "alignment": 4000,
+    "falling": 1000,
+    "collapse": 1000,
+    "bomb_estimate": 4000,
+    "live_blast": 28000
+  },
+  "character_power_entries": 532,
+  "original_speeds": [
+    5,
+    3,
+    2,
+    4,
+    7,
+    6,
+    8,
+    6,
+    9,
+    6,
+    8,
+    4,
+    2,
+    8,
+    5,
+    4,
+    8,
+    8,
+    7
+  ],
+  "scope": "Recovered board routines and tables only; not full-game fidelity"
+}

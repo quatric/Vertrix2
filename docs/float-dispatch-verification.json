@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4d80a6": 1500,
+    "0x4d809c": 1500
+  },
+  "scope": "Both entries execute completely in the original with the helper behind the dword at 0x503ea0 stubbed (the jump target) and logged; the callee registers eax and edx and the returned eax compare for zero, signed zero and random operands."
+}

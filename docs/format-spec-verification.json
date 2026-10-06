@@ -1,0 +1,18 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4df6c8": 8192
+  },
+  "consumed": {
+    "0": 2159,
+    "1": 3312,
+    "2": 1603,
+    "3": 685,
+    "4": 291,
+    "5": 86,
+    "6": 33,
+    "7": 14,
+    "8": 9
+  },
+  "scope": "The routine executes completely in the original (0x4df81c included); the returned text position, the specification record and the argument pointer compare."
+}

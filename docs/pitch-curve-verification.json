@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "curve": 4096
+  },
+  "scope": "Complete 410150 runs unmodified in the original over rates from zero to 32-bit extremes (including shift wrap and the halving loop); results compare."
+}

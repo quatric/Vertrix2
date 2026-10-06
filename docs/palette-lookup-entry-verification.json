@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "cases": 4096,
+  "scope": "Unchanged original475183..47525c nearest-channel lookup assembly matches native using recovered and random channel tables, including first-entry ties. RGB-to-HSV and complete lookup generation remain unfinished."
+}

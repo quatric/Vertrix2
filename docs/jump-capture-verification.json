@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4d9f06": 256
+  },
+  "scope": "The routine executes completely in the original over random registers and exception chains; the stored record compares byte for byte."
+}

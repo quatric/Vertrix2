@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x441e30": 300
+  },
+  "call_counts_seen": {
+    "3": 55,
+    "24": 245
+  },
+  "scope": "The original executes completely, exception frame included, with its callees stubbed and logged; every callee call and the 21 stored entries compare (the return value is the previous exception chain and is not ported)."
+}

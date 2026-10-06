@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "inner": 2019,
+    "edge": 1981
+  },
+  "scope": "Complete 433180 executes in the original over random grids, tables and cells; the output memory and the twelve scratch globals compare."
+}

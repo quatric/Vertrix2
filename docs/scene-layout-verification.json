@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 512,
+  "object_comparisons": 32768,
+  "scope": "Complete original 0x430930 with only resource dimension helper intercepted. Both cell collections, incoming columns/rows, quadrant positions, null/aliased handles, signed-byte offsets, signed-word wrap, mode 16 bypass and unsigned centering arithmetic. Resource measurement separately verified; renderer integration and full game remain unfinished."
+}

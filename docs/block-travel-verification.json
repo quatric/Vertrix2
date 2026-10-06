@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 2048,
+  "linked_resources": 1365,
+  "scope": "Complete original 0x44ebe0 and 0x44ec40 whole-object comparison without hooks, including dword handoff, origin movement, both-axis completion and frame binding. Gameplay construction remains incomplete."
+}

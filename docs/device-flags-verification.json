@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "mark_dirty": 4096,
+    "set_limit": 4096,
+    "set_pair": 4096,
+    "get_values": 4096,
+    "get_locked": 4096,
+    "lock": 4096
+  },
+  "scope": "Complete 40ede0 (lock callback 40ae00 stubbed), 40ee30, 40ee60, 40eea0, 40ef00 and 40ef40 run unmodified in the original over random flag bytes and parameters; status, flags, fields and outputs compare."
+}

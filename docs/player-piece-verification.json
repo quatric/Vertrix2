@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "cases": 2048,
+  "create": 1536,
+  "create_existing": 512,
+  "release": 1638,
+  "release_empty": 410,
+  "preview": 1365,
+  "preview_empty": 683,
+  "scope": "Complete 432160, 4321b0 and 432110 execute in the original with heap allocation and the virtual destructor supplied as boundaries (identity and flag-2 argument asserted). Whole player, parent and child storage compare. Destructor bodies, preview construction 4320d0/42b6b0 and game-loop integration remain separate."
+}

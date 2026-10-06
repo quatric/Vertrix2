@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "first_dealt": 1014,
+    "second_skipped": 966,
+    "first_skipped": 986,
+    "second_dealt": 1034
+  },
+  "scope": "Complete 431780 and 431930 execute in the original (operator new 4ca000 and the draw 4826c0 stubbed and replayed, the destructor calls logged); the result, the destroy events, the board and every object compare."
+}

@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "row_effect_transition_cases": 40000,
+  "scope": "Original 0x40e770 through 0x40e7ba, including real packed-event decode and pitch restoration branches; whole channel comparison, vibrato/arpeggio transitions, zero/nonzero old parameters and arbitrary pitch/flags. Excludes later row instrument/note initialization and effect execution."
+}

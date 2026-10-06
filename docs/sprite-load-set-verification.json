@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "owned_load_sets": 12,
+  "mapped_banks_checked": 240,
+  "frames_checked_after_archive_close": 2592,
+  "pixels_checked": 4662360,
+  "scope": "All20 planned original direct banks, two explicit interface first-source fixtures, six RGB byte permutations. Independent VF/SPR pixel and metadata reference includes simultaneous interface clone/mirror changes. Map pointers bind stable owned banks. Occupied output and final missing resource preserve output; freeing clears the set. Runtime settings selection, derived builders and complete startup remain unverified."
+}

@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "sequences": 12000,
+  "integrated_ticks": 72000,
+  "scope": "Original complete volume-column dispatch followed by main dispatch for effects 20/27 with present/absent instruments, cross-instrument retained samples and envelope release flags; whole 180-byte channel comparisons, persistent shared memories and flags, both pitch modes. Unsupported effect preserves all native state. Sample selection and counter wrapping covered; envelope counters/resets remain intact. Other effects, full instrument playback and audio excluded."
+}

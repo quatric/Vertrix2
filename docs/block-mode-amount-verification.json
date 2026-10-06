@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 4096,
+  "linked_resources": 2730,
+  "scope": "Complete original 0x44e790/0x44e800/0x44f990/0x44fa00 whole-object comparison without hooks, including mode/amount transitions, both-completion handoff and frame binding. Gameplay construction remains incomplete."
+}

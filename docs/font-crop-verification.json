@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 1024,
+  "pixels_compared": 75369,
+  "scope": "Actual47ce10 four-byte regular row-copy branch, no hooks. Narrower bordered-sheet crops; all pixel bytes and unmodified source compared. Full-width fast path, original482f80 allocator and VF font integration are outside this proof."
+}

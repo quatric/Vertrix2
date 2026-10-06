@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 1024,
+  "pixels": 118832,
+  "scope": "Owned image adapters match separately oracle-verified kernels. Explicit LE byte translation, source mutation/preservation, dimensions, nonempty-output rejection and freeing checked. This integration proof does not execute x86 or validate complete VF-derived glyph assembly."
+}

@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cursor_cases": 20000,
+  "step_cases": 20000,
+  "scope": "Original successful attachment 0x40c9d0: cursor position, loop bounds and flags, including signed right shift and fixed-point wrapping. Also executes original 0x40cb10 playback step calculation. Source binding, slot validation and mixing excluded."
+}

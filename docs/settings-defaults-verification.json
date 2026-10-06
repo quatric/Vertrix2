@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4290c0": 2048
+  },
+  "scope": "Complete 4290c0 executes in the original with random globals and random prior object bytes; the whole settings object compares byte for byte."
+}

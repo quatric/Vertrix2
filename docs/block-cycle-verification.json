@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 3072,
+  "linked_resources": 2048,
+  "scope": "Complete original 0x44f390/0x44f3e0/0x44f430 whole-object comparison without hooks, including signed wrapping, modulus255, cycle traces, pre-tick flag and frame binding. Gameplay construction remains incomplete."
+}

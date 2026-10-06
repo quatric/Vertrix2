@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "cases": 3072,
+  "scope": "Actual original 0x4acc10/0x4ad580 without hooks; whole object and completion returns match full-width cycles and signed-word values. Does not execute the enclosing rotating actor handler."
+}

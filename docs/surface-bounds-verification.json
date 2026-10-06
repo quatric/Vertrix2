@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "last_column_images": 1368,
+    "other_images": 2728
+  },
+  "scope": "Complete 4792d0 executes in the original over 1, 2, 3 and 4 byte (and zero) pixel surfaces of 0 to 20 columns and 0 to 16 rows with empty, sparse, dense, first-column and last-column images; all four output dwords and the result compare, including the empty/last-column whole-image quirk."
+}

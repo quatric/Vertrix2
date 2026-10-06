@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 2048,
+  "pixels": 2201989,
+  "scope": "Actual complete483ce0 four-byte branch without hooks. Pixels and unchanged descriptor match; double mirror restores input. One-byte branch and complete configured sprite bank remain outside this proof."
+}

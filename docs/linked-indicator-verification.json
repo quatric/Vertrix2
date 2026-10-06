@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "cases": 10240,
+  "handler_changes": 3360,
+  "serialized_storage_cases": 10240,
+  "short_storage_preservation_cases": 10240,
+  "scope": "Complete44ff90/44fff0/450040/4500b0/450100 without hooks. Whole object matches with original lookup, timers and byte transition. Missing linked objects, signed thresholds, wrap arithmetic and handler changes covered. Caller resolves native linked object; full application remains unfinished."
+}

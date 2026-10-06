@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "sequences": 8000,
+  "ticks_per_sequence": 6,
+  "integrated_playback_ticks": 48000,
+  "scope": "Consecutive original 0x40dc80, 0x40dc50 for integrated channel effects, complete 0x40e030 and 0x40e8a0 per tick, whole 180-byte channels across persistent row/column/playback state. All volume commands, present/absent instruments, envelope metadata, arbitrary state and shared dirty flags. Invalid native envelope preserves row and playback. Publication order/arguments match with mixer wrappers captured. Invalid command storage preserves row/playback. Covers main effects 0..10, 12, 25, 29, 30, 33 and no-op entries. Other main effects and execution of emitted mixer commands excluded."
+}

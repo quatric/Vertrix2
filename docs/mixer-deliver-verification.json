@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "delivery_cases": 30000,
+  "scope": "Complete original 0x40e8a0 through actual wrapper calls and mixer setters, no hooks. Whole sequencer and mixer channel comparisons cover every flag byte, missing/rejected sample attachment, all sample flag bytes, invalid setters, both pitch modes and continued command execution. Excludes slot indexing, sequencing and real-time audio."
+}

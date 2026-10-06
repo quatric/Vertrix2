@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "cases": 4096,
+  "scope": "Original 0x440990 without hooks, full signed-word dimensions/bounds, narrowing, truncation and early-return origin behavior. Font measurement/rendering remain unfinished."
+}

@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x46f220": 498,
+    "0x46f000": 526
+  },
+  "scope": "The routine executes completely in the original with the string runtime, the allocation and the actor setters stubbed and logged (0x440610 storing the width through its ecx pointer, 0x4ca370 storing its assignment); every call with its registers and stack arguments and every actor object compare."
+}

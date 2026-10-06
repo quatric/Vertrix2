@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "kernel_cases": 16896,
+  "scope": "Full original noninterpolated 8-bit and 16-bit stereo kernels, one positive sample per case, all 33 valid stored volumes and all 256 pan values. Original gain table initialized by 0x40c7d0 with master gain 256. Does not verify interpolation, arbitrary PCM, looping or complete music playback."
+}

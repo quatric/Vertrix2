@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "next": 4096,
+    "bits24": 4096,
+    "bits16": 4096,
+    "unread": 4096
+  },
+  "scope": "Complete 4046e0, 404610, 404680 and 4060e0 (copy 4eb5e0 stubbed and compared) run unmodified in the original over positions 0..7 and wide positions (shift counts, sign carry); result and both state dwords compare."
+}

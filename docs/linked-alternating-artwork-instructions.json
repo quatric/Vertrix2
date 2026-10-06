@@ -1,0 +1,60 @@
+{
+  "executable_sha256": "4db546b7957136179bedf22a37b7e5db401ea25bc668b715643adf84ce525e28",
+  "chain": "artwork",
+  "handlers": [
+    {
+      "address": "0x45e490",
+      "end": "0x45e528",
+      "calls": [
+        "0x4831b0",
+        "0x487640",
+        "0x4877f0",
+        "0x487850"
+      ],
+      "instructions": [
+        "0045e490 push ebx",
+        "0045e491 push ecx",
+        "0045e492 push edx",
+        "0045e493 mov edx, 1",
+        "0045e498 mov eax, 0x546618",
+        "0045e49d call 0x487640",
+        "0045e4a2 mov edx, 9",
+        "0045e4a7 mov eax, 0x546538",
+        "0045e4ac call 0x4877f0",
+        "0045e4b1 mov edx, dword ptr [0x4fbfac]",
+        "0045e4b7 mov ecx, eax",
+        "0045e4b9 mov eax, 0x5449fc",
+        "0045e4be mov ebx, 1",
+        "0045e4c3 call 0x4877f0",
+        "0045e4c8 mov edx, ecx",
+        "0045e4ca call 0x4831b0",
+        "0045e4cf mov ebx, eax",
+        "0045e4d1 xor edx, edx",
+        "0045e4d3 mov eax, 0x546618",
+        "0045e4d8 call 0x487850",
+        "0045e4dd mov edx, 1",
+        "0045e4e2 mov eax, 0x546634",
+        "0045e4e7 call 0x487640",
+        "0045e4ec mov edx, 9",
+        "0045e4f1 mov eax, 0x546538",
+        "0045e4f6 call 0x4877f0",
+        "0045e4fb mov edx, dword ptr [0x4fbfac]",
+        "0045e501 mov ecx, eax",
+        "0045e503 mov eax, 0x5449fc",
+        "0045e508 xor ebx, ebx",
+        "0045e50a call 0x4877f0",
+        "0045e50f mov edx, ecx",
+        "0045e511 call 0x4831b0",
+        "0045e516 mov ebx, eax",
+        "0045e518 xor edx, edx",
+        "0045e51a mov eax, 0x546634",
+        "0045e51f call 0x487850",
+        "0045e524 pop edx",
+        "0045e525 pop ecx",
+        "0045e526 pop ebx",
+        "0045e527 ret "
+      ]
+    }
+  ],
+  "scope": "Complete static instruction evidence for selected linked display routines. This is recovery evidence, not a native implementation or runtime proof."
+}

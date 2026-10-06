@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4776a0": 8192,
+    "0x478b70": 8192,
+    "0x478da0": 8192,
+    "0x478480": 8192,
+    "0x479a40": 8192
+  },
+  "scope": "Complete 4776a0, 478b70, 478da0, 478480 and 479a40 execute in the original; text buffer and length, whole 768-byte objects, results and the pixel format global compare. Decimal cases include INT_MIN, zero, negative values and every width class."
+}

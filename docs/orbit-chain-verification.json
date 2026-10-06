@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "sequences": 256,
+  "whole_object_updates": 2894,
+  "scope": "Consecutive original 0x44de20 -> 0x44dfb0 -> 0x44c860, including frame binding and shared rotation globals, without hooks. Timer periods, dimensions and intervals are fixtures; full actor runtime and playable game are not verified."
+}

@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4269e0": 3000
+  },
+  "cases": {
+    "found": 2721,
+    "none": 279,
+    "levels": {
+      "3": 679,
+      "2": 362,
+      "5": 315,
+      "1": 348,
+      "4": 687,
+      "0": 330
+    }
+  },
+  "scope": "The complete chain search runs in the original with its line pass, collapse and row reach executing for real over random boards, pieces, thresholds, starts, rows and levels; the answer and both output words compare with the native search."
+}

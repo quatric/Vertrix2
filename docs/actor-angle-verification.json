@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "spin": 4096,
+    "turn_toward": 4096,
+    "polar_offset": 2839,
+    "polar_offset_second": 2823,
+    "orbit_point": 3843
+  },
+  "out_of_table_angles_rejected": 253,
+  "scope": "Complete 4ad110, 4ace40, 4ad1c0, 4ad210 and 4ad260 execute in the original over random actors and random 360-entry tables; whole object, results and outputs compare. Angles outside 0..359 would read past the tables in the original and are rejected natively. Scratch globals 0x5bb5dc..0x5bb608 are dead temporaries."
+}

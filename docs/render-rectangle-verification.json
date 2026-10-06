@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "original_rectangle_cases": 4096,
+  "flag_selected_rectangle_cases": 20480,
+  "original_index_half_rectangle_cases": 4096,
+  "original_half_palette_rectangle_cases": 4096,
+  "original_fixed_palette_rectangle_cases": 4096,
+  "original_palette_rectangle_cases": 4096,
+  "pixels": 35576,
+  "invalid_preservation_cases": 4096,
+  "scope": "All five original destination rectangle bodies compare whole backing, forward traversal, overlapping rows, zero dimensions, arbitrary packed colors and final original cursor/counters. Actor dispatch and playable application remain unfinished."
+}

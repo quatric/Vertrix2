@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x478f50": {
+      "flat": 2051,
+      "rows": 2045
+    }
+  },
+  "scope": "The routine executes completely in the original (0x479a40 included); the returned eax, the scratch globals 0x5589f4 up to 0x558a50 and the filled pixel memory compare."
+}

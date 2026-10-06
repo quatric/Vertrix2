@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4177b0": 4000,
+    "0x4179d0": 4000
+  },
+  "ranks_seen": {
+    "0x0": 492,
+    "0x1": 762,
+    "0x2": 680,
+    "0x3": 777,
+    "0x4": 767,
+    "0xff": 522
+  },
+  "scope": "The original executes completely with 0x4ca310 and 0x4ca370 stubbed and logged; every call, the returned eax and the score table compare."
+}

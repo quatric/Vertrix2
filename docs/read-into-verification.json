@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4db8c0": 1000
+  },
+  "scope": "The routine executes completely in the original with its callees stubbed and logged (0x4db950 with its three stack arguments); every callee call and the returned eax compare."
+}

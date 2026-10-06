@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "effect_cases": 60000,
+  "scope": "Complete original 0x40d450/0x40d4c0: all parameter bytes, song-length limits, zero/nonzero signed ticks, prior order/row/flags. Includes decimal-invalid nibbles in row breaks. Excludes consumption of pending changes by sequencer."
+}

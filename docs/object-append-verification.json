@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "cases": 2048,
+  "scope": "Complete original4b5e70/4d88a0/4d8770 append with reserved capacity executes without hooks. Whole original descriptor and all list slots match native registration, including duplicate handles and stale tail storage. Full/null-handle rejection checked natively. Allocation growth is external and outside this proof; full scene registration/application remains unfinished."
+}

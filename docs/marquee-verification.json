@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "backward": 2386,
+    "forward": 1614
+  },
+  "scope": "Complete 46e8b0 executes in the original (operator new 4ca000 and the draw 4826c0 stubbed and replayed; the frame binding 4ac8a0 and the list append 4b5e70 logged); the call log, the board and every object compare."
+}

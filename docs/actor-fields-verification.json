@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "clear_counter": 4096,
+    "set_period_steps": 4096,
+    "set_period": 4096,
+    "set_handler": 4096,
+    "clear_cc": 4096,
+    "set_d0": 4096,
+    "set_frame_index": 4096
+  },
+  "scope": "Complete 4ac510, 4ac7b0, 4ac7d0, 4ac8f0, 4ac380, 4ac490 and 4ac710 execute in the original; whole actor storage compares for random contents and parameters."
+}

@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x43bb60": 4096,
+    "0x43b7c0": 4096,
+    "0x43bc90": 4096,
+    "0x43bce0": 4096,
+    "0x43ccb0": 4096,
+    "0x43bd00": 4096,
+    "0x43b6a0": 4096
+  },
+  "scope": "Complete 43b6a0, 43bb60, 43b7c0, 43bc90, 43bce0, 43ccb0 and 43bd00 execute in the original (the recovered 482060, 482750 and 43b810 run for real, 4826c0 draws stubbed and replayed, 431400 stubbed and logged); whole objects, notifications and the draws consumed compare."
+}

@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "cases": 10240,
+  "handler_changes": 3104,
+  "random_draws": 1107,
+  "serialized_actor_cases": 10240,
+  "failure_preservation_cases": 20480,
+  "scope": "All five original handlers without hooks, actual RNG modulo and transitions. Whole effect object, unchanged linked object and shared random cursor match. RNG refill has separate recovery evidence; these fixtures do not reach refill. Full actor/application scheduling remains unfinished."
+}

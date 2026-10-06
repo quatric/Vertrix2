@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x40f360": {
+      "loaded": 630,
+      "unknown signature": 118,
+      "no memory": 109,
+      "callee error": 141,
+      "open failed": 26
+    }
+  },
+  "scope": "The routine executes completely in the original with the file reads, the allocation, the release, the pattern packer and the sound buffer calls stubbed and logged (the file data, the allocated objects and the buffer pointers and the header copy mirrored for the native; 0x4eb860 runs unstubbed); every call with its registers, the returned code, the objects and the scratch compare."
+}

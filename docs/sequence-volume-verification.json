@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "sequences": 10000,
+  "ticks_per_sequence": 6,
+  "integrated_volume_ticks": 60000,
+  "scope": "Complete original 0x40dc80 across six consecutive ticks per fixture, row-authoritative shared fields and persistent vibrato/portamento memory. Whole 180-byte channel and shared-state consistency comparisons, all command bytes and realistic/full-width initial values. Excludes main effect dispatch and complete tick orchestration."
+}

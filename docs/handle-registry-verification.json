@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "registry_add": 4096,
+    "handles_release": 4096,
+    "handles_init": 4096,
+    "guarded_call": 4096,
+    "close_cell": 4096,
+    "handles_shutdown": 4096,
+    "text_for_code": 4096
+  },
+  "scope": "Complete 40a890, 40ad50, 40aba0 (entry 52f040 stubbed), 40ab60 (with the real 4eb5c0), 40ab20, 40aca0 and 40a860 run in the original over random registry memory. The library entries 52f020, 52f03c, 52f058 and the runtime calls 4ea190 and 4eb860 are data-driven stubs whose call sequences and arguments compare with the native callbacks."
+}

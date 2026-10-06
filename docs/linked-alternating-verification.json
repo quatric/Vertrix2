@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "cases": 12288,
+  "handler_changes": 5750,
+  "resource_switches": 612,
+  "scope": "All six complete original handlers without hooks. Whole display state and unchanged linked storage match timers, movement, effects, phase arithmetic and resource/frame/descriptor switches. Fixtures use direct resources; linked resource helpers have separate proof. Portable actor-storage dispatch also matches every complete original object, preserving unrelated bytes and mapping resource identity tokens to native resources. Scene-list adapter also matches complete original lookup/updates with duplicate IDs and different linked values, selecting the first field0 match. Complete virtual frame wrapper4ae150/4ade20 also matches all12288 no-interaction/no-chain cases with conditional refresh clearing. Actual VF/application integration remains unfinished."
+}

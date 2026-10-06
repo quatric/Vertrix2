@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "group_a": 4096,
+    "group_b": 4096,
+    "set_side": 4096,
+    "set_level": 4096,
+    "first_turn": 4096
+  },
+  "scope": "Complete 43d3b0, 43d3d0, 43aab0, 43b810 and 43b1a0 execute in the original (4826c0 draws stubbed and replayed, 431400 stubbed and logged); results, the shared globals and every pool object compare."
+}

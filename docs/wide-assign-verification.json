@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4ca3a0": 1000
+  },
+  "scope": "The routine executes completely in the original with its callees stubbed and logged; every callee call, the returned eax and every pool object compare."
+}

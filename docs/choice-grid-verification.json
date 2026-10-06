@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "apply": 4096,
+    "load_values": 4096,
+    "store_values": 4096,
+    "pick_rows": 4096,
+    "pick_column": 4096,
+    "pick_cell": 4096,
+    "mark": 4096,
+    "available": 4096,
+    "any_marked": 4096,
+    "cell_bytes": 4096
+  },
+  "scope": "Complete 429d50, 429fe0, 429df0, 429e80, 429ee0, 42a080, 42a140, 42a170, 42a190 and 42a1b0 execute in the original (4826c0 draws are stubbed and replayed); the grid, every pool object, outputs, results and draw counts compare."
+}

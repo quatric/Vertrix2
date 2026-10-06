@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4da6b6": {
+      "6": 4096
+    }
+  },
+  "scope": "The routine executes completely in the original over the chain head at fs:[0], a record and a descriptor, with its six callees stubbed and logged; every call with its registers, the result, the stack locals and the record compare."
+}

@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x473630": 400,
+    "0x4737d0": 400,
+    "0x473960": 400,
+    "0x473af0": 400
+  },
+  "scope": "Each routine executes completely in the original with its callees stubbed and logged; every callee call, the returned eax and every pool object compare. The gate global is constant during a run."
+}

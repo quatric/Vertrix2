@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 8192,
+  "linked_resources": 5461,
+  "scope": "Complete original 0x44e590/0x44e600/0x44e670/0x44f040/0x44f0b0/0x44f700/0x44f770/0x44f920 whole-object comparison without hooks, including mode and effect transitions, phase handoffs, pre-tick amount/flag writes and frame binding. Gameplay construction remains incomplete."
+}

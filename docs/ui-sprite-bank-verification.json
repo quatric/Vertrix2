@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "banks": 256,
+  "frames": 8960,
+  "pixels": 143807,
+  "scope": "Actual45dd52..45de10 executes all five clone/mirror substitutions with original helpers and initialized configuration constants. Only allocation and old descriptor disposal supplied. All bank frames/descriptors match. First source index supplied explicitly; full VF selector/startup remains unfinished."
+}

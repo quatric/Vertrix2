@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "piece_and_rng_position_comparisons": 40376,
+  "seeds": [
+    0,
+    1,
+    305419896,
+    4294967295
+  ],
+  "original_addresses": [
+    "0x0043d130",
+    "0x0043d180"
+  ],
+  "piece_operation_and_rng_comparisons": 20000,
+  "scope": "Block types and RNG consumption; spawn/render/collision still unrecovered"
+}

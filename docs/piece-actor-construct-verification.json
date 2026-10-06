@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "complete_original_piece_construction_cases": 512,
+  "constructed_children": 1792,
+  "failure_preservation_cases": 1536,
+  "runtime_placement_cases": 256,
+  "default_placement_cases": 256,
+  "scope": "Complete42acf0 with only heap allocation supplied. Parent/child bytes match original count scan, default/runtime placement globals, all difficulty/level timing, clipping, child construction and parent handles. Zero counts and sentinel gaps covered. Resource publication and full player/game-loop/Wii execution remain separate."
+}

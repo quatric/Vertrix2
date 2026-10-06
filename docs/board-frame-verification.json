@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "frames": 256,
+  "object_state_comparisons": 16640,
+  "virtual_operations": 105939,
+  "removed_objects": 1932,
+  "scope": "Complete native board handler compared with actual original 0x42fb60. Actual layout, list update/state filtering/destruction/shift and ten resets execute. Only dimensions and object virtual methods supplied. Positions, active parameters, object states, virtual trace, complete list storage/count and flags match. Effect and fall timers, object transfers, layout, list operations and flags compared together. Object virtual handlers, player/game logic, rendering and complete game remain unfinished."
+}

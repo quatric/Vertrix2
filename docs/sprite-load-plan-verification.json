@@ -1,0 +1,110 @@
+{
+  "status": "passed",
+  "original_startup_selection_cases": 512,
+  "load_entries_compared": 10240,
+  "invalid_preservation_cases": 1024,
+  "loader_initial_selection_verified": true,
+  "initial_image_settings_plan": [
+    {
+      "token": "0x5449c4",
+      "slot": 2,
+      "filename": ".\\SPRITE\\mousec.spr"
+    },
+    {
+      "token": "0x5449e0",
+      "slot": 3,
+      "filename": ".\\SPRITE\\mousea.spr"
+    },
+    {
+      "token": "0x5449fc",
+      "slot": 0,
+      "filename": ".\\SPRITE\\damier.spr"
+    },
+    {
+      "token": "0x544a18",
+      "slot": 1,
+      "filename": ".\\SPRITE\\select.spr"
+    },
+    {
+      "token": "0x544c10",
+      "slot": 5,
+      "filename": ".\\SPRITE\\star.spr"
+    },
+    {
+      "token": "0x544c48",
+      "slot": 7,
+      "filename": ".\\SPRITE\\bigstar.spr"
+    },
+    {
+      "token": "0x544c2c",
+      "slot": 6,
+      "filename": ".\\SPRITE\\planete.spr"
+    },
+    {
+      "token": "0x544c64",
+      "slot": 8,
+      "filename": ".\\SPRITE\\flare.spr"
+    },
+    {
+      "token": "0x544d0c",
+      "slot": 9,
+      "filename": ".\\SPRITE\\asteroid.spr"
+    },
+    {
+      "token": "0x544c80",
+      "slot": 10,
+      "filename": ".\\SPRITE\\hermeyes.spr"
+    },
+    {
+      "token": "0x544c9c",
+      "slot": 11,
+      "filename": ".\\SPRITE\\ArrowL.spr"
+    },
+    {
+      "token": "0x544cb8",
+      "slot": 12,
+      "filename": ".\\SPRITE\\ArrowR.spr"
+    },
+    {
+      "token": "0x544cd4",
+      "slot": 13,
+      "filename": ".\\SPRITE\\ArrowU.spr"
+    },
+    {
+      "token": "0x544cf0",
+      "slot": 14,
+      "filename": ".\\SPRITE\\ArrowD.spr"
+    },
+    {
+      "token": "0x546500",
+      "slot": 15,
+      "filename": ".\\SPRITE\\Debrit.spr"
+    },
+    {
+      "token": "0x54651c",
+      "slot": 16,
+      "filename": ".\\SPRITE\\Debrit2.spr"
+    },
+    {
+      "token": "0x546538",
+      "slot": 17,
+      "filename": ".\\SPRITE\\Circle.spr"
+    },
+    {
+      "token": "0x546650",
+      "slot": 4,
+      "filename": ".\\SPRITE\\BlocType.spr"
+    },
+    {
+      "token": "0x54666c",
+      "slot": 18,
+      "filename": ".\\SPRITE\\Oeil1.spr"
+    },
+    {
+      "token": "0x546688",
+      "slot": 19,
+      "filename": ".\\SPRITE\\Oeil2.spr"
+    }
+  ],
+  "scope": "Complete original45dca0 control flow and actual45f540 path building. Hooks supply sprite load, progress, mirror/clone and derived-resource boundaries; they do not validate resource side effects. VF table is independently parsed and supplied to original pointer table. Settings are explicit, including initial EXE bytes, not post-configuration startup."
+}

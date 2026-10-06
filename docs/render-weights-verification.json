@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "byte_entries": 25856,
+  "word_entries": 51712,
+  "selected_amounts": 101,
+  "alpha_entries": 131072,
+  "scope": "Complete original480730 executes unchanged. All percentage bytes/words and both alpha tables match. Original4ae26d..4ae2b9 row selection matches all valid amounts. Render preparation and playable application remain unfinished."
+}

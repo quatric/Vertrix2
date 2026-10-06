@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x43bb40": 4096,
+    "0x43baf0": 4096
+  },
+  "scope": "Complete 43bb40 and 43baf0 execute in the original (refresh 4726d0 stubbed and logged); whole objects and refresh events compare, plus short-storage preservation checks."
+}

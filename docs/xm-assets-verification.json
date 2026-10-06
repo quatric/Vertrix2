@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "files": 29,
+  "patterns": 967,
+  "packed_bytes": 1034658,
+  "empty_patterns": 50,
+  "scope": "Direct VF XM header/pattern loading compared with original extracted bytes; owned output guards, cleanup and unavailable/unsupported resources. No music playback."
+}

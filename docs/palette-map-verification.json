@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "relative_slots": 601,
+  "pixel_cases": 4096,
+  "scope": "Original475400..475441 builds pointer tables unchanged. Every backed relative slot and4096 complete48d740/48d7f0 pixels match native signed map resolution, including repeated row0 and row200. Unbacked slots reject; full drawing/application integration remains unfinished."
+}

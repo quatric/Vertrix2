@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x430660": 2000,
+    "0x430440": 2000
+  },
+  "scope": "Complete 430660 and 430440 execute in the original (operator new 4ca000 and the draw 4826c0 stubbed and replayed; the frame binding 4ac8a0 and the list append 4b5e70 logged); the call log, the board and every object compare."
+}

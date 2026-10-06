@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x427380": 3000
+  },
+  "cases": {
+    "found": 1295,
+    "none": 1705,
+    "levels": {
+      "0": 0,
+      "4": 448,
+      "1": 0,
+      "3": 411,
+      "2": 217,
+      "5": 219
+    }
+  },
+  "scope": "The complete bomb search runs in the original with its blast estimates and row reach executing for real over random boards, pieces with and without bombs, patterns, modes, starts, rows and levels; the answer and both output words compare with the native search."
+}

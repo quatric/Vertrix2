@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "fonts": 19,
+  "text_draws": 304,
+  "scope": "Complete VF text composition independently checks pixels, trailing spacing, full/low-word position arithmetic, descriptor origins, missing glyphs, row padding, clipping and invalid-input preservation. Delegates separately oracle-verified traversal, origin and binary renderer components. Whole original virtual sprite preparation, scaled text, viewport offsets and application remain separate."
+}

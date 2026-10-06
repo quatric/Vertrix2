@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4330d0": 1720,
+    "0x4371b0": 2048,
+    "0x437460": 2048,
+    "0x438470": 2048,
+    "0x433750": 821,
+    "0x433750_declined": 1227
+  },
+  "scope": "Complete 4330d0, 4371b0, 437460, 438470 and 433750 execute in the original (operator new 4ca000 and the draw 4826c0 stubbed and replayed, recovered building blocks executed for real); returned values, whole boards and objects, and the draws consumed compare."
+}

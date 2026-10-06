@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x426240": 4096
+  },
+  "cases": {
+    "valid": 4096,
+    "invalid": 0,
+    "draws": 1887,
+    "kinds": [
+      1305,
+      1000,
+      1791
+    ]
+  },
+  "scope": "The complete fallback runs in the original (only the 0x4826c0 draws are stubbed and replayed in order, with their divisors checked) over random boards, pieces, starts, rows, levels and remembered columns; both output words and the remembered column compare with the native version."
+}

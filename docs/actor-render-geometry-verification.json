@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "original_direct_geometry_cases": 4096,
+  "visible_cases": 2593,
+  "invalid_storage_preservation_cases": 4096,
+  "scope": "Complete original 0x4ae3e0 direct-coordinate preparation compares visibility, visible dimensions and source offsets. Target clipping mode1, scale1..16, descriptor anchors, displacement and ignored screen override are covered. Drawing, other clip modes and full application remain unfinished."
+}

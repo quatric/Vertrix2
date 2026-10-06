@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "modules": 29,
+  "instruments": 718,
+  "samples": 713,
+  "scope": "All original VF-loaded XM instruments and PCM samples bound to recovered row/trigger/playback views. Exact mapping, tuning, volume/pan, envelopes, fade/vibrato, binding offsets/source pointers and sample loop flags; internal pointers target stable caller storage. Invalid count preserves output. Metadata/PCM have separate original-executable proof. Excludes tick playback and audio delivery."
+}

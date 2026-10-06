@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<app version="1">
+    <name>Vertrix2</name>
+    <version>0.2</version>
+    <short_description>Playable single-player board</short_description>
+    <long_description>One playable board built from the recovered Vertrix 2 routines, drawn with the original block artwork. Needs the original Vertrix2.vf in sd:/apps/vertrix2/. Menus, opponents, bonuses and sound are not recovered yet. HOME on Wii Remote 1 exits.</long_description>
+</app>

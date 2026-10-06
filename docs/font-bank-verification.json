@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "glyphs": 548,
+  "derived_glyphs": 82,
+  "pixels": 310592,
+  "scope": "Actual43eab0 with actual43f110/43f190 and4831b0/483400 transforms, including source84..93 mutation through three outline passes. Hooks supply independently decoded VF base sheets/stencils, resource allocation/clone, progress and separately verified map initialization. All final glyph pixels, dimensions, descriptor origins and owned lifetime match. Original filenames fixed; alternate configurations and text rendering remain separate. OriginalRGBA color order tested."
+}

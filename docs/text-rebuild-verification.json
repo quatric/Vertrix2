@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4b4af0": {
+      "last": 1237,
+      "rebuilt": 811
+    }
+  },
+  "scope": "The routine executes completely in the original with the string runtime stubbed and logged (0x4ca310 storing its assignment); every callee call and every pool object compare."
+}

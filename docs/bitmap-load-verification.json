@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x473cf0": {
+      "loaded": 1514,
+      "rejected": 319,
+      "empty": 215
+    }
+  },
+  "scope": "The routine executes completely in the original with the stream and surface callees stubbed and logged (0x48a930 filling the frame locals and mirrored for the native); every call with its registers, the returned surface and the converted pixels compare."
+}

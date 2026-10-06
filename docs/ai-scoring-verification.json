@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "compare_boards": 8192,
+    "record_score": 8192
+  },
+  "scope": "Complete 428110 and 428610 execute in the original (4eb5c0 fill runs for real); every output byte and the signed score compare over random boards, levels, record lists, tables and limits."
+}

@@ -1,0 +1,8 @@
+{
+  "routine": "0x451a60 composed with 0x4320d0 and 0x43ad50",
+  "cases": 1024,
+  "complete_original_executions": 1024,
+  "whole_object_compared": true,
+  "call_logs_compared": true,
+  "short_storage_preserved": true
+}

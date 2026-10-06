@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x43ba80": 4096,
+    "0x43b980": 4096,
+    "0x43ce00": 4096,
+    "0x43b930": 4096,
+    "0x43ce30": 4096,
+    "0x43cd30": 4096,
+    "0x43cd60": 4096,
+    "0x43cda0": 4096,
+    "0x43ccf0": 4096,
+    "0x43bb00": 4096
+  },
+  "scope": "Complete 43ba80, 43b980, 43ce00, 43b930, 43ce30, 43cd30, 43cd60, 43cda0, 43ccf0 and 43bb00 execute in the original (allocator, refresh and destructor stubbed and logged); player, opponent, side, preview and RNG position compare, plus native-only failure guards."
+}

@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "alpha_values_verified": 256,
+  "random_pixels_verified": 131072,
+  "original_sprite_frames_verified": 216,
+  "original_sprite_pixels_verified": 337657,
+  "scope": "Original 0x483750 executes unchanged for all pixels; color-format conversion, PCX mask attachment, blending and Wii rendering remain separate"
+}

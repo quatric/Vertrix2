@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x487fd0": 4096
+  },
+  "results": {
+    "found": 821,
+    "missing": 3275
+  },
+  "scope": "The routine executes completely in the original (0x489d00 unstubbed); the returned index compares over random name arrays."
+}

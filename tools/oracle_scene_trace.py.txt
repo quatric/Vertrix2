@@ -1,0 +1,47 @@
+import sys, struct
+sys.path.insert(0,'tools')
+from original import Original
+from unicorn import UC_HOOK_CODE
+from unicorn.x86_const import *
+ENTRY=int(sys.argv[1],16); LO=ENTRY; HI=int(sys.argv[2],16); mode=1; char='Glouk'
+o=Original('../../work/extraction-check/original/Vertrix2.exe')
+cpu=o.cpu
+cpu.mem_map(0x900000,0x400000); cpu.mem_map(0xd00000,0x10000)
+flt=open('../../work/extraction-check/assets/Filtre/%s.flt'%char,'rb').read()
+cpu.mem_write(0xd00000,flt[8:])
+cpu.mem_write(0x532928,struct.pack('<I',0xd00000))
+cpu.mem_write(0x532a7c,struct.pack('<I',mode))
+for i,v in enumerate(open('/dev/null','rb').read()): pass
+d=bytes(cpu.mem_read(0x4f9c06,4)); cpu.mem_write(0x546830,d)
+bump=[0x900000]; objs=[]
+LEAF={0x4b54d0,0x4b5400,0x4ac4e0,0x465a70,0x4adf20,0x4ac8f0,0x4ac7b0,0x4adfa0,0x4ae110,0x4710d0,0x4123d0,0x4ac710,0x4ac7d0,0x4ac860,0x4ac8a0,0x4ac8d0,0x4ac910}
+log=[]
+def u32(a): return struct.unpack('<I',bytes(cpu.mem_read(a,4)))[0]
+first=[True]
+def hook(uc,addr,size,ctx):
+    if not (LO<=addr<HI): return
+    b=bytes(uc.mem_read(addr,5))
+    if b[0]!=0xe8: return
+    t=(addr+5+struct.unpack('<i',b[1:])[0])&0xffffffff
+    if t in LEAF: return
+    esp=uc.reg_read(UC_X86_REG_ESP)
+    regs=[uc.reg_read(r) for r in (UC_X86_REG_EAX,UC_X86_REG_EDX,UC_X86_REG_ECX,UC_X86_REG_EBX)]
+    st=[u32(esp+4*i) for i in range(6)]
+    log.append((addr,t,regs,st))
+    if t==0x4ca000:
+        p=bump[0]; bump[0]+=0x800; objs.append((p,regs[0]))
+        uc.reg_write(UC_X86_REG_EBX,p)
+        uc.reg_write(UC_X86_REG_EAX,0 if first[0] else p); first[0]=False
+    uc.reg_write(UC_X86_REG_EIP,addr+5)
+cpu.hook_add(UC_HOOK_CODE,hook)
+try: o.call(ENTRY,eax=0,edx=0,ebx=0)
+except Exception as e: print('stopped',e,hex(cpu.reg_read(UC_X86_REG_EIP)))
+def w(a): return struct.unpack('<H',bytes(cpu.mem_read(a,2)))[0]
+for a,t,r,s in log:
+    if t in (0x4b5700,): print('%06x b5700 this=%x idx=%x cx=%x bl=%x st=%x %x %x'%(a,r[0],r[1],r[2]&0xffff,r[3]&0xff,*s[:3]))
+print('--- objects')
+for p,size in objs:
+    m=bytes(cpu.mem_read(p,0x1a0))
+    h=lambda o:struct.unpack_from('<H',m,o)[0]
+    d=lambda o:struct.unpack_from('<I',m,o)[0]
+    print('f4=%d f8=%d'%(d(0xf4),d(0xf8)),'%x size=%x x=%d y=%d z=%d  b0=%x b4=%x b8=%x 134=%x 154=%x  93=%d 95=%d 4e=%d 48=%d 52=%d 94=%d 8c=%d 80=%d 8e=%d 8f=%d'%(p,size,struct.unpack_from('<h',m,0xe)[0],struct.unpack_from('<h',m,0x16)[0],h(0x1e),d(0xb0),d(0xb4),d(0xb8),d(0x134),d(0x154),m[0x93],m[0x95],m[0x4e],struct.unpack_from('<h',m,0x48)[0],m[0x52],m[0x94],m[0x8c],m[0x80],m[0x8e],m[0x8f]))

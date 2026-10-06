@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4b4270": 4000
+  },
+  "inside_cases": 54,
+  "scope": "The original executes completely over pools of linked objects with small positions, extents and insets; the hit result and all objects compare."
+}

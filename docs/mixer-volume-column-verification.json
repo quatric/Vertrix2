@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "volume_column_cases": 60000,
+  "scope": "Complete original 0x40dc80, all 256 command bytes at zero/nonzero signed ticks, whole channel comparison including delegated vibrato and portamento. Realistic and full-width values cover clamps and wrapping. Excludes main effect dispatch and sequencing."
+}

@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4365c0": 200,
+    "0x436440": 200,
+    "0x433040": 200,
+    "0x43bbf0": 200,
+    "0x43bd80": 200
+  },
+  "scope": "Each routine executes completely in the original with its callees stubbed and logged (the cell coordinates stored through the ebx and ecx locals and replayed); every callee call, the returned eax and every pool object compare."
+}

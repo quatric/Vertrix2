@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "effect_cases": 12288,
+  "scope": "Complete original 0x40d540 selecting glissando control 3, exhaustive low nibbles and prior glissando bytes at ticks 0/1/-1. Full channel comparison verifies mode replacement and all unrelated state preservation. Excludes later pitch quantization use."
+}

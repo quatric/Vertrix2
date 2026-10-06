@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "cases": 2048,
+  "focused_handoffs": 64,
+  "linked_resources": 1365,
+  "scope": "Actual complete original 0x44de20 and 0x44dfb0 including rotation, original table coordinates, measurement, word/mode/dword transitions, handoff initialization and frame binding, with no routine hooks. Whole block state matches direct and one/two-level linked resource tables. Native receives independently resolved descriptor order; does not implement resource graph construction, actual VF actor binding or complete object runtime/game."
+}

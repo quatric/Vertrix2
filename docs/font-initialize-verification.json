@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 256,
+  "maps_compared": 5120,
+  "scope": "Original0x43fc50 and actual punctuation helpers; only4877f0 resource lookup hooked with randomized dimensions. All glyphs, space sizes, trailing words and untouched slot19 compared. VF font-resource construction and text rendering remain unfinished."
+}

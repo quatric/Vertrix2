@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4731a0": 4000
+  },
+  "scope": "Complete 4731a0 executes in the original (operator new 4ca000 and the draw 4826c0 stubbed and replayed; the frame binding 4ac8a0 and the list append 4b5e70 logged); the call log and every object compare."
+}

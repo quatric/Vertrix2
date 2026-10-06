@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "characters": 18,
+  "block_frames": 1008,
+  "block_pixels": 580608,
+  "sprite_files": 20,
+  "sprite_frames": 216,
+  "missing_or_invalid_character_rows": 3,
+  "scope": "Actual VF decoding and Wii asset/texture ownership code under ASan/UBSan. GX/cache calls are host stubs; no GPU or hardware validation."
+}

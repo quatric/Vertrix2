@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "frames": 256,
+  "object_state_comparisons": 16384,
+  "virtual_operations": 106206,
+  "removed_objects": 1972,
+  "scope": "Composed native board tail compared with actual original 0x42fc56..0x42fd81. Actual layout, list update/state filtering/destruction/shift and ten resets execute. Only dimensions and object virtual methods supplied. Positions, active parameters, object states, virtual trace, complete list storage/count and flags match. Preceding board logic, object handlers, rendering and complete game remain unfinished."
+}

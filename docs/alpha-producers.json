@@ -1,0 +1,50 @@
+{
+  "status": "passed",
+  "sites": [
+    {
+      "address": "0x46711e",
+      "instruction": "mov dword ptr [esi + 0x150], 1"
+    },
+    {
+      "address": "0x46773a",
+      "instruction": "mov dword ptr [esi + 0x150], 1"
+    },
+    {
+      "address": "0x469bd2",
+      "instruction": "mov dword ptr [esi + 0x150], 1"
+    },
+    {
+      "address": "0x469dd0",
+      "instruction": "mov dword ptr [esi + 0x150], 1"
+    },
+    {
+      "address": "0x46e49a",
+      "instruction": "mov dword ptr [esi + 0x150], 1"
+    },
+    {
+      "address": "0x46e618",
+      "instruction": "mov dword ptr [esi + 0x150], 1"
+    },
+    {
+      "address": "0x472699",
+      "instruction": "mov dword ptr [esi + 0x150], 1"
+    },
+    {
+      "address": "0x473150",
+      "instruction": "mov dword ptr [esi + 0x150], 1"
+    },
+    {
+      "address": "0x47329a",
+      "instruction": "mov dword ptr [esi + 0x150], 1"
+    },
+    {
+      "address": "0x4733c1",
+      "instruction": "mov dword ptr [esi + 0x150], 1"
+    },
+    {
+      "address": "0x4ac10e",
+      "instruction": "mov dword ptr [eax + 0x150], 0"
+    }
+  ],
+  "scope": "Exact drawing-object default and explicit override stores; does not infer asset-driven selection or recover entire constructors."
+}

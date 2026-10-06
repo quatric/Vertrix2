@@ -1,0 +1,24 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x436720": 2048,
+    "0x437060": 2048,
+    "0x437350": 2048,
+    "0x437be0": 2048,
+    "0x437b70": 2048,
+    "0x437d70": 2048,
+    "0x4368e0": 2048,
+    "0x436b40": 2048,
+    "0x436d80": 2048,
+    "0x438540_0_settled": 512,
+    "0x438540_1_settled": 512,
+    "0x438540_2_moving": 512,
+    "0x438540_3_moving": 512,
+    "0x439260": 2048,
+    "0x437fe0": 2048,
+    "0x4378c0_empty": 256,
+    "0x4378c0": 1792,
+    "0x438960": 2048
+  },
+  "scope": "Complete 436720, 437060, 437350 and 437be0 and 437b70 and 437d70, 4368e0, 436b40, 436d80, 438540, 439260, 437fe0, 4378c0 and 438960 execute in the original (operator new 4ca000 and the draw 4826c0 stubbed and replayed, recovered building blocks executed for real); returned values, whole boards and objects, and the draws and allocations consumed compare."
+}

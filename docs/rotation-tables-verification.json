@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "coordinate_cases": 2048,
+  "table_values": 720,
+  "scope": "Direct original VF sine/cosine values match extraction references. Actual original 0x4ad1c0/0x4849e0 instructions run without hooks with original tables populated in memory; signed radii and wrapped shifts match. File I/O initializer and enclosing actor handler are not executed by this harness."
+}

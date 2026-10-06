@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x471100": 512
+  },
+  "scope": "Complete original 0x471100 executions with the allocator 0x4ca000 and the list append 0x4b5e70 stubbed and logged (the base constructor, the placer, the style applier and the gate read execute for real on both sides); the returned actor, the allocator/append call logs and every pool object compare."
+}

@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "complete_original_layout_cases": 4096,
+  "actor_position_updates": 25166,
+  "failure_preservation_cases": 4096,
+  "complete_original_piece_update_cases": 4096,
+  "piece_update_failure_preservation_cases": 4096,
+  "complete_original_piece_cycle_cases": 4096,
+  "piece_cycle_failure_preservation_cases": 12288,
+  "complete_original_piece_parent_constructor_cases": 4096,
+  "piece_parent_constructor_failure_preservation_cases": 4096,
+  "scope": "Complete42af30 without hooks. Entire parent and child storage matches seven-slot layout, null/repeated handles and word wrapping. Caller supplies original row height and stable mutable resolution. Complete42ac40 also matches timer-driven movement, all four piece child virtual updates, mode-dependent effects and layout. Complete42af80 also matches handle rotation and final callback assignments. Other child callback classes, movement scheduling and full game remain unfinished."
+}

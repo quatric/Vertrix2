@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x40a590": 60
+  },
+  "scope": "The routine executes completely in the original with the six floating point helpers stubbed (random eax:edx results) and logged; every call with all four registers (about 4000 a run), the five window arrays and the scaled table compare."
+}

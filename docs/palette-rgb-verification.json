@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "cases": 270592,
+  "scope": "Complete original474560 including software float helpers matches native RGB-to-HSV and chromatic flag. Full lookup generation remains unfinished."
+}

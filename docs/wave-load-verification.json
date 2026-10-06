@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4b7e80": {
+      "loaded": 384,
+      "rejected": 1211,
+      "buffer failure": 167,
+      "no memory": 195,
+      "no pointer": 91
+    }
+  },
+  "scope": "The routine executes completely in the original with the stream reads, the allocation, the buffer calls and the release stubbed and logged (the chunk reads and the buffer pointer mirrored for the native); every call with its registers, the returned code, the chunk scratch, the sound total and the objects and sample buffer compare."
+}

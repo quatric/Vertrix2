@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "animation_comparisons": 108244,
+  "sequential_animation_comparisons": 20000,
+  "scope": "Original four playback routines and timer/frame helpers execute unchanged; resource decoding, drawing and full-game scheduling remain separate"
+}

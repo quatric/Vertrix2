@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "effect_cases": 53280,
+  "scope": "Complete original 0x40d250: all volume 0..64/parameter pairs at tick zero and one, plus 20000 random full-width states. Upper-nibble precedence, signed clamping, parameter memory and dirty flags match. Excludes combined effects and sequencer dispatch."
+}

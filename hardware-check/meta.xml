@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<app version="1">
+    <name>Vertrix2 hardware check</name>
+    <version>0.1</version>
+    <short_description>Original VF loading and display check</short_description>
+    <long_description>Diagnostic only, not the complete game. Reads the original Vertrix2.vf from sd:/apps/vertrix2/Vertrix2.vf and displays a small original sprite on a black frame. HOME on Wii Remote 1 or START on GameCube controller 1 exits.</long_description>
+</app>

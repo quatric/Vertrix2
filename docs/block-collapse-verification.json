@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 2048,
+  "linked_resources": 1365,
+  "scope": "Complete original 0x44e380 and 0x44e410 whole-object comparison without hooks, including effect/mode ordering, phase handoff override, flags and frame binding. Gameplay construction remains incomplete."
+}

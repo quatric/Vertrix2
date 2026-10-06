@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "row": 2048,
+    "nearest": 2048,
+    "seek": 2048,
+    "clamp": 2048,
+    "previous": 2048,
+    "next": 2048,
+    "home": 2048,
+    "end": 2048,
+    "at_end": 2048,
+    "row_at": 2048
+  },
+  "scope": "The routine executes completely in the original with the string runtime stubbed and logged (0x4cdb70 and 0x440610 storing their out dwords); the returned value compares; every callee call and every pool object compare."
+}

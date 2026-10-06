@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x45f9f0": 2048,
+    "0x45fa70": 2048,
+    "0x45fab0": 2048,
+    "0x472d50": 2048
+  },
+  "scope": "Complete 45f9f0, 45fa70, 45fab0 and 472d50 execute in the original with the panel globals and per-object vtables; every virtual call (object, slot, edx argument for slots 0 and 2) and the cleared global compare, including null panels for the null-checked routines."
+}

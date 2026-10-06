@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "launch": 2048,
+    "fly_out": 2048,
+    "fly_out_done": 778,
+    "fight_fly": 2048,
+    "fight_fly_done": 1211,
+    "wave_fly": 2048,
+    "wave_fly_done": 1204
+  },
+  "scope": "Complete original 0x45a0c0 (with the real 0x484680, 0x484700 and 0x4ad510; the sound player 0x482a60 observed and its table lookup checked) and handlers 0x45a1c0, 0x45a4f0 and 0x45a910 (with the real actor helpers, 0x4ad750, 0x4ad5e0, 0x4ad530 and 0x4b14c0) run in the oracle. The first 0x160 actor bytes, handler token included, and the flag 0x532a40 compare after every call."
+}

@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "slide_cases": 60000,
+  "scope": "Complete original 0x40cf50 and 0x40cfa0: tick-zero parameter memory/preservation, subsequent application, signed clamps, wrapped arithmetic, output period and dirty flags. Realistic and full-width random states. Excludes sequencer effect dispatch and other slides."
+}

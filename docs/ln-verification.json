@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4db896": 3000
+  },
+  "bit_exact": 2916,
+  "worst_error_ulp": 1.0,
+  "scope": "The routine executes completely in the original (x87 fyl2x). The native result is compared bit for bit; where it differs it must be within two units in the last place. Zero is not tested: the emulator returns 0.0 for fyl2x of zero where the hardware gives minus infinity, which the C library matches."
+}

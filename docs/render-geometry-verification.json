@@ -1,0 +1,14 @@
+{
+  "render_bindings_verified": 10000,
+  "scale_clip_alignments_verified": 10000,
+  "clip_mode_cases_verified": 10000,
+  "sprite_clipping_cases_verified": 20000,
+  "resource_bounds_verified": 10000,
+  "resource_state_measurements_verified": 10000,
+  "resource_measurements_verified": 13808,
+  "status": "passed",
+  "clip_rectangles_verified": 1025,
+  "cell_positions_verified": 66625,
+  "centered_cell_positions_verified": 66625,
+  "scope": "Complete 0x42ff10 and first positioning phase 0x430930..0x4309f9 execute unchanged for mode-16 and centered cells. Resource measurement 0x4b14c0 also executes unchanged for descriptor and fallback dimensions with resolved modes 0..16. Centering tests supply dimensions at the measurement boundary; Full 0x4b15e0 descriptor bounds and unscaled clipping phase 0x4b1ae9..0x4b1c6f also execute unchanged. Rejection redirects to the phase endpoint before the surrounding function epilogue; Scale clipping phase 0x4ae99f..0x4aea50 also executes unchanged; later effects and drawing remain separate. Resource binding phase 0x4af0ee..0x4af187 executes unchanged; both original source-pointer globals are checked."
+}

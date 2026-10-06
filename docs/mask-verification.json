@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "mask_values_verified": 256,
+  "pcx_assets_verified": 529,
+  "pcx_pixels_verified": 7677516,
+  "matching_bmp_pcx_pairs_verified": 18,
+  "composed_artwork_pixels_verified": 580608,
+  "scope": "Original 0x4797f0 mask instructions execute unchanged; PCX decode and free boundaries supplied by oracle. Binary mask path only; graded effects and renderer remain separate."
+}

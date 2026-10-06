@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "effect_cases": 30000,
+  "scope": "Full original extended dispatcher selecting case 8, all low nibbles, zero/nonzero signed ticks, random prior pan/flags and whole channel comparison. Excludes full sequencing."
+}

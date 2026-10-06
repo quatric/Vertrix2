@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4346b0": 8000
+  },
+  "cases_with_runs": 4897,
+  "scope": "The complete line pass runs in the original over random boards (including kind 7), thresholds (including 0 and 255), nonzero reward bases and pre-marked masks; the answer, the mask and the reward compare with vertrix_line_pass."
+}

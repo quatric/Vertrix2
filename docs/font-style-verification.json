@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 2048,
+  "fields": 16,
+  "scope": "Actual440b93..440c46 without hooks, all16 transferred drawing fields, forced binary flag and untouched child bytes compared. Parent unchanged and native in-place/null behavior checked. Renderer interpretation of effects/cycle/clipping and complete styled text drawing remain separate."
+}

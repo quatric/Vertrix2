@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "spawn_initialization_comparisons": 4800,
+  "spawn_position_comparisons": 20490,
+  "scope": "Original column selection and constructor position inputs; recovered native piece/timer/animation initialization and RNG consumption; rendering resource ownership and caller state-machine integration remain unfinished"
+}

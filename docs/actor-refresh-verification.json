@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x45afe0": 300,
+    "0x45cff0": 300,
+    "0x45cdc0": 300
+  },
+  "scope": "Both routines execute completely in the original with their callees stubbed and logged (0x4ad1c0 storing a dword through its stack argument); every callee call, the returned eax and every pool object compare."
+}

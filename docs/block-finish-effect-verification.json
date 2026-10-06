@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 16384,
+  "linked_resources": 10922,
+  "scope": "Complete original450330/4503b0/450450/4504e0/450550/4505c0/450630/4506a0 without hooks. Whole objects match animation, timers, transitions, flags, handler clearing, state15d completion and direct/linked resource binding. Native receives resolved frame order; full actor/application integration remains unfinished."
+}

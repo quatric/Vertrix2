@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "files": 29,
+  "instruments": 718,
+  "samples": 713,
+  "sample_bytes": 8739249,
+  "empty_samples": 79,
+  "sixteen_bit_samples": 74,
+  "scope": "Direct VF XM sample metadata and delta-decoded bytes compared with independent original resource parsing; includes software-mixer interpolation guards; instruments/envelopes and playback excluded."
+}

@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "cases": 2048,
+  "created": 808,
+  "companion_setup_cases": 512,
+  "scope": "Complete original471100 executes availability lookup,4abd70 constructor, 4710d0/4adf20 positioning,4123d0 styling, sentinel flag and4b5e70 list registration unchanged. Only allocation4ca000 is supplied with prior storage. Whole native actor bytes and enabled/disabled results match, including untouched bytes; original registration count/order is checked. Native allocation/registration remain external. Additionally512 complete companion constructor-plus-setup cases match original46e022/46e1b2 including parameters, thresholds, timing and movement handler. Full VF companion/scene integration remains unfinished."
+}

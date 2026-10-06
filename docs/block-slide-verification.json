@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 2048,
+  "linked_resources": 1365,
+  "scope": "Complete original 0x44e250 and 0x44e2d0 whole-object comparison without hooks, including signed distance narrowing, unsigned division, transitions and frame binding. Gameplay construction remains incomplete."
+}

@@ -1,0 +1,513 @@
+{
+  "status": "passed",
+  "files": 63,
+  "frames": 1661760,
+  "decoder_revision": "ed9b8fcf77a696a3c0e9ee727cc18e5d9e221b7c",
+  "rows": [
+    {
+      "name": "son/Doo01.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 28800,
+      "byte_count": 57600,
+      "pcm_sha256": "f44d657e14e7161d3209edea003dd42a7e20c2f6ea7ac1170dbb484baa4bc362"
+    },
+    {
+      "name": "son/Doo02.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 25920,
+      "byte_count": 51840,
+      "pcm_sha256": "2ee5be3177827a3060dce40fd7fc12fefd702607116066cb4077d4398be65a9f"
+    },
+    {
+      "name": "son/Doo03.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 27648,
+      "byte_count": 55296,
+      "pcm_sha256": "1a2684e3e58fe03869453dc24c2ec7c147b22cab0e5e37670b92161eb95019c8"
+    },
+    {
+      "name": "son/Doo04.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 17856,
+      "byte_count": 35712,
+      "pcm_sha256": "4b7fb8e4f99e735c188c5adc47046a7459fc1c1fd57660d3c4e0c86997a23ce6"
+    },
+    {
+      "name": "son/Doo05.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 24768,
+      "byte_count": 49536,
+      "pcm_sha256": "6a51464758347948e1a4b0d69f57a7afd4bcb49ac71a0d5c1c9eac3df006bf3e"
+    },
+    {
+      "name": "son/Doo06.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 25920,
+      "byte_count": 51840,
+      "pcm_sha256": "8838c7d9c084ff04933a7324b24942e07546c19814cc025b9c51ca0f6c33eff1"
+    },
+    {
+      "name": "son/Doo07.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 16704,
+      "byte_count": 33408,
+      "pcm_sha256": "9b91b0d0a121df8a99c367fb272341a678f0317a1568b7134fc9e9e4eb60690d"
+    },
+    {
+      "name": "son/Doo08.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 12672,
+      "byte_count": 25344,
+      "pcm_sha256": "5b0a53508e81080032ea79336d81b53edc4421323d4b7be0b82137d34a010373"
+    },
+    {
+      "name": "son/Doo09.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 28800,
+      "byte_count": 57600,
+      "pcm_sha256": "769d9e54da9e6fd6401eac956498e2ed4ef65c52aa3449ebe45dc0a93a761d7c"
+    },
+    {
+      "name": "son/Doo10.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 31104,
+      "byte_count": 62208,
+      "pcm_sha256": "0eba7c553411fbbaea65406e32086c917115ec5feda44cd4600993be99e74744"
+    },
+    {
+      "name": "son/Doo11.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 25920,
+      "byte_count": 51840,
+      "pcm_sha256": "796f199b4e14345f8fc56f15526e396c358cc20442cb7fbfd97f1993e46ef85b"
+    },
+    {
+      "name": "son/Doo12.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 27072,
+      "byte_count": 54144,
+      "pcm_sha256": "ba6fe578dbebf0200016fecc59b9d6dbf3627db5d90f58f63d2d10c0ef79fde0"
+    },
+    {
+      "name": "son/Doo13.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 33984,
+      "byte_count": 67968,
+      "pcm_sha256": "bbea6acadb140aa6d7581c0904fc2d9f45908608019e3c615f97136d1ea95c17"
+    },
+    {
+      "name": "son/Doo14.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 23040,
+      "byte_count": 46080,
+      "pcm_sha256": "e6dc4ec7474bb0ea4606ffdee5ef2499b74c699ac934dc219ad0797aa19f6645"
+    },
+    {
+      "name": "son/Doo15.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 19584,
+      "byte_count": 39168,
+      "pcm_sha256": "810362f6a54f801ef917f2ad1d9802df3c53dc7da10d268e21274a95b4864ce4"
+    },
+    {
+      "name": "son/Doo16.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 7488,
+      "byte_count": 14976,
+      "pcm_sha256": "f3adb9e964c2bdd3d195bfa23300bce2bbe188ef582a321d22d2d76d80ebcabe"
+    },
+    {
+      "name": "son/Doo17.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 42048,
+      "byte_count": 84096,
+      "pcm_sha256": "331f751a00e958e8f359e20cfd75cc61964da21a5267f0d0e63b88c41da5504a"
+    },
+    {
+      "name": "son/Doo18.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 27072,
+      "byte_count": 54144,
+      "pcm_sha256": "017b8b8be26e15d7b6580318451132fae5f62f117933621a1812ee7e48f676dc"
+    },
+    {
+      "name": "son/Doo19.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 42048,
+      "byte_count": 84096,
+      "pcm_sha256": "0d2c52336c289896b1ef5468cc5546de39e3811532673b65000811ac2eb7ca92"
+    },
+    {
+      "name": "son/FX15.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 17856,
+      "byte_count": 35712,
+      "pcm_sha256": "11b83e8083468387b7950436055190bfd8688370b9dcd1951f0034f40e4d01fd"
+    },
+    {
+      "name": "son/FX16.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 15552,
+      "byte_count": 31104,
+      "pcm_sha256": "eef8f9f8024af12b7707d8986143068952e918ba4c983c63c98474c4e11bfd0f"
+    },
+    {
+      "name": "son/FX17.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 17856,
+      "byte_count": 35712,
+      "pcm_sha256": "dd6bdf0c30c7ae720cd0ce6f2e630cbc37a2f3b802a688338fd21bcd69447254"
+    },
+    {
+      "name": "son/FX18.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 18432,
+      "byte_count": 36864,
+      "pcm_sha256": "ecdf58ebd02ef704d29ae8563ce96ce86c696b732bb8287bb42c1c32b399ddc5"
+    },
+    {
+      "name": "son/FX19.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 43776,
+      "byte_count": 87552,
+      "pcm_sha256": "cdb93bf71b11603f4fbb7492ab026fdd4ba6cb1292df1b02cf46dc981fdb52c3"
+    },
+    {
+      "name": "son/Fx09.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 38592,
+      "byte_count": 77184,
+      "pcm_sha256": "2c9ad13bb64fb367ed70a0c32e220d2255a52e06b5bffa5051c9bdaa9fc0e200"
+    },
+    {
+      "name": "son/Laugh01.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 21888,
+      "byte_count": 43776,
+      "pcm_sha256": "6a55befe379ccc0f94b784c4107e0c07ee843c854c54200713fe3e4fda677097"
+    },
+    {
+      "name": "son/Laugh02.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 18432,
+      "byte_count": 36864,
+      "pcm_sha256": "df7012f7da7966adcfe33deddaeccf7e5a166430fda2e1903ef65d1bd29ef154"
+    },
+    {
+      "name": "son/Laugh03.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 20736,
+      "byte_count": 41472,
+      "pcm_sha256": "83c04e1762781ae2bb04dec9d48357b2b059ea27a0cc7033fe38dc68933b3281"
+    },
+    {
+      "name": "son/Laugh04.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 12672,
+      "byte_count": 25344,
+      "pcm_sha256": "4a86098cfdfac5d9ed99bf00db7f6be4e17de679dc5b66e54af5c48acab995ca"
+    },
+    {
+      "name": "son/Laugh05.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 24768,
+      "byte_count": 49536,
+      "pcm_sha256": "0c510427f86a7fb350cd14f9eb7022fd5e77476fa09e852f56e781c36d9bd1fb"
+    },
+    {
+      "name": "son/Laugh06.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 23616,
+      "byte_count": 47232,
+      "pcm_sha256": "3a4d19c6d4427082add6e25de10dd43d16fb17ebc8e1b8bcee83ac2da6cdec89"
+    },
+    {
+      "name": "son/Laugh07.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 23616,
+      "byte_count": 47232,
+      "pcm_sha256": "bcf7502d4493a4e5506614a7e8bb7a1a1a9d1d40181bfe90b5a8adc94072fadc"
+    },
+    {
+      "name": "son/Laugh08.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 8640,
+      "byte_count": 17280,
+      "pcm_sha256": "093c6bf0b0cfc7501fba7a60078756fd480979378ad41ba501eea78a4237b75f"
+    },
+    {
+      "name": "son/Laugh09.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 23616,
+      "byte_count": 47232,
+      "pcm_sha256": "07c166555f4c4649f4129fe598b77456cff59f35d051d445bf48740df654fd74"
+    },
+    {
+      "name": "son/Laugh10.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 17856,
+      "byte_count": 35712,
+      "pcm_sha256": "362ac9284f3b9b05c438910f6211cb0d98463927655d893c3b45b372a6334f83"
+    },
+    {
+      "name": "son/Laugh11.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 27648,
+      "byte_count": 55296,
+      "pcm_sha256": "e2beba2643d3afe1695f49a0b2dec1ffde3c38443686b2c7a5329cd4161bfcb7"
+    },
+    {
+      "name": "son/Laugh12.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 27648,
+      "byte_count": 55296,
+      "pcm_sha256": "6b7ffba4d99585bc779c061a37beb7a4377971bb749384f711612a6fa80f817a"
+    },
+    {
+      "name": "son/Laugh13.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 35712,
+      "byte_count": 71424,
+      "pcm_sha256": "10336d03df414950cbc7f3370b57df0ec7824b10485f90a5751188ee709d0a71"
+    },
+    {
+      "name": "son/Laugh14.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 19584,
+      "byte_count": 39168,
+      "pcm_sha256": "ff46929a3fde1b7a1387b4da792beb675152d06565c6151d0e4fb54ec522e996"
+    },
+    {
+      "name": "son/Laugh15.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 18432,
+      "byte_count": 36864,
+      "pcm_sha256": "bfe680036cc46ed5eca0143bb7a371f50b019e772908e9471d25b063b7e55057"
+    },
+    {
+      "name": "son/Laugh16.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 14400,
+      "byte_count": 28800,
+      "pcm_sha256": "f93ccfbedbdd6201f7a1aec31c84612a28366e9377dc2264f05914dbfd335dfb"
+    },
+    {
+      "name": "son/Laugh17.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 51264,
+      "byte_count": 102528,
+      "pcm_sha256": "b4b12da4965e6390e7296aa82abc060c76ae88c96fc87124cf7d180c62c003ea"
+    },
+    {
+      "name": "son/Laugh18.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 21888,
+      "byte_count": 43776,
+      "pcm_sha256": "a0253b4e95c4fbe1426e5920c60ff630b37ddaa671fbaec5ca9047a0953123dd"
+    },
+    {
+      "name": "son/Laugh19.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 84672,
+      "byte_count": 169344,
+      "pcm_sha256": "4b252c8ad9ccc1375c3bc00d0a64b432070efd71bdf660663c30a325e19ca1e7"
+    },
+    {
+      "name": "son/Name01.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 27072,
+      "byte_count": 54144,
+      "pcm_sha256": "f1bd5b18b70fd6e6e0f21e14f1c4b8f7ee2f505e7069021a2e3a4642b0ba47fd"
+    },
+    {
+      "name": "son/Name02.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 15552,
+      "byte_count": 31104,
+      "pcm_sha256": "684bcfe5f7d1c6d52cac76fe60e3efebbb81098f048f4feddd4228ef805f44b0"
+    },
+    {
+      "name": "son/Name03.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 31104,
+      "byte_count": 62208,
+      "pcm_sha256": "4f50f0d87ff0fa2b5b30b3c857b203f9448fb3813a06230431d53a1365b56125"
+    },
+    {
+      "name": "son/Name04.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 21888,
+      "byte_count": 43776,
+      "pcm_sha256": "cf890fa2006d61942866c4c7053f52bf3e9e1db87356f9ea0c81f0e3be7ac966"
+    },
+    {
+      "name": "son/Name05.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 32832,
+      "byte_count": 65664,
+      "pcm_sha256": "3fa67874dda378cbe3235daf0295dd9defea1a95fdd063c7d9ba03c7d9f4457c"
+    },
+    {
+      "name": "son/Name06.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 24768,
+      "byte_count": 49536,
+      "pcm_sha256": "0d9272d5270c836ac8f6c526433c592dd06bca538f3acbc7931db1074f855d10"
+    },
+    {
+      "name": "son/Name07.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 27072,
+      "byte_count": 54144,
+      "pcm_sha256": "36ec7c4e63b0333e53f0ac3be4185f1d5e0b35147512abfb3b840c12c89f084b"
+    },
+    {
+      "name": "son/Name08.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 16704,
+      "byte_count": 33408,
+      "pcm_sha256": "4eb9b413cebd90ad9a03809954d8d019457ac0da7406ca6f595189fb4362a93b"
+    },
+    {
+      "name": "son/Name09.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 39744,
+      "byte_count": 79488,
+      "pcm_sha256": "e879ed326e1f0ae232670832dd82c2b6ea0c8423ef93ee1afd9bf13aa5718300"
+    },
+    {
+      "name": "son/Name10.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 31104,
+      "byte_count": 62208,
+      "pcm_sha256": "4ce9bcb56c82b7e5687d2bbfda27f16810cddb310ddc88708eecc982a42d4abe"
+    },
+    {
+      "name": "son/Name11.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 32832,
+      "byte_count": 65664,
+      "pcm_sha256": "e549d09fa9eca8f0ea81b982fd520798179c2760316a72dcb7b1fcf83b31c1e1"
+    },
+    {
+      "name": "son/Name12.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 31104,
+      "byte_count": 62208,
+      "pcm_sha256": "78be7f321401cf6d22b1b7802cfcd1890c74ab12cd415c9a401f9afa5090ceb2"
+    },
+    {
+      "name": "son/Name13.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 29952,
+      "byte_count": 59904,
+      "pcm_sha256": "b0ee26542f200489c3386deeb809e72fe2d2b5052490bb43465be14864f1290c"
+    },
+    {
+      "name": "son/Name14.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 21888,
+      "byte_count": 43776,
+      "pcm_sha256": "9dbbeb5a835380919155fe3288bdb02f58ca632a516d502097b2efa2c63493ff"
+    },
+    {
+      "name": "son/Name15.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 28800,
+      "byte_count": 57600,
+      "pcm_sha256": "ce550d7afb9abf3126d73338aef9a5c8e6e4285c8e155608b7f7abd3173026db"
+    },
+    {
+      "name": "son/Name16.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 15552,
+      "byte_count": 31104,
+      "pcm_sha256": "3c2e80f3284e7f0abefc636878bc92ea0108ab9e351d53edcff9f3a41496f530"
+    },
+    {
+      "name": "son/Name17.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 39744,
+      "byte_count": 79488,
+      "pcm_sha256": "c6211995cb5d439beaa86e4a5c2a2042b92f10d3d51fdc6b2c891a2f7c2db74a"
+    },
+    {
+      "name": "son/Name18.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 20736,
+      "byte_count": 41472,
+      "pcm_sha256": "d3c8c7dcd5a6f62c1fcfc4752d9ca221a12cb1882cdee428a73c7d08b9877b3c"
+    },
+    {
+      "name": "son/Name19.mp3",
+      "sample_rate": 22050,
+      "channels": 1,
+      "sample_frames": 35712,
+      "byte_count": 71424,
+      "pcm_sha256": "f756109a35b28c0a07eb7309d715e0251585c5d3bc11e6bef777b5cbbeb4fbc5"
+    }
+  ],
+  "scope": "Actual decoding with devkitPro libmad source using FPM_64BIT host arithmetic and cache stub. No original-codec fidelity or Wii hardware validation."
+}

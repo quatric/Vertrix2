@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "load": 4096,
+    "store": 4096,
+    "table_init": 4096,
+    "field": 45056,
+    "step_up": 4096,
+    "step_down": 4096
+  },
+  "scope": "Complete 412650, 412690, 4120a0, 4125e0, 412430 and 412510 run unmodified in the original over random storage; the whole 2 KiB storage compares (12 bytes move, including overlapping records)."
+}

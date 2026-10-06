@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "complete_row_cases": 20000,
+  "scope": "Complete original 0x40e770 including packed decode, effect transition, instrument selection, note selection/release, reset and sample defaults. Whole 192-byte channels, translated instrument/sample handles, cross-instrument sample retention, invalid notes/mappings and module flags. Excludes effect dispatch and row scheduling."
+}

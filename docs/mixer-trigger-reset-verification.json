@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "trigger_reset_cases": 40000,
+  "scope": "Complete original 0x40df20; whole 192-byte channel comparison, all waveform bytes, instrument presence, envelope flags, sweep/depth zero and nonzero. Excludes sample selection, envelope advancement and full note trigger."
+}

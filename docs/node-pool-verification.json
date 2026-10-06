@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "('pair', 'alloc')": 1018,
+    "('initialised', 'reuse')": 996,
+    "('quad', 'reuse')": 1021,
+    "('pair', 'reuse')": 1030,
+    "('initialised', 'alloc')": 1052,
+    "('quad', 'alloc')": 1027
+  },
+  "scope": "Each routine executes completely in the original with 0x4e23e0, 0x4ca060 and 0x4eb5e0 stubbed and logged; every callee call, the returned node and every pool object compare, with and without a block refill."
+}

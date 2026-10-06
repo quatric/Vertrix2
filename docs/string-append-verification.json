@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x45f540": 1024
+  },
+  "scope": "Complete original 0x45f540 executions over random source/suffix strings (including empties); the returned destination, the full destination buffer and the exact concatenation compare, plus native-only short/null guards."
+}

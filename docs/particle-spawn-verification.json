@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "spread": 4096,
+    "burst": 4096,
+    "drift": 4096,
+    "place": 4096
+  },
+  "scope": "Complete 43dea0, 43e740, 43e840 and 43e920 execute in the original (the random draw 4826c0 and image lookup 4877f0 are stubbed; attach, frame, bind and timer setters run for real); the scratch globals, every pool object and the replayed draws compare."
+}

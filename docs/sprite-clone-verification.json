@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 2048,
+  "pixels": 2072433,
+  "scope": "Complete original487790 clone replacement then4877d0 mirror execute, including actual483110/483ce0 and resource lookup. Only calloc and discarded old descriptor disposal are supplied. Native owns independent pixels and retains serialized metadata/frame count. Original pointer field is represented by native image.rgba. Mirrored replacement composition matches actual cloned descriptor483ce0 execution with an occupied native destination. Indexed direct-bank mutation matches; linked banks and full application remain unfinished."
+}

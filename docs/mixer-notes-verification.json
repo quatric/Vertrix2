@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "note_cases": 142464,
+  "scope": "Complete original 0x40ce80 in both modes, exhaustive notes 0..121 with all signed-byte finetunes at zero relative note, 20000 random realistic relative-note fixtures and 20000 full-width register fixtures per mode. Covers original table, bounds and wrapping. Excludes instrument mapping and sequencer effects."
+}

@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "publication_cases": 40000,
+  "scope": "Complete original 0x40e8a0; captures mixer call order and arguments, all update flags with/without sample, both pitch modes, global-volume wrapping and whole channel preservation. Hooks replace mixer delivery only. Excludes execution of emitted commands and audio delivery."
+}

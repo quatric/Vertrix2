@@ -1,0 +1,9 @@
+{
+  "routine": "0x43b720",
+  "cases": 4096,
+  "complete_original_executions": 4096,
+  "whole_object_compared": true,
+  "call_logs_compared": true,
+  "short_storage_preserved": true,
+  "scope": "Complete original 0x43b720 executions with the win handler 0x43ac00 executing for real (chain-select with live grid/counts/defaults, slot-6 dispatch, table allocation and release call all compared); the win return, the table bytes, the release target and the slot-6/release call logs compare alongside the progress return, objects, globals and boundary logs."
+}

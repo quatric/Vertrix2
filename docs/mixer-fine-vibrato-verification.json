@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "effect_cases": 40000,
+  "scope": "Complete original 0x40d170: all waveform selectors/phase bytes, tick-zero nibble memory, signed clamps and wrapped multiply/phase arithmetic, realistic and full-width states. Excludes other vibrato variants and full effect dispatch."
+}

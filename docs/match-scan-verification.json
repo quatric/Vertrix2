@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x432480": 128
+  },
+  "scope": "Complete original 0x432480 executions with the slot snapshot, the figure and line passes, the timer/event sweep and the per-cell reward loop (effect actor, burst spawner with draw/bind/append hooks, virtual dispatch) all executing; the return value, the four out-words, the player bytes, the line image, the 65 mask dwords, every object and the draw/bind/append/method call logs compare. Only the allocator, the random draw, the frame bind, the list append and the virtual method are stubbed."
+}

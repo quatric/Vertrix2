@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "release_cases": 30000,
+  "scope": "Complete original 0x40e640, instrument present/absent, all envelope flag bytes, arbitrary active/volume/flag state. Whole channel comparison verifies envelope branch behavior and preservation. Excludes envelope advancement and trigger initialization."
+}

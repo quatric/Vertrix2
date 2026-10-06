@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4713d0": 528,
+    "0x4715a0": 496
+  },
+  "scope": "The routine executes completely in the original with the string runtime, the allocation and the actor setters stubbed and logged (0x4cdfb0 storing the new string through its stack pointer); every call with its registers and stack arguments and every actor object compare."
+}

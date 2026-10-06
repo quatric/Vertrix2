@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "sequences": 12000,
+  "ticks_per_sequence": 4,
+  "playback_tick_cases": 48000,
+  "scope": "Complete original 0x40e030, whole 192-byte channels across consecutive ticks, absent instruments, both envelope gates, release fade, volume/pan scaling and instrument vibrato. Native invalid storage rejects atomically. Excludes row/tick scheduling and audio delivery."
+}

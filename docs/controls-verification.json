@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "active_piece_dispatch_comparisons": 5000,
+  "scope": "Original input order, movement, cycle/bottom-color RNG, fast drop, opponent input generation, acknowledgments and refresh request; surrounding player/board state loop and rendering remain unfinished"
+}

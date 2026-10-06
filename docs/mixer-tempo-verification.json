@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "tempo_cases": 22240,
+  "scope": "Complete original 0x40cd40 setter, all valid BPM values at five audio rates in mono/stereo, plus 20000 full-width rates preserving wrapped arithmetic. Original and native invalid-BPM preservation checked. Excludes sequencer effects and audio delivery."
+}

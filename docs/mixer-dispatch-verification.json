@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "dispatch_modes": 8,
+  "kernel_batches": 18000,
+  "accumulated_frames": 574200,
+  "scope": "Native dispatcher compared with all eight complete original sample kernels using existing batch oracles reduced to 250 fixtures per gain/mode. Includes their invalid-bound and zero-count guards. Excludes stopped-channel and loop orchestration."
+}

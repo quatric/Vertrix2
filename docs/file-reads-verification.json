@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x40c220": 4096,
+    "0x40c260": 4096,
+    "0x40c2a0": 4096,
+    "0x40c2e0": 4096,
+    "0x40c320": 4096,
+    "0x40c360": 4096
+  },
+  "scope": "Complete 40c360 (byte-swapped word), 40c220, 40c260, 40c2a0, 40c2e0 and 40c320 run in the original with the real 4eb5c0 zero fill; the runtime read 4ebec0 is a data-driven stub (full and short reads). Read arguments and the whole buffer compare."
+}

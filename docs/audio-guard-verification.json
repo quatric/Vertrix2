@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "cases": 20000,
+  "scope": "Original complete 0x40c990 sample guard callback, forward loops, overlaps, end guards and wrapping update arithmetic. No mixer playback."
+}

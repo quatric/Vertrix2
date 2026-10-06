@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "read_exact": 4096,
+    "read": 4096,
+    "skip": 4096
+  },
+  "scope": "Complete 48a930, 48a9d0 and 48aa90 execute in the original over random stream positions/ends and requests; stream object, destination bytes, results and the applied-delta global compare. Other scratch globals (0x5bb22c..0x5bb248) are dead temporaries."
+}

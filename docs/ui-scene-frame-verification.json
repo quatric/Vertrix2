@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "scenes": 512,
+  "actor_updates": 6332,
+  "handlers_exercised": 23,
+  "shared_random_draws": 133,
+  "original_parent_preview_updates": 512,
+  "nested_actor_updates": 2664,
+  "scope": "Complete original4b6200 virtual scene-list updates without hooks, invoking actual4ae150/4ade20, lookup and all twenty-two recovered handlers plus idle actors. Whole actor storage, shared refresh and list order match mixed scenes with duplicate identities. Shared random cursor matches update order. Complete42b310 parent preview update also matches parent/child bytes, refresh and RNG with missing and repeated handles. Direct resource fixtures; no interaction targets/child chains. Other actor classes, full scene construction, rendering and application execution remain unfinished."
+}

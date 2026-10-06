@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4dae1e": 4096
+  },
+  "scope": "The routine executes completely in the original with 0x4e509c stubbed and logged (writing the integer and fractional doubles in the frame, mirrored for the native); the call registers, the returned edx:eax and the integer part stored through ebx compare."
+}

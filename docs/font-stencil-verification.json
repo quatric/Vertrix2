@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 1024,
+  "pixels_compared": 191833,
+  "scope": "Actual0x4831b0 with only zeroed resource allocation483060 hooked. All pixels, unmodified source and output dimensions/origins compared. Even/odd stencil dimensions, solid0..2 and overlap saturation covered. Native implements pixels; resource construction/VF integration remain separate."
+}

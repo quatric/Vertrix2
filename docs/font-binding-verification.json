@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "constructor_cases": 1024,
+  "fonts": 19,
+  "measurements": 1216,
+  "scope": "Actual48ab10 constructor matches all fields including preserved255. Actual43fc50 mapping and440610 measurement with actual43f420/48ac00 glyph lookup and4b14c0 dimensions match real owned VF bank. Resource lookup for stencil dimensions and allocation/constructor/attach/destructor/empty comparison remain hooks. Rendering/application integration remain unfinished."
+}

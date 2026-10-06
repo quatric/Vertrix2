@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "row_seek_cases": 16000,
+  "skipped_events": 256366,
+  "scope": "Original 0x40ea45..0x40ea79 nested packed event skip loop, mixed packed/unpacked/zero-field cells, signed zero/negative rows and channels, empty patterns. Cursor matches original. Native truncation and oversized request preserve output. Excludes channel initialization and complete sequencer integration."
+}

@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4c9860": 2048
+  },
+  "scope": "The routine executes completely in the original over random pointer arrays, row counts (including overlapping rows) and sizes; every pool object compares. The original eax is scratch."
+}

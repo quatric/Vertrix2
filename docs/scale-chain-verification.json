@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "sequences": 256,
+  "whole_object_updates": 2712,
+  "scope": "Successive original 0x44d330 -> 0x44d3a0 -> 0x44d410 -> 0x44c860 compared without hooks. Random timer periods and frame intervals are fixtures. No full actor runtime or playable-game execution is claimed."
+}

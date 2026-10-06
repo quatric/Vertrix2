@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "board_incoming_and_eviction_comparisons": 20000,
+  "lock_placement_comparisons": 10000,
+  "rising_board_comparisons": 10000,
+  "original_addresses": [
+    "0x0042f580",
+    "0x0042f620",
+    "0x0042f310"
+  ],
+  "scope": "Board types, incoming consumption and destructor order; graphics destructor effects remain separate"
+}

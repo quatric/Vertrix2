@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "cases": 1024,
+  "scope": "Original 0x440610 control flow and actual resource measurement4b14c0. Empty-string comparison, glyph lookup, allocation/constructor/resource attach/destructor are hooked. VF font mapping and runtime rendering remain unverified."
+}

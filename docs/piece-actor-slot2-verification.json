@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "complete_original_cases": 8192,
+  "rejected_cases": 8192,
+  "scope": "Complete 42abf0 and 42ac30 execute with the slot-2 target supplied as a recorded stub. Call order, identity and edx argument match; storage is unchanged. Slot-2 bodies remain separate."
+}

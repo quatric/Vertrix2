@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "vf_sheets": 29,
+  "glyphs": 466,
+  "pixels": 170904,
+  "scope": "Direct original VF composition of29 BMP sheets into466 base glyphs; actual4799f0 and47ce10 execute without hooks. Pixel bytes, dimensions, ordering, owned lifetime after archive close, occupied-output rejection and missing-artwork failure verified. Mask-present branch, final color ordering,82 derived glyphs and text rendering remain separate."
+}

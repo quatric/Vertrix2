@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "recorded_quad_cases": 2048,
+  "invalid_no_command_cases": 4096,
+  "scope": "Recorded host GX calls verify opaque completed-frame state, vertex/UV order, padding limits and coordinate range. Source alpha does not reject/blend final RGB. Compiles against actual libogc for PowerPC. GPU rendering, projection/viewport, video copy/swap and full application remain unverified."
+}

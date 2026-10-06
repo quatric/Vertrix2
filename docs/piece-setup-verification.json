@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x43ab30": 4096
+  },
+  "scope": "Complete 43ab30 executes in the original with seeded RNG; initialized piece bytes, delay fields and RNG position compare."
+}

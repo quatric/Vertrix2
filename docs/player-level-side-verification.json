@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x431400": 1024
+  },
+  "scope": "Complete original 0x431400 executions with the delay setter 0x4ac7d0 and the counter clearer 0x4ac510 executing for real on both sides; the returned handle, the holder bytes and every pool object compare."
+}

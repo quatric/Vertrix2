@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x42ff50": 2048,
+    "0x43d2b0": 2048
+  },
+  "scope": "Complete 42ff50 and 43d2b0 execute in the original (operator new 4ca000 stubbed and replayed, recovered building blocks executed for real); the whole board and every object compare."
+}

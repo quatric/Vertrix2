@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 512,
+  "compared_operations": 218618,
+  "scope": "Original 0x42fc56..0x42fd81 board update-tail dispatch, including live collection mutations and layout gating. Original collection traversal and active-byte setters execute; all ten original reset methods execute normally and all 194 flag bytes are compared; virtual object updates and layout/list leaves are captured. Does not prove those leaf implementations, preceding descent/effects, or complete game scheduling."
+}

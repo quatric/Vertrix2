@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "start_cases": 4000,
+  "successful_starts": 1755,
+  "already_active": 1952,
+  "missing_song": 293,
+  "scope": "Complete original 0x40ec40 with mixer allocation, pan, tempo and callback registration captured; state clearing executes normally. Zero to 32 channels, arbitrary/default pans, full-width speed/tempo, error precedence and native preservation. Whole active channel and global records match. Excludes real mixer slot allocation and runtime registration/audio."
+}

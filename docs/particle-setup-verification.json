@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "no_picture": 165,
+    "picture": 435
+  },
+  "scope": "Complete 43e4d0 executes in the original (operator new, the draw, the picture loader and release and the frame binding stubbed and replayed or logged; the pixel reader 478f10 executed for real); the call log, the board, every object and the scratch globals compare."
+}

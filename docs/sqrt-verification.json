@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "hardware": 1047,
+    "software": 996,
+    "error": 957,
+    "hardware_hunted": 15000,
+    "double_rounding_cases": 2
+  },
+  "scope": "The routine executes completely in the original (fsqrt on the hardware path) with 0x4dad2e and 0x4db10a stubbed and logged; the result pair edx:eax and every callee call compare bit for bit, including the cases where fsqrt double rounding differs from the correctly rounded root."
+}

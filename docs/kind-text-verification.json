@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x488d80": {
+      "text": 1352,
+      "default": 696
+    }
+  },
+  "scope": "The routine executes completely in the original with the string runtime stubbed and logged ; the returned variable compares; every callee call and every pool object compare."
+}

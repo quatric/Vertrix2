@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "fade_cases": 25000,
+  "volume_cases": 50000,
+  "pan_cases": 50000,
+  "scope": "Original fade 0x40e038..0x40e05b, enabled/disabled output volume and pan branches, whole channel comparisons with realistic and full-width wrapping inputs. Excludes instrument vibrato, envelope enable gating and full sequencing."
+}

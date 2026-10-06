@@ -1,0 +1,25 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x41de80": 4000,
+    "0x476090": 4000,
+    "0x482b30": 4000,
+    "0x489f90": 4000,
+    "0x4b4600": 4000,
+    "0x4b4610": 4000,
+    "0x4b4620": 4000,
+    "0x4b5500": 4000,
+    "0x4b6700": 4000,
+    "0x48a2f0": 4000,
+    "0x471e10": 4000,
+    "0x4725f0": 4000,
+    "0x484a60": 4000,
+    "0x4b5d40": 4000,
+    "0x4b6020": 4000,
+    "0x48d330": 4000,
+    "0x48d500": 4000,
+    "0x4b4630": 4000,
+    "0x48d480": 4000
+  },
+  "scope": "Each wrapper executes completely in the original with its callees stubbed and logged; every callee call, the returned eax, the flag 0x532a08 and every pool object compare."
+}

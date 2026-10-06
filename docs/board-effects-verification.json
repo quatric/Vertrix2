@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "cases": 4096,
+  "whole_object_comparisons": 8192,
+  "virtual_updates": 4090,
+  "scope": "Original 0x42fb60..0x42fbba prefix with actual effect state setters, blink/timer methods and toggle routines. Only virtual updates captured. Whole effect objects match, including absent objects, arbitrary state/flash/parameters, zero/wrapped timers and second-parameter mutation during first update. Character meaning, virtual object implementations and complete board/game integration remain unfinished."
+}

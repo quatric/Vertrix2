@@ -1,0 +1,27 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4b7080": 500,
+    "0x4b7120": 500,
+    "0x4b71c0": 500,
+    "0x4b7260": 500,
+    "0x4b7300": 500,
+    "0x4b73a0": 500,
+    "0x4b3740": 500,
+    "0x4b37e0": 500,
+    "0x4b3880": 500,
+    "0x4b3940": 500,
+    "0x4b7420": 500,
+    "0x4b7710": 500,
+    "0x4b76d0": 500,
+    "0x4b7830": 500,
+    "0x4b79e0": 500,
+    "0x48a300": 500,
+    "0x4b4fb0": 500,
+    "0x4b3c40": 500,
+    "0x478dd0": 500,
+    "0x416a80": 500,
+    "0x418170": 500
+  },
+  "scope": "Each reader executes completely in the original, exception frame included, with its callees stubbed and logged (0x4cdfb0 as a cdecl call); every callee call and the returned slot compare."
+}

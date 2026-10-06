@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 8192,
+  "original_channel_layout_cases": 4096,
+  "scope": "Unchanged original48d740/48d7f0 execute without hooks. Random lookup entries, channel maps, pixels and full-word fixed channel indices match native palette conversion. Original palette creation and complete actor draw dispatch remain unfinished. Additional4096 cases match using the recovered201-by101 channel table and original pointer stride."
+}

@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "cases": 4096,
+  "scope": "Original 0x44fa70/0x44faa0/0x44fc00/0x44fc30, actual list lookup and refresh routines. Numeric/font setter is hooked to capture value and write field180; font binding and full player runtime remain unverified."
+}

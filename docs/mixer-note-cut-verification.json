@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "effect_cases": 30000,
+  "scope": "Full original extended dispatcher selecting note-cut case 12. All tick nibbles, exact matches, near and full-width signed ticks, arbitrary channel state. Whole channel comparison includes memory and unrelated field preservation. Excludes note delay/retrigger and full sequencing."
+}

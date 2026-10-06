@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x43f550": 512,
+    "0x43f630": 512,
+    "0x43f710": 512,
+    "0x43f7f0": 512,
+    "0x43f8d0": 512,
+    "0x43f9b0": 512,
+    "0x43fa90": 512,
+    "0x43fb70": 512
+  },
+  "scope": "Complete 43f550, 43f630, 43f710, 43f7f0, 43f8d0, 43f9b0, 43fa90 and 43fb70 execute in the original (the recovered setter 48abf0 runs for real); the whole input object compares."
+}

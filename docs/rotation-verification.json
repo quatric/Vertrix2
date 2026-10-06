@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "cases": 1024,
+  "scope": "Actual original 0x4ad060 without hooks; full object storage, return value and both global trace fields match signed-word angle and step extremes. Coordinate lookup and the enclosing actor handler remain incomplete."
+}

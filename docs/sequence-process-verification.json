@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "sequences": 4000,
+  "integrated_ticks": 24000,
+  "processed_channels": 36000,
+  "callback_calls": 7,
+  "mixer_commands_checked": 75790,
+  "scope": "Complete original 0x40eb3a..0x40ec24 post-row tick body across zero to three channels and six consecutive ticks, all volume/main effects and full instrument playback, pending global consumption and final publication order. Whole channel/global records, sample binding handles, tempo and callback arguments match. Only application callback, tempo setter and mixer wrappers captured. Excludes row advancement and audio execution."
+}

@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "original_filename_slots": 23,
+  "original_nonempty_rows": 20,
+  "capacity_preservation_cases": 434,
+  "renamed_table_selected_stencils": 2,
+  "malformed_table_cases": 7,
+  "scope": "All original VF slots match complete original45f540 path construction. Missing trailing23-slot entries retain empty names. Renamed VF row17 drives font stencil loading. Bounded supported-table reader; not an emulation of every original generic INI parser behavior or startup settings."
+}

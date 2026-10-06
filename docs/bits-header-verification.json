@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x407280": {
+      "1": 1352,
+      "2": 678,
+      "3": 749,
+      "0": 642,
+      "neg": 675
+    }
+  },
+  "scope": "The routine executes completely in the original with 0x404610, 0x404680, 0x4046e0 and 0x4eb4d4 stubbed and logged (bit reads return values below 2^width); every call with its registers and every record dword compare."
+}

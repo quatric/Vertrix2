@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "archive_sha256": "bdae74e10f8674b3c12e68d744a19e902a0a3185627782ede0c8e8abd5864090",
+  "assets_verified": 1525,
+  "payload_bytes_verified": 27491361,
+  "malformed_archives_rejected": 7,
+  "scope": "Direct archive lookup/full/partial reads on host; Wii compilation separately"
+}

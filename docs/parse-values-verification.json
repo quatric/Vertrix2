@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x48a560": 1500
+  },
+  "scope": "The routine executes completely in the original with its callees stubbed and logged; every callee call, the returned eax, every pool object compare. The register arguments of each call are the loop state; the allocations never return the object itself."
+}

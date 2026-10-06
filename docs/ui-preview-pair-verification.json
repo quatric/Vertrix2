@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "original_pair_cases": 2048,
+  "actors_compared": 4096,
+  "failure_preservation_cases": 6144,
+  "complete_original_preview_parent_constructor_cases": 2048,
+  "parent_constructor_failure_preservation_cases": 2048,
+  "complete_original_player_preview_cases": 512,
+  "complete_original_player_preview_actors": 3072,
+  "player_failure_preservation_cases": 1024,
+  "scope": "Original constructors and complete companion/border setup fragments execute without hooks, including actual4877f0 binding and final callbacks. Original descriptor pointers normalize to verified bank-local indices. Entire extended actors match. Complete42b370 construction also matches all six actors and all parent bytes with only heap allocation supplied. Direct resource fixtures; native ownership, scene registration and full gameplay remain separate."
+}

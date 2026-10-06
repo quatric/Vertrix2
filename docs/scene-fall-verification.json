@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "cases": 2048,
+  "transferred_blocks": 1926,
+  "destructor_calls": 786,
+  "scope": "Complete original 0x42fbba..0x42fc56 active-piece update with real timers, frozen transitions, blink effects, pixel loop and object locking; only virtual destructors captured. Cell handles, ownership observed at each destructor, child clearing, active clearing, lock result and whole block records match. Actual object destructors, enclosing board/scene composition and complete game remain unfinished."
+}

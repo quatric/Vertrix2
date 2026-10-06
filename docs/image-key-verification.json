@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "kernel_cases": 1024,
+  "vf_font_sheets": 29,
+  "vf_pixels": 196664,
+  "scope": "Actual4799f0 without hooks; full32-bit key comparison including alpha. Direct VF BMP/top-left-key composition matches original kernel across all29 font sheets; owned pixels remain valid after archive close. Mask-present selection, configuration parsing, glyph resource construction and text rendering remain separate."
+}

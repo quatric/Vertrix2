@@ -1,0 +1,215 @@
+{
+  "status": "passed",
+  "modules": 29,
+  "executed_ticks": 3712,
+  "emitted_commands": 3386,
+  "compared_channels": 29952,
+  "pcm_frames": 237568,
+  "pcm_values": 352256,
+  "songs": [
+    {
+      "name": "Abraham.xm",
+      "ticks": 128,
+      "orders_visited": 1,
+      "commands": 169,
+      "stopped": false
+    },
+    {
+      "name": "Albert.xm",
+      "ticks": 128,
+      "orders_visited": 1,
+      "commands": 92,
+      "stopped": false
+    },
+    {
+      "name": "Bill.xm",
+      "ticks": 128,
+      "orders_visited": 1,
+      "commands": 61,
+      "stopped": false
+    },
+    {
+      "name": "Choose.xm",
+      "ticks": 128,
+      "orders_visited": 1,
+      "commands": 105,
+      "stopped": false
+    },
+    {
+      "name": "Clara.xm",
+      "ticks": 128,
+      "orders_visited": 1,
+      "commands": 94,
+      "stopped": false
+    },
+    {
+      "name": "Credit.xm",
+      "ticks": 128,
+      "orders_visited": 1,
+      "commands": 75,
+      "stopped": false
+    },
+    {
+      "name": "Doc.xm",
+      "ticks": 128,
+      "orders_visited": 1,
+      "commands": 38,
+      "stopped": false
+    },
+    {
+      "name": "Draw.xm",
+      "ticks": 128,
+      "orders_visited": 2,
+      "commands": 205,
+      "stopped": false
+    },
+    {
+      "name": "Enigma.xm",
+      "ticks": 128,
+      "orders_visited": 1,
+      "commands": 56,
+      "stopped": false
+    },
+    {
+      "name": "Glouk.xm",
+      "ticks": 128,
+      "orders_visited": 1,
+      "commands": 50,
+      "stopped": false
+    },
+    {
+      "name": "Intro.xm",
+      "ticks": 128,
+      "orders_visited": 1,
+      "commands": 145,
+      "stopped": false
+    },
+    {
+      "name": "Lee.xm",
+      "ticks": 128,
+      "orders_visited": 1,
+      "commands": 227,
+      "stopped": false
+    },
+    {
+      "name": "Loser.xm",
+      "ticks": 128,
+      "orders_visited": 1,
+      "commands": 122,
+      "stopped": false
+    },
+    {
+      "name": "Max.xm",
+      "ticks": 128,
+      "orders_visited": 1,
+      "commands": 139,
+      "stopped": false
+    },
+    {
+      "name": "Mike.xm",
+      "ticks": 128,
+      "orders_visited": 1,
+      "commands": 60,
+      "stopped": false
+    },
+    {
+      "name": "Musnull.xm",
+      "ticks": 128,
+      "orders_visited": 1,
+      "commands": 2,
+      "stopped": false
+    },
+    {
+      "name": "Pamela.xm",
+      "ticks": 128,
+      "orders_visited": 1,
+      "commands": 72,
+      "stopped": false
+    },
+    {
+      "name": "Present.xm",
+      "ticks": 128,
+      "orders_visited": 1,
+      "commands": 170,
+      "stopped": false
+    },
+    {
+      "name": "Regis.xm",
+      "ticks": 128,
+      "orders_visited": 1,
+      "commands": 103,
+      "stopped": false
+    },
+    {
+      "name": "Rose.xm",
+      "ticks": 128,
+      "orders_visited": 1,
+      "commands": 30,
+      "stopped": false
+    },
+    {
+      "name": "Sandra.xm",
+      "ticks": 128,
+      "orders_visited": 1,
+      "commands": 622,
+      "stopped": false
+    },
+    {
+      "name": "Space.xm",
+      "ticks": 128,
+      "orders_visited": 1,
+      "commands": 42,
+      "stopped": false
+    },
+    {
+      "name": "Stan.xm",
+      "ticks": 128,
+      "orders_visited": 1,
+      "commands": 133,
+      "stopped": false
+    },
+    {
+      "name": "Stories.xm",
+      "ticks": 128,
+      "orders_visited": 1,
+      "commands": 202,
+      "stopped": false
+    },
+    {
+      "name": "Tod.xm",
+      "ticks": 128,
+      "orders_visited": 1,
+      "commands": 107,
+      "stopped": false
+    },
+    {
+      "name": "Tommy.xm",
+      "ticks": 128,
+      "orders_visited": 1,
+      "commands": 25,
+      "stopped": false
+    },
+    {
+      "name": "Valerie.xm",
+      "ticks": 128,
+      "orders_visited": 1,
+      "commands": 73,
+      "stopped": false
+    },
+    {
+      "name": "Vick.xm",
+      "ticks": 128,
+      "orders_visited": 1,
+      "commands": 15,
+      "stopped": false
+    },
+    {
+      "name": "Winner.xm",
+      "ticks": 128,
+      "orders_visited": 1,
+      "commands": 152,
+      "stopped": false
+    }
+  ],
+  "scope": "All original VF songs compared through x86 startup, complete ticks, actual mixer commands and 64-frame per-channel PCM mixing after each tick. Whole sequencer/mixer states and PCM accumulators match, mono/stereo and interpolation modes distributed across modules, at 32000/48000 Hz. Only slot allocation, tempo setter and tick registration captured. Invalid source preserves native mixer/output. Fixed-size chunks do not yet implement original tempo-based scheduling or audible delivery."
+}

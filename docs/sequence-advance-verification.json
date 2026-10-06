@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "advance_cases": 24000,
+  "outcomes": [
+    12000,
+    1183,
+    9736,
+    1081
+  ],
+  "scope": "Complete original 0x40e940, no hooks, zero through three channels and zero through two instruments, mixed packed events, row jumps/breaks, invalid patterns, restarts, seeking and complete per-channel initialization. Includes sample mappings, signed tuning, cross-instrument sample retention, envelope resets/releases and defaults. Whole globals/channels and packed cursor comparisons. Full sequencer tick execution remains unfinished."
+}

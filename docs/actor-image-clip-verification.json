@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 4096,
+  "visible": 2409,
+  "scope": "Original4b1a99 clipping executes with actor/custom/cached/target modes. Native actor-storage adapter matches visible rectangles, dimensions, source offsets and clipped flags; actor bytes remain unchanged and clipped/invalid output is preserved. Visible source offsets also match original4ae99f..4aea50 scale advances. Effects and complete draw/application integration remain unfinished."
+}

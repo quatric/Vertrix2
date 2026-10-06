@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "deal": 4096
+  },
+  "scope": "Complete 415c60 runs in the original (draw 4826c0 stubbed and replayed) over random distinct reserved slots; all 15 output dwords and the 16 draws compare."
+}

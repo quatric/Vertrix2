@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "original_origin_cases": 2048,
+  "draw_cases": 1024,
+  "scope": "Actual4ae6fa..4ae747 origin arithmetic matches without hooks. Owned-image draw adapter composes separately oracle-verified clipping and binary pixel renderer; integration pixels independently checked with randomized alpha/background/edge clipping. Whole original sprite preparation, nonzero viewport origins and application integration remain separate."
+}

@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 3072,
+  "linked_resources": 2048,
+  "scope": "Actual complete original 0x44c860/0x450710/0x450730 including forward/reverse loops and animation and 0x4ac8a0/0x4877f0 frame binding, with no routine hooks. Whole block state matches direct and one/two-level linked resource tables. Native receives independently resolved descriptor order; does not implement resource graph construction, actual VF actor binding or complete object runtime/game."
+}

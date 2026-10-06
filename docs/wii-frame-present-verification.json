@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "recorded_presentations": 2048,
+  "invalid_preservation_cases": 8192,
+  "scope": "Host records projection setup, progressive/field viewport selection, draw/copy/completion/display/flush/vsync ordering and alternating XFBs. Actual PowerPC/libogc compilation passes. GPU execution, allocated XFB sizes, video/copy initialization, timing and complete game remain unverified."
+}

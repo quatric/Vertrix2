@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "drift": 2048,
+    "fall": 2048,
+    "reset": 4096
+  },
+  "scope": "Complete 43e740, 43e840 and 43e100 execute in the original (the draw 4826c0 replayed, the frame binding 4ac8a0 logged); the actor storage, the scratch globals, the binding calls and the draws compare."
+}

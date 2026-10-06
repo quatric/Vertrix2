@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 16384,
+  "phase_changes": 8347,
+  "scope": "Complete original44fad0/44fb40/44fbb0/44fc60/44fcf0/44fd60/44fdb0/44fe30 execution without hooks. Whole effect and linked numeric objects match, including timers, signed transitions, value comparison and numeric handler handoff. Caller resolves the linked object; full player scheduling remains unfinished."
+}

@@ -1,0 +1,1125 @@
+{
+  "status": "passed",
+  "eligible_checks": 220,
+  "skipped": [
+    {
+      "script": "verify_sprite_chain_draw.py",
+      "reason": "helper module without executable test entry point"
+    },
+    {
+      "script": "verify_ui_artwork_frames.py",
+      "reason": "helper module without executable test entry point"
+    },
+    {
+      "script": "verify_ui_artwork_render.py",
+      "reason": "helper module without executable test entry point"
+    },
+    {
+      "script": "verify_ui_scene_render.py",
+      "reason": "helper module without executable test entry point"
+    }
+  ],
+  "results": [
+    {
+      "script": "verify_actor_image_bounds.py",
+      "exit_code": 0,
+      "seconds": 0.65
+    },
+    {
+      "script": "verify_actor_image_clip.py",
+      "exit_code": 0,
+      "seconds": 0.78
+    },
+    {
+      "script": "verify_actor_render_geometry.py",
+      "exit_code": 0,
+      "seconds": 0.47
+    },
+    {
+      "script": "verify_actor_render_style.py",
+      "exit_code": 0,
+      "seconds": 0.59
+    },
+    {
+      "script": "verify_actor_style_storage.py",
+      "exit_code": 0,
+      "seconds": 0.25
+    },
+    {
+      "script": "verify_alpha.py",
+      "exit_code": 0,
+      "seconds": 0.45
+    },
+    {
+      "script": "verify_actor_render_draw.py",
+      "exit_code": 0,
+      "seconds": 4.13
+    },
+    {
+      "script": "verify_assets.py",
+      "exit_code": 0,
+      "seconds": 0.33
+    },
+    {
+      "script": "verify_animation.py",
+      "exit_code": 0,
+      "seconds": 3.16
+    },
+    {
+      "script": "verify_audio_delta.py",
+      "exit_code": 0,
+      "seconds": 0.9
+    },
+    {
+      "script": "verify_audio_format.py",
+      "exit_code": 0,
+      "seconds": 0.92
+    },
+    {
+      "script": "verify_audio_guard.py",
+      "exit_code": 0,
+      "seconds": 0.68
+    },
+    {
+      "script": "verify_block_accelerate.py",
+      "exit_code": 0,
+      "seconds": 0.39
+    },
+    {
+      "script": "verify_block_byte_pulse.py",
+      "exit_code": 0,
+      "seconds": 0.38
+    },
+    {
+      "script": "verify_block_centered.py",
+      "exit_code": 0,
+      "seconds": 0.52
+    },
+    {
+      "script": "verify_block_centered_finish.py",
+      "exit_code": 0,
+      "seconds": 0.51
+    },
+    {
+      "script": "verify_block_collapse.py",
+      "exit_code": 0,
+      "seconds": 0.39
+    },
+    {
+      "script": "verify_block_chain.py",
+      "exit_code": 0,
+      "seconds": 0.56
+    },
+    {
+      "script": "verify_block_cycle.py",
+      "exit_code": 0,
+      "seconds": 0.42
+    },
+    {
+      "script": "verify_block_combined.py",
+      "exit_code": 0,
+      "seconds": 0.53
+    },
+    {
+      "script": "verify_block_departure.py",
+      "exit_code": 0,
+      "seconds": 0.34
+    },
+    {
+      "script": "verify_block_fade.py",
+      "exit_code": 0,
+      "seconds": 0.31
+    },
+    {
+      "script": "verify_block_finish.py",
+      "exit_code": 0,
+      "seconds": 0.43
+    },
+    {
+      "script": "verify_block_effect.py",
+      "exit_code": 0,
+      "seconds": 1.1
+    },
+    {
+      "script": "verify_block_frames.py",
+      "exit_code": 0,
+      "seconds": 0.61
+    },
+    {
+      "script": "verify_block_half_pulse.py",
+      "exit_code": 0,
+      "seconds": 0.32
+    },
+    {
+      "script": "verify_block_finish_effect.py",
+      "exit_code": 0,
+      "seconds": 1.14
+    },
+    {
+      "script": "verify_block_mode_pulse.py",
+      "exit_code": 0,
+      "seconds": 0.34
+    },
+    {
+      "script": "verify_block_mode_amount.py",
+      "exit_code": 0,
+      "seconds": 0.66
+    },
+    {
+      "script": "verify_block_motion.py",
+      "exit_code": 0,
+      "seconds": 0.37
+    },
+    {
+      "script": "verify_block_orbit.py",
+      "exit_code": 0,
+      "seconds": 0.62
+    },
+    {
+      "script": "verify_block_period.py",
+      "exit_code": 0,
+      "seconds": 0.46
+    },
+    {
+      "script": "verify_block_pulse.py",
+      "exit_code": 0,
+      "seconds": 0.36
+    },
+    {
+      "script": "verify_block_resource.py",
+      "exit_code": 0,
+      "seconds": 0.38
+    },
+    {
+      "script": "verify_block_return.py",
+      "exit_code": 0,
+      "seconds": 0.35
+    },
+    {
+      "script": "verify_block_scale.py",
+      "exit_code": 0,
+      "seconds": 0.45
+    },
+    {
+      "script": "verify_block_slide.py",
+      "exit_code": 0,
+      "seconds": 0.4
+    },
+    {
+      "script": "verify_block_staged.py",
+      "exit_code": 0,
+      "seconds": 0.31
+    },
+    {
+      "script": "verify_block_spin.py",
+      "exit_code": 0,
+      "seconds": 0.79
+    },
+    {
+      "script": "verify_block_travel.py",
+      "exit_code": 0,
+      "seconds": 0.4
+    },
+    {
+      "script": "verify_block_swell.py",
+      "exit_code": 0,
+      "seconds": 0.82
+    },
+    {
+      "script": "verify_block_triple.py",
+      "exit_code": 0,
+      "seconds": 0.31
+    },
+    {
+      "script": "verify_block_update.py",
+      "exit_code": 0,
+      "seconds": 0.42
+    },
+    {
+      "script": "verify_block_visibility.py",
+      "exit_code": 0,
+      "seconds": 0.54
+    },
+    {
+      "script": "verify_board_effects.py",
+      "exit_code": 0,
+      "seconds": 0.37
+    },
+    {
+      "script": "verify_board_frame.py",
+      "exit_code": 0,
+      "seconds": 1.06
+    },
+    {
+      "script": "verify_byte_transition.py",
+      "exit_code": 0,
+      "seconds": 0.27
+    },
+    {
+      "script": "verify_board.py",
+      "exit_code": 0,
+      "seconds": 3.15
+    },
+    {
+      "script": "verify_color_order.py",
+      "exit_code": 0,
+      "seconds": 1.35
+    },
+    {
+      "script": "verify_controls.py",
+      "exit_code": 0,
+      "seconds": 1.46
+    },
+    {
+      "script": "verify_coordinates.py",
+      "exit_code": 0,
+      "seconds": 2.6
+    },
+    {
+      "script": "verify_dword_transition.py",
+      "exit_code": 0,
+      "seconds": 0.25
+    },
+    {
+      "script": "verify_descent.py",
+      "exit_code": 0,
+      "seconds": 2.48
+    },
+    {
+      "script": "verify_font_binding.py",
+      "exit_code": 0,
+      "seconds": 1.04
+    },
+    {
+      "script": "verify_font_cell.py",
+      "exit_code": 0,
+      "seconds": 0.29
+    },
+    {
+      "script": "verify_font_crop.py",
+      "exit_code": 0,
+      "seconds": 0.27
+    },
+    {
+      "script": "verify_font_bank.py",
+      "exit_code": 0,
+      "seconds": 2.65
+    },
+    {
+      "script": "verify_font_initialize.py",
+      "exit_code": 0,
+      "seconds": 0.34
+    },
+    {
+      "script": "verify_font_map.py",
+      "exit_code": 0,
+      "seconds": 0.35
+    },
+    {
+      "script": "verify_font_outline.py",
+      "exit_code": 0,
+      "seconds": 0.46
+    },
+    {
+      "script": "verify_font_run.py",
+      "exit_code": 0,
+      "seconds": 1.48
+    },
+    {
+      "script": "verify_font_measure.py",
+      "exit_code": 0,
+      "seconds": 2.51
+    },
+    {
+      "script": "verify_font_scaled_draw.py",
+      "exit_code": 0,
+      "seconds": 0.67
+    },
+    {
+      "script": "verify_font_sheet.py",
+      "exit_code": 0,
+      "seconds": 0.39
+    },
+    {
+      "script": "verify_font_scaled_run.py",
+      "exit_code": 0,
+      "seconds": 1.62
+    },
+    {
+      "script": "verify_font_stencils.py",
+      "exit_code": 0,
+      "seconds": 0.27
+    },
+    {
+      "script": "verify_font_style.py",
+      "exit_code": 0,
+      "seconds": 0.39
+    },
+    {
+      "script": "verify_frame_resource.py",
+      "exit_code": 0,
+      "seconds": 0.27
+    },
+    {
+      "script": "verify_font_stencil.py",
+      "exit_code": 0,
+      "seconds": 1.47
+    },
+    {
+      "script": "verify_image_key.py",
+      "exit_code": 0,
+      "seconds": 0.31
+    },
+    {
+      "script": "verify_image_mirror.py",
+      "exit_code": 0,
+      "seconds": 0.59
+    },
+    {
+      "script": "verify_input.py",
+      "exit_code": 0,
+      "seconds": 8.59
+    },
+    {
+      "script": "verify_linked_alternating.py",
+      "exit_code": 0,
+      "seconds": 1.15
+    },
+    {
+      "script": "verify_linked_burst.py",
+      "exit_code": 0,
+      "seconds": 0.49
+    },
+    {
+      "script": "verify_linked_indicator.py",
+      "exit_code": 0,
+      "seconds": 0.45
+    },
+    {
+      "script": "verify_linked_movement.py",
+      "exit_code": 0,
+      "seconds": 1.02
+    },
+    {
+      "script": "verify_graded_mask.py",
+      "exit_code": 0,
+      "seconds": 15.87
+    },
+    {
+      "script": "verify_mixer_arpeggio.py",
+      "exit_code": 0,
+      "seconds": 0.73
+    },
+    {
+      "script": "verify_mixer_attach.py",
+      "exit_code": 0,
+      "seconds": 0.66
+    },
+    {
+      "script": "verify_mask.py",
+      "exit_code": 0,
+      "seconds": 4.84
+    },
+    {
+      "script": "verify_mixer_batch.py",
+      "exit_code": 0,
+      "seconds": 0.75
+    },
+    {
+      "script": "verify_mixer_boundary.py",
+      "exit_code": 0,
+      "seconds": 1.0
+    },
+    {
+      "script": "verify_mixer_channel.py",
+      "exit_code": 0,
+      "seconds": 1.22
+    },
+    {
+      "script": "verify_mixer_combined.py",
+      "exit_code": 0,
+      "seconds": 0.88
+    },
+    {
+      "script": "verify_mixer_cursor.py",
+      "exit_code": 0,
+      "seconds": 0.72
+    },
+    {
+      "script": "verify_mixer_command.py",
+      "exit_code": 0,
+      "seconds": 1.39
+    },
+    {
+      "script": "verify_mixer_deliver.py",
+      "exit_code": 0,
+      "seconds": 0.95
+    },
+    {
+      "script": "verify_mixer_effect_selection.py",
+      "exit_code": 0,
+      "seconds": 1.25
+    },
+    {
+      "script": "verify_mixer_envelope.py",
+      "exit_code": 0,
+      "seconds": 2.22
+    },
+    {
+      "script": "verify_mixer_extended_pan.py",
+      "exit_code": 0,
+      "seconds": 0.64
+    },
+    {
+      "script": "verify_mixer_envelope_output.py",
+      "exit_code": 0,
+      "seconds": 2.59
+    },
+    {
+      "script": "verify_mixer_filter.py",
+      "exit_code": 0,
+      "seconds": 0.68
+    },
+    {
+      "script": "verify_mixer_fine_slide.py",
+      "exit_code": 0,
+      "seconds": 1.08
+    },
+    {
+      "script": "verify_mixer_fine_vibrato.py",
+      "exit_code": 0,
+      "seconds": 0.95
+    },
+    {
+      "script": "verify_mixer_finetune_control.py",
+      "exit_code": 0,
+      "seconds": 0.66
+    },
+    {
+      "script": "verify_mixer_fine_volume.py",
+      "exit_code": 0,
+      "seconds": 0.86
+    },
+    {
+      "script": "verify_mixer_glissando_control.py",
+      "exit_code": 0,
+      "seconds": 0.4
+    },
+    {
+      "script": "verify_mixer_gains.py",
+      "exit_code": 0,
+      "seconds": 0.48
+    },
+    {
+      "script": "verify_mixer_instrument_vibrato.py",
+      "exit_code": 0,
+      "seconds": 1.31
+    },
+    {
+      "script": "verify_mixer_global_effects.py",
+      "exit_code": 0,
+      "seconds": 1.51
+    },
+    {
+      "script": "verify_mixer_interpolated_mono.py",
+      "exit_code": 0,
+      "seconds": 1.27
+    },
+    {
+      "script": "verify_mixer_interpolated_stereo.py",
+      "exit_code": 0,
+      "seconds": 1.55
+    },
+    {
+      "script": "verify_mixer_note_cut.py",
+      "exit_code": 0,
+      "seconds": 0.61
+    },
+    {
+      "script": "verify_mixer_mono.py",
+      "exit_code": 0,
+      "seconds": 1.14
+    },
+    {
+      "script": "verify_mixer_note_release.py",
+      "exit_code": 0,
+      "seconds": 0.67
+    },
+    {
+      "script": "verify_mixer_output.py",
+      "exit_code": 0,
+      "seconds": 0.32
+    },
+    {
+      "script": "verify_mixer_notes.py",
+      "exit_code": 0,
+      "seconds": 1.54
+    },
+    {
+      "script": "verify_mixer_pan_release.py",
+      "exit_code": 0,
+      "seconds": 1.41
+    },
+    {
+      "script": "verify_mixer_pattern_change.py",
+      "exit_code": 0,
+      "seconds": 1.1
+    },
+    {
+      "script": "verify_mixer_pattern_delay.py",
+      "exit_code": 0,
+      "seconds": 0.41
+    },
+    {
+      "script": "verify_mixer_pattern_loop.py",
+      "exit_code": 0,
+      "seconds": 0.81
+    },
+    {
+      "script": "verify_mixer_pcm16_interpolated_mono.py",
+      "exit_code": 0,
+      "seconds": 1.37
+    },
+    {
+      "script": "verify_mixer_pcm16_interpolated_stereo.py",
+      "exit_code": 0,
+      "seconds": 1.8
+    },
+    {
+      "script": "verify_mixer_pcm16_mono.py",
+      "exit_code": 0,
+      "seconds": 1.29
+    },
+    {
+      "script": "verify_mixer_pitch.py",
+      "exit_code": 0,
+      "seconds": 1.02
+    },
+    {
+      "script": "verify_mixer_pcm16_stereo.py",
+      "exit_code": 0,
+      "seconds": 1.7
+    },
+    {
+      "script": "verify_mixer_playback_tick.py",
+      "exit_code": 0,
+      "seconds": 1.17
+    },
+    {
+      "script": "verify_mixer_portamento.py",
+      "exit_code": 0,
+      "seconds": 0.95
+    },
+    {
+      "script": "verify_mixer_publish.py",
+      "exit_code": 0,
+      "seconds": 1.74
+    },
+    {
+      "script": "verify_mixer_retrigger.py",
+      "exit_code": 0,
+      "seconds": 2.01
+    },
+    {
+      "script": "verify_mixer_row_effects.py",
+      "exit_code": 0,
+      "seconds": 1.3
+    },
+    {
+      "script": "verify_mixer_row.py",
+      "exit_code": 0,
+      "seconds": 1.98
+    },
+    {
+      "script": "verify_mixer_row_instrument.py",
+      "exit_code": 0,
+      "seconds": 1.9
+    },
+    {
+      "script": "verify_mixer_sequence_row.py",
+      "exit_code": 0,
+      "seconds": 1.05
+    },
+    {
+      "script": "verify_mixer_sequence_tick.py",
+      "exit_code": 0,
+      "seconds": 2.05
+    },
+    {
+      "script": "verify_mixer_sample_selection.py",
+      "exit_code": 0,
+      "seconds": 5.37
+    },
+    {
+      "script": "verify_mixer_set_effects.py",
+      "exit_code": 0,
+      "seconds": 1.05
+    },
+    {
+      "script": "verify_mixer_slides.py",
+      "exit_code": 0,
+      "seconds": 1.22
+    },
+    {
+      "script": "verify_mixer_stereo.py",
+      "exit_code": 0,
+      "seconds": 1.51
+    },
+    {
+      "script": "verify_mixer_tempo.py",
+      "exit_code": 0,
+      "seconds": 0.48
+    },
+    {
+      "script": "verify_mixer_ticks.py",
+      "exit_code": 0,
+      "seconds": 0.31
+    },
+    {
+      "script": "verify_mixer_table.py",
+      "exit_code": 0,
+      "seconds": 6.58
+    },
+    {
+      "script": "verify_mixer_tremolo.py",
+      "exit_code": 0,
+      "seconds": 0.97
+    },
+    {
+      "script": "verify_mixer_tremor_extra_fine.py",
+      "exit_code": 0,
+      "seconds": 1.38
+    },
+    {
+      "script": "verify_mixer_trigger_reset.py",
+      "exit_code": 0,
+      "seconds": 0.94
+    },
+    {
+      "script": "verify_mixer_vibrato.py",
+      "exit_code": 0,
+      "seconds": 0.96
+    },
+    {
+      "script": "verify_mixer_timed_trigger.py",
+      "exit_code": 0,
+      "seconds": 10.08
+    },
+    {
+      "script": "verify_mixer_volume_column.py",
+      "exit_code": 0,
+      "seconds": 1.17
+    },
+    {
+      "script": "verify_mixer_waveform_control.py",
+      "exit_code": 0,
+      "seconds": 0.53
+    },
+    {
+      "script": "verify_mixer_volume_slide.py",
+      "exit_code": 0,
+      "seconds": 1.07
+    },
+    {
+      "script": "verify_number_player.py",
+      "exit_code": 0,
+      "seconds": 0.46
+    },
+    {
+      "script": "verify_number_text.py",
+      "exit_code": 0,
+      "seconds": 0.54
+    },
+    {
+      "script": "verify_object_append.py",
+      "exit_code": 0,
+      "seconds": 0.27
+    },
+    {
+      "script": "verify_number_transition.py",
+      "exit_code": 0,
+      "seconds": 0.72
+    },
+    {
+      "script": "verify_object_find.py",
+      "exit_code": 0,
+      "seconds": 0.3
+    },
+    {
+      "script": "verify_object_growth.py",
+      "exit_code": 0,
+      "seconds": 0.26
+    },
+    {
+      "script": "verify_object_list.py",
+      "exit_code": 0,
+      "seconds": 0.46
+    },
+    {
+      "script": "verify_orbit_chain.py",
+      "exit_code": 0,
+      "seconds": 0.45
+    },
+    {
+      "script": "verify_original_image.py",
+      "exit_code": 0,
+      "seconds": 0.32
+    },
+    {
+      "script": "verify_palette_cycle.py",
+      "exit_code": 0,
+      "seconds": 0.33
+    },
+    {
+      "script": "verify_palette_color.py",
+      "exit_code": 0,
+      "seconds": 0.71
+    },
+    {
+      "script": "verify_palette_half.py",
+      "exit_code": 0,
+      "seconds": 0.56
+    },
+    {
+      "script": "verify_palette_lookup_entry.py",
+      "exit_code": 0,
+      "seconds": 0.48
+    },
+    {
+      "script": "verify_palette_map.py",
+      "exit_code": 0,
+      "seconds": 0.27
+    },
+    {
+      "script": "verify_palette_rgb.py",
+      "exit_code": 0,
+      "seconds": 8.97
+    },
+    {
+      "script": "verify_piece.py",
+      "exit_code": 0,
+      "seconds": 1.13
+    },
+    {
+      "script": "verify_player_countdown.py",
+      "exit_code": 0,
+      "seconds": 0.46
+    },
+    {
+      "script": "verify_player_indicator.py",
+      "exit_code": 0,
+      "seconds": 0.4
+    },
+    {
+      "script": "verify_random.py",
+      "exit_code": 0,
+      "seconds": 1.99
+    },
+    {
+      "script": "verify_render_color.py",
+      "exit_code": 0,
+      "seconds": 0.54
+    },
+    {
+      "script": "verify_render_color_bank.py",
+      "exit_code": 0,
+      "seconds": 0.27
+    },
+    {
+      "script": "verify_render_dispatch.py",
+      "exit_code": 0,
+      "seconds": 4.95
+    },
+    {
+      "script": "verify_render_geometry.py",
+      "exit_code": 0,
+      "seconds": 6.18
+    },
+    {
+      "script": "verify_render_operation.py",
+      "exit_code": 0,
+      "seconds": 0.33
+    },
+    {
+      "script": "verify_render_palette.py",
+      "exit_code": 0,
+      "seconds": 0.38
+    },
+    {
+      "script": "verify_render_pixel.py",
+      "exit_code": 0,
+      "seconds": 10.75
+    },
+    {
+      "script": "verify_render_preparation.py",
+      "exit_code": 0,
+      "seconds": 0.45
+    },
+    {
+      "script": "verify_render_rectangle.py",
+      "exit_code": 0,
+      "seconds": 1.22
+    },
+    {
+      "script": "verify_render_weights.py",
+      "exit_code": 0,
+      "seconds": 0.23
+    },
+    {
+      "script": "verify_rotation.py",
+      "exit_code": 0,
+      "seconds": 0.26
+    },
+    {
+      "script": "verify_scale_chain.py",
+      "exit_code": 0,
+      "seconds": 0.3
+    },
+    {
+      "script": "verify_scene.py",
+      "exit_code": 0,
+      "seconds": 0.75
+    },
+    {
+      "script": "verify_scene_descent.py",
+      "exit_code": 0,
+      "seconds": 0.49
+    },
+    {
+      "script": "verify_scene_fall.py",
+      "exit_code": 0,
+      "seconds": 0.47
+    },
+    {
+      "script": "verify_scene_frame.py",
+      "exit_code": 0,
+      "seconds": 0.78
+    },
+    {
+      "script": "verify_scene_layout.py",
+      "exit_code": 0,
+      "seconds": 1.24
+    },
+    {
+      "script": "verify_scene_lock.py",
+      "exit_code": 0,
+      "seconds": 0.53
+    },
+    {
+      "script": "verify_score.py",
+      "exit_code": 0,
+      "seconds": 0.6
+    },
+    {
+      "script": "verify_palette_tables.py",
+      "exit_code": 0,
+      "seconds": 46.21
+    },
+    {
+      "script": "verify_sequence_advance.py",
+      "exit_code": 0,
+      "seconds": 3.81
+    },
+    {
+      "script": "verify_sequence_deliver.py",
+      "exit_code": 0,
+      "seconds": 1.21
+    },
+    {
+      "script": "verify_sequence_effects.py",
+      "exit_code": 0,
+      "seconds": 3.14
+    },
+    {
+      "script": "verify_sequence_channel_pipeline.py",
+      "exit_code": 0,
+      "seconds": 6.74
+    },
+    {
+      "script": "verify_sequence_extended_effect.py",
+      "exit_code": 0,
+      "seconds": 3.06
+    },
+    {
+      "script": "verify_sequence_global_effect.py",
+      "exit_code": 0,
+      "seconds": 2.87
+    },
+    {
+      "script": "verify_sequence_note_effect.py",
+      "exit_code": 0,
+      "seconds": 2.87
+    },
+    {
+      "script": "verify_sequence_pitch_effect.py",
+      "exit_code": 0,
+      "seconds": 2.53
+    },
+    {
+      "script": "verify_sequence_process.py",
+      "exit_code": 0,
+      "seconds": 2.34
+    },
+    {
+      "script": "verify_sequence_playback.py",
+      "exit_code": 0,
+      "seconds": 4.07
+    },
+    {
+      "script": "verify_sequence_start.py",
+      "exit_code": 0,
+      "seconds": 1.28
+    },
+    {
+      "script": "verify_sequence_volume.py",
+      "exit_code": 0,
+      "seconds": 1.43
+    },
+    {
+      "script": "verify_sequence_tick.py",
+      "exit_code": 0,
+      "seconds": 2.2
+    },
+    {
+      "script": "verify_spawn.py",
+      "exit_code": 0,
+      "seconds": 3.43
+    },
+    {
+      "script": "verify_shift.py",
+      "exit_code": 0,
+      "seconds": 3.98
+    },
+    {
+      "script": "verify_sprite_actor_storage.py",
+      "exit_code": 0,
+      "seconds": 0.35
+    },
+    {
+      "script": "verify_sprite_files.py",
+      "exit_code": 0,
+      "seconds": 0.39
+    },
+    {
+      "script": "verify_sprite_load_plan.py",
+      "exit_code": 0,
+      "seconds": 0.51
+    },
+    {
+      "script": "verify_sprite_clone.py",
+      "exit_code": 0,
+      "seconds": 1.19
+    },
+    {
+      "script": "verify_staged_chain.py",
+      "exit_code": 0,
+      "seconds": 0.32
+    },
+    {
+      "script": "verify_text_layout.py",
+      "exit_code": 0,
+      "seconds": 0.28
+    },
+    {
+      "script": "verify_timer.py",
+      "exit_code": 0,
+      "seconds": 1.59
+    },
+    {
+      "script": "verify_timing.py",
+      "exit_code": 0,
+      "seconds": 0.4
+    },
+    {
+      "script": "verify_surface.py",
+      "exit_code": 0,
+      "seconds": 3.65
+    },
+    {
+      "script": "verify_ui_scene_frame.py",
+      "exit_code": 0,
+      "seconds": 0.4
+    },
+    {
+      "script": "verify_ui_sprite_bank.py",
+      "exit_code": 0,
+      "seconds": 0.36
+    },
+    {
+      "script": "verify_ui_sprite_vf.py",
+      "exit_code": 0,
+      "seconds": 0.42
+    },
+    {
+      "script": "verify_word_transition.py",
+      "exit_code": 0,
+      "seconds": 0.28
+    },
+    {
+      "script": "verify_xm_instrument_header.py",
+      "exit_code": 0,
+      "seconds": 1.5
+    },
+    {
+      "script": "verify_xm_seek_row.py",
+      "exit_code": 0,
+      "seconds": 1.54
+    },
+    {
+      "script": "verify_ui_artwork.py",
+      "exit_code": 0,
+      "seconds": 39.45
+    },
+    {
+      "script": "verify_font_draw.py",
+      "exit_code": 0,
+      "seconds": 0.68
+    },
+    {
+      "script": "verify_rotation_tables.py",
+      "exit_code": 0,
+      "seconds": 0.26
+    },
+    {
+      "script": "verify_font_scaled_text.py",
+      "exit_code": 0,
+      "seconds": 1.72
+    },
+    {
+      "script": "verify_sequence_module_differential.py",
+      "exit_code": 0,
+      "seconds": 2.73
+    },
+    {
+      "script": "verify_sequence_module_mixer.py",
+      "exit_code": 0,
+      "seconds": 3.08
+    },
+    {
+      "script": "verify_sequence_module_pcm.py",
+      "exit_code": 0,
+      "seconds": 2.22
+    },
+    {
+      "script": "verify_ui_display_setup.py",
+      "exit_code": 0,
+      "seconds": 0.33
+    },
+    {
+      "script": "verify_sequence_player.py",
+      "exit_code": 0,
+      "seconds": 7.76
+    },
+    {
+      "script": "verify_xm_instruments.py",
+      "exit_code": 0,
+      "seconds": 0.37
+    },
+    {
+      "script": "verify_xm.py",
+      "exit_code": 0,
+      "seconds": 9.06
+    }
+  ],
+  "scope": "Original-execution verifier entry points with recognized required inputs; skipped scripts are explicitly listed and are not established by this run."
+}

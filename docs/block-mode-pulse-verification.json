@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 1024,
+  "linked_resources": 682,
+  "scope": "Actual complete original 0x44d8b0/0x44d940 including animation, primary timer, mode transition 0x4acc10, field 0x95, wrapping age with signed completion limit and handler switching, with no routine hooks. Whole block state matches direct and one/two-level linked resource tables. Native receives independently resolved descriptor order; does not implement resource graph construction, actual VF actor binding or complete object runtime/game."
+}

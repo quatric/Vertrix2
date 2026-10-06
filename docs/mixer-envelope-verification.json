@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "volume_envelope_cases": 40000,
+  "pan_envelope_cases": 40000,
+  "scope": "Original enabled volume 0x40e070..0x40e0f2 and pan 0x40e122..0x40e1a4 paths; whole channel comparisons with random point times/values, counter wrapping, sustain/loop and signed slope truncation. Excludes enable gating, final volume/pan scaling, fade and instrument vibrato."
+}

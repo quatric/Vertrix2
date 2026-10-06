@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "effect_cases": 12288,
+  "scope": "Full original extended dispatcher selecting case 14. Exhaustive low nibbles/prior sequencer flags at ticks 0/1/-1, random pending delays, channel preservation. Excludes pending-delay consumption and full sequencing."
+}

@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "banks": 10,
+  "frames_per_bank": 47,
+  "pixels": 2397534,
+  "scope": "Direct original VF caller-selected damier.spr loading, independently parsed frames, binary alpha/color order and five configured substitutions match. Ownership after archive closure verified. Companion descriptor binding matches complete original4ac8a0/4877f0 for all470 frames using local descriptor IDs, and resolves verified VF pixels/origins. Invalid frame preserves actor and outputs. Startup selector/default first source and full generated artwork/application remain unfinished."
+}

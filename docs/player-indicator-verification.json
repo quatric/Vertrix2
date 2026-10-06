@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 8192,
+  "audio_requests": 1548,
+  "scope": "All four original indicator handlers with actual player-state predicate and timer helpers. Whole object and audio request match; only43c0e0 audio routing is intercepted. Full player/application scheduling remains unfinished."
+}

@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "graphs": 256,
+  "descriptor_comparisons": 4419,
+  "maximum_depth": 8,
+  "scope": "Actual original 0x4877f0 without hooks; direct and linked descriptor traversal. Invalid bounds, insufficient budget and cyclic graphs reject without publishing output. Resource construction and VF actor ownership remain to be integrated."
+}

@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cases": 1024,
+  "placements": 17330,
+  "scope": "Actual440a20, actual43f420/48ac00 lookup and4b14c0 measurement. Allocation, object constructor/resource attach, virtual draw and destructor are service hooks. Glyph handles, signed coordinates, inherited scale/override, flags8e/8f, missing/space measured traversal and final signed-word position match. Full-width random dimensions/spaces cover measurement narrowing and word wrap. Actual rendered pixels and full application remain separate."
+}

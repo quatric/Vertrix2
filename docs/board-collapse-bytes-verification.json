@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x432980": 8000
+  },
+  "cases_that_changed": 8000,
+  "scope": "The complete byte-board collapse runs in the original over random boards; the resulting board compares with board_collapse."
+}

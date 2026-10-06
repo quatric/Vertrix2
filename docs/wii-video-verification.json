@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "recorded_mode_configurations": 64,
+  "allocation_failure_cases": 192,
+  "scope": "Host assertions check preferred-mode propagation, XFB reserve, allocation rollback, zeroed FIFO, initial buffer separation, copy-height rounding, filtering, field and pixel format selection. Actual PowerPC/libogc compilation passes. Hardware output and the complete application remain unverified."
+}

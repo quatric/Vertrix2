@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "initialized_section_bytes_checked": 1260544,
+  "zero_initialized_bytes_checked": 695296,
+  "loader_interface_selector": 0,
+  "scope": "PE section flags and file pointers independently determine expected backing; all initialized payload bytes and entire uninitialized section compare. Oracle preserves zero selector after RNG setup. Windows process execution is not performed."
+}

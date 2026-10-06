@@ -1,0 +1,5 @@
+{
+  "status": "passed",
+  "setter_cases": 90000,
+  "scope": "Complete original non-attachment setters 0x40ca70/0x40caa0/0x40cad0/0x40cb10/0x40cb70/0x40cbb0, exact return values and whole mixer channel comparisons. Covers valid/invalid values, wrapping, bounds and unrelated fields. Native zero-rate rejection avoids original divide fault. Excludes sample attachment and slot indexing."
+}

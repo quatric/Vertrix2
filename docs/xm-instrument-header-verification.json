@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "instrument_headers": 20000,
+  "empty_headers_with_carry": 1177,
+  "scope": "Original 0x4117e0..0x411a00 metadata conversion with the actual bounded name-copy routine, whole zero-initialized 252-byte instrument records. Counts 0..16, clamped envelope counts, bounded note maps, flag masks, LE points, vibrato/fade fields and loader-scratch carry on empty instruments. Invalid native header preserves output. Excludes VF traversal and sample allocation/loading."
+}

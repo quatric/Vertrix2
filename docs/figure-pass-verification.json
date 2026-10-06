@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x434ee0": 8192
+  },
+  "boards_with_figures": 2009,
+  "scope": "The complete figure pass runs in the original on random boards (with ecx 1 and with ecx 0 and a random ebx, including kind 7); eax, the reward word, the mask (written when ecx is 1) and the branded board compare with the native pass."
+}

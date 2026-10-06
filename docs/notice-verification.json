@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x416010": 500
+  },
+  "scope": "The routine executes completely in the original with its callees stubbed and logged; every callee call and the global 0x532c40 compare (the original eax is the restored exception chain)."
+}

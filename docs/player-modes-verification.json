@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x43cf30": 206,
+    "0x43cf70": 206,
+    "0x43cfb0": 206,
+    "0x43cff0": 206,
+    "0x43d030": 206,
+    "0x43d070": 206,
+    "0x43d0b0": 206,
+    "0x43d0f0": 206,
+    "0x43ceb0": 206,
+    "0x43cef0": 206,
+    "0x43ce70": 206
+  },
+  "scope": "Complete mode-setup routines execute in the original (allocator, refresh and destructor stubbed and logged); player, side, preview and RNG position compare."
+}

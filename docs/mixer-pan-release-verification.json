@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "pan_slide_cases": 40000,
+  "timed_release_cases": 40000,
+  "scope": "Complete original main dispatcher 0x40dc50 effects 25/20, whole channel comparison, parameter memory and signed pan clamps/wrapping, full-byte release timing, instrument/envelope branches. Excludes scheduling and remaining main effects."
+}

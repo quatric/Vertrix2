@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "cycles": 256,
+  "resolved_entries": 65536,
+  "scope": "Unchanged original4754e0 executes without hooks. Original default pointer layout with arbitrary auxiliary entries and zero tail matches including the index0/cycle255 adjacent-global boundary, bounded native lookup for every byte cycle and index. Complete scene render preparation and drawing remain unfinished."
+}

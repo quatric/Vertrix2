@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "placed": 1724,
+    "skipped": 2276
+  },
+  "scope": "Complete 4316c0 executes in the original (operator new 4ca000 and the draw 4826c0 stubbed and replayed, the destructor calls logged); the result, the destroy events, the board and every object compare."
+}

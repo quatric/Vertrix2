@@ -1,0 +1,28 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "add_cc": 4096,
+    "cc_reached": 4096,
+    "counter_reached": 4096,
+    "counter_quotient": 4096,
+    "progress_quotient": 4096,
+    "reset_frame_counter": 4096,
+    "next_frame_counter": 4096,
+    "previous_frame_counter": 4096,
+    "frame_counter_is_zero": 4096,
+    "set_e0_steps": 4096,
+    "set_e0": 4096,
+    "set_ec": 4096,
+    "handler_from_ec": 4096,
+    "set_f0": 4096,
+    "handler_from_f0": 4096,
+    "set_b4": 4096,
+    "get_b4": 4096,
+    "set_114": 4096,
+    "set_11c": 4096,
+    "set_words_2a": 4096,
+    "set_words_3a": 4096,
+    "set_box": 4096
+  },
+  "scope": "Complete 4ac370, 4ac390, 4ac4e0, 4ac4f0, 4ac520, 4ac540, 4ac640, 4ac700, 4ac740, 4ac750, 4ac7a0, 4ac840, 4ac860, 4ac910, 4ac920, 4ac930, 4ac940, 4ac950, 4ac960, 4ad510, 4ad520 and 4b54d0 execute in the original; whole actor storage and returned values compare."
+}

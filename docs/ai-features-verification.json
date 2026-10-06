@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "row_reach": 8192,
+    "features": 8192,
+    "mode_flags": 8192,
+    "choice_scores": 8192
+  },
+  "scope": "Complete 4261b0, 427c10, 427e10 and 428e70 execute in the original (the fill routine 4eb5c0 runs for real); outputs, results and untouched bytes compare, including both players of 427e10 and every pool object."
+}

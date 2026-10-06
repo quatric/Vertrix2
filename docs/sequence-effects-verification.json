@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "sequences": 12000,
+  "integrated_ticks": 72000,
+  "callback_calls": 20,
+  "scope": "Complete original volume-column and all 36 main dispatcher entries plus ignored commands, whole 180-byte channels and 64-byte globals across six consecutive ticks. Both pitch modes, present/absent instruments, retained sample ownership, reset and effect memory, pattern/global controls and callbacks. Only application callback is captured. Invalid native storage preserves state. Excludes full instrument playback, row advancement and audio."
+}

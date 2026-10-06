@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x43acd0": 2048
+  },
+  "scope": "Complete original 0x43acd0 executions with the operator new 0x4ca000, the table construct 0x487870 (Self-preserving), the release wrapper 0x4879f0 and the virtual slot 6 method stubbed and logged; the returned eax, the new table bytes (+0/+4/+8), the release target object, the slot-6 call, the release target/table/field arguments (native 0x4d88a0 against original 0x4879f0) and the 0x10 allocation compare. Both path shapes execute: chain two with a row, and chain two empty (zero address stored)."
+}
