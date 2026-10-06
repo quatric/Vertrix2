@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4b7cd0": 1024
+  },
+  "scope": "Complete original 0x4b7cd0 executions with the timeGetTime import redirected to a scripted stub; the returned tick and both globals compare."
+}

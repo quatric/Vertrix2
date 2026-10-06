@@ -49,3 +49,11 @@ int vertrix_character_power(int character, int slot)
 {
     return character_powers[character][slot];
 }
+
+uint32_t vertrix_time_sample(VertrixClock clock, void *context, uint32_t *first, uint32_t *second)
+{
+    uint32_t ticks = clock(context);
+    *first = ticks;
+    *second = ticks;
+    return ticks;
+}
