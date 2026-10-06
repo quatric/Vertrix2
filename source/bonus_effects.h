@@ -178,4 +178,38 @@ uint32_t vertrix_effect_stone_apply(const VertrixEffectServices *services, uint3
  * the board and the handler ends with 0x43bbf0 after slot 1; otherwise it returns the slot's
  * result. */
 uint32_t vertrix_effect_stone_clear(const VertrixEffectServices *services, uint32_t player);
+
+/* The attack handlers that bind a follow-up handler to the opponent: 0x453c00, 0x453f40, 0x454250,
+ * 0x454560, 0x4547b0, 0x4549d0, 0x454c30, 0x454e90, 0x455020, 0x455b20, 0x455ca0 and 0x45b9c0
+ * (eax = player). Each runs its calls in order (ebx the player, ecx the opponent, edx carried from
+ * call to call, the entry edx for the first when set_edx is zero), the last being 0x4ac8f0 of the
+ * handler token on the opponent, then copies a dword of the player to the opponent (and clears
+ * another), sets the dwords +0xb80, +0xb84 and +0xb88 (and +0xb90 to zero when clear_b90) of the
+ * opponent board, calls slot 1 of the player's board and returns 0x43bbf0 on the player (edx the
+ * carried edx, ecx the vtable). Zero when an object does not resolve. */
+typedef struct
+{
+    uint32_t target;
+    int on_opponent;
+    int set_edx;
+    uint32_t edx;
+} VertrixAttackCall;
+
+typedef struct
+{
+    uint32_t routine;
+    uint32_t handler;
+    uint32_t source;
+    uint32_t destination;
+    uint32_t cleared;
+    int clear_b90;
+    unsigned count;
+    VertrixAttackCall calls[8];
+} VertrixAttack;
+
+#define VERTRIX_ATTACK_COUNT 12
+extern const VertrixAttack vertrix_attacks[VERTRIX_ATTACK_COUNT];
+
+uint32_t vertrix_effect_attack(const VertrixEffectServices *services, uint32_t player,
+                               uint32_t entry_edx, const VertrixAttack *attack);
 #endif

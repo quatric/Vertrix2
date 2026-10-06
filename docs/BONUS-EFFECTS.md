@@ -87,10 +87,19 @@ boundary call (compared with its stack arguments). 2048 cases each.
 callees 0x436fe0, 0x437060, 0x42eca0, 0x42ecc0, 0x4371b0, 0x42ebe0 are boundary calls. 2048 cases
 each.
 
+## Attack handlers (twelve)
+
+`vertrix_effect_attack` with the table `vertrix_attacks`: 0x453c00, 0x453f40, 0x454250, 0x454560,
+0x4547b0, 0x4549d0, 0x454c30, 0x454e90, 0x455020, 0x455b20, 0x455ca0, 0x45b9c0. Each is a short
+list of boundary calls (0x43ac00, 0x43ce00, 0x43bb60, 0x43bae0, 0x43baf0, 0x43b860), the binding of
+a follow-up handler to the opponent (0x4ac8f0), a dword copy, the opponent board's flags and
+slot 1 / 0x43bbf0. 2048 cases per routine. (`vertrix_effect_copy_speed` for 0x453c00 is the earlier
+standalone port; both are verified.)
+
 ## Wiring note
 
 The dispatcher 0x43c140 does not call an effect: it stores the effect address as the player's
 actor handler with 0x4ac8f0 (`43cc74: edx = handler; eax = player; call 0x4ac8f0`). The effects run
 later from the actor update, so their entry ebx/edx come from that caller, not from the dispatcher.
 
-Not yet ported: the remaining effects behind 0x43c140 (0x4528e0.. is done; open are 0x453f40 and everything from 0x454250).
+Not yet ported: the remaining effects behind 0x43c140 (0x4528e0.. is done; open are 0x4554a0.. (the stone-style handlers), 0x455e50, 0x45b4c0 and the follow-up handlers).

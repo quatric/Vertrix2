@@ -53,6 +53,15 @@ class Gate_(c.Structure):
     _fields_ = [('handler', U), ('kind', c.c_int), ('state', U), ('callee', U)]
 
 
+class AttackCall(c.Structure):
+    _fields_ = [('target', U), ('on_opponent', c.c_int), ('set_edx', c.c_int), ('edx', U)]
+
+
+class Attack(c.Structure):
+    _fields_ = [('routine', U), ('handler', U), ('source', U), ('destination', U), ('cleared', U),
+                ('clear_b90', c.c_int), ('count', c.c_uint), ('calls', AttackCall * 8)]
+
+
 class Site(c.Structure):
     _fields_ = [(name, U) for name in ('target', 'eax', 'edx', 'ebx', 'ecx', 'stack', 'stack_next',
                                        'stack_third', 'out_ebx', 'out_ecx')] + [
@@ -469,6 +478,34 @@ def main():
                             (0x453570, n.vertrix_effect_stone_clear)):
         for case in range(args.cases):
             check_one(hex(address), case, address, native)
+    # The twelve attack handlers that bind a follow-up handler to the opponent
+    n.vertrix_effect_attack.argtypes = [c.POINTER(Services), U, U, c.POINTER(Attack)]
+    n.vertrix_effect_attack.restype = U
+    attacks = (Attack * 12).in_dll(n, 'vertrix_attacks')
+    for address in (0x43ce00, 0x43baf0, 0x43b860):
+        stubs.add(address, 0)
+
+    def patch_attack(handle, data):
+        patch_convert(handle, data)
+        if handle == player:
+            for offset in (0x3cc, 0x3d0, 0x3d4, 0x3d8, 0x3e8):
+                struct.pack_into('<I', data, offset, rng.getrandbits(32))
+    for attack in attacks:
+        for case in range(args.cases):
+            pool.fill(rng, patch_attack)
+            stubs.log.clear()
+            returns.clear()
+            draws.clear()
+            native_log.clear()
+            entry_edx = rng.getrandbits(32)
+            result = original.call(attack.routine, eax=player, edx=entry_edx) & 0xffffffff
+            replay[:] = list(returns)
+            got = n.vertrix_effect_attack(c.byref(services), player, entry_edx, c.byref(attack))
+            expected = normalized(stubs.log)
+            assert native_log == expected, (hex(attack.routine), case, native_log, expected)
+            assert got == result, (hex(attack.routine), case, hex(got), hex(result))
+            assert not replay, case
+            assert pool.same(), (hex(attack.routine), case, pool.diff())
     # Objects that do not resolve: the effect stops where the original would have read them. Before
     # the first call (player, opponent, grid) nothing is called or stored; later failures still
     # never reach the final 0x43bbf0.
@@ -511,7 +548,10 @@ def main():
                                         **{hex(a): args.cases for a in (
                                             0x452a30, 0x452b00, 0x452bb0, 0x452c60, 0x452a50,
                                             0x452b20, 0x452bd0, 0x452c80, 0x452d10, 0x452d70,
-                                            0x453460, 0x4534e0, 0x453570)}},
+                                            0x453460, 0x4534e0, 0x453570,
+                                            0x453f40, 0x454250, 0x454560, 0x4547b0, 0x4549d0,
+                                            0x454c30, 0x454e90, 0x455020, 0x455b20, 0x455ca0,
+                                            0x45b9c0)}},
         'paths': totals,
         'convert_paths': convert_totals,
         'match_paths': match_totals,
