@@ -16,7 +16,8 @@ typedef struct VertrixBlendSurface
     uint8_t sub_format;
 } VertrixBlendSurface;
 
-/* The scratch globals the original 0x47c930 leaves behind (their addresses in the comments). */
+/* The scratch globals the original 0x47c930 leaves behind (their addresses in the comments; the
+ * block of 0x47cb40 is the same with the dwords from 0x558bc8 and the bytes at 0x558bf0). */
 typedef struct VertrixBlendScratch
 {
     uint32_t destination;  /* 0x558b9c */
@@ -53,4 +54,12 @@ enum
 int vertrix_surface_blend(VertrixBlendSurface *target, const VertrixBlendSurface *source,
                           uint32_t row, uint32_t column, const uint32_t arguments[5],
                           const uint8_t *tables, VertrixBlendScratch *scratch);
+
+/* Original 0x47cb40: the same blend and arguments as 0x47c930, except that a pixel is blended only
+ * when the alpha byte of the target pixel is not zero either. Its scratch globals are 0x558bc8
+ * (destination), 0x558bcc (source), 0x558bd8 (counter), 0x558bdc and 0x558be0 (skips), 0x558be8
+ * and 0x558bec (widths), the bytes 0x558bf0..0x558bf3, 0x55f1f0 and 0x55f1f4. */
+int vertrix_surface_blend_masked(VertrixBlendSurface *target, const VertrixBlendSurface *source,
+                                 uint32_t row, uint32_t column, const uint32_t arguments[5],
+                                 const uint8_t *tables, VertrixBlendScratch *scratch);
 #endif

@@ -32,8 +32,9 @@ recovered (or have unmodeled global state):
 - `0x475510`, `0x475700`, `0x4759e0`, `0x475c80`, `0x476160`, `0x476810`, `0x4774e0`,
   `0x477c30`, `0x477c90`, `0x477b10`, `0x477390`, `0x476aa0`, `0x47e680`..`0x47fd70`:
   exception frames, imported API calls and COM setup chains.
-- `0x47c930`, `0x47cb40`: blends through the runtime table at `0x558cf0` (possible later
-  with a supplied table).
+- ~~`0x47c930`~~, ~~`0x47cb40`~~ RECOVERED (`source/surface_blend.c`,
+  `tools/verify_surface_blend.py`, `docs/surface-blend-verification.json`; the table at
+  `0x558cf0` is supplied, 4,096 executions of each, including every scratch global).
 
 ## Trace of the `0x45fb00` dependency chain
 

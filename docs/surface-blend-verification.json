@@ -1,11 +1,14 @@
 {
   "status": "passed",
   "complete_original_executions": {
-    "0x47c930": 4096
+    "0x47c930": 4096,
+    "0x47cb40": 4096
   },
   "cases": {
-    "blended": 2448,
-    "other_depth": 1648
+    "0x47c930 other depth": 1650,
+    "0x47cb40 blended": 2443,
+    "0x47c930 blended": 2446,
+    "0x47cb40 other depth": 1653
   },
-  "scope": "The original executes completely over random surfaces and random 101 x 256 tables; both pixel buffers and every scratch global (0x558b9c..0x558bbf, 0x55f1f0, 0x55f1f4) compare, including the sums that carry into the neighbouring channel fields and the early exits for other pixel depths."
+  "scope": "Each original executes completely over random surfaces and random 101 x 256 tables (a quarter of the alpha bytes are zero); both pixel buffers and every scratch global compare, including the sums that carry into the neighbouring channel fields and the early exits for other pixel depths."
 }

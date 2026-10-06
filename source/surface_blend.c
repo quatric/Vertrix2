@@ -31,9 +31,9 @@ static void store(uint8_t *data, uint32_t value)
     data[3] = (uint8_t)(value >> 24);
 }
 
-int vertrix_surface_blend(VertrixBlendSurface *target, const VertrixBlendSurface *source,
-                          uint32_t row, uint32_t column, const uint32_t arguments[5],
-                          const uint8_t *tables, VertrixBlendScratch *scratch)
+static int blend(VertrixBlendSurface *target, const VertrixBlendSurface *source, uint32_t row,
+                 uint32_t column, const uint32_t arguments[5], const uint8_t *tables,
+                 VertrixBlendScratch *scratch, int masked)
 {
     uint32_t source_column = arguments[0];
     uint32_t source_row = arguments[1];
@@ -82,7 +82,7 @@ int vertrix_surface_blend(VertrixBlendSurface *target, const VertrixBlendSurface
                 return 0;
             }
             from = load(source->data + source_offset);
-            if ((from >> 24) != 0)
+            if ((from >> 24) != 0 && (!masked || (load(target->data + target_offset) >> 24) != 0))
             {
                 uint32_t to = load(target->data + target_offset);
                 uint32_t red = (uint32_t)first[(from >> 16) & 0xff] + second[(to >> 16) & 0xff];
@@ -101,4 +101,18 @@ int vertrix_surface_blend(VertrixBlendSurface *target, const VertrixBlendSurface
     }
     scratch->source = source_pointer;
     return 1;
+}
+
+int vertrix_surface_blend(VertrixBlendSurface *target, const VertrixBlendSurface *source,
+                          uint32_t row, uint32_t column, const uint32_t arguments[5],
+                          const uint8_t *tables, VertrixBlendScratch *scratch)
+{
+    return blend(target, source, row, column, arguments, tables, scratch, 0);
+}
+
+int vertrix_surface_blend_masked(VertrixBlendSurface *target, const VertrixBlendSurface *source,
+                                 uint32_t row, uint32_t column, const uint32_t arguments[5],
+                                 const uint8_t *tables, VertrixBlendScratch *scratch)
+{
+    return blend(target, source, row, column, arguments, tables, scratch, 1);
 }
