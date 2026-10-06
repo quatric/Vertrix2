@@ -19,7 +19,8 @@ DRAW = 0x4826c0
 CALLEES = (0x43acd0, 0x43ac00, 0x43bb60, 0x4ac8f0, 0x43bbf0, 0x43c0e0)
 ALLOCATE = 0x4ca000
 # 0x452e00 callees; the first four steer its flow and return small values
-FLOW = {0x43b720: (0, 1, 1, 2), 0x43b800: (0, 1, 1, 2), 0x43b7c0: (0, 1, 1), 0x43d3b0: (0, 1), 0x438cd0: (0, 1), 0x43ab60: (0, 1, 1, 2), 0x4320c0: (1, 1, 1, 0), 0x4330d0: (1, 1, 1, 0)}
+FLOW = {0x437060: (0, 1, 1), 0x42eca0: (0, 1, 1, 1), 0x42ecc0: (0, 1, 1, 1),
+        0x4371b0: (0, 1, 1), 0x43b720: (0, 1, 1, 2), 0x43b800: (0, 1, 1, 2), 0x43b7c0: (0, 1, 1), 0x43d3b0: (0, 1), 0x438cd0: (0, 1), 0x43ab60: (0, 1, 1, 2), 0x4320c0: (1, 1, 1, 0), 0x4330d0: (1, 1, 1, 0)}
 MATCH_CALLEES = (0x438cd0, 0x43ab60, 0x4320c0, 0x4330d0, 0x431d80, 0x42ee20, 0x42eda0, 0x42ee80,
                  0x433040, 0x43a560)
 EFFECT_CODE = 0x450000
@@ -416,6 +417,7 @@ def main():
                                  0 if rng.random() < 0.8 else rng.getrandbits(32))
             struct.pack_into('<I', data, 0x3b4, rng.getrandbits(32))
             struct.pack_into('<I', data, 0x3c8, rng.getrandbits(32))
+            struct.pack_into('<I', data, 0x3e0, rng.getrandbits(32))
             struct.pack_into('<I', data, 0x17c, rng.choice([0, 1, 2, 0xffffffff]))
         elif handle == opponent:
             struct.pack_into('<I', data, 0x17c, rng.choice([0, 1, 2, 0xffffffff]))
@@ -449,6 +451,22 @@ def main():
                       ebx=ebx)
     for address, native in ((0x452d10, n.vertrix_effect_progress_update_gate),
                             (0x452d70, n.vertrix_effect_progress_compare)):
+        for case in range(args.cases):
+            check_one(hex(address), case, address, native)
+    # 0x453460, 0x4534e0 and 0x453570: the stone handlers
+    for address in (0x436fe0, 0x437060, 0x42eca0, 0x42ecc0, 0x4371b0, 0x42ebe0):
+        stubs.add(address, 0)
+    for name in ('stone_apply', 'stone_clear'):
+        function = getattr(n, 'vertrix_effect_' + name)
+        function.argtypes = [c.POINTER(Services), U]
+        function.restype = U
+    n.vertrix_effect_stone_arm.argtypes = [c.POINTER(Services), U, U]
+    n.vertrix_effect_stone_arm.restype = U
+    for case in range(args.cases):
+        edx = rng.getrandbits(32)
+        check_one('0x453460', case, 0x453460, n.vertrix_effect_stone_arm, edx, edx=edx)
+    for address, native in ((0x4534e0, n.vertrix_effect_stone_apply),
+                            (0x453570, n.vertrix_effect_stone_clear)):
         for case in range(args.cases):
             check_one(hex(address), case, address, native)
     # Objects that do not resolve: the effect stops where the original would have read them. Before
@@ -492,7 +510,8 @@ def main():
                                         '0x4528e0': args.cases,
                                         **{hex(a): args.cases for a in (
                                             0x452a30, 0x452b00, 0x452bb0, 0x452c60, 0x452a50,
-                                            0x452b20, 0x452bd0, 0x452c80, 0x452d10, 0x452d70)}},
+                                            0x452b20, 0x452bd0, 0x452c80, 0x452d10, 0x452d70,
+                                            0x453460, 0x4534e0, 0x453570)}},
         'paths': totals,
         'convert_paths': convert_totals,
         'match_paths': match_totals,

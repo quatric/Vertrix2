@@ -160,4 +160,22 @@ uint32_t vertrix_effect_progress_update_gate(const VertrixEffectServices *servic
  * the player with b and on the opponent with a, and sound 11 for the opponent. Then slot 1 of the
  * board and 0x43bbf0. */
 uint32_t vertrix_effect_progress_compare(const VertrixEffectServices *services, uint32_t player);
+
+/* Original 0x453460 (eax = player): 0x436fe0 on the player's board (edx = entry_edx), then 0x437060
+ * with the player's +0x3e0. Result 1 plays sound 11 (0x4f81ac) and binds 0x4534e0 (0x4ac8f0);
+ * anything else calls 0x43acd0 and makes the handler end with 0x43bbf0. Slot 1 of the board comes
+ * between. Returns 0x43bbf0 in the second case, else the result of the slot. */
+uint32_t vertrix_effect_stone_arm(const VertrixEffectServices *services, uint32_t player,
+                                  uint32_t entry_edx);
+
+/* Original 0x4534e0 (eax = player): when 0x42eca0 and 0x42ecc0 (board, 0x44c860) are both non-zero,
+ * 0x4371b0 runs with the player's +0x3e0. Result 1 binds 0x453570 (0x4ac8f0) and plays sound 5
+ * (0x4f8194); any other result makes the handler end with 0x43bbf0 after slot 1 of the board. With
+ * a zero test the result of the slot is returned. */
+uint32_t vertrix_effect_stone_apply(const VertrixEffectServices *services, uint32_t player);
+
+/* Original 0x453570 (eax = player): when 0x42eca0 and 0x42ecc0 are both non-zero, 0x42ebe0 runs on
+ * the board and the handler ends with 0x43bbf0 after slot 1; otherwise it returns the slot's
+ * result. */
+uint32_t vertrix_effect_stone_clear(const VertrixEffectServices *services, uint32_t player);
 #endif

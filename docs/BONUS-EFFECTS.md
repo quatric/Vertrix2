@@ -81,10 +81,16 @@ leaves ebx as the state byte merged into the caller's ebx, so the entry ebx is a
 `vertrix_effect_armed_handler(which)`: the four handlers; 0x43a5f0 with three stack arguments is a
 boundary call (compared with its stack arguments). 2048 cases each.
 
+## 0x453460, 0x4534e0, 0x453570
+
+`vertrix_effect_stone_arm` (entry edx forwarded to 0x436fe0), `_stone_apply`, `_stone_clear`; the
+callees 0x436fe0, 0x437060, 0x42eca0, 0x42ecc0, 0x4371b0, 0x42ebe0 are boundary calls. 2048 cases
+each.
+
 ## Wiring note
 
 The dispatcher 0x43c140 does not call an effect: it stores the effect address as the player's
 actor handler with 0x4ac8f0 (`43cc74: edx = handler; eax = player; call 0x4ac8f0`). The effects run
 later from the actor update, so their entry ebx/edx come from that caller, not from the dispatcher.
 
-Not yet ported: the remaining effects behind 0x43c140 (0x4528e0.. is done; open are 0x453460, 0x453f40 and everything from 0x454250).
+Not yet ported: the remaining effects behind 0x43c140 (0x4528e0.. is done; open are 0x453f40 and everything from 0x454250).
