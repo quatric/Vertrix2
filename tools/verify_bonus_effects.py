@@ -121,6 +121,10 @@ class ActorPair(c.Structure):
                 ('flag_after', c.c_int)]
 
 
+class ActorRise(c.Structure):
+    _fields_ = [(name, U) for name in ('routine', 'word_a', 'word_b', 'byte', 'token')]
+
+
 class Site(c.Structure):
     _fields_ = [(name, U) for name in ('target', 'eax', 'edx', 'ebx', 'ecx', 'stack', 'stack_next',
                                        'stack_third', 'out_ebx', 'out_ecx')] + [
@@ -1226,8 +1230,13 @@ def main():
     n.vertrix_effect_actor_prepare.restype = U
     n.vertrix_effect_actor_settle.argtypes = [c.POINTER(Services), U, U, U]
     n.vertrix_effect_actor_settle.restype = U
-    n.vertrix_effect_actor_rise.argtypes = [c.POINTER(Services), U, U, U]
+    n.vertrix_effect_actor_rise.argtypes = [c.POINTER(Services), U, U, U, c.POINTER(ActorRise)]
     n.vertrix_effect_actor_rise.restype = U
+    rises = (ActorRise * 2).in_dll(n, 'vertrix_actor_rises')
+    for name, count in (('actor_drop', 3), ('actor_toggle', 4), ('actor_scale', 3)):
+        function = getattr(n, 'vertrix_effect_' + name)
+        function.argtypes = [c.POINTER(Services), U] + [U] * (count - 2)
+        function.restype = U
     n.vertrix_effect_actor_pair.argtypes = [c.POINTER(Services), U, U, c.POINTER(ActorPair)]
     n.vertrix_effect_actor_pair.restype = U
     pairs_actor = (ActorPair * 2).in_dll(n, 'vertrix_actor_pairs')
@@ -1239,6 +1248,7 @@ def main():
             returns.clear()
             draws.clear()
             native_log.clear()
+            cpu.mem_write(0x532b98, struct.pack('<II', rng.getrandbits(32), rng.getrandbits(32)))
             values = {register: rng.getrandbits(32) for register in registers}
             result = original.call(routine, eax=player, **values) & 0xffffffff
             replay[:] = list(returns)
@@ -1250,7 +1260,12 @@ def main():
             assert pool.same(), (label, case, pool.diff())
     run_actor('0x4568c0', 0x4568c0, n.vertrix_effect_actor_prepare, (), ('ebx',))
     run_actor('0x456900', 0x456900, n.vertrix_effect_actor_settle, (), ('ebx', 'edx'))
-    run_actor('0x456a80', 0x456a80, n.vertrix_effect_actor_rise, (), ('ebx', 'edx'))
+    for rise in rises:
+        run_actor(hex(rise.routine), rise.routine, n.vertrix_effect_actor_rise, (c.byref(rise),),
+                  ('ebx', 'edx'))
+    run_actor('0x456b80', 0x456b80, n.vertrix_effect_actor_drop, (), ('edx',))
+    run_actor('0x456ca0', 0x456ca0, n.vertrix_effect_actor_toggle, (), ('ebx', 'ecx'))
+    run_actor('0x456cd0', 0x456cd0, n.vertrix_effect_actor_scale, (), ('edx',))
     for pair in pairs_actor:
         run_actor(hex(pair.routine), pair.routine, n.vertrix_effect_actor_pair,
                   (c.byref(pair),), ('edx',))
@@ -1304,7 +1319,7 @@ def main():
                                             0x455f80, 0x456060, 0x453c90, 0x453fd0, 0x4542e0, 0x453ef0, 0x454200, 0x454510, 0x454760, 0x453d50, 0x454830, 0x454a50, 0x454cb0, 0x454090, 0x4543a0, 0x454600, 0x4546a0, 0x4548e0, 0x454970, 0x454b20, 0x454bd0, 0x454d80, 0x454e30, 0x454f00, 0x454fc0, 0x4552b0, 0x455320, 0x4553a0, 0x4550a0, 0x455580, 0x455700, 0x455830, 0x455970, 0x455a90, 0x455b90, 0x455d10, 0x455c30, 0x455db0, 0x455e00, 0x45b4c0, 0x45b590,
                                             0x45b5f0, 0x4560c0, 0x456290, 0x456300, 0x456170, 0x456390, 0x456570, 0x456490, 0x456670,
                                             0x4564e0, 0x4566d0, 0x456760, 0x456860, 0x4568c0, 0x456900, 0x456a80, 0x456980,
-                                            0x456a00)}},
+                                            0x456a00, 0x456b00, 0x456b80, 0x456ca0, 0x456cd0)}},
         'paths': totals,
         'convert_paths': convert_totals,
         'match_paths': match_totals,

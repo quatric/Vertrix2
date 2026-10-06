@@ -212,12 +212,16 @@ changed it.
 `_actor_rise`: short handlers that set bytes and words of the actor and call the actor primitives
 0x4ac500 / 0x4ac520 / 0x4ac540 / 0x4ac5b0 / 0x4ac8a0 / 0x4ac8f0.
 
+## 0x456b00, 0x456b80, 0x456ca0, 0x456cd0
+
+`vertrix_actor_rises` (0x456a80, 0x456b00), `vertrix_effect_actor_drop`, `_actor_toggle` and `_actor_scale` (a percentage computed from the high half of +0x46 and the globals 0x532b98 / 0x532b9c).
+
 ## Tally
 
 Distinct direct `call` targets in 0x401000..0x4d0000: 1827. Named in `source/` (ported): 1139.
 Not named: 688, listed in `docs/unported-call-targets.txt` (about 260 of them in 0x452830..0x45bd00,
 the follow-up and animation handlers of the bonus effects). Handlers reached only through tokens or
-vtables are not in this count. Oracle-verified bonus-effect routines: 101.
+vtables are not in this count. Oracle-verified bonus-effect routines: 105.
 
 ## Wiring note
 
