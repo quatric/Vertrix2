@@ -204,3 +204,31 @@ run_screen('state-combine-453320', 0x453320, ['player_states.c'], 'vertrix_state
 run_screen('state-pair-4533b0', 0x4533b0, ['player_states.c'], 'vertrix_state_pair_4533b0', [U],
            U, PAIR, pair_case, TEXT,
            **{**MORE, 'choices': {0x42eca0: [1, 1, 1, 0], 0x42ecc0: [1, 1, 1, 0]}})
+
+
+run_screen('state-ask-453ef0', 0x453ef0, ['player_states.c'], 'vertrix_state_ask_453ef0', [U], U,
+           PAIR, pair_case, TEXT, **{**MORE, 'choices': {0x42eca0: [1, 0, 1]}})
+
+run_screen('state-ask-454200', 0x454200, ['player_states.c'], 'vertrix_state_ask_454200', [U], U,
+           PAIR, pair_case, TEXT, **{**MORE, 'choices': {0x42eca0: [1, 0, 1]}})
+
+for address, name in ((0x454510, 'ask-454510'), (0x454760, 'ask-454760')):
+    run_screen('state-' + name, address, ['player_states.c'],
+               'vertrix_state_' + name.replace('-', '_'), [U], U, PAIR, pair_case, TEXT,
+               **{**MORE, 'choices': {0x42eca0: [1, 0, 1]}})
+
+CYCLE = {address: 0 for address in (0x4ac500, 0x4ac520, 0x4ac540, 0x4ac5b0, 0x4ad750, 0x438c60,
+                                    0x43b970, 0x438b90, 0x4ac8f0, LEAF)}
+
+
+def patch_cycle(rng, handle, data):
+    patch_more(rng, handle, data)
+    data[0x3ec:0x3f0] = rng.choice([0, 1, 1, 2]).to_bytes(4, 'little')
+    data[0x448:0x44c] = struct.pack('<i', rng.randrange(-2, 14))
+
+
+run_screen('state-cycle-4546a0', 0x4546a0, ['player_states.c'], 'vertrix_state_cycle_4546a0',
+           [U, U], U, CYCLE, player_edx, TEXT,
+           **{**MORE, 'patch': patch_cycle,
+              'choices': {0x4ac520: [1, 1, 0, 2], 0x4ac540: [0, 1, 2, 3], 0x4ad750: [0, 0, 1],
+                          0x43b970: [0, 1]}})

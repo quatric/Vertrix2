@@ -66,6 +66,19 @@ static uint32_t finish_edx(const VertrixCalls *calls, const VertrixFactoryServic
     return regs->eax;
 }
 
+/* finish_edx that reports whether the table could be read. */
+static int finish_edx_ok(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                         const VertrixGlobals *globals, VertrixRegs *regs, uint32_t board)
+{
+    if (!read_value(services, board, STATE_BOARD_TABLE, DWORD_WIDTH, &regs->edx))
+    {
+        return 0;
+    }
+    regs->eax = board;
+    vertrix_regs_virtual(calls, globals, regs, STATE_VIRTUAL_SLOT);
+    return 1;
+}
+
 /* The same with the table pointer in ebx. */
 static uint32_t finish_ebx(const VertrixCalls *calls, const VertrixFactoryServices *services,
                            const VertrixGlobals *globals, VertrixRegs *regs, uint32_t board)
@@ -1048,4 +1061,139 @@ uint32_t vertrix_state_pair_4533b0(const VertrixCalls *calls,
         vertrix_regs_call(calls, &regs, CHOICE_FINISH);
     }
     return regs.eax;
+}
+
+uint32_t vertrix_state_ask_453ef0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                  const VertrixGlobals *globals, uint32_t player)
+{
+    VertrixRegs regs = {0, PAIR_MARK, 0, 0};
+    uint32_t board;
+    uint32_t flag;
+    if (!read_value(services, player, STATE_BOARD, DWORD_WIDTH, &board))
+    {
+        return 0;
+    }
+    regs.ecx = board;
+    regs.eax = board;
+    vertrix_regs_call(calls, &regs, PAIR_ASK_FIRST);
+    flag = regs.eax != 0;
+    regs.ebx = flag;
+    if (!finish_edx_ok(calls, services, globals, &regs, board))
+    {
+        return 0;
+    }
+    if (flag == 1)
+    {
+        regs.eax = player;
+        vertrix_regs_call(calls, &regs, CHOICE_FINISH);
+    }
+    return regs.eax;
+}
+
+uint32_t vertrix_state_ask_454200(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                  const VertrixGlobals *globals, uint32_t player)
+{
+    return vertrix_state_ask_453ef0(calls, services, globals, player);
+}
+
+uint32_t vertrix_state_ask_454510(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                  const VertrixGlobals *globals, uint32_t player)
+{
+    return vertrix_state_ask_453ef0(calls, services, globals, player);
+}
+
+uint32_t vertrix_state_ask_454760(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                  const VertrixGlobals *globals, uint32_t player)
+{
+    return vertrix_state_ask_453ef0(calls, services, globals, player);
+}
+
+enum
+{
+    CYCLE_TIMER_STEP = 0x4ac500,
+    CYCLE_DUE = 0x4ac520,
+    CYCLE_COUNT = 0x4ac540,
+    CYCLE_RESET = 0x4ac5b0,
+    CYCLE_QUERY = 0x4ad750,
+    CYCLE_FIELD = 0x64,
+    CYCLE_ENABLE = 0x3ec,
+    CYCLE_INDEX = 0x448,
+    CYCLE_APPLY = 0x438c60,
+    CYCLE_LIMIT = 10,
+    CYCLE_BUSY = 0x43b970,
+    CYCLE_FINAL = 0x438b90,
+    CYCLE_HANDLER = 0x454760
+};
+
+uint32_t vertrix_state_cycle_4546a0(const VertrixCalls *calls,
+                                    const VertrixFactoryServices *services,
+                                    const VertrixGlobals *globals, uint32_t player, uint32_t edx)
+{
+    VertrixRegs regs = {player, edx, player, 0};
+    uint32_t board;
+    uint32_t enable;
+    uint32_t index;
+    if (!read_value(services, player, STATE_BOARD, DWORD_WIDTH, &board))
+    {
+        return 0;
+    }
+    regs.ecx = board;
+    regs.eax = board;
+    vertrix_regs_call(calls, &regs, CYCLE_TIMER_STEP);
+    regs.eax = board;
+    vertrix_regs_call(calls, &regs, CYCLE_DUE);
+    if (regs.eax == 1)
+    {
+        regs.eax = board;
+        vertrix_regs_call(calls, &regs, CYCLE_COUNT);
+        regs.edx = regs.eax;
+        regs.eax = board;
+        vertrix_regs_call(calls, &regs, CYCLE_RESET);
+        regs.eax = board;
+        vertrix_regs_call(calls, &regs, CYCLE_QUERY);
+        if (regs.eax == 0)
+        {
+            if (!vertrix_build_store(services, board, CYCLE_FIELD, DWORD_WIDTH, 0) ||
+                !read_value(services, player, CYCLE_ENABLE, DWORD_WIDTH, &enable))
+            {
+                return 0;
+            }
+            if (enable == 1)
+            {
+                if (!read_value(services, player, CYCLE_INDEX, BYTE_WIDTH, &regs.edx))
+                {
+                    return 0;
+                }
+                regs.eax = board;
+                vertrix_regs_call(calls, &regs, CYCLE_APPLY);
+                if (!read_value(services, player, CYCLE_INDEX, DWORD_WIDTH, &index))
+                {
+                    return 0;
+                }
+                index++;
+                if (!vertrix_build_store(services, player, CYCLE_INDEX, DWORD_WIDTH, index) ||
+                    ((int32_t)index >= CYCLE_LIMIT &&
+                     !vertrix_build_store(services, player, CYCLE_INDEX, DWORD_WIDTH, 0)))
+                {
+                    return 0;
+                }
+            }
+        }
+    }
+    regs.eax = player;
+    vertrix_regs_call(calls, &regs, CYCLE_BUSY);
+    if (regs.eax != 0)
+    {
+        return finish_edx(calls, services, globals, &regs, board);
+    }
+    if (!read_value(services, player, CYCLE_ENABLE, BYTE_WIDTH, &regs.edx))
+    {
+        return 0;
+    }
+    regs.eax = board;
+    vertrix_regs_call(calls, &regs, CYCLE_FINAL);
+    regs.edx = CYCLE_HANDLER;
+    regs.eax = player;
+    vertrix_regs_call(calls, &regs, STATE_SET_HANDLER);
+    return finish_edx(calls, services, globals, &regs, board);
 }

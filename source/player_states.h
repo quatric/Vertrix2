@@ -147,4 +147,30 @@ uint32_t vertrix_state_combine_453320(const VertrixCalls *calls,
 uint32_t vertrix_state_pair_4533b0(const VertrixCalls *calls,
                                    const VertrixFactoryServices *services,
                                    const VertrixGlobals *globals, uint32_t player);
+
+/* Original 0x453ef0 (eax = player). The flag is set when 0x42eca0 on the board (+0x15c) accepts
+ * the descriptor 0x44c860 (ebx = 0 for the call). The board's virtual call follows with ebx = the
+ * flag; a set flag ends with 0x43bbf0 on the player. */
+uint32_t vertrix_state_ask_453ef0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                  const VertrixGlobals *globals, uint32_t player);
+
+/* Original 0x454200 is the same routine as 0x453ef0. */
+uint32_t vertrix_state_ask_454200(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                  const VertrixGlobals *globals, uint32_t player);
+
+/* Original 0x454510 and 0x454760 are the same routine as 0x453ef0. */
+uint32_t vertrix_state_ask_454510(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                  const VertrixGlobals *globals, uint32_t player);
+uint32_t vertrix_state_ask_454760(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                  const VertrixGlobals *globals, uint32_t player);
+
+/* Original 0x4546a0 (eax = player, edx the caller's register). 0x4ac500 and 0x4ac520 on the board
+ * (+0x15c); a one runs 0x4ac540 (edx = its result for 0x4ac5b0) and 0x4ad750; a zero from that
+ * clears +0x64 and, when the player's +0x3ec is one, runs 0x438c60 with the byte +0x448 in edx and
+ * steps +0x448 (back to 0 at ten). Then 0x43b970 on the player: nonzero ends with the board's
+ * virtual call, zero runs 0x438b90 with the byte +0x3ec, sets the handler 0x454760 and ends with
+ * the virtual call. */
+uint32_t vertrix_state_cycle_4546a0(const VertrixCalls *calls,
+                                    const VertrixFactoryServices *services,
+                                    const VertrixGlobals *globals, uint32_t player, uint32_t edx);
 #endif
