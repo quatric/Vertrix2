@@ -24,6 +24,8 @@ typedef struct
     /* Reads a dword of the original's static data or globals (0x532bbc, tables) at the boundary. */
     uint32_t (*global)(uint32_t address, void *context);
     void *global_context;
+    /* Stores a dword to the original's globals (0x532a60). */
+    void (*global_write)(uint32_t address, uint32_t value, void *context);
 } VertrixEffectServices;
 
 /* Original 0x453ad0 (eax = player, the effect behind dispatcher id 3): reads the opponent
@@ -534,4 +536,19 @@ uint32_t vertrix_effect_count_wait(const VertrixEffectServices *services, uint32
  * between. */
 uint32_t vertrix_effect_count_step(const VertrixEffectServices *services, uint32_t player,
                                    uint32_t entry_ebx, uint32_t entry_edx);
+
+/* Original 0x4560c0 (eax = obj; ebx the caller's): 0x4ac7b0 (edx 1), 0x4ac500 and 0x4ac520 on obj.
+ * A result other than 1 is returned. Otherwise 0x4ac540 (n), 0x4ac5b0, and 0x4aca60, 0x4acab0 and
+ * 0x4acb00 with n; when all three are zero 0x4ac8f0 binds 0x456170 and 0x4ac7b0 runs with edx 2.
+ * Then 0x4b5500: zero is returned, otherwise obj's +0x14c is stored to the global 0x532a60 and
+ * returned. */
+uint32_t vertrix_effect_object_start(const VertrixEffectServices *services, uint32_t object,
+                                     uint32_t entry_ebx);
+
+/* Original 0x456290 (eax = obj; ebx the caller's): 0x4ac500 and 0x4ac520 with edx obj; result 1
+ * adds 0x4ac510. Then 0x476480 on the point list 0x54d640 with 0x74: zero stores obj's +0x14c to
+ * 0x532a60 and binds 0x456170. Then 0x4b5500: non-zero stores +0x14c to 0x532a60 and returns it,
+ * zero is returned. */
+uint32_t vertrix_effect_object_poll(const VertrixEffectServices *services, uint32_t object,
+                                    uint32_t entry_ebx);
 #endif

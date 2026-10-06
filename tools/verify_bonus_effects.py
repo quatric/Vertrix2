@@ -37,6 +37,7 @@ Range = c.CFUNCTYPE(c.c_int, c.c_uint32, c.POINTER(c.c_uint32), c.POINTER(c.c_ui
 
 
 Global = c.CFUNCTYPE(U, U, c.c_void_p)
+GlobalWrite = c.CFUNCTYPE(None, U, U, c.c_void_p)
 
 
 class Factory(c.Structure):
@@ -119,7 +120,8 @@ class Services(c.Structure):
     _fields_ = [('calls', c.POINTER(Calls)), ('resolve', Resolve), ('resolve_context', c.c_void_p),
                 ('virtual_call', Virtual), ('virtual_context', c.c_void_p), ('draw', Draw),
                 ('draw_context', c.c_void_p), ('factory', c.POINTER(Factory)),
-                ('global_read', Global), ('global_context', c.c_void_p)]
+                ('global_read', Global), ('global_context', c.c_void_p),
+                ('global_write', GlobalWrite)]
 
 
 def main():
@@ -226,9 +228,15 @@ def main():
     def global_read(address, context):
         return struct.unpack('<I', bytes(cpu.mem_read(address, 4)))[0]
 
+    global_writes = {}
+
+    @GlobalWrite
+    def global_write(address, value, context):
+        global_writes[address] = value
+
     factory = Factory(pool.resolve, allocate, draw, table_range, None)
     services = Services(c.pointer(calls), pool.resolve, None, virtual, None, draw, None,
-                        c.pointer(factory), global_read, None)
+                        c.pointer(factory), global_read, None, global_write)
     totals = {'forced_choice': 0, 'no_choice': 0, 'unresolved': 0}
     player, opponent, own_board, opponent_board, grid_handle, other = pool.handles[:6]
     cpu.mem_write(VTABLE + 4, struct.pack('<I', SLOT_ONE))
@@ -1054,6 +1062,41 @@ def main():
             assert got == result, (hex(address), case, hex(got), hex(result))
             assert not replay, case
             assert pool.same(), (hex(address), case, pool.diff())
+    # 0x4560c0 and 0x456290: the point-list objects
+    for address in (0x4ac7b0, 0x4aca60, 0x4acab0, 0x4acb00, 0x4b5500, 0x476480):
+        if address not in (0x4ac7b0,):
+            stubs.add(address, 0)
+    for name in ('object_start', 'object_poll'):
+        function = getattr(n, 'vertrix_effect_' + name)
+        function.argtypes = [c.POINTER(Services), U, U]
+        function.restype = U
+    FLOW[0x4aca60] = (0, 0, 1)
+    FLOW[0x4acab0] = (0, 0, 1)
+    FLOW[0x4acb00] = (0, 0, 1)
+    FLOW[0x4b5500] = (0, 1, 7)
+    FLOW[0x476480] = (0, 0, 1)
+    for address, name in ((0x4560c0, 'object_start'), (0x456290, 'object_poll')):
+        native = getattr(n, 'vertrix_effect_' + name)
+        for case in range(args.cases):
+            pool.fill(rng, patch_slide)
+            before = rng.getrandbits(32)
+            cpu.mem_write(0x532a60, struct.pack('<I', before))
+            global_writes.clear()
+            stubs.log.clear()
+            returns.clear()
+            draws.clear()
+            native_log.clear()
+            ebx = rng.getrandbits(32)
+            result = original.call(address, eax=player, ebx=ebx) & 0xffffffff
+            replay[:] = list(returns)
+            got = native(c.byref(services), player, ebx)
+            expected = normalized(stubs.log)
+            assert native_log == expected, (hex(address), case, native_log, expected)
+            assert got == result, (hex(address), case, hex(got), hex(result))
+            assert not replay, case
+            assert pool.same(), (hex(address), case, pool.diff())
+            after = struct.unpack('<I', bytes(cpu.mem_read(0x532a60, 4)))[0]
+            assert global_writes.get(0x532a60, before) == after, (hex(address), case)
     # Objects that do not resolve: the effect stops where the original would have read them. Before
     # the first call (player, opponent, grid) nothing is called or stored; later failures still
     # never reach the final 0x43bbf0.
@@ -1102,7 +1145,7 @@ def main():
                                             0x45b9c0, 0x4554a0, 0x455600, 0x455670, 0x455790,
                                             0x4558e0, 0x455a00, 0x455510, 0x455e50, 0x455f10,
                                             0x455f80, 0x456060, 0x453c90, 0x453fd0, 0x4542e0, 0x453ef0, 0x454200, 0x454510, 0x454760, 0x453d50, 0x454830, 0x454a50, 0x454cb0, 0x454090, 0x4543a0, 0x454600, 0x4546a0, 0x4548e0, 0x454970, 0x454b20, 0x454bd0, 0x454d80, 0x454e30, 0x454f00, 0x454fc0, 0x4552b0, 0x455320, 0x4553a0, 0x4550a0, 0x455580, 0x455700, 0x455830, 0x455970, 0x455a90, 0x455b90, 0x455d10, 0x455c30, 0x455db0, 0x455e00, 0x45b4c0, 0x45b590,
-                                            0x45b5f0)}},
+                                            0x45b5f0, 0x4560c0, 0x456290)}},
         'paths': totals,
         'convert_paths': convert_totals,
         'match_paths': match_totals,

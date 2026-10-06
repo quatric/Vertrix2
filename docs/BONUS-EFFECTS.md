@@ -180,12 +180,19 @@ returns the result of its last call, 0x43bae0. 0x455970 is identical to 0x455700
 `vertrix_effect_count_start`, `_count_wait`, `_count_step`: the counting chain (`+0x400`, `+0x420`,
 table `0x4f7d2c[dword 0x532bbc]`, callees 0x438d50, 0x439080, 0x438dd0, 0x42ec80, 0x439190).
 
+## 0x4560c0 and 0x456290 (point-list objects)
+
+`vertrix_effect_object_start` and `vertrix_effect_object_poll`. The routines after 0x456060 belong
+to a different subsystem (menu cursor / point list 0x54d640, mouse globals 0x558944..0x558958).
+They store to the global 0x532a60, so `VertrixEffectServices` gained a `global_write` service; the
+verifier compares the stored value with the oracle's memory.
+
 ## Tally
 
 Distinct direct `call` targets in 0x401000..0x4d0000: 1827. Named in `source/` (ported): 1139.
 Not named: 688, listed in `docs/unported-call-targets.txt` (about 260 of them in 0x452830..0x45bd00,
 the follow-up and animation handlers of the bonus effects). Handlers reached only through tokens or
-vtables are not in this count. Oracle-verified bonus-effect routines: 84.
+vtables are not in this count. Oracle-verified bonus-effect routines: 86.
 
 ## Wiring note
 
