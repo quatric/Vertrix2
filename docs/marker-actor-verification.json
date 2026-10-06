@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x465a70": 4096
+  },
+  "scope": "The original executes completely with its callees stubbed and logged (0x4adf20 with its five stack arguments); every call, the returned eax and every pool object compare."
+}

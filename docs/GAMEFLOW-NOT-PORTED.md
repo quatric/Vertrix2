@@ -10,7 +10,9 @@ recovered (or have unmodeled global state):
   boundary (`docs/table-loops-verification.json`).
 - ~~`0x45fb00`~~ RECOVERED (see `docs/LABEL-ACTOR.md`, with `0x45fc80`, `0x45fe10`, `0x45fee0`,
   `0x4b3210`, `0x4b65d0`).
-- `0x465a70`, `0x46b810`, `0x470b20`, `0x470d20`, `0x471020`, `0x4711a0`,
+- ~~`0x465a70`~~ RECOVERED (`source/marker_actor.c`, `tools/verify_marker_actor.py`,
+  `docs/marker-actor-verification.json`, 4,096 executions).
+-  `0x46b810`, `0x470b20`, `0x470d20`, `0x471020`, `0x4711a0`,
   `0x471340`, `0x472620`, `0x472c10`: actor constructors/update routines built on the
   allocator `0x4ca000` and many unrecovered list and actor helpers.
 - `0x471e10`, `0x4725f0`: lookups through `0x4b5eb0` with unrecovered `0x4123d0`.
