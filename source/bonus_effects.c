@@ -1753,3 +1753,65 @@ uint32_t vertrix_effect_slide_end(const VertrixEffectServices *services, uint32_
     return ebx == 1 ? vertrix_call(services->calls, 0x43bbf0, player, board, ebx, player, 0)
                     : result;
 }
+
+const VertrixSlideStart vertrix_slide_starts[VERTRIX_SLIDE_START_COUNT] = {
+    {0x453c90, 0x4314a0, 0x424, 0x428, 0x4f7c0c, 0x4f7c18, 0x1a, 0x453d50},
+    {0x453fd0, 0x431780, 0x42c, 0x430, 0x4f7c3c, 0x4f7c48, 0x12, 0x454090},
+    {0x4542e0, 0x431930, 0x42c, 0x430, 0x4f7c3c, 0x4f7c48, 0x12, 0x4543a0}};
+
+uint32_t vertrix_effect_slide_start(const VertrixEffectServices *services, uint32_t player,
+                                    const VertrixSlideStart *start)
+{
+    void *player_storage;
+    void *board_storage;
+    size_t player_size;
+    size_t board_size;
+    uint32_t board;
+    uint32_t first;
+    uint32_t second;
+    uint32_t vtable;
+    uint32_t result;
+    int ended = 0;
+    if (!services || !services->calls || !services->global || !start ||
+        !resolve_object(services, player, &player_storage, &player_size) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_BOARD, DWORD_WIDTH,
+                                    &board) ||
+        !vertrix_actor_storage_read(player_storage, player_size, start->second_offset, DWORD_WIDTH,
+                                    &second) ||
+        !vertrix_actor_storage_read(player_storage, player_size, start->first_offset, DWORD_WIDTH,
+                                    &first) ||
+        !resolve_object(services, board, &board_storage, &board_size))
+    {
+        return 0;
+    }
+    if (vertrix_call(services->calls, start->check, board, first, second, board, 0) == 1)
+    {
+        uint32_t mode = services->global(GLOBAL_DIFFICULTY, services->global_context);
+        uint32_t entry = services->global(start->dword_table + 4u * mode, services->global_context);
+        uint32_t word = services->global(start->word_table + 4u * mode, services->global_context);
+        vertrix_call(services->calls, 0x4ac7b0, board, entry, second, board, 0);
+        if (!vertrix_actor_storage_write(board_storage, board_size, start->word_offset, 2,
+                                         word & 0xffffu) ||
+            !vertrix_actor_storage_write(board_storage, board_size, BOARD_SLIDE_POSITION,
+                                         DWORD_WIDTH, 0))
+        {
+            return 0;
+        }
+        vertrix_call(services->calls, 0x4ac510, board, start->token, second, board, 0);
+        vertrix_call(services->calls, 0x4ac8f0, player, start->token, second, board, 0);
+        vertrix_call(services->calls, 0x43c0e0, player, SOUND_TWO, second, board, 0);
+    }
+    else
+    {
+        ended = 1;
+    }
+    if (!vertrix_actor_storage_read(board_storage, board_size, BOARD_VTABLE, DWORD_WIDTH, &vtable))
+    {
+        return 0;
+    }
+    result = services->virtual_call ? (uint32_t)services->virtual_call(services->virtual_context,
+                                                                       board, SLOT_RELEASE, 0)
+                                    : 0;
+    return ended ? vertrix_call(services->calls, 0x43bbf0, player, vtable, second, board, 0)
+                 : result;
+}

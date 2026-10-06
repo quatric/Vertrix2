@@ -111,6 +111,19 @@ the new `global` service). `vertrix_effect_field_bind` is the follow-up handler 
 player's `+0x444` is checked with 0x438910; the tables 0x4f7cfc and 0x4f7d08 are read through the
 `global` service. The entry ebx/edx that the handlers forward are parameters. 2048 cases each.
 
+## Slide starts 0x453c90, 0x453fd0, 0x4542e0
+
+`vertrix_effect_slide_start` with `vertrix_slide_starts`: a check callee (0x4314a0, 0x431780,
+0x431930) on the board, then 0x4ac7b0 / board word / 0x4ac510 / 0x4ac8f0 / sound 2 from the tables
+selected by `[0x532bbc]`. 2048 cases each.
+
+## Tally
+
+Distinct direct `call` targets in 0x401000..0x4d0000: 1827. Named in `source/` (ported): 1139.
+Not named: 688, listed in `docs/unported-call-targets.txt` (about 260 of them in 0x452830..0x45bd00,
+the follow-up and animation handlers of the bonus effects). Handlers reached only through tokens or
+vtables are not in this count. Oracle-verified bonus-effect routines: 47.
+
 ## Wiring note
 
 The dispatcher 0x43c140 does not call an effect: it stores the effect address as the player's

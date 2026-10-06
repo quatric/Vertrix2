@@ -280,4 +280,28 @@ uint32_t vertrix_effect_slide_advance(const VertrixEffectServices *services, uin
  * player after slot 1 of the board, otherwise the slot's result is returned. */
 uint32_t vertrix_effect_slide_end(const VertrixEffectServices *services, uint32_t player,
                                   uint32_t entry_ebx);
+
+/* The follow-up handlers 0x453c90, 0x453fd0 and 0x4542e0 (eax = player). The check callee runs on
+ * the player's board with edx the player's dword at first_offset and ebx the one at second_offset.
+ * Result 1 calls 0x4ac7b0 with the table entry dword_table[dword 0x532bbc], stores the word
+ * word_table[dword 0x532bbc] at the board's word_offset, clears the board's +0x58, calls 0x4ac510
+ * with the token, binds the token to the player (0x4ac8f0) and plays sound 2 (0x43c0e0). Anything
+ * else makes the handler end with 0x43bbf0 on the player. Slot 1 of the board comes between. */
+typedef struct
+{
+    uint32_t routine;
+    uint32_t check;
+    uint32_t first_offset;
+    uint32_t second_offset;
+    uint32_t dword_table;
+    uint32_t word_table;
+    uint32_t word_offset;
+    uint32_t token;
+} VertrixSlideStart;
+
+#define VERTRIX_SLIDE_START_COUNT 3
+extern const VertrixSlideStart vertrix_slide_starts[VERTRIX_SLIDE_START_COUNT];
+
+uint32_t vertrix_effect_slide_start(const VertrixEffectServices *services, uint32_t player,
+                                    const VertrixSlideStart *start);
 #endif
