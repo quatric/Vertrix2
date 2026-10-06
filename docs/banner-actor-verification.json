@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x472620": 4096
+  },
+  "scope": "The original executes completely with its callees stubbed and logged (0x4adf20 with its five stack arguments); the frame global 0x532a68 holds random data. Every call, the returned eax and every pool object compare."
+}

@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x471340": 4096
+  },
+  "scope": "The original executes completely with its callees stubbed and logged; the delay index is below eight and the table 0x53bdac holds random dwords. Every call with the caller registers, the returned eax and every pool object compare."
+}

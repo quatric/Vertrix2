@@ -12,14 +12,17 @@ recovered (or have unmodeled global state):
   `0x4b3210`, `0x4b65d0`).
 - ~~`0x465a70`~~ RECOVERED (`source/marker_actor.c`, `tools/verify_marker_actor.py`,
   `docs/marker-actor-verification.json`, 4,096 executions).
+- ~~`0x4711a0`~~, ~~`0x471340`~~, ~~`0x472620`~~ RECOVERED (`source/slide_pair.c`,
+  `source/scene_actors.c`, `tools/verify_slide_pair.py`, `tools/verify_scene_actors.py`,
+  `docs/slide-pair-verification.json`, `docs/delay-actor-verification.json`,
+  `docs/banner-actor-verification.json`; 4,096 executions each).
 - ~~`0x470d20`~~ RECOVERED (`source/panel_group.c`, `tools/verify_panel_group.py`,
   `docs/panel-group-verification.json`, 4,096 executions).
 - ~~`0x471020`~~ RECOVERED (`source/panel_actor.c`, `tools/verify_panel_actor.py`,
   `docs/panel-actor-verification.json`, 4,096 executions).
 - ~~`0x470b20`~~ RECOVERED (`source/row_label.c`, `tools/verify_row_label.py`,
   `docs/row-label-verification.json`, 4,096 executions).
-- `0x46b810`, `0x4711a0`,
-  `0x471340`, `0x472620`, `0x472c10`: actor constructors/update routines built on the
+- `0x46b810`, `0x472c10`: actor constructors/update routines built on the
   allocator `0x4ca000` and many unrecovered list and actor helpers.
 - `0x471e10`, `0x4725f0`: lookups through `0x4b5eb0` with unrecovered `0x4123d0`.
 - `0x475510`, `0x475700`, `0x4759e0`, `0x475c80`, `0x476160`, `0x476810`, `0x4774e0`,

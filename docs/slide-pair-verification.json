@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4711a0": 4096
+  },
+  "scope": "The original executes completely with its callees stubbed and logged; the globals 0x4f8a48..0x4f8a56 hold random data. Every call with the registers the previous call left and every pool object compare. The original returns the saved exception chain head, which is not modeled."
+}
