@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x45fb00": 1024,
+    "0x45fc80": 1024,
+    "0x45fe10": 1024,
+    "0x45fee0": 1024
+  },
+  "scope": "Each routine executes completely in the original with its callees stubbed and logged (registers and stack arguments); every call, the returned actor and every pool object compare. The 0x45fe10 and 0x45fee0 stale stack halfword is read from the oracle stack."
+}

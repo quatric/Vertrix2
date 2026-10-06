@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4b65d0": 4096
+  },
+  "scope": "The original executes completely with 0x4ca370 and 0x4408e0 stubbed and logged (0x4408e0 stores four random dwords through its stack pointers); every call with its registers and seven stack arguments, the returned eax and every pool object compare."
+}

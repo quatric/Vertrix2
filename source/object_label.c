@@ -136,3 +136,83 @@ int vertrix_object_place_label(const VertrixCalls *calls, const VertrixFactorySe
     vertrix_call(calls, LABEL_RELEASE, temp, 0, glyph, x1, 0);
     return 1;
 }
+
+enum
+{
+    TEXT_SLOT = 0x15c,
+    TEXT_GLYPH = 0x160,
+    TEXT_X1 = 0x162,
+    TEXT_X2 = 0x164,
+    TEXT_Y1 = 0x166,
+    TEXT_Y2 = 0x168,
+    TEXT_STYLE = 0x44,
+    TEXT_MEASURE = 0x4408e0,
+    TEXT_MEASURE_ARGUMENTS = 7,
+    TEXT_LOCAL_WIDTH = 0x18,
+    TEXT_LOCAL_HEIGHT = 0x14,
+    TEXT_LOCAL_X = 0x10,
+    TEXT_LOCAL_Y = 0xc,
+    TEXT_OUT_HEIGHT = 4,
+    TEXT_RESULT_X = 0xe,
+    TEXT_RESULT_Y = 0x16,
+    TEXT_RESULT_WIDTH = 0xf4,
+    TEXT_RESULT_HEIGHT = 0xf8
+};
+
+int vertrix_object_label_text(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                              uint32_t frame, uint32_t object, uint32_t text, uint32_t x1,
+                              uint32_t glyph, const uint32_t arguments[3], uint32_t *result)
+{
+    void *storage;
+    size_t size;
+    uint32_t slot;
+    uint32_t style;
+    uint32_t stack[TEXT_MEASURE_ARGUMENTS];
+    VertrixCallSite site;
+    uint32_t i;
+    if (!services->resolve(object, &storage, &size, services->context))
+    {
+        return 0;
+    }
+    vertrix_call(calls, LABEL_ASSIGN, object + TEXT_SLOT, text, x1, object + TEXT_SLOT, 0);
+    if (!vertrix_actor_storage_write(storage, size, TEXT_GLYPH, BYTE_WIDTH, glyph) ||
+        !vertrix_actor_storage_write(storage, size, TEXT_X2, WORD_WIDTH, arguments[0]) ||
+        !vertrix_actor_storage_write(storage, size, TEXT_Y1, WORD_WIDTH, arguments[1]) ||
+        !vertrix_actor_storage_write(storage, size, TEXT_Y2, WORD_WIDTH, arguments[2]) ||
+        !vertrix_actor_storage_write(storage, size, TEXT_X1, WORD_WIDTH, x1) ||
+        !vertrix_actor_storage_read(storage, size, TEXT_SLOT, DWORD_WIDTH, &slot) ||
+        !vertrix_actor_storage_read(storage, size, TEXT_STYLE, BYTE_WIDTH, &style))
+    {
+        return 0;
+    }
+    stack[0] = sign_extend(arguments[2]);
+    stack[1] = slot;
+    stack[2] = style;
+    stack[3] = frame - TEXT_LOCAL_WIDTH;
+    stack[4] = frame - TEXT_LOCAL_HEIGHT;
+    stack[5] = frame - TEXT_LOCAL_X;
+    stack[6] = frame - TEXT_LOCAL_Y;
+    site = (VertrixCallSite){TEXT_MEASURE,
+                             (uint32_t)(int32_t)(int8_t)glyph,
+                             sign_extend(x1),
+                             sign_extend(arguments[0]),
+                             sign_extend(arguments[1]),
+                             stack[0],
+                             stack[1],
+                             stack[2],
+                             0,
+                             0,
+                             {0},
+                             0};
+    for (i = 3; i < TEXT_MEASURE_ARGUMENTS; ++i)
+    {
+        site.stack_rest[i - 3] = stack[i];
+    }
+    calls->call(&site, calls->context);
+    *result = site.stack_rest[TEXT_OUT_HEIGHT];
+    return vertrix_actor_storage_write(storage, size, TEXT_RESULT_X, WORD_WIDTH, site.out_ebx) &&
+           vertrix_actor_storage_write(storage, size, TEXT_RESULT_Y, WORD_WIDTH, site.out_ecx) &&
+           vertrix_actor_storage_write(storage, size, TEXT_RESULT_WIDTH, DWORD_WIDTH,
+                                       site.out_value) &&
+           vertrix_actor_storage_write(storage, size, TEXT_RESULT_HEIGHT, DWORD_WIDTH, *result);
+}

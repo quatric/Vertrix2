@@ -8,7 +8,9 @@ recovered (or have unmodeled global state):
   `source/table_loops.c` (`tools/verify_table_loops.py`), which run the
   `0x4831b0`/`0x482e10`/`0x483ed0`/`0x487850` callees through the calls
   boundary (`docs/table-loops-verification.json`).
-- `0x45fb00`, `0x465a70`, `0x46b810`, `0x470b20`, `0x470d20`, `0x471020`, `0x4711a0`,
+- ~~`0x45fb00`~~ RECOVERED (see `docs/LABEL-ACTOR.md`, with `0x45fc80`, `0x45fe10`, `0x45fee0`,
+  `0x4b3210`, `0x4b65d0`).
+- `0x465a70`, `0x46b810`, `0x470b20`, `0x470d20`, `0x471020`, `0x4711a0`,
   `0x471340`, `0x472620`, `0x472c10`: actor constructors/update routines built on the
   allocator `0x4ca000` and many unrecovered list and actor helpers.
 - `0x471e10`, `0x4725f0`: lookups through `0x4b5eb0` with unrecovered `0x4123d0`.
