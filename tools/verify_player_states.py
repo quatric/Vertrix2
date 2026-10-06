@@ -92,3 +92,65 @@ run_screen('state-choice-apply', 0x451e20, ['player_states.c'], 'vertrix_state_c
            TEXT + ' 0x42a170 stores two random dwords through its pointers (frame locals), carried '
            'through the call site.',
            effects={0x42a170: cell_effect}, **{**COMMON, 'choices': CHOICE_CHOICES})
+
+
+TAKE = {address: 0 for address in (0x42a190, 0x42a140, 0x4ac8f0, 0x43bae0, 0x43c0e0, 0x43bbf0,
+                                   LEAF)}
+TAKE[0x42a170] = 1
+TAKE[0x43bd90] = 2
+MATCH = {address: 0 for address in (0x4328a0, 0x4ac7d0, 0x4ac510, 0x4ac8f0, 0x452250, 0x43ba70,
+                                    0x43bae0, 0x43ba80, LEAF)}
+ATTACK = {address: 0 for address in (0x4316c0, 0x4ac7b0, 0x4ac510, 0x4ac8f0, 0x43c0e0, 0x43bbf0,
+                                     LEAF)}
+TABLES = ((0x4f7bf4, 0x4c), (0x4f81ac, 4), (0x4f8188, 4), (0x4f7be8, 0x28))
+
+
+def take_effects():
+    def first(cpu, rng, eax, edx, ebx, ecx, stack):
+        value = rng.getrandbits(32)
+        cpu.mem_write(ecx, struct.pack('<I', value))
+        return 0, 0, value
+
+    def sounds(cpu, rng, eax, edx, ebx, ecx, stack):
+        second, third = rng.getrandbits(32), rng.getrandbits(32)
+        cpu.mem_write(stack[0], struct.pack('<I', second))
+        cpu.mem_write(ecx, struct.pack('<I', third))
+        return second, 0, third
+    def cell(cpu, rng, eax, edx, ebx, ecx, stack):
+        value = rng.getrandbits(32)
+        cpu.mem_write(stack[0], struct.pack('<I', value))
+        return value
+
+    return {0x43bae0: first, 0x42a170: cell, 0x43bd90: sounds}
+
+
+def patch_more(rng, handle, data):
+    patch(rng, handle, data)
+    handles = [0x806000 + 0x1000 * i for i in range(4)]
+    data[0x3b0:0x3b4] = rng.choice(handles).to_bytes(4, 'little')
+    data[0x44c:0x450] = rng.choice([0, 1, 1, 2]).to_bytes(4, 'little')
+
+
+def take_case(rng, pool, cpu):
+    player, ecx = rng.choice(pool.handles), rng.getrandbits(32)
+    return {'eax': player, 'ecx': ecx}, (), (STACK - 4, player, ecx)
+
+
+def attack_case(rng, pool, cpu):
+    player = rng.choice(pool.handles)
+    cpu.mem_write(0x532bbc, struct.pack('<I', rng.randrange(0, 10)))
+    return {'eax': player}, (), (player,)
+
+
+MORE = {**COMMON, 'patch': patch_more, 'globals_ranges': TABLES}
+MORE_CHOICES = {0x42a190: [1, 1, 0, 2], 0x4328a0: [1, 1, 0, 3], 0x43ba70: [1, 1, 0],
+                0x4316c0: [1, 1, 0, 2]}
+run_screen('state-choice-take', 0x451f50, ['player_states.c'], 'vertrix_state_choice_take',
+           [U, U, U], U, TAKE, take_case,
+           TEXT + ' 0x43bae0, 0x42a170 and 0x43bd90 store random dwords through their pointers '
+           '(frame locals), carried through the call site.',
+           effects=take_effects(), **{**MORE, 'choices': MORE_CHOICES})
+run_screen('state-match-452160', 0x452160, ['player_states.c'], 'vertrix_state_match_452160',
+           [U, U], U, MATCH, player_edx, TEXT, **{**MORE, 'choices': MORE_CHOICES})
+run_screen('state-attack-452440', 0x452440, ['player_states.c'], 'vertrix_state_attack_452440',
+           [U], U, ATTACK, attack_case, TEXT, **{**MORE, 'choices': MORE_CHOICES})

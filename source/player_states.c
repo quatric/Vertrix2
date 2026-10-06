@@ -471,3 +471,276 @@ uint32_t vertrix_state_choice_apply(const VertrixCalls *calls,
     }
     return regs.eax;
 }
+
+enum
+{
+    TAKE_OPPONENT = 0x3b0,
+    TAKE_CELL = 0x42a140,
+    TAKE_HANDLER = 0x451dd0,
+    TAKE_FIRST = 0x43bae0,
+    TAKE_SOUNDS = 0x43bd90,
+    TAKE_LOCAL_FIRST = 0x18,
+    TAKE_LOCAL_SECOND = 0x1c,
+    TAKE_LOCAL_THIRD = 0x34,
+    TAKE_LOCAL_FOURTH = 0x30,
+    MATCH_BOARD = 0x4328a0,
+    MATCH_FLAG = 0x44c,
+    MATCH_PROGRESS = 0x452250,
+    MATCH_QUERY = 0x43ba70,
+    MATCH_CLEAR = 0x43ba80,
+    MATCH_BONUS_HANDLER = 0x451a60,
+    MATCH_FALLBACK_HANDLER = 0x450ff0,
+    MATCH_PERIOD = 0x4ac7d0,
+    MATCH_PERIOD_TABLE = 0x4f7bf4,
+    MATCH_WORD_TABLE = 0x4f7c00,
+    MATCH_NEW_HANDLER = 0x452770,
+    MATCH_TIMER = 0x4ac510,
+    MATCH_WORD_FIELD = 0x1a,
+    MATCH_COUNTER = 0x58,
+    ATTACK_AMOUNT = 0x3f0,
+    ATTACK_CHECK = 0x4316c0,
+    ATTACK_STATE = 0x428,
+    ATTACK_PERIOD_TABLE = 0x4f7c24,
+    ATTACK_WORD_TABLE = 0x4f7c30,
+    ATTACK_HANDLER = 0x452520,
+    ATTACK_SOUND = 0x4f8188
+};
+
+uint32_t vertrix_state_choice_take(const VertrixCalls *calls,
+                                   const VertrixFactoryServices *services,
+                                   const VertrixGlobals *globals, uint32_t frame, uint32_t player,
+                                   uint32_t ecx)
+{
+    VertrixRegs regs;
+    uint32_t grid;
+    uint32_t opponent;
+    uint32_t board;
+    uint32_t row;
+    uint32_t column;
+    uint32_t flag = 0;
+    if (!read_value(services, player, CHOICE_GRID, DWORD_WIDTH, &grid) ||
+        !read_value(services, player, CHOICE_COLUMN, DWORD_WIDTH, &column) ||
+        !read_value(services, player, TAKE_OPPONENT, DWORD_WIDTH, &opponent) ||
+        !read_value(services, player, STATE_BOARD, DWORD_WIDTH, &board) ||
+        !read_value(services, player, CHOICE_ROW, DWORD_WIDTH, &row))
+    {
+        return 0;
+    }
+    regs.eax = grid;
+    regs.edx = row;
+    regs.ebx = column;
+    regs.ecx = ecx;
+    vertrix_regs_call(calls, &regs, CHOICE_ASK);
+    if (regs.eax != 1)
+    {
+        flag = 1;
+    }
+    else
+    {
+        VertrixCallSite site;
+        uint32_t first;
+        uint32_t second;
+        uint32_t third;
+        uint32_t fourth;
+        regs.eax = grid;
+        if (!read_value(services, player, CHOICE_COLUMN, DWORD_WIDTH, &regs.ebx) ||
+            !read_value(services, player, CHOICE_ROW, DWORD_WIDTH, &regs.edx))
+        {
+            return 0;
+        }
+        vertrix_regs_call(calls, &regs, TAKE_CELL);
+        regs.edx = TAKE_HANDLER;
+        regs.eax = player;
+        vertrix_regs_call(calls, &regs, STATE_SET_HANDLER);
+        regs.edx = 4;
+        regs.eax = player;
+        regs.ecx = frame - TAKE_LOCAL_FIRST;
+        site = (VertrixCallSite){TAKE_FIRST, regs.eax, regs.edx, regs.ebx, regs.ecx, 0,
+                                 0,          0,        0,        0,        {0},      0};
+        calls->call(&site, calls->context);
+        first = site.out_ecx;
+        if (!read_value(services, player, CHOICE_COLUMN, DWORD_WIDTH, &regs.ebx) ||
+            !read_value(services, player, CHOICE_ROW, DWORD_WIDTH, &regs.edx))
+        {
+            return 0;
+        }
+        regs.eax = grid;
+        site = (VertrixCallSite){
+            CHOICE_CELL, regs.eax, regs.edx, regs.ebx, regs.ecx, frame - TAKE_LOCAL_SECOND,
+            0,           0,        0,        0,        {0},      0};
+        calls->call(&site, calls->context);
+        second = site.out_value;
+        regs.ebx = second & 0xff;
+        regs.edx = first & 0xff;
+        regs.eax = player;
+        regs.ecx = frame - TAKE_LOCAL_THIRD;
+        site = (VertrixCallSite){
+            TAKE_SOUNDS, regs.eax, regs.edx, regs.ebx, regs.ecx, frame - TAKE_LOCAL_FOURTH,
+            0,           0,        0,        0,        {0},      0};
+        calls->call(&site, calls->context);
+        third = site.out_ecx;
+        fourth = site.out_value;
+        regs.edx = third;
+        regs.eax = player;
+        vertrix_regs_call(calls, &regs, STATE_SOUND);
+        regs.edx = fourth;
+        regs.eax = opponent;
+        vertrix_regs_call(calls, &regs, STATE_SOUND);
+    }
+    if (!read_value(services, board, STATE_BOARD_TABLE, DWORD_WIDTH, &regs.edx))
+    {
+        return 0;
+    }
+    regs.eax = board;
+    regs.ebx = flag;
+    vertrix_regs_virtual(calls, globals, &regs, STATE_VIRTUAL_SLOT);
+    if (flag == 1)
+    {
+        regs.eax = player;
+        vertrix_regs_call(calls, &regs, CHOICE_FINISH);
+    }
+    return regs.eax;
+}
+
+uint32_t vertrix_state_match_452160(const VertrixCalls *calls,
+                                    const VertrixFactoryServices *services,
+                                    const VertrixGlobals *globals, uint32_t player, uint32_t edx)
+{
+    VertrixRegs regs = {0, edx, 0, player};
+    uint32_t board;
+    uint32_t flag;
+    uint32_t index;
+    if (!read_value(services, player, STATE_BOARD, DWORD_WIDTH, &board))
+    {
+        return 0;
+    }
+    regs.ebx = board;
+    regs.eax = board;
+    vertrix_regs_call(calls, &regs, MATCH_BOARD);
+    if (regs.eax == 1)
+    {
+        index = globals->read(STATE_SPEED_INDEX, globals->context);
+        regs.edx = globals->read(MATCH_PERIOD_TABLE + index * 4, globals->context);
+        regs.eax = board;
+        vertrix_regs_call(calls, &regs, MATCH_PERIOD);
+        index = globals->read(STATE_SPEED_INDEX, globals->context);
+        if (!vertrix_build_store(services, board, MATCH_WORD_FIELD, 2,
+                                 globals->read(MATCH_WORD_TABLE + index * 4, globals->context)) ||
+            !vertrix_build_store(services, board, MATCH_COUNTER, DWORD_WIDTH, 0))
+        {
+            return 0;
+        }
+        regs.edx = MATCH_NEW_HANDLER;
+        regs.eax = board;
+        vertrix_regs_call(calls, &regs, MATCH_TIMER);
+        regs.eax = player;
+        vertrix_regs_call(calls, &regs, STATE_SET_HANDLER);
+        return finish_edx(calls, services, globals, &regs, board);
+    }
+    if (!read_value(services, player, MATCH_FLAG, DWORD_WIDTH, &flag))
+    {
+        return 0;
+    }
+    if (flag == 1)
+    {
+        regs.eax = player;
+        vertrix_regs_call(calls, &regs, MATCH_PROGRESS);
+        return finish_edx(calls, services, globals, &regs, board);
+    }
+    regs.eax = player;
+    vertrix_regs_call(calls, &regs, MATCH_QUERY);
+    if (regs.eax == 1)
+    {
+        regs.edx = MATCH_BONUS_HANDLER;
+        regs.eax = player;
+        vertrix_regs_call(calls, &regs, STATE_SET_HANDLER);
+        regs.edx = 2;
+        regs.eax = player;
+        vertrix_regs_call(calls, &regs, TAKE_FIRST);
+        regs.eax = player;
+        vertrix_regs_call(calls, &regs, MATCH_CLEAR);
+    }
+    else
+    {
+        regs.edx = MATCH_FALLBACK_HANDLER;
+        regs.eax = player;
+        vertrix_regs_call(calls, &regs, STATE_SET_HANDLER);
+        regs.eax = player;
+        regs.edx = 0;
+        vertrix_regs_call(calls, &regs, TAKE_FIRST);
+    }
+    return finish_edx(calls, services, globals, &regs, board);
+}
+
+uint32_t vertrix_state_attack_452440(const VertrixCalls *calls,
+                                     const VertrixFactoryServices *services,
+                                     const VertrixGlobals *globals, uint32_t player)
+{
+    VertrixRegs regs;
+    uint32_t opponent;
+    uint32_t board;
+    uint32_t amount;
+    uint32_t opponent_board;
+    uint32_t state;
+    uint32_t flag = 0;
+    uint32_t index;
+    if (!read_value(services, player, TAKE_OPPONENT, DWORD_WIDTH, &opponent) ||
+        !read_value(services, player, STATE_BOARD, DWORD_WIDTH, &board) ||
+        !read_value(services, player, ATTACK_AMOUNT, DWORD_WIDTH, &amount) ||
+        !read_value(services, opponent, STATE_BOARD, DWORD_WIDTH, &opponent_board) ||
+        !read_value(services, opponent, ATTACK_STATE, DWORD_WIDTH, &state))
+    {
+        return 0;
+    }
+    regs.eax = opponent_board;
+    regs.edx = state;
+    regs.ebx = amount;
+    regs.ecx = board;
+    vertrix_regs_call(calls, &regs, ATTACK_CHECK);
+    if (regs.eax == 1)
+    {
+        index = globals->read(STATE_SPEED_INDEX, globals->context);
+        regs.edx = globals->read(ATTACK_PERIOD_TABLE + index * 4, globals->context);
+        regs.eax = board;
+        vertrix_regs_call(calls, &regs, STATE_START_PERIOD);
+        index = globals->read(STATE_SPEED_INDEX, globals->context);
+        if (!vertrix_build_store(services, board, MATCH_WORD_FIELD, 2,
+                                 globals->read(ATTACK_WORD_TABLE + index * 4, globals->context)) ||
+            !vertrix_build_store(services, board, MATCH_COUNTER, DWORD_WIDTH, 0))
+        {
+            return 0;
+        }
+        regs.edx = ATTACK_HANDLER;
+        regs.eax = board;
+        vertrix_regs_call(calls, &regs, MATCH_TIMER);
+        regs.eax = player;
+        vertrix_regs_call(calls, &regs, STATE_SET_HANDLER);
+        regs.edx = globals->read(ATTACK_SOUND, globals->context);
+        regs.eax = opponent;
+        vertrix_regs_call(calls, &regs, STATE_SOUND);
+    }
+    else
+    {
+        flag = 1;
+    }
+    if (!read_value(services, board, STATE_BOARD_TABLE, DWORD_WIDTH, &regs.edx))
+    {
+        return 0;
+    }
+    regs.eax = board;
+    vertrix_regs_virtual(calls, globals, &regs, STATE_VIRTUAL_SLOT);
+    if (!read_value(services, opponent_board, STATE_BOARD_TABLE, DWORD_WIDTH, &regs.edx))
+    {
+        return 0;
+    }
+    regs.eax = opponent_board;
+    vertrix_regs_virtual(calls, globals, &regs, STATE_VIRTUAL_SLOT);
+    if (flag == 1)
+    {
+        regs.eax = player;
+        vertrix_regs_call(calls, &regs, CHOICE_FINISH);
+        regs.eax = opponent;
+        vertrix_regs_call(calls, &regs, CHOICE_FINISH);
+    }
+    return regs.eax;
+}

@@ -75,4 +75,37 @@ uint32_t vertrix_state_choice_apply(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services,
                                     const VertrixGlobals *globals, uint32_t frame, uint32_t player,
                                     uint32_t ecx);
+
+/* Original 0x451f50 (eax = player, ecx the caller's register, frame the token for ebp). Like
+ * 0x451e20 the choice grid is asked about the cell (+0x194, +0x198) with 0x42a190. Unless that is
+ * one the flag is set. Otherwise 0x42a140 takes the cell, 0x4ac8f0 sets the handler 0x451dd0,
+ * 0x43bae0(edx = 4, ecx = frame - 0x18) and 0x42a170 (stack pointer frame - 0x1c) give two
+ * dwords, 0x43bd90 (edx and ebx the low bytes, ecx = frame - 0x34, stack frame - 0x30 and 0)
+ * stores two more, and 0x43c0e0 plays them as sounds on the player and on the opponent (+0x3b0).
+ * The board's virtual call follows (ebx = the flag) and a set flag ends with 0x43bbf0 on the
+ * player. Returns the last eax. */
+uint32_t vertrix_state_choice_take(const VertrixCalls *calls,
+                                   const VertrixFactoryServices *services,
+                                   const VertrixGlobals *globals, uint32_t frame, uint32_t player,
+                                   uint32_t ecx);
+
+/* Original 0x452160 (eax = player, edx the caller's register, ecx = the player, ebx = the board).
+ * 0x4328a0 on the board: one sets the board period from the dword 0x4f7bf4[dword 0x532bbc], the
+ * word +0x1a from the word 0x4f7c00[...], clears +0x58, 0x4ac510 and sets the handler 0x452770.
+ * Otherwise a player +0x44c of one runs 0x452250; else 0x43ba70 equal to one starts the bonus
+ * (handler 0x451a60, 0x43bae0(edx = 2) and 0x43ba80) and any other result sets the handler
+ * 0x450ff0 (0x43bae0 with edx = 0). All end with the board's virtual call. */
+uint32_t vertrix_state_match_452160(const VertrixCalls *calls,
+                                    const VertrixFactoryServices *services,
+                                    const VertrixGlobals *globals, uint32_t player, uint32_t edx);
+
+/* Original 0x452440 (eax = player; ebx = the dword +0x3f0, ecx = the board). 0x4316c0 on the
+ * opponent's board (+0x15c of +0x3b0) with the opponent's +0x428 in edx: one sets the board period
+ * from 0x4f7c24[dword 0x532bbc], the word +0x1a from 0x4f7c30[...], clears +0x58, 0x4ac510, sets
+ * the handler 0x452520 on the player and plays the sound 0x4f8188 for the opponent; anything else
+ * sets the flag. Both boards then take their virtual call and a set flag ends with 0x43bbf0 on
+ * the player and on the opponent. */
+uint32_t vertrix_state_attack_452440(const VertrixCalls *calls,
+                                     const VertrixFactoryServices *services,
+                                     const VertrixGlobals *globals, uint32_t player);
 #endif
