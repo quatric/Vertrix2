@@ -50,7 +50,7 @@ def write_report(build_dir, name, report):
 
 def run_screen(name, address, sources, function, argtypes, restype, callees, generate, scope,
                *, wrappers=(), allocator=0x4ca000, globals_ranges=(), patch=None, compare=True,
-               result_mask=0xffffffff, description='', table_targets=(), lookups=(), pool_size=0x200, effects=None, fixed_returns=None, handle_returns=(),
+               result_mask=0xffffffff, description='', table_targets=(), lookups=(), pool_size=0x200, effects=None, fixed_returns=None, handle_returns=(), choices=None,
                setup=None, extras=None, native_extras_arg=None,
                leading=('calls', 'services', 'globals')):
     """Run `function` against the original routine at `address`.
@@ -90,6 +90,8 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
             outs.append(effects[target](cpu, rng, eax, edx, ebx, ecx, stack))
         if target in fixed_returns:
             returns.append(fixed_returns[target])
+        elif choices and target in choices:
+            returns.append(rng.choice(choices[target]))
         elif target in handle_returns:
             returns.append(rng.choice(pool.handles))
         elif target in lookups:

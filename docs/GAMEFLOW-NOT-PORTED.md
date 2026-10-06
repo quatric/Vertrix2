@@ -55,3 +55,10 @@ recovered (or have unmodeled global state):
   `0x4ca210`, `0x4ca370`, `0x4ca040`, plus `0x4b3210` and `0x4b5550`.
 - Next step: recover the AnsiString runtime with a refcount-aware oracle, then `0x4b3210`,
   then `0x45fb00`.
+
+## Player state handlers (bonus system range 0x450ff0..0x456033)
+
+- RECOVERED: `0x451490`, `0x451520`, `0x451580`, `0x451630`, `0x451690`, `0x451730`
+  (`source/player_states.c`, `tools/verify_player_states.py`,
+  `docs/state-*-verification.json`, 4,096 executions each). `source/regs_call.h` tracks the four
+  argument registers so every boundary call carries the values the original holds.
