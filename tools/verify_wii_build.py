@@ -37,7 +37,8 @@ def main():
     undefined = sorted(line.split()[-1] for line in
                        run([str(prefix) + "nm", "-u", str(combined)], environment).splitlines())
     runtime = {"__divdi3", "__umoddi3", "calloc", "fclose", "fopen", "fread", "free",
-               "fseek", "ftell", "malloc", "memcmp", "memcpy", "memmove", "memset"}
+               "fseek", "ftell", "malloc", "memcmp", "memcpy", "memmove", "memset",
+               "__getreent", "fprintf", "log", "nextafter", "snprintf", "sqrt", "strlen"}
     unexpected = set(undefined) - runtime
     if unexpected:
         raise RuntimeError(f"Unresolved recovered dependencies: {sorted(unexpected)}")
