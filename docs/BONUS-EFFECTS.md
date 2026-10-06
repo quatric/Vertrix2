@@ -194,12 +194,19 @@ through `global`, 0x4b0b70 hit test, 0x4764a0 storing through two frame pointers
 pointer (new `vertrix_call_out_stack`). 0x456390 passes the ecx and stack pointers the other way
 round.
 
+## 0x456490, 0x456570, 0x456670, 0x4564e0, 0x4566d0
+
+`vertrix_effect_object_wait` (0x456490, 0x456670; the latter flips the global 0x5589dc and reads
+0x532b98), more rows in `vertrix_object_begins` (0x4564e0, 0x4566d0) and `vertrix_cursors`
+(0x456570). The verifier restores the global before the native run, because the original already
+changed it.
+
 ## Tally
 
 Distinct direct `call` targets in 0x401000..0x4d0000: 1827. Named in `source/` (ported): 1139.
 Not named: 688, listed in `docs/unported-call-targets.txt` (about 260 of them in 0x452830..0x45bd00,
 the follow-up and animation handlers of the bonus effects). Handlers reached only through tokens or
-vtables are not in this count. Oracle-verified bonus-effect routines: 89.
+vtables are not in this count. Oracle-verified bonus-effect routines: 94.
 
 ## Wiring note
 

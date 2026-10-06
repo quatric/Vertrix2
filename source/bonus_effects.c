@@ -119,6 +119,10 @@ enum
     HANDLER_COUNT_WAIT = 0x45b590,
     HANDLER_COUNT_STEP = 0x45b5f0,
     OBJECT_VALUE = 0x14c,
+    GLOBAL_FLIP = 0x5589dc,
+    GLOBAL_SELECTION = 0x532b98,
+    HANDLER_WAIT_NEXT = 0x456390,
+    HANDLER_WAIT_FLIP = 0x456570,
     GLOBAL_OBJECT_VALUE = 0x532a60,
     HANDLER_OBJECT_POLL = 0x456170,
     POINT_LIST = 0x54d640,
@@ -3436,8 +3440,11 @@ uint32_t vertrix_effect_object_poll(const VertrixEffectServices *services, uint3
     return value;
 }
 
+const VertrixObjectBegin vertrix_object_begins[VERTRIX_OBJECT_BEGIN_COUNT] = {
+    {0x456300, 0x456390}, {0x4564e0, 0x456570}, {0x4566d0, 0x456760}};
+
 uint32_t vertrix_effect_object_begin(const VertrixEffectServices *services, uint32_t object,
-                                     uint32_t entry_ebx)
+                                     uint32_t entry_ebx, const VertrixObjectBegin *begin)
 {
     uint32_t result;
     uint32_t n;
@@ -3445,7 +3452,7 @@ uint32_t vertrix_effect_object_begin(const VertrixEffectServices *services, uint
     uint32_t second;
     uint32_t third;
     const VertrixCalls *calls;
-    if (!services || !services->calls)
+    if (!services || !services->calls || !begin)
     {
         return 0;
     }
@@ -3466,12 +3473,12 @@ uint32_t vertrix_effect_object_begin(const VertrixEffectServices *services, uint
     {
         return third;
     }
-    vertrix_call(calls, 0x4ac8f0, object, 0x456390, n, object, 0);
+    vertrix_call(calls, 0x4ac8f0, object, begin->token, n, object, 0);
     return vertrix_call(calls, 0x4ac7b0, object, 2, n, object, 0);
 }
 
-const VertrixCursor vertrix_cursors[VERTRIX_CURSOR_COUNT] = {{0x456170, 0x456290, 1, 0},
-                                                             {0x456390, 0x456490, 0, 1}};
+const VertrixCursor vertrix_cursors[VERTRIX_CURSOR_COUNT] = {
+    {0x456170, 0x456290, 1, 0}, {0x456390, 0x456490, 0, 1}, {0x456570, 0x456670, 0, 1}};
 
 uint32_t vertrix_effect_cursor(const VertrixEffectServices *services, uint32_t object,
                                uint32_t entry_ebx, uint32_t entry_edx, uint32_t frame,
@@ -3562,4 +3569,38 @@ uint32_t vertrix_effect_cursor(const VertrixEffectServices *services, uint32_t o
     }
     services->global_write(GLOBAL_OBJECT_VALUE, value, services->global_context);
     return value;
+}
+
+uint32_t vertrix_effect_object_wait(const VertrixEffectServices *services, uint32_t object,
+                                    uint32_t entry_ebx, int flip)
+{
+    uint32_t edx = object;
+    uint32_t result;
+    const VertrixCalls *calls;
+    if (!services || !services->calls || !services->global || !services->global_write)
+    {
+        return 0;
+    }
+    calls = services->calls;
+    vertrix_call(calls, 0x4ac500, object, edx, entry_ebx, object, 0);
+    if (vertrix_call(calls, 0x4ac520, object, edx, entry_ebx, object, 0) == 1)
+    {
+        vertrix_call(calls, 0x4ac510, object, edx, entry_ebx, object, 0);
+    }
+    result = vertrix_call(calls, 0x476480, POINT_LIST, POINT_KIND, entry_ebx, object, 0);
+    if (result != 0)
+    {
+        return result;
+    }
+    if (flip)
+    {
+        uint32_t current = services->global(GLOBAL_FLIP, services->global_context);
+        uint32_t selection;
+        services->global_write(GLOBAL_FLIP, 1u - current, services->global_context);
+        selection = services->global(GLOBAL_SELECTION, services->global_context);
+        vertrix_call(calls, 0x478b40, selection, HANDLER_WAIT_FLIP, entry_ebx, object, 0);
+        return vertrix_call(calls, 0x4ac8f0, object, HANDLER_WAIT_FLIP, entry_ebx, object, 0);
+    }
+    vertrix_call(calls, 0x478bd0, result, POINT_KIND, entry_ebx, object, 0);
+    return vertrix_call(calls, 0x4ac8f0, object, HANDLER_WAIT_NEXT, entry_ebx, object, 0);
 }

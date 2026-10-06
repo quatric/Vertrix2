@@ -552,12 +552,21 @@ uint32_t vertrix_effect_object_start(const VertrixEffectServices *services, uint
 uint32_t vertrix_effect_object_poll(const VertrixEffectServices *services, uint32_t object,
                                     uint32_t entry_ebx);
 
-/* Original 0x456300 (eax = obj; ebx the caller's): the start of 0x4560c0 without the poll: 0x4ac7b0
- * (edx 1), 0x4ac500 and 0x4ac520; a result other than 1 is returned. Then 0x4ac540 (n), 0x4ac5b0
- * and 0x4aca60, 0x4acab0, 0x4acb00 with n. All three zero bind 0x456390 and return 0x4ac7b0 with
- * edx 2; otherwise 0x4acb00's result is returned. */
+/* The starts 0x456300, 0x4564e0 and 0x4566d0 (eax = obj; ebx the caller's), the start of 0x4560c0
+ * without the poll: 0x4ac7b0 (edx 1), 0x4ac500 and 0x4ac520; a result other than 1 is returned.
+ * Then 0x4ac540 (n), 0x4ac5b0 and 0x4aca60, 0x4acab0, 0x4acb00 with n. All three zero bind the
+ * token and return 0x4ac7b0 with edx 2; otherwise 0x4acb00's result is returned. */
+typedef struct
+{
+    uint32_t routine;
+    uint32_t token;
+} VertrixObjectBegin;
+
+#define VERTRIX_OBJECT_BEGIN_COUNT 3
+extern const VertrixObjectBegin vertrix_object_begins[VERTRIX_OBJECT_BEGIN_COUNT];
+
 uint32_t vertrix_effect_object_begin(const VertrixEffectServices *services, uint32_t object,
-                                     uint32_t entry_ebx);
+                                     uint32_t entry_ebx, const VertrixObjectBegin *begin);
 
 /* The cursor handlers 0x456170 and 0x456390 (eax = obj; ebx and edx the caller's; frame the entry
  * ebp token). 0x4ac500 and 0x4ac520 on obj; result 1 adds 0x4ac540 (n), 0x4ac5b0, the words +0x4a
@@ -576,10 +585,18 @@ typedef struct
     int swapped; /* 0x456390 passes frame - 0x14 in ecx and frame - 0x18 on the stack */
 } VertrixCursor;
 
-#define VERTRIX_CURSOR_COUNT 2
+#define VERTRIX_CURSOR_COUNT 3
 extern const VertrixCursor vertrix_cursors[VERTRIX_CURSOR_COUNT];
 
 uint32_t vertrix_effect_cursor(const VertrixEffectServices *services, uint32_t object,
                                uint32_t entry_ebx, uint32_t entry_edx, uint32_t frame,
                                const VertrixCursor *cursor);
+
+/* The waits 0x456490 and 0x456670 (eax = obj; ebx the caller's): 0x4ac500 and 0x4ac520 with edx
+ * obj, result 1 adds 0x4ac510; 0x476480 on the point list (0x74) non-zero returns. Zero runs, for
+ * 0x456490, 0x478bd0 and binds 0x456390, and for 0x456670 flips the global 0x5589dc (1 - value),
+ * runs 0x478b40 with the global 0x532b98 and the token 0x456570 and binds that token. Returns the
+ * result of 0x4ac8f0. */
+uint32_t vertrix_effect_object_wait(const VertrixEffectServices *services, uint32_t object,
+                                    uint32_t entry_ebx, int flip);
 #endif

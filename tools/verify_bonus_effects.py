@@ -107,6 +107,10 @@ class Cursor(c.Structure):
     _fields_ = [('routine', U), ('token', U), ('poll', c.c_int), ('swapped', c.c_int)]
 
 
+class ObjectBegin(c.Structure):
+    _fields_ = [('routine', U), ('token', U)]
+
+
 class Site(c.Structure):
     _fields_ = [(name, U) for name in ('target', 'eax', 'edx', 'ebx', 'ecx', 'stack', 'stack_next',
                                        'stack_third', 'out_ebx', 'out_ecx')] + [
@@ -1115,24 +1119,26 @@ def main():
             assert pool.same(), (hex(address), case, pool.diff())
             after = struct.unpack('<I', bytes(cpu.mem_read(0x532a60, 4)))[0]
             assert global_writes.get(0x532a60, before) == after, (hex(address), case)
-    # 0x456300
-    n.vertrix_effect_object_begin.argtypes = [c.POINTER(Services), U, U]
+    # 0x456300, 0x4564e0 and 0x4566d0
+    n.vertrix_effect_object_begin.argtypes = [c.POINTER(Services), U, U, c.POINTER(ObjectBegin)]
     n.vertrix_effect_object_begin.restype = U
-    for case in range(args.cases):
-        pool.fill(rng, patch_slide)
-        stubs.log.clear()
-        returns.clear()
-        draws.clear()
-        native_log.clear()
-        ebx = rng.getrandbits(32)
-        result = original.call(0x456300, eax=player, ebx=ebx) & 0xffffffff
-        replay[:] = list(returns)
-        got = n.vertrix_effect_object_begin(c.byref(services), player, ebx)
-        expected = normalized(stubs.log)
-        assert native_log == expected, ('0x456300', case, native_log, expected)
-        assert got == result, ('0x456300', case, hex(got), hex(result))
-        assert not replay, case
-        assert pool.same(), ('0x456300', case, pool.diff())
+    begins = (ObjectBegin * 3).in_dll(n, 'vertrix_object_begins')
+    for begin in begins:
+        for case in range(args.cases):
+            pool.fill(rng, patch_slide)
+            stubs.log.clear()
+            returns.clear()
+            draws.clear()
+            native_log.clear()
+            ebx = rng.getrandbits(32)
+            result = original.call(begin.routine, eax=player, ebx=ebx) & 0xffffffff
+            replay[:] = list(returns)
+            got = n.vertrix_effect_object_begin(c.byref(services), player, ebx, c.byref(begin))
+            expected = normalized(stubs.log)
+            assert native_log == expected, (hex(begin.routine), case, native_log, expected)
+            assert got == result, (hex(begin.routine), case, hex(got), hex(result))
+            assert not replay, case
+            assert pool.same(), (hex(begin.routine), case, pool.diff())
     # 0x456170 and 0x456390: the cursor handlers
     for address in (0x4b0b70, 0x4ad530):
         stubs.add(address, 0)
@@ -1141,7 +1147,7 @@ def main():
     FLOW[0x476480] = (0, 1, 1)
     n.vertrix_effect_cursor.argtypes = [c.POINTER(Services), U, U, U, U, c.POINTER(Cursor)]
     n.vertrix_effect_cursor.restype = U
-    cursors = (Cursor * 2).in_dll(n, 'vertrix_cursors')
+    cursors = (Cursor * 3).in_dll(n, 'vertrix_cursors')
     for cursor in cursors:
         for case in range(args.cases):
             pool.fill(rng, patch_slide)
@@ -1168,6 +1174,34 @@ def main():
             assert pool.same(), (hex(cursor.routine), case, pool.diff())
             after = struct.unpack('<I', bytes(cpu.mem_read(0x532a60, 4)))[0]
             assert global_writes.get(0x532a60, before) == after, (hex(cursor.routine), case)
+    # 0x456490 and 0x456670
+    for address in (0x478bd0, 0x478b40):
+        stubs.add(address, 0)
+    n.vertrix_effect_object_wait.argtypes = [c.POINTER(Services), U, U, c.c_int]
+    n.vertrix_effect_object_wait.restype = U
+    for address, flip in ((0x456490, 0), (0x456670, 1)):
+        for case in range(args.cases):
+            pool.fill(rng, patch_slide)
+            before = rng.getrandbits(32)
+            cpu.mem_write(0x5589dc, struct.pack('<I', before & 1))
+            cpu.mem_write(0x532b98, struct.pack('<I', rng.getrandbits(32)))
+            global_writes.clear()
+            stubs.log.clear()
+            returns.clear()
+            draws.clear()
+            native_log.clear()
+            ebx = rng.getrandbits(32)
+            result = original.call(address, eax=player, ebx=ebx) & 0xffffffff
+            after = struct.unpack('<I', bytes(cpu.mem_read(0x5589dc, 4)))[0]
+            cpu.mem_write(0x5589dc, struct.pack('<I', before & 1))
+            replay[:] = list(returns)
+            got = n.vertrix_effect_object_wait(c.byref(services), player, ebx, flip)
+            expected = normalized(stubs.log)
+            assert native_log == expected, (hex(address), case, native_log, expected)
+            assert got == result, (hex(address), case, hex(got), hex(result))
+            assert not replay, case
+            assert pool.same(), (hex(address), case, pool.diff())
+            assert global_writes.get(0x5589dc, before & 1) == after, (hex(address), case)
     # Objects that do not resolve: the effect stops where the original would have read them. Before
     # the first call (player, opponent, grid) nothing is called or stored; later failures still
     # never reach the final 0x43bbf0.
@@ -1216,7 +1250,8 @@ def main():
                                             0x45b9c0, 0x4554a0, 0x455600, 0x455670, 0x455790,
                                             0x4558e0, 0x455a00, 0x455510, 0x455e50, 0x455f10,
                                             0x455f80, 0x456060, 0x453c90, 0x453fd0, 0x4542e0, 0x453ef0, 0x454200, 0x454510, 0x454760, 0x453d50, 0x454830, 0x454a50, 0x454cb0, 0x454090, 0x4543a0, 0x454600, 0x4546a0, 0x4548e0, 0x454970, 0x454b20, 0x454bd0, 0x454d80, 0x454e30, 0x454f00, 0x454fc0, 0x4552b0, 0x455320, 0x4553a0, 0x4550a0, 0x455580, 0x455700, 0x455830, 0x455970, 0x455a90, 0x455b90, 0x455d10, 0x455c30, 0x455db0, 0x455e00, 0x45b4c0, 0x45b590,
-                                            0x45b5f0, 0x4560c0, 0x456290, 0x456300, 0x456170, 0x456390)}},
+                                            0x45b5f0, 0x4560c0, 0x456290, 0x456300, 0x456170, 0x456390, 0x456570, 0x456490, 0x456670,
+                                            0x4564e0, 0x4566d0)}},
         'paths': totals,
         'convert_paths': convert_totals,
         'match_paths': match_totals,
