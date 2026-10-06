@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x46b810": 4096
+  },
+  "scope": "The original executes completely with its callees stubbed and logged (0x471100 as a stdcall routine with two stack arguments); the layout tables, the frame table and the name table hold random data, the selected characters are small. The slot test 0x4178d0 answers -1 or 0, the name box test 0x4126f0 one or zero. Every call with its registers (stale ebx and ecx included), the returned eax and every pool object compare."
+}

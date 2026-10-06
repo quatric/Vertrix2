@@ -24,8 +24,9 @@ recovered (or have unmodeled global state):
   `docs/row-label-verification.json`, 4,096 executions).
 - ~~`0x472c10`~~ RECOVERED (`vertrix_overlay_spawn` in `source/scene_actors.c`,
   `docs/overlay-actor-verification.json`).
-- `0x46b810`: actor constructors/update routines built on the
-  allocator `0x4ca000` and many unrecovered list and actor helpers.
+- ~~`0x46b810`~~ RECOVERED (`source/hud_builder.c`, `tools/verify_hud_builder.py`,
+  `docs/hud-builder-verification.json`, 4,096 executions; `0x471100`, `0x4178d0`, `0x4126f0`
+  stay call boundaries).
 - ~~`0x471e10`~~, ~~`0x4725f0`~~ RECOVERED (`source/scene_lookups.c`,
   `tools/verify_scene_lookups.py`, `docs/scene-lookup-pair-verification.json`,
   `docs/scene-clear-marker-verification.json`). `0x4123d0` stays a call boundary.
