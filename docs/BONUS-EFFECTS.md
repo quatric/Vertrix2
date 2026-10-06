@@ -122,12 +122,18 @@ selected by `[0x532bbc]`. 2048 cases each.
 `vertrix_effect_field_end` and `vertrix_effect_slide_step` (the step handler bound by 0x453c90; it
 takes the caller's ebx, ecx and edx). 2048 cases each.
 
+## 0x454830, 0x454a50, 0x454cb0
+
+`vertrix_effect_counted_start` and `vertrix_effect_counted_step` (table `vertrix_counted_steps`);
+the tables 0x4f7c54 / 0x4f7c60 and the sounds 0x4f8190 / 0x4f8194 are read through `global`.
+2048 cases each.
+
 ## Tally
 
 Distinct direct `call` targets in 0x401000..0x4d0000: 1827. Named in `source/` (ported): 1139.
 Not named: 688, listed in `docs/unported-call-targets.txt` (about 260 of them in 0x452830..0x45bd00,
 the follow-up and animation handlers of the bonus effects). Handlers reached only through tokens or
-vtables are not in this count. Oracle-verified bonus-effect routines: 49.
+vtables are not in this count. Oracle-verified bonus-effect routines: 52.
 
 ## Wiring note
 

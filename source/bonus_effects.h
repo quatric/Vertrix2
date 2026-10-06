@@ -320,4 +320,31 @@ uint32_t vertrix_effect_field_end(const VertrixEffectServices *services, uint32_
  * result of slot 1 of the board. */
 uint32_t vertrix_effect_slide_step(const VertrixEffectServices *services, uint32_t player,
                                    uint32_t entry_ebx, uint32_t entry_ecx, uint32_t entry_edx);
+
+/* Original 0x454830 (eax = player): 0x435e80 on the player's board with the player's +0x434, then
+ * 0x436150. Result 1 calls 0x4ac7b0 with 0x4f7c54[dword 0x532bbc], 0x4ac510 with the token
+ * 0x4548e0, binds the token to the player, plays the sound of the dword 0x4f8190 and calls 0x43ac00
+ * on the opponent with it. Anything else calls 0x43acd0 on the opponent and makes the handler end
+ * with 0x43bbf0 on the player. Slot 1 of the board comes between. */
+uint32_t vertrix_effect_counted_start(const VertrixEffectServices *services, uint32_t player);
+
+/* The handlers 0x454a50 and 0x454cb0 (eax = player): the first callee runs on the player's board
+ * (edx first_edx), a positive player +0x438 (signed) lets the check callee run with edx 5; its
+ * result 1 decrements +0x438, calls 0x4ac7b0 with 0x4f7c60[dword 0x532bbc], 0x4ac510 and 0x4ac8f0
+ * with the token, plays the sound of the dword 0x4f8194 and calls 0x43ac00 on the opponent with it.
+ * Otherwise 0x43acd0 runs on the opponent with edx 1 and the handler ends with 0x43bbf0. */
+typedef struct
+{
+    uint32_t routine;
+    uint32_t first;
+    uint32_t first_edx;
+    uint32_t check;
+    uint32_t token;
+} VertrixCountedStep;
+
+#define VERTRIX_COUNTED_STEP_COUNT 2
+extern const VertrixCountedStep vertrix_counted_steps[VERTRIX_COUNTED_STEP_COUNT];
+
+uint32_t vertrix_effect_counted_step(const VertrixEffectServices *services, uint32_t player,
+                                     const VertrixCountedStep *step);
 #endif
