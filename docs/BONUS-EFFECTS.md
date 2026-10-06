@@ -135,12 +135,18 @@ the tables 0x4f7c54 / 0x4f7c60 and the sounds 0x4f8190 / 0x4f8194 are read throu
 `+0x42c`; 0x4543a0 runs the same flow with the direction reversed). 0x454200 and 0x454510 are
 byte-identical to 0x453ef0 and are verified against `vertrix_effect_field_end`.
 
+## 0x454600, 0x4546a0, 0x454760
+
+`vertrix_effect_cycle_start` and `vertrix_effect_cycle_step` (bound by 0x454560); the table
+`0x4f7c90[20 * mode + 4 * +0x3ec]` is read through `global`. 0x454760 is again identical to
+0x453ef0. 2048 cases each.
+
 ## Tally
 
 Distinct direct `call` targets in 0x401000..0x4d0000: 1827. Named in `source/` (ported): 1139.
 Not named: 688, listed in `docs/unported-call-targets.txt` (about 260 of them in 0x452830..0x45bd00,
 the follow-up and animation handlers of the bonus effects). Handlers reached only through tokens or
-vtables are not in this count. Oracle-verified bonus-effect routines: 56.
+vtables are not in this count. Oracle-verified bonus-effect routines: 59.
 
 ## Wiring note
 

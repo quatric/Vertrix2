@@ -376,4 +376,20 @@ extern const VertrixSlideStepB vertrix_slide_steps_b[VERTRIX_SLIDE_STEP_B_COUNT]
 uint32_t vertrix_effect_slide_step_b(const VertrixEffectServices *services, uint32_t player,
                                      uint32_t entry_ebx, uint32_t entry_ecx, uint32_t entry_edx,
                                      const VertrixSlideStepB *step);
+
+/* Original 0x454600 (eax = player): the handler bound by 0x454560. 0x4ac7b0 on the player's board
+ * with 0x4f7c84[dword 0x532bbc], 0x43b930 on the player with the table entry
+ * 0x4f7c90[5 * 4 * mode + 4 * +0x3ec], the player's +0x448 cleared, the board's +0x64 = 0, +0x68 =
+ * 4 and +0x6c = 1, sound 5 (0x4f8194), 0x438960 on the board with the byte +0x3ec and the token
+ * 0x4546a0 bound to the player. Returns the result of slot 1 of the board. */
+uint32_t vertrix_effect_cycle_start(const VertrixEffectServices *services, uint32_t player);
+
+/* Original 0x4546a0 (eax = player; edx the caller's): the step bound by 0x454600. 0x4ac500 and
+ * 0x4ac520 on the board; result 1 runs 0x4ac540, 0x4ac5b0 and 0x4ad750 and, when that is zero, the
+ * board's +0x64 is cleared and, for a player +0x3ec of one, 0x438c60 runs with the byte +0x448 and
+ * +0x448 counts up to ten. Then 0x43b970 decides: non-zero ends with slot 1 of the board, zero
+ * calls 0x438b90 with the byte +0x3ec, binds 0x454760 and calls slot 1. Returns that slot's
+ * result. */
+uint32_t vertrix_effect_cycle_step(const VertrixEffectServices *services, uint32_t player,
+                                   uint32_t entry_edx);
 #endif
