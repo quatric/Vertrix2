@@ -107,7 +107,8 @@ enum
     BOARD_CYCLE_THIRD = 0x6c,
     HANDLER_CYCLE_STEP = 0x4546a0,
     HANDLER_CYCLE_END = 0x454760,
-    CYCLE_LIMIT = 10
+    CYCLE_LIMIT = 10,
+    HANDLER_BURST_END = 0x454970
 };
 
 static int resolve_object(const VertrixEffectServices *services, uint32_t handle, void **storage,
@@ -2389,6 +2390,54 @@ uint32_t vertrix_effect_cycle_step(const VertrixEffectServices *services, uint32
         }
         vertrix_call(calls, 0x438b90, board, edx, player, board, 0);
         vertrix_call(calls, 0x4ac8f0, player, HANDLER_CYCLE_END, player, board, 0);
+    }
+    return release_board(services, board, board_storage, board_size);
+}
+
+uint32_t vertrix_effect_burst_step(const VertrixEffectServices *services, uint32_t player,
+                                   uint32_t entry_ecx, uint32_t entry_edx)
+{
+    void *player_storage;
+    void *board_storage;
+    size_t player_size;
+    size_t board_size;
+    uint32_t board;
+    uint32_t edx = entry_edx;
+    uint32_t ecx = entry_ecx;
+    const VertrixCalls *calls;
+    if (!services || !services->calls || !services->global ||
+        !resolve_object(services, player, &player_storage, &player_size) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_BOARD, DWORD_WIDTH,
+                                    &board) ||
+        !resolve_object(services, board, &board_storage, &board_size))
+    {
+        return 0;
+    }
+    calls = services->calls;
+    vertrix_call(calls, 0x4ac500, board, edx, board, ecx, 0);
+    if (vertrix_call(calls, 0x4ac520, board, edx, board, ecx, 0) != 1)
+    {
+        return release_board(services, board, board_storage, board_size);
+    }
+    edx = vertrix_call(calls, 0x4ac540, board, edx, board, ecx, 0);
+    ecx = edx;
+    vertrix_call(calls, 0x4ac5b0, board, edx, board, ecx, 0);
+    if (edx != 0)
+    {
+        do
+        {
+            if (vertrix_call(calls, 0x436150, board, edx, board, ecx, 0) != 1)
+            {
+                break;
+            }
+            edx = services->global(GLOBAL_SOUND_START, services->global_context);
+            ecx -= 1;
+            vertrix_call(calls, 0x43c0e0, player, edx, board, ecx, 0);
+        } while (ecx != 0);
+    }
+    if (ecx != 0)
+    {
+        vertrix_call(calls, 0x4ac8f0, player, HANDLER_BURST_END, board, ecx, 0);
     }
     return release_board(services, board, board_storage, board_size);
 }
