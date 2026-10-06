@@ -19,7 +19,8 @@ DRAW = 0x4826c0
 CALLEES = (0x43acd0, 0x43ac00, 0x43bb60, 0x4ac8f0, 0x43bbf0, 0x43c0e0)
 ALLOCATE = 0x4ca000
 # 0x452e00 callees; the first four steer its flow and return small values
-FLOW = {0x4ac540: (0, 1, 2, 3, 0xffffffff),
+FLOW = {0x431d60: (0, 0, 1), 0x432010: (0, 0, 1), 0x4320c0: (1, 1, 1, 0),
+        0x4ac540: (0, 1, 2, 3, 0xffffffff),
         0x438910: (0, 1, 1, 2), 0x4ac520: (0, 1, 1), 0x430090: (0, 1, 1),
         0x437350: (0, 1, 1), 0x4375f0: (0, 1, 1), 0x4378c0: (0, 1, 1), 0x437be0: (0, 1, 1),
         0x437d70: (0, 1, 1), 0x437060: (0, 1, 1), 0x42eca0: (0, 1, 1, 1), 0x42ecc0: (0, 1, 1, 1),
@@ -628,6 +629,58 @@ def main():
             assert got == result, (hex(start.routine), case, hex(got), hex(result))
             assert not replay, case
             assert pool.same(), (hex(start.routine), case, pool.diff())
+    # 0x453ef0
+    n.vertrix_effect_field_end.argtypes = [c.POINTER(Services), U]
+    n.vertrix_effect_field_end.restype = U
+    for case in range(args.cases):
+        pool.fill(rng, patch_slide)
+        stubs.log.clear()
+        returns.clear()
+        draws.clear()
+        native_log.clear()
+        result = original.call(0x453ef0, eax=player) & 0xffffffff
+        replay[:] = list(returns)
+        got = n.vertrix_effect_field_end(c.byref(services), player)
+        expected = normalized(stubs.log)
+        assert native_log == expected, ('0x453ef0', case, native_log, expected)
+        assert got == result, ('0x453ef0', case, hex(got), hex(result))
+        assert not replay, case
+        assert pool.same(), ('0x453ef0', case, pool.diff())
+    # 0x453d50
+    for address in (0x42f210, 0x42f280, 0x42f3d0, 0x42f310, 0x431d60, 0x432010, 0x431340, 0x42eb60):
+        stubs.add(address, 0)
+    n.vertrix_effect_slide_step.argtypes = [c.POINTER(Services), U, U, U, U]
+    n.vertrix_effect_slide_step.restype = U
+
+    def patch_step(handle, data):
+        patch_slide(handle, data)
+        if handle == player:
+            struct.pack_into('<IIII', data, 0x424, rng.getrandbits(32), rng.choice([0, 1, 7]),
+                             0, 0)
+            struct.pack_into('<I', data, 0x170, rng.choice([1, 1, 0]))
+        elif handle == own_board:
+            struct.pack_into('<I', data, 0xa60, targets[0])
+        elif handle == targets[0]:
+            struct.pack_into('<III', data, 0x15c, *targets[1:4])
+        elif handle in targets[1:4]:
+            data[0x15c] = rng.choice([0, 1, 2, 3, 4, 5, 6, 0xff, 0x80])
+    for case in range(args.cases):
+        cpu.mem_write(0x532bbc, struct.pack('<I', rng.randrange(0, 4)))
+        pool.fill(rng, patch_step)
+        stubs.log.clear()
+        returns.clear()
+        draws.clear()
+        native_log.clear()
+        values = [rng.getrandbits(32) for _ in range(3)]
+        result = original.call(0x453d50, eax=player, ebx=values[0], ecx=values[1],
+                               edx=values[2]) & 0xffffffff
+        replay[:] = list(returns)
+        got = n.vertrix_effect_slide_step(c.byref(services), player, *values)
+        expected = normalized(stubs.log)
+        assert native_log == expected, ('0x453d50', case, native_log, expected)
+        assert got == result, ('0x453d50', case, hex(got), hex(result))
+        assert not replay, case
+        assert pool.same(), ('0x453d50', case, pool.diff())
     # Objects that do not resolve: the effect stops where the original would have read them. Before
     # the first call (player, opponent, grid) nothing is called or stored; later failures still
     # never reach the final 0x43bbf0.
@@ -675,7 +728,7 @@ def main():
                                             0x454c30, 0x454e90, 0x455020, 0x455b20, 0x455ca0,
                                             0x45b9c0, 0x4554a0, 0x455600, 0x455670, 0x455790,
                                             0x4558e0, 0x455a00, 0x455510, 0x455e50, 0x455f10,
-                                            0x455f80, 0x456060, 0x453c90, 0x453fd0, 0x4542e0)}},
+                                            0x455f80, 0x456060, 0x453c90, 0x453fd0, 0x4542e0, 0x453ef0, 0x453d50)}},
         'paths': totals,
         'convert_paths': convert_totals,
         'match_paths': match_totals,

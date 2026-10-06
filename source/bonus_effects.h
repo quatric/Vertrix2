@@ -304,4 +304,20 @@ extern const VertrixSlideStart vertrix_slide_starts[VERTRIX_SLIDE_START_COUNT];
 
 uint32_t vertrix_effect_slide_start(const VertrixEffectServices *services, uint32_t player,
                                     const VertrixSlideStart *start);
+
+/* Original 0x453ef0 (eax = player): 0x42eca0 on the board with 0x44c860. A non-zero result makes
+ * the handler end with 0x43bbf0 on the player after slot 1 of the board; otherwise the slot's
+ * result is returned. */
+uint32_t vertrix_effect_field_end(const VertrixEffectServices *services, uint32_t player);
+
+/* Original 0x453d50 (eax = player; ebx, ecx and edx the caller's): the step handler bound by
+ * 0x453c90. Like vertrix_effect_slide_advance the board's +0x58 advances (0x4ac540, +0x18), but
+ * below 24 it ends with 0x42f210 and 0x42f280 (edx the player's +0x424, ebx +0x428). Otherwise
+ * 0x42f3d0 and 0x42f310 run, when 0x4320c0 reports one a pending flag +0x170 of one with 0x431d60
+ * zero sends the three piece child kinds to 0x43a560 (with the player's +0x3b4) and clears it, and
+ * 0x432010 zero runs 0x431340, 0x431d80 and 0x42eb60. Then +0x428 grows by one, +0x58 is reduced
+ * below 24, and 0x4314a0 decides: zero binds 0x453ef0, anything else plays sound 2. Returns the
+ * result of slot 1 of the board. */
+uint32_t vertrix_effect_slide_step(const VertrixEffectServices *services, uint32_t player,
+                                   uint32_t entry_ebx, uint32_t entry_ecx, uint32_t entry_edx);
 #endif
