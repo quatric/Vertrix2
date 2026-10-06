@@ -93,7 +93,11 @@ enum
     TABLE_COUNTED_STEP = 0x4f7c60,
     GLOBAL_SOUND_START = 0x4f8190,
     GLOBAL_SOUND_STEP = 0x4f8194,
-    HANDLER_COUNTED_START = 0x4548e0
+    HANDLER_COUNTED_START = 0x4548e0,
+    BOARD_SLIDE_RATE_B = 0x10,
+    PLAYER_STEP_B_ARG = 0x42c,
+    PLAYER_STEP_B_COUNT = 0x430,
+    HANDLER_FIELD_END_B = 0x454200
 };
 
 static int resolve_object(const VertrixEffectServices *services, uint32_t handle, void **storage,
@@ -2122,4 +2126,133 @@ uint32_t vertrix_effect_counted_step(const VertrixEffectServices *services, uint
                                     : 0;
     return ended ? vertrix_call(services->calls, 0x43bbf0, player, vtable, player, board, 0)
                  : result;
+}
+
+uint32_t vertrix_effect_slide_step_b(const VertrixEffectServices *services, uint32_t player,
+                                     uint32_t entry_ebx, uint32_t entry_ecx, uint32_t entry_edx)
+{
+    void *player_storage;
+    void *board_storage;
+    size_t player_size;
+    size_t board_size;
+    uint32_t board;
+    uint32_t extra;
+    uint32_t position;
+    uint32_t rate;
+    uint32_t pending;
+    uint32_t count;
+    uint32_t ebx = entry_ebx;
+    uint32_t ecx = entry_ecx;
+    uint32_t edx = entry_edx;
+    uint32_t pre_edx;
+    const VertrixCalls *calls;
+    if (!services || !services->calls ||
+        !resolve_object(services, player, &player_storage, &player_size) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_BOARD, DWORD_WIDTH,
+                                    &board) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_EXTRA, DWORD_WIDTH,
+                                    &extra) ||
+        !resolve_object(services, board, &board_storage, &board_size))
+    {
+        return 0;
+    }
+    calls = services->calls;
+    vertrix_call(calls, 0x4ac500, board, edx, ebx, ecx, 0);
+    if (vertrix_call(calls, 0x4ac520, board, edx, ebx, ecx, 0) == 1)
+    {
+        edx = vertrix_call(calls, 0x4ac540, board, edx, ebx, ecx, 0);
+        vertrix_call(calls, 0x4ac5b0, board, edx, ebx, ecx, 0);
+        if (!vertrix_actor_storage_read(board_storage, board_size, BOARD_SLIDE_RATE_B, DWORD_WIDTH,
+                                        &rate) ||
+            !vertrix_actor_storage_read(board_storage, board_size, BOARD_SLIDE_POSITION,
+                                        DWORD_WIDTH, &position))
+        {
+            return 0;
+        }
+        edx = (uint32_t)((int32_t)edx * ((int32_t)rate >> 16));
+        if (!vertrix_actor_storage_write(board_storage, board_size, BOARD_SLIDE_POSITION,
+                                         DWORD_WIDTH, position + edx))
+        {
+            return 0;
+        }
+    }
+    pre_edx = edx;
+    if (!vertrix_actor_storage_read(board_storage, board_size, BOARD_SLIDE_POSITION, DWORD_WIDTH,
+                                    &position) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_STEP_B_COUNT, DWORD_WIDTH,
+                                    &ebx) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_STEP_B_ARG, DWORD_WIDTH,
+                                    &edx))
+    {
+        return 0;
+    }
+    if ((int32_t)position < SLIDE_LIMIT)
+    {
+        vertrix_call(calls, 0x42f440, board, pre_edx, entry_ebx, entry_ecx, 0);
+        vertrix_call(calls, 0x42f520, board, edx, ebx, entry_ecx, 0);
+        return release_board(services, board, board_storage, board_size);
+    }
+    vertrix_call(calls, 0x42f6e0, board, edx, ebx, ecx, 0);
+    vertrix_call(calls, 0x42f580, board, edx, ebx, ecx, 0);
+    if (vertrix_call(calls, 0x4320c0, board, edx, ebx, ecx, 0) == 1 &&
+        vertrix_call(calls, 0x432040, board, edx, ebx, ecx, 0) == 1)
+    {
+        if (!vertrix_actor_storage_read(player_storage, player_size, PLAYER_PENDING, DWORD_WIDTH,
+                                        &pending))
+        {
+            return 0;
+        }
+        if (pending == 1)
+        {
+            uint32_t kinds[3];
+            if (!piece_kinds(services, board_storage, board_size, kinds))
+            {
+                return 0;
+            }
+            edx = kinds[0];
+            ebx = kinds[1];
+            ecx = kinds[2];
+            vertrix_call(calls, 0x43a560, extra, edx, ebx, ecx, 0);
+            if (!vertrix_actor_storage_write(player_storage, player_size, PLAYER_PENDING,
+                                             DWORD_WIDTH, 0))
+            {
+                return 0;
+            }
+        }
+        vertrix_call(calls, 0x42eb60, board, edx, ebx, ecx, 0);
+    }
+    if (!vertrix_actor_storage_read(player_storage, player_size, PLAYER_STEP_B_COUNT, DWORD_WIDTH,
+                                    &count) ||
+        !vertrix_actor_storage_write(player_storage, player_size, PLAYER_STEP_B_COUNT, DWORD_WIDTH,
+                                     count + 1) ||
+        !vertrix_actor_storage_read(board_storage, board_size, BOARD_SLIDE_POSITION, DWORD_WIDTH,
+                                    &position))
+    {
+        return 0;
+    }
+    while ((int32_t)position >= SLIDE_LIMIT)
+    {
+        position -= SLIDE_LIMIT;
+        if (!vertrix_actor_storage_write(board_storage, board_size, BOARD_SLIDE_POSITION,
+                                         DWORD_WIDTH, position))
+        {
+            return 0;
+        }
+    }
+    if (!vertrix_actor_storage_read(player_storage, player_size, PLAYER_STEP_B_COUNT, DWORD_WIDTH,
+                                    &ebx) ||
+        !vertrix_actor_storage_read(player_storage, player_size, PLAYER_STEP_B_ARG, DWORD_WIDTH,
+                                    &edx))
+    {
+        return 0;
+    }
+    if (vertrix_call(calls, 0x431780, board, edx, ebx, ecx, 0) == 0)
+    {
+        vertrix_call(calls, 0x4ac8f0, player, HANDLER_FIELD_END_B, ebx, ecx, 0);
+    }
+    else
+    {
+        vertrix_call(calls, 0x43c0e0, player, SOUND_TWO, ebx, ecx, 0);
+    }
+    return release_board(services, board, board_storage, board_size);
 }

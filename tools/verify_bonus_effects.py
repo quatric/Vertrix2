@@ -19,7 +19,7 @@ DRAW = 0x4826c0
 CALLEES = (0x43acd0, 0x43ac00, 0x43bb60, 0x4ac8f0, 0x43bbf0, 0x43c0e0)
 ALLOCATE = 0x4ca000
 # 0x452e00 callees; the first four steer its flow and return small values
-FLOW = {0x436150: (0, 1, 1), 0x436440: (0, 1, 1), 0x4365c0: (0, 1, 1),
+FLOW = {0x432040: (0, 1, 1), 0x431780: (0, 0, 1), 0x436150: (0, 1, 1), 0x436440: (0, 1, 1), 0x4365c0: (0, 1, 1),
         0x431d60: (0, 0, 1), 0x432010: (0, 0, 1), 0x4320c0: (1, 1, 1, 0),
         0x4ac540: (0, 1, 2, 3, 0xffffffff),
         0x438910: (0, 1, 1, 2), 0x4ac520: (0, 1, 1), 0x430090: (0, 1, 1),
@@ -731,6 +731,35 @@ def main():
             assert got == result, (hex(step.routine), case, hex(got), hex(result))
             assert not replay, case
             assert pool.same(), (hex(step.routine), case, pool.diff())
+    # 0x454090
+    for address in (0x42f440, 0x42f520, 0x42f6e0, 0x42f580, 0x432040):
+        stubs.add(address, 0)
+    n.vertrix_effect_slide_step_b.argtypes = [c.POINTER(Services), U, U, U, U]
+    n.vertrix_effect_slide_step_b.restype = U
+
+    def patch_step_b(handle, data):
+        patch_step(handle, data)
+        if handle == player:
+            struct.pack_into('<II', data, 0x42c, rng.getrandbits(32), rng.choice([0, 1, 7]))
+        elif handle == own_board:
+            struct.pack_into('<I', data, 0x10,
+                             ((rng.randrange(-3, 4) << 16) & 0xffff0000) | rng.getrandbits(16))
+    for case in range(args.cases):
+        pool.fill(rng, patch_step_b)
+        stubs.log.clear()
+        returns.clear()
+        draws.clear()
+        native_log.clear()
+        values = [rng.getrandbits(32) for _ in range(3)]
+        result = original.call(0x454090, eax=player, ebx=values[0], ecx=values[1],
+                               edx=values[2]) & 0xffffffff
+        replay[:] = list(returns)
+        got = n.vertrix_effect_slide_step_b(c.byref(services), player, *values)
+        expected = normalized(stubs.log)
+        assert native_log == expected, ('0x454090', case, native_log, expected)
+        assert got == result, ('0x454090', case, hex(got), hex(result))
+        assert not replay, case
+        assert pool.same(), ('0x454090', case, pool.diff())
     # Objects that do not resolve: the effect stops where the original would have read them. Before
     # the first call (player, opponent, grid) nothing is called or stored; later failures still
     # never reach the final 0x43bbf0.
@@ -778,7 +807,7 @@ def main():
                                             0x454c30, 0x454e90, 0x455020, 0x455b20, 0x455ca0,
                                             0x45b9c0, 0x4554a0, 0x455600, 0x455670, 0x455790,
                                             0x4558e0, 0x455a00, 0x455510, 0x455e50, 0x455f10,
-                                            0x455f80, 0x456060, 0x453c90, 0x453fd0, 0x4542e0, 0x453ef0, 0x453d50, 0x454830, 0x454a50, 0x454cb0)}},
+                                            0x455f80, 0x456060, 0x453c90, 0x453fd0, 0x4542e0, 0x453ef0, 0x453d50, 0x454830, 0x454a50, 0x454cb0, 0x454090)}},
         'paths': totals,
         'convert_paths': convert_totals,
         'match_paths': match_totals,

@@ -347,4 +347,13 @@ extern const VertrixCountedStep vertrix_counted_steps[VERTRIX_COUNTED_STEP_COUNT
 
 uint32_t vertrix_effect_counted_step(const VertrixEffectServices *services, uint32_t player,
                                      const VertrixCountedStep *step);
+
+/* Original 0x454090 (eax = player; ebx, ecx and edx the caller's): the step handler bound by
+ * 0x453fd0, built like vertrix_effect_slide_step but with the rate in the board's +0x10, the
+ * player's counter at +0x430 and argument at +0x42c, 0x42f440 / 0x42f520 below 24, and above it
+ * 0x42f6e0, 0x42f580, then (0x4320c0 and 0x432040 both one) the piece kinds to 0x43a560 for a
+ * pending +0x170 of one and 0x42eb60. 0x431780 decides: zero binds 0x454200, anything else plays
+ * sound 2. Returns the result of slot 1 of the board. */
+uint32_t vertrix_effect_slide_step_b(const VertrixEffectServices *services, uint32_t player,
+                                     uint32_t entry_ebx, uint32_t entry_ecx, uint32_t entry_edx);
 #endif
