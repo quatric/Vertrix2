@@ -399,4 +399,12 @@ uint32_t vertrix_effect_cycle_step(const VertrixEffectServices *services, uint32
  * 0x454970 to the player. Returns the result of slot 1 of the board. */
 uint32_t vertrix_effect_burst_step(const VertrixEffectServices *services, uint32_t player,
                                    uint32_t entry_ecx, uint32_t entry_edx);
+
+/* Original 0x454b20 (eax = player; ebx and edx the caller's): the step bound by 0x454a50, built
+ * like vertrix_effect_burst_step but spending the player's +0x438: while n from 0x4ac540 is
+ * non-zero, +0x438 is positive (signed) and 0x436440 reports one (edx 5), +0x438 and n are
+ * decremented and sound 5 plays. A remaining n binds 0x454bd0 to the player. Returns the result of
+ * slot 1 of the board. */
+uint32_t vertrix_effect_counted_burst_step(const VertrixEffectServices *services, uint32_t player,
+                                           uint32_t entry_ebx, uint32_t entry_edx);
 #endif

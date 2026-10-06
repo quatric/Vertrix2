@@ -509,7 +509,8 @@ def main():
         check_one('0x453460', case, 0x453460, n.vertrix_effect_stone_arm, edx, edx=edx)
     for address, native in ((0x4534e0, n.vertrix_effect_stone_apply),
                             (0x453570, n.vertrix_effect_stone_clear),
-                            (0x454970, n.vertrix_effect_stone_clear)):
+                            (0x454970, n.vertrix_effect_stone_clear),
+                            (0x454bd0, n.vertrix_effect_stone_clear)):
         for case in range(args.cases):
             check_one(hex(address), case, address, native)
     # The twelve attack handlers that bind a follow-up handler to the opponent
@@ -826,6 +827,24 @@ def main():
         assert got == result, ('0x4548e0', case, hex(got), hex(result))
         assert not replay, case
         assert pool.same(), ('0x4548e0', case, pool.diff())
+    # 0x454b20 (0x454bd0 is identical to 0x453570)
+    n.vertrix_effect_counted_burst_step.argtypes = [c.POINTER(Services), U, U, U]
+    n.vertrix_effect_counted_burst_step.restype = U
+    for case in range(args.cases):
+        pool.fill(rng, patch_counted)
+        stubs.log.clear()
+        returns.clear()
+        draws.clear()
+        native_log.clear()
+        values = [rng.getrandbits(32), rng.getrandbits(32)]
+        result = original.call(0x454b20, eax=player, ebx=values[0], edx=values[1]) & 0xffffffff
+        replay[:] = list(returns)
+        got = n.vertrix_effect_counted_burst_step(c.byref(services), player, *values)
+        expected = normalized(stubs.log)
+        assert native_log == expected, ('0x454b20', case, native_log, expected)
+        assert got == result, ('0x454b20', case, hex(got), hex(result))
+        assert not replay, case
+        assert pool.same(), ('0x454b20', case, pool.diff())
     # Objects that do not resolve: the effect stops where the original would have read them. Before
     # the first call (player, opponent, grid) nothing is called or stored; later failures still
     # never reach the final 0x43bbf0.
@@ -873,7 +892,7 @@ def main():
                                             0x454c30, 0x454e90, 0x455020, 0x455b20, 0x455ca0,
                                             0x45b9c0, 0x4554a0, 0x455600, 0x455670, 0x455790,
                                             0x4558e0, 0x455a00, 0x455510, 0x455e50, 0x455f10,
-                                            0x455f80, 0x456060, 0x453c90, 0x453fd0, 0x4542e0, 0x453ef0, 0x454200, 0x454510, 0x454760, 0x453d50, 0x454830, 0x454a50, 0x454cb0, 0x454090, 0x4543a0, 0x454600, 0x4546a0, 0x4548e0, 0x454970)}},
+                                            0x455f80, 0x456060, 0x453c90, 0x453fd0, 0x4542e0, 0x453ef0, 0x454200, 0x454510, 0x454760, 0x453d50, 0x454830, 0x454a50, 0x454cb0, 0x454090, 0x4543a0, 0x454600, 0x4546a0, 0x4548e0, 0x454970, 0x454b20, 0x454bd0)}},
         'paths': totals,
         'convert_paths': convert_totals,
         'match_paths': match_totals,
