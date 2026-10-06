@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x471020": 4096
+  },
+  "scope": "The original executes completely with its callees stubbed and logged (0x4b25b0 with its ten stack arguments, the virtual call through the vtable at +0x158, two real vtables used); the layout globals hold random data. Every call, the returned eax and every pool object compare; the allocator also fails (zero) in a third of the cases."
+}
