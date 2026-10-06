@@ -190,4 +190,45 @@ uint32_t vertrix_state_drain_454b20(const VertrixCalls *calls,
 uint32_t vertrix_state_done_454bd0(const VertrixCalls *calls,
                                    const VertrixFactoryServices *services,
                                    const VertrixGlobals *globals, uint32_t player);
+
+/* Original 0x454d80 is 0x454b20 with 0x4365c0 as the attempt and 0x454e30 as the handler;
+ * 0x454e30 is the same routine as 0x454bd0. */
+uint32_t vertrix_state_drain_454d80(const VertrixCalls *calls,
+                                    const VertrixFactoryServices *services,
+                                    const VertrixGlobals *globals, uint32_t player, uint32_t edx,
+                                    uint32_t ebx);
+uint32_t vertrix_state_done_454e30(const VertrixCalls *calls,
+                                   const VertrixFactoryServices *services,
+                                   const VertrixGlobals *globals, uint32_t player);
+
+/* Original 0x454fc0 is the same routine as 0x454bd0. */
+uint32_t vertrix_state_done_454fc0(const VertrixCalls *calls,
+                                   const VertrixFactoryServices *services,
+                                   const VertrixGlobals *globals, uint32_t player);
+
+/* Original 0x4552b0 (eax = player). Like 0x454bd0 with 0x42ed40, 0x42ed70 and 0x42eba0 on the
+ * board (+0x15c); a set flag ends with 0x43bbf0 on the player and a zero +0xb90 on the board. */
+uint32_t vertrix_state_done_4552b0(const VertrixCalls *calls,
+                                   const VertrixFactoryServices *services,
+                                   const VertrixGlobals *globals, uint32_t player);
+
+/* Original 0x455320 (eax = player, ebx the caller's register). Unless one of the player's dwords
+ * +0x4d0, +0x4d4 and +0x4d8 is set, 0x43a510 (the dword +0x3b4; edx, ebx and ecx = 5) runs and
+ * 0x42eba0 (edx = 1) on the board (+0x15c) sets the flag in edx. The board's virtual call goes
+ * through ecx = the board's table with ebx and edx as they stand; a set flag ends with 0x43bbf0 on
+ * the player and a zero +0xb90 on the board. */
+uint32_t vertrix_state_guard_455320(const VertrixCalls *calls,
+                                    const VertrixFactoryServices *services,
+                                    const VertrixGlobals *globals, uint32_t player, uint32_t ebx);
+
+/* Original 0x4553a0 (eax = player; ebx and ecx the caller's registers). With +0x4d0, +0x4d4 and
+ * +0x4d8 all zero 0x43a510 runs as in 0x455320, then the board (+0x15c) is asked 0x42ed40 and
+ * 0x42ed70 about 0x44c860: both accepting runs 0x42eba0 (ecx = 1) and sets the flag, a refusal sets
+ * the handler 0x4552b0. With one of the dwords set the same two answers set the handler 0x455320.
+ * The board's virtual call follows with ebx = the flag; a set flag ends with 0x43bbf0 on the player
+ * and a zero +0xb90 on the board. */
+uint32_t vertrix_state_guard_4553a0(const VertrixCalls *calls,
+                                    const VertrixFactoryServices *services,
+                                    const VertrixGlobals *globals, uint32_t player, uint32_t ebx,
+                                    uint32_t ecx);
 #endif

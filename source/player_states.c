@@ -1204,13 +1204,14 @@ enum
     DRAIN_TRY = 0x436440,
     DRAIN_TRY_ARGUMENT = 5,
     DRAIN_SOUND = 0x4f8194,
-    DRAIN_HANDLER = 0x454bd0
+    DRAIN_HANDLER = 0x454bd0,
+    DRAIN_TRY_SECOND = 0x4365c0,
+    DRAIN_HANDLER_SECOND = 0x454e30
 };
 
-uint32_t vertrix_state_drain_454b20(const VertrixCalls *calls,
-                                    const VertrixFactoryServices *services,
-                                    const VertrixGlobals *globals, uint32_t player, uint32_t edx,
-                                    uint32_t ebx)
+static uint32_t drain_with(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                           const VertrixGlobals *globals, uint32_t player, uint32_t edx,
+                           uint32_t ebx, uint32_t try_target, uint32_t handler)
 {
     VertrixRegs regs = {0, edx, ebx, player};
     uint32_t board;
@@ -1244,7 +1245,7 @@ uint32_t vertrix_state_drain_454b20(const VertrixCalls *calls,
             }
             regs.edx = DRAIN_TRY_ARGUMENT;
             regs.eax = board;
-            vertrix_regs_call(calls, &regs, DRAIN_TRY);
+            vertrix_regs_call(calls, &regs, try_target);
             if (regs.eax != 1)
             {
                 break;
@@ -1268,10 +1269,27 @@ uint32_t vertrix_state_drain_454b20(const VertrixCalls *calls,
     {
         return finish_edx(calls, services, globals, &regs, board);
     }
-    regs.edx = DRAIN_HANDLER;
+    regs.edx = handler;
     regs.eax = player;
     vertrix_regs_call(calls, &regs, STATE_SET_HANDLER);
     return finish_edx(calls, services, globals, &regs, board);
+}
+
+uint32_t vertrix_state_drain_454b20(const VertrixCalls *calls,
+                                    const VertrixFactoryServices *services,
+                                    const VertrixGlobals *globals, uint32_t player, uint32_t edx,
+                                    uint32_t ebx)
+{
+    return drain_with(calls, services, globals, player, edx, ebx, DRAIN_TRY, DRAIN_HANDLER);
+}
+
+uint32_t vertrix_state_drain_454d80(const VertrixCalls *calls,
+                                    const VertrixFactoryServices *services,
+                                    const VertrixGlobals *globals, uint32_t player, uint32_t edx,
+                                    uint32_t ebx)
+{
+    return drain_with(calls, services, globals, player, edx, ebx, DRAIN_TRY_SECOND,
+                      DRAIN_HANDLER_SECOND);
 }
 
 uint32_t vertrix_state_done_454bd0(const VertrixCalls *calls,
@@ -1308,6 +1326,241 @@ uint32_t vertrix_state_done_454bd0(const VertrixCalls *calls,
     {
         regs.eax = player;
         vertrix_regs_call(calls, &regs, CHOICE_FINISH);
+    }
+    return regs.eax;
+}
+
+uint32_t vertrix_state_done_454e30(const VertrixCalls *calls,
+                                   const VertrixFactoryServices *services,
+                                   const VertrixGlobals *globals, uint32_t player)
+{
+    return vertrix_state_done_454bd0(calls, services, globals, player);
+}
+
+uint32_t vertrix_state_done_454fc0(const VertrixCalls *calls,
+                                   const VertrixFactoryServices *services,
+                                   const VertrixGlobals *globals, uint32_t player)
+{
+    return vertrix_state_done_454bd0(calls, services, globals, player);
+}
+
+enum
+{
+    GUARD_FIRST = 0x4d0,
+    GUARD_SECOND = 0x4d4,
+    GUARD_THIRD = 0x4d8,
+    GUARD_PLAYER = 0x3b4,
+    GUARD_PREPARE = 0x43a510,
+    GUARD_ARGUMENT = 5,
+    GUARD_ASK_FIRST = 0x42ed40,
+    GUARD_ASK_SECOND = 0x42ed70,
+    GUARD_DONE = 0x42eba0,
+    GUARD_FLAG_FIELD = 0xb90,
+    GUARD_DONE_HANDLER = 0x4552b0,
+    GUARD_PAIR_HANDLER = 0x455320
+};
+
+uint32_t vertrix_state_done_4552b0(const VertrixCalls *calls,
+                                   const VertrixFactoryServices *services,
+                                   const VertrixGlobals *globals, uint32_t player)
+{
+    VertrixRegs regs = {0, PAIR_MARK, player, 0};
+    uint32_t board;
+    uint32_t flag = 0;
+    if (!read_value(services, player, STATE_BOARD, DWORD_WIDTH, &board))
+    {
+        return 0;
+    }
+    regs.ecx = board;
+    regs.eax = board;
+    vertrix_regs_call(calls, &regs, GUARD_ASK_FIRST);
+    if (regs.eax != 0)
+    {
+        regs.edx = PAIR_MARK;
+        regs.eax = board;
+        vertrix_regs_call(calls, &regs, GUARD_ASK_SECOND);
+    }
+    if (regs.eax != 0)
+    {
+        regs.eax = board;
+        flag = 1;
+        vertrix_regs_call(calls, &regs, GUARD_DONE);
+    }
+    if (!finish_edx_ok(calls, services, globals, &regs, board))
+    {
+        return 0;
+    }
+    if (flag == 1)
+    {
+        regs.eax = player;
+        vertrix_regs_call(calls, &regs, CHOICE_FINISH);
+        if (!vertrix_build_store(services, board, GUARD_FLAG_FIELD, DWORD_WIDTH, 0))
+        {
+            return 0;
+        }
+    }
+    return regs.eax;
+}
+
+/* Reads the three guard dwords; the first set one (or zero) is returned. */
+static int guard_set(const VertrixFactoryServices *services, uint32_t player, uint32_t *value)
+{
+    static const uint32_t fields[3] = {GUARD_FIRST, GUARD_SECOND, GUARD_THIRD};
+    unsigned index;
+    for (index = 0; index < 3; index++)
+    {
+        if (!read_value(services, player, fields[index], DWORD_WIDTH, value))
+        {
+            return -1;
+        }
+        if (*value != 0)
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+uint32_t vertrix_state_guard_455320(const VertrixCalls *calls,
+                                    const VertrixFactoryServices *services,
+                                    const VertrixGlobals *globals, uint32_t player, uint32_t ebx)
+{
+    VertrixRegs regs = {player, 0, ebx, 0};
+    uint32_t board;
+    uint32_t value;
+    int set;
+    if (!read_value(services, player, STATE_BOARD, DWORD_WIDTH, &board))
+    {
+        return 0;
+    }
+    set = guard_set(services, player, &value);
+    if (set < 0)
+    {
+        return 0;
+    }
+    regs.ecx = value;
+    if (set == 0)
+    {
+        regs.ecx = GUARD_ARGUMENT;
+        if (!read_value(services, player, GUARD_PLAYER, DWORD_WIDTH, &regs.eax))
+        {
+            return 0;
+        }
+        regs.ebx = GUARD_ARGUMENT;
+        regs.edx = GUARD_ARGUMENT;
+        vertrix_regs_call(calls, &regs, GUARD_PREPARE);
+        regs.eax = board;
+        regs.edx = 1;
+        vertrix_regs_call(calls, &regs, GUARD_DONE);
+    }
+    else
+    {
+        regs.edx = 0;
+    }
+    if (!read_value(services, board, STATE_BOARD_TABLE, DWORD_WIDTH, &regs.ecx))
+    {
+        return 0;
+    }
+    regs.eax = board;
+    vertrix_regs_virtual_at(calls, globals, &regs, regs.ecx, STATE_VIRTUAL_SLOT);
+    if (regs.edx == 1)
+    {
+        regs.eax = player;
+        vertrix_regs_call(calls, &regs, CHOICE_FINISH);
+        if (!vertrix_build_store(services, board, GUARD_FLAG_FIELD, DWORD_WIDTH, 0))
+        {
+            return 0;
+        }
+    }
+    return regs.eax;
+}
+
+uint32_t vertrix_state_guard_4553a0(const VertrixCalls *calls,
+                                    const VertrixFactoryServices *services,
+                                    const VertrixGlobals *globals, uint32_t player, uint32_t ebx,
+                                    uint32_t ecx)
+{
+    VertrixRegs regs = {player, 0, ebx, ecx};
+    uint32_t board;
+    uint32_t value;
+    uint32_t flag = 0;
+    int set;
+    if (!read_value(services, player, STATE_BOARD, DWORD_WIDTH, &board))
+    {
+        return 0;
+    }
+    set = guard_set(services, player, &value);
+    if (set < 0)
+    {
+        return 0;
+    }
+    regs.edx = value;
+    if (set == 0)
+    {
+        regs.ecx = GUARD_ARGUMENT;
+        if (!read_value(services, player, GUARD_PLAYER, DWORD_WIDTH, &regs.eax))
+        {
+            return 0;
+        }
+        regs.ebx = GUARD_ARGUMENT;
+        regs.edx = GUARD_ARGUMENT;
+        vertrix_regs_call(calls, &regs, GUARD_PREPARE);
+        regs.edx = PAIR_MARK;
+        regs.eax = board;
+        vertrix_regs_call(calls, &regs, GUARD_ASK_FIRST);
+        if (regs.eax != 0)
+        {
+            regs.edx = PAIR_MARK;
+            regs.eax = board;
+            vertrix_regs_call(calls, &regs, GUARD_ASK_SECOND);
+        }
+        if (regs.eax != 0)
+        {
+            regs.eax = board;
+            regs.ecx = 1;
+            vertrix_regs_call(calls, &regs, GUARD_DONE);
+            flag = 1;
+        }
+        else
+        {
+            regs.edx = GUARD_DONE_HANDLER;
+            regs.eax = player;
+            vertrix_regs_call(calls, &regs, STATE_SET_HANDLER);
+        }
+    }
+    else
+    {
+        regs.edx = PAIR_MARK;
+        regs.eax = board;
+        vertrix_regs_call(calls, &regs, GUARD_ASK_FIRST);
+        if (regs.eax != 0)
+        {
+            regs.edx = PAIR_MARK;
+            regs.eax = board;
+            vertrix_regs_call(calls, &regs, GUARD_ASK_SECOND);
+            if (regs.eax != 0)
+            {
+                regs.edx = GUARD_PAIR_HANDLER;
+                regs.eax = player;
+                vertrix_regs_call(calls, &regs, STATE_SET_HANDLER);
+            }
+        }
+    }
+    if (!read_value(services, board, STATE_BOARD_TABLE, DWORD_WIDTH, &regs.edx))
+    {
+        return 0;
+    }
+    regs.eax = board;
+    regs.ebx = flag;
+    vertrix_regs_virtual(calls, globals, &regs, STATE_VIRTUAL_SLOT);
+    if (flag == 1)
+    {
+        regs.eax = player;
+        vertrix_regs_call(calls, &regs, CHOICE_FINISH);
+        if (!vertrix_build_store(services, board, GUARD_FLAG_FIELD, DWORD_WIDTH, 0))
+        {
+            return 0;
+        }
     }
     return regs.eax;
 }

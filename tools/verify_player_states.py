@@ -256,3 +256,50 @@ run_screen('state-drain-454b20', 0x454b20, ['player_states.c'], 'vertrix_state_d
 run_screen('state-done-454bd0', 0x454bd0, ['player_states.c'], 'vertrix_state_done_454bd0', [U],
            U, PAIR, pair_case, TEXT,
            **{**MORE, 'choices': {0x42eca0: [1, 1, 0], 0x42ecc0: [1, 1, 0]}})
+
+DRAIN2 = {**DRAIN, 0x4365c0: 0}
+del DRAIN2[0x436440]
+run_screen('state-drain-454d80', 0x454d80, ['player_states.c'], 'vertrix_state_drain_454d80',
+           [U, U, U], U, DRAIN2, drain_case, TEXT,
+           **{**MORE, 'patch': patch_drain,
+              'choices': {0x4ac520: [1, 1, 1, 0], 0x4ac540: [0, 1, 2, 3, 6],
+                          0x4365c0: [1, 1, 1, 0]}})
+run_screen('state-done-454e30', 0x454e30, ['player_states.c'], 'vertrix_state_done_454e30', [U],
+           U, PAIR, pair_case, TEXT,
+           **{**MORE, 'choices': {0x42eca0: [1, 1, 0], 0x42ecc0: [1, 1, 0]}})
+run_screen('state-done-454fc0', 0x454fc0, ['player_states.c'], 'vertrix_state_done_454fc0', [U],
+           U, PAIR, pair_case, TEXT,
+           **{**MORE, 'choices': {0x42eca0: [1, 1, 0], 0x42ecc0: [1, 1, 0]}})
+
+
+GUARD = {address: 0 for address in (0x42ed40, 0x42ed70, 0x42eba0, 0x43a510, 0x43bbf0, 0x4ac8f0,
+                                    LEAF)}
+
+
+def patch_guard(rng, handle, data):
+    patch_more(rng, handle, data)
+    for field in (0x4d0, 0x4d4, 0x4d8):
+        data[field:field + 4] = rng.choice([0, 0, 0, rng.getrandbits(32)]).to_bytes(4, 'little')
+    data[0x3b4:0x3b8] = rng.choice(
+        [0x806000 + 0x1000 * i for i in range(4)]).to_bytes(4, 'little')
+
+
+def guard_case(rng, pool, cpu):
+    player, ebx, ecx = rng.choice(pool.handles), rng.getrandbits(32), rng.getrandbits(32)
+    return {'eax': player, 'ebx': ebx, 'ecx': ecx}, (), (player, ebx, ecx)
+
+
+def guard_ebx_case(rng, pool, cpu):
+    player, ebx = rng.choice(pool.handles), rng.getrandbits(32)
+    return {'eax': player, 'ebx': ebx}, (), (player, ebx)
+
+
+run_screen('state-done-4552b0', 0x4552b0, ['player_states.c'], 'vertrix_state_done_4552b0', [U],
+           U, GUARD, pair_case, TEXT,
+           **{**MORE, 'choices': {0x42ed40: [1, 1, 0], 0x42ed70: [1, 1, 0]}})
+run_screen('state-guard-455320', 0x455320, ['player_states.c'], 'vertrix_state_guard_455320',
+           [U, U], U, GUARD, guard_ebx_case, TEXT, **{**MORE, 'patch': patch_guard})
+run_screen('state-guard-4553a0', 0x4553a0, ['player_states.c'], 'vertrix_state_guard_4553a0',
+           [U, U, U], U, GUARD, guard_case, TEXT,
+           **{**MORE, 'patch': patch_guard,
+              'choices': {0x42ed40: [1, 1, 0], 0x42ed70: [1, 1, 0]}})

@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x455320": 4096
+  },
+  "scope": "The original executes completely with its callees stubbed and logged (the virtual call through a fake vtable); the timer and gate results are drawn from small sets so every branch is taken. Every call with its registers, the returned eax and every pool object compare."
+}
