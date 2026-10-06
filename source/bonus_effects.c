@@ -2902,7 +2902,11 @@ finish:
                : 0;
 }
 
-uint32_t vertrix_effect_field_finish(const VertrixEffectServices *services, uint32_t player)
+const VertrixFieldFinish vertrix_field_finishes[VERTRIX_FIELD_FINISH_COUNT] = {
+    {0x455580, 0x4374e0, 0}, {0x455700, 0x42ebe0, 1}};
+
+uint32_t vertrix_effect_field_finish(const VertrixEffectServices *services, uint32_t player,
+                                     const VertrixFieldFinish *finish)
 {
     void *player_storage;
     void *board_storage;
@@ -2911,7 +2915,7 @@ uint32_t vertrix_effect_field_finish(const VertrixEffectServices *services, uint
     uint32_t board;
     uint32_t result;
     int ended = 0;
-    if (!services || !services->calls ||
+    if (!services || !services->calls || !finish ||
         !resolve_object(services, player, &player_storage, &player_size) ||
         !vertrix_actor_storage_read(player_storage, player_size, PLAYER_BOARD, DWORD_WIDTH,
                                     &board) ||
@@ -2922,7 +2926,7 @@ uint32_t vertrix_effect_field_finish(const VertrixEffectServices *services, uint
     if (field_tests(services, player, board))
     {
         ended = 1;
-        vertrix_call(services->calls, 0x4374e0, board, HANDLER_FIELD, player, board, 0);
+        vertrix_call(services->calls, finish->callee, board, HANDLER_FIELD, player, board, 0);
     }
     result = release_board(services, board, board_storage, board_size);
     if (!ended)
@@ -2932,7 +2936,10 @@ uint32_t vertrix_effect_field_finish(const VertrixEffectServices *services, uint
     vertrix_call(services->calls, 0x43bbf0, player, HANDLER_FINISH, player, board, 0);
     vertrix_call(services->calls, 0x4ac8f0, player, HANDLER_FINISH, player, board, 0);
     result = vertrix_call(services->calls, 0x43bae0, player, 1, player, board, 0);
-    return vertrix_actor_storage_write(player_storage, player_size, PLAYER_CHAIN, DWORD_WIDTH, 0)
+    return vertrix_actor_storage_write(player_storage, player_size, PLAYER_CHAIN, DWORD_WIDTH, 0) &&
+                   (!finish->clear_slide_flag ||
+                    vertrix_actor_storage_write(board_storage, board_size, BOARD_FLAG_SLIDE,
+                                                DWORD_WIDTH, 0))
                ? result
                : 0;
 }

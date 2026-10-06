@@ -163,16 +163,17 @@ byte-identical to 0x453ef0 and are verified against `vertrix_effect_field_end`.
 caller's frame): the new `vertrix_call_out3` brings them back, and the verifier's stub writes them
 into the oracle's stack. All branch paths are exercised (`kinds_paths` in the report).
 
-## 0x455580
+## 0x455580 and 0x455700
 
-`vertrix_effect_field_finish` (bound by 0x455510); returns the result of its last call, 0x43bae0.
+`vertrix_effect_field_finish` with `vertrix_field_finishes` (bound by 0x455510 and 0x455670);
+returns the result of its last call, 0x43bae0.
 
 ## Tally
 
 Distinct direct `call` targets in 0x401000..0x4d0000: 1827. Named in `source/` (ported): 1139.
 Not named: 688, listed in `docs/unported-call-targets.txt` (about 260 of them in 0x452830..0x45bd00,
 the follow-up and animation handlers of the bonus effects). Handlers reached only through tokens or
-vtables are not in this count. Oracle-verified bonus-effect routines: 72.
+vtables are not in this count. Oracle-verified bonus-effect routines: 73.
 
 ## Wiring note
 
