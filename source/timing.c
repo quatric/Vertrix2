@@ -57,3 +57,22 @@ uint32_t vertrix_time_sample(VertrixClock clock, void *context, uint32_t *first,
     *second = ticks;
     return ticks;
 }
+
+uint32_t vertrix_time_frame_step(VertrixClock clock, void *context, uint32_t *now,
+                                 uint32_t *previous, uint32_t *capped)
+{
+    uint32_t ticks = clock(context);
+    uint32_t delta = 0;
+    *now = ticks;
+    if (ticks > *previous)
+    {
+        delta = ticks - *previous;
+        if (delta >= 0xffff)
+        {
+            delta = 0xffff;
+        }
+    }
+    *previous = ticks;
+    *capped = delta;
+    return delta;
+}

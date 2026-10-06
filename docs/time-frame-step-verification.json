@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4b7d10": 1024
+  },
+  "scope": "Complete original 0x4b7d10 executions with the timeGetTime import redirected to a scripted stub (normal, wrap-around and saturation cases); the returned delta and all three globals compare."
+}

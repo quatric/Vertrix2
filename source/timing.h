@@ -29,10 +29,17 @@ void vertrix_motion_fast(VertrixMotion *motion, int difficulty);
  * to +0x45c and +0x460. Their game-loop scheduling is not yet recovered. */
 VertrixDelay vertrix_delay(int character, int difficulty, uint32_t level, int parameter);
 int vertrix_character_power(int character, int slot);
-
 /* Original 0x4b7cd0: sample the millisecond clock (originally WinMM
  * timeGetTime) into both *first and *second (original globals 0x5bd838 and
  * 0x5bd844). Returns the sample. */
 uint32_t vertrix_time_sample(VertrixClock clock, void *context, uint32_t *first, uint32_t *second);
+
+/* Original 0x4b7d10: sample the millisecond clock into *now, take the
+ * unsigned difference against *previous (original globals 0x5bd838 and
+ * 0x5bd844) when ahead (a still or backwards clock yields zero), store it
+ * back into *previous and the value capped at 0xffff into *capped (original
+ * global 0x5bd834). Returns the capped difference. */
+uint32_t vertrix_time_frame_step(VertrixClock clock, void *context, uint32_t *now,
+                                 uint32_t *previous, uint32_t *capped);
 
 #endif
