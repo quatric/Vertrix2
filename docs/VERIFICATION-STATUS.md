@@ -39,3 +39,21 @@ source; the counts are kept apart on purpose.
 translation to be turned into named, untangled source, and 481 have neither (Win32
 import wrappers, translations that did not pass, routines the tools refused). The dispatcher
 0x43c140 and the wiring into the game are open.
+
+## Direct-call targets with no verified hand recovery (current breakdown)
+
+Of the 481 targets in `docs/unported-call-targets.txt` (list not regenerated; 136 of them now have
+a verified translation):
+
+| state | count |
+| --- | --- |
+| translation verified (reference only) | 136 |
+| translation weak (inputs cannot model pointers or loops) | 174 |
+| translation fails the comparison | 17 |
+| refused: indirect call (absolute-memory call, i.e. an import-table call) | 139 |
+| refused: indirect jmp | 6 |
+| refused: callee with more than eleven stack arguments | 6 |
+| refused: one-operand imul / shld / recursion | 3 |
+
+The 139 indirect-call routines are wrappers around Win32 imports; they need Wii replacements, not
+a port. The rest need hand recovery.
