@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x471e10": 4096
+  },
+  "scope": "The original executes completely with 0x4b5eb0 and 0x4123d0 stubbed and logged (0x4b5eb0 finds nothing in a third of the cases); every call with its registers and the returned eax compare."
+}

@@ -26,7 +26,9 @@ recovered (or have unmodeled global state):
   `docs/overlay-actor-verification.json`).
 - `0x46b810`: actor constructors/update routines built on the
   allocator `0x4ca000` and many unrecovered list and actor helpers.
-- `0x471e10`, `0x4725f0`: lookups through `0x4b5eb0` with unrecovered `0x4123d0`.
+- ~~`0x471e10`~~, ~~`0x4725f0`~~ RECOVERED (`source/scene_lookups.c`,
+  `tools/verify_scene_lookups.py`, `docs/scene-lookup-pair-verification.json`,
+  `docs/scene-clear-marker-verification.json`). `0x4123d0` stays a call boundary.
 - `0x475510`, `0x475700`, `0x4759e0`, `0x475c80`, `0x476160`, `0x476810`, `0x4774e0`,
   `0x477c30`, `0x477c90`, `0x477b10`, `0x477390`, `0x476aa0`, `0x47e680`..`0x47fd70`:
   exception frames, imported API calls and COM setup chains.

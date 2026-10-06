@@ -50,7 +50,8 @@ def write_report(build_dir, name, report):
 
 def run_screen(name, address, sources, function, argtypes, restype, callees, generate, scope,
                *, wrappers=(), allocator=0x4ca000, globals_ranges=(), patch=None, compare=True,
-               result_mask=0xffffffff, description='', table_targets=()):
+               result_mask=0xffffffff, description='', table_targets=(), lookups=(), pool_size=0x200,
+               leading=('calls', 'services', 'globals')):
     """Run `function` against the original routine at `address`.
 
     generate(rng, pool, cpu) returns (original keyword arguments, original stack arguments, native
@@ -72,16 +73,20 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
                                'actor_fields.c', 'board_cells.c']
     native = build(args.build_dir, name, sources)
     fn = getattr(native, function)
-    fn.argtypes = [c.POINTER(Calls), c.POINTER(Services), c.POINTER(Globals)] + argtypes
+    kinds = {'calls': c.POINTER(Calls), 'services': c.POINTER(Services),
+             'globals': c.POINTER(Globals)}
+    fn.argtypes = [kinds[name_] for name_ in leading] + argtypes
     fn.restype = restype
     original = Original(args.executable)
     cpu = original.cpu
     rng = random.Random(address)
-    pool = Pool(cpu, 4, 0x200)
+    pool = Pool(cpu, 4, pool_size)
     returns, native_log, replay = [], [], []
 
     def handler(target, eax, edx, ebx, ecx, stack):
-        if target == allocator:
+        if target in lookups:
+            returns.append(rng.choice(pool.handles + [0] * 2))
+        elif target == allocator:
             returns.append(rng.choice(pool.handles))
         elif target in wrappers:
             returns.append(eax)
@@ -119,7 +124,8 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
         native_log.clear()
         result = original.call(address, args=tuple(stack_args), **kwargs) & 0xffffffff
         replay[:] = list(returns)
-        got = fn(c.byref(calls), c.byref(services), c.byref(globals_), *native_args)
+        objects = {'calls': calls, 'services': services, 'globals': globals_}
+        got = fn(*[c.byref(objects[name_]) for name_ in leading], *native_args)
         if compare:
             assert got == result & result_mask, (case, hex(got), hex(result))
         else:
