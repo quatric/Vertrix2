@@ -871,3 +871,83 @@ uint32_t vertrix_title_letter_wave_count_call(const VertrixCalls *calls, uint8_t
 {
     return family_count_call(calls, actor, size, object, elapsed, tables, 0, edx, ebx, 0);
 }
+
+static uint32_t family_fly_call(const VertrixCalls *calls, uint8_t *actor, size_t size,
+                                uint32_t object, uint32_t frame, uint32_t elapsed,
+                                const VertrixAngleTables *tables, VertrixMemoryWrite write,
+                                void *context, int fight)
+{
+    if (!calls || !calls->call || !actor || size < VERTRIX_LETTER_STORAGE_SIZE || !tables ||
+        (fight && !write))
+    {
+        return 0;
+    }
+    uint32_t limit = (uint32_t)(int32_t)(int16_t)get(actor, LIMIT, 2);
+    put(actor, COUNTER, 4, get(actor, COUNTER, 4) + elapsed);
+    if (get(actor, COUNTER, 4) < get(actor, PERIOD, 4))
+    {
+        return 0;
+    }
+    uint32_t quotient = 0;
+    vertrix_actor_counter_quotient(actor, size, &quotient);
+    vertrix_actor_counter_wrap(actor, size);
+    int16_t angle = (int16_t)get(actor, ANGLE, 2);
+    VertrixRotationTrace trace = {0};
+    vertrix_rotation_advance(&angle, (int16_t)get(actor, ANGLE_STEP, 2), quotient, &trace);
+    put(actor, ANGLE, 2, (uint16_t)angle);
+    uint16_t x = 0, y = 0;
+    if (!vertrix_actor_orbit_point(actor, size, tables, &x, &y))
+    {
+        return 0;
+    }
+    uint32_t radius = (uint32_t)(int32_t)(int16_t)get(actor, RADIUS, 2);
+    if (radius > limit)
+    {
+        put(actor, LEVEL, 1, 0);
+        put(actor, EFFECT, 2, 0);
+    }
+    else
+    {
+        if (!limit)
+        {
+            return 0;
+        }
+        uint32_t level = 0x10 - (radius << 4) / limit;
+        put(actor, LEVEL, 1, (int32_t)level >= 0x10 ? 0x10 : level & 0xff);
+    }
+    VertrixCallSite measure = {
+        .target = 0x4b14c0, .eax = object, .edx = frame - 0x24, .ebx = frame - 0x20, .ecx = object};
+    calls->call(&measure, calls->context);
+    put(actor, 0xe, 2, (uint16_t)(x - (measure.out_value >> 1)));
+    put(actor, 0x16, 2, (uint16_t)(y - (measure.out_ebx >> 1)));
+    put(actor, RADIUS, 2, get(actor, RADIUS, 2) + get(actor, RADIUS_STEP, 2) * quotient);
+    int16_t effect = (int16_t)get(actor, EFFECT, 2);
+    uint32_t moving = vertrix_word_transition(&effect, (int16_t)get(actor, EFFECT_TARGET, 2),
+                                              (int16_t)get(actor, EFFECT_STEP, 2), quotient);
+    put(actor, EFFECT, 2, (uint16_t)effect);
+    if (get(actor, LEVEL, 1))
+    {
+        return moving;
+    }
+    put(actor, 0x154, 4, 0);
+    if (fight && !write(0x532a40, 4, 1, context))
+    {
+        return 0;
+    }
+    return object;
+}
+
+uint32_t vertrix_title_letter_fight_fly_call(const VertrixCalls *calls, uint8_t *actor, size_t size,
+                                             uint32_t object, uint32_t frame, uint32_t elapsed,
+                                             const VertrixAngleTables *tables,
+                                             VertrixMemoryWrite write, void *context)
+{
+    return family_fly_call(calls, actor, size, object, frame, elapsed, tables, write, context, 1);
+}
+
+uint32_t vertrix_title_letter_wave_fly_call(const VertrixCalls *calls, uint8_t *actor, size_t size,
+                                            uint32_t object, uint32_t frame, uint32_t elapsed,
+                                            const VertrixAngleTables *tables)
+{
+    return family_fly_call(calls, actor, size, object, frame, elapsed, tables, 0, 0, 0);
+}

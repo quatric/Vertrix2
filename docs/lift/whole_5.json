@@ -1,5 +1,5 @@
 {
- "f4d25e0": {
+ "return_constant_ffff": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -227,7 +227,7 @@
   "virtual": [],
   "address": 5057904
  },
- "f4d2ea0": {
+ "return_constant_4d09b0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -239,7 +239,7 @@
   "virtual": [],
   "address": 5058208
  },
- "f4d2eb0": {
+ "return_constant_4d05e0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -251,7 +251,7 @@
   "virtual": [],
   "address": 5058224
  },
- "f4d2ec0": {
+ "return_constant_4d0740": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -263,7 +263,7 @@
   "virtual": [],
   "address": 5058240
  },
- "f4d2ed0": {
+ "return_constant_4d24a0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -275,7 +275,7 @@
   "virtual": [],
   "address": 5058256
  },
- "f4d2ee0": {
+ "return_constant_4d0620": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -287,7 +287,7 @@
   "virtual": [],
   "address": 5058272
  },
- "f4d2ef0": {
+ "return_constant_4d2460": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -299,7 +299,7 @@
   "virtual": [],
   "address": 5058288
  },
- "f4d2f00": {
+ "return_constant_4d2420": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -311,7 +311,7 @@
   "virtual": [],
   "address": 5058304
  },
- "f4d2f10": {
+ "return_constant_4d2440": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -323,7 +323,7 @@
   "virtual": [],
   "address": 5058320
  },
- "f4d2f20": {
+ "return_constant_4d0650": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -335,7 +335,7 @@
   "virtual": [],
   "address": 5058336
  },
- "f4d2f30": {
+ "return_constant_4d0670": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -347,7 +347,7 @@
   "virtual": [],
   "address": 5058352
  },
- "f4d2f40": {
+ "return_constant_4d06a0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -359,7 +359,7 @@
   "virtual": [],
   "address": 5058368
  },
- "f4d2f50": {
+ "return_constant_4d02a0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -371,7 +371,7 @@
   "virtual": [],
   "address": 5058384
  },
- "f4d2f60": {
+ "return_constant_4d2170": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -383,7 +383,7 @@
   "virtual": [],
   "address": 5058400
  },
- "f4d2f70": {
+ "return_constant_4d21d0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -395,7 +395,7 @@
   "virtual": [],
   "address": 5058416
  },
- "f4d2f80": {
+ "return_constant_4d2260": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -407,7 +407,7 @@
   "virtual": [],
   "address": 5058432
  },
- "f4d2f90": {
+ "return_constant_4d22b0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -419,7 +419,7 @@
   "virtual": [],
   "address": 5058448
  },
- "f4d2fa0": {
+ "return_constant_4d2310": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -431,7 +431,7 @@
   "virtual": [],
   "address": 5058464
  },
- "f4d2fb0": {
+ "return_constant_4d21a0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -443,7 +443,7 @@
   "virtual": [],
   "address": 5058480
  },
- "f4d2fc0": {
+ "rtl_scope_refresh_address": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -455,7 +455,7 @@
   "virtual": [],
   "address": 5058496
  },
- "f4d2fd0": {
+ "return_constant_4d23f0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2090,7 +2090,7 @@
   ],
   "address": 5071824
  },
- "f4d6490": {
+ "return_constant_4d54c0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2102,7 +2102,7 @@
   "virtual": [],
   "address": 5072016
  },
- "f4d64a0": {
+ "return_constant_4d5660": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2114,7 +2114,7 @@
   "virtual": [],
   "address": 5072032
  },
- "f4d64b0": {
+ "return_constant_4d57a0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2126,7 +2126,7 @@
   "virtual": [],
   "address": 5072048
  },
- "f4d64c0": {
+ "return_constant_4d57c0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2138,7 +2138,7 @@
   "virtual": [],
   "address": 5072064
  },
- "f4d64d0": {
+ "return_constant_4d6080": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2150,7 +2150,7 @@
   "virtual": [],
   "address": 5072080
  },
- "f4d64e0": {
+ "return_constant_4d58e0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2162,7 +2162,7 @@
   "virtual": [],
   "address": 5072096
  },
- "f4d64f0": {
+ "return_constant_4d4e00": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2174,7 +2174,7 @@
   "virtual": [],
   "address": 5072112
  },
- "f4d6500": {
+ "return_constant_4d4e30": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2186,7 +2186,7 @@
   "virtual": [],
   "address": 5072128
  },
- "f4d6510": {
+ "return_constant_4d5360": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2198,7 +2198,7 @@
   "virtual": [],
   "address": 5072144
  },
- "f4d6520": {
+ "return_constant_4d4990": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2210,7 +2210,7 @@
   "virtual": [],
   "address": 5072160
  },
- "f4d6530": {
+ "return_constant_4d4d10": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2222,7 +2222,7 @@
   "virtual": [],
   "address": 5072176
  },
- "f4d6540": {
+ "return_constant_4d4c00": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2234,7 +2234,7 @@
   "virtual": [],
   "address": 5072192
  },
- "f4d6550": {
+ "return_constant_4d62e0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2246,7 +2246,7 @@
   "virtual": [],
   "address": 5072208
  },
- "f4d6560": {
+ "return_constant_4d6300": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2258,7 +2258,7 @@
   "virtual": [],
   "address": 5072224
  },
- "f4d6570": {
+ "return_constant_4d4ee0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2270,7 +2270,7 @@
   "virtual": [],
   "address": 5072240
  },
- "f4d6580": {
+ "return_constant_4d4fd0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2282,7 +2282,7 @@
   "virtual": [],
   "address": 5072256
  },
- "f4d6590": {
+ "return_constant_4d5010": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2294,7 +2294,7 @@
   "virtual": [],
   "address": 5072272
  },
- "f4d65a0": {
+ "return_constant_4d50d0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2306,7 +2306,7 @@
   "virtual": [],
   "address": 5072288
  },
- "f4d65b0": {
+ "return_constant_4d5150": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2318,7 +2318,7 @@
   "virtual": [],
   "address": 5072304
  },
- "f4d65c0": {
+ "return_constant_4d5180": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2330,7 +2330,7 @@
   "virtual": [],
   "address": 5072320
  },
- "f4d65d0": {
+ "return_constant_4d4270": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2342,7 +2342,7 @@
   "virtual": [],
   "address": 5072336
  },
- "f4d65e0": {
+ "return_constant_4d4630": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2354,7 +2354,7 @@
   "virtual": [],
   "address": 5072352
  },
- "f4d65f0": {
+ "return_constant_4d41c0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2366,7 +2366,7 @@
   "virtual": [],
   "address": 5072368
  },
- "f4d6600": {
+ "return_constant_4d41a0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2378,7 +2378,7 @@
   "virtual": [],
   "address": 5072384
  },
- "f4d6610": {
+ "return_constant_4d42a0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2390,7 +2390,7 @@
   "virtual": [],
   "address": 5072400
  },
- "f4d6620": {
+ "return_constant_4d4300": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2402,7 +2402,7 @@
   "virtual": [],
   "address": 5072416
  },
- "f4d6630": {
+ "return_constant_4d4e60": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2414,7 +2414,7 @@
   "virtual": [],
   "address": 5072432
  },
- "f4d6640": {
+ "return_constant_4d5a30": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2426,7 +2426,7 @@
   "virtual": [],
   "address": 5072448
  },
- "f4d6650": {
+ "return_constant_4d5a70": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2438,7 +2438,7 @@
   "virtual": [],
   "address": 5072464
  },
- "f4d6660": {
+ "return_constant_4d5bf8": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2450,7 +2450,7 @@
   "virtual": [],
   "address": 5072480
  },
- "f4d6670": {
+ "return_constant_4d5c70": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2462,7 +2462,7 @@
   "virtual": [],
   "address": 5072496
  },
- "f4d6680": {
+ "return_constant_4d5ab0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2474,7 +2474,7 @@
   "virtual": [],
   "address": 5072512
  },
- "f4d6690": {
+ "return_constant_4d51c0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2486,7 +2486,7 @@
   "virtual": [],
   "address": 5072528
  },
- "f4d66a0": {
+ "return_constant_4d5280": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2498,7 +2498,7 @@
   "virtual": [],
   "address": 5072544
  },
- "f4d66b0": {
+ "return_constant_4d5330": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2850,7 +2850,7 @@
   "virtual": [],
   "address": 5075968
  },
- "f4d7430": {
+ "return_constant_4d73b0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2890,7 +2890,7 @@
   "virtual": [],
   "address": 5076048
  },
- "f4d7460": {
+ "return_constant_4d73c0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2902,7 +2902,7 @@
   "virtual": [],
   "address": 5076064
  },
- "f4d7470": {
+ "return_constant_4d7400": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2914,7 +2914,7 @@
   "virtual": [],
   "address": 5076080
  },
- "f4d7480": {
+ "return_constant_4d25e0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2926,7 +2926,7 @@
   "virtual": [],
   "address": 5076096
  },
- "f4d7490": {
+ "return_constant_4d7140": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2938,7 +2938,7 @@
   "virtual": [],
   "address": 5076112
  },
- "f4d74a0": {
+ "return_constant_4d7110": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -3941,6 +3941,27 @@
   ],
   "virtual": [],
   "address": 5085920
+ },
+ "rtl_zero_call3": {
+  "callees": {
+   "0x4da3ba": [
+    0,
+    false
+   ]
+  },
+  "stack": 100,
+  "arguments": 0,
+  "pointer_callees": [],
+  "pointer_fields": [],
+  "pointer_globals": [],
+  "pointer_maybe": [],
+  "constants": [
+   19,
+   20,
+   21
+  ],
+  "virtual": [],
+  "address": 5088878
  },
  "f4da71b": {
   "callees": {
@@ -5195,6 +5216,31 @@
   ],
   "virtual": [],
   "address": 5106896
+ },
+ "rtl_segment_dispatch": {
+  "callees": {
+   "0x4e6220": [
+    0,
+    false
+   ],
+   "0x4eb4d4": [
+    0,
+    false
+   ],
+   "0x4e6250": [
+    0,
+    false
+   ]
+  },
+  "stack": 84,
+  "arguments": 0,
+  "pointer_callees": [],
+  "pointer_fields": [],
+  "pointer_globals": [],
+  "pointer_maybe": [],
+  "constants": [],
+  "virtual": [],
+  "address": 5107315
  },
  "rtl_construct_table": {
   "callees": {},
@@ -7386,18 +7432,6 @@
   "constants": [],
   "virtual": [],
   "address": 5125780
- },
- "return_unchanged_4e3697": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 5125783
  },
  "f4e36c4": {
   "callees": {},

@@ -5305,7 +5305,7 @@
   "virtual": [],
   "address": 4314384
  },
- "gate_dispatch_call": {
+ "gate_dispatch_call_full": {
   "callees": {
    "0x418820": [
     0,
@@ -5942,7 +5942,7 @@
   "virtual": [],
   "address": 4342144
  },
- "f4241d0": {
+ "return_constant_419f60": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -5954,7 +5954,7 @@
   "virtual": [],
   "address": 4342224
  },
- "f4241e0": {
+ "return_constant_419ea0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -5966,7 +5966,7 @@
   "virtual": [],
   "address": 4342240
  },
- "f4241f0": {
+ "return_constant_424160": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -5978,7 +5978,7 @@
   "virtual": [],
   "address": 4342256
  },
- "f424200": {
+ "return_constant_419f80": {
   "callees": {},
   "stack": 64,
   "arguments": 0,

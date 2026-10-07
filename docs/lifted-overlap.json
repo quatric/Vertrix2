@@ -851,6 +851,11 @@
    "object-scalars-verification.json"
   ]
  },
+ "0x413bd0": {
+  "lifted": "f413bd0",
+  "hand_files": [],
+  "verification": []
+ },
  "0x414a90": {
   "lifted": "anchor_offsets_update",
   "hand_files": [
@@ -1341,33 +1346,37 @@
    "table_queries.h"
   ],
   "verification": [
+   "grid-query-naming-verification.json",
    "table-queries-verification.json"
   ]
  },
  "0x417d10": {
-  "lifted": "f417d10",
+  "lifted": "table_grid_value_417d10",
   "hand_files": [
    "table_queries.h"
   ],
   "verification": [
+   "grid-query-naming-verification.json",
    "table-queries-verification.json"
   ]
  },
  "0x417d40": {
-  "lifted": "f417d40",
+  "lifted": "table_grid_value_417d40",
   "hand_files": [
    "table_queries.h"
   ],
   "verification": [
+   "grid-query-naming-verification.json",
    "table-queries-verification.json"
   ]
  },
  "0x417d70": {
-  "lifted": "f417d70",
+  "lifted": "table_grid_value_417d70",
   "hand_files": [
    "table_queries.h"
   ],
   "verification": [
+   "grid-query-naming-verification.json",
    "table-queries-verification.json"
   ]
  },
@@ -1418,12 +1427,13 @@
   ]
  },
  "0x417f40": {
-  "lifted": "matcher_reset",
+  "lifted": "matcher_reset_full",
   "hand_files": [
    "call_glue.h",
    "object_scalars.h"
   ],
   "verification": [
+   "call-glue-verification.json",
    "object-scalars-verification.json"
   ]
  },
@@ -1487,6 +1497,13 @@
   "verification": [
    "object-scalars-verification.json"
   ]
+ },
+ "0x418270": {
+  "lifted": "f418270",
+  "hand_files": [
+   "table_loops.h"
+  ],
+  "verification": []
  },
  "0x4182c0": {
   "lifted": "f4182c0",
@@ -1627,11 +1644,18 @@
  },
  "0x419f60": {
   "lifted": "f419f60",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x41a010": {
   "lifted": "f41a010",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x41a040": {
+  "lifted": "f41a040",
   "hand_files": [],
   "verification": []
  },
@@ -1878,7 +1902,7 @@
   "verification": []
  },
  "0x41d5b0": {
-  "lifted": "gate_dispatch_call",
+  "lifted": "gate_dispatch_call_full",
   "hand_files": [
    "call_glue.h"
   ],
@@ -1957,7 +1981,9 @@
  },
  "0x424160": {
   "lifted": "f424160",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x424180": {
@@ -1966,24 +1992,40 @@
   "verification": []
  },
  "0x4241d0": {
-  "lifted": "f4241d0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_419f60",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4241e0": {
-  "lifted": "f4241e0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_419ea0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4241f0": {
-  "lifted": "f4241f0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_424160",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x424200": {
-  "lifted": "f424200",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_419f80",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x424760": {
   "lifted": "object_center_titled",
@@ -4878,6 +4920,15 @@
    "object_glue.h"
   ],
   "verification": []
+ },
+ "0x440ca0": {
+  "lifted": "object_corner_call",
+  "hand_files": [
+   "object_glue.h"
+  ],
+  "verification": [
+   "corner-call-verification.json"
+  ]
  },
  "0x440d50": {
   "lifted": "f440d50",
@@ -8123,7 +8174,7 @@
   "verification": []
  },
  "0x459e00": {
-  "lifted": "f459e00",
+  "lifted": "title_letter_restart_call",
   "hand_files": [
    "title_letter_step.h"
   ],
@@ -8141,7 +8192,7 @@
   ]
  },
  "0x45a3e0": {
-  "lifted": "f45a3e0",
+  "lifted": "title_letter_fight_settle_call",
   "hand_files": [
    "title_letter_step.h"
   ],
@@ -8150,7 +8201,7 @@
   ]
  },
  "0x45a440": {
-  "lifted": "f45a440",
+  "lifted": "title_letter_fight_restart_call",
   "hand_files": [
    "title_letter_step.h"
   ],
@@ -8159,7 +8210,7 @@
   ]
  },
  "0x45a750": {
-  "lifted": "f45a750",
+  "lifted": "title_letter_wave_call",
   "hand_files": [
    "title_letter_step.h"
   ],
@@ -8168,7 +8219,7 @@
   ]
  },
  "0x45a830": {
-  "lifted": "f45a830",
+  "lifted": "title_letter_wave_call_45a830",
   "hand_files": [
    "title_letter_step.h"
   ],
@@ -8553,6 +8604,13 @@
    "object-glue-verification.json"
   ]
  },
+ "0x45dca0": {
+  "lifted": "f45dca0",
+  "hand_files": [
+   "sprite_load_plan.h"
+  ],
+  "verification": []
+ },
  "0x45e260": {
   "lifted": "table_release_everything",
   "hand_files": [
@@ -8887,7 +8945,7 @@
   ]
  },
  "0x45f1e0": {
-  "lifted": "table_identity_cells",
+  "lifted": "table_identity_cells_full",
   "hand_files": [
    "call_glue.h",
    "field_accessors.h",
@@ -9768,7 +9826,7 @@
   ]
  },
  "0x473960": {
-  "lifted": "f473960",
+  "lifted": "pair_flags_473960",
   "hand_files": [
    "pair_sync.h"
   ],
@@ -9861,13 +9919,16 @@
  "0x4757e0": {
   "lifted": "f4757e0",
   "hand_files": [],
-  "verification": []
+  "verification": [
+   "input-consume-verification.json"
+  ]
  },
  "0x475800": {
   "lifted": "flags_get",
   "hand_files": [
    "call_glue.h",
-   "field_accessors.h"
+   "field_accessors.h",
+   "input.h"
   ],
   "verification": [
    "field-accessors-verification.json"
@@ -9954,20 +10015,24 @@
   ]
  },
  "0x475ad0": {
-  "lifted": "input_repeat_start",
+  "lifted": "input_repeat_start_full",
   "hand_files": [
    "input.h"
   ],
-  "verification": []
+  "verification": [
+   "input-verification.json"
+  ]
  },
  "0x475af0": {
-  "lifted": "f475af0",
+  "lifted": "input_repeat_stop_full",
   "hand_files": [
    "call_glue.h",
    "input.h",
    "object_glue.h"
   ],
-  "verification": []
+  "verification": [
+   "input-verification.json"
+  ]
  },
  "0x475b00": {
   "lifted": "flags_idle",
@@ -9980,7 +10045,9 @@
  },
  "0x475b20": {
   "lifted": "f475b20",
-  "hand_files": [],
+  "hand_files": [
+   "input.h"
+  ],
   "verification": []
  },
  "0x475b80": {
@@ -9996,9 +10063,13 @@
   "verification": []
  },
  "0x475c30": {
-  "lifted": "f475c30",
-  "hand_files": [],
-  "verification": []
+  "lifted": "input_queue_consume_full",
+  "hand_files": [
+   "input.h"
+  ],
+  "verification": [
+   "input-consume-verification.json"
+  ]
  },
  "0x475c80": {
   "lifted": "queue_next",
@@ -10025,9 +10096,13 @@
   "verification": []
  },
  "0x475d70": {
-  "lifted": "f475d70",
-  "hand_files": [],
-  "verification": []
+  "lifted": "input_queue_ready_full",
+  "hand_files": [
+   "input.h"
+  ],
+  "verification": [
+   "input-verification.json"
+  ]
  },
  "0x475d90": {
   "lifted": "offset_call",
@@ -10095,7 +10170,7 @@
   ]
  },
  "0x475e50": {
-  "lifted": "input_repeat_tick",
+  "lifted": "input_repeat_tick_full",
   "hand_files": [
    "input.h"
   ],
@@ -10207,11 +10282,14 @@
   ]
  },
  "0x476320": {
-  "lifted": "f476320",
+  "lifted": "input_queue_acknowledge_full",
   "hand_files": [
+   "input.h",
    "pair_sync.h"
   ],
-  "verification": []
+  "verification": [
+   "input-verification.json"
+  ]
  },
  "0x476400": {
   "lifted": "f476400",
@@ -10890,6 +10968,11 @@
   "hand_files": [],
   "verification": []
  },
+ "0x47c520": {
+  "lifted": "f47c520",
+  "hand_files": [],
+  "verification": []
+ },
  "0x47c710": {
   "lifted": "f47c710",
   "hand_files": [],
@@ -11450,7 +11533,8 @@
    "letter_row.h",
    "object_glue.h",
    "particle_spawn.h",
-   "player_slots.h"
+   "player_slots.h",
+   "title_letter_step.h"
   ],
   "verification": [
    "actor-match-burst-verification.json",
@@ -11588,6 +11672,11 @@
    "call-glue-verification.json"
   ]
  },
+ "0x482d00": {
+  "lifted": "f482d00",
+  "hand_files": [],
+  "verification": []
+ },
  "0x483060": {
   "lifted": "f483060",
   "hand_files": [
@@ -11609,6 +11698,13 @@
    "release-tables-verification.json",
    "table-release-verification.json"
   ]
+ },
+ "0x483110": {
+  "lifted": "f483110",
+  "hand_files": [
+   "image.h"
+  ],
+  "verification": []
  },
  "0x4831b0": {
   "lifted": "f4831b0",
@@ -11703,8 +11799,18 @@
   "hand_files": [],
   "verification": []
  },
+ "0x484b60": {
+  "lifted": "f484b60",
+  "hand_files": [],
+  "verification": []
+ },
  "0x4854a0": {
   "lifted": "f4854a0",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x485550": {
+  "lifted": "f485550",
   "hand_files": [],
   "verification": []
  },
@@ -11724,6 +11830,16 @@
  },
  "0x486d00": {
   "lifted": "f486d00",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x486da0": {
+  "lifted": "f486da0",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x486e20": {
+  "lifted": "f486e20",
   "hand_files": [],
   "verification": []
  },
@@ -11771,11 +11887,25 @@
   "hand_files": [],
   "verification": []
  },
+ "0x4873d0": {
+  "lifted": "f4873d0",
+  "hand_files": [],
+  "verification": []
+ },
  "0x4874f0": {
   "lifted": "array_list_release",
   "hand_files": [
    "array_list.h",
    "table_release.h"
+  ],
+  "verification": [
+   "array-list-verification.json"
+  ]
+ },
+ "0x4875a0": {
+  "lifted": "array_list_build",
+  "hand_files": [
+   "array_list.h"
   ],
   "verification": [
    "array-list-verification.json"
@@ -11919,7 +12049,7 @@
   ]
  },
  "0x4879f0": {
-  "lifted": "f4879f0",
+  "lifted": "object_release_call",
   "hand_files": [
    "object_glue.h"
   ],
@@ -12056,6 +12186,15 @@
   "hand_files": [],
   "verification": []
  },
+ "0x488b10": {
+  "lifted": "object_construct_e",
+  "hand_files": [
+   "object_glue.h"
+  ],
+  "verification": [
+   "object-glue-verification.json"
+  ]
+ },
  "0x488b90": {
   "lifted": "object_destroy_e",
   "hand_files": [
@@ -12064,6 +12203,39 @@
   "verification": [
    "object-glue-verification.json"
   ]
+ },
+ "0x488c50": {
+  "lifted": "f488c50",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x488d80": {
+  "lifted": "object_kind_text",
+  "hand_files": [
+   "list_text.h"
+  ],
+  "verification": [
+   "kind-text-verification.json"
+  ]
+ },
+ "0x489230": {
+  "lifted": "f489230",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4895e0": {
+  "lifted": "find_succeeded",
+  "hand_files": [
+   "call_glue.h"
+  ],
+  "verification": [
+   "call-glue-verification.json"
+  ]
+ },
+ "0x489a10": {
+  "lifted": "f489a10",
+  "hand_files": [],
+  "verification": []
  },
  "0x489b20": {
   "lifted": "f489b20",
@@ -12097,6 +12269,16 @@
  },
  "0x489fa0": {
   "lifted": "f489fa0",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x48a050": {
+  "lifted": "f48a050",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x48a100": {
+  "lifted": "f48a100",
   "hand_files": [],
   "verification": []
  },
@@ -12152,6 +12334,15 @@
    "object-glue-verification.json"
   ]
  },
+ "0x48a3c0": {
+  "lifted": "stream_read_token",
+  "hand_files": [
+   "object_glue.h"
+  ],
+  "verification": [
+   "stream-token-verification.json"
+  ]
+ },
  "0x48a420": {
   "lifted": "stream_next_directive",
   "hand_files": [
@@ -12159,6 +12350,24 @@
   ],
   "verification": [
    "stream-token-verification.json"
+  ]
+ },
+ "0x48a4a0": {
+  "lifted": "list_parse_texts",
+  "hand_files": [
+   "list_text.h"
+  ],
+  "verification": [
+   "parse-texts-verification.json"
+  ]
+ },
+ "0x48a560": {
+  "lifted": "list_parse_values",
+  "hand_files": [
+   "list_text.h"
+  ],
+  "verification": [
+   "parse-values-verification.json"
   ]
  },
  "0x48a620": {
@@ -12211,6 +12420,22 @@
   ],
   "verification": [
    "object-dwords-verification.json"
+  ]
+ },
+ "0x48a930": {
+  "lifted": "stream_read_exact",
+  "hand_files": [
+   "bitmap_load.h",
+   "call_glue.h",
+   "object_dwords.h",
+   "rtl_glue.h",
+   "stream_read.h",
+   "wave_load.h"
+  ],
+  "verification": [
+   "bitmap-load-verification.json",
+   "object-dwords-verification.json",
+   "stream-read-verification.json"
   ]
  },
  "0x48aa70": {
@@ -12372,7 +12597,7 @@
   ]
  },
  "0x48c310": {
-  "lifted": "f48c310",
+  "lifted": "object_notify_field_48c310",
   "hand_files": [
    "object_glue.h"
   ],
@@ -12381,7 +12606,7 @@
   ]
  },
  "0x48c330": {
-  "lifted": "f48c330",
+  "lifted": "object_notify_field_48c330",
   "hand_files": [
    "object_glue.h"
   ],
@@ -12390,7 +12615,7 @@
   ]
  },
  "0x48c370": {
-  "lifted": "copy_dword",
+  "lifted": "copy_dword_full",
   "hand_files": [
    "call_glue.h"
   ],
@@ -12494,7 +12719,7 @@
   ]
  },
  "0x48d520": {
-  "lifted": "f48d520",
+  "lifted": "object_table_new",
   "hand_files": [
    "object_glue.h"
   ],
@@ -12517,7 +12742,7 @@
   ]
  },
  "0x48d600": {
-  "lifted": "f48d600",
+  "lifted": "object_release_call_48d600",
   "hand_files": [
    "object_glue.h"
   ],
@@ -12559,6 +12784,21 @@
  },
  "0x48d6c0": {
   "lifted": "f48d6c0",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4aa660": {
+  "lifted": "f4aa660",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4aa950": {
+  "lifted": "f4aa950",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4aabe0": {
+  "lifted": "f4aabe0",
   "hand_files": [],
   "verification": []
  },
@@ -12828,7 +13068,7 @@
   "verification": []
  },
  "0x4ac5b0": {
-  "lifted": "actor_counter_wrap",
+  "lifted": "actor_counter_consume",
   "hand_files": [
    "actor_fields.h",
    "bonus_effects.h",
@@ -12873,7 +13113,7 @@
   ]
  },
  "0x4ac6b0": {
-  "lifted": "actor_progress_wrap",
+  "lifted": "actor_progress_consume",
   "hand_files": [
    "actor_fields.h",
    "actor_refresh.h"
@@ -13621,6 +13861,19 @@
   ],
   "verification": []
  },
+ "0x4ae3e0": {
+  "lifted": "actor_gate",
+  "hand_files": [
+   "actor_gate.c",
+   "actor_gate.h"
+  ],
+  "verification": [
+   "actor-chain-visit-verification.json",
+   "actor-gate-verification.json",
+   "actor-render-draw-verification.json",
+   "actor-render-geometry-verification.json"
+  ]
+ },
  "0x4af2a0": {
   "lifted": "render_rule",
   "hand_files": [
@@ -13677,6 +13930,17 @@
    "surface-verification.json"
   ]
  },
+ "0x4af8c0": {
+  "lifted": "actor_chain_paint",
+  "hand_files": [
+   "actor_chain_visit.h"
+  ],
+  "verification": [
+   "actor-chain-visit-verification.json",
+   "actor-draw-slot-verification.json",
+   "actor-render-draw-verification.json"
+  ]
+ },
  "0x4b0b70": {
   "lifted": "f4b0b70",
   "hand_files": [],
@@ -13709,6 +13973,11 @@
  },
  "0x4b17b0": {
   "lifted": "f4b17b0",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4b17e0": {
+  "lifted": "f4b17e0",
   "hand_files": [],
   "verification": []
  },
@@ -13880,7 +14149,7 @@
   ]
  },
  "0x4b4610": {
-  "lifted": "f4b4610",
+  "lifted": "object_step_text_length_4b4610",
   "hand_files": [
    "list_text.h",
    "object_tails.h"
@@ -13890,7 +14159,7 @@
   ]
  },
  "0x4b4620": {
-  "lifted": "f4b4620",
+  "lifted": "object_step_text_length_4b4620",
   "hand_files": [
    "list_text.h",
    "object_tails.h"
@@ -13970,7 +14239,7 @@
   ]
  },
  "0x4b4cd0": {
-  "lifted": "f4b4cd0",
+  "lifted": "object_parent_append_4b4cd0",
   "hand_files": [
    "object_glue.h"
   ],
@@ -14217,6 +14486,13 @@
    "object-list-verification.json"
   ]
  },
+ "0x4b6240": {
+  "lifted": "f4b6240",
+  "hand_files": [
+   "sprite_scene_draw.h"
+  ],
+  "verification": []
+ },
  "0x4b6350": {
   "lifted": "object_construct_labeled_box",
   "hand_files": [
@@ -14337,7 +14613,7 @@
   ]
  },
  "0x4b6700": {
-  "lifted": "f4b6700",
+  "lifted": "object_slot_present_4b6700",
   "hand_files": [
    "object_tails.h"
   ],
@@ -14359,6 +14635,11 @@
    "call-glue-verification.json",
    "object-glue-verification.json"
   ]
+ },
+ "0x4b68a0": {
+  "lifted": "f4b68a0",
+  "hand_files": [],
+  "verification": []
  },
  "0x4b69f0": {
   "lifted": "object_glyph_layout",
@@ -14384,7 +14665,7 @@
   "verification": []
  },
  "0x4b6f70": {
-  "lifted": "object_release_call",
+  "lifted": "object_release_call_4b6f70",
   "hand_files": [
    "object_glue.h"
   ],
@@ -14412,6 +14693,11 @@
   "hand_files": [],
   "verification": []
  },
+ "0x4b7610": {
+  "lifted": "f4b7610",
+  "hand_files": [],
+  "verification": []
+ },
  "0x4b76d0": {
   "lifted": "list_resize_call",
   "hand_files": [
@@ -14422,8 +14708,26 @@
    "list-text-verification.json"
   ]
  },
+ "0x4b7710": {
+  "lifted": "list_text_indexed",
+  "hand_files": [
+   "list_text.h"
+  ],
+  "verification": [
+   "list-text-verification.json"
+  ]
+ },
+ "0x4b7830": {
+  "lifted": "list_release_entries",
+  "hand_files": [
+   "list_text.h"
+  ],
+  "verification": [
+   "list-text-verification.json"
+  ]
+ },
  "0x4b78d0": {
-  "lifted": "object_table_new",
+  "lifted": "object_table_new_4b78d0",
   "hand_files": [
    "object_glue.h",
    "object_tails.h"
@@ -14438,7 +14742,7 @@
   "verification": []
  },
  "0x4b79a0": {
-  "lifted": "f4b79a0",
+  "lifted": "object_release_call_4b79a0",
   "hand_files": [
    "object_glue.h"
   ],
@@ -14455,6 +14759,15 @@
   ],
   "verification": [
    "object-dwords-verification.json"
+  ]
+ },
+ "0x4b79e0": {
+  "lifted": "list_text_lookup",
+  "hand_files": [
+   "list_text.h"
+  ],
+  "verification": [
+   "list-text-verification.json"
   ]
  },
  "0x4b7a80": {
@@ -14629,9 +14942,13 @@
   "verification": []
  },
  "0x4b9ce0": {
-  "lifted": "f4b9ce0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_unchanged_4b9ce0",
+  "hand_files": [
+   "register_return.h"
+  ],
+  "verification": [
+   "register-return-verification.json"
+  ]
  },
  "0x4b9cf0": {
   "lifted": "f4b9cf0",
@@ -14654,9 +14971,13 @@
   "verification": []
  },
  "0x4ba210": {
-  "lifted": "f4ba210",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_zero",
+  "hand_files": [
+   "call_glue.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4ba220": {
   "lifted": "f4ba220",
@@ -14664,9 +14985,13 @@
   "verification": []
  },
  "0x4bb260": {
-  "lifted": "f4bb260",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_unchanged_4bb260",
+  "hand_files": [
+   "register_return.h"
+  ],
+  "verification": [
+   "register-return-verification.json"
+  ]
  },
  "0x4bb3d0": {
   "lifted": "f4bb3d0",
@@ -14993,16 +15318,20 @@
   "verification": []
  },
  "0x4c5c10": {
-  "lifted": "return_zero",
+  "lifted": "return_zero_4c5c10",
   "hand_files": [
    "call_glue.h"
   ],
   "verification": []
  },
  "0x4c5c20": {
-  "lifted": "f4c5c20",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_unchanged_4c5c20",
+  "hand_files": [
+   "register_return.h"
+  ],
+  "verification": [
+   "register-return-verification.json"
+  ]
  },
  "0x4c5d60": {
   "lifted": "scaled_round",
@@ -15034,9 +15363,13 @@
   "verification": []
  },
  "0x4c6a80": {
-  "lifted": "f4c6a80",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_unchanged_4c6a80",
+  "hand_files": [
+   "register_return.h"
+  ],
+  "verification": [
+   "register-return-verification.json"
+  ]
  },
  "0x4c6c70": {
   "lifted": "f4c6c70",
@@ -15059,9 +15392,13 @@
   "verification": []
  },
  "0x4c93c0": {
-  "lifted": "f4c93c0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_unchanged_4c93c0",
+  "hand_files": [
+   "register_return.h"
+  ],
+  "verification": [
+   "register-return-verification.json"
+  ]
  },
  "0x4c9550": {
   "lifted": "f4c9550",
@@ -15209,13 +15546,15 @@
   "verification": []
  },
  "0x4ca060": {
-  "lifted": "f4ca060",
+  "lifted": "return_constant_50081c",
   "hand_files": [
+   "constant_getters.h",
    "device_glue.h",
    "node_pool.h",
    "rtl_glue.h"
   ],
   "verification": [
+   "constant-return-verification.json",
    "node-pool-verification.json",
    "string-table-assign-verification.json"
   ]
@@ -15263,6 +15602,15 @@
    "rtl_glue.h"
   ],
   "verification": []
+ },
+ "0x4ca180": {
+  "lifted": "rtl_string_unique",
+  "hand_files": [
+   "rtl_glue.h"
+  ],
+  "verification": [
+   "rtl-glue-verification.json"
+  ]
  },
  "0x4ca1a0": {
   "lifted": "rtl_string_make_unique",
@@ -15424,6 +15772,17 @@
   ],
   "verification": []
  },
+ "0x4ca630": {
+  "lifted": "rtl_byte_local_call",
+  "hand_files": [
+   "object_glue.h",
+   "rtl_glue.h",
+   "text_wrap.h"
+  ],
+  "verification": [
+   "rtl-glue-verification.json"
+  ]
+ },
  "0x4ca650": {
   "lifted": "f4ca650",
   "hand_files": [],
@@ -15490,19 +15849,31 @@
   "verification": []
  },
  "0x4cb390": {
-  "lifted": "f4cb390",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4cc7a0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4cb3a0": {
-  "lifted": "f4cb3a0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4ccaf0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4cb3b0": {
-  "lifted": "f4cb3b0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4ccb40",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4cb460": {
   "lifted": "rtl_stream_init",
@@ -15618,7 +15989,9 @@
  },
  "0x4cc7a0": {
   "lifted": "f4cc7a0",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4cc7c0": {
@@ -15643,12 +16016,16 @@
  },
  "0x4ccaf0": {
   "lifted": "f4ccaf0",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4ccb40": {
   "lifted": "f4ccb40",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4ccb9f": {
@@ -15857,6 +16234,16 @@
    "rtl-glue-verification.json"
   ]
  },
+ "0x4ce030": {
+  "lifted": "rtl_string_trim_start",
+  "hand_files": [
+   "object_glue.h",
+   "rtl_glue.h"
+  ],
+  "verification": [
+   "rtl-glue-verification.json"
+  ]
+ },
  "0x4ce080": {
   "lifted": "f4ce080",
   "hand_files": [],
@@ -15864,6 +16251,30 @@
  },
  "0x4ce230": {
   "lifted": "f4ce230",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4ce740": {
+  "lifted": "f4ce740",
+  "hand_files": [
+   "rtl_glue.h"
+  ],
+  "verification": []
+ },
+ "0x4ce780": {
+  "lifted": "f4ce780",
+  "hand_files": [
+   "rtl_glue.h"
+  ],
+  "verification": []
+ },
+ "0x4ce7a0": {
+  "lifted": "f4ce7a0",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4ce7c0": {
+  "lifted": "f4ce7c0",
   "hand_files": [],
   "verification": []
  },
@@ -16030,17 +16441,23 @@
  },
  "0x4d05e0": {
   "lifted": "f4d05e0",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d0650": {
   "lifted": "f4d0650",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d0740": {
   "lifted": "f4d0740",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d0b30": {
@@ -16119,32 +16536,44 @@
  },
  "0x4d2170": {
   "lifted": "f4d2170",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d21a0": {
   "lifted": "f4d21a0",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d21d0": {
   "lifted": "f4d21d0",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d2260": {
   "lifted": "f4d2260",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d22b0": {
   "lifted": "f4d22b0",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d2310": {
   "lifted": "f4d2310",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d2390": {
@@ -16158,18 +16587,26 @@
  },
  "0x4d2420": {
   "lifted": "f4d2420",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d2440": {
   "lifted": "f4d2440",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d25e0": {
-  "lifted": "f4d25e0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_ffff",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d2700": {
   "lifted": "object_reset_triple",
@@ -16210,104 +16647,184 @@
   ]
  },
  "0x4d2ea0": {
-  "lifted": "f4d2ea0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d09b0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d2eb0": {
-  "lifted": "f4d2eb0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d05e0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d2ec0": {
-  "lifted": "f4d2ec0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d0740",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d2ed0": {
-  "lifted": "f4d2ed0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d24a0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d2ee0": {
-  "lifted": "f4d2ee0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d0620",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d2ef0": {
-  "lifted": "f4d2ef0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d2460",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d2f00": {
-  "lifted": "f4d2f00",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d2420",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d2f10": {
-  "lifted": "f4d2f10",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d2440",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d2f20": {
-  "lifted": "f4d2f20",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d0650",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d2f30": {
-  "lifted": "f4d2f30",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d0670",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d2f40": {
-  "lifted": "f4d2f40",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d06a0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d2f50": {
-  "lifted": "f4d2f50",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d02a0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d2f60": {
-  "lifted": "f4d2f60",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d2170",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d2f70": {
-  "lifted": "f4d2f70",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d21d0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d2f80": {
-  "lifted": "f4d2f80",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d2260",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d2f90": {
-  "lifted": "f4d2f90",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d22b0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d2fa0": {
-  "lifted": "f4d2fa0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d2310",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d2fb0": {
-  "lifted": "f4d2fb0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d21a0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d2fc0": {
-  "lifted": "f4d2fc0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "rtl_scope_refresh_address",
+  "hand_files": [
+   "rtl_glue.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d2fd0": {
-  "lifted": "f4d2fd0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d23f0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d3010": {
   "lifted": "f4d3010",
@@ -16377,27 +16894,37 @@
  },
  "0x4d41a0": {
   "lifted": "f4d41a0",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d41c0": {
   "lifted": "f4d41c0",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d4270": {
   "lifted": "f4d4270",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d42a0": {
   "lifted": "f4d42a0",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d4300": {
   "lifted": "f4d4300",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d4390": {
@@ -16416,7 +16943,9 @@
  },
  "0x4d4630": {
   "lifted": "f4d4630",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d4700": {
@@ -16427,6 +16956,7 @@
  "0x4d4990": {
   "lifted": "f4d4990",
   "hand_files": [
+   "constant_getters.h",
    "rtl_glue.h"
   ],
   "verification": [
@@ -16442,52 +16972,72 @@
  },
  "0x4d4d10": {
   "lifted": "f4d4d10",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d4e00": {
   "lifted": "f4d4e00",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d4e30": {
   "lifted": "f4d4e30",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d4e60": {
   "lifted": "f4d4e60",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d4fd0": {
   "lifted": "f4d4fd0",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d5010": {
   "lifted": "f4d5010",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d5150": {
   "lifted": "f4d5150",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d5180": {
   "lifted": "f4d5180",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d51c0": {
   "lifted": "f4d51c0",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d5330": {
   "lifted": "f4d5330",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d5350": {
@@ -16506,22 +17056,30 @@
  },
  "0x4d54c0": {
   "lifted": "f4d54c0",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d5660": {
   "lifted": "f4d5660",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d57a0": {
   "lifted": "f4d57a0",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d58e0": {
   "lifted": "f4d58e0",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d5910": {
@@ -16536,27 +17094,37 @@
  },
  "0x4d5a70": {
   "lifted": "f4d5a70",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d5bf8": {
   "lifted": "f4d5bf8",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d5c70": {
   "lifted": "f4d5c70",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d6080": {
   "lifted": "f4d6080",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d62e0": {
   "lifted": "f4d62e0",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d6380": {
@@ -16575,179 +17143,319 @@
   "verification": []
  },
  "0x4d6490": {
-  "lifted": "f4d6490",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d54c0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d64a0": {
-  "lifted": "f4d64a0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d5660",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d64b0": {
-  "lifted": "f4d64b0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d57a0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d64c0": {
-  "lifted": "f4d64c0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d57c0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d64d0": {
-  "lifted": "f4d64d0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d6080",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d64e0": {
-  "lifted": "f4d64e0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d58e0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d64f0": {
-  "lifted": "f4d64f0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d4e00",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d6500": {
-  "lifted": "f4d6500",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d4e30",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d6510": {
-  "lifted": "f4d6510",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d5360",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d6520": {
-  "lifted": "f4d6520",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d4990",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d6530": {
-  "lifted": "f4d6530",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d4d10",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d6540": {
-  "lifted": "f4d6540",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d4c00",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d6550": {
-  "lifted": "f4d6550",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d62e0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d6560": {
-  "lifted": "f4d6560",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d6300",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d6570": {
-  "lifted": "f4d6570",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d4ee0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d6580": {
-  "lifted": "f4d6580",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d4fd0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d6590": {
-  "lifted": "f4d6590",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d5010",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d65a0": {
-  "lifted": "f4d65a0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d50d0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d65b0": {
-  "lifted": "f4d65b0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d5150",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d65c0": {
-  "lifted": "f4d65c0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d5180",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d65d0": {
-  "lifted": "f4d65d0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d4270",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d65e0": {
-  "lifted": "f4d65e0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d4630",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d65f0": {
-  "lifted": "f4d65f0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d41c0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d6600": {
-  "lifted": "f4d6600",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d41a0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d6610": {
-  "lifted": "f4d6610",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d42a0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d6620": {
-  "lifted": "f4d6620",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d4300",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d6630": {
-  "lifted": "f4d6630",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d4e60",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d6640": {
-  "lifted": "f4d6640",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d5a30",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d6650": {
-  "lifted": "f4d6650",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d5a70",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d6660": {
-  "lifted": "f4d6660",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d5bf8",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d6670": {
-  "lifted": "f4d6670",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d5c70",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d6680": {
-  "lifted": "f4d6680",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d5ab0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d6690": {
-  "lifted": "f4d6690",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d51c0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d66a0": {
-  "lifted": "f4d66a0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d5280",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d66b0": {
-  "lifted": "f4d66b0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d5330",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d66cd": {
   "lifted": "rtl_test_and_set",
@@ -16831,23 +17539,33 @@
  },
  "0x4d7140": {
   "lifted": "f4d7140",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d73c0": {
   "lifted": "f4d73c0",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d7400": {
   "lifted": "f4d7400",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4d7430": {
-  "lifted": "f4d7430",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d73b0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d7440": {
   "lifted": "f4d7440",
@@ -16860,29 +17578,49 @@
   "verification": []
  },
  "0x4d7460": {
-  "lifted": "f4d7460",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d73c0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d7470": {
-  "lifted": "f4d7470",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d7400",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d7480": {
-  "lifted": "f4d7480",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d25e0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d7490": {
-  "lifted": "f4d7490",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d7140",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d74a0": {
-  "lifted": "f4d74a0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4d7110",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4d74a6": {
   "lifted": "f4d74a6",
@@ -16910,13 +17648,38 @@
   ],
   "verification": []
  },
+ "0x4d77d0": {
+  "lifted": "f4d77d0",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4d7980": {
+  "lifted": "f4d7980",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4d7a10": {
+  "lifted": "f4d7a10",
+  "hand_files": [],
+  "verification": []
+ },
  "0x4d7aa0": {
   "lifted": "f4d7aa0",
   "hand_files": [],
   "verification": []
  },
+ "0x4d7bb0": {
+  "lifted": "f4d7bb0",
+  "hand_files": [],
+  "verification": []
+ },
  "0x4d7c00": {
   "lifted": "f4d7c00",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4d7c40": {
+  "lifted": "f4d7c40",
   "hand_files": [],
   "verification": []
  },
@@ -17004,7 +17767,8 @@
  "0x4d8540": {
   "lifted": "f4d8540",
   "hand_files": [
-   "device_glue.h"
+   "device_glue.h",
+   "input.h"
   ],
   "verification": [
    "queue-drain-verification.json",
@@ -17112,6 +17876,13 @@
   ],
   "verification": []
  },
+ "0x4d9060": {
+  "lifted": "f4d9060",
+  "hand_files": [
+   "call_glue.h"
+  ],
+  "verification": []
+ },
  "0x4d9280": {
   "lifted": "f4d9280",
   "hand_files": [
@@ -17150,6 +17921,15 @@
    "rtl-glue-verification.json"
   ]
  },
+ "0x4d9510": {
+  "lifted": "rtl_static_init_call",
+  "hand_files": [
+   "rtl_glue.h"
+  ],
+  "verification": [
+   "rtl-glue-verification.json"
+  ]
+ },
  "0x4d9930": {
   "lifted": "rtl_forward_pair",
   "hand_files": [
@@ -17161,6 +17941,22 @@
  },
  "0x4d9ae0": {
   "lifted": "f4d9ae0",
+  "hand_files": [
+   "rtl_glue.h"
+  ],
+  "verification": []
+ },
+ "0x4d9f06": {
+  "lifted": "rtl_jump_capture",
+  "hand_files": [
+   "rtl_glue.h"
+  ],
+  "verification": [
+   "jump-capture-verification.json"
+  ]
+ },
+ "0x4da3ba": {
+  "lifted": "f4da3ba",
   "hand_files": [
    "rtl_glue.h"
   ],
@@ -17340,6 +18136,11 @@
   "hand_files": [],
   "verification": []
  },
+ "0x4dbb30": {
+  "lifted": "f4dbb30",
+  "hand_files": [],
+  "verification": []
+ },
  "0x4dbc60": {
   "lifted": "f4dbc60",
   "hand_files": [],
@@ -17350,6 +18151,16 @@
   "hand_files": [
    "rtl_glue.h"
   ],
+  "verification": []
+ },
+ "0x4dbd20": {
+  "lifted": "f4dbd20",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4dbf80": {
+  "lifted": "f4dbf80",
+  "hand_files": [],
   "verification": []
  },
  "0x4dc000": {
@@ -17731,6 +18542,11 @@
   "hand_files": [],
   "verification": []
  },
+ "0x4e08a0": {
+  "lifted": "f4e08a0",
+  "hand_files": [],
+  "verification": []
+ },
  "0x4e0960": {
   "lifted": "f4e0960",
   "hand_files": [],
@@ -17780,6 +18596,11 @@
   "hand_files": [],
   "verification": []
  },
+ "0x4e0c0c": {
+  "lifted": "f4e0c0c",
+  "hand_files": [],
+  "verification": []
+ },
  "0x4e0eaf": {
   "lifted": "f4e0eaf",
   "hand_files": [
@@ -17790,6 +18611,14 @@
  },
  "0x4e0ec7": {
   "lifted": "f4e0ec7",
+  "hand_files": [
+   "exception_chain.h",
+   "rtl_glue.h"
+  ],
+  "verification": []
+ },
+ "0x4e0f8b": {
+  "lifted": "f4e0f8b",
   "hand_files": [
    "exception_chain.h",
    "rtl_glue.h"
@@ -17816,6 +18645,13 @@
  "0x4e105a": {
   "lifted": "f4e105a",
   "hand_files": [],
+  "verification": []
+ },
+ "0x4e10d0": {
+  "lifted": "f4e10d0",
+  "hand_files": [
+   "rtl_glue.h"
+  ],
   "verification": []
  },
  "0x4e11b0": {
@@ -17999,8 +18835,18 @@
   "hand_files": [],
   "verification": []
  },
+ "0x4e33d0": {
+  "lifted": "f4e33d0",
+  "hand_files": [],
+  "verification": []
+ },
  "0x4e3420": {
   "lifted": "f4e3420",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4e3470": {
+  "lifted": "f4e3470",
   "hand_files": [],
   "verification": []
  },
@@ -18025,7 +18871,16 @@
   "verification": []
  },
  "0x4e3697": {
-  "lifted": "f4e3697",
+  "lifted": "return_unchanged_4e3697",
+  "hand_files": [
+   "register_return.h"
+  ],
+  "verification": [
+   "register-return-verification.json"
+  ]
+ },
+ "0x4e3698": {
+  "lifted": "f4e3698",
   "hand_files": [],
   "verification": []
  },
@@ -18674,6 +19529,11 @@
   "hand_files": [],
   "verification": []
  },
+ "0x4e960c": {
+  "lifted": "f4e960c",
+  "hand_files": [],
+  "verification": []
+ },
  "0x4e9670": {
   "lifted": "f4e9670",
   "hand_files": [],
@@ -18695,9 +19555,13 @@
   "verification": []
  },
  "0x4e9d00": {
-  "lifted": "f4e9d00",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_zero_4e9d00",
+  "hand_files": [
+   "call_glue.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4e9d10": {
   "lifted": "f4e9d10",
@@ -19022,9 +19886,13 @@
   "verification": []
  },
  "0x4ec8c0": {
-  "lifted": "f4ec8c0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_unchanged_4ec8c0",
+  "hand_files": [
+   "register_return.h"
+  ],
+  "verification": [
+   "register-return-verification.json"
+  ]
  },
  "0x4ec8f0": {
   "lifted": "f4ec8f0",
@@ -19128,23 +19996,37 @@
  },
  "0x4ee730": {
   "lifted": "f4ee730",
-  "hand_files": [],
+  "hand_files": [
+   "constant_getters.h"
+  ],
   "verification": []
  },
  "0x4ee7f0": {
-  "lifted": "f4ee7f0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4ee730",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4ee800": {
-  "lifted": "f4ee800",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4ee750",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4ee810": {
-  "lifted": "f4ee810",
-  "hand_files": [],
-  "verification": []
+  "lifted": "return_constant_4ee6a0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": [
+   "constant-return-verification.json"
+  ]
  },
  "0x4ee840": {
   "lifted": "f4ee840",

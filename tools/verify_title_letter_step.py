@@ -1,6 +1,6 @@
 """Compare the complete original letter step handler 0x459be0 with the native recovery."""
 import ctypes as c, random, struct
-from unicorn import UC_HOOK_CODE
+from unicorn import UC_HOOK_CODE, UC_HOOK_MEM_WRITE
 from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_EDX
 from oracle_kit import Stubs
 from verify_call_glue import Calls, Call
@@ -584,6 +584,145 @@ def verify_full_family_count(args, native, fight=False):
                      'inputs, callback register clobbers and exception behavior outside boundary.'}
 
 
+def verify_full_family_fly(args, native, fight=False):
+    original = Original(args.executable)
+    cpu = original.cpu
+    address = 0x45a4f0 if fight else 0x45a910
+    rng = random.Random(address)
+    factors = [[c.c_int32(rng.getrandbits(32)).value for _ in range(360)] for _ in range(2)]
+    for base, values in zip((X_TABLE, Y_TABLE), factors):
+        cpu.mem_write(base, struct.pack('<360i', *values))
+    tables = Tables(*[(c.c_int32 * 360)(*values) for values in factors])
+    from original import STACK
+    frame = STACK - 4
+    Write = c.CFUNCTYPE(c.c_int, c.c_uint32, c.c_uint, c.c_uint32, c.c_void_p)
+    function = native.vertrix_title_letter_fight_fly_call if fight else native.vertrix_title_letter_wave_fly_call
+    function.argtypes = [c.POINTER(Calls), c.POINTER(c.c_uint8), c.c_size_t,
+                         c.c_uint32, c.c_uint32, c.c_uint32, c.POINTER(Tables)] + ([Write, c.c_void_p] if fight else [])
+    function.restype = c.c_uint32
+    buffer = None
+    flag = c.c_uint32()
+    patches = []
+    dimensions = (0, 0)
+    callback_return = 0
+    original_events, native_events, errors = [], [], []
+
+    def flag_write(cpu, access, address, width, value, context):
+        original_events.append(('write', address, width, value & 0xffffffff))
+    cpu.hook_add(UC_HOOK_MEM_WRITE, flag_write, begin=0x532a40, end=0x532a43)
+
+    def original_boundary(address, eax, edx, ebx, ecx, stack):
+        original_events.append(('call', address, eax, edx, ebx, ecx,
+                                bytes(cpu.mem_read(OBJ, SIZE)), int.from_bytes(cpu.mem_read(0x532a40, 4), 'little')))
+        for offset, data in patches:
+            cpu.mem_write(OBJ + offset, data)
+        cpu.mem_write(0x532a40, struct.pack('<I', changed_flag))
+        cpu.mem_write(edx, struct.pack('<I', dimensions[0]))
+        cpu.mem_write(ebx, struct.pack('<I', dimensions[1]))
+        return callback_return
+    stubs = Stubs(cpu, original_boundary)
+    stubs.add(0x4b14c0)
+
+    @Call
+    def boundary(site, context):
+        call = site.contents
+        native_events.append(('call', call.target, call.eax, call.edx, call.ebx, call.ecx,
+                              bytes(buffer), flag.value))
+        if call.target != 0x4b14c0:
+            errors.append(('target', call.target))
+            return 0
+        for offset, data in patches:
+            c.memmove(c.addressof(buffer) + offset, data, len(data))
+        flag.value = changed_flag
+        call.out_value, call.out_ebx = dimensions
+        return callback_return
+
+    @Write
+    def write(address, width, value, context):
+        native_events.append(('write', address, width, value))
+        if address != 0x532a40 or width != 4:
+            errors.append(('write', address, width))
+            return 0
+        flag.value = value
+        return 1
+
+    calls = Calls(boundary, None)
+    shapes, returns_seen = {}, {}
+    callback_count = mutations = completed = 0
+    for case in range(args.cases):
+        shape = ('not_due', 'fading', 'opaque', 'full', 'wrapped', 'signed', 'zero_rate')[case % 7]
+        data = bytearray(rng.randbytes(SIZE))
+        period, counter, elapsed = rng.randrange(1, 400), rng.randrange(400), rng.randrange(400)
+        if counter + elapsed < period:
+            counter = period
+        limit = rng.randrange(1, 300)
+        radius, rate = rng.randrange(0, limit), rng.choice([0, 1, -3, 32767, -32768])
+        if shape == 'not_due':
+            counter, elapsed, period = 0, 0, 1
+        elif shape == 'opaque': radius = limit + 1
+        elif shape == 'full': radius = limit
+        elif shape == 'wrapped': counter, elapsed, period = 0xffffffff, 1, 1
+        elif shape == 'signed':
+            radius, limit = rng.choice([-32768, -1, 0, 1, 32767]), rng.choice([-32768, -1, 1, 32767])
+        elif shape == 'zero_rate': counter, elapsed, period, rate = rng.getrandbits(32), 0, 0, 0
+        struct.pack_into('<II', data, 0xbc, counter, period)
+        struct.pack_into('<Hh', data, 0x24, rng.randrange(360), rng.randrange(-32768, 32768))
+        struct.pack_into('<hh', data, 0x28, rate, radius)
+        struct.pack_into('<hh', data, 0x30, limit, rng.randrange(-32768, 32768))
+        struct.pack_into('<hhh', data, 0x48, rng.randrange(-32768, 32768), rng.randrange(-32768, 32768), rng.randrange(-32768, 32768))
+        patches = [(offset, rng.randbytes(width)) for offset, width in
+                   ((8, 4), (0x24, 16), (0x48, 6), (0xbc, 8), (0x154, 4), (0x15c, 4))] if case % 2 else []
+        if case % 3:
+            patches.append((0x44, bytes([0 if case % 3 == 1 else rng.randrange(1, 256)])))
+        dimensions = tuple(rng.choice([0, 0xffffffff, 0x80000000, rng.getrandbits(32)]) for _ in range(2))
+        callback_return = rng.getrandbits(32)
+        flag.value, changed_flag = rng.getrandbits(32), rng.getrandbits(32)
+        cpu.mem_write(0x532a40, struct.pack('<I', flag.value))
+        cpu.mem_write(0x5bd834, struct.pack('<I', elapsed))
+        cpu.mem_write(OBJ, bytes(data))
+        original_events.clear(); native_events.clear(); errors.clear(); stubs.log.clear()
+        expected = original.call(address, eax=OBJ, edx=rng.getrandbits(32), ebx=rng.getrandbits(32), ecx=rng.getrandbits(32))
+        buffer = (c.c_uint8 * SIZE).from_buffer_copy(bytes(data))
+        tail = [write, None] if fight else []
+        got = function(c.byref(calls), buffer, SIZE, OBJ, frame, elapsed, c.byref(tables), *tail)
+        assert not errors, (case, errors)
+        assert got == expected, (shape, case, got, expected)
+        assert native_events == original_events, (shape, case, native_events, original_events)
+        assert bytes(buffer) == bytes(cpu.mem_read(OBJ, SIZE)), (shape, case)
+        assert flag.value == int.from_bytes(cpu.mem_read(0x532a40, 4), 'little'), case
+        key = 'object' if expected == OBJ else str(expected)
+        returns_seen[key] = returns_seen.get(key, 0) + 1
+        shapes[shape] = shapes.get(shape, 0) + 1
+        callback_count += len(stubs.log)
+        mutations += bool(patches) and bool(stubs.log)
+        completed += 1
+    assert completed == args.cases
+    if args.cases >= 100:
+        assert set(returns_seen) == {'0', '1', 'object'}, returns_seen
+    guard = (c.c_uint8 * SIZE).from_buffer_copy(bytes(data))
+    before = bytes(guard)
+    empty_calls = Calls(Call(), None)
+    for runtime in (None, c.byref(empty_calls)):
+        assert function(runtime, guard, SIZE, OBJ, frame, elapsed, c.byref(tables), *tail) == 0
+        assert bytes(guard) == before
+    for size_arg, tables_arg in ((0x157, c.byref(tables)), (SIZE, None)):
+        assert function(c.byref(calls), guard, size_arg, OBJ, frame, elapsed, tables_arg, *tail) == 0
+        assert bytes(guard) == before
+    if fight:
+        assert function(c.byref(calls), guard, SIZE, OBJ, frame, elapsed, c.byref(tables), Write(), None) == 0
+        assert bytes(guard) == before
+    return {'complete_original_executions': {hex(address): completed}, 'branch_fixtures': shapes,
+            'exact_measure_callback_register_state_comparisons': callback_count,
+            'live_actor_mutation_cases': mutations, 'return_counts': returns_seen,
+            'native_missing_boundary_input_guards': 5 if fight else 4,
+            'scope': 'Complete normal fly handlers execute real timer, rotation/orbit and signed '
+                     'transition helpers, with only 0x4b14c0 supplied. Exact measurement registers, '
+                     'full-width output dimensions, independent 0x160 actor/flag state before and '
+                     'after callbacks, late actor mutation reads and exact original EAX compare. '
+                     'Fight global writes compare in order. Arithmetic faults, callback register '
+                     'clobbers and exceptional execution remain outside the normal boundary.'}
+
+
 def main():
     args = vs.parse(__doc__)
     n = vs.build(args, 'title-letter-step', ['title_letter_step.c', 'actor_angle.c', 'actor_fields.c', 'actor_storage.c', 'fixed_point.c', 'rotation.c', 'word_transition.c', 'dword_transition.c', 'ui_slide_setup.c', 'render_geometry.c', 'surface.c', 'render_dispatch.c'])
@@ -804,6 +943,8 @@ def main():
     full_count = verify_full_count(args, n)
     full_fight_count = verify_full_family_count(args, n, fight=True)
     full_wave_count = verify_full_family_count(args, n)
+    full_fight_fly = verify_full_family_fly(args, n, fight=True)
+    full_wave_fly = verify_full_family_fly(args, n)
     vs.write_report(args, 'title-letter-step', {
         'full_effect_abi': full_effect,
         'full_fight_effect_abi': full_fight_effect,
@@ -811,6 +952,8 @@ def main():
         'full_count_abi': full_count,
         'full_fight_count_abi': full_fight_count,
         'full_wave_count_abi': full_wave_count,
+        'full_fight_fly_abi': full_fight_fly,
+        'full_wave_fly_abi': full_wave_fly,
         'status': 'passed', 'complete_original_executions': totals,
         'scope': 'State comparisons only for the legacy status APIs: original handlers 0x459be0, 0x459d60, 0x459e00, 0x45a290, 0x45a3e0, 0x45a440, 0x45a620, 0x45a750 and 0x45a830 (with the real 0x4ac500/0x4ac540/0x4ac5b0, 0x4ad060, 0x4ad260, 0x4ad530 and 0x457890/0x4b14c0) runs in the oracle; only the sound players 0x417260/0x417290/0x4171e0/0x417220 and the generator draw 0x4826c0 are observed and returned. The first 0x160 actor bytes, including the handler token at +0x154, compare after every call.'})
 

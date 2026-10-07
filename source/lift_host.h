@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #include "lifted_dispatch.h"
+#include "vf.h"
 
 /* The host side of the lifted routines: the original's mapped image (static data) and a heap
  * arena at original-style addresses, behind the global reads, the global stores, the object
@@ -34,7 +35,24 @@ typedef struct LiftHost
     uint32_t boundary_targets[LIFT_HOST_TARGETS];
     unsigned boundary_counts[LIFT_HOST_TARGETS];
     unsigned boundary_distinct;
+    /* DirectDraw emulation: the primary surface the original draws to, and the display mode */
+    uint32_t primary_surface;
+    uint32_t display_bits, display_width, display_height;
+    uint32_t back_surface;
+    unsigned frames_presented;
+    /* The files the original opens are entries of this archive (names like .\\SPRITE\\x.spr). */
+    uint32_t tls[64], tls_count;
+    VertrixVf *archive;
+    struct
+    {
+        uint32_t index, position, size;
+        int open;
+    } files[16];
 } LiftHost;
+
+/* The pixel memory (original address), width, height and byte pitch of a surface object, or 0. */
+uint32_t lift_host_surface(const LiftHost *host, uint32_t surface, uint32_t *width,
+                           uint32_t *height, uint32_t *pitch, uint32_t *bytes_per_pixel);
 
 /* `image` is copied into the writable image; the heap arena is supplied by the caller. */
 void lift_host_init(LiftHost *host, uint8_t *image, const uint8_t *original, uint8_t *heap,

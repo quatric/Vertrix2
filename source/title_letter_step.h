@@ -152,7 +152,7 @@ uint32_t vertrix_title_letter_fight_restart_call(const VertrixCalls *calls, uint
                                                  size_t size, uint32_t object, uint32_t elapsed,
                                                  uint32_t edx, uint32_t ebx, uint32_t ecx);
 
-/* Original handler 0x45a4f0 (the fight letters flying out): handler 0x459ec0 up to its level test.
+/* Original fragment 0x45a4f0 (the fight letters flying out): handler 0x459ec0 up to its level test.
  * When the frame is due and the level byte is zero the handler token becomes zero and *finished
  * is set (the original stores 1 at 0x532a40, which the caller applies). */
 int vertrix_title_letter_fight_fly(uint8_t *actor, size_t size, uint32_t elapsed,
@@ -160,6 +160,22 @@ int vertrix_title_letter_fight_fly(uint8_t *actor, size_t size, uint32_t elapsed
                                    const VertrixResourceDimensions *descriptor,
                                    uint8_t screen_unscaled, uint8_t screen_mode,
                                    uint32_t *finished);
+/* Original 0x45a4f0: complete normal fight fly. Mandatory 0x4b14c0 callback receives
+ * EAX/ECX=object, EDX=frame-0x24, EBX=frame-0x20; its width is out_value, height out_ebx.
+ * Later actor reads observe callback mutations. No-due returns zero; nonzero live level returns
+ * effect-transition status; zero level clears the handler, writes 1 at 0x532a40 and returns object.
+ * write is mandatory. Missing inputs reject before effects; faulting arithmetic/table inputs,
+ * callback register clobbers and exceptional execution remain outside the normal boundary. */
+uint32_t vertrix_title_letter_fight_fly_call(const VertrixCalls *calls, uint8_t *actor, size_t size,
+                                             uint32_t object, uint32_t frame, uint32_t elapsed,
+                                             const VertrixAngleTables *tables,
+                                             VertrixMemoryWrite write, void *context);
+/* Original 0x45a910: same measurement/live actor and return boundary as fight fly, clearing the
+ * handler on zero level without a global write. */
+uint32_t vertrix_title_letter_wave_fly_call(const VertrixCalls *calls, uint8_t *actor, size_t size,
+                                            uint32_t object, uint32_t frame, uint32_t elapsed,
+                                            const VertrixAngleTables *tables);
+
 /* Original handler 0x45a1c0 (a title letter flying out): the angle step and position as in the
  * other handlers; the glyph is placed with its measured size, the step word +0x32 grows by the
  * quotient, the dwords +0x64 toward +0x68 by +0x6c (0x4ad750) and, when that is done, +0x64 = 0 and

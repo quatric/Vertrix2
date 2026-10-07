@@ -1,5 +1,8 @@
 #include "lift_host.h"
 
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "lift_imports.h"
@@ -27,6 +30,17 @@ static uint8_t *bytes_at(const LiftHost *host, uint32_t address, unsigned size)
     if (in_heap(host, address, size))
     {
         return host->heap + (address - LIFT_HOST_HEAP_BASE);
+    }
+    {
+        unsigned frame = vertrix_lifted_depth();
+        while (frame-- > 0)
+        {
+            const LiftEnv *env = frame < LIFT_FRAME_LIMIT ? vertrix_lift_frames[frame] : NULL;
+            if (env != NULL && lift_in_stack(env, address, size))
+            {
+                return env->stack + (address - env->low);
+            }
+        }
     }
     return NULL;
 }
@@ -132,6 +146,15 @@ uint32_t lift_host_allocate(LiftHost *host, uint32_t size)
     return host_allocate(size, host);
 }
 
+enum
+{
+    LIFT_COM_BASE = 0xe0000000u,
+    COM_DRAW = 1,
+    COM_SURFACE = 2
+};
+
+static uint32_t host_com_object(LiftHost *host, unsigned interface_id);
+
 static uint32_t site_argument(const VertrixCallSite *site, unsigned index)
 {
     return index == 0   ? site->stack
@@ -150,12 +173,42 @@ static uint32_t host_string_length(LiftHost *host, uint32_t address)
     return length;
 }
 
+/* Look a path up in the archive: drops a leading ".\\" or drive, folds separators. */
+static int host_find_file(LiftHost *host, uint32_t name, uint32_t *index)
+{
+    char text[300];
+    unsigned length = 0;
+    const char *start = text;
+    if (host->archive == NULL)
+    {
+        return 0;
+    }
+    while (length < sizeof text - 1 && lift_host_read(host, name + length, 1) != 0)
+    {
+        text[length] = (char)lift_host_read(host, name + length, 1);
+        length++;
+    }
+    text[length] = 0;
+    {
+        int found = vertrix_vf_find(host->archive, start, index);
+        if (getenv("TRACE_FILES"))
+        {
+            printf("file %s -> %d\n", text, found);
+        }
+        return found;
+    }
+}
+
 /* The Win32 imports the original's runtime reaches, served on the host. Returns 1 and the result
  * in *result when the import is implemented. Arguments are the stdcall stack dwords. */
 static int host_import(LiftHost *host, const VertrixCallSite *site, const char *name,
                        uint32_t *result)
 {
     uint32_t a0 = site_argument(site, 0), a1 = site_argument(site, 1), a2 = site_argument(site, 2);
+    if (getenv("TRACE_IMPORTS"))
+    {
+        printf("import %s(%x, %x, %x)\n", name, (unsigned)a0, (unsigned)a1, (unsigned)a2);
+    }
     if (strcmp(name, "lstrlenA") == 0)
     {
         *result = host_string_length(host, a0);
@@ -198,6 +251,236 @@ static int host_import(LiftHost *host, const VertrixCallSite *site, const char *
     {
         *result = a0;
     }
+    else if (strcmp(name, "DirectDrawCreateEx") == 0) /* (guid, out, iid, outer) */
+    {
+        uint32_t device = host_com_object(host, COM_DRAW);
+        host_write(host, a1, 4, device);
+        *result = device == 0 ? 0x8007000eu : 0;
+    }
+    else if (strcmp(name, "GetFullPathNameA") == 0) /* (name, size, buffer, file part) */
+    {
+        uint32_t length = host_string_length(host, a0), i;
+        for (i = 0; i <= length && i < a1; i++)
+        {
+            host_write(host, a2 + i, 1, lift_host_read(host, a0 + i, 1));
+        }
+        *result = length;
+    }
+    else if (strcmp(name, "TlsAlloc") == 0)
+    {
+        *result = host->tls_count < 64 ? host->tls_count++ : 0xffffffffu;
+    }
+    else if (strcmp(name, "TlsGetValue") == 0)
+    {
+        *result = a0 < 64 ? host->tls[a0] : 0;
+    }
+    else if (strcmp(name, "TlsSetValue") == 0)
+    {
+        if (a0 < 64)
+        {
+            host->tls[a0] = a1;
+        }
+        *result = a0 < 64;
+    }
+    else if (strcmp(name, "TlsFree") == 0)
+    {
+        *result = 1;
+    }
+    else if (strcmp(name, "FileTimeToLocalFileTime") == 0)
+    {
+        host_write(host, a1, 4, lift_host_read(host, a0, 4));
+        host_write(host, a1 + 4, 4, lift_host_read(host, a0 + 4, 4));
+        *result = 1;
+    }
+    else if (strcmp(name, "FileTimeToSystemTime") == 0)
+    {
+        uint32_t i;
+        for (i = 0; i < 16; i += 4)
+        {
+            host_write(host, a1 + i, 4, 0);
+        }
+        host_write(host, a1, 2, 2004);
+        host_write(host, a1 + 2, 2, 1);
+        host_write(host, a1 + 6, 2, 1);
+        *result = 1;
+    }
+    else if (strcmp(name, "GetTimeZoneInformation") == 0)
+    {
+        uint32_t i;
+        for (i = 0; i < 172; i += 4)
+        {
+            host_write(host, a0 + i, 4, 0);
+        }
+        *result = 0; /* TIME_ZONE_ID_UNKNOWN, UTC */
+    }
+    else if (strcmp(name, "GetStringTypeA") == 0) /* (locale, type, text, count, out) */
+    {
+        uint32_t count = site_argument(site, 3), out = site_argument(site, 4), i;
+        if (count == 0xffffffffu)
+        {
+            count = host_string_length(host, a2) + 1;
+        }
+        for (i = 0; i < count; i++)
+        {
+            int c = (int)lift_host_read(host, a2 + i, 1);
+            uint32_t bits = 0;
+            bits |= isupper(c) ? 1 : 0;
+            bits |= islower(c) ? 2 : 0;
+            bits |= isdigit(c) ? 4 : 0;
+            bits |= isspace(c) ? 8 : 0;
+            bits |= ispunct(c) ? 0x10 : 0;
+            bits |= iscntrl(c) ? 0x20 : 0;
+            bits |= (c == ' ' || c == '\t') ? 0x40 : 0;
+            bits |= isxdigit(c) ? 0x80 : 0;
+            bits |= isalpha(c) ? 0x100 : 0;
+            host_write(host, out + 2 * i, 2, bits);
+        }
+        *result = 1;
+    }
+    else if (strcmp(name, "CharUpperA") == 0)
+    {
+        if (a0 < 0x10000u)
+        {
+            *result = a0 >= 'a' && a0 <= 'z' ? a0 - 32 : a0;
+        }
+        else
+        {
+            uint32_t i;
+            for (i = 0; lift_host_read(host, a0 + i, 1) != 0; i++)
+            {
+                uint32_t c = lift_host_read(host, a0 + i, 1);
+                host_write(host, a0 + i, 1, c >= 'a' && c <= 'z' ? c - 32 : c);
+            }
+            *result = a0;
+        }
+    }
+    else if (strcmp(name, "FindFirstFileA") == 0) /* (name, find data) */
+    {
+        uint32_t index, size, i, length;
+        if (!host_find_file(host, a0, &index) || !vertrix_vf_size(host->archive, index, &size))
+        {
+            *result = 0xffffffffu;
+            return 1;
+        }
+        for (i = 0; i < 320; i += 4)
+        {
+            host_write(host, a1 + i, 4, 0);
+        }
+        host_write(host, a1, 4, 0x80);
+        host_write(host, a1 + 32, 4, size);
+        length = host_string_length(host, a0);
+        for (i = 0; i < length && i < 259; i++)
+        {
+            host_write(host, a1 + 44 + i, 1, lift_host_read(host, a0 + i, 1));
+        }
+        *result = 0x1001;
+    }
+    else if (strcmp(name, "FindClose") == 0)
+    {
+        *result = 1;
+    }
+    else if (strcmp(name, "CreateFileA") == 0)
+    {
+        uint32_t index, size;
+        unsigned slot;
+        *result = 0xffffffffu;
+        if (host_find_file(host, a0, &index) && vertrix_vf_size(host->archive, index, &size))
+        {
+            for (slot = 0; slot < 16; slot++)
+            {
+                if (!host->files[slot].open)
+                {
+                    host->files[slot].open = 1;
+                    host->files[slot].index = index;
+                    host->files[slot].position = 0;
+                    host->files[slot].size = size;
+                    *result = 0x100 + slot;
+                    break;
+                }
+            }
+        }
+    }
+    else if (strcmp(name, "ReadFile") == 0) /* (handle, buffer, count, read*, overlapped) */
+    {
+        unsigned slot = a0 - 0x100;
+        uint32_t count = a2, available;
+        uint8_t *to =
+            a0 >= 0x100 && slot < 16 && host->files[slot].open ? bytes_at(host, a1, count) : NULL;
+        *result = 0;
+        if (to != NULL || count == 0)
+        {
+            available = host->files[slot].size - host->files[slot].position;
+            if (count > available)
+            {
+                count = available;
+            }
+            if (count == 0 || vertrix_vf_read(host->archive, host->files[slot].index,
+                                              host->files[slot].position, to, count))
+            {
+                host->files[slot].position += count;
+                if (site_argument(site, 3) != 0)
+                {
+                    host_write(host, site_argument(site, 3), 4, count);
+                }
+                *result = 1;
+            }
+        }
+    }
+    else if (strcmp(name, "SetFilePointer") == 0) /* (handle, distance, high*, method) */
+    {
+        unsigned slot = a0 - 0x100;
+        uint32_t method = site_argument(site, 3);
+        *result = 0xffffffffu;
+        if (a0 >= 0x100 && slot < 16 && host->files[slot].open)
+        {
+            uint32_t base = method == 0   ? 0
+                            : method == 1 ? host->files[slot].position
+                                          : host->files[slot].size;
+            host->files[slot].position = base + a1;
+            *result = host->files[slot].position;
+        }
+    }
+    else if (strcmp(name, "GetFileSize") == 0)
+    {
+        unsigned slot = a0 - 0x100;
+        *result = a0 >= 0x100 && slot < 16 && host->files[slot].open ? host->files[slot].size
+                                                                     : 0xffffffffu;
+        if (a1 != 0)
+        {
+            host_write(host, a1, 4, 0);
+        }
+    }
+    else if (strcmp(name, "CloseHandle") == 0)
+    {
+        unsigned slot = a0 - 0x100;
+        if (a0 >= 0x100 && slot < 16)
+        {
+            host->files[slot].open = 0;
+        }
+        *result = 1;
+    }
+    else if (strcmp(name, "GetVolumeInformationA") == 0) /* (root, name, size, serial, ...) */
+    {
+        uint32_t serial = site_argument(site, 3), length = site_argument(site, 4),
+                 flags = site_argument(site, 5);
+        if (a1 != 0)
+        {
+            host_write(host, a1, 1, 0);
+        }
+        if (serial != 0)
+        {
+            host_write(host, serial, 4, 0x1234abcdu);
+        }
+        if (length != 0)
+        {
+            host_write(host, length, 4, 255);
+        }
+        if (flags != 0)
+        {
+            host_write(host, flags, 4, 0);
+        }
+        *result = 1;
+    }
     else if (strcmp(name, "GetVersion") == 0)
     {
         *result = 0x0a280005u; /* Windows XP style: major 5, minor 1 packs as 0x0a280105 */
@@ -218,10 +501,223 @@ static int host_import(LiftHost *host, const VertrixCallSite *site, const char *
     return 1;
 }
 
+/* ---- DirectDraw emulation -------------------------------------------------------------------
+ * COM objects are heap blocks { +0 vtable, +4 pixels, +8 width, +12 height, +16 pitch, +20 bytes
+ * per pixel }; a vtable entry is the fake address LIFT_COM_BASE + interface * 0x100 + index, which
+ * lands on the boundary where host_com serves it. Interfaces: 1 IDirectDraw7, 2 surface. */
+static uint32_t host_com_object(LiftHost *host, unsigned interface_id)
+{
+    uint32_t object = host_allocate(32, host);
+    uint32_t table = host_allocate(0x100 * 4, host);
+    uint32_t i;
+    for (i = 0; object != 0 && table != 0 && i < 0x40; i++)
+    {
+        host_write(host, table + 4 * i, 4, LIFT_COM_BASE + interface_id * 0x100 + i);
+    }
+    if (object != 0)
+    {
+        host_write(host, object, 4, table);
+    }
+    return object;
+}
+
+uint32_t lift_host_surface(const LiftHost *host, uint32_t surface, uint32_t *width,
+                           uint32_t *height, uint32_t *pitch, uint32_t *bytes_per_pixel)
+{
+    if (surface == 0)
+    {
+        return 0;
+    }
+    *width = lift_host_read(host, surface + 8, 4);
+    *height = lift_host_read(host, surface + 12, 4);
+    *pitch = lift_host_read(host, surface + 16, 4);
+    *bytes_per_pixel = lift_host_read(host, surface + 20, 4);
+    return lift_host_read(host, surface + 4, 4);
+}
+
+static uint32_t host_create_surface(LiftHost *host, uint32_t desc, uint32_t out)
+{
+    uint32_t flags = lift_host_read(host, desc + 4, 4);
+    uint32_t height = (flags & 2) ? lift_host_read(host, desc + 8, 4) : host->display_height;
+    uint32_t width = (flags & 4) ? lift_host_read(host, desc + 12, 4) : host->display_width;
+    uint32_t bits = (flags & 0x1000) ? lift_host_read(host, desc + 84, 4) : host->display_bits;
+    uint32_t caps = lift_host_read(host, desc + 104, 4);
+    uint32_t surface = host_com_object(host, COM_SURFACE);
+    uint32_t pixels;
+    if (bits == 0)
+    {
+        bits = 32;
+    }
+    if ((caps & 0x200) != 0 && width == 0)
+    {
+        width = 640;
+        height = 480;
+    }
+    if (width == 0 || height == 0)
+    {
+        width = 640;
+        height = 480;
+    }
+    pixels = host_allocate(width * height * (bits / 8), host);
+    if (surface == 0 || pixels == 0)
+    {
+        return 0x8007000e; /* E_OUTOFMEMORY */
+    }
+    host_write(host, surface + 4, 4, pixels);
+    host_write(host, surface + 8, 4, width);
+    host_write(host, surface + 12, 4, height);
+    host_write(host, surface + 16, 4, width * (bits / 8));
+    host_write(host, surface + 20, 4, bits / 8);
+    if ((caps & 0x200) != 0)
+    {
+        host->primary_surface = surface;
+    }
+    host_write(host, out, 4, surface);
+    return 0;
+}
+
+/* Copy a rectangle between emulated surfaces of the same pixel size; a zero rectangle pointer is
+ * the whole surface. Clipped to both. */
+static void host_surface_copy(LiftHost *host, uint32_t target, uint32_t tx, uint32_t ty,
+                              uint32_t source, uint32_t rect)
+{
+    uint32_t sw, sh, sp, sb, tw, th, tp, tb;
+    uint32_t spixels = lift_host_surface(host, source, &sw, &sh, &sp, &sb);
+    uint32_t tpixels = lift_host_surface(host, target, &tw, &th, &tp, &tb);
+    int32_t left = 0, top = 0, right = (int32_t)sw, bottom = (int32_t)sh, x, y;
+    if (spixels == 0 || tpixels == 0 || sb != tb || sb == 0)
+    {
+        return;
+    }
+    if (rect != 0)
+    {
+        left = (int32_t)lift_host_read(host, rect, 4);
+        top = (int32_t)lift_host_read(host, rect + 4, 4);
+        right = (int32_t)lift_host_read(host, rect + 8, 4);
+        bottom = (int32_t)lift_host_read(host, rect + 12, 4);
+    }
+    for (y = top; y < bottom; y++)
+    {
+        int32_t dy = (int32_t)ty + (y - top);
+        if (y < 0 || y >= (int32_t)sh || dy < 0 || dy >= (int32_t)th)
+        {
+            continue;
+        }
+        for (x = left; x < right; x++)
+        {
+            int32_t dx = (int32_t)tx + (x - left);
+            uint32_t i;
+            if (x < 0 || x >= (int32_t)sw || dx < 0 || dx >= (int32_t)tw)
+            {
+                continue;
+            }
+            for (i = 0; i < sb; i++)
+            {
+                host_write(host, tpixels + dy * tp + dx * tb + i, 1,
+                           lift_host_read(host, spixels + y * sp + x * sb + i, 1));
+            }
+        }
+    }
+}
+
+static uint32_t host_com(LiftHost *host, unsigned interface_id, unsigned index,
+                         const VertrixCallSite *site)
+{
+    uint32_t this_ = site_argument(site, 0);
+    if (getenv("TRACE_IMPORTS"))
+    {
+        printf("com %s[%u](%x, %x, %x)\n", interface_id == COM_DRAW ? "DirectDraw" : "Surface",
+               index, (unsigned)this_, (unsigned)site_argument(site, 1),
+               (unsigned)site_argument(site, 2));
+    }
+    if (interface_id == COM_DRAW)
+    {
+        if (index == 6) /* CreateSurface(this, desc, out, outer) */
+        {
+            return host_create_surface(host, site_argument(site, 1), site_argument(site, 2));
+        }
+        if (index == 21) /* SetDisplayMode(this, width, height, bits, ...) */
+        {
+            host->display_width = site_argument(site, 1);
+            host->display_height = site_argument(site, 2);
+            host->display_bits = site_argument(site, 3);
+        }
+        return 0; /* QueryInterface, SetCooperativeLevel and the rest report DD_OK */
+    }
+    if (interface_id == COM_SURFACE)
+    {
+        uint32_t pixels = lift_host_read(host, this_ + 4, 4);
+        if (index == 12) /* GetAttachedSurface(this, caps, out): the back buffer, same size */
+        {
+            uint32_t back = host_com_object(host, COM_SURFACE);
+            uint32_t bytes = lift_host_read(host, this_ + 20, 4);
+            uint32_t width = lift_host_read(host, this_ + 8, 4);
+            uint32_t height = lift_host_read(host, this_ + 12, 4);
+            uint32_t memory = host_allocate(width * height * bytes, host);
+            if (back == 0 || memory == 0)
+            {
+                return 0x8007000e;
+            }
+            host_write(host, back + 4, 4, memory);
+            host_write(host, back + 8, 4, width);
+            host_write(host, back + 12, 4, height);
+            host_write(host, back + 16, 4, width * bytes);
+            host_write(host, back + 20, 4, bytes);
+            host_write(host, site_argument(site, 2), 4, back);
+            if (this_ == host->primary_surface)
+            {
+                host->back_surface = back;
+            }
+            return 0;
+        }
+        if (index == 5) /* Blt(this, target rect, source, source rect, flags, effects) */
+        {
+            uint32_t target_rect = site_argument(site, 1);
+            host_surface_copy(host, this_,
+                              target_rect != 0 ? lift_host_read(host, target_rect, 4) : 0,
+                              target_rect != 0 ? lift_host_read(host, target_rect + 4, 4) : 0,
+                              site_argument(site, 2), site_argument(site, 3));
+            return 0;
+        }
+        if (index == 7) /* BltFast(this, x, y, source, source rect, flags) */
+        {
+            host_surface_copy(host, this_, site_argument(site, 1), site_argument(site, 2),
+                              site_argument(site, 3), site_argument(site, 4));
+            return 0;
+        }
+        if (index == 11) /* Flip: the back buffer becomes what the primary shows */
+        {
+            if (host->primary_surface == this_)
+            {
+                host_surface_copy(host, this_, 0, 0, host->back_surface, 0);
+            }
+            host->frames_presented++;
+            return 0;
+        }
+        if (index == 25) /* Lock(this, rect, desc, flags, event) */
+        {
+            uint32_t desc = site_argument(site, 2);
+            host_write(host, desc + 4, 4, 0x100f | 0x1000);
+            host_write(host, desc + 8, 4, lift_host_read(host, this_ + 12, 4));
+            host_write(host, desc + 12, 4, lift_host_read(host, this_ + 8, 4));
+            host_write(host, desc + 16, 4, lift_host_read(host, this_ + 16, 4));
+            host_write(host, desc + 36, 4, pixels);
+            host_write(host, desc + 84, 4, 8 * lift_host_read(host, this_ + 20, 4));
+        }
+        return 0; /* Unlock, Blt, GetFlipStatus, Restore, Release... report DD_OK */
+    }
+    return 0;
+}
+
 static uint32_t host_boundary(VertrixCallSite *site, void *context)
 {
     LiftHost *host = context;
     unsigned i;
+    if (site->target >= LIFT_COM_BASE && site->target < LIFT_COM_BASE + 0x400)
+    {
+        return host_com(host, (site->target - LIFT_COM_BASE) >> 8,
+                        (site->target - LIFT_COM_BASE) & 0xff, site);
+    }
     {
         uint32_t slot = vertrix_import_slot(host->image, LIFT_HOST_IMAGE_BASE, site->target);
         const char *name = vertrix_import_name(slot);

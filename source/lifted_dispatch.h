@@ -7,6 +7,12 @@
 /* Number of original routines that run as verified lifted C (tools/gen_dispatch.py). */
 unsigned vertrix_lifted_count(void);
 
+/* How many lifted routines are executing now (the frames in vertrix_lift_frames). */
+unsigned vertrix_lifted_depth(void);
+
+/* Print every dispatched routine's original address and call depth (debugging). */
+void vertrix_lifted_set_trace(int enabled);
+
 /* Also run the lifted routines that did not pass verification (off by default). */
 void vertrix_lifted_allow_unverified(int allowed);
 

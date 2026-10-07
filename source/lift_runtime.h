@@ -51,6 +51,16 @@ typedef struct LiftEnv
     int failed;
 } LiftEnv;
 
+/* The stack frames of the lifted routines now executing, outermost first, so the host side of
+ * the call boundary can read the strings and structures a routine builds in its locals. The
+ * dispatcher sets the index before it runs a routine. Weak: every translation unit shares them. */
+enum
+{
+    LIFT_FRAME_LIMIT = 17
+};
+__attribute__((weak)) const LiftEnv *vertrix_lift_frames[LIFT_FRAME_LIMIT];
+__attribute__((weak)) unsigned vertrix_lift_frame_index;
+
 static inline void lift_begin(LiftEnv *env, const VertrixCalls *calls,
                               const VertrixFactoryServices *services, const VertrixGlobals *globals,
                               uint8_t *stack, uint32_t below, unsigned argument_count,
@@ -65,6 +75,10 @@ static inline void lift_begin(LiftEnv *env, const VertrixCalls *calls,
     env->high = entry->esp + 4 + 4 * argument_count + 4;
     env->chain = entry->chain;
     env->failed = 0;
+    if (vertrix_lift_frame_index < LIFT_FRAME_LIMIT)
+    {
+        vertrix_lift_frames[vertrix_lift_frame_index] = env;
+    }
     memcpy(stack, entry->garbage, below);
     memset(stack + below, 0, 4 + 4 * argument_count + 4);
     for (i = 0; i < argument_count; i++)

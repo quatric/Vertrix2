@@ -165,3 +165,87 @@ int32_t vertrix_compare_u32(uint32_t first, uint32_t second)
 {
     return first < second ? -1 : first > second;
 }
+
+uint32_t vertrix_actor_advance_elapsed(void *actor, size_t size, uint32_t object, uint32_t offset,
+                                       uint32_t elapsed)
+{
+    return vertrix_actor_add_elapsed(actor, size, offset, elapsed) ? object : 0;
+}
+
+uint32_t vertrix_actor_sync_clock_period(void *actor, size_t size, uint32_t object)
+{
+    return vertrix_actor_clock_to_period(actor, size) ? object : 0;
+}
+
+uint32_t vertrix_actor_choose_handler(void *actor, size_t size, uint32_t object,
+                                      uint32_t source_offset)
+{
+    return copy_dword(actor, size, source_offset, ACTOR_SELECTED) ? object : 0;
+}
+
+uint32_t vertrix_player_write_bytes_168(void *player, size_t size, uint32_t object, uint32_t first,
+                                        uint32_t second, uint32_t third)
+{
+    return vertrix_player_set_bytes_168(player, size, first, second, third) ? object : 0;
+}
+
+uint32_t vertrix_player_test_4e8(const void *player, size_t size)
+{
+    uint32_t result = 0;
+    vertrix_player_flag_4e8(player, size, &result);
+    return result;
+}
+
+uint32_t vertrix_player_test_bonus_full(const void *player, size_t size)
+{
+    uint32_t result = 0;
+    vertrix_player_bonus_meter_full(player, size, &result);
+    return result;
+}
+
+uint32_t vertrix_player_test_a60(const void *player, size_t size)
+{
+    uint32_t result = 0;
+    vertrix_player_flag_a60(player, size, &result);
+    return result;
+}
+
+uint32_t vertrix_player_test_4c4(const void *player, size_t size)
+{
+    uint32_t result = 0;
+    vertrix_player_byte_4c4_is_one(player, size, &result);
+    return result;
+}
+
+uint32_t vertrix_object_write_18(void *storage, size_t size, uint32_t object, uint32_t value)
+{
+    return vertrix_object_set_18(storage, size, value) ? object : 0;
+}
+
+uint32_t vertrix_actor_test_counter_pair(const void *actor, size_t size, uint32_t counter_offset,
+                                         uint32_t limit_offset)
+{
+    uint32_t result = 0;
+    vertrix_actor_counter_pair_reached(actor, size, counter_offset, limit_offset, &result);
+    return result;
+}
+
+uint32_t vertrix_actor_store_times_twelve(void *actor, size_t size, uint32_t offset, uint32_t value)
+{
+    return vertrix_actor_set_times_twelve(actor, size, offset, value) ? value * 12u : 0;
+}
+
+uint32_t vertrix_player_fill_byte_range(void *player, size_t size, uint32_t object, uint32_t start,
+                                        uint32_t count, uint32_t value)
+{
+    if (start > size || count > size - start)
+    {
+        return 0;
+    }
+    return vertrix_player_fill_bytes(player, size, start, count, value) ? object + count : 0;
+}
+
+uint32_t vertrix_object_reset_slots(void *storage, size_t size, uint32_t object)
+{
+    return vertrix_object_clear_slots(storage, size) ? object + OBJECT_SLOTS_END : 0;
+}
