@@ -78,6 +78,16 @@ void vertrix_complete(void);
 """
                 self.assertEqual(dict(header_pairs(text)), {0x400003: "vertrix_complete"})
 
+    def test_function_type_alias_is_scaffolding_not_routine(self):
+        text = """
+/* Original 0x400001: callable routine below type scaffolding. */
+typedef uint32_t vertrix_result_type(int value);
+uint32_t vertrix_actual(vertrix_result_type *callback);
+/* Original 0x400002: only a type alias, no recovered routine. */
+typedef void vertrix_callback_type(void);
+"""
+        self.assertEqual(dict(header_pairs(text)), {0x400001: "vertrix_actual"})
+
     def test_member_callback_comment_does_not_leak(self):
         text = """
 typedef struct {

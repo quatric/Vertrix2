@@ -34,7 +34,7 @@ def following_name(text):
     text = re.sub(r"^[ \t]*#[^\n]*(?:\\\n[^\n]*)*", " ", text, flags=re.M)
     while text.strip():
         text = text.lstrip()
-        found = PROTOTYPE.match(text)
+        found = None if re.match(r"typedef\b", text) else PROTOTYPE.match(text)
         if found:
             return found.group(1)
         if not re.match(r"(?:typedef|enum|struct|union)\b", text):
