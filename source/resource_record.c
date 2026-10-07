@@ -182,3 +182,85 @@ int vertrix_record_release_global(uint32_t *global, void *record, size_t record_
     *global = 0;
     return result;
 }
+
+uint32_t vertrix_record_release_full(void *record, size_t size, uint32_t record_handle,
+                                     const VertrixCalls *runtime, uint32_t caller_ebx)
+{
+    const uint8_t *bytes = record;
+    if (!record || size < VERTRIX_RECORD_SIZE)
+    {
+        return 0;
+    }
+    uint32_t result = record_handle;
+    uint32_t ecx = handle_at(record, size, HANDLE_268);
+    if (ecx)
+    {
+        result = vertrix_call(runtime, 0x478d80, ecx, record_handle, caller_ebx, ecx, 0);
+    }
+    uint32_t ebx = handle_at(record, size, HANDLE_274);
+    if (ebx)
+    {
+        result = vertrix_call(runtime, 0x478d80, ebx, record_handle, ebx, ecx, 0);
+    }
+    uint32_t handle = handle_at(record, size, HANDLE_278);
+    if (handle)
+    {
+        result = vertrix_call(runtime, 0x478d80, handle, record_handle, ebx, ecx, 0);
+    }
+    if (bytes[FLAG_220] == 1)
+    {
+        handle = handle_at(record, size, HANDLE_270);
+        if (handle)
+        {
+            result = vertrix_call(runtime, 0x478d80, handle, record_handle, ebx, ecx, 0);
+        }
+    }
+    if (bytes[FLAG_222] == 1)
+    {
+        result = handle_at(record, size, HANDLE_26C);
+        if (result)
+        {
+            result = vertrix_call(runtime, 0x478d80, result, record_handle, ebx, ecx, 0);
+        }
+    }
+    vertrix_actor_storage_write(record, size, HANDLE_268, 4, 0);
+    vertrix_actor_storage_write(record, size, HANDLE_274, 4, 0);
+    vertrix_actor_storage_write(record, size, HANDLE_278, 4, 0);
+    vertrix_actor_storage_write(record, size, HANDLE_270, 4, 0);
+    vertrix_actor_storage_write(record, size, HANDLE_26C, 4, 0);
+    return result;
+}
+
+uint32_t vertrix_record_release_global_full(uint32_t *global, void *record, size_t size,
+                                            const VertrixCalls *runtime, uint32_t caller_ebx,
+                                            VertrixMemoryRead read, void *read_context)
+{
+    if (!global)
+    {
+        return 0;
+    }
+    uint32_t object = *global;
+    if (!object)
+    {
+        return 0;
+    }
+    if (!record || size < VERTRIX_RECORD_SIZE)
+    {
+        return 0;
+    }
+    uint32_t result = vertrix_record_release_full(record, size, object, runtime, caller_ebx);
+    object = *global;
+    if (!object)
+    {
+        return result;
+    }
+    uint32_t table, entry;
+    if (!read || !read(object + 0x27c, 4, &table, read_context) ||
+        !read(table, 4, &entry, read_context) || !entry)
+    {
+        return 0;
+    }
+    result = vertrix_call(runtime, entry, object, 2, caller_ebx, table, 0);
+    *global = 0;
+    return result;
+}

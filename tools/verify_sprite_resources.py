@@ -94,6 +94,7 @@ def main():
         native.vertrix_sprite_resources_free(c.byref(loaded))
     archive = native.vertrix_vf_open(str(args.archive.resolve()).encode())
     assert archive
+    failure_cases = 0
     for case in range(5):
         selection = Selection()
         native.vertrix_sprite_selection_init(c.byref(selection))
@@ -101,18 +102,21 @@ def main():
         format_word = 0x04000000
         if case == 0:
             selection.artwork_source = 0xffffffff
-            if case == 1:
-                selection.settings[16] = 11
-#Arrow bank lacks stencil frame9.if case == 2:
-            selection.settings[18] = 22
-#Missing last direct bank.if case == 3:
+        elif case == 1:
+            selection.settings[16] = 11  # Arrow bank lacks stencil frame 9.
+        elif case == 2:
+            selection.settings[18] = 22  # Missing last direct bank.
+        elif case == 3:
             format_word = 0x03000000
-            if case == 4:
-                selection.border_source = 0xffffffff
-                assert not native.vertrix_sprite_resources_load(archive, c.byref(selection), masks, format_word, c.byref(loaded))
-                assert bytes(loaded) == bytes(Resources())
-                native.vertrix_vf_close(archive)
-    report = {'status': 'passed', 'integrated_resource_sets': 8, 'published_bindings_checked': 184, 'generated_pixels_compared': pixels, 'failure_preservation_cases': 5, 'scope': 'Selected20 VF banks plus solid/hollow and additional border artwork match the separately original-verified ' 'artwork path. All published internal pointers are rebased into the final live ' 'context and remain valid after archive closure. Occupied/invalid output rejection ' 'and repeated free checked. Full startup, actor creation, scene/gameplay and Wii ' 'execution remain separate.'}
+        else:
+            selection.border_source = 0xffffffff
+        assert not native.vertrix_sprite_resources_load(
+            archive, c.byref(selection), masks, format_word, c.byref(loaded)), case
+        assert bytes(loaded) == bytes(Resources()), case
+        failure_cases += 1
+    assert failure_cases == 5
+    native.vertrix_vf_close(archive)
+    report = {'status': 'passed', 'integrated_resource_sets': 8, 'published_bindings_checked': 184, 'generated_pixels_compared': pixels, 'failure_preservation_cases': failure_cases, 'scope': 'Selected20 VF banks plus solid/hollow and additional border artwork match the separately original-verified ' 'artwork path. All published internal pointers are rebased into the final live ' 'context and remain valid after archive closure. Occupied/invalid output rejection ' 'and repeated free checked. Full startup, actor creation, scene/gameplay and Wii ' 'execution remain separate.'}
     (build / 'sprite-resources-verification.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))
 if __name__ == '__main__':

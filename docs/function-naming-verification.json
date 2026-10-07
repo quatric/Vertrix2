@@ -2,10 +2,10 @@
   "status": "passed",
   "scope": "Current naming, metadata, and generated dispatcher validation after independent verified routine regeneration. Name-only token comparison for the earlier application is archived separately.",
   "reference_commit": "241998d372f40a065d8166730c4999d9cdeb9931",
-  "name_map_entries": 1284,
+  "name_map_entries": 1287,
   "canonical_alias_decisions": 54,
   "verified_chunk_routines": 2616,
-  "readable_chunk_names": 1020,
+  "readable_chunk_names": 1022,
   "name_application_idempotent": true,
   "all_chunk_addresses_match_passed_batch": true,
   "earlier_name_only_application": "docs/function-naming-application-006cbd2.json",
@@ -21,18 +21,18 @@
     "unsigned_edge_pairs": 36,
     "boundary_forwarding_calls": 1
   },
-  "naming_regression_tests": 19,
-  "post_regeneration_identifier_only_renames": 8,
+  "naming_regression_tests": 20,
+  "post_regeneration_identifier_only_renames": 3,
   "metadata_matches_verified_batch_except_names": true,
   "identifier_only_comparison": {
     "status": "passed",
-    "scope": "Generated lifted identifiers only; native verifier coverage and header evidence corrected separately.",
-    "reference_commit": "e27086b60643272361392567e0183f664ea694b5",
-    "renamed_routines": 8,
+    "scope": "Generated lifted identifiers only; full native resource-return recovery has separate original-executable verification.",
+    "reference_commit": "49671c6a8b27e6a9c73487a29bf6ecfd0dce6f87",
+    "renamed_routines": 3,
     "normalized_files": [
       "source/lifted_dispatch.c",
-      "source/lifted_whole_0.c",
-      "source/lifted_whole_0.h",
+      "source/lifted_whole_1.c",
+      "source/lifted_whole_1.h",
       "source/lifted_whole_4.c",
       "source/lifted_whole_4.h"
     ],
@@ -62,6 +62,14 @@
     "report": "docs/resource-record-verification.json",
     "before_fix_mismatch_reproduced": true,
     "original_executions": 20480,
-    "known_release_return_gap": "docs/resource-record-release-return-gap.json"
+    "legacy_release_return_fixture": "docs/resource-record-release-return-gap.json"
+  },
+  "native_resource_return_recovery": {
+    "status": "passed",
+    "report": "docs/resource-record-verification.json",
+    "original_executions": 28672,
+    "full_release_cases": 4096,
+    "full_global_release_cases": 4096,
+    "former_gap_fixture": "docs/resource-record-release-return-gap.json"
   }
 }

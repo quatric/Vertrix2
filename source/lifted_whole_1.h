@@ -200,7 +200,7 @@ enum
     LIFTED_FORWARD_4EA190_STACK = 68,
     LIFTED_CHAIN_OBJECT_CONSTRUCT_STACK = 136,
     LIFTED_RECORD_INIT_STACK = 88,
-    LIFTED_RECORD_RELEASE_STACK = 104,
+    LIFTED_RECORD_RELEASE_FULL_STACK = 104,
     LIFTED_RECORD_DRAW_STACK = 100,
     LIFTED_RELEASE_TABLE_B_STACK = 72,
     LIFTED_F4429A0_STACK = 92,
@@ -1307,8 +1307,9 @@ uint32_t lifted_record_init(const VertrixCalls *calls, const VertrixFactoryServi
                             const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x441a80. */
-uint32_t lifted_record_release(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                               const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_record_release_full(const VertrixCalls *calls,
+                                    const VertrixFactoryServices *services,
+                                    const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x441b30. */
 uint32_t lifted_record_draw(const VertrixCalls *calls, const VertrixFactoryServices *services,

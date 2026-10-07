@@ -63,6 +63,20 @@
       "report": "docs/block-factory-verification.json",
       "completed_comparison_cases": 20480,
       "correction": "Create and spawn independently assert all callbacks consumed, with exact interleaved allocation sizes, returned handles, random divisors and values. Comparisons occur outside callback bodies."
+    },
+    {
+      "tool": "tools/verify_sprite_resources.py",
+      "report": "docs/sprite-resources-verification.json",
+      "completed_failure_preservation_cases": 5,
+      "previous_actual_failure_preservation_cases": 0,
+      "correction": "Each invalid artwork/settings/format/border fixture independently invokes the resource loader and checks zero output; archive closes after all comparisons."
+    },
+    {
+      "tool": "tools/verify_table_queries.py",
+      "report": "docs/table-queries-verification.json",
+      "completed_comparison_cases": 98304,
+      "original_entrypoints": 24,
+      "correction": "Each original entrypoint runs4096 randomized comparisons; exact per-address counters asserted. Independent operations run once per fixture, and success report is written only after every fixture completes."
     }
   ]
 }

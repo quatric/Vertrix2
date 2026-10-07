@@ -142,12 +142,25 @@ def resolve_aliases(names, conflicts, registry, root):
     return resolved, unresolved
 
 
+def load_registry(path):
+    """Do not let duplicate JSON fields silently replace reviewed naming evidence."""
+    def unique_pairs(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError(f"Duplicate canonical-registry JSON key: {key}")
+            result[key] = value
+        return result
+
+    return json.loads(Path(path).read_text(), object_pairs_hook=unique_pairs)
+
+
 def main():
     root = Path(__file__).resolve().parents[1]
     names, conflicts = collect_names(root / "source")
     registry_path = root / "docs" / "function-name-aliases.json"
     if registry_path.exists():
-        names, conflicts = resolve_aliases(names, conflicts, json.loads(registry_path.read_text()), root)
+        names, conflicts = resolve_aliases(names, conflicts, load_registry(registry_path), root)
     for address, values in sorted(conflicts.items()):
         print(f"Excluded conflicting annotation 0x{address:x}: {', '.join(sorted(values))}", file=sys.stderr)
     (root / "docs" / "names.json").write_text(

@@ -25878,10 +25878,11 @@ L_44157e:
     return env.failed ? 0u : eax;
 }
 
-uint32_t lifted_record_release(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                               const VertrixGlobals *globals, const LiftEntry *entry)
+uint32_t lifted_record_release_full(const VertrixCalls *calls,
+                                    const VertrixFactoryServices *services,
+                                    const VertrixGlobals *globals, const LiftEntry *entry)
 {
-    uint8_t stack[LIFTED_RECORD_RELEASE_STACK + 4 + 4 * 0 + 4];
+    uint8_t stack[LIFTED_RECORD_RELEASE_FULL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
     LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
@@ -25901,7 +25902,7 @@ uint32_t lifted_record_release(const VertrixCalls *calls, const VertrixFactorySe
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_RECORD_RELEASE_STACK, 0, entry);
+    lift_begin(&env, calls, services, globals, stack, LIFTED_RECORD_RELEASE_FULL_STACK, 0, entry);
     {
         uint32_t v = ebx;
         esp -= 4u;

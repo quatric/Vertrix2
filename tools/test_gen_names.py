@@ -5,7 +5,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from gen_names import collect_names, header_pairs, resolve_aliases
+from gen_names import collect_names, header_pairs, load_registry, resolve_aliases
 
 
 class NameEvidenceTests(unittest.TestCase):
@@ -177,6 +177,20 @@ void vertrix_unrelated(void);
                 with self.assertRaises(ValueError):
                     resolve_aliases({}, candidates, invalid, root)
 
+    def test_registry_rejects_duplicate_json_evidence(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "registry.json"
+            for text in (
+                    '{"0x400001": {}, "0x400001": {}}',
+                    '{"0x400001": {"name": "vertrix_first", "name": "vertrix_second"}}',
+                    '{"0x400001": {"evidence": ["first.h"], "evidence": ["second.h"]}}'):
+                with self.subTest(text=text):
+                    path.write_text(text)
+                    with self.assertRaises(ValueError):
+                        load_registry(path)
+            path.write_text('{"0x400001": {"name": "vertrix_first"}}')
+            self.assertEqual(load_registry(path), {"0x400001": {"name": "vertrix_first"}})
+
     def test_repository_evidence(self):
         root = Path(__file__).resolve().parents[1]
         source = root / "source"
@@ -190,9 +204,11 @@ void vertrix_unrelated(void);
         if registry.exists():
             names, conflicts = resolve_aliases(names, conflicts, json.loads(registry.read_text()), root)
             self.assertEqual(names[0x43b5b0], "vertrix_ai_reaction_time")
+        self.assertEqual(names[0x41a9e0], "vertrix_record_release_global_full")
+        self.assertEqual(names[0x441a80], "vertrix_record_release_full")
         self.assertNotIn(0x43f200, names)
         self.assertNotIn(0x43f200, conflicts)
-        for fragment in (0x41a9e0, 0x42b290, 0x42b310, 0x43eab0, 0x4b6240, 0x4831b0, 0x483400,
+        for fragment in ( 0x42b290, 0x42b310, 0x43eab0, 0x4b6240, 0x4831b0, 0x483400,
                          0x40c518, 0x40c5d8, 0x40c7d0,
                          0x40e1db, 0x40e77f, 0x40e7ba, 0x40e82c, 0x40eb14, 0x40eb6e):
             self.assertNotIn(fragment, names)

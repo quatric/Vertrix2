@@ -7,11 +7,20 @@
     "text_width": 4096,
     "0x41a9e0": 4096
   },
+  "full_return_preserving_cases": {
+    "release": 4096,
+    "global": 4096,
+    "release_mutation": 2048,
+    "global_cleared_by_release": 1024,
+    "global_redirected_by_release": 1024,
+    "initial_global_zero": 1024,
+    "final_zero_handle": 341
+  },
   "global_method_mutation_cases": 1445,
   "global_release_method_table_mutation_cases": 724,
   "global_method_zero_mutation_cases": 349,
-  "limitations": [
-    "Release callbacks changing the global object cell are outside this suite: the native void release boundary omits the original release-register return when the cell becomes zero. Reproduce with --probe-release-clears-global (expected failure)."
+  "legacy_helper_limitations": [
+    "The legacy void-release global helper omits the original release-register return when release clears the global. The full runtime-boundary API verifies this case."
   ],
-  "scope": "Complete 441530, 441a80, 441b30, 442b00 and 41a9e0 execute in the original (release 478d80 and draw 47ce10 stubbed and logged, methods stubbed); the whole record, every pool object, the global cell, events and the 16-bit text width compare. Global-method callbacks observe and mutate the global cell and record storage; native resolution reads independent host memory."
+  "scope": "Complete 441530, 441a80, 441b30, 442b00 and 41a9e0 execute in the original (release 478d80 and draw 47ce10 stubbed and logged, methods stubbed); the whole record, every pool object, the global cell, events and the 16-bit text width compare. Global-method callbacks observe and mutate the global cell and record storage; native resolution reads independent host memory. Full runtime-boundary APIs compare release and method register inputs, exact returned EAX, late reads, mutating releases, initial zero globals, globals cleared or redirected by releases, and callback writes overwritten by the final global clear."
 }

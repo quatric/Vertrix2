@@ -4,5 +4,5 @@
   "published_bindings_checked": 184,
   "generated_pixels_compared": 538112,
   "failure_preservation_cases": 5,
-  "scope": "Selected20 VF banks plus solid/hollow artwork match the separately original-verified artwork path. All published internal pointers are rebased into the final live context and remain valid after archive closure. Occupied/invalid output rejection and repeated free checked. Full startup, actor creation, scene/gameplay and Wii execution remain separate."
+  "scope": "Selected20 VF banks plus solid/hollow and additional border artwork match the separately original-verified artwork path. All published internal pointers are rebased into the final live context and remain valid after archive closure. Occupied/invalid output rejection and repeated free checked. Full startup, actor creation, scene/gameplay and Wii execution remain separate."
 }

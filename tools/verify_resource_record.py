@@ -8,6 +8,7 @@ from pathlib import Path
 
 from original import Original
 from oracle_kit import Pool, Resolve, Stubs, build
+from verify_object_tails import Call, Calls
 
 U = c.c_uint32
 RECORD, STRINGS, TABLE = 0x80a000, 0x80b000, 0x544790
@@ -18,6 +19,157 @@ Draw = c.CFUNCTYPE(None, c.c_uint32, c.c_uint32, c.c_uint32, c.c_uint32, c.POINT
 SIZE = 0x300
 
 
+def verify_full(n, original, stubs, args):
+    """Check original return propagation and callback order on independent memories."""
+    cpu = original.cpu
+    REC, ALT, TABLE1, TABLE2, METHOD = 0x807100, 0x808100, 0x807500, 0x807504, 0x707000
+    n.vertrix_record_release_full.argtypes = [c.c_void_p, c.c_size_t, U, c.POINTER(Calls), U]
+    n.vertrix_record_release_full.restype = U
+    n.vertrix_record_release_global_full.argtypes = [c.POINTER(U), c.c_void_p, c.c_size_t,
+                                                    c.POINTER(Calls), U, Read, c.c_void_p]
+    n.vertrix_record_release_global_full.restype = U
+    rng = random.Random(0x441a8041)
+    counts = {'release': 0, 'global': 0, 'release_mutation': 0,
+              'global_cleared_by_release': 0, 'global_redirected_by_release': 0,
+              'initial_global_zero': 0, 'final_zero_handle': 0}
+    originals, natives, original_observations, native_observations = [], [], [], []
+    host_cell = None
+    host_records = {}
+    host_reads = []
+    tokens = []
+    mode = 0
+    mutates = False
+    global_run = False
+    values = []
+    flag220 = flag222 = 0
+
+    def mutations(index):
+        if not mutates:
+            return []
+        if index == 0:
+            return [(0x268, 4, values[0]), (0x274, 4, values[1]), (0x27c, 4, TABLE2)]
+        if index == 1:
+            return [(0x278, 4, values[2]), (0x220, 1, flag220)]
+        if index == 2:
+            return [(0x270, 4, values[3]), (0x26c, 4, values[4]), (0x222, 1, flag222)]
+        return []
+
+    def handler(address, eax, edx, ebx, ecx, stack):
+        index = len(originals)
+        originals.append((address, eax, edx, ebx, ecx))
+        if address == 0x478d80:
+            for offset, width, value in mutations(index):
+                cpu.mem_write(REC + offset, value.to_bytes(width, 'little'))
+            if global_run and index == 0:
+                if mode == 1:
+                    cpu.mem_write(0x544070, struct.pack('<I', 0))
+                elif mode == 2:
+                    cpu.mem_write(0x544070, struct.pack('<I', ALT))
+        else:
+            original_observations.append(struct.unpack('<I', cpu.mem_read(0x544070, 4))[0])
+            cpu.mem_write(0x544070, struct.pack('<I', values[0]))
+            cpu.mem_write(eax + 0x280, struct.pack('<I', values[1]))
+        return tokens[index]
+
+    @Call
+    def call(site, context):
+        x = site.contents
+        index = len(natives)
+        natives.append((x.target, x.eax, x.edx, x.ebx, x.ecx))
+        if x.target == 0x478d80:
+            for offset, width, value in mutations(index):
+                c.memmove(c.addressof(host_records[REC]) + offset,
+                          value.to_bytes(width, 'little'), width)
+            if global_run and index == 0:
+                if mode == 1:
+                    host_cell[0] = 0
+                elif mode == 2:
+                    host_cell[0] = ALT
+        else:
+            native_observations.append(host_cell[0])
+            host_cell[0] = values[0]
+            c.memmove(c.addressof(host_records[x.eax]) + 0x280, struct.pack('<I', values[1]), 4)
+        return tokens[index]
+
+    @Read
+    def read(address, width, value, context):
+        host_reads.append((address, width))
+        for base, storage in host_records.items():
+            if base <= address and address + width <= base + SIZE:
+                value[0] = int.from_bytes(storage.raw[address - base:address - base + width], 'little')
+                return 1
+        if address in (TABLE1, TABLE2) and width == 4:
+            value[0] = METHOD
+            return 1
+        return 0
+
+    runtime = Calls(call, None)
+    stubs.handler = handler
+    for case in range(args.cases):
+        raw = bytearray(rng.randbytes(SIZE))
+        handles = [rng.choice([0, rng.getrandbits(32)]) for _ in range(5)]
+        mutates = case % 2 == 0
+        if mutates:
+            handles[0] = 0x11112222
+            handles[1] = 0x33334444
+            handles[2] = 0x55556666
+        for offset, handle in zip((0x268, 0x274, 0x278, 0x270, 0x26c), handles):
+            struct.pack_into('<I', raw, offset, handle)
+        raw[0x220], raw[0x222] = case % 3, (case // 3) % 3
+        struct.pack_into('<I', raw, 0x27c, TABLE1)
+        alternate = bytearray(raw)
+        struct.pack_into('<I', alternate, 0x27c, TABLE2)
+        flag220, flag222 = (case // 5) % 3, (case // 7) % 3
+        values = [rng.getrandbits(32), rng.getrandbits(32), rng.getrandbits(32),
+                  rng.getrandbits(32), 0 if case % 4 == 0 else rng.getrandbits(32)]
+        tokens = [0 if case % 11 == 0 else rng.getrandbits(32) for _ in range(8)]
+        caller_ebx = rng.getrandbits(32)
+        mode = case % 4
+        for global_run in (False, True):
+            originals.clear()
+            natives.clear()
+            original_observations.clear()
+            native_observations.clear()
+            host_reads.clear()
+            stubs.log.clear()
+            cpu.mem_write(REC, bytes(raw))
+            cpu.mem_write(ALT, bytes(alternate))
+            cpu.mem_write(TABLE1, struct.pack('<I', METHOD))
+            cpu.mem_write(TABLE2, struct.pack('<I', METHOD))
+            initial_global = 0 if mode == 0 else REC
+            cpu.mem_write(0x544070, struct.pack('<I', initial_global))
+            host_records = {REC: c.create_string_buffer(bytes(raw), SIZE),
+                            ALT: c.create_string_buffer(bytes(alternate), SIZE)}
+            host_cell = (U * 1)(initial_global)
+            if global_run:
+                expected = original.call(0x41a9e0, eax=rng.getrandbits(32), edx=rng.getrandbits(32),
+                                         ebx=caller_ebx, ecx=rng.getrandbits(32))
+                got = n.vertrix_record_release_global_full(host_cell, host_records[REC], SIZE,
+                                                            c.byref(runtime), caller_ebx, read, None)
+                assert host_cell[0] == struct.unpack('<I', cpu.mem_read(0x544070, 4))[0], case
+                counts['global'] += 1
+                counts['initial_global_zero'] += mode == 0
+                counts['global_cleared_by_release'] += mode == 1 and bool(originals)
+                counts['global_redirected_by_release'] += mode == 2 and bool(originals)
+            else:
+                expected = original.call(0x441a80, eax=REC, edx=rng.getrandbits(32),
+                                         ebx=caller_ebx, ecx=rng.getrandbits(32))
+                got = n.vertrix_record_release_full(host_records[REC], SIZE, REC,
+                                                    c.byref(runtime), caller_ebx)
+                counts['release'] += 1
+                counts['release_mutation'] += mutates
+                counts['final_zero_handle'] += mutates and flag222 == 1 and values[4] == 0
+            assert got == expected, (case, global_run, hex(got), hex(expected), originals, natives)
+            assert originals == natives, (case, global_run, originals, natives)
+            assert original_observations == native_observations, case
+            for base, storage in host_records.items():
+                assert storage.raw == bytes(cpu.mem_read(base, SIZE)), (case, global_run, hex(base))
+    assert counts['release'] == counts['global'] == args.cases
+    assert all(counts[key] > 0 for key in counts if key not in ('final_zero_handle',))
+    assert counts['final_zero_handle'] > 0
+    return counts
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('executable', type=Path)
@@ -26,7 +178,7 @@ def main():
     parser.add_argument('--probe-release-clears-global', action='store_true',
                         help='Reproduce the known omitted release-register return; expected to fail.')
     args = parser.parse_args()
-    n = build(args.build_dir, 'resource-record', ['resource_record.c', 'actor_storage.c'])
+    n = build(args.build_dir, 'resource-record', ['resource_record.c', 'actor_storage.c', 'call_glue.c'])
     n.vertrix_record_init.argtypes = [c.c_void_p, c.c_size_t, c.c_char_p, c.c_char_p] + [c.c_uint8] * 5
     n.vertrix_record_release.argtypes = [c.c_void_p, c.c_size_t, Release, c.c_void_p]
     n.vertrix_record_release_global.argtypes = [c.POINTER(U), c.c_void_p, c.c_size_t, Release,
@@ -232,9 +384,33 @@ def main():
         got = n.vertrix_record_release_global(host_cell, host_record, SIZE, global_release, None,
                                                     method, None, read, None)
         if release_clears_global:
+            n.vertrix_record_release_global_full.argtypes = [c.POINTER(U), c.c_void_p, c.c_size_t,
+                                                            c.POINTER(Calls), U, Read, c.c_void_p]
+            n.vertrix_record_release_global_full.restype = U
+            host_cell = (U * 1)(global_value)
+            host_record = c.create_string_buffer(bytes(record), SIZE)
+            native_release_mutated = False
+            full_calls = []
+
+            @Call
+            def full_probe_call(site, context):
+                x = site.contents
+                full_calls.append((x.target, x.eax, x.edx, x.ebx, x.ecx))
+                global_release(x.eax, None)
+                return x.eax
+
+            full_runtime = Calls(full_probe_call, None)
+            full_got = n.vertrix_record_release_global_full(host_cell, host_record, SIZE,
+                                                            c.byref(full_runtime), 0, read, None)
+            assert full_got == expect
+            assert full_calls == stubs.log
+            assert host_record.raw == bytes(cpu.mem_read(RECORD2, SIZE))
+            assert host_cell[0] == struct.unpack('<I', cpu.mem_read(0x544070, 4))[0]
             evidence = {'fixture': 'release_callback_clears_global', 'case': case,
                               'address': '0x41a9e0', 'input_registers': {'eax': RECORD2, 'edx': 0, 'ebx': 0, 'ecx': 0},
                               'original_return': expect, 'native_return': got,
+                              'full_native_return': full_got, 'full_api_status': 'passed',
+                              'full_api': 'vertrix_record_release_global_full',
                               'original_release_calls': [list(e) for e in stubs.log if e[0] == 0x478d80],
                               'original_method_events': callback_events, 'native_method_events': native_events}
             (args.build_dir / 'release-clears-global-mismatch.json').write_text(
@@ -258,19 +434,23 @@ def main():
         count('0x41a9e0')
     assert totals['0x41a9e0'] == args.cases
     assert mutation_cases > 0 and release_mutation_cases > 0 and zero_method_mutation_cases > 0
+    full_counts = verify_full(n, original, stubs, args)
     report = {'status': 'passed', 'complete_original_executions': totals,
+              'full_return_preserving_cases': full_counts,
               'global_method_mutation_cases': mutation_cases,
               'global_release_method_table_mutation_cases': release_mutation_cases,
               'global_method_zero_mutation_cases': zero_method_mutation_cases,
-              'limitations': ['Release callbacks changing the global object cell are outside this suite: '
-                              'the native void release boundary omits the original release-register '
-                              'return when the cell becomes zero. Reproduce with '
-                              '--probe-release-clears-global (expected failure).'],
+              'legacy_helper_limitations': ['The legacy void-release global helper omits the original '
+                                          'release-register return when release clears the global. '
+                                          'The full runtime-boundary API verifies this case.'],
               'scope': 'Complete 441530, 441a80, 441b30, 442b00 and 41a9e0 execute in the original '
                        '(release 478d80 and draw 47ce10 stubbed and logged, methods stubbed); the '
                        'whole record, every pool object, the global cell, events and the 16-bit '
                        'text width compare. Global-method callbacks observe and mutate the global cell and '
-                       'record storage; native resolution reads independent host memory.'}
+                       'record storage; native resolution reads independent host memory. Full runtime-boundary '
+                       'APIs compare release and method register inputs, exact returned EAX, late reads, '
+                       'mutating releases, initial zero globals, globals cleared or redirected by releases, '
+                       'and callback writes overwritten by the final global clear.'}
     (args.build_dir / 'resource-record-verification.json').write_text(
         json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))

@@ -403,7 +403,7 @@
   "virtual": [],
   "address": 4901904
  },
- "f4acc70": {
+ "dword_transition": {
   "callees": {},
   "stack": 76,
   "arguments": 0,
@@ -734,7 +734,7 @@
   "virtual": [],
   "address": 4904784
  },
- "f4ad790": {
+ "actor_dword_transition_4ad790": {
   "callees": {},
   "stack": 76,
   "arguments": 0,

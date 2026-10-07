@@ -3,6 +3,7 @@
 #include "actor_gate.h"
 #include "actor_storage.h"
 #include "board_cells.h"
+#include "call_glue.h"
 /* A resource record: a name string at +0x00, a path string at +0x104 (260 bytes each), flag
  * bytes at +0x220..+0x224 and five resource handles at +0x268..+0x278. */
 #define VERTRIX_RECORD_SIZE 0x27c
@@ -19,9 +20,11 @@ int vertrix_record_init(void *record, size_t size, const char *name, const char 
 /* Supplied boundary for the original handle release 0x478d80. */
 typedef void (*VertrixRecordRelease)(uint32_t handle, void *context);
 
-/* Original0x441a80: release the handles at +0x268, +0x274 and +0x278 when set, the one at +0x270
- * when byte +0x220 is 1 and it is set, and the one at +0x26c when byte +0x222 is 1 and it is
- * set, in that order; then clear all five. Returns zero for short storage. */
+/* Original fragment 0x441a80: release the handles at +0x268, +0x274 and +0x278 when set, the one at
+ * +0x270 when byte +0x220 is 1 and it is set, and the one at +0x26c when byte +0x222 is 1 and it is
+ * set, in that order; then clear all five. This convenience helper returns success
+ * rather than original EAX; its void callback omits release return values.
+ * Returns zero for short storage. */
 int vertrix_record_release(void *record, size_t size, VertrixRecordRelease release, void *context);
 
 /* Supplied boundary for the original draw call 0x47ce10 (eax, edx, ecx, ebx and four stack
@@ -56,4 +59,23 @@ int vertrix_record_release_global(uint32_t *global, void *record, size_t record_
                                   VertrixRecordRelease release, void *context,
                                   VertrixRecordMethod method, void *method_context,
                                   VertrixMemoryRead read, void *read_context);
+/* Original0x441a80: release each currently stored handle in order through the
+ * return-preserving runtime boundary. The final EAX is the record handle,
+ * a callback result, or the final +0x26c handle when flag +0x222 is one.
+ * Callback arguments retain the original ECX/+0x268 and EBX/+0x274 snapshots;
+ * later handles and flags are read after preceding callbacks. Short storage
+ * returns zero before any callback. */
+uint32_t vertrix_record_release_full(void *record, size_t size, uint32_t record_handle,
+                                     const VertrixCalls *runtime, uint32_t caller_ebx);
+
+/* Original0x41a9e0: release the initially selected global record, re-read the
+ * global cell, and preserve release EAX when it became zero. Otherwise call
+ * the current object's method-table entry with flag 2, then clear the global
+ * cell and return method EAX. An initially zero global returns zero without
+ * accessing supplied record storage. Short storage rejects before release;
+ * late lookup failure retains completed release effects and returns zero. */
+uint32_t vertrix_record_release_global_full(uint32_t *global, void *record, size_t size,
+                                            const VertrixCalls *runtime, uint32_t caller_ebx,
+                                            VertrixMemoryRead read, void *read_context);
+
 #endif

@@ -23,6 +23,28 @@ class LoadSet(c.Structure):
     _fields_ = [('banks', Bank*20), ('bindings', Binding*20), ('map', Map), ('ready', c.c_uint)]
 
 
+# Recovered 45dca0 direct-load order, recorded by verify_sprite_load_plan's
+# original-executable hooks and corroborated by sprite_load_plan.c resources.
+INITIAL_TOKENS = (0x5449c4, 0x5449e0, 0x5449fc, 0x544a18, 0x544c10, 0x544c48,
+    0x544c2c, 0x544c64, 0x544d0c, 0x544c80, 0x544c9c, 0x544cb8, 0x544cd4,
+    0x544cf0, 0x546500, 0x54651c, 0x546538, 0x546650, 0x54666c, 0x546688)
+
+
+def validated_initial_plan(report):
+    if not isinstance(report, dict) or report.get('status') != 'passed':
+        raise ValueError('Initial sprite plan report must have passed status')
+    entries = report.get('initial_image_settings_plan')
+    if not isinstance(entries, list) or len(entries) != len(INITIAL_TOKENS):
+        raise ValueError('Initial sprite plan must contain exactly 20 entries')
+    for index, (entry, expected) in enumerate(zip(entries, INITIAL_TOKENS)):
+        if not isinstance(entry, dict) or entry.get('token') != hex(expected):
+            raise ValueError(f'Initial sprite plan token order mismatch at entry {index}')
+        slot = entry.get('slot')
+        if type(slot) is not int or not 0 <= slot < 23:
+            raise ValueError(f'Initial sprite plan slot invalid at entry {index}')
+    return entries
+
+
 def frames(data, slots):
     result = []
     count = struct.unpack_from('<H', data)[0]
@@ -52,6 +74,7 @@ def main():
     parser.add_argument('plan_report', type=Path)
     parser.add_argument('--build-dir', type=Path, required=True)
     args = parser.parse_args()
+    initial = validated_initial_plan(json.loads(args.plan_report.read_text()))
     build = args.build_dir.resolve()
     build.mkdir(parents=True, exist_ok=True)
     root = Path(__file__).resolve().parents[1]
@@ -71,7 +94,7 @@ def main():
 #Reconstruct explicit test selectors from the recovered initial - image plan.
     selectors = [1,2,255,0,4,6,5,7,8,9,10,11,12,13,14,15,16,3,17,18]
     settings = (c.c_uint8*19)()
-    initial = json.loads(args.plan_report.read_text())['initial_image_settings_plan']
+    interface_slot = initial[2]['slot']
     for entry, selector in zip(initial, selectors):
         if selector != 255:
             settings[selector] = entry['slot']
@@ -82,12 +105,12 @@ def main():
             archive = native.vertrix_vf_open(str(args.archive.resolve()).encode())
             assert archive
             plan = Plan()
-            assert native.vertrix_sprite_load_plan(archive, settings, 0, c.byref(plan))
+            assert native.vertrix_sprite_load_plan(archive, settings, interface_slot, c.byref(plan))
             loaded = LoadSet()
             masks = (c.c_uint32*3)(*(255 << (8*s) for s in slots))
-            assert native.vertrix_sprite_load_set(archive, settings, 0, masks, first, c.byref(loaded))
+            assert native.vertrix_sprite_load_set(archive, settings, interface_slot, masks, first, c.byref(loaded))
             before = bytes(loaded)
-            assert not native.vertrix_sprite_load_set(archive, settings, 0, masks, first, c.byref(loaded))
+            assert not native.vertrix_sprite_load_set(archive, settings, interface_slot, masks, first, c.byref(loaded))
             assert bytes(loaded) == before
             native.vertrix_vf_close(archive)
             assert loaded.ready and loaded.map.count == 20
@@ -125,7 +148,7 @@ def main():
     settings[18] = 22
     loaded = LoadSet()
     masks = (c.c_uint32*3)(0xff,0xff00,0xff0000)
-    assert not native.vertrix_sprite_load_set(archive, settings, 0, masks, 0, c.byref(loaded))
+    assert not native.vertrix_sprite_load_set(archive, settings, interface_slot, masks, 0, c.byref(loaded))
     assert bytes(loaded) == bytes(LoadSet())
     native.vertrix_vf_close(archive)
     report = {'status': 'passed', 'owned_load_sets': 12, 'mapped_banks_checked': 240,

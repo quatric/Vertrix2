@@ -10,6 +10,9 @@
   },
   "original_return": 8413184,
   "native_return": 0,
+  "full_native_return": 8413184,
+  "full_api_status": "passed",
+  "full_api": "vertrix_record_release_global_full",
   "original_release_calls": [
     [
       4689280,
