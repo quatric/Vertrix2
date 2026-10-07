@@ -29,7 +29,7 @@ Verified: `0x46b810` (also hand ported in `source/hud_builder.c`; the lift agree
 ## Uniform stack model
 
 `tools/lift.py` now lifts every register (including ebp and esp), the stack as a byte array and the
-flags (with pf); calls go through `lift_call` with the dwords at esp. `source/lifted_range_450ff0.*`
+flags (with pf); calls go through `lift_call` with the dwords at esp. `source/lifted_whole_*.c` (1553 of 3330 lifted routines of 0x401000..0x4f1000)
 holds the 116 of 133 routines of 0x450ff0..0x456033 that verified against the original
 (`tools/lift_batch.py`). The four screens (hud_decor, title, select, game) re-verify 4096/4096.
 Open: the 17 routines that fail (out-param callees, loops, virtual calls through garbage locals).

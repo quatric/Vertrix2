@@ -62,9 +62,9 @@ def verify_all(scratch, jobs, cases):
         print(len(group), detail, group[:3])
 
 
-def combine(scratch, name, out_dir):
+def combine(scratch, name, out_dir, first=0, count=None):
     results = json.loads((scratch / 'results.json').read_text())
-    passed = sorted(n for n, r in results.items() if r['ok'])
+    passed = sorted(n for n, r in results.items() if r['ok'])[first:first + count if count else None]
     body = ['/* Routines lifted from the original by tools/lift.py (see docs/LIFTED.md), each verified\n'
             ' * against the original by tools/verify_lifted.py. */\n#include "lift_runtime.h"\n'
             '\n#include "lifted_%s.h"\n' % name]
@@ -98,4 +98,4 @@ if __name__ == '__main__':
         cases = int(sys.argv[sys.argv.index('--cases') + 1]) if '--cases' in sys.argv else 256
         verify_all(scratch, jobs, cases)
     elif command == 'combine':
-        combine(scratch, sys.argv[3], sys.argv[4])
+        combine(scratch, sys.argv[3], sys.argv[4], *map(int, sys.argv[5:7]))
