@@ -256,7 +256,7 @@ int vertrix_actor_set_box(void *actor, size_t size, uint16_t x, uint16_t y, uint
            vertrix_actor_storage_write(actor, size, ACTOR_HEIGHT, 4, height);
 }
 
-static int wrap(void *actor, size_t size, size_t dividend, size_t divisor)
+static int wrap(void *actor, size_t size, size_t dividend, size_t divisor, uint32_t *consumed)
 {
     uint32_t a, b, product;
     if (!vertrix_actor_storage_read(actor, size, dividend, 4, &a) ||
@@ -266,15 +266,37 @@ static int wrap(void *actor, size_t size, size_t dividend, size_t divisor)
     }
     b = b ? b : 1;
     product = (a / b) * b;
-    return vertrix_actor_storage_write(actor, size, dividend, 4, product >= a ? 0 : a - product);
+    if (!vertrix_actor_storage_write(actor, size, dividend, 4, product >= a ? 0 : a - product))
+    {
+        return 0;
+    }
+    if (consumed)
+    {
+        *consumed = product;
+    }
+    return 1;
 }
 
 int vertrix_actor_counter_wrap(void *actor, size_t size)
 {
-    return wrap(actor, size, ACTOR_COUNTER, ACTOR_PERIOD);
+    return wrap(actor, size, ACTOR_COUNTER, ACTOR_PERIOD, NULL);
 }
 
 int vertrix_actor_progress_wrap(void *actor, size_t size)
 {
-    return wrap(actor, size, ACTOR_DONE, ACTOR_TOTAL);
+    return wrap(actor, size, ACTOR_DONE, ACTOR_TOTAL, NULL);
+}
+
+uint32_t vertrix_actor_counter_consume(void *actor, size_t size)
+{
+    uint32_t consumed = 0;
+    wrap(actor, size, ACTOR_COUNTER, ACTOR_PERIOD, &consumed);
+    return consumed;
+}
+
+uint32_t vertrix_actor_progress_consume(void *actor, size_t size)
+{
+    uint32_t consumed = 0;
+    wrap(actor, size, ACTOR_DONE, ACTOR_TOTAL, &consumed);
+    return consumed;
 }

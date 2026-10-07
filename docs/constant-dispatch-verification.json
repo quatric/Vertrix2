@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "entrypoints": 74,
+  "retired_entrypoints": [
+    "0x4e9d00"
+  ],
+  "dispatch_cases": 444,
+  "scope": "Actual lifted dispatch with six unsigned input-register edge fixtures per constant-return entrypoint. Retired entries must decline dispatch and preserve output. No callback, factory or global boundary is supplied. Expected values share the independent original-executable fixtures in verify_constant_returns.py; this integration check does not prove other lifted routines."
+}

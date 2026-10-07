@@ -92,6 +92,53 @@
     "native_missing_input_guard_cases": 3,
     "scope": "Complete normal 459be0 executes unchanged with real timer, quotient, remainder, angle/orbit, signed transition and setters; only voice 417260/417290 and final 457890 are supplied. Every call register and complete 0x160 actor/live voice-base state compare before callbacks and after completion. EAX returns random saved FS:[0], independent of callback results; SEH chain restores. Fixtures include arbitrary signed radius/limit/step, full-width factors, wrapped timers and full-width quotient with zero angle rate. Faulting division/table inputs, callback register clobbers and exceptional unwinding or mutations to the saved exception stack local remain outside the boundary."
   },
+  "full_fight_count_abi": {
+    "complete_original_executions": {
+      "0x45a290": 4096
+    },
+    "branch_fixtures": {
+      "not_due": 512,
+      "opaque": 512,
+      "fading": 512,
+      "parked_other": 512,
+      "parked_one": 512,
+      "wrapped": 512,
+      "signed": 512,
+      "zero_rate": 512
+    },
+    "sound_calls": {
+      "0x4171e0": 1118,
+      "0x417220": 1118
+    },
+    "live_actor_mutation_calls": 4222,
+    "live_sound_base_mutation_calls": 3072,
+    "native_missing_boundary_guard_cases": 2,
+    "native_missing_input_guard_cases": 3,
+    "exact_callback_register_state_comparisons": 6332,
+    "scope": "Full normal fight/wave count executes real timer/quotient/remainder, rotation/orbit/transitions and setters; only sounds and final center supplied. Every callback register and independent 0x160 actor/sound-base state compare before callbacks and after completion. Returns final center EAX. First fight sound mutations affect the second live sound-base read. Signed inputs, wrapped timers, full-width factors and zero angle rate covered. Faulting inputs, callback register clobbers and exception behavior outside boundary."
+  },
+  "full_wave_count_abi": {
+    "complete_original_executions": {
+      "0x45a620": 4096
+    },
+    "branch_fixtures": {
+      "not_due": 512,
+      "opaque": 512,
+      "fading": 512,
+      "parked_other": 512,
+      "parked_one": 512,
+      "wrapped": 512,
+      "signed": 512,
+      "zero_rate": 512
+    },
+    "sound_calls": {},
+    "live_actor_mutation_calls": 2730,
+    "live_sound_base_mutation_calls": 2048,
+    "native_missing_boundary_guard_cases": 2,
+    "native_missing_input_guard_cases": 2,
+    "exact_callback_register_state_comparisons": 4096,
+    "scope": "Full normal fight/wave count executes real timer/quotient/remainder, rotation/orbit/transitions and setters; only sounds and final center supplied. Every callback register and independent 0x160 actor/sound-base state compare before callbacks and after completion. Returns final center EAX. First fight sound mutations affect the second live sound-base read. Signed inputs, wrapped timers, full-width factors and zero angle rate covered. Faulting inputs, callback register clobbers and exception behavior outside boundary."
+  },
   "status": "passed",
   "complete_original_executions": {
     "not_due": 984,

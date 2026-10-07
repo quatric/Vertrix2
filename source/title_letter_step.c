@@ -795,3 +795,79 @@ int vertrix_title_letter_wave_fly(uint8_t *actor, size_t size, uint32_t elapsed,
     }
     return 1;
 }
+
+static uint32_t family_count_boundary(const VertrixCalls *calls, uint32_t target, uint32_t eax,
+                                      uint32_t edx, uint32_t ebx, uint32_t ecx)
+{
+    VertrixCallSite site = {.target = target, .eax = eax, .edx = edx, .ebx = ebx, .ecx = ecx};
+    return calls->call(&site, calls->context);
+}
+
+static uint32_t family_count_call(const VertrixCalls *calls, uint8_t *actor, size_t size,
+                                  uint32_t object, uint32_t elapsed,
+                                  const VertrixAngleTables *tables, const uint32_t *sound_base,
+                                  uint32_t edx, uint32_t ebx, int fight)
+{
+    if (!calls || !calls->call || !actor || size < VERTRIX_LETTER_STORAGE_SIZE || !tables ||
+        (fight && !sound_base))
+    {
+        return 0;
+    }
+    uint32_t ecx = object;
+    if (get(actor, COUNTER, 4) + elapsed >= get(actor, PERIOD, 4))
+    {
+        ecx = object;
+        edx = (uint32_t)(int32_t)(int16_t)get(actor, EFFECT_TARGET, 2);
+        ebx = (uint32_t)(int32_t)(int16_t)get(actor, RADIUS, 2);
+    }
+    int parked = 0;
+    VertrixRotationTrace trace = {0};
+    if (!count_core(actor, size, elapsed, tables, &trace, &parked))
+    {
+        return 0;
+    }
+    if (parked)
+    {
+        if (fight)
+        {
+            put(actor, POSITION_X, 2, get(actor, ORIGIN_X, 2));
+            put(actor, POSITION_Y, 2, get(actor, ORIGIN_Y, 2));
+            put(actor, LEVEL, 1, 0x10);
+            family_count_boundary(calls, 0x4171e0, *sound_base, 0x32, ebx, object);
+            family_count_boundary(calls, 0x417220, *sound_base, 0x32, ebx, object);
+            put(actor, EFFECT, 2, 0);
+            put(actor, EFFECT_TARGET, 2, 0x96);
+            put(actor, EFFECT_STEP, 2, 5);
+            edx = 0x45a3e0;
+        }
+        else
+        {
+            put(actor, LEVEL, 1, 0x10);
+            put(actor, EFFECT, 2, 0);
+            put(actor, POSITION_X, 2, get(actor, ORIGIN_X, 2));
+            put(actor, EFFECT_TARGET, 2, 0x32);
+            put(actor, POSITION_Y, 2, get(actor, ORIGIN_Y, 2));
+            put(actor, EFFECT_STEP, 2, 2);
+            edx = 0x45a750;
+        }
+        put(actor, 0x154, 4, edx);
+    }
+    return family_count_boundary(calls, 0x457890, object, edx, ebx, ecx);
+}
+
+uint32_t vertrix_title_letter_fight_count_call(const VertrixCalls *calls, uint8_t *actor,
+                                               size_t size, uint32_t object, uint32_t elapsed,
+                                               const VertrixAngleTables *tables,
+                                               const uint32_t *sound_base, uint32_t edx,
+                                               uint32_t ebx)
+{
+    return family_count_call(calls, actor, size, object, elapsed, tables, sound_base, edx, ebx, 1);
+}
+
+uint32_t vertrix_title_letter_wave_count_call(const VertrixCalls *calls, uint8_t *actor,
+                                              size_t size, uint32_t object, uint32_t elapsed,
+                                              const VertrixAngleTables *tables, uint32_t edx,
+                                              uint32_t ebx)
+{
+    return family_count_call(calls, actor, size, object, elapsed, tables, 0, edx, ebx, 0);
+}

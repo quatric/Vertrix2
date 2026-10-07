@@ -107,17 +107,28 @@ typedef struct
     void *context;
 } VertrixFightServices;
 
-/* Original 0x45a290, with state fragments of 0x45a3e0 and 0x45a440, the letters of the second title
- * word. They are 0x459be0, 0x459d60 and 0x459e00 with other endings: 0x45a290 parks at the origin,
- * plays the fight pair, sets +0x48 = 0, target 0x96, step 5 and takes 0x45a3e0 (no voice); 0x45a3e0
- * settles (target 0, step 5) into 0x45a440; 0x45a440 sets +0x30 = 0xa0 and the words +0x2a = 1,
- * +0x2c, +0x2e from +8 and +0xa, draws +0x24 (below 0x168) and +0x28 (below 10, plus 10), sets
- * +0x32 = 2 and takes handler 0x45a4f0. */
+/* Original fragment 0x45a290, with state fragments of 0x45a3e0 and 0x45a440, the letters of the
+ * second title word. They are 0x459be0, 0x459d60 and 0x459e00 with other endings: 0x45a290 parks at
+ * the origin, plays the fight pair, sets +0x48 = 0, target 0x96, step 5 and takes 0x45a3e0 (no
+ * voice); 0x45a3e0 settles (target 0, step 5) into 0x45a440; 0x45a440 sets +0x30 = 0xa0 and the
+ * words +0x2a = 1, +0x2c, +0x2e from +8 and +0xa, draws +0x24 (below 0x168) and +0x28 (below 10,
+ * plus 10), sets +0x32 = 2 and takes handler 0x45a4f0. */
 int vertrix_title_letter_fight_count(uint8_t *actor, size_t size, uint32_t elapsed,
                                      const VertrixAngleTables *tables, VertrixRotationTrace *trace,
                                      const VertrixResourceDimensions *descriptor,
                                      uint8_t screen_unscaled, uint8_t screen_mode,
                                      const VertrixFightServices *services);
+/* Original 0x45a290: complete normal fight counter with mandatory sound/center callbacks.
+ * sound_base is the live 0x4f81c4 dword, reread before each sound call; callback actor mutations
+ * remain live before the parked-state setters. Returns the final 0x457890 callback EAX. Caller
+ * edx/ebx survive a frame not due; due frames substitute original transition/radius registers.
+ * Missing inputs/short storage reject before effects. Faulting arithmetic/table inputs and
+ * callback register clobbers remain outside the normal boundary. */
+uint32_t vertrix_title_letter_fight_count_call(const VertrixCalls *calls, uint8_t *actor,
+                                               size_t size, uint32_t object, uint32_t elapsed,
+                                               const VertrixAngleTables *tables,
+                                               const uint32_t *sound_base, uint32_t edx,
+                                               uint32_t ebx);
 /* Original fragment 0x45a3e0: state recovery with native centering and status return only. */
 int vertrix_title_letter_fight_settle(uint8_t *actor, size_t size, uint32_t elapsed,
                                       const VertrixResourceDimensions *descriptor,
@@ -168,7 +179,7 @@ int vertrix_title_letter_fly_out(uint8_t *actor, size_t size, uint32_t elapsed,
 int vertrix_title_letter_launch(uint8_t *actor, size_t size,
                                 const uint16_t heading_table[VERTRIX_RATIO_TABLE_SIZE],
                                 void (*play)(void *context, uint32_t channel), void *context);
-/* Original handlers 0x45a620, 0x45a750 / 0x45a830 and 0x45a910, a third family of title letters.
+/* Original fragments 0x45a620, 0x45a750 / 0x45a830 and 0x45a910, a third family of title letters.
  * 0x45a620 is the park step of 0x459be0 without a sound: level 16, effect 0, target 0x32, step 2,
  * handler 0x45a750. The two wave handlers (second = 0 for 0x45a750, 1 for 0x45a830) move the
  * effect word while `running` (the global at 0x532bd0) is not zero and, on arrival, alternate the
@@ -180,6 +191,15 @@ int vertrix_title_letter_wave_count(uint8_t *actor, size_t size, uint32_t elapse
                                     const VertrixAngleTables *tables, VertrixRotationTrace *trace,
                                     const VertrixResourceDimensions *descriptor,
                                     uint8_t screen_unscaled, uint8_t screen_mode);
+/* Original 0x45a620: complete normal wave counter with mandatory final 0x457890 callback,
+ * returning its EAX. Actor mutations by that callback remain live. Caller edx/ebx survive a
+ * frame not due; due/parked frames carry the original transition/radius/handler registers.
+ * Missing inputs/short storage reject before effects; faulting arithmetic/table inputs and
+ * callback register clobbers remain outside the normal boundary. */
+uint32_t vertrix_title_letter_wave_count_call(const VertrixCalls *calls, uint8_t *actor,
+                                              size_t size, uint32_t object, uint32_t elapsed,
+                                              const VertrixAngleTables *tables, uint32_t edx,
+                                              uint32_t ebx);
 /* Original fragment 0x45a750 and 0x45a830: actor state with projected services/status return. */
 int vertrix_title_letter_wave(uint8_t *actor, size_t size, uint32_t elapsed, int second,
                               uint32_t running, const VertrixResourceDimensions *descriptor,

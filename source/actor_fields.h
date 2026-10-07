@@ -87,11 +87,17 @@ int vertrix_actor_set_words_3a(void *actor, size_t size, uint16_t a, uint16_t b,
 int vertrix_actor_set_box(void *actor, size_t size, uint16_t x, uint16_t y, uint16_t width,
                           uint16_t height);
 
-/* Original0x4ac5b0 (counter +0xbc, period +0xc0) and 0x4ac6b0 (progress +0xdc, total +0xe0):
- * keep the remainder of the dword by the divisor (a zero divisor counts as one): the dword is
- * replaced by itself minus the quotient times the divisor, or by zero when that product reaches
+/* Original fragment 0x4ac5b0 (counter +0xbc, period +0xc0) and 0x4ac6b0 (progress +0xdc, total
+ * +0xe0): keep the remainder of the dword by the divisor (a zero divisor counts as one): the dword
+ * is replaced by itself minus the quotient times the divisor, or by zero when that product reaches
  * it. */
 int vertrix_actor_counter_wrap(void *actor, size_t size);
-/* Original 0x4ac6b0: Wrap progress +0xdc by total +0xe0; zero divisor counts as one. */
+/* Original fragment 0x4ac6b0: Wrap progress +0xdc by total +0xe0; zero divisor counts as one. */
 int vertrix_actor_progress_wrap(void *actor, size_t size);
+/* Original 0x4ac5b0: consume whole periods from counter +0xbc, leaving its remainder. Returns
+ * the original eax, the consumed quotient-times-period product. A zero period counts as one.
+ * Short/null storage returns zero without changes. */
+uint32_t vertrix_actor_counter_consume(void *actor, size_t size);
+/* Original 0x4ac6b0: the same operation and original eax for progress +0xdc and total +0xe0. */
+uint32_t vertrix_actor_progress_consume(void *actor, size_t size);
 #endif

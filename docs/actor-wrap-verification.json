@@ -4,5 +4,24 @@
     "counter": 4096,
     "progress": 4096
   },
-  "scope": "Complete 4ac5b0 and 4ac6b0 execute in the original over edge and random fields; the whole object compares."
+  "exact_eax_comparisons": {
+    "0x4ac5b0": 4096,
+    "0x4ac6b0": 4096
+  },
+  "branch_fixtures": {
+    "counter_zero_divisor": 683,
+    "progress_zero_divisor": 683,
+    "counter_zero_counter": 683,
+    "progress_zero_counter": 683,
+    "counter_below_divisor": 683,
+    "progress_below_divisor": 683,
+    "counter_exact_multiple": 683,
+    "progress_exact_multiple": 683,
+    "counter_remainder": 682,
+    "progress_remainder": 682,
+    "counter_random": 682,
+    "progress_random": 682
+  },
+  "native_invalid_storage_guard_cases": 6,
+  "scope": "Complete unchanged 4ac5b0 and 4ac6b0 execute over unsigned edge/random counters and divisors. New consume APIs compare original EAX (consumed whole-period product) and entire 0x200 actor storage. Original EDX/EBX/ECX preservation also checks. Zero divisors, zero/below/exact/remainder counters and high-bit values are covered. Legacy wrap APIs compare state only; native invalid storage guards preserve memory and return zero."
 }
