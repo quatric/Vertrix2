@@ -133,22 +133,27 @@ def verify_full_effect(args, native):
                      'outside this boundary.'}
 
 
-def verify_full_fight_effect(args, native):
-    """Compare normal fight settle/restart ABI and actor state at every supplied call."""
+def verify_full_fight_effect(args, native, wave=False):
+    """Compare normal fight or wave ABI and live state at every supplied call."""
     original = Original(args.executable)
     cpu = original.cpu
     rng = random.Random(0x45a440)
     original_events, native_events = [], []
+    running = c.c_uint32()
+    running_mutations = []
     returns, patches = [], []
     buffer = None
     total, shapes = {}, {}
-    mutation_calls, draw_calls = 0, 0
+    mutation_calls, draw_calls, running_mutation_calls = 0, 0, 0
 
     def original_boundary(address, eax, edx, ebx, ecx, stack):
         index = len(original_events)
-        original_events.append((address, eax, edx, ebx, ecx, bytes(cpu.mem_read(OBJ, SIZE))))
+        original_events.append((address, eax, edx, ebx, ecx, bytes(cpu.mem_read(OBJ, SIZE)),
+                                struct.unpack('<I', bytes(cpu.mem_read(0x532bd0, 4)))[0] if wave else 0))
         for offset, data in patches[index]:
             cpu.mem_write(OBJ + offset, data)
+        if wave and running_mutations[index] is not None:
+            cpu.mem_write(0x532bd0, struct.pack('<I', running_mutations[index]))
         return returns[index]
 
     stubs = Stubs(cpu, original_boundary)
@@ -159,21 +164,34 @@ def verify_full_fight_effect(args, native):
     def boundary(site, context):
         call = site.contents
         index = len(native_events)
-        native_events.append((call.target, call.eax, call.edx, call.ebx, call.ecx, bytes(buffer)))
+        native_events.append((call.target, call.eax, call.edx, call.ebx, call.ecx, bytes(buffer),
+                              running.value if wave else 0))
         for offset, data in patches[index]:
             c.memmove(c.addressof(buffer) + offset, data, len(data))
+        if wave and running_mutations[index] is not None:
+            running.value = running_mutations[index]
         return returns[index]
 
     calls = Calls(boundary, None)
-    for address, name in ((0x45a3e0, 'settle'), (0x45a440, 'restart')):
-        function = getattr(native, 'vertrix_title_letter_fight_' + name + '_call')
+    entries = ((0x45a750, 'first'), (0x45a830, 'second')) if wave else (
+        (0x45a3e0, 'settle'), (0x45a440, 'restart'))
+    for address, name in entries:
+        function = native.vertrix_title_letter_wave_call if wave else getattr(
+            native, 'vertrix_title_letter_fight_' + name + '_call')
         function.argtypes = [c.POINTER(Calls), c.POINTER(c.c_uint8), c.c_size_t,
                              c.c_uint32, c.c_uint32, c.c_uint32, c.c_uint32] + (
                                  [c.c_uint32] if name == 'restart' else [])
+        if wave:
+            function.argtypes = [c.POINTER(Calls), c.POINTER(c.c_uint8), c.c_size_t,
+                                 c.c_uint32, c.c_uint32, c.c_uint32, c.POINTER(c.c_uint32),
+                                 c.c_uint32, c.c_uint32, c.c_uint32]
         function.restype = c.c_uint32
         for case in range(args.cases):
             data = bytearray(rng.randbytes(SIZE))
-            shape = ('not_due', 'moving', 'arrived', 'wrapped', 'random')[case % 5]
+            fixture_shapes = ('not_due', 'moving', 'arrived', 'stopped', 'wrapped', 'random') if wave else (
+                'not_due', 'moving', 'arrived', 'wrapped', 'random')
+            shape = fixture_shapes[case % len(fixture_shapes)]
+            running.value = rng.choice([0, 1, 0xffffffff, rng.getrandbits(32)])
             period, counter = rng.choice([0, 1, 12, 60, rng.getrandbits(32)]), rng.getrandbits(32)
             elapsed = rng.choice([0, 1, 16, 0xffffffff, rng.getrandbits(32)])
             current, target = rng.randrange(-32768, 32768), rng.randrange(-32768, 32768)
@@ -183,14 +201,21 @@ def verify_full_fight_effect(args, native):
             elif shape == 'moving':
                 counter, elapsed, period = 1, 0, 1
                 current, target, step = -200, 200, 1
+                running.value = 1
             elif shape == 'arrived':
                 counter, elapsed, period = rng.getrandbits(32), 0, 0
                 current = target
+                running.value = 1
+            elif shape == 'stopped':
+                counter, elapsed, period = 1, 0, 1
+                running.value = 0
             elif shape == 'wrapped':
                 counter, elapsed, period = 0xffffffff, 1, 1
             struct.pack_into('<II', data, 0xbc, counter, period)
             struct.pack_into('<hhh', data, 0x48, current, target, step)
             cpu.mem_write(0x5bd834, struct.pack('<I', elapsed))
+            if wave:
+                cpu.mem_write(0x532bd0, struct.pack('<I', running.value))
             cpu.mem_write(OBJ, bytes(data))
             edx, ebx, ecx = [rng.getrandbits(32) for _ in range(3)]
             # Full-width draw returns deliberately exercise narrowing and wrapped rate +10.
@@ -200,13 +225,20 @@ def verify_full_fight_effect(args, native):
                         ((0x08, 4), (0x24, 2), (0x28, 12), (0x48, 6),
                          (0xbc, 8), (0x154, 4), (0x15c, 4))] if case % 3 else []
                        for _ in range(3)]
+            running_mutations = [rng.choice([0, 1, 0xffffffff, rng.getrandbits(32)]) if case % 2 else None
+                                 for _ in range(3)]
             original_events.clear()
             native_events.clear()
             result = original.call(address, eax=OBJ, edx=edx, ebx=ebx, ecx=ecx)
             want = bytes(cpu.mem_read(OBJ, SIZE))
             buffer = (c.c_uint8 * SIZE).from_buffer_copy(bytes(data))
             extra = (ecx,) if name == 'restart' else ()
-            got = function(c.byref(calls), buffer, SIZE, OBJ, elapsed, edx, ebx, *extra)
+            if wave:
+                got = function(c.byref(calls), buffer, SIZE, OBJ, elapsed, int(name == 'second'),
+                               c.byref(running), edx, ebx, ecx)
+                assert running.value == struct.unpack('<I', bytes(cpu.mem_read(0x532bd0, 4)))[0]
+            else:
+                got = function(c.byref(calls), buffer, SIZE, OBJ, elapsed, edx, ebx, *extra)
             assert got == result == returns[len(original_events) - 1], (name, case, got, result)
             assert original_events == native_events, (name, case, original_events, native_events)
             assert original_events[-1][0] == 0x457890
@@ -215,26 +247,48 @@ def verify_full_fight_effect(args, native):
             shapes[name + '_' + shape] = shapes.get(name + '_' + shape, 0) + 1
             mutation_calls += sum(bool(patches[i]) for i in range(len(original_events)))
             draw_calls += sum(event[0] == 0x4826c0 for event in original_events)
+            if wave:
+                running_mutation_calls += sum(running_mutations[i] is not None
+                                              for i in range(len(original_events)))
         guard_buffer = (c.c_uint8 * SIZE).from_buffer_copy(bytes(data))
         before = bytes(guard_buffer)
+        before_running = running.value
         empty_calls = Calls(Call(), None)
         for missing in (None, c.byref(empty_calls)):
-            assert function(missing, guard_buffer, SIZE, OBJ, elapsed, edx, ebx, *extra) == 0
+            if wave:
+                assert function(missing, guard_buffer, SIZE, OBJ, elapsed, int(name == 'second'),
+                                c.byref(running), edx, ebx, ecx) == 0
+            else:
+                assert function(missing, guard_buffer, SIZE, OBJ, elapsed, edx, ebx, *extra) == 0
             assert bytes(guard_buffer) == before
-    assert total == {'0x45a3e0': args.cases, '0x45a440': args.cases}
+        if wave:
+            assert function(c.byref(calls), guard_buffer, SIZE, OBJ, elapsed, 2,
+                            c.byref(running), edx, ebx, ecx) == 0
+            assert function(c.byref(calls), guard_buffer, SIZE, OBJ, elapsed, 0,
+                            None, edx, ebx, ecx) == 0
+            assert bytes(guard_buffer) == before
+            assert running.value == before_running
+    assert total == {hex(address): args.cases for address, _ in entries}
     if args.cases >= 5:
         assert draw_calls > 0 and mutation_calls > 0
     return {'complete_original_executions': total, 'branch_fixtures': shapes,
             'draw_boundary_calls': draw_calls, 'live_actor_mutation_calls': mutation_calls,
-            'native_missing_boundary_guard_cases': 4,
-            'scope': 'Complete normal 45a3e0 and 45a440 run unchanged with real timer, quotient, '
+            'live_running_mutation_calls': running_mutation_calls,
+            'native_missing_boundary_guard_cases': 8 if wave else 4,
+            'scope': ('Complete normal 45a3e0 and 45a440 run unchanged with real timer, quotient, '
                      'remainder, signed transition and setters. Only draws 4826c0 and final '
                      'centering 457890 are supplied; every target/eax/edx/ebx/ecx, entire 0x160 '
                      'actor before each call and after completion, and final original EAX '
                      'compare. Arbitrary caller registers, wrapped timer values, full-width draw '
                      'returns and live actor mutations at either draw and centering are covered. '
                      'Callbacks preserve input registers other than returned EAX; faults and '
-                     'exceptional unwinding remain outside the normal boundary.'}
+                     'exceptional unwinding remain outside the normal boundary.') if not wave else
+                     'Complete normal 45a750 and 45a830 execute unchanged. Only draws 4826c0 and '
+                     'final 457890 are supplied; target/eax/edx/ebx/ecx, complete actor state and '
+                     'live running 532bd0 state compare before every callback and after completion, '
+                     'along with final EAX. Running is read only once after due timer consumption; '
+                     'callback mutations to running and actor do not re-enter that branch. '
+                     'Faults and register-clobbering callbacks remain outside this boundary.'}
 
 
 def main():
@@ -453,9 +507,11 @@ def main():
                 totals[name + '_arrivals'] = totals.get(name + '_arrivals', 0) + 1
     full_effect = verify_full_effect(args, n)
     full_fight_effect = verify_full_fight_effect(args, n)
+    full_wave = verify_full_fight_effect(args, n, wave=True)
     vs.write_report(args, 'title-letter-step', {
         'full_effect_abi': full_effect,
         'full_fight_effect_abi': full_fight_effect,
+        'full_wave_abi': full_wave,
         'status': 'passed', 'complete_original_executions': totals,
         'scope': 'State comparisons only for the legacy status APIs: original handlers 0x459be0, 0x459d60, 0x459e00, 0x45a290, 0x45a3e0, 0x45a440, 0x45a620, 0x45a750 and 0x45a830 (with the real 0x4ac500/0x4ac540/0x4ac5b0, 0x4ad060, 0x4ad260, 0x4ad530 and 0x457890/0x4b14c0) runs in the oracle; only the sound players 0x417260/0x417290/0x4171e0/0x417220 and the generator draw 0x4826c0 are observed and returned. The first 0x160 actor bytes, including the handler token at +0x154, compare after every call.'})
 

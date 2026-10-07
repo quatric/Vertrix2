@@ -902,3 +902,35 @@ uint32_t vertrix_notice_call(const VertrixCalls *calls, uint32_t frame, uint32_t
     notice_apply(calls, frame - NOTICE_LOCAL_SECOND, NOTICE_TEXT_SECOND);
     return 0;
 }
+
+uint32_t vertrix_notice_call_full(const VertrixCalls *calls, uint32_t frame,
+                                  uint32_t previous_exception, VertrixMemoryRead read,
+                                  VertrixMemoryWrite write, void *context)
+{
+    if (!calls || !calls->call || !read || !write)
+    {
+        return 0;
+    }
+    uint32_t current, expected;
+    if (!read(0x532bf8, 4, &current, context) || !read(0x4f8160, 4, &expected, context) ||
+        !write(0x532c40, 4, 1, context))
+    {
+        return 0;
+    }
+    if (current != expected)
+    {
+        return previous_exception;
+    }
+    if (vertrix_call(calls, NOTICE_PROBE, NOTICE_TABLE, NOTICE_EDX, 0, NOTICE_ECX, 0) == 1)
+    {
+        notice_apply(calls, frame - NOTICE_LOCAL_SINGLE, NOTICE_TEXT_SINGLE);
+        if (!write(0x532c40, 4, 1, context))
+        {
+            return 0;
+        }
+        return previous_exception;
+    }
+    notice_apply(calls, frame - NOTICE_LOCAL_FIRST, NOTICE_TEXT_FIRST);
+    notice_apply(calls, frame - NOTICE_LOCAL_SECOND, NOTICE_TEXT_SECOND);
+    return previous_exception;
+}

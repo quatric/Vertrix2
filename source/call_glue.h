@@ -348,14 +348,25 @@ uint32_t vertrix_gate_dispatch_call_full(const VertrixCalls *calls, uint32_t obj
                                          uint32_t previous_exception, VertrixMemoryRead read,
                                          VertrixMemoryWrite write, void *context);
 
-/* Original 0x416010 (frame is the token for ebp, the exception frame being ignored; the original's
- * eax is the restored exception chain and is not comparable): the global 0x532c40 (*flag) is set
- * to one; when the global 0x532bf8 (current) equals the dword at 0x4f8160 (expected), 0x47f9b0
- * probes the table 0x5bb254. A result of one assigns the text 0x50d3c9 (0x4ca280) to a local,
- * hands it to 0x4b76d0 on the list 0x532c24, releases it (0x4ca210) and sets the flag again;
- * otherwise the texts 0x50d3f4 and 0x50d40d go the same way. Returns zero. */
+/* Original fragment 0x416010 (frame is the token for ebp, the exception frame being ignored; the
+ * original's eax is the restored exception chain, omitted by this convenience helper): the global
+ * 0x532c40
+ * (*flag) is set to one; when the global 0x532bf8 (current) equals the dword at 0x4f8160
+ * (expected), 0x47f9b0 probes the table 0x5bb254. A result of one assigns the text 0x50d3c9
+ * (0x4ca280) to a local, hands it to 0x4b76d0 on the list 0x532c24, releases it (0x4ca210) and sets
+ * the flag again; otherwise the texts 0x50d3f4 and 0x50d40d go the same way. Returns zero. */
 uint32_t vertrix_notice_call(const VertrixCalls *calls, uint32_t frame, uint32_t current,
                              uint32_t expected, uint32_t *flag);
+
+/* Original 0x416010: normal notice dispatch with live current/expected global reads and flag
+ * writes. Runtime callbacks receive the original frame-relative text-local handles. Every normal
+ * branch returns previous_exception (the saved exception-chain token), ignoring callee returns
+ * except the probe decision and assigned-text handle. Calls/read/write are mandatory; missing
+ * boundaries reject before effects, while late memory failure retains completed effects.
+ * Exception-stack bookkeeping and exception unwinding remain outside the runtime boundary. */
+uint32_t vertrix_notice_call_full(const VertrixCalls *calls, uint32_t frame,
+                                  uint32_t previous_exception, VertrixMemoryRead read,
+                                  VertrixMemoryWrite write, void *context);
 
 /* Original 0x472d00: 0x472d50, then 0x4ca000(0x15c); a non-zero result goes through 0x4abd70 and is
  * stored in *slot (the global 0x546794), which then has its handler set by 0x4ac8f0 (0x45c250 for

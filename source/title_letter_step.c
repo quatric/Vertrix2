@@ -451,6 +451,27 @@ int vertrix_title_letter_fight_restart(uint8_t *actor, size_t size, uint32_t ela
     return vertrix_ui_center_on_anchor(actor, size, descriptor, screen_unscaled, screen_mode);
 }
 
+static void letter_prepare_fly(const VertrixCalls *calls, uint8_t *actor, uint32_t *ebx,
+                               uint32_t *ecx, uint32_t handler)
+{
+    *ebx = (uint32_t)(int32_t)(int16_t)get(actor, POSITION_X, 2);
+    *ecx = (uint32_t)(int32_t)(int16_t)get(actor, POSITION_Y, 2);
+    put(actor, LIMIT, 2, 0xa0);
+    put(actor, RADIUS, 2, 1);
+    put(actor, ORIGIN_X, 2, *ebx);
+    put(actor, ORIGIN_Y, 2, *ecx);
+    VertrixCallSite draw = {
+        .target = 0x4826c0, .eax = 0x598d30, .edx = 0x168, .ebx = *ebx, .ecx = *ecx};
+    uint32_t angle = calls->call(&draw, calls->context);
+    put(actor, ANGLE, 2, angle);
+    draw =
+        (VertrixCallSite){.target = 0x4826c0, .eax = 0x598d30, .edx = 10, .ebx = *ebx, .ecx = *ecx};
+    uint32_t rate = calls->call(&draw, calls->context);
+    put(actor, ANGLE_STEP, 2, rate + 10u);
+    put(actor, RADIUS_STEP, 2, 2);
+    put(actor, 0x154, 4, handler);
+}
+
 static uint32_t fight_effect_call(const VertrixCalls *calls, uint8_t *actor, size_t size,
                                   uint32_t object, uint32_t elapsed, uint32_t edx, uint32_t ebx,
                                   uint32_t ecx, int restart)
@@ -470,21 +491,7 @@ static uint32_t fight_effect_call(const VertrixCalls *calls, uint8_t *actor, siz
     {
         if (restart)
         {
-            ebx = (uint32_t)(int32_t)(int16_t)get(actor, POSITION_X, 2);
-            ecx = (uint32_t)(int32_t)(int16_t)get(actor, POSITION_Y, 2);
-            put(actor, LIMIT, 2, 0xa0);
-            put(actor, RADIUS, 2, 1);
-            put(actor, ORIGIN_X, 2, ebx);
-            put(actor, ORIGIN_Y, 2, ecx);
-            VertrixCallSite draw = {
-                .target = 0x4826c0, .eax = 0x598d30, .edx = 0x168, .ebx = ebx, .ecx = ecx};
-            uint32_t angle = calls->call(&draw, calls->context);
-            put(actor, ANGLE, 2, angle);
-            draw = (VertrixCallSite){
-                .target = 0x4826c0, .eax = 0x598d30, .edx = 10, .ebx = ebx, .ecx = ecx};
-            uint32_t rate = calls->call(&draw, calls->context);
-            put(actor, ANGLE_STEP, 2, rate + 10u);
-            put(actor, RADIUS_STEP, 2, 2);
+            letter_prepare_fly(calls, actor, &ebx, &ecx, 0x45a4f0);
             edx = 0x45a4f0;
         }
         else
@@ -492,8 +499,8 @@ static uint32_t fight_effect_call(const VertrixCalls *calls, uint8_t *actor, siz
             put(actor, EFFECT_TARGET, 2, 0);
             put(actor, EFFECT_STEP, 2, 5);
             edx = 0x45a440;
+            put(actor, 0x154, 4, edx);
         }
-        put(actor, 0x154, 4, edx);
     }
     VertrixCallSite center = {
         .target = 0x457890, .eax = object, .edx = edx, .ebx = ebx, .ecx = ecx};
@@ -677,6 +684,51 @@ int vertrix_title_letter_wave(uint8_t *actor, size_t size, uint32_t elapsed, int
         }
     }
     return vertrix_ui_center_on_anchor(actor, size, descriptor, screen_unscaled, screen_mode);
+}
+
+uint32_t vertrix_title_letter_wave_call(const VertrixCalls *calls, uint8_t *actor, size_t size,
+                                        uint32_t object, uint32_t elapsed, unsigned second,
+                                        const uint32_t *running, uint32_t edx, uint32_t ebx,
+                                        uint32_t ecx)
+{
+    if (!calls || !calls->call || !running || second > 1 || !actor ||
+        size < VERTRIX_LETTER_STORAGE_SIZE)
+    {
+        return 0;
+    }
+    put(actor, COUNTER, 4, get(actor, COUNTER, 4) + elapsed);
+    if (get(actor, COUNTER, 4) >= get(actor, PERIOD, 4))
+    {
+        uint32_t quotient = 0;
+        vertrix_actor_counter_quotient(actor, size, &quotient);
+        vertrix_actor_counter_wrap(actor, size);
+        if (*running)
+        {
+            int16_t effect = (int16_t)get(actor, EFFECT, 2);
+            int16_t target = (int16_t)get(actor, EFFECT_TARGET, 2);
+            edx = (uint32_t)(int32_t)target;
+            int moving = vertrix_word_transition(&effect, target,
+                                                 (int16_t)get(actor, EFFECT_STEP, 2), quotient);
+            put(actor, EFFECT, 2, (uint16_t)effect);
+            if (!moving)
+            {
+                put(actor, EFFECT_TARGET, 2, second ? 0x32 : 0xffec);
+                put(actor, EFFECT_STEP, 2, 2);
+                edx = second ? 0x45a750 : 0x45a830;
+                put(actor, 0x154, 4, edx);
+            }
+        }
+        else
+        {
+            put(actor, EFFECT_TARGET, 2, 0);
+            put(actor, EFFECT_STEP, 2, 5);
+            letter_prepare_fly(calls, actor, &ebx, &ecx, 0x45a910);
+            edx = 0x45a910;
+        }
+    }
+    VertrixCallSite center = {
+        .target = 0x457890, .eax = object, .edx = edx, .ebx = ebx, .ecx = ecx};
+    return calls->call(&center, calls->context);
 }
 
 int vertrix_title_letter_wave_fly(uint8_t *actor, size_t size, uint32_t elapsed,

@@ -168,10 +168,21 @@ int vertrix_title_letter_wave_count(uint8_t *actor, size_t size, uint32_t elapse
                                     const VertrixAngleTables *tables, VertrixRotationTrace *trace,
                                     const VertrixResourceDimensions *descriptor,
                                     uint8_t screen_unscaled, uint8_t screen_mode);
+/* Original fragment 0x45a750 and 0x45a830: actor state with projected services/status return. */
 int vertrix_title_letter_wave(uint8_t *actor, size_t size, uint32_t elapsed, int second,
                               uint32_t running, const VertrixResourceDimensions *descriptor,
                               uint8_t screen_unscaled, uint8_t screen_mode,
                               const VertrixFightServices *services);
+/* Original variants 0x45a750, 0x45a830: complete normal wave handlers; second is 0/1,
+ * respectively. running is the live 0x532bd0 dword, read once after quotient/remainder on a due
+ * frame. Draw and center callbacks may mutate it and the actor; the running decision is not
+ * repeated after those calls. Returns mandatory final 0x457890 eax. Missing callback/running,
+ * invalid second or short storage returns zero without changes. */
+uint32_t vertrix_title_letter_wave_call(const VertrixCalls *calls, uint8_t *actor, size_t size,
+                                        uint32_t object, uint32_t elapsed, unsigned second,
+                                        const uint32_t *running, uint32_t edx, uint32_t ebx,
+                                        uint32_t ecx);
+
 int vertrix_title_letter_wave_fly(uint8_t *actor, size_t size, uint32_t elapsed,
                                   const VertrixAngleTables *tables, VertrixRotationTrace *trace,
                                   const VertrixResourceDimensions *descriptor,

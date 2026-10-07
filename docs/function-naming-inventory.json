@@ -1,9 +1,9 @@
 {
   "scope": "Current address/name inventory and consistency only. Original behavior verification is recorded in separate routine reports.",
-  "name_map_entries": 1347,
-  "verified_whole_chunk_entries": 2297,
-  "readable_whole_chunk_names": 792,
-  "anonymous_whole_chunk_names": 1505,
+  "name_map_entries": 1362,
+  "verified_whole_chunk_entries": 2303,
+  "readable_whole_chunk_names": 810,
+  "anonymous_whole_chunk_names": 1493,
   "anonymous_entries_with_unapplied_canonical_names": [],
   "rename_dry_run": {
     "pending_routine_renames": 0,
@@ -12,8 +12,14 @@
   "full_native_recovery_reports": [
     "docs/actor-frame-switch-verification.json",
     "docs/ui-panel-dispatch-verification.json",
-    "docs/input-verification.json"
+    "docs/input-verification.json",
+    "docs/title-letter-step-verification.json",
+    "docs/call-glue-verification.json",
+    "docs/notice-verification.json",
+    "docs/register-return-verification.json",
+    "docs/copy-dword-verification.json"
   ],
   "dispatcher_report": "docs/dispatcher-integration-verification.json",
-  "remaining_work": "Recover names and behavior for anonymous routines and complete runtime integration. Optional lifted routines require independent behavioral verification."
+  "remaining_work": "Recover names and behavior for anonymous routines and complete runtime integration. Optional lifted routines require independent behavioral verification.",
+  "normal_boundary_limit": "Exception unwinding is outside the title-letter, gate and notice normal-return APIs."
 }
