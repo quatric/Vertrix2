@@ -17,6 +17,8 @@ from pathlib import Path
 
 import capstone
 import pefile
+
+from import_args import BY_SLOT
 from capstone import x86_const as X
 
 EXE = Path('/Volumes/SSD/larsen/Documents/Codex/2026-10-03/goal-ok-i-have-a-big/work/original/'
@@ -384,8 +386,12 @@ class Lifter:
                 op.mem.segment != X.X86_REG_FS and 0x4f1000 <= op.mem.disp < 0x4f4000:
             # an import: the slot address is the target (stdcall)
             target_expr = '0x%xu' % op.mem.disp
-            count = self.pending_pushes(insn) if not cdecl else \
-                int(next_insn.op_str.split(',')[1], 0) // 4
+            if cdecl:
+                count = int(next_insn.op_str.split(',')[1], 0) // 4
+            else:
+                count = BY_SLOT.get(op.mem.disp, None)
+                if count is None:
+                    count = self.pending_pushes(insn)
             self.callees[op.mem.disp] = (count, cdecl)
             pops = 0 if cdecl else count
         elif op.type == X.X86_OP_MEM and not op.mem.base and not op.mem.index and \

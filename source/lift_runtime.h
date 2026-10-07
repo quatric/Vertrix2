@@ -135,7 +135,8 @@ static inline void lift_store(LiftEnv *env, uint32_t base, uint32_t offset, unsi
     }
     else if (!vertrix_build_store(env->services, base, offset, size, value))
     {
-        env->failed = 1;
+        uint32_t stack[1] = {size};
+        vertrix_calln(env->calls, LIFT_GLOBAL_STORE, address, value, 0, 0, stack, 1, NULL);
     }
 }
 

@@ -1,4 +1,5 @@
 """Shared pieces of the screen builder oracles: call sites, services, supplied static data reads."""
+from unicorn import UC_HOOK_MEM_READ_UNMAPPED, UC_HOOK_MEM_WRITE_UNMAPPED, UcError
 import ctypes as c
 import json
 import struct
@@ -39,8 +40,27 @@ def site_log(s, count):
 def global_reader(cpu):
     @GlobalRead
     def read(address, context):
-        return struct.unpack('<I', bytes(cpu.mem_read(address, 4)))[0]
+        try:
+            return struct.unpack('<I', bytes(cpu.mem_read(address, 4)))[0]
+        except UcError:
+            return 0
     return read
+
+
+def automap(cpu):
+    """Map a zero page for any access to unmapped memory so garbage pointers run on."""
+    def fault(uc, access, address, size, value, user):
+        page = address & ~0xfff
+        if page == 0 and address < 0x1000:
+            return False
+        try:
+            uc.mem_map(page, 0x1000)
+            if address + size > page + 0x1000:
+                uc.mem_map(page + 0x1000, 0x1000)
+        except UcError:
+            return False
+        return True
+    cpu.hook_add(UC_HOOK_MEM_READ_UNMAPPED | UC_HOOK_MEM_WRITE_UNMAPPED, fault)
 
 
 def write_report(build_dir, name, report):
@@ -51,7 +71,7 @@ def write_report(build_dir, name, report):
 def run_screen(name, address, sources, function, argtypes, restype, callees, generate, scope,
                *, wrappers=(), allocator=0x4ca000, globals_ranges=(), patch=None, compare=True,
                result_mask=0xffffffff, description='', table_targets=(), lookups=(), pool_size=0x200, effects=None, fixed_returns=None, handle_returns=(), choices=None,
-               setup=None, extras=None, native_extras_arg=None, post=None, mixed_returns=(),
+               setup=None, automap_enabled=False, extras=None, native_extras_arg=None, post=None, mixed_returns=(),
                leading=('calls', 'services', 'globals')):
     """Run `function` against the original routine at `address`.
 
@@ -107,6 +127,8 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
             returns.append(rng.getrandbits(32))
         return returns[-1]
 
+    if automap_enabled:
+        automap(cpu)
     if setup:
         setup(cpu)
     effects = effects or {}

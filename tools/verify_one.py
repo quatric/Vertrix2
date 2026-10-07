@@ -59,7 +59,8 @@ def vtable_setup(cpu):
         cpu.mem_write(VTABLE + slot, struct.pack('<I', LEAF))
 
 
-spec = dict(address=meta['address'], arguments=meta['arguments'], small=True, keep=tuple(slots) + tuple(pointer_globals) + tuple(imports), mixed=True, handles=True,
+spec = dict(address=meta['address'], arguments=meta['arguments'], small=True, keep=tuple(slots) + tuple(pointer_globals) + tuple(imports), mixed=True, handles=True, automap=True,
             pool_size=0x1000, patch=vtable_patch,
+            setup_case=lambda rng, pool, cpu, kwargs: vtable_setup(cpu),
             setup=vtable_setup if virtual or slots or pointer_globals or imports else None)
 verify_lifted.run(name, spec, meta, scratch / (name + '.c'))
