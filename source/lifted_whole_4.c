@@ -4,6 +4,589 @@
 
 #include "lifted_whole_4.h"
 
+uint32_t lifted_f4ac760(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry)
+{
+    uint8_t stack[LIFTED_F4AC760_STACK + 4 + 4 * 0 + 4];
+    LiftEnv env;
+    LiftFlags fl = {0, 0, 0, 0, 0};
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi = entry->esi;
+    uint32_t edi = entry->edi;
+    uint32_t ebp = entry->ebp;
+    uint32_t esp = entry->esp;
+    (void)fl;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)esp;
+    lift_begin(&env, calls, services, globals, stack, LIFTED_F4AC760_STACK, 0, entry);
+    {
+        uint32_t v = edx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    edx = eax;
+    eax = lift_load(&env, eax, 0xb0u, 4);
+    eax = lift_call(&env, 0x487860u, eax, edx, ebx, ecx, 0, esp);
+    {
+        (void)lift_sub(32, eax, lift_load(&env, edx, 0xb8u, 4), &fl);
+    }
+    eax = (eax & 0xffffff00u) | (((fl.zf) ? 1u : 0u) & 0xffu);
+    {
+        uint32_t r = lift_and(32, eax, 0xffu, &fl);
+        eax = r;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        edx = v;
+    }
+    return env.failed ? 0u : eax;
+}
+
+uint32_t lifted_f4ac780(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry)
+{
+    uint8_t stack[LIFTED_F4AC780_STACK + 4 + 4 * 0 + 4];
+    LiftEnv env;
+    LiftFlags fl = {0, 0, 0, 0, 0};
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi = entry->esi;
+    uint32_t edi = entry->edi;
+    uint32_t ebp = entry->ebp;
+    uint32_t esp = entry->esp;
+    (void)fl;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)esp;
+    lift_begin(&env, calls, services, globals, stack, LIFTED_F4AC780_STACK, 0, entry);
+    {
+        uint32_t v = edx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    edx = lift_load(&env, eax, 0xb8u, 4);
+    eax = lift_load(&env, eax, 0xb0u, 4);
+    {
+        uint32_t a = edx;
+        uint32_t r = lift_inc(32, a, &fl, 1);
+        edx = r;
+    }
+    eax = lift_call(&env, 0x487860u, eax, edx, ebx, ecx, 0, esp);
+    {
+        (void)lift_sub(32, edx, eax, &fl);
+    }
+    eax = (eax & 0xffffff00u) | (((fl.zf) ? 1u : 0u) & 0xffu);
+    {
+        uint32_t r = lift_and(32, eax, 0xffu, &fl);
+        eax = r;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        edx = v;
+    }
+    return env.failed ? 0u : eax;
+}
+
+uint32_t lifted_f4ac7a0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry)
+{
+    uint8_t stack[LIFTED_F4AC7A0_STACK + 4 + 4 * 0 + 4];
+    LiftEnv env;
+    LiftFlags fl = {0, 0, 0, 0, 0};
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi = entry->esi;
+    uint32_t edi = entry->edi;
+    uint32_t ebp = entry->ebp;
+    uint32_t esp = entry->esp;
+    (void)fl;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)esp;
+    lift_begin(&env, calls, services, globals, stack, LIFTED_F4AC7A0_STACK, 0, entry);
+    {
+        (void)lift_sub(32, lift_load(&env, eax, 0xb8u, 4), 0x0u, &fl);
+    }
+    eax = (eax & 0xffffff00u) | (((fl.zf) ? 1u : 0u) & 0xffu);
+    {
+        uint32_t r = lift_and(32, eax, 0xffu, &fl);
+        eax = r;
+    }
+    return env.failed ? 0u : eax;
+}
+
+uint32_t lifted_f4ac7b0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry)
+{
+    uint8_t stack[LIFTED_F4AC7B0_STACK + 4 + 4 * 0 + 4];
+    LiftEnv env;
+    LiftFlags fl = {0, 0, 0, 0, 0};
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi = entry->esi;
+    uint32_t edi = entry->edi;
+    uint32_t ebp = entry->ebp;
+    uint32_t esp = entry->esp;
+    (void)fl;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)esp;
+    lift_begin(&env, calls, services, globals, stack, LIFTED_F4AC7B0_STACK, 0, entry);
+    {
+        uint32_t v = ecx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    ecx = eax;
+    eax = ((edx * 4u));
+    {
+        uint32_t r = lift_sub(32, eax, edx, &fl);
+        eax = r;
+    }
+    {
+        uint32_t a = eax;
+        uint32_t r = lift_shl(32, a, 0x2u, &fl);
+        eax = r;
+    }
+    lift_store(&env, ecx, 0xc0u, 4, eax);
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        ecx = v;
+    }
+    return env.failed ? 0u : eax;
+}
+
+uint32_t lifted_f4ac7d0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry)
+{
+    uint8_t stack[LIFTED_F4AC7D0_STACK + 4 + 4 * 0 + 4];
+    LiftEnv env;
+    LiftFlags fl = {0, 0, 0, 0, 0};
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi = entry->esi;
+    uint32_t edi = entry->edi;
+    uint32_t ebp = entry->ebp;
+    uint32_t esp = entry->esp;
+    (void)fl;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)esp;
+    lift_begin(&env, calls, services, globals, stack, LIFTED_F4AC7D0_STACK, 0, entry);
+    lift_store(&env, eax, 0xc0u, 4, edx);
+    return env.failed ? 0u : eax;
+}
+
+uint32_t lifted_f4ac7e0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry)
+{
+    uint8_t stack[LIFTED_F4AC7E0_STACK + 4 + 4 * 0 + 4];
+    LiftEnv env;
+    LiftFlags fl = {0, 0, 0, 0, 0};
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi = entry->esi;
+    uint32_t edi = entry->edi;
+    uint32_t ebp = entry->ebp;
+    uint32_t esp = entry->esp;
+    (void)fl;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)esp;
+    lift_begin(&env, calls, services, globals, stack, LIFTED_F4AC7E0_STACK, 0, entry);
+    {
+        uint32_t v = ebx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t v = ecx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t v = edx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    ecx = eax;
+    {
+        uint32_t r = lift_xor(32, edx, edx, &fl);
+        edx = r;
+    }
+    edx = (edx & 0xffff0000u) | ((lift_load(&env, eax, 0xc8u, 2)) & 0xffffu);
+    eax = 0x598d30u;
+    eax = lift_call(&env, 0x4826c0u, eax, edx, ebx, ecx, 0, esp);
+    {
+        uint32_t r = lift_xor(32, edx, edx, &fl);
+        edx = r;
+    }
+    ebx = lift_load(&env, ecx, 0xc4u, 4);
+    edx = (edx & 0xffff0000u) | (((eax & 0xffffu)) & 0xffffu);
+    eax = ecx;
+    {
+        uint32_t r = lift_add(32, edx, ebx, &fl);
+        edx = r;
+    }
+    eax = lift_call(&env, 0x4ac7d0u, eax, edx, ebx, ecx, 0, esp);
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        edx = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        ecx = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        ebx = v;
+    }
+    return env.failed ? 0u : eax;
+}
+
+uint32_t lifted_f4ac810(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry)
+{
+    uint8_t stack[LIFTED_F4AC810_STACK + 4 + 4 * 0 + 4];
+    LiftEnv env;
+    LiftFlags fl = {0, 0, 0, 0, 0};
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi = entry->esi;
+    uint32_t edi = entry->edi;
+    uint32_t ebp = entry->ebp;
+    uint32_t esp = entry->esp;
+    (void)fl;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)esp;
+    lift_begin(&env, calls, services, globals, stack, LIFTED_F4AC810_STACK, 0, entry);
+    {
+        uint32_t v = ebx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t v = ecx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t v = edx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    ecx = eax;
+    {
+        uint32_t r = lift_xor(32, edx, edx, &fl);
+        edx = r;
+    }
+    edx = (edx & 0xffff0000u) | ((lift_load(&env, eax, 0xd8u, 2)) & 0xffffu);
+    eax = 0x598d30u;
+    eax = lift_call(&env, 0x4826c0u, eax, edx, ebx, ecx, 0, esp);
+    {
+        uint32_t r = lift_xor(32, edx, edx, &fl);
+        edx = r;
+    }
+    ebx = lift_load(&env, ecx, 0xd4u, 4);
+    edx = (edx & 0xffff0000u) | (((eax & 0xffffu)) & 0xffffu);
+    eax = ecx;
+    {
+        uint32_t r = lift_add(32, edx, ebx, &fl);
+        edx = r;
+    }
+    eax = lift_call(&env, 0x4ac490u, eax, edx, ebx, ecx, 0, esp);
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        edx = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        ecx = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        ebx = v;
+    }
+    return env.failed ? 0u : eax;
+}
+
+uint32_t lifted_f4ac840(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry)
+{
+    uint8_t stack[LIFTED_F4AC840_STACK + 4 + 4 * 0 + 4];
+    LiftEnv env;
+    LiftFlags fl = {0, 0, 0, 0, 0};
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi = entry->esi;
+    uint32_t edi = entry->edi;
+    uint32_t ebp = entry->ebp;
+    uint32_t esp = entry->esp;
+    (void)fl;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)esp;
+    lift_begin(&env, calls, services, globals, stack, LIFTED_F4AC840_STACK, 0, entry);
+    {
+        uint32_t v = ecx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    ecx = eax;
+    eax = ((edx * 4u));
+    {
+        uint32_t r = lift_sub(32, eax, edx, &fl);
+        eax = r;
+    }
+    {
+        uint32_t a = eax;
+        uint32_t r = lift_shl(32, a, 0x2u, &fl);
+        eax = r;
+    }
+    lift_store(&env, ecx, 0xe0u, 4, eax);
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        ecx = v;
+    }
+    return env.failed ? 0u : eax;
+}
+
+uint32_t lifted_f4ac860(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry)
+{
+    uint8_t stack[LIFTED_F4AC860_STACK + 4 + 4 * 0 + 4];
+    LiftEnv env;
+    LiftFlags fl = {0, 0, 0, 0, 0};
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi = entry->esi;
+    uint32_t edi = entry->edi;
+    uint32_t ebp = entry->ebp;
+    uint32_t esp = entry->esp;
+    (void)fl;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)esp;
+    lift_begin(&env, calls, services, globals, stack, LIFTED_F4AC860_STACK, 0, entry);
+    lift_store(&env, eax, 0xe0u, 4, edx);
+    return env.failed ? 0u : eax;
+}
+
+uint32_t lifted_f4ac8a0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry)
+{
+    uint8_t stack[LIFTED_F4AC8A0_STACK + 4 + 4 * 0 + 4];
+    LiftEnv env;
+    LiftFlags fl = {0, 0, 0, 0, 0};
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi = entry->esi;
+    uint32_t edi = entry->edi;
+    uint32_t ebp = entry->ebp;
+    uint32_t esp = entry->esp;
+    (void)fl;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)esp;
+    lift_begin(&env, calls, services, globals, stack, LIFTED_F4AC8A0_STACK, 0, entry);
+    {
+        uint32_t v = ecx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t v = edx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    ecx = eax;
+    {
+        (void)lift_sub(32, lift_load(&env, eax, 0xb0u, 4), 0x0u, &fl);
+    }
+    if (!fl.zf)
+        goto L_4ac8b0;
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        edx = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        ecx = v;
+    }
+    return env.failed ? 0u : eax;
+L_4ac8b0:
+    edx = lift_load(&env, eax, 0xb8u, 4);
+    eax = lift_load(&env, eax, 0xb0u, 4);
+    eax = lift_call(&env, 0x4877f0u, eax, edx, ebx, ecx, 0, esp);
+    lift_store(&env, ecx, 0xb4u, 4, eax);
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        edx = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        ecx = v;
+    }
+    return env.failed ? 0u : eax;
+}
+
+uint32_t lifted_f4ac8d0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry)
+{
+    uint8_t stack[LIFTED_F4AC8D0_STACK + 4 + 4 * 0 + 4];
+    LiftEnv env;
+    LiftFlags fl = {0, 0, 0, 0, 0};
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi = entry->esi;
+    uint32_t edi = entry->edi;
+    uint32_t ebp = entry->ebp;
+    uint32_t esp = entry->esp;
+    (void)fl;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)esp;
+    lift_begin(&env, calls, services, globals, stack, LIFTED_F4AC8D0_STACK, 0, entry);
+    {
+        uint32_t v = ecx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    ecx = eax;
+    eax = lift_call(&env, 0x4ac380u, eax, edx, ebx, ecx, 0, esp);
+    eax = ecx;
+    eax = lift_call(&env, 0x4ac700u, eax, edx, ebx, ecx, 0, esp);
+    lift_store(&env, ecx, 0xb0u, 4, edx);
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        ecx = v;
+    }
+    return env.failed ? 0u : eax;
+}
+
+uint32_t lifted_f4ac8f0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry)
+{
+    uint8_t stack[LIFTED_F4AC8F0_STACK + 4 + 4 * 0 + 4];
+    LiftEnv env;
+    LiftFlags fl = {0, 0, 0, 0, 0};
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi = entry->esi;
+    uint32_t edi = entry->edi;
+    uint32_t ebp = entry->ebp;
+    uint32_t esp = entry->esp;
+    (void)fl;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)esp;
+    lift_begin(&env, calls, services, globals, stack, LIFTED_F4AC8F0_STACK, 0, entry);
+    lift_store(&env, eax, 0x154u, 4, edx);
+    return env.failed ? 0u : eax;
+}
+
 uint32_t lifted_f4ac900(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry)
 {
@@ -24319,6 +24902,310 @@ uint32_t lifted_f4bb470(const VertrixCalls *calls, const VertrixFactoryServices 
     return env.failed ? 0u : eax;
 }
 
+uint32_t lifted_f4bb510(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry)
+{
+    uint8_t stack[LIFTED_F4BB510_STACK + 4 + 4 * 1 + 4];
+    LiftEnv env;
+    LiftFlags fl = {0, 0, 0, 0, 0};
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi = entry->esi;
+    uint32_t edi = entry->edi;
+    uint32_t ebp = entry->ebp;
+    uint32_t esp = entry->esp;
+    (void)fl;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)esp;
+    lift_begin(&env, calls, services, globals, stack, LIFTED_F4BB510_STACK, 1, entry);
+    {
+        uint32_t v = esi;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t v = edi;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t v = ebp;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t r = lift_sub(32, esp, 0x3cu, &fl);
+        esp = r;
+    }
+    esi = eax;
+    lift_store(&env, esp, 0x18u, 4, edx);
+    lift_store(&env, esp, 0x10u, 4, ebx);
+    lift_store(&env, esp, 0x14u, 4, ecx);
+    edx = lift_load(&env, esi, 0x70u, 4);
+    lift_store(&env, esp, 0xcu, 4, edx);
+    edx = lift_load(&env, esi, 0x144u, 4);
+    eax = lift_load(&env, eax, 0x1c8u, 4);
+    lift_store(&env, esp, 0x34u, 4, edx);
+    edx = lift_load(&env, eax, 0x8u, 4);
+    lift_store(&env, esp, 0x2cu, 4, edx);
+    edx = lift_load(&env, eax, 0xcu, 4);
+    lift_store(&env, esp, 0x20u, 4, edx);
+    edx = lift_load(&env, eax, 0x10u, 4);
+    eax = lift_load(&env, eax, 0x14u, 4);
+    lift_store(&env, esp, 0x24u, 4, eax);
+    eax = ((ebx * 4u));
+    lift_store(&env, esp, 0x28u, 4, edx);
+    lift_store(&env, esp, 0x1cu, 4, eax);
+L_4bb562:
+    edx = lift_load(&env, esp, 0x4cu, 4);
+    {
+        uint32_t a = edx;
+        uint32_t r = lift_dec(32, a, &fl, 1);
+        edx = r;
+    }
+    lift_store(&env, esp, 0x4cu, 4, edx);
+    {
+        (void)lift_and(32, edx, edx, &fl);
+    }
+    if (fl.sf != fl.of)
+        goto L_4bb696;
+    eax = lift_load(&env, esp, 0x18u, 4);
+    ebx = lift_load(&env, esp, 0x1cu, 4);
+    eax = lift_load(&env, eax, 0x0u, 4);
+    {
+        uint32_t r = lift_add(32, eax, ebx, &fl);
+        eax = r;
+    }
+    ecx = lift_load(&env, eax, 0x0u, 4);
+    eax = lift_load(&env, esp, 0x18u, 4);
+    eax = lift_load(&env, eax, 0x4u, 4);
+    {
+        uint32_t r = lift_add(32, eax, ebx, &fl);
+        eax = r;
+    }
+    esi = lift_load(&env, eax, 0x0u, 4);
+    eax = lift_load(&env, esp, 0x18u, 4);
+    eax = lift_load(&env, eax, 0x8u, 4);
+    {
+        uint32_t r = lift_add(32, eax, ebx, &fl);
+        eax = r;
+    }
+    ebx = lift_load(&env, esp, 0x18u, 4);
+    ebp = lift_load(&env, esp, 0x1cu, 4);
+    edi = lift_load(&env, eax, 0x0u, 4);
+    ebx = lift_load(&env, ebx, 0xcu, 4);
+    eax = lift_load(&env, esp, 0x14u, 4);
+    {
+        uint32_t r = lift_add(32, ebx, ebp, &fl);
+        ebx = r;
+    }
+    eax = lift_load(&env, eax, 0x0u, 4);
+    edx = (ebp + 0x4u);
+    ebx = lift_load(&env, ebx, 0x0u, 4);
+    ebp = lift_load(&env, esp, 0x10u, 4);
+    lift_store(&env, esp, 0x1cu, 4, edx);
+    {
+        uint32_t a = ebp;
+        uint32_t r = lift_inc(32, a, &fl, 1);
+        ebp = r;
+    }
+    edx = lift_load(&env, esp, 0x14u, 4);
+    lift_store(&env, esp, 0x10u, 4, ebp);
+    {
+        uint32_t r = lift_add(32, edx, 0x4u, &fl);
+        edx = r;
+    }
+    ebp = lift_load(&env, esp, 0xcu, 4);
+    lift_store(&env, esp, 0x14u, 4, edx);
+    {
+        (void)lift_and(32, ebp, ebp, &fl);
+    }
+    if (fl.cf || fl.zf)
+        goto L_4bb562;
+    lift_store(&env, esp, 0x38u, 4, ebx);
+    ebx = (ecx + ebp);
+    edx = ecx;
+    lift_store(&env, esp, 0x30u, 4, ebx);
+L_4bb5dc:
+    {
+        uint32_t r = lift_xor(32, ecx, ecx, &fl);
+        ecx = r;
+    }
+    ecx = (ecx & 0xffffff00u) | ((lift_load(&env, esi, 0x0u, 1)) & 0xffu);
+    lift_store(&env, esp, 0x0u, 4, ecx);
+    {
+        uint32_t r = lift_xor(32, ecx, ecx, &fl);
+        ecx = r;
+    }
+    ecx = (ecx & 0xffffff00u) | ((lift_load(&env, edi, 0x0u, 1)) & 0xffu);
+    {
+        uint32_t a = ecx;
+        uint32_t r = lift_shl(32, a, 0x2u, &fl);
+        ecx = r;
+    }
+    lift_store(&env, esp, 0x4u, 4, ecx);
+    ecx = lift_load(&env, esp, 0x2cu, 4);
+    ebp = lift_load(&env, esp, 0x4u, 4);
+    {
+        uint32_t r = lift_xor(32, ebx, ebx, &fl);
+        ebx = r;
+    }
+    {
+        uint32_t r = lift_add(32, ecx, ebp, &fl);
+        ecx = r;
+    }
+    ebx = (ebx & 0xffffff00u) | ((lift_load(&env, edx, 0x0u, 1)) & 0xffu);
+    ecx = lift_load(&env, ecx, 0x0u, 4);
+    {
+        uint32_t r = lift_add(32, ecx, ebx, &fl);
+        ecx = r;
+    }
+    lift_store(&env, esp, 0x8u, 4, ecx);
+    ecx = 0xffu;
+    {
+        uint32_t r = lift_sub(32, ecx, lift_load(&env, esp, 0x8u, 4), &fl);
+        ecx = r;
+    }
+    {
+        uint32_t r = lift_add(32, ecx, lift_load(&env, esp, 0x34u, 4), &fl);
+        ecx = r;
+    }
+    ecx = (ecx & 0xffffff00u) | ((lift_load(&env, ecx, 0x0u, 1)) & 0xffu);
+    lift_store(&env, eax, 0x0u, 1, (ecx & 0xffu));
+    ecx = lift_load(&env, esp, 0x0u, 4);
+    {
+        uint32_t a = ecx;
+        uint32_t r = lift_shl(32, a, 0x2u, &fl);
+        ecx = r;
+    }
+    lift_store(&env, esp, 0x8u, 4, ecx);
+    ecx = lift_load(&env, esp, 0x24u, 4);
+    {
+        uint32_t r = lift_add(32, ecx, lift_load(&env, esp, 0x8u, 4), &fl);
+        ecx = r;
+    }
+    ebp = lift_load(&env, esp, 0x28u, 4);
+    {
+        uint32_t r = lift_add(32, ebp, lift_load(&env, esp, 0x4u, 4), &fl);
+        ebp = r;
+    }
+    ecx = lift_load(&env, ecx, 0x0u, 4);
+    {
+        uint32_t r = lift_add(32, ecx, lift_load(&env, ebp, 0x0u, 4), &fl);
+        ecx = r;
+    }
+    {
+        uint32_t a = ecx;
+        uint32_t r = lift_sar(32, a, 0x10u, &fl);
+        ecx = r;
+    }
+    ebp = 0xffu;
+    {
+        uint32_t r = lift_add(32, ecx, ebx, &fl);
+        ecx = r;
+    }
+    {
+        uint32_t r = lift_sub(32, ebp, ecx, &fl);
+        ebp = r;
+    }
+    ecx = ebp;
+    {
+        uint32_t r = lift_add(32, ecx, lift_load(&env, esp, 0x34u, 4), &fl);
+        ecx = r;
+    }
+    ecx = (ecx & 0xffffff00u) | ((lift_load(&env, ecx, 0x0u, 1)) & 0xffu);
+    ebp = lift_load(&env, esp, 0x8u, 4);
+    lift_store(&env, eax, 0x1u, 1, (ecx & 0xffu));
+    ecx = lift_load(&env, esp, 0x20u, 4);
+    {
+        uint32_t r = lift_add(32, ecx, ebp, &fl);
+        ecx = r;
+    }
+    ecx = lift_load(&env, ecx, 0x0u, 4);
+    {
+        uint32_t r = lift_add(32, ecx, ebx, &fl);
+        ecx = r;
+    }
+    ebx = 0xffu;
+    {
+        uint32_t r = lift_sub(32, ebx, ecx, &fl);
+        ebx = r;
+    }
+    {
+        uint32_t r = lift_add(32, eax, 0x4u, &fl);
+        eax = r;
+    }
+    ecx = ebx;
+    ebx = lift_load(&env, esp, 0x34u, 4);
+    {
+        uint32_t a = edi;
+        uint32_t r = lift_inc(32, a, &fl, 1);
+        edi = r;
+    }
+    {
+        uint32_t r = lift_add(32, ecx, ebx, &fl);
+        ecx = r;
+    }
+    {
+        uint32_t a = esi;
+        uint32_t r = lift_inc(32, a, &fl, 1);
+        esi = r;
+    }
+    {
+        uint32_t a = edx;
+        uint32_t r = lift_inc(32, a, &fl, 1);
+        edx = r;
+    }
+    ebx = (ebx & 0xffffff00u) | ((lift_load(&env, ecx, 0x0u, 1)) & 0xffu);
+    ebp = lift_load(&env, esp, 0x38u, 4);
+    lift_store(&env, eax, 0xfffffffeu, 1, (ebx & 0xffu));
+    ebx = lift_load(&env, esp, 0x38u, 4);
+    {
+        uint32_t a = ebp;
+        uint32_t r = lift_inc(32, a, &fl, 1);
+        ebp = r;
+    }
+    ecx = lift_load(&env, esp, 0x30u, 4);
+    ebx = (ebx & 0xffffff00u) | ((lift_load(&env, ebx, 0x0u, 1)) & 0xffu);
+    lift_store(&env, esp, 0x38u, 4, ebp);
+    lift_store(&env, eax, 0xffffffffu, 1, (ebx & 0xffu));
+    {
+        (void)lift_sub(32, edx, ecx, &fl);
+    }
+    if (fl.cf)
+        goto L_4bb5dc;
+    goto L_4bb562;
+L_4bb696:
+    {
+        uint32_t r = lift_add(32, esp, 0x3cu, &fl);
+        esp = r;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        ebp = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        edi = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        esi = v;
+    }
+    return env.failed ? 0u : eax;
+}
+
 uint32_t lifted_f4bb6c0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry)
 {
@@ -24621,6 +25508,154 @@ L_4bb83f:
         uint32_t v = lift_load(&env, esp, 0u, 4);
         esp += 4u;
         ebx = v;
+    }
+    return env.failed ? 0u : eax;
+}
+
+uint32_t lifted_f4bb9b0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry)
+{
+    uint8_t stack[LIFTED_F4BB9B0_STACK + 4 + 4 * 0 + 4];
+    LiftEnv env;
+    LiftFlags fl = {0, 0, 0, 0, 0};
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi = entry->esi;
+    uint32_t edi = entry->edi;
+    uint32_t ebp = entry->ebp;
+    uint32_t esp = entry->esp;
+    (void)fl;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)esp;
+    lift_begin(&env, calls, services, globals, stack, LIFTED_F4BB9B0_STACK, 0, entry);
+    {
+        uint32_t v = ebp;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    ebp = esp;
+    {
+        uint32_t v = ebx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t v = ecx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t v = edx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t v = esi;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t v = edi;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t r = lift_sub(32, esp, 0x8u, &fl);
+        esp = r;
+    }
+    ecx = eax;
+    esi = lift_load(&env, eax, 0x4u, 4);
+    ebx = 0x54u;
+    edx = 0x1u;
+    eax = lift_call(&env, lift_load(&env, esi, 0x0u, 4), eax, edx, ebx, ecx, 0, esp);
+    lift_store(&env, ecx, 0x1c0u, 4, eax);
+    {
+        uint32_t r = lift_xor(32, edx, edx, &fl);
+        edx = r;
+    }
+    lift_store(&env, eax, 0x0u, 4, 0x4bb870u);
+    lift_store(&env, ebp, 0xffffffe4u, 4, edx);
+    ebx = lift_load(&env, ecx, 0x24u, 4);
+    esi = lift_load(&env, ecx, 0xd8u, 4);
+    {
+        (void)lift_and(32, ebx, ebx, &fl);
+    }
+    if (fl.zf || fl.sf != fl.of)
+        goto L_4bba30;
+    lift_store(&env, ebp, 0xffffffe8u, 4, eax);
+L_4bb9ed:
+    ebx = 0x100u;
+    edi = lift_load(&env, ecx, 0x4u, 4);
+    edx = 0x1u;
+    eax = ecx;
+    eax = lift_call(&env, lift_load(&env, edi, 0x0u, 4), eax, edx, ebx, ecx, 0, esp);
+    ebx = 0x100u;
+    {
+        uint32_t r = lift_xor(32, edx, edx, &fl);
+        edx = r;
+    }
+    lift_store(&env, esi, 0x50u, 4, eax);
+    eax = lift_call(&env, 0x4eb5c0u, eax, edx, ebx, ecx, 0, esp);
+    eax = lift_load(&env, ebp, 0xffffffe8u, 4);
+    {
+        uint32_t r = lift_add(32, esi, 0x54u, &fl);
+        esi = r;
+    }
+    edi = (eax + 0x4u);
+    lift_store(&env, eax, 0x2cu, 4, 0xffffffffu);
+    eax = lift_load(&env, ebp, 0xffffffe4u, 4);
+    lift_store(&env, ebp, 0xffffffe8u, 4, edi);
+    {
+        uint32_t a = eax;
+        uint32_t r = lift_inc(32, a, &fl, 1);
+        eax = r;
+    }
+    edx = lift_load(&env, ecx, 0x24u, 4);
+    lift_store(&env, ebp, 0xffffffe4u, 4, eax);
+    {
+        (void)lift_sub(32, eax, edx, &fl);
+    }
+    if (fl.sf != fl.of)
+        goto L_4bb9ed;
+L_4bba30:
+    esp = (ebp + 0xffffffecu);
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        edi = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        esi = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        edx = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        ecx = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        ebx = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        ebp = v;
     }
     return env.failed ? 0u : eax;
 }
@@ -34806,6 +35841,194 @@ uint32_t lifted_f4c5d60(const VertrixCalls *calls, const VertrixFactoryServices 
     return env.failed ? 0u : eax;
 }
 
+uint32_t lifted_f4c63a0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry)
+{
+    uint8_t stack[LIFTED_F4C63A0_STACK + 4 + 4 * 0 + 4];
+    LiftEnv env;
+    LiftFlags fl = {0, 0, 0, 0, 0};
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi = entry->esi;
+    uint32_t edi = entry->edi;
+    uint32_t ebp = entry->ebp;
+    uint32_t esp = entry->esp;
+    (void)fl;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)esp;
+    lift_begin(&env, calls, services, globals, stack, LIFTED_F4C63A0_STACK, 0, entry);
+    {
+        uint32_t v = esi;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t v = edi;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t v = ebp;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t r = lift_sub(32, esp, 0x20u, &fl);
+        esp = r;
+    }
+    lift_store(&env, esp, 0x0u, 4, ecx);
+    ecx = lift_load(&env, eax, 0x1ccu, 4);
+    ecx = lift_load(&env, ecx, 0x18u, 4);
+    lift_store(&env, esp, 0x14u, 4, ecx);
+    ecx = lift_load(&env, eax, 0x70u, 4);
+    esi = lift_load(&env, esp, 0x0u, 4);
+    lift_store(&env, esp, 0x4u, 4, ecx);
+    eax = lift_load(&env, eax, 0x78u, 4);
+    {
+        uint32_t r = lift_xor(32, ecx, ecx, &fl);
+        ecx = r;
+    }
+    lift_store(&env, esp, 0x1cu, 4, eax);
+    lift_store(&env, esp, 0x10u, 4, ecx);
+    {
+        (void)lift_and(32, esi, esi, &fl);
+    }
+    if (fl.zf || fl.sf != fl.of)
+        goto L_4c6455;
+    lift_store(&env, esp, 0xcu, 4, ebx);
+    lift_store(&env, esp, 0x8u, 4, edx);
+L_4c63dd:
+    ecx = lift_load(&env, esp, 0x8u, 4);
+    eax = lift_load(&env, esp, 0x4u, 4);
+    ebp = lift_load(&env, esp, 0xcu, 4);
+    lift_store(&env, esp, 0x18u, 4, eax);
+    ecx = lift_load(&env, ecx, 0x0u, 4);
+    ebp = lift_load(&env, ebp, 0x0u, 4);
+    {
+        (void)lift_and(32, eax, eax, &fl);
+    }
+    if (fl.cf || fl.zf)
+        goto L_4c642f;
+L_4c63f6:
+    eax = lift_load(&env, esp, 0x1cu, 4);
+    {
+        uint32_t r = lift_xor(32, ebx, ebx, &fl);
+        ebx = r;
+    }
+    {
+        uint32_t r = lift_xor(32, edx, edx, &fl);
+        edx = r;
+    }
+    {
+        (void)lift_and(32, eax, eax, &fl);
+    }
+    if (fl.zf || fl.sf != fl.of)
+        goto L_4c641e;
+    eax = lift_load(&env, esp, 0x14u, 4);
+L_4c6406:
+    edi = lift_load(&env, eax, 0x0u, 4);
+    esi = lift_load(&env, ecx, 0x0u, 1);
+    {
+        uint32_t a = ecx;
+        uint32_t r = lift_inc(32, a, &fl, 1);
+        ecx = r;
+    }
+    esi = lift_load(&env, edi, esi + 0x0u, 1);
+    {
+        uint32_t a = edx;
+        uint32_t r = lift_inc(32, a, &fl, 1);
+        edx = r;
+    }
+    {
+        uint32_t r = lift_add(32, ebx, esi, &fl);
+        ebx = r;
+    }
+    esi = lift_load(&env, esp, 0x1cu, 4);
+    {
+        uint32_t r = lift_add(32, eax, 0x4u, &fl);
+        eax = r;
+    }
+    {
+        (void)lift_sub(32, edx, esi, &fl);
+    }
+    if (fl.sf != fl.of)
+        goto L_4c6406;
+L_4c641e:
+    esi = lift_load(&env, esp, 0x18u, 4);
+    {
+        uint32_t a = ebp;
+        uint32_t r = lift_inc(32, a, &fl, 1);
+        ebp = r;
+    }
+    {
+        uint32_t a = esi;
+        uint32_t r = lift_dec(32, a, &fl, 1);
+        esi = r;
+    }
+    lift_store(&env, ebp, 0xffffffffu, 1, (ebx & 0xffu));
+    lift_store(&env, esp, 0x18u, 4, esi);
+    {
+        (void)lift_and(32, esi, esi, &fl);
+    }
+    if (!fl.cf && !fl.zf)
+        goto L_4c63f6;
+L_4c642f:
+    edi = lift_load(&env, esp, 0xcu, 4);
+    ebp = lift_load(&env, esp, 0x8u, 4);
+    eax = lift_load(&env, esp, 0x10u, 4);
+    edx = lift_load(&env, esp, 0x0u, 4);
+    {
+        uint32_t r = lift_add(32, edi, 0x4u, &fl);
+        edi = r;
+    }
+    {
+        uint32_t r = lift_add(32, ebp, 0x4u, &fl);
+        ebp = r;
+    }
+    {
+        uint32_t a = eax;
+        uint32_t r = lift_inc(32, a, &fl, 1);
+        eax = r;
+    }
+    lift_store(&env, esp, 0xcu, 4, edi);
+    lift_store(&env, esp, 0x8u, 4, ebp);
+    lift_store(&env, esp, 0x10u, 4, eax);
+    {
+        (void)lift_sub(32, eax, edx, &fl);
+    }
+    if (fl.sf != fl.of)
+        goto L_4c63dd;
+L_4c6455:
+    {
+        uint32_t r = lift_add(32, esp, 0x20u, &fl);
+        esp = r;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        ebp = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        edi = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        esi = v;
+    }
+    return env.failed ? 0u : eax;
+}
+
 uint32_t lifted_f4c6460(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry)
 {
@@ -36973,6 +38196,247 @@ L_4c8cb7:
     goto L_4c8c6f;
 }
 
+uint32_t lifted_f4c9030(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry)
+{
+    uint8_t stack[LIFTED_F4C9030_STACK + 4 + 4 * 0 + 4];
+    LiftEnv env;
+    LiftFlags fl = {0, 0, 0, 0, 0};
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi = entry->esi;
+    uint32_t edi = entry->edi;
+    uint32_t ebp = entry->ebp;
+    uint32_t esp = entry->esp;
+    (void)fl;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)esp;
+    lift_begin(&env, calls, services, globals, stack, LIFTED_F4C9030_STACK, 0, entry);
+    {
+        uint32_t v = ebp;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    ebp = esp;
+    {
+        uint32_t v = ebx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t v = ecx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t v = edx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t v = esi;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t v = edi;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t r = lift_sub(32, esp, 0x8u, &fl);
+        esp = r;
+    }
+    ebx = 0x7fcu;
+    ecx = lift_load(&env, eax, 0x4u, 4);
+    edx = 0x1u;
+    esi = lift_load(&env, eax, 0x1ccu, 4);
+    eax = lift_call(&env, lift_load(&env, ecx, 0x0u, 4), eax, edx, ebx, ecx, 0, esp);
+    ecx = (eax + 0x3fcu);
+    {
+        uint32_t r = lift_xor(32, edx, edx, &fl);
+        edx = r;
+    }
+    ebx = ecx;
+    {
+        uint32_t r = lift_xor(32, eax, eax, &fl);
+        eax = r;
+    }
+    lift_store(&env, esi, 0x28u, 4, ecx);
+L_4c905f:
+    edi = edx;
+    esi = eax;
+    lift_store(&env, ebx, 0x0u, 4, edx);
+    {
+        uint32_t r = lift_add(32, ebx, 0x4u, &fl);
+        ebx = r;
+    }
+    {
+        uint32_t a = edi;
+        uint32_t r = lift_sub(32, 0, a, &fl);
+        edi = r;
+    }
+    {
+        uint32_t a = esi;
+        uint32_t r = lift_sub(32, 0, a, &fl);
+        esi = r;
+    }
+    {
+        uint32_t a = eax;
+        uint32_t r = lift_inc(32, a, &fl, 1);
+        eax = r;
+    }
+    {
+        uint32_t a = esi;
+        uint32_t r = lift_shl(32, a, 0x2u, &fl);
+        esi = r;
+    }
+    {
+        uint32_t a = edx;
+        uint32_t r = lift_inc(32, a, &fl, 1);
+        edx = r;
+    }
+    lift_store(&env, ecx, esi + 0x0u, 4, edi);
+    {
+        (void)lift_sub(32, eax, 0x10u, &fl);
+    }
+    if (fl.sf != fl.of)
+        goto L_4c905f;
+    ebx = ((eax * 4u));
+    {
+        uint32_t r = lift_add(32, ebx, ecx, &fl);
+        ebx = r;
+    }
+L_4c9082:
+    {
+        (void)lift_sub(32, eax, 0x30u, &fl);
+    }
+    if (fl.sf != fl.of)
+        goto L_4c90b3;
+    ebx = ((eax * 4u));
+    {
+        uint32_t r = lift_add(32, ebx, ecx, &fl);
+        ebx = r;
+    }
+L_4c9090:
+    {
+        (void)lift_sub(32, eax, 0xffu, &fl);
+    }
+    if (!fl.zf && fl.sf == fl.of)
+        goto L_4c90d6;
+    esi = edx;
+    lift_store(&env, ebp, 0xffffffe4u, 4, edx);
+    {
+        uint32_t a = esi;
+        uint32_t r = lift_sub(32, 0, a, &fl);
+        esi = r;
+    }
+    lift_store(&env, ebx, 0x0u, 4, edx);
+    lift_store(&env, ebp, 0xffffffe4u, 4, esi);
+    esi = eax;
+    {
+        uint32_t r = lift_add(32, ebx, 0x4u, &fl);
+        ebx = r;
+    }
+    {
+        uint32_t a = esi;
+        uint32_t r = lift_sub(32, 0, a, &fl);
+        esi = r;
+    }
+    edi = lift_load(&env, ebp, 0xffffffe4u, 4);
+    {
+        uint32_t a = eax;
+        uint32_t r = lift_inc(32, a, &fl, 1);
+        eax = r;
+    }
+    lift_store(&env, ecx, (esi * 4u) + 0x0u, 4, edi);
+    goto L_4c9090;
+L_4c90b3:
+    esi = edx;
+    edi = eax;
+    lift_store(&env, ebx, 0x0u, 4, edx);
+    {
+        uint32_t a = edi;
+        uint32_t r = lift_sub(32, 0, a, &fl);
+        edi = r;
+    }
+    {
+        uint32_t r = lift_add(32, ebx, 0x4u, &fl);
+        ebx = r;
+    }
+    {
+        uint32_t a = edi;
+        uint32_t r = lift_shl(32, a, 0x2u, &fl);
+        edi = r;
+    }
+    {
+        uint32_t a = esi;
+        uint32_t r = lift_sub(32, 0, a, &fl);
+        esi = r;
+    }
+    {
+        uint32_t r = lift_add(32, edi, ecx, &fl);
+        edi = r;
+    }
+    {
+        uint32_t a = eax;
+        uint32_t r = lift_inc(32, a, &fl, 1);
+        eax = r;
+    }
+    lift_store(&env, edi, 0x0u, 4, esi);
+    {
+        (void)lift_and(8, (eax & 0xffu), 0x1u, &fl);
+    }
+    lift_store(&env, ebp, 0xffffffe8u, 1, (fl.zf) ? 1u : 0u);
+    esi = lift_load(&env, ebp, 0xffffffe8u, 1);
+    {
+        uint32_t r = lift_add(32, edx, esi, &fl);
+        edx = r;
+    }
+    goto L_4c9082;
+L_4c90d6:
+    esp = (ebp + 0xffffffecu);
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        edi = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        esi = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        edx = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        ecx = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        ebx = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        ebp = v;
+    }
+    return env.failed ? 0u : eax;
+}
+
 uint32_t lifted_f4c93c0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry)
 {
@@ -38727,6 +40191,79 @@ L_4ca2d6:
     return env.failed ? 0u : eax;
 }
 
+uint32_t lifted_f4ca2e0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry)
+{
+    uint8_t stack[LIFTED_F4CA2E0_STACK + 4 + 4 * 0 + 4];
+    LiftEnv env;
+    LiftFlags fl = {0, 0, 0, 0, 0};
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi = entry->esi;
+    uint32_t edi = entry->edi;
+    uint32_t ebp = entry->ebp;
+    uint32_t esp = entry->esp;
+    (void)fl;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)esp;
+    lift_begin(&env, calls, services, globals, stack, LIFTED_F4CA2E0_STACK, 0, entry);
+    {
+        uint32_t v = ecx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t v = esi;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t v = edi;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    ecx = eax;
+    esi = edx;
+    edi = ebx;
+    eax = lift_call(&env, 0x4ca1e0u, eax, edx, ebx, ecx, 0, esp);
+    ebx = esi;
+    edx = edi;
+    eax = lift_load(&env, ecx, 0x0u, 4);
+    eax = lift_call(&env, 0x4eb5e0u, eax, edx, ebx, ecx, 0, esp);
+    eax = lift_load(&env, ecx, 0x0u, 4);
+    lift_store(&env, eax, 0xfffffff8u, 4, esi);
+    {
+        uint32_t r = lift_sub(32, eax, 0xcu, &fl);
+        eax = r;
+    }
+    eax = lift_load(&env, ecx, 0x0u, 4);
+    lift_store(&env, esi, eax + 0x0u, 1, 0x0u);
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        edi = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        esi = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        ecx = v;
+    }
+    return env.failed ? 0u : eax;
+}
+
 uint32_t lifted_f4ca310(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry)
 {
@@ -39430,6 +40967,145 @@ L_4ca57e:
     return env.failed ? 0u : eax;
 }
 
+uint32_t lifted_f4ca5a0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry)
+{
+    uint8_t stack[LIFTED_F4CA5A0_STACK + 4 + 4 * 0 + 4];
+    LiftEnv env;
+    LiftFlags fl = {0, 0, 0, 0, 0};
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi = entry->esi;
+    uint32_t edi = entry->edi;
+    uint32_t ebp = entry->ebp;
+    uint32_t esp = entry->esp;
+    (void)fl;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)esp;
+    lift_begin(&env, calls, services, globals, stack, LIFTED_F4CA5A0_STACK, 0, entry);
+    {
+        uint32_t v = ecx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t v = esi;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t v = edi;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    esi = eax;
+    ecx = edx;
+    edx = ebx;
+    {
+        (void)lift_and(32, ecx, ecx, &fl);
+    }
+    if (fl.zf)
+        goto L_4ca5fb;
+    ebx = lift_load(&env, eax, 0x0u, 4);
+    eax = (ebx + 0xfffffff4u);
+    {
+        (void)lift_sub(32, lift_load(&env, eax, 0x0u, 4), 0x1u, &fl);
+    }
+    if (!fl.zf && fl.sf == fl.of)
+        goto L_4ca5c1;
+    edi = lift_load(&env, eax, 0x4u, 4);
+    {
+        uint32_t r = lift_add(32, edi, ecx, &fl);
+        edi = r;
+    }
+    {
+        (void)lift_sub(32, edi, lift_load(&env, eax, 0x8u, 4), &fl);
+    }
+    if (fl.zf || fl.sf != fl.of)
+        goto L_4ca5db;
+L_4ca5c1:
+    ebx = lift_load(&env, esi, 0x0u, 4);
+    edi = (ebx + 0xfffffff4u);
+    {
+        uint32_t v = edx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    eax = esi;
+    edx = lift_load(&env, edi, 0x4u, 4);
+    eax = lift_call(&env, 0x4ca3f0u, eax, edx, ebx, ecx, 1, esp);
+    esp += 4u;
+    {
+        uint32_t v = edi;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    eax = lift_call(&env, 0x4ca150u, eax, edx, ebx, ecx, 1, esp);
+    esp += 4u;
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        edi = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        esi = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        ecx = v;
+    }
+    return env.failed ? 0u : eax;
+L_4ca5db:
+    eax = lift_load(&env, eax, 0x4u, 4);
+    {
+        uint32_t r = lift_add(32, eax, ebx, &fl);
+        eax = r;
+    }
+    ebx = ecx;
+    eax = lift_call(&env, 0x4eb5e0u, eax, edx, ebx, ecx, 0, esp);
+    eax = lift_load(&env, esi, 0x0u, 4);
+    {
+        uint32_t r = lift_add(32, lift_load(&env, eax, 0xfffffff8u, 4), ecx, &fl);
+        lift_store(&env, eax, 0xfffffff8u, 4, r);
+    }
+    {
+        uint32_t r = lift_sub(32, eax, 0xcu, &fl);
+        eax = r;
+    }
+    edx = lift_load(&env, esi, 0x0u, 4);
+    eax = (edx + 0xfffffff4u);
+    eax = lift_load(&env, eax, 0x4u, 4);
+    lift_store(&env, edx, eax + 0x0u, 1, 0x0u);
+L_4ca5fb:
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        edi = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        esi = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        ecx = v;
+    }
+    return env.failed ? 0u : eax;
+}
+
 uint32_t lifted_f4ca600(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry)
 {
@@ -39665,6 +41341,136 @@ L_4ca6b7:
         esp += 4u;
         esi = v;
     }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        ecx = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        ebx = v;
+    }
+    return env.failed ? 0u : eax;
+}
+
+uint32_t lifted_f4ca6c0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry)
+{
+    uint8_t stack[LIFTED_F4CA6C0_STACK + 4 + 4 * 0 + 4];
+    LiftEnv env;
+    LiftFlags fl = {0, 0, 0, 0, 0};
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi = entry->esi;
+    uint32_t edi = entry->edi;
+    uint32_t ebp = entry->ebp;
+    uint32_t esp = entry->esp;
+    (void)fl;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)esp;
+    lift_begin(&env, calls, services, globals, stack, LIFTED_F4CA6C0_STACK, 0, entry);
+    {
+        uint32_t v = ebx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t v = ecx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    ebx = eax;
+    eax = lift_call(&env, 0x4ca1a0u, eax, edx, ebx, ecx, 0, esp);
+    {
+        (void)lift_sub(32, edx, 0xffffffffu, &fl);
+    }
+    if (!fl.zf)
+        goto L_4ca6d9;
+    {
+        uint32_t v = lift_load(&env, ebx, 0x0u, 4);
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    eax = lift_call(&env, 0x4f1d24u, eax, edx, ebx, ecx, 1, esp);
+    esp += 4u;
+    edx = eax;
+L_4ca6d9:
+    eax = lift_load(&env, ebx, 0x0u, 4);
+    lift_store(&env, eax, 0xfffffff8u, 4, edx);
+    {
+        uint32_t r = lift_sub(32, eax, 0xcu, &fl);
+        eax = r;
+    }
+    eax = lift_load(&env, ebx, 0x0u, 4);
+    lift_store(&env, edx, eax + 0x0u, 1, 0x0u);
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        ecx = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        ebx = v;
+    }
+    return env.failed ? 0u : eax;
+}
+
+uint32_t lifted_f4ca6f0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry)
+{
+    uint8_t stack[LIFTED_F4CA6F0_STACK + 4 + 4 * 0 + 4];
+    LiftEnv env;
+    LiftFlags fl = {0, 0, 0, 0, 0};
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi = entry->esi;
+    uint32_t edi = entry->edi;
+    uint32_t ebp = entry->ebp;
+    uint32_t esp = entry->esp;
+    (void)fl;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)esp;
+    lift_begin(&env, calls, services, globals, stack, LIFTED_F4CA6F0_STACK, 0, entry);
+    {
+        uint32_t v = ebx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t v = ecx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    ecx = eax;
+    ebx = edx;
+    eax = lift_call(&env, 0x4ca670u, eax, edx, ebx, ecx, 0, esp);
+    eax = lift_load(&env, ecx, 0x0u, 4);
+    lift_store(&env, eax, 0xfffffff8u, 4, ebx);
+    {
+        uint32_t r = lift_sub(32, eax, 0xcu, &fl);
+        eax = r;
+    }
+    eax = lift_load(&env, ecx, 0x0u, 4);
+    lift_store(&env, ebx, eax + 0x0u, 1, 0x0u);
+    eax = lift_load(&env, ecx, 0x0u, 4);
     {
         uint32_t v = lift_load(&env, esp, 0u, 4);
         esp += 4u;
@@ -41623,6 +43429,82 @@ uint32_t lifted_f4cbf10(const VertrixCalls *calls, const VertrixFactoryServices 
         uint32_t v = lift_load(&env, esp, 0u, 4);
         esp += 4u;
         edx = v;
+    }
+    return env.failed ? 0u : eax;
+}
+
+uint32_t lifted_f4cbf90(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry)
+{
+    uint8_t stack[LIFTED_F4CBF90_STACK + 4 + 4 * 0 + 4];
+    LiftEnv env;
+    LiftFlags fl = {0, 0, 0, 0, 0};
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi = entry->esi;
+    uint32_t edi = entry->edi;
+    uint32_t ebp = entry->ebp;
+    uint32_t esp = entry->esp;
+    (void)fl;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)esp;
+    lift_begin(&env, calls, services, globals, stack, LIFTED_F4CBF90_STACK, 0, entry);
+    {
+        uint32_t v = ebx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t v = ecx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    {
+        uint32_t v = edx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    ebx = eax;
+    {
+        uint32_t r = lift_add(32, eax, 0x54u, &fl);
+        eax = r;
+    }
+    lift_store(&env, eax, 0xffffffc8u, 4, 0x0u);
+    lift_store(&env, eax, 0xffffffccu, 4, 0x0u);
+    lift_store(&env, eax, 0xffffffd4u, 4, 0x0u);
+    lift_store(&env, eax, 0xffffffd8u, 4, 0x0u);
+    lift_store(&env, eax, 0xffffffe0u, 4, 0x0u);
+    {
+        uint32_t v = eax;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    lift_store(&env, eax, 0x8u, 4, 0x0u);
+    eax = lift_call(&env, 0x4f1970u, eax, edx, ebx, ecx, 1, esp);
+    esp += 4u;
+    lift_store(&env, ebx, 0x24u, 4, 0x1u);
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        edx = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        ecx = v;
+    }
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        ebx = v;
     }
     return env.failed ? 0u : eax;
 }
@@ -45511,6 +47393,68 @@ L_4dbff8:
         uint32_t v = lift_load(&env, esp, 0u, 4);
         esp += 4u;
         ebx = v;
+    }
+    return env.failed ? 0u : eax;
+}
+
+uint32_t lifted_f4ce230(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry)
+{
+    uint8_t stack[LIFTED_F4CE230_STACK + 4 + 4 * 0 + 4];
+    LiftEnv env;
+    LiftFlags fl = {0, 0, 0, 0, 0};
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi = entry->esi;
+    uint32_t edi = entry->edi;
+    uint32_t ebp = entry->ebp;
+    uint32_t esp = entry->esp;
+    (void)fl;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    (void)esp;
+    lift_begin(&env, calls, services, globals, stack, LIFTED_F4CE230_STACK, 0, entry);
+    {
+        uint32_t v = ecx;
+        esp -= 4u;
+        lift_store(&env, esp, 0u, 4, v);
+    }
+    ecx = edx;
+    {
+        uint32_t r = lift_add(32, eax, 0x1cu, &fl);
+        eax = r;
+    }
+    lift_store(&env, eax, 0x0u, 4, 0x0u);
+    {
+        uint32_t r = lift_add(32, eax, 0x8u, &fl);
+        eax = r;
+    }
+    lift_store(&env, eax, 0xfffffffcu, 4, 0x0u);
+    lift_store(&env, eax, 0x0u, 4, 0x0u);
+    {
+        uint32_t r = lift_sub(32, eax, 0x24u, &fl);
+        eax = r;
+    }
+    lift_store(&env, eax, 0x28u, 4, 0x0u);
+    edx = (eax + 0x24u);
+    lift_store(&env, eax, 0x0u, 4, 0x519344u);
+    lift_store(&env, edx, 0x4u, 4, 0x1cu);
+    edx = (eax + 0x1cu);
+    lift_store(&env, edx, 0x4u, 4, 0x14u);
+    lift_store(&env, eax, 0x18u, 2, 0x0u);
+    lift_store(&env, eax, 0x30u, 4, 0x1u);
+    lift_store(&env, eax, 0x14u, 1, (ecx & 0xffu));
+    {
+        uint32_t v = lift_load(&env, esp, 0u, 4);
+        esp += 4u;
+        ecx = v;
     }
     return env.failed ? 0u : eax;
 }
@@ -51795,862 +53739,5 @@ uint32_t lifted_f4d2ec0(const VertrixCalls *calls, const VertrixFactoryServices 
     (void)esp;
     lift_begin(&env, calls, services, globals, stack, LIFTED_F4D2EC0_STACK, 0, entry);
     eax = 0x4d0740u;
-    return env.failed ? 0u : eax;
-}
-
-uint32_t lifted_f4d2ed0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
-{
-    uint8_t stack[LIFTED_F4D2ED0_STACK + 4 + 4 * 0 + 4];
-    LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
-    uint32_t eax = entry->eax;
-    uint32_t edx = entry->edx;
-    uint32_t ebx = entry->ebx;
-    uint32_t ecx = entry->ecx;
-    uint32_t esi = entry->esi;
-    uint32_t edi = entry->edi;
-    uint32_t ebp = entry->ebp;
-    uint32_t esp = entry->esp;
-    (void)fl;
-    (void)eax;
-    (void)edx;
-    (void)ebx;
-    (void)ecx;
-    (void)esi;
-    (void)edi;
-    (void)ebp;
-    (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F4D2ED0_STACK, 0, entry);
-    eax = 0x4d24a0u;
-    return env.failed ? 0u : eax;
-}
-
-uint32_t lifted_f4d2ee0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
-{
-    uint8_t stack[LIFTED_F4D2EE0_STACK + 4 + 4 * 0 + 4];
-    LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
-    uint32_t eax = entry->eax;
-    uint32_t edx = entry->edx;
-    uint32_t ebx = entry->ebx;
-    uint32_t ecx = entry->ecx;
-    uint32_t esi = entry->esi;
-    uint32_t edi = entry->edi;
-    uint32_t ebp = entry->ebp;
-    uint32_t esp = entry->esp;
-    (void)fl;
-    (void)eax;
-    (void)edx;
-    (void)ebx;
-    (void)ecx;
-    (void)esi;
-    (void)edi;
-    (void)ebp;
-    (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F4D2EE0_STACK, 0, entry);
-    eax = 0x4d0620u;
-    return env.failed ? 0u : eax;
-}
-
-uint32_t lifted_f4d2ef0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
-{
-    uint8_t stack[LIFTED_F4D2EF0_STACK + 4 + 4 * 0 + 4];
-    LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
-    uint32_t eax = entry->eax;
-    uint32_t edx = entry->edx;
-    uint32_t ebx = entry->ebx;
-    uint32_t ecx = entry->ecx;
-    uint32_t esi = entry->esi;
-    uint32_t edi = entry->edi;
-    uint32_t ebp = entry->ebp;
-    uint32_t esp = entry->esp;
-    (void)fl;
-    (void)eax;
-    (void)edx;
-    (void)ebx;
-    (void)ecx;
-    (void)esi;
-    (void)edi;
-    (void)ebp;
-    (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F4D2EF0_STACK, 0, entry);
-    eax = 0x4d2460u;
-    return env.failed ? 0u : eax;
-}
-
-uint32_t lifted_f4d2f00(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
-{
-    uint8_t stack[LIFTED_F4D2F00_STACK + 4 + 4 * 0 + 4];
-    LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
-    uint32_t eax = entry->eax;
-    uint32_t edx = entry->edx;
-    uint32_t ebx = entry->ebx;
-    uint32_t ecx = entry->ecx;
-    uint32_t esi = entry->esi;
-    uint32_t edi = entry->edi;
-    uint32_t ebp = entry->ebp;
-    uint32_t esp = entry->esp;
-    (void)fl;
-    (void)eax;
-    (void)edx;
-    (void)ebx;
-    (void)ecx;
-    (void)esi;
-    (void)edi;
-    (void)ebp;
-    (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F4D2F00_STACK, 0, entry);
-    eax = 0x4d2420u;
-    return env.failed ? 0u : eax;
-}
-
-uint32_t lifted_f4d2f10(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
-{
-    uint8_t stack[LIFTED_F4D2F10_STACK + 4 + 4 * 0 + 4];
-    LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
-    uint32_t eax = entry->eax;
-    uint32_t edx = entry->edx;
-    uint32_t ebx = entry->ebx;
-    uint32_t ecx = entry->ecx;
-    uint32_t esi = entry->esi;
-    uint32_t edi = entry->edi;
-    uint32_t ebp = entry->ebp;
-    uint32_t esp = entry->esp;
-    (void)fl;
-    (void)eax;
-    (void)edx;
-    (void)ebx;
-    (void)ecx;
-    (void)esi;
-    (void)edi;
-    (void)ebp;
-    (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F4D2F10_STACK, 0, entry);
-    eax = 0x4d2440u;
-    return env.failed ? 0u : eax;
-}
-
-uint32_t lifted_f4d2f20(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
-{
-    uint8_t stack[LIFTED_F4D2F20_STACK + 4 + 4 * 0 + 4];
-    LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
-    uint32_t eax = entry->eax;
-    uint32_t edx = entry->edx;
-    uint32_t ebx = entry->ebx;
-    uint32_t ecx = entry->ecx;
-    uint32_t esi = entry->esi;
-    uint32_t edi = entry->edi;
-    uint32_t ebp = entry->ebp;
-    uint32_t esp = entry->esp;
-    (void)fl;
-    (void)eax;
-    (void)edx;
-    (void)ebx;
-    (void)ecx;
-    (void)esi;
-    (void)edi;
-    (void)ebp;
-    (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F4D2F20_STACK, 0, entry);
-    eax = 0x4d0650u;
-    return env.failed ? 0u : eax;
-}
-
-uint32_t lifted_f4d2f30(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
-{
-    uint8_t stack[LIFTED_F4D2F30_STACK + 4 + 4 * 0 + 4];
-    LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
-    uint32_t eax = entry->eax;
-    uint32_t edx = entry->edx;
-    uint32_t ebx = entry->ebx;
-    uint32_t ecx = entry->ecx;
-    uint32_t esi = entry->esi;
-    uint32_t edi = entry->edi;
-    uint32_t ebp = entry->ebp;
-    uint32_t esp = entry->esp;
-    (void)fl;
-    (void)eax;
-    (void)edx;
-    (void)ebx;
-    (void)ecx;
-    (void)esi;
-    (void)edi;
-    (void)ebp;
-    (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F4D2F30_STACK, 0, entry);
-    eax = 0x4d0670u;
-    return env.failed ? 0u : eax;
-}
-
-uint32_t lifted_f4d2f40(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
-{
-    uint8_t stack[LIFTED_F4D2F40_STACK + 4 + 4 * 0 + 4];
-    LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
-    uint32_t eax = entry->eax;
-    uint32_t edx = entry->edx;
-    uint32_t ebx = entry->ebx;
-    uint32_t ecx = entry->ecx;
-    uint32_t esi = entry->esi;
-    uint32_t edi = entry->edi;
-    uint32_t ebp = entry->ebp;
-    uint32_t esp = entry->esp;
-    (void)fl;
-    (void)eax;
-    (void)edx;
-    (void)ebx;
-    (void)ecx;
-    (void)esi;
-    (void)edi;
-    (void)ebp;
-    (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F4D2F40_STACK, 0, entry);
-    eax = 0x4d06a0u;
-    return env.failed ? 0u : eax;
-}
-
-uint32_t lifted_f4d2f50(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
-{
-    uint8_t stack[LIFTED_F4D2F50_STACK + 4 + 4 * 0 + 4];
-    LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
-    uint32_t eax = entry->eax;
-    uint32_t edx = entry->edx;
-    uint32_t ebx = entry->ebx;
-    uint32_t ecx = entry->ecx;
-    uint32_t esi = entry->esi;
-    uint32_t edi = entry->edi;
-    uint32_t ebp = entry->ebp;
-    uint32_t esp = entry->esp;
-    (void)fl;
-    (void)eax;
-    (void)edx;
-    (void)ebx;
-    (void)ecx;
-    (void)esi;
-    (void)edi;
-    (void)ebp;
-    (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F4D2F50_STACK, 0, entry);
-    eax = 0x4d02a0u;
-    return env.failed ? 0u : eax;
-}
-
-uint32_t lifted_f4d2f60(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
-{
-    uint8_t stack[LIFTED_F4D2F60_STACK + 4 + 4 * 0 + 4];
-    LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
-    uint32_t eax = entry->eax;
-    uint32_t edx = entry->edx;
-    uint32_t ebx = entry->ebx;
-    uint32_t ecx = entry->ecx;
-    uint32_t esi = entry->esi;
-    uint32_t edi = entry->edi;
-    uint32_t ebp = entry->ebp;
-    uint32_t esp = entry->esp;
-    (void)fl;
-    (void)eax;
-    (void)edx;
-    (void)ebx;
-    (void)ecx;
-    (void)esi;
-    (void)edi;
-    (void)ebp;
-    (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F4D2F60_STACK, 0, entry);
-    eax = 0x4d2170u;
-    return env.failed ? 0u : eax;
-}
-
-uint32_t lifted_f4d2f70(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
-{
-    uint8_t stack[LIFTED_F4D2F70_STACK + 4 + 4 * 0 + 4];
-    LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
-    uint32_t eax = entry->eax;
-    uint32_t edx = entry->edx;
-    uint32_t ebx = entry->ebx;
-    uint32_t ecx = entry->ecx;
-    uint32_t esi = entry->esi;
-    uint32_t edi = entry->edi;
-    uint32_t ebp = entry->ebp;
-    uint32_t esp = entry->esp;
-    (void)fl;
-    (void)eax;
-    (void)edx;
-    (void)ebx;
-    (void)ecx;
-    (void)esi;
-    (void)edi;
-    (void)ebp;
-    (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F4D2F70_STACK, 0, entry);
-    eax = 0x4d21d0u;
-    return env.failed ? 0u : eax;
-}
-
-uint32_t lifted_f4d2f80(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
-{
-    uint8_t stack[LIFTED_F4D2F80_STACK + 4 + 4 * 0 + 4];
-    LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
-    uint32_t eax = entry->eax;
-    uint32_t edx = entry->edx;
-    uint32_t ebx = entry->ebx;
-    uint32_t ecx = entry->ecx;
-    uint32_t esi = entry->esi;
-    uint32_t edi = entry->edi;
-    uint32_t ebp = entry->ebp;
-    uint32_t esp = entry->esp;
-    (void)fl;
-    (void)eax;
-    (void)edx;
-    (void)ebx;
-    (void)ecx;
-    (void)esi;
-    (void)edi;
-    (void)ebp;
-    (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F4D2F80_STACK, 0, entry);
-    eax = 0x4d2260u;
-    return env.failed ? 0u : eax;
-}
-
-uint32_t lifted_f4d2f90(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
-{
-    uint8_t stack[LIFTED_F4D2F90_STACK + 4 + 4 * 0 + 4];
-    LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
-    uint32_t eax = entry->eax;
-    uint32_t edx = entry->edx;
-    uint32_t ebx = entry->ebx;
-    uint32_t ecx = entry->ecx;
-    uint32_t esi = entry->esi;
-    uint32_t edi = entry->edi;
-    uint32_t ebp = entry->ebp;
-    uint32_t esp = entry->esp;
-    (void)fl;
-    (void)eax;
-    (void)edx;
-    (void)ebx;
-    (void)ecx;
-    (void)esi;
-    (void)edi;
-    (void)ebp;
-    (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F4D2F90_STACK, 0, entry);
-    eax = 0x4d22b0u;
-    return env.failed ? 0u : eax;
-}
-
-uint32_t lifted_f4d2fa0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
-{
-    uint8_t stack[LIFTED_F4D2FA0_STACK + 4 + 4 * 0 + 4];
-    LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
-    uint32_t eax = entry->eax;
-    uint32_t edx = entry->edx;
-    uint32_t ebx = entry->ebx;
-    uint32_t ecx = entry->ecx;
-    uint32_t esi = entry->esi;
-    uint32_t edi = entry->edi;
-    uint32_t ebp = entry->ebp;
-    uint32_t esp = entry->esp;
-    (void)fl;
-    (void)eax;
-    (void)edx;
-    (void)ebx;
-    (void)ecx;
-    (void)esi;
-    (void)edi;
-    (void)ebp;
-    (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F4D2FA0_STACK, 0, entry);
-    eax = 0x4d2310u;
-    return env.failed ? 0u : eax;
-}
-
-uint32_t lifted_f4d2fb0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
-{
-    uint8_t stack[LIFTED_F4D2FB0_STACK + 4 + 4 * 0 + 4];
-    LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
-    uint32_t eax = entry->eax;
-    uint32_t edx = entry->edx;
-    uint32_t ebx = entry->ebx;
-    uint32_t ecx = entry->ecx;
-    uint32_t esi = entry->esi;
-    uint32_t edi = entry->edi;
-    uint32_t ebp = entry->ebp;
-    uint32_t esp = entry->esp;
-    (void)fl;
-    (void)eax;
-    (void)edx;
-    (void)ebx;
-    (void)ecx;
-    (void)esi;
-    (void)edi;
-    (void)ebp;
-    (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F4D2FB0_STACK, 0, entry);
-    eax = 0x4d21a0u;
-    return env.failed ? 0u : eax;
-}
-
-uint32_t lifted_f4d2fc0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
-{
-    uint8_t stack[LIFTED_F4D2FC0_STACK + 4 + 4 * 0 + 4];
-    LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
-    uint32_t eax = entry->eax;
-    uint32_t edx = entry->edx;
-    uint32_t ebx = entry->ebx;
-    uint32_t ecx = entry->ecx;
-    uint32_t esi = entry->esi;
-    uint32_t edi = entry->edi;
-    uint32_t ebp = entry->ebp;
-    uint32_t esp = entry->esp;
-    (void)fl;
-    (void)eax;
-    (void)edx;
-    (void)ebx;
-    (void)ecx;
-    (void)esi;
-    (void)edi;
-    (void)ebp;
-    (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F4D2FC0_STACK, 0, entry);
-    eax = 0x4d2390u;
-    return env.failed ? 0u : eax;
-}
-
-uint32_t lifted_f4d2fd0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
-{
-    uint8_t stack[LIFTED_F4D2FD0_STACK + 4 + 4 * 0 + 4];
-    LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
-    uint32_t eax = entry->eax;
-    uint32_t edx = entry->edx;
-    uint32_t ebx = entry->ebx;
-    uint32_t ecx = entry->ecx;
-    uint32_t esi = entry->esi;
-    uint32_t edi = entry->edi;
-    uint32_t ebp = entry->ebp;
-    uint32_t esp = entry->esp;
-    (void)fl;
-    (void)eax;
-    (void)edx;
-    (void)ebx;
-    (void)ecx;
-    (void)esi;
-    (void)edi;
-    (void)ebp;
-    (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F4D2FD0_STACK, 0, entry);
-    eax = 0x4d23f0u;
-    return env.failed ? 0u : eax;
-}
-
-uint32_t lifted_f4d3010(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
-{
-    uint8_t stack[LIFTED_F4D3010_STACK + 4 + 4 * 0 + 4];
-    LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
-    uint32_t eax = entry->eax;
-    uint32_t edx = entry->edx;
-    uint32_t ebx = entry->ebx;
-    uint32_t ecx = entry->ecx;
-    uint32_t esi = entry->esi;
-    uint32_t edi = entry->edi;
-    uint32_t ebp = entry->ebp;
-    uint32_t esp = entry->esp;
-    (void)fl;
-    (void)eax;
-    (void)edx;
-    (void)ebx;
-    (void)ecx;
-    (void)esi;
-    (void)edi;
-    (void)ebp;
-    (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F4D3010_STACK, 0, entry);
-    {
-        uint32_t v = ecx;
-        esp -= 4u;
-        lift_store(&env, esp, 0u, 4, v);
-    }
-    ecx = lift_load(&env, eax, 0x0u, 4);
-    eax = lift_call(&env, lift_load(&env, ecx, 0x0u, 4), eax, edx, ebx, ecx, 0, esp);
-    eax = lift_call(&env, 0x4d3120u, eax, edx, ebx, ecx, 0, esp);
-    {
-        uint32_t v = lift_load(&env, esp, 0u, 4);
-        esp += 4u;
-        ecx = v;
-    }
-    return env.failed ? 0u : eax;
-}
-
-uint32_t lifted_f4d3020(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
-{
-    uint8_t stack[LIFTED_F4D3020_STACK + 4 + 4 * 0 + 4];
-    LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
-    uint32_t eax = entry->eax;
-    uint32_t edx = entry->edx;
-    uint32_t ebx = entry->ebx;
-    uint32_t ecx = entry->ecx;
-    uint32_t esi = entry->esi;
-    uint32_t edi = entry->edi;
-    uint32_t ebp = entry->ebp;
-    uint32_t esp = entry->esp;
-    (void)fl;
-    (void)eax;
-    (void)edx;
-    (void)ebx;
-    (void)ecx;
-    (void)esi;
-    (void)edi;
-    (void)ebp;
-    (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F4D3020_STACK, 0, entry);
-    {
-        uint32_t v = ecx;
-        esp -= 4u;
-        lift_store(&env, esp, 0u, 4, v);
-    }
-    ecx = edx;
-    {
-        (void)lift_and(32, edx, edx, &fl);
-    }
-    if (fl.zf)
-        goto L_4d3034;
-    edx = eax;
-    eax = ecx;
-    eax = lift_call(&env, 0x4d3010u, eax, edx, ebx, ecx, 0, esp);
-    {
-        (void)lift_and(32, eax, eax, &fl);
-    }
-    if (!fl.zf)
-        goto L_4d3036;
-L_4d3034:
-    {
-        uint32_t r = lift_xor(32, ecx, ecx, &fl);
-        ecx = r;
-    }
-L_4d3036:
-    eax = ecx;
-    {
-        uint32_t v = lift_load(&env, esp, 0u, 4);
-        esp += 4u;
-        ecx = v;
-    }
-    return env.failed ? 0u : eax;
-}
-
-uint32_t lifted_f4d30f0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
-{
-    uint8_t stack[LIFTED_F4D30F0_STACK + 4 + 4 * 0 + 4];
-    LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
-    uint32_t eax = entry->eax;
-    uint32_t edx = entry->edx;
-    uint32_t ebx = entry->ebx;
-    uint32_t ecx = entry->ecx;
-    uint32_t esi = entry->esi;
-    uint32_t edi = entry->edi;
-    uint32_t ebp = entry->ebp;
-    uint32_t esp = entry->esp;
-    (void)fl;
-    (void)eax;
-    (void)edx;
-    (void)ebx;
-    (void)ecx;
-    (void)esi;
-    (void)edi;
-    (void)ebp;
-    (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F4D30F0_STACK, 0, entry);
-    {
-        uint32_t v = ebx;
-        esp -= 4u;
-        lift_store(&env, esp, 0u, 4, v);
-    }
-    {
-        uint32_t v = ecx;
-        esp -= 4u;
-        lift_store(&env, esp, 0u, 4, v);
-    }
-    {
-        uint32_t v = esi;
-        esp -= 4u;
-        lift_store(&env, esp, 0u, 4, v);
-    }
-    {
-        uint32_t v = edi;
-        esp -= 4u;
-        lift_store(&env, esp, 0u, 4, v);
-    }
-    ebx = eax;
-    esi = edx;
-    eax = lift_call(&env, 0x4ce740u, eax, edx, ebx, ecx, 0, esp);
-    {
-        uint32_t v = 0x0u;
-        esp -= 4u;
-        lift_store(&env, esp, 0u, 4, v);
-    }
-    edi = eax;
-    eax = lift_call(&env, 0x4de9c0u, eax, edx, ebx, ecx, 1, esp);
-    esp += 4u;
-    eax = (edi + 0x1cu);
-    edx = esi;
-    eax = lift_call(&env, 0x4dba10u, eax, edx, ebx, ecx, 0, esp);
-    {
-        uint32_t v = 0x0u;
-        esp -= 4u;
-        lift_store(&env, esp, 0u, 4, v);
-    }
-    eax = lift_call(&env, 0x4dea40u, eax, edx, ebx, ecx, 1, esp);
-    esp += 4u;
-    eax = ebx;
-    {
-        uint32_t v = lift_load(&env, esp, 0u, 4);
-        esp += 4u;
-        edi = v;
-    }
-    {
-        uint32_t v = lift_load(&env, esp, 0u, 4);
-        esp += 4u;
-        esi = v;
-    }
-    {
-        uint32_t v = lift_load(&env, esp, 0u, 4);
-        esp += 4u;
-        ecx = v;
-    }
-    {
-        uint32_t v = lift_load(&env, esp, 0u, 4);
-        esp += 4u;
-        ebx = v;
-    }
-    return env.failed ? 0u : eax;
-}
-
-uint32_t lifted_f4d3120(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
-{
-    uint8_t stack[LIFTED_F4D3120_STACK + 4 + 4 * 0 + 4];
-    LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
-    uint32_t eax = entry->eax;
-    uint32_t edx = entry->edx;
-    uint32_t ebx = entry->ebx;
-    uint32_t ecx = entry->ecx;
-    uint32_t esi = entry->esi;
-    uint32_t edi = entry->edi;
-    uint32_t ebp = entry->ebp;
-    uint32_t esp = entry->esp;
-    (void)fl;
-    (void)eax;
-    (void)edx;
-    (void)ebx;
-    (void)ecx;
-    (void)esi;
-    (void)edi;
-    (void)ebp;
-    (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F4D3120_STACK, 0, entry);
-    {
-        uint32_t v = ecx;
-        esp -= 4u;
-        lift_store(&env, esp, 0u, 4, v);
-    }
-    ecx = eax;
-    {
-        (void)lift_and(32, eax, eax, &fl);
-    }
-    if (fl.zf)
-        goto L_4d3139;
-L_4d3127:
-    {
-        (void)lift_sub(32, eax, edx, &fl);
-    }
-    if (!fl.zf)
-        goto L_4d3132;
-    eax = 0x1u;
-    {
-        uint32_t v = lift_load(&env, esp, 0u, 4);
-        esp += 4u;
-        ecx = v;
-    }
-    return env.failed ? 0u : eax;
-L_4d3132:
-    eax = lift_load(&env, eax, 0x10u, 4);
-    {
-        (void)lift_and(32, eax, eax, &fl);
-    }
-    if (!fl.zf)
-        goto L_4d3127;
-L_4d3139:
-    {
-        uint32_t r = lift_xor(32, eax, eax, &fl);
-        eax = r;
-    }
-    {
-        uint32_t v = lift_load(&env, esp, 0u, 4);
-        esp += 4u;
-        ecx = v;
-    }
-    return env.failed ? 0u : eax;
-}
-
-uint32_t lifted_f4d3f70(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
-{
-    uint8_t stack[LIFTED_F4D3F70_STACK + 4 + 4 * 0 + 4];
-    LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
-    uint32_t eax = entry->eax;
-    uint32_t edx = entry->edx;
-    uint32_t ebx = entry->ebx;
-    uint32_t ecx = entry->ecx;
-    uint32_t esi = entry->esi;
-    uint32_t edi = entry->edi;
-    uint32_t ebp = entry->ebp;
-    uint32_t esp = entry->esp;
-    (void)fl;
-    (void)eax;
-    (void)edx;
-    (void)ebx;
-    (void)ecx;
-    (void)esi;
-    (void)edi;
-    (void)ebp;
-    (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F4D3F70_STACK, 0, entry);
-    {
-        uint32_t v = ebx;
-        esp -= 4u;
-        lift_store(&env, esp, 0u, 4, v);
-    }
-    {
-        uint32_t v = ecx;
-        esp -= 4u;
-        lift_store(&env, esp, 0u, 4, v);
-    }
-    {
-        uint32_t r = lift_sub(32, esp, 0x30u, &fl);
-        esp = r;
-    }
-    ecx = eax;
-    ebx = edx;
-    {
-        (void)lift_and(8, (ebx & 0xffu), 0x4u, &fl);
-    }
-    if (fl.zf)
-        goto L_4d3fa5;
-    lift_store(&env, esp, 0x20u, 4, 0x1u);
-    edx = 0x5199f0u;
-    lift_store(&env, esp, 0x0u, 4, eax);
-    eax = lift_call(&env, 0x4ccb9fu, eax, edx, ebx, ecx, 0, esp);
-    lift_store(&env, esp, 0x20u, 4, 0x0u);
-    eax = lift_call(&env, 0x4ca040u, eax, edx, ebx, ecx, 0, esp);
-    goto L_4d4037;
-L_4d3fa5:
-    lift_store(&env, eax, 0x0u, 4, 0x5198f4u);
-    {
-        uint32_t r = lift_xor(32, edx, edx, &fl);
-        edx = r;
-    }
-    lift_store(&env, esp, 0x24u, 4, eax);
-    eax = (esp + 0x14u);
-    lift_store(&env, esp, 0x28u, 1, (ebx & 0xffu));
-    {
-        uint32_t v = env.chain;
-        esp -= 4u;
-        lift_store(&env, esp, 0u, 4, v);
-    }
-    {
-        uint32_t v = lift_load(&env, esp, 0u, 4);
-        esp += 4u;
-        lift_store(&env, eax, 0x0u, 4, v);
-    }
-    env.chain = eax;
-    lift_store(&env, esp, 0x18u, 4, 0x4ec1ecu);
-    lift_store(&env, esp, 0x1cu, 4, 0x5197fcu);
-    eax = ecx;
-    lift_store(&env, esp, 0x20u, 4, 0x5u);
-    eax = lift_call(&env, 0x4d4060u, eax, edx, ebx, ecx, 0, esp);
-    eax = (ecx + 0xacu);
-    lift_store(&env, esp, 0x20u, 4, 0x4u);
-    eax = lift_call(&env, 0x4ca210u, eax, edx, ebx, ecx, 0, esp);
-    {
-        uint32_t r = lift_sub(32, eax, 0x40u, &fl);
-        eax = r;
-    }
-    {
-        uint32_t r = lift_xor(32, edx, edx, &fl);
-        edx = r;
-    }
-    lift_store(&env, esp, 0x20u, 4, 0x3u);
-    eax = lift_call(&env, 0x4d83f0u, eax, edx, ebx, ecx, 0, esp);
-    edx = 0x1u;
-    {
-        uint32_t r = lift_sub(32, eax, 0x6cu, &fl);
-        eax = r;
-    }
-    lift_store(&env, esp, 0x20u, 4, 0x0u);
-    eax = lift_call(&env, 0x4d01a0u, eax, edx, ebx, ecx, 0, esp);
-    ecx = eax;
-    {
-        (void)lift_and(8, (ebx & 0xffu), 0x2u, &fl);
-    }
-    if (fl.zf)
-        goto L_4d402d;
-    eax = lift_call(&env, 0x4ca050u, eax, edx, ebx, ecx, 0, esp);
-L_4d402d:
-    eax = lift_load(&env, esp, 0x14u, 4);
-    env.chain = eax;
-L_4d4037:
-    eax = ecx;
-    {
-        uint32_t r = lift_add(32, esp, 0x30u, &fl);
-        esp = r;
-    }
-    {
-        uint32_t v = lift_load(&env, esp, 0u, 4);
-        esp += 4u;
-        ecx = v;
-    }
-    {
-        uint32_t v = lift_load(&env, esp, 0u, 4);
-        esp += 4u;
-        ebx = v;
-    }
     return env.failed ? 0u : eax;
 }

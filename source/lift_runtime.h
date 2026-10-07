@@ -117,6 +117,12 @@ static inline uint32_t lift_load(LiftEnv *env, uint32_t base, uint32_t offset, u
     {
         return value;
     }
+    if (base != 0 && offset != 0 &&
+        env->services->resolve(address, &storage, &length, env->services->context) &&
+        vertrix_actor_storage_read(storage, length, 0, size, &value))
+    {
+        return value; /* a negative displacement from an interior pointer */
+    }
     return env->globals->read(address, env->globals->context) & lift_mask(size);
 }
 
@@ -133,7 +139,9 @@ static inline void lift_store(LiftEnv *env, uint32_t base, uint32_t offset, unsi
         uint32_t stack[1] = {size};
         vertrix_calln(env->calls, LIFT_GLOBAL_STORE, address, value, 0, 0, stack, 1, NULL);
     }
-    else if (!vertrix_build_store(env->services, base, offset, size, value))
+    else if (!vertrix_build_store(env->services, base, offset, size, value) &&
+             !(base != 0 && offset != 0 &&
+               vertrix_build_store(env->services, address, 0, size, value)))
     {
         uint32_t stack[1] = {size};
         vertrix_calln(env->calls, LIFT_GLOBAL_STORE, address, value, 0, 0, stack, 1, NULL);
