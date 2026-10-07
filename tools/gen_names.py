@@ -1,44 +1,90 @@
-"""Collect readable names for original routines from the recovered headers.
+"""Generate proven address/name pairs from recovered header annotations.
 
-A header comment 'Original 0xADDR ...' directly above a prototype names that routine. The result
-(docs/names.json, address -> name) feeds tools/rename_lifted.py; names are the recovered
-functions' own, never guesses.
+Only a standalone Original annotation and its following declaration provide evidence.
+Markdown prose may mention callees or data and is deliberately not a naming source.
+For grouped annotations, only the first address is paired with the first prototype;
+parameterized helpers and shared implementations make positional alias inference unsafe.
 """
 import json
 import re
+import sys
 from pathlib import Path
 
-root = Path(__file__).resolve().parents[1]
-names = {}
-comment = re.compile(r'/\*\s*(?:Originals?|Original routines?)\s+((?:0x[0-9a-f]+[,\s]*(?:and\s+)?)+)', re.I)
-proto = re.compile(r'^\s*(?:static\s+inline\s+)?[A-Za-z_][\w\s\*]*?\b(vertrix_\w+)\s*\(', re.M)
-for header in sorted((root / 'source').glob('*.h')):
-    if header.name.startswith(('lifted_', 'lift_')):
-        continue
-    text = header.read_text()
-    for match in comment.finditer(text):
-        addresses = re.findall(r'0x([0-9a-f]+)', match.group(1))
-        end = text.find('*/', match.end())
-        found = proto.search(text, end if end >= 0 else match.end())
-        if not found or not addresses:
+BLOCK_COMMENT = re.compile(r"/\*[\s\S]*?\*/")
+ANNOTATION = re.compile(
+    r"/\*\s*Original(?:s|\s+routines?|\s+handlers?)?\s*0x([0-9a-f]+)\b", re.I
+)
+PROTOTYPE = re.compile(
+    r"(?:static\s+inline\s+)?[A-Za-z_][\w\s*]*?\b(vertrix_\w+)\s*\("
+)
+
+
+def following_name(text):
+    """Inspect declarations, skipping only comments, directives and type scaffolding."""
+    text = BLOCK_COMMENT.sub(" ", text)
+    text = re.sub(r"//[^\n]*", " ", text)
+    text = re.sub(r"^[ \t]*#[^\n]*(?:\\\n[^\n]*)*", " ", text, flags=re.M)
+    while text.strip():
+        text = text.lstrip()
+        found = PROTOTYPE.match(text)
+        if found:
+            return found.group(1)
+        if not re.match(r"(?:typedef|enum|struct|union)\b", text):
+            return None
+        # A typedef may contain semicolons inside its struct/union body.
+        depth = 0
+        for index, char in enumerate(text):
+            if char == "{":
+                depth += 1
+            elif char == "}":
+                depth -= 1
+                if depth < 0:
+                    return None
+            elif char == ";" and depth == 0:
+                text = text[index + 1:]
+                break
+        else:
+            return None
+    return None
+
+
+def header_pairs(text):
+    comments = list(BLOCK_COMMENT.finditer(text))
+    annotations = [m for m in comments if ANNOTATION.match(m.group())]
+    for index, annotation in enumerate(annotations):
+        # Callback/member comments are not annotations for a later declaration.
+        line_start = text.rfind("\n", 0, annotation.start()) + 1
+        if text[line_start:annotation.start()].strip():
             continue
-        # the first listed address names the prototype that follows the comment
-        names.setdefault(int(addresses[0], 16), found.group(1))
-# Second source: a docs line that pairs exactly one address with exactly one recovered function
-# that exists in the headers.
-declared = set()
-for header in (root / 'source').glob('*.h'):
-    declared.update(re.findall(r'\b(vertrix_\w+)\s*\(', header.read_text()))
-pairs = {}
-for doc in sorted((root / 'docs').glob('*.md')):
-    for line in doc.read_text().splitlines():
-        addresses = re.findall(r'0x(4[0-9a-f]{5})\b', line)
-        functions = re.findall(r'\b(vertrix_\w+)\b', line)
-        if len(addresses) == 1 and len(functions) == 1 and functions[0] in declared:
-            pairs.setdefault(int(addresses[0], 16), set()).add(functions[0])
-for address, found in pairs.items():
-    if address not in names and len(found) == 1:
-        names[address] = next(iter(found))
-(root / 'docs' / 'names.json').write_text(
-    json.dumps({'0x%x' % a: n for a, n in sorted(names.items())}, indent=1) + '\n')
-print(len(names), 'names')
+        boundary = annotations[index + 1].start() if index + 1 < len(annotations) else len(text)
+        name = following_name(text[annotation.end():boundary])
+        if name:
+            address = int(ANNOTATION.match(annotation.group()).group(1), 16)
+            yield address, name
+
+
+def collect_names(source):
+    candidates = {}
+    for header in sorted(source.glob("*.h")):
+        if header.name.startswith(("lifted_", "lift_")):
+            continue
+        for address, name in header_pairs(header.read_text()):
+            candidates.setdefault(address, set()).add(name)
+    conflicts = {address: values for address, values in candidates.items() if len(values) > 1}
+    names = {address: next(iter(values)) for address, values in candidates.items() if len(values) == 1}
+    return names, conflicts
+
+
+def main():
+    root = Path(__file__).resolve().parents[1]
+    names, conflicts = collect_names(root / "source")
+    for address, values in sorted(conflicts.items()):
+        print(f"Excluded conflicting annotation 0x{address:x}: {', '.join(sorted(values))}", file=sys.stderr)
+    (root / "docs" / "names.json").write_text(
+        json.dumps({f"0x{address:x}": name for address, name in sorted(names.items())}, indent=1) + "\n"
+    )
+    print(len(names), "names")
+
+
+if __name__ == "__main__":
+    main()
