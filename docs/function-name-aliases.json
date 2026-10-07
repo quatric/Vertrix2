@@ -34,6 +34,17 @@
     ],
     "reason": "Both recoveries compare unsigned dwords returning minus one, zero, or one."
   },
+  "0x418830": {
+    "name": "vertrix_actor_clock_to_period",
+    "aliases": [
+      "vertrix_actor_clock_to_period",
+      "vertrix_object_counter_to_period"
+    ],
+    "evidence": [
+      "source/object_accessors.h"
+    ],
+    "reason": "Copies timer period 0xc0 into counter 0xbc; both recovered APIs perform the same field update."
+  },
   "0x42ff10": {
     "name": "vertrix_board_set_actor_clip",
     "aliases": [
@@ -91,6 +102,17 @@
     ],
     "reason": "Player delay parameter zero is explicitly the AI reaction-time routine."
   },
+  "0x43b970": {
+    "name": "vertrix_player_flag_4e8",
+    "aliases": [
+      "vertrix_player_flag_4e8",
+      "vertrix_player_has_e8"
+    ],
+    "evidence": [
+      "source/object_accessors.h"
+    ],
+    "reason": "Both recoveries query whether player dword 0x4e8 is nonzero."
+  },
   "0x43ba70": {
     "name": "vertrix_player_bonus_meter_full",
     "aliases": [
@@ -102,6 +124,39 @@
       "tools/verify_object_accessors.py"
     ],
     "reason": "Tests player bonus meter at offset 0x18c for value three."
+  },
+  "0x43bad0": {
+    "name": "vertrix_player_set_cd",
+    "aliases": [
+      "vertrix_player_set_b14",
+      "vertrix_player_set_cd"
+    ],
+    "evidence": [
+      "source/object_scalars.h"
+    ],
+    "reason": "Both recovered setters write the player byte at 0x4cd."
+  },
+  "0x43bae0": {
+    "name": "vertrix_player_set_cc",
+    "aliases": [
+      "vertrix_player_set_b08",
+      "vertrix_player_set_cc"
+    ],
+    "evidence": [
+      "source/object_scalars.h"
+    ],
+    "reason": "Both recovered setters write the player byte at 0x4cc."
+  },
+  "0x43bd40": {
+    "name": "vertrix_player_byte_4c4_is_one",
+    "aliases": [
+      "vertrix_player_byte_4c4_is_one",
+      "vertrix_player_c4_is_one"
+    ],
+    "evidence": [
+      "source/object_accessors.h"
+    ],
+    "reason": "Both recoveries query whether player byte 0x4c4 equals one."
   },
   "0x43e740": {
     "name": "vertrix_particle_init_drift",
@@ -184,6 +239,17 @@
     ],
     "reason": "Event frame caller establishes context for remaining value and activity flag."
   },
+  "0x47f8e0": {
+    "name": "vertrix_object_set_18",
+    "aliases": [
+      "vertrix_object_set_18",
+      "vertrix_object_set_dword"
+    ],
+    "evidence": [
+      "source/object_accessors.h"
+    ],
+    "reason": "Specific original field setter at offset 0x18; object_set_dword is a parameterized helper."
+  },
   "0x48a930": {
     "name": "vertrix_stream_read_exact",
     "aliases": [
@@ -244,6 +310,28 @@
     ],
     "reason": "Complete alpha traversal; alpha pixel helper is only the inner arithmetic."
   },
+  "0x4ac370": {
+    "name": "vertrix_actor_add_cc",
+    "aliases": [
+      "vertrix_actor_add_cc",
+      "vertrix_actor_add_elapsed"
+    ],
+    "evidence": [
+      "source/actor_fields.h"
+    ],
+    "reason": "Specific actor counter 0xcc update; actor_add_elapsed supports several counter offsets."
+  },
+  "0x4ac390": {
+    "name": "vertrix_actor_cc_reached",
+    "aliases": [
+      "vertrix_actor_cc_reached",
+      "vertrix_actor_counter_pair_reached"
+    ],
+    "evidence": [
+      "source/actor_fields.h"
+    ],
+    "reason": "Specific counter 0xcc compared against limit 0xd0; counter_pair_reached is the generalized offset helper."
+  },
   "0x4ac470": {
     "name": "vertrix_actor_set_d0_steps",
     "aliases": [
@@ -259,13 +347,36 @@
     "name": "vertrix_actor_clock_reached",
     "aliases": [
       "vertrix_actor_clock_reached",
+      "vertrix_actor_counter_pair_reached",
       "vertrix_actor_counter_reached"
     ],
     "evidence": [
       "source/object_accessors.h",
       "tools/verify_object_accessors.py"
     ],
-    "reason": "Tests actor clock at offset 0xbc against period at 0xc0."
+    "reason": "Tests actor clock at offset 0xbc against period at 0xc0. The offset-parameter counter helper is also verified at this entrypoint."
+  },
+  "0x4ac7b0": {
+    "name": "vertrix_actor_set_period_steps",
+    "aliases": [
+      "vertrix_actor_set_period_steps",
+      "vertrix_actor_set_times_twelve"
+    ],
+    "evidence": [
+      "source/actor_fields.h"
+    ],
+    "reason": "Specific timer period 0xc0 setter with twelve-times scaling; generalized helper handles other offsets."
+  },
+  "0x4ac840": {
+    "name": "vertrix_actor_set_e0_steps",
+    "aliases": [
+      "vertrix_actor_set_e0_steps",
+      "vertrix_actor_set_times_twelve"
+    ],
+    "evidence": [
+      "source/actor_fields.h"
+    ],
+    "reason": "Specific progress period 0xe0 setter with twelve-times scaling; generalized helper handles other offsets."
   },
   "0x4ac8d0": {
     "name": "vertrix_actor_attach_resource",
@@ -289,6 +400,17 @@
       "source/actor_fields.h"
     ],
     "reason": "Copies actor handler token from offset 0xec to active handler at 0x154."
+  },
+  "0x4ac940": {
+    "name": "vertrix_actor_handler_from_f0",
+    "aliases": [
+      "vertrix_actor_handler_from_f0",
+      "vertrix_actor_select_f0"
+    ],
+    "evidence": [
+      "source/actor_fields.h"
+    ],
+    "reason": "Copies fallback handler token from offset 0xf0 to active handler 0x154, matching the EC handler naming."
   },
   "0x4ad1c0": {
     "name": "vertrix_actor_polar_offset",

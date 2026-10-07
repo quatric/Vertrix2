@@ -8,7 +8,7 @@
 /* Supplied read of original memory outside the globals (objects, image data, tables). Original
  * addresses are identity tokens. Returns zero when the address cannot be read. */
 typedef int (*VertrixMemoryRead)(uint32_t address, unsigned width, uint32_t *value, void *context);
-/* Original4ae3e0: actor clipping and span preparation. mode is actor dword144. Runs the complete
+/* Original 0x4ae3e0: actor clipping and span preparation. mode is actor dword144. Runs the complete
  * routine against the globals and the actor (at least 0x15c bytes), reads original memory through
  * read and reports the original eax in *result. Division by zero, unreadable memory, out-of-range
  * global writes and short storage return zero and preserve globals and actor. */

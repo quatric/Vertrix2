@@ -31,7 +31,7 @@ int vertrix_piece_actor_construct(void *parent, size_t parent_size, void *childr
  * accumulates across the row: the back-edge targets the store, not the
  * reload). Needs 0x274 bytes. Invalid inputs preserve storage. */
 int vertrix_piece_actor_construct_slots(void *actor, size_t actor_size);
-/* Original42b5c0: construct a piece actor (base fields 0x4abd70) with class
+/* Original 0x42b5c0: construct a piece actor (base fields 0x4abd70) with class
  * token 0x514894 and cleared child slots (+0x170 second list and +0x15c,
  * +0x160, +0x164 handles). Needs 0x174 bytes; the board caller allocates
  * exactly that. Invalid inputs preserve storage. */

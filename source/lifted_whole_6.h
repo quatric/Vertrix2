@@ -6,6 +6,7 @@
 
 enum
 {
+    LIFTED_F4E8DCB_STACK = 112,
     LIFTED_F4E8E69_STACK = 80,
     LIFTED_F4E8EA0_STACK = 80,
     LIFTED_F4E8FA7_STACK = 84,
@@ -102,6 +103,10 @@ enum
     LIFTED_F4EEA20_STACK = 104,
     LIFTED_F4EEA90_STACK = 84
 };
+
+/* Original 0x4e8dcb. */
+uint32_t lifted_f4e8dcb(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4e8e69. */
 uint32_t lifted_f4e8e69(const VertrixCalls *calls, const VertrixFactoryServices *services,

@@ -3,7 +3,7 @@
 #include "frame_resource.h"
 #include "piece_actor_layout.h"
 typedef int (*VertrixPieceActorUpdate)(void *actor, size_t size, uint32_t elapsed, void *context);
-/* Original42ac40: advance parent timer, move if due and17c is zero, update
+/* Original 0x42ac40: advance parent timer, move if due and17c is zero, update
  * seven children, set their effect48, then apply42af30 layout. Child virtual
  * dispatch remains explicit because those actors can have different classes.
  * Parent count/handles may change during callbacks; read them as reached.

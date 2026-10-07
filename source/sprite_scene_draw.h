@@ -2,7 +2,7 @@
 #define VERTRIX_SPRITE_SCENE_DRAW_H
 #include "object_list.h"
 #include "sprite_chain_draw.h"
-/* Original4b6240 snapshots handles and signed Y, then draws in ascending Y.
+/* Original 0x4b6240 snapshots handles and signed Y, then draws in ascending Y.
  * Equal Y retains list order. Original sentinel32000 excludes Y>=32000.
  * Supports at most1024 roots and base-class517af4 virtual drawing. Each root
  * uses recovered4ade60 linked drawing and its supplied chain budget.

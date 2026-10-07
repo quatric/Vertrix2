@@ -2,7 +2,7 @@
 #define VERTRIX_UI_PLAYER_PREVIEWS_H
 #include "ui_preview_pair.h"
 #define VERTRIX_UI_PREVIEW_ACTORS 6
-/* Original42b150 base constructor and preview-parent class initialization.
+/* Original 0x42b150 base constructor and preview-parent class initialization.
  * Clear the six owned preview handles, preserve all other untouched bytes.
  * Invalid storage below174 bytes remains unchanged. */
 int vertrix_ui_player_preview_parent_construct(void *player, size_t player_size);

@@ -19,7 +19,7 @@ void vertrix_palette_tables_free(VertrixPaletteTables *tables);
  * Other scene pointer-table selections remain separate. */
 int vertrix_palette_tables_pixel(const VertrixPaletteTables *tables, uint32_t source,
                                  int fixed_channels, const uint16_t channels[3], uint32_t *output);
-/* Original4754e0 applies byte cycle to default54d1d0 auxiliary pointers.
+/* Original 0x4754e0 applies byte cycle to default54d1d0 auxiliary pointers.
  * Index0 selects constant100 for cycles0..254; cycle255 reaches original
  * global54cdc8, supplied explicitly as constant_tail (an opaque original
  * value, never a host pointer). Indices1..255 select the auxiliary table plus

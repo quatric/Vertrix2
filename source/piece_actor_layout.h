@@ -5,7 +5,7 @@
  * handles and zero movement/mode/flag/count178..188. Minimum18c bytes;
  * preserve all untouched bytes and reject short storage before mutation. */
 int vertrix_piece_actor_parent_construct(void *parent, size_t parent_size);
-/* Original42af30: visit seven parent slots15c..174, skip nulls, copy parent
+/* Original 0x42af30: visit seven parent slots15c..174, skip nulls, copy parent
  * x0e and write parent y16 + slot * row height to actor y16 with word wrapping.
  * Row height represents original4f90ac. Read parent coordinates as each actor
  * is reached. Resolver keeps parent and actors live. Failure retains preceding

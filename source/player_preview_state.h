@@ -7,7 +7,7 @@
 int vertrix_player_preview_mode(const void *player, size_t size, uint32_t *mode);
 int vertrix_player_preview_toggle(void *player, size_t size);
 int vertrix_player_preview_set_mode(void *player, size_t size, uint32_t mode);
-/* Original42b070 selects the final active preview's frameb8 using count188.
+/* Original 0x42b070 selects the final active preview's frameb8 using count188.
  * Valid native counts1..3 map to companion handles15c..164. Resolve stable
  * actor storage; invalid count/handle/resolution preserves the output. */
 int vertrix_player_preview_frame(const void *player, size_t size,

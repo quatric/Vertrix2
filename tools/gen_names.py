@@ -4,6 +4,7 @@ Only a standalone Original annotation and its following declaration provide evid
 Markdown prose may mention callees or data and is deliberately not a naming source.
 For grouped annotations, only the first address is paired with the first prototype;
 parameterized helpers and shared implementations make positional alias inference unsafe.
+Only explicit Original variants annotations associate every listed address with one declaration.
 """
 import json
 import re
@@ -12,8 +13,13 @@ from pathlib import Path
 
 BLOCK_COMMENT = re.compile(r"/\*[\s\S]*?\*/")
 ANNOTATION = re.compile(
-    r"/\*\s*Original(?:s|\s+routines?|\s+handlers?)?\s*0x([0-9a-f]+)\b", re.I
+    r"/\*\s*Original(?:s|\s+routines?|\s+handlers?|\s+variants)?\s*0x([0-9a-f]+)\b", re.I
 )
+VARIANTS = re.compile(
+    r"/\*\s*Original\s+variants\s+"
+    r"(0x[0-9a-f]+(?:\s*(?:,|and|/)\s*0x[0-9a-f]+)*)\s*:", re.I
+)
+VARIANT_MARKER = re.compile(r"/\*\s*Original\s+variants\b", re.I)
 PROTOTYPE = re.compile(
     r"(?:static\s+inline\s+)?[A-Za-z_][\w\s*]*?\b(vertrix_\w+)\s*\("
 )
@@ -59,8 +65,18 @@ def header_pairs(text):
         boundary = annotations[index + 1].start() if index + 1 < len(annotations) else len(text)
         name = following_name(text[annotation.end():boundary])
         if name:
-            address = int(ANNOTATION.match(annotation.group()).group(1), 16)
-            yield address, name
+            variant_text = re.sub(r"\n[ \t]*\*[ \t]?", "\n", annotation.group())
+            variants = VARIANTS.match(variant_text)
+            if VARIANT_MARKER.match(annotation.group()):
+                if variants is None:
+                    raise ValueError("Original variants annotation requires an explicit address list and colon")
+                addresses = [int(value, 16) for value in re.findall(r"0x([0-9a-f]+)", variants.group(1), re.I)]
+                if len(addresses) != len(set(addresses)):
+                    raise ValueError("Original variants annotation repeats an address")
+            else:
+                addresses = [int(ANNOTATION.match(annotation.group()).group(1), 16)]
+            for address in addresses:
+                yield address, name
 
 
 def collect_names(source):

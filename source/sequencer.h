@@ -95,6 +95,7 @@ typedef struct
 } VertrixSequenceExtendedMemory;
 /* Complete extended effect 14 integration, preserving current row and
  * trigger-reset ownership. Invalid native storage rejects atomically. */
+/* Original 0x40d540: complete callable dispatcher; tools/verify_sequence_extended_effect.py. */
 int vertrix_sequence_extended_effect(int32_t tick, int linear,
                                      const VertrixMixerTriggerInstrument *instrument,
                                      VertrixMixerRowState *row, VertrixMixerVolumeColumn *column,
@@ -229,6 +230,7 @@ void vertrix_sequence_player_free(VertrixSequencePlayer *player);
 /* Clear and fill interleaved signed accumulators using original 0x40c5c0
  * tick-before-mix scheduling. Capacity counts values. Runtime failure can
  * leave earlier batches progressed; valid modules/configuration are required. */
+/* Original 0x40c5c0: complete callable routine; tools/verify_sequence_player.py. */
 int vertrix_sequence_player_mix(VertrixSequencePlayer *player, int32_t *output, size_t frames,
                                 size_t capacity);
 /* Render original unsigned PCM8 or little-endian signed PCM16. Scratch capacity

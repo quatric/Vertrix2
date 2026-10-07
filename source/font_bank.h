@@ -7,7 +7,7 @@ typedef struct
     uint32_t origin_x[548], origin_y[548];
     unsigned ready;
 } VertrixFontBank;
-/* Original43eab0 loading order, including source-mutating outline transforms.
+/* Original 0x43eab0 loading order, including source-mutating outline transforms.
  * Uses verified original VF filenames and configured graphics color masks.
  * Output must be zero initialized. Owns all548 glyphs and descriptor origins. */
 int vertrix_font_bank_load(VertrixVf *archive, const uint32_t masks[3], VertrixFontBank *output);

@@ -1,7 +1,7 @@
 #ifndef VERTRIX_UI_PLAYER_PREVIEW_DRAW_H
 #define VERTRIX_UI_PLAYER_PREVIEW_DRAW_H
 #include "sprite_chain_draw.h"
-/* Original42b290: draw companion slots first, then border slots, skipping
+/* Original 0x42b290: draw companion slots first, then border slots, skipping
  * nulls and reading each handle as reached. Parent class514814 is supported;
  * children use recovered base-class direct drawing and next108 chains.
  * Budget bounds total actor draws; earlier draws/bindings persist on failure.

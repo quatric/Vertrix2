@@ -1353,7 +1353,7 @@
   "virtual": [],
   "address": 4670784
  },
- "f4754e0": {
+ "palette_tables_cycle": {
   "callees": {},
   "stack": 72,
   "arguments": 0,
@@ -4328,7 +4328,7 @@
   "virtual": [],
   "address": 4712848
  },
- "f47e9a0": {
+ "object_dword": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -4583,7 +4583,7 @@
   ],
   "address": 4713776
  },
- "f47ed60": {
+ "object_set_dword": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -4595,7 +4595,7 @@
   "virtual": [],
   "address": 4713824
  },
- "f47ed70": {
+ "object_set_dword_47ed70": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -4607,7 +4607,7 @@
   "virtual": [],
   "address": 4713840
  },
- "f47ed80": {
+ "object_set_dword_47ed80": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -4619,7 +4619,7 @@
   "virtual": [],
   "address": 4713856
  },
- "f47ed90": {
+ "object_set_dword_47ed90": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -5545,7 +5545,7 @@
   ],
   "address": 4718640
  },
- "f480070": {
+ "object_dword_480070": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -5795,7 +5795,7 @@
   ],
   "address": 4724640
  },
- "f481b20": {
+ "object_set_dword_481b20": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -6536,7 +6536,7 @@
   "virtual": [],
   "address": 4734176
  },
- "f484410": {
+ "object_set_dword_484410": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -7237,7 +7237,7 @@
   "virtual": [],
   "address": 4749264
  },
- "f4877e0": {
+ "object_dword_4877e0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -7450,7 +7450,7 @@
   "virtual": [],
   "address": 4751408
  },
- "f488040": {
+ "table_item_488040": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -8007,7 +8007,7 @@
   "virtual": [],
   "address": 4760272
  },
- "f48a2e0": {
+ "object_dword_48a2e0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -8319,7 +8319,7 @@
   ],
   "address": 4761360
  },
- "f48a8a0": {
+ "range_start": {
   "callees": {},
   "stack": 72,
   "arguments": 0,
@@ -8366,7 +8366,7 @@
   "virtual": [],
   "address": 4761872
  },
- "f48aa70": {
+ "range_block_second": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -8380,7 +8380,7 @@
   "virtual": [],
   "address": 4762224
  },
- "f48aa80": {
+ "object_dword_48aa80": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -8404,7 +8404,7 @@
   "virtual": [],
   "address": 4762256
  },
- "f48aad0": {
+ "range_span": {
   "callees": {},
   "stack": 72,
   "arguments": 0,
@@ -8418,7 +8418,7 @@
   "virtual": [],
   "address": 4762320
  },
- "f48aaf0": {
+ "range_seek": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -8432,7 +8432,7 @@
   "virtual": [],
   "address": 4762352
  },
- "f48abe0": {
+ "object_set_pair": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -9296,7 +9296,7 @@
   "virtual": [],
   "address": 4773168
  },
- "f48d5f0": {
+ "list_empty_48d5f0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -9342,7 +9342,7 @@
   "virtual": [],
   "address": 4773408
  },
- "f48d630": {
+ "list_item_48d630": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -9730,7 +9730,7 @@
   "virtual": [],
   "address": 4899712
  },
- "actor_counter_pair_reached": {
+ "actor_cc_reached": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -9832,7 +9832,7 @@
   "virtual": [],
   "address": 4900064
  },
- "f4ac4f0": {
+ "actor_set_11c": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -9880,7 +9880,7 @@
   "virtual": [],
   "address": 4900128
  },
- "f4ac540": {
+ "actor_counter_quotient": {
   "callees": {},
   "stack": 72,
   "arguments": 0,
@@ -9942,7 +9942,7 @@
   "virtual": [],
   "address": 4900272
  },
- "f4ac600": {
+ "actor_add_elapsed_4ac600": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -9966,7 +9966,7 @@
   "virtual": [],
   "address": 4900368
  },
- "f4ac620": {
+ "actor_counter_pair_reached": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -9978,7 +9978,7 @@
   "virtual": [],
   "address": 4900384
  },
- "f4ac640": {
+ "actor_progress_quotient": {
   "callees": {},
   "stack": 72,
   "arguments": 0,
@@ -9990,7 +9990,7 @@
   "virtual": [],
   "address": 4900416
  },
- "f4ac6b0": {
+ "actor_progress_wrap": {
   "callees": {
    "0x4ac640": [
     0,

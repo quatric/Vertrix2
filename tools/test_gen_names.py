@@ -25,6 +25,28 @@ int vertrix_title_letter_restart(void);
             0x459d60: "vertrix_title_letter_settle",
         })
 
+    def test_only_explicit_variants_map_all_leading_addresses(self):
+        text = """
+/* Original variants 0x00401010,
+ * 0x401054: conversion calls 0x4ca070. */
+int vertrix_mixer_output(void);
+/* Original handlers 0x459d60 and 0x459e00: ordered routines. */
+int vertrix_settle(void);
+int vertrix_restart(void);
+/* Original variants 0x0040cf50 / 0x40cfa0: two callable modes. */
+enum { MODE = 1 };
+int vertrix_pitch_slide(void);
+"""
+        self.assertEqual(dict(header_pairs(text)), {
+            0x401010: "vertrix_mixer_output", 0x401054: "vertrix_mixer_output",
+            0x459d60: "vertrix_settle",
+            0x40cf50: "vertrix_pitch_slide", 0x40cfa0: "vertrix_pitch_slide",
+        })
+        with self.assertRaises(ValueError):
+            list(header_pairs("/* Original variants 0x401010, 0x401054 */\nint vertrix_output(void);"))
+        with self.assertRaises(ValueError):
+            list(header_pairs("/* Original variants 0x401010, 0x00401010: duplicate */\nint vertrix_output(void);"))
+
     def test_scaffolding_and_next_annotation_boundary(self):
         text = """
 /* Original 0x4713d0 and 0x4715a0. */

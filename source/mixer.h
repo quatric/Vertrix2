@@ -37,7 +37,7 @@ int vertrix_mixer_stereo_gains(uint32_t stored_volume, uint8_t pan, VertrixMixer
  * Negative products round toward negative infinity, matching x86 SAR. */
 int vertrix_mixer_pcm8_value(uint8_t sample, uint32_t table_row, uint32_t master_gain, int stereo,
                              int32_t *output);
-/* Original 0x401010/0x401054 conversion from signed 32-bit accumulation.
+/* Original variants 0x401010, 0x401054: conversion from signed 32-bit accumulation.
  * Emits unsigned PCM8 or signed little-endian PCM16 bytes. Output capacity is
  * checked before writing; zero samples is a native no-op. */
 int vertrix_mixer_output(const int32_t *samples, size_t count, int sixteen_bit, uint8_t *output,
@@ -65,12 +65,14 @@ int vertrix_mixer_pcm8_stereo(const uint8_t *samples, size_t sample_count, uint3
 /* Original PCM16 kernels 0x402934/0x402c18 read the high byte of each
  * little-endian signed sample. Position and step count samples, not bytes.
  * Same traversal/prefetch contract as PCM8. */
+/* Original 0x402934: complete callable routine; tools/verify_mixer_pcm16_mono.py. */
 int vertrix_mixer_pcm16_mono(const uint8_t *samples, size_t byte_count, uint32_t step,
                              uint32_t stored_volume, uint32_t master_gain,
                              VertrixMixerReadState *state, int32_t *output, size_t frames,
                              size_t output_capacity);
 /* Original noninterpolated PCM16 stereo kernel 0x402c18. Same bounded
  * traversal contract as mono; capacity counts interleaved 32-bit values. */
+/* Original 0x402c18: complete callable routine; tools/verify_mixer_pcm16_stereo.py. */
 int vertrix_mixer_pcm16_stereo(const uint8_t *samples, size_t byte_count, uint32_t step,
                                uint32_t stored_volume, uint32_t master_gain, uint8_t pan,
                                VertrixMixerReadState *state, int32_t *output, size_t frames,
@@ -180,7 +182,7 @@ typedef struct
     uint8_t update_flags;
 } VertrixMixerSlide;
 
-/* Original 0x40cf50/0x40cfa0 pitch slides. Tick zero remembers a nonzero
+/* Original variants 0x40cf50, 0x40cfa0: pitch slides. Tick zero remembers a nonzero
  * parameter times four; later ticks apply memory and mark pitch dirty.
  * Increasing period clamps to 0x7cff; decreasing period clamps to one. */
 int vertrix_mixer_pitch_slide(uint8_t parameter, int32_t tick, int increasing_period,
@@ -226,8 +228,10 @@ int vertrix_mixer_volume_slide(uint8_t parameter, int32_t tick, VertrixMixerVolu
 /* Original combined effects 0x40d2d0/0x40d300. Pitch-state flags are
  * authoritative shared channel flags; both returned states receive them.
  * Tick zero only updates volume memory (portamento also clears bits 1/8). */
+/* Original 0x40d2d0: complete callable routine; tools/verify_mixer_combined.py. */
 int vertrix_mixer_portamento_volume(uint8_t parameter, int32_t tick, VertrixMixerPortamento *pitch,
                                     VertrixMixerVolumeSlide *volume);
+/* Original 0x40d300: complete callable routine; tools/verify_mixer_combined.py. */
 int vertrix_mixer_vibrato_volume(uint8_t parameter, int32_t tick, VertrixMixerVibrato *pitch,
                                  VertrixMixerVolumeSlide *volume);
 typedef struct
@@ -257,7 +261,7 @@ typedef struct
     uint32_t output_volume;
     uint8_t update_flags;
 } VertrixMixerSetState;
-/* Original 0x40d410, 0x40d430 and 0x40d490 tick-zero setters.
+/* Original variants 0x40d410, 0x40d430, 0x40d490: tick-zero setters.
  * Nonzero ticks preserve all state. Invalid effect/null state rejects. */
 int vertrix_mixer_set_effect(VertrixMixerSetEffect effect, uint8_t parameter, int32_t tick,
                              VertrixMixerSetState *state);
@@ -267,7 +271,7 @@ typedef struct
     uint32_t row;
     uint8_t flags;
 } VertrixMixerPatternChange;
-/* Original 0x40d450 order jump and 0x40d4c0 decimal-nibble row break.
+/* Original variants 0x40d450, 0x40d4c0: order jump and decimal-nibble row break.
  * Only tick zero acts. Jump checks parameter against original song length.
  * Row break accepts all nibbles, including values above decimal nine. */
 int vertrix_mixer_pattern_change(uint8_t parameter, int32_t tick, int row_break,
@@ -471,6 +475,7 @@ typedef struct
 } VertrixMixerPlayback;
 /* Complete original 0x40e030 update, in original fade/envelope/vibrato order.
  * Active and update flags live in vibrato. Invalid storage rejects atomically. */
+/* Original 0x40e030: complete callable routine; tools/verify_mixer_playback_tick.py. */
 int vertrix_mixer_playback_tick(const VertrixMixerPlaybackInstrument *instrument,
                                 VertrixMixerPlayback *state);
 enum
@@ -499,6 +504,7 @@ typedef struct
 } VertrixMixerPublishState;
 /* Complete 0x40e8a0 command ordering. Sample zero means absent; other
  * values are caller-defined handles. Commands still require mixer delivery. */
+/* Original 0x40e8a0: complete callable routine; tools/verify_mixer_publish.py. */
 int vertrix_mixer_publish(uint32_t global_volume, int linear, VertrixMixerPublishState *state,
                           VertrixMixerPublishCommand commands[7], size_t *count);
 /* Execute non-attachment publication commands using original setters
@@ -612,6 +618,8 @@ typedef struct
 } VertrixMixerGlobalEffects;
 /* Original effects F/G/H at 0x40d880/0x40d8c0/0x40d8f0. Effect numbers
  * are 15/16/17. Tempo/volume dirty flags are pending sequencer work. */
+/* Original variants 0x40d880, 0x40d8c0, 0x40d8f0: complete callable routines;
+ * tools/verify_mixer_global_effects.py. */
 int vertrix_mixer_global_effect(uint8_t effect, uint8_t parameter, int32_t tick,
                                 VertrixMixerGlobalEffects *state);
 typedef struct
@@ -622,9 +630,11 @@ typedef struct
 } VertrixMixerPanSlide;
 /* Main effect 25 at 0x40d9b0. Tick zero remembers nonzero parameters;
  * later ticks prioritize upper-nibble increase over lower-nibble decrease. */
+/* Original 0x40d9b0: complete callable routine; tools/verify_mixer_pan_release.py. */
 int vertrix_mixer_pan_slide(uint8_t parameter, int32_t tick, VertrixMixerPanSlide *state);
 /* Main effect 20 at 0x40d990 releases exactly when signed tick equals
  * the full parameter byte, using the recovered envelope-aware release. */
+/* Original 0x40d990: complete callable routine; tools/verify_mixer_pan_release.py. */
 int vertrix_mixer_timed_release(uint8_t parameter, int32_t tick, int instrument_present,
                                 uint8_t envelope_flags, uint8_t *active,
                                 VertrixMixerVolumeSlide *state);
@@ -638,6 +648,7 @@ typedef struct
     uint8_t flags;
 } VertrixMixerTremor;
 /* Main effect 29, original 0x40db00. Updates its byte counter on every tick. */
+/* Original 0x40db00: complete callable routine; tools/verify_mixer_tremor_extra_fine.py. */
 int vertrix_mixer_tremor(uint8_t parameter, int32_t tick, VertrixMixerTremor *state);
 typedef struct
 {
@@ -649,6 +660,7 @@ typedef struct
 } VertrixMixerExtraFineSlide;
 /* Main effect 33, original 0x40db70. Tick-zero selectors 1/2 change
  * period by the remembered low nibble, without the ordinary factor four. */
+/* Original 0x40db70: complete callable routine; tools/verify_mixer_tremor_extra_fine.py. */
 int vertrix_mixer_extra_fine_slide(uint8_t parameter, int32_t tick,
                                    VertrixMixerExtraFineSlide *state);
 typedef struct
@@ -662,12 +674,14 @@ typedef struct
 } VertrixMixerRetrigger;
 /* Complete effect 27 at 0x40da20. Selection flags are shared channel flags.
  * Retrigger reselects the sample without resetting envelope state. */
+/* Original 0x40da20: complete callable routine; tools/verify_mixer_retrigger.py. */
 int vertrix_mixer_retrigger(uint8_t parameter, int32_t tick,
                             const VertrixMixerTriggerInstrument *instrument, int linear,
                             VertrixMixerSampleSelection *selection, VertrixMixerRetrigger *state);
 typedef void (*VertrixMixerEffectCallback)(uint8_t parameter, uint32_t order, uint32_t row,
                                            void *context);
 /* Original effect 35 at 0x40dc10. Callback runs only on tick zero. */
+/* Original 0x40dc10: complete callable routine; tools/verify_mixer_effect_selection.py. */
 void vertrix_mixer_effect_callback(uint8_t parameter, int32_t tick, uint32_t order, uint32_t row,
                                    VertrixMixerEffectCallback callback, void *context);
 /* Original 0x40dc50 dispatch selection. Returns the active effect number

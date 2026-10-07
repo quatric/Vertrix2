@@ -19,13 +19,13 @@ int vertrix_render_palette_pixel_layout(uint32_t source, const uint32_t *lookup,
                                         size_t lookup_count, const uint8_t *maps, size_t maps_size,
                                         size_t map_stride, size_t map_count, int fixed_channels,
                                         const uint16_t channels[3], uint32_t *output);
-/* Original48dba0 half blend: average source/destination lookup channel indices
+/* Original 0x48dba0 half blend: average source/destination lookup channel indices
  * before resolving them through the SOURCE's selected channel map. */
 int vertrix_render_palette_half_pixel(uint32_t source, uint32_t destination, const uint32_t *lookup,
                                       size_t lookup_count, const uint8_t *maps, size_t maps_size,
                                       size_t map_stride, size_t map_count, uint32_t *output);
 
-/* Original490340: weight lookup channel indices through two256-byte tables,
+/* Original 0x490340: weight lookup channel indices through two256-byte tables,
  * add their values, then resolve through the source map row. */
 int vertrix_render_palette_weighted_pixel(uint32_t source, uint32_t destination,
                                           const uint32_t *lookup, size_t lookup_count,

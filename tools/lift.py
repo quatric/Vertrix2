@@ -154,7 +154,61 @@ class Lifter:
         pushes = sum(1 for i in self.insns.values() if i.mnemonic in ('push', 'call'))
         sub_esp = sum(int(i.op_str.split(',')[1], 0) for i in self.insns.values()
                       if i.mnemonic == 'sub' and i.op_str.startswith('esp,'))
+        self.compute_flag_liveness()
         self.stack_size = (sub_esp + 4 * pushes + 0x40 + 3) & ~3
+
+    # ---- flag liveness ---------------------------------------------------------------------
+    @staticmethod
+    def reads_flags(insn):
+        m = insn.mnemonic
+        return (m in CONDITIONS or m in ('adc', 'sbb', 'rcl', 'rcr', 'cmc') or
+                (m.startswith('set') and 'j' + m[3:] in CONDITIONS) or
+                (m.startswith('cmov') and 'j' + m[4:] in CONDITIONS) or
+                m in STRING_OPS or (len(m.split(' ')) == 2 and m.split(' ')[1] in STRING_OPS))
+
+    @staticmethod
+    def kills_flags(insn):
+        m = insn.mnemonic
+        if m in ('add', 'sub', 'and', 'or', 'xor', 'cmp', 'test', 'neg', 'adc', 'sbb', 'call',
+                 'ret', 'mul', 'imul', 'div', 'idiv', 'bsr', 'bsf'):
+            return True
+        if m in ('shl', 'sal', 'shr', 'sar') and len(insn.operands) == 2 and \
+                insn.operands[1].type == X.X86_OP_IMM and insn.operands[1].imm & 31:
+            return True
+        return False
+
+    def successors(self, insn):
+        m = insn.mnemonic
+        following = insn.address + insn.size
+        if m == 'ret':
+            return []
+        if m == 'jmp':
+            if insn.operands[0].type == X.X86_OP_IMM:
+                return [insn.operands[0].imm]
+            return list(TABLES.get(insn.address, []))
+        result = [following] if following in self.insns else []
+        if m in CONDITIONS or m in ('loop', 'jecxz'):
+            result.append(insn.operands[0].imm)
+        return result
+
+    def compute_flag_liveness(self):
+        live_in = {a: False for a in self.insns}
+        live_out = {a: False for a in self.insns}
+        changed = True
+        while changed:
+            changed = False
+            for a in reversed(self.order):
+                insn = self.insns[a]
+                out = any(live_in.get(t, True) for t in self.successors(insn))
+                inn = self.reads_flags(insn) or (out and not self.kills_flags(insn))
+                if out != live_out[a] or inn != live_in[a]:
+                    live_out[a], live_in[a] = out, inn
+                    changed = True
+        self.flags_live = live_out
+
+    def dead(self, insn):
+        """True when no later instruction reads the flags this one would set."""
+        return not self.flags_live.get(insn.address, True)
 
     # ---- operand helpers -------------------------------------------------------------------
     def reg_read(self, reg):
@@ -307,7 +361,12 @@ class Lifter:
         elif m == 'lea':
             self.emit(self.write(ops[0], self.address_expr(ops[1])))
         elif m in ('add', 'sub', 'and', 'or', 'xor', 'cmp', 'test', 'adc', 'sbb'):
-            self.arith(m, ops)
+            self.arith(m, ops, insn)
+        elif m in ('inc', 'dec') and self.dead(insn):
+            self.emit(self.write(ops[0], '%s %s 1u' % (self.read(ops[0]),
+                                                      '+' if m == 'inc' else '-')))
+        elif m == 'neg' and self.dead(insn):
+            self.emit(self.write(ops[0], '0u - %s' % self.read(ops[0])))
         elif m in ('inc', 'dec'):
             bits = self.bits(ops[0])
             self.emit('{ uint32_t a = %s; uint32_t r = lift_%s(%d, a, &fl, 1); %s }' % (
@@ -375,7 +434,7 @@ class Lifter:
         else:
             raise NotImplementedError('%x %s %s' % (insn.address, m, insn.op_str))
 
-    def arith(self, m, ops):
+    def arith(self, m, ops, insn=None):
         bits = self.bits(ops[0])
         a = self.read(ops[0])
         b = self.read(ops[1])
@@ -384,6 +443,13 @@ class Lifter:
         func = {'add': 'lift_add', 'sub': 'lift_sub', 'cmp': 'lift_sub', 'and': 'lift_and',
                 'test': 'lift_and', 'or': 'lift_or', 'xor': 'lift_xor', 'adc': 'lift_adc',
                 'sbb': 'lift_sbb'}[m]
+        if insn is not None and self.dead(insn):
+            if m in ('cmp', 'test'):
+                return
+            plain = {'add': '%s + %s', 'sub': '%s - %s', 'and': '%s & %s', 'or': '%s | %s',
+                     'xor': '%s ^ %s', 'adc': '%s + %s + fl.cf', 'sbb': '%s - %s - fl.cf'}[m]
+            self.emit(self.write(ops[0], plain % (a, b)))
+            return
         if m in ('cmp', 'test'):
             self.emit('{ (void)%s(%d, %s, %s, &fl); }' % (func, bits, a, b))
         else:

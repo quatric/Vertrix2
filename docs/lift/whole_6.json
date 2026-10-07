@@ -1,4 +1,27 @@
 {
+ "f4e8dcb": {
+  "callees": {
+   "0x4e3846": [
+    0,
+    false
+   ]
+  },
+  "stack": 112,
+  "arguments": 0,
+  "pointer_callees": [],
+  "pointer_fields": [
+   4
+  ],
+  "pointer_globals": [],
+  "pointer_maybe": [],
+  "constants": [
+   27,
+   28,
+   29
+  ],
+  "virtual": [],
+  "address": 5148107
+ },
  "f4e8e69": {
   "callees": {
    "0x4e8dcb": [

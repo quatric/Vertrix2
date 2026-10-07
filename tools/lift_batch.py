@@ -11,6 +11,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import lift
+from routine_names import readable_names as read_routine_names
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -68,22 +69,13 @@ def verify_all(scratch, jobs, cases):
 
 
 def readable_names():
-    """address -> short name from docs/names.json (first address wins a name)."""
-    path = ROOT / 'docs' / 'names.json'
-    if not path.exists():
-        return {}
-    taken, result = set(), {}
-    for address, full in sorted(json.loads(path.read_text()).items(), key=lambda i: int(i[0], 16)):
-        short = full[len('vertrix_'):] if full.startswith('vertrix_') else full
-        if short not in taken:
-            taken.add(short)
-            result[int(address, 16)] = short
-    return result
+    """Use the shared address-stable recovered routine and variant names."""
+    return read_routine_names(ROOT / 'docs' / 'names.json')
 
 
-def combine(scratch, name, out_dir, first=0, count=None):
+def combine(scratch, name, out_dir, first=0, count=None, unverified=False):
     results = json.loads((scratch / 'results.json').read_text())
-    passed = sorted(n for n, r in results.items() if r['ok'])[first:first + count if count else None]
+    passed = sorted(n for n, r in results.items() if r['ok'] != unverified)[first:first + count if count else None]
     body = ['/* Routines lifted from the original by tools/lift.py (see docs/LIFTED.md), each verified\n'
             ' * against the original by tools/verify_lifted.py. */\n#include "lift_runtime.h"\n'
             '\n#include "lifted_%s.h"\n' % name]
@@ -111,6 +103,8 @@ def combine(scratch, name, out_dir, first=0, count=None):
         '#include "actor_build.h"\n\nenum\n{\n%s\n};\n\n%s\n#endif\n' % (
             name.upper(), name.upper(), ',\n'.join(enums), '\n\n'.join(protos)))
     (ROOT / 'docs' / 'lift' / (name + '.json')).write_text(json.dumps(metas, indent=1))
+    if unverified:
+        (out / ('lifted_%s.c' % name)).write_text((out / ('lifted_%s.c' % name)).read_text().replace('Routines lifted from the original by tools/lift.py (see docs/LIFTED.md), each verified\n * against the original by tools/verify_lifted.py.', 'Routines lifted from the original by tools/lift.py (see docs/LIFTED.md) that did NOT pass\n * tools/verify_lifted.py: unverified, used only when explicitly enabled.'))
     print('combined', len(passed))
 
 
@@ -123,4 +117,6 @@ if __name__ == '__main__':
         cases = int(sys.argv[sys.argv.index('--cases') + 1]) if '--cases' in sys.argv else 256
         verify_all(scratch, jobs, cases)
     elif command == 'combine':
-        combine(scratch, sys.argv[3], sys.argv[4], *map(int, sys.argv[5:7]))
+        unverified = '--unverified' in sys.argv
+        rest = [a for a in sys.argv[5:] if a != '--unverified']
+        combine(scratch, sys.argv[3], sys.argv[4], *map(int, rest[:2]), unverified=unverified)

@@ -1,7 +1,7 @@
 #ifndef VERTRIX_UI_PLAYER_PREVIEW_UPDATE_H
 #define VERTRIX_UI_PLAYER_PREVIEW_UPDATE_H
 #include "ui_scene_render.h"
-/* Original42b310: explicit parent base update, then nonnull companions in
+/* Original 0x42b310: explicit parent base update, then nonnull companions in
  * slot order, then nonnull borders in slot order. Each handle is read when
  * reached. Parent class514814 and base-class children are supported. Failure
  * retains earlier completed updates, matching the scene update convention.

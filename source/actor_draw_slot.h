@@ -5,7 +5,7 @@
  * resource words. Handles are identity tokens, never native pointers. */
 typedef int (*VertrixActorDraw)(uint32_t handle, uint32_t selector, int32_t x, int32_t y,
                                 uint32_t resource_a, uint32_t resource_b, void *context);
-/* Original4ae010 (base vtable slot 3). Draws only when dword124 is one, the
+/* Original 0x4ae010 (base vtable slot 3). Draws only when dword124 is one, the
  * refresh value is one and equals dword138 with nonzero resources at 12c/130.
  * x and y are the signed words at 128 and 12a. When dword140 is one the same
  * rectangle is drawn again for the companion handle/selector read from

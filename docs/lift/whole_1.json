@@ -866,7 +866,7 @@
   "virtual": [],
   "address": 4399312
  },
- "f432110": {
+ "player_preview_release": {
   "callees": {
    "virtual_43214e": [
     0,
@@ -891,7 +891,7 @@
   ],
   "address": 4399376
  },
- "f432160": {
+ "player_piece_create": {
   "callees": {
    "0x4ca000": [
     0,
@@ -923,7 +923,7 @@
   "virtual": [],
   "address": 4399456
  },
- "f4321b0": {
+ "player_piece_release": {
   "callees": {
    "0x42b070": [
     0,
@@ -3075,7 +3075,7 @@
   "virtual": [],
   "address": 4437600
  },
- "f43b680": {
+ "player_draw_delay_2": {
   "callees": {
    "0x43b6a0": [
     0,
@@ -3220,7 +3220,7 @@
   "virtual": [],
   "address": 4438112
  },
- "f43b870": {
+ "player_e0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -3385,7 +3385,7 @@
   "virtual": [],
   "address": 4438672
  },
- "f43bad0": {
+ "player_set_cd": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -3397,7 +3397,7 @@
   "virtual": [],
   "address": 4438736
  },
- "player_set_b08": {
+ "player_set_cc": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -3890,7 +3890,7 @@
   "virtual": [],
   "address": 4443488
  },
- "f43cda0": {
+ "player_setup_side_2c": {
   "callees": {
    "0x43b930": [
     0,
@@ -3915,7 +3915,7 @@
   "virtual": [],
   "address": 4443552
  },
- "f43cde0": {
+ "player_enter_state": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -4056,7 +4056,7 @@
   "virtual": [],
   "address": 4443888
  },
- "f43cf30": {
+ "player_setup_side_23": {
   "callees": {
    "0x43b930": [
     0,
@@ -4085,7 +4085,7 @@
   "virtual": [],
   "address": 4443952
  },
- "f43cf70": {
+ "player_setup_side_22": {
   "callees": {
    "0x43b930": [
     0,
@@ -4139,7 +4139,7 @@
   "virtual": [],
   "address": 4444080
  },
- "f43cff0": {
+ "player_setup_side_28": {
   "callees": {
    "0x43b930": [
     0,
@@ -4168,7 +4168,7 @@
   "virtual": [],
   "address": 4444144
  },
- "f43d030": {
+ "player_setup_side_29": {
   "callees": {
    "0x43b930": [
     0,
@@ -4197,7 +4197,7 @@
   "virtual": [],
   "address": 4444208
  },
- "f43d070": {
+ "player_setup_side_2a": {
   "callees": {
    "0x43b930": [
     0,
@@ -4226,7 +4226,7 @@
   "virtual": [],
   "address": 4444272
  },
- "f43d0b0": {
+ "player_setup_side_2d": {
   "callees": {
    "0x43b930": [
     0,
@@ -4255,7 +4255,7 @@
   "virtual": [],
   "address": 4444336
  },
- "f43d0f0": {
+ "player_setup_side_2e": {
   "callees": {
    "0x43b930": [
     0,

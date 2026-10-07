@@ -7,7 +7,7 @@ typedef struct
     uint32_t space_width, space_height;
     int16_t glyphs[256];
 } VertrixFontMap;
-/* Original48ab10 initializes indices0..254 to-1; index255 is preserved. */
+/* Original 0x48ab10 initializes indices0..254 to-1; index255 is preserved. */
 int vertrix_font_map_construct(VertrixFontMap *map);
 /* Original 0x43fc50: preserves unspecified glyphs and maps beyond slot18.
  * Dimensions come from resource4877f0 indices6 and9. */

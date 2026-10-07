@@ -9,6 +9,7 @@
 /* Original0x43d3b0 and 0x43d3d0: 1 when the mode dword at +0x4c8 is 0x25..0x27 (group A) or
  * 0x32..0x34 (group B), else 0. Returns -1 for short storage. */
 int vertrix_player_mode_in_group_a(const void *player, size_t size);
+/* Original 0x43d3d0: Test membership in mode group B. */
 int vertrix_player_mode_in_group_b(const void *player, size_t size);
 
 /* Original0x43aab0: store side in byte +0x190, then position the cursor child (handle at +0x15c)
@@ -99,6 +100,7 @@ int vertrix_player_draw_delay_0(void *player, size_t size, VertrixRandom *random
  * and +0x460 respectively. Same preservation contract. */
 int vertrix_player_draw_delay_1(void *player, size_t size, VertrixRandom *random,
                                 uint32_t difficulty);
+/* Original 0x43b680: Draw delay parameter two through shared helper 0x43b6a0. */
 int vertrix_player_draw_delay_2(void *player, size_t size, VertrixRandom *random,
                                 uint32_t difficulty);
 
@@ -171,6 +173,7 @@ int vertrix_player_clear_field_18c(void *player, size_t size);
  * state bytes of the player_actions event machine). Returns zero for short
  * storage, preserving it. */
 int vertrix_player_set_b08(void *player, size_t size, uint8_t value);
+/* Original 0x43bad0: Store flag byte +0x4cd. */
 int vertrix_player_set_b14(void *player, size_t size, uint8_t value);
 
 /* Original0x43bb00: store the B01 byte, then refresh only when it is nonzero.
@@ -199,6 +202,7 @@ int vertrix_player_setup_side_2b(void *player, size_t size, uint32_t handle, uin
                                  VertrixRandom *random, VertrixSideAllocate allocate,
                                  VertrixSideDestroy destroy, VertrixRefreshNotify notify,
                                  VertrixObjectStorage resolve, void *context);
+/* Original 0x43cda0: Allocate and reset the side for mode 0x2c. */
 int vertrix_player_setup_side_2c(void *player, size_t size, uint32_t handle, uint32_t steps,
                                  VertrixRandom *random, VertrixSideAllocate allocate,
                                  VertrixSideDestroy destroy, VertrixRefreshNotify notify,
@@ -224,30 +228,37 @@ int vertrix_player_adopt_side(void *player, size_t size, uint32_t handle, uint32
  * difficulty tables (0x4f9c14, 0x4f9c20 or 0x4f9c2c by member) and are read
  * live in tests. Always return 1 on valid storage with a successful
  * allocation. */
+/* Original 0x43cf70: Allocate and reset the side for mode 0x22. */
 int vertrix_player_setup_side_22(void *player, size_t size, uint32_t handle, uint32_t steps,
                                  VertrixRandom *random, VertrixSideAllocate allocate,
                                  VertrixSideDestroy destroy, VertrixRefreshNotify notify,
                                  VertrixObjectStorage resolve, void *context);
+/* Original 0x43cf30: Allocate and reset the side for mode 0x23. */
 int vertrix_player_setup_side_23(void *player, size_t size, uint32_t handle, uint32_t steps,
                                  VertrixRandom *random, VertrixSideAllocate allocate,
                                  VertrixSideDestroy destroy, VertrixRefreshNotify notify,
                                  VertrixObjectStorage resolve, void *context);
+/* Original 0x43cff0: Allocate and reset the side for mode 0x28. */
 int vertrix_player_setup_side_28(void *player, size_t size, uint32_t handle, uint32_t steps,
                                  VertrixRandom *random, VertrixSideAllocate allocate,
                                  VertrixSideDestroy destroy, VertrixRefreshNotify notify,
                                  VertrixObjectStorage resolve, void *context);
+/* Original 0x43d030: Allocate and reset the side for mode 0x29. */
 int vertrix_player_setup_side_29(void *player, size_t size, uint32_t handle, uint32_t steps,
                                  VertrixRandom *random, VertrixSideAllocate allocate,
                                  VertrixSideDestroy destroy, VertrixRefreshNotify notify,
                                  VertrixObjectStorage resolve, void *context);
+/* Original 0x43d070: Allocate and reset the side for mode 0x2a. */
 int vertrix_player_setup_side_2a(void *player, size_t size, uint32_t handle, uint32_t steps,
                                  VertrixRandom *random, VertrixSideAllocate allocate,
                                  VertrixSideDestroy destroy, VertrixRefreshNotify notify,
                                  VertrixObjectStorage resolve, void *context);
+/* Original 0x43d0b0: Allocate and reset the side for mode 0x2d. */
 int vertrix_player_setup_side_2d(void *player, size_t size, uint32_t handle, uint32_t steps,
                                  VertrixRandom *random, VertrixSideAllocate allocate,
                                  VertrixSideDestroy destroy, VertrixRefreshNotify notify,
                                  VertrixObjectStorage resolve, void *context);
+/* Original 0x43d0f0: Allocate and reset the side for mode 0x2e. */
 int vertrix_player_setup_side_2e(void *player, size_t size, uint32_t handle, uint32_t steps,
                                  VertrixRandom *random, VertrixSideAllocate allocate,
                                  VertrixSideDestroy destroy, VertrixRefreshNotify notify,

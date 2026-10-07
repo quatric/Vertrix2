@@ -137,9 +137,48 @@ uint32_t lifted_beta(void)
             root = Path(directory).resolve()
             self.fixture(root, {"0x402000": "vertrix_shared", "0x401000": "vertrix_shared"})
             names = readable_names(root / "docs" / "names.json")
-            self.assertEqual(names, {0x401000: "shared"})
+            self.assertEqual(names, {0x401000: "shared", 0x402000: "shared_402000"})
             _, changes = plan_renames(root)
-            self.assertEqual(changes, {"alpha": "shared", "beta": "f402000"})
+            self.assertEqual(changes, {"alpha": "shared", "beta": "shared_402000"})
+
+    def test_variant_suffixes_do_not_steal_real_base_names(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            self.fixture(root, {
+                "0x405000": "vertrix_shared_402000_2",
+                "0x403000": "vertrix_shared_402000",
+                "0x402000": "vertrix_shared",
+                "0x401000": "vertrix_shared",
+                "0x404000": "vertrix_shared",
+            })
+            path = root / "docs" / "names.json"
+            expected = {
+                0x401000: "shared", 0x402000: "shared_402000_3",
+                0x403000: "shared_402000", 0x404000: "shared_404000",
+                0x405000: "shared_402000_2",
+            }
+            self.assertEqual(readable_names(path), expected)
+            content = json.loads(path.read_text())
+            path.write_text(json.dumps(dict(reversed(list(content.items())))))
+            self.assertEqual(readable_names(path), expected)
+            _, changes = plan_renames(root)
+            self.assertEqual(changes["beta"], "shared_402000_3")
+
+    def test_shared_reader_rejects_invalid_and_duplicate_addresses(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "names.json"
+            for contents in (
+                '{"0x401000": "vertrix_name", "0x00401000": "vertrix_other"}',
+                '{"0x401000": "vertrix_name", "0x401000": "vertrix_other"}',
+                '{"0x401000": "invalid-name"}',
+                '{"401000": "vertrix_name"}',
+                '{"0x401000": null}',
+                '[]',
+            ):
+                with self.subTest(contents=contents):
+                    path.write_text(contents)
+                    with self.assertRaises(ValueError):
+                        readable_names(path)
 
     def test_normalized_tokens_cover_enums_and_numeric_behavior(self):
         before = 'enum { LIFTED_A_STACK = 8 }; uint32_t lifted_a(void) { return 17; }'

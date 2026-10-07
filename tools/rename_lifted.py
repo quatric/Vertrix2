@@ -10,6 +10,8 @@ import json
 from pathlib import Path
 import re
 
+from routine_names import readable_names
+
 IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z_0-9]*\Z")
 C_TOKEN = re.compile(
     r"(?P<trivia>\s+|/\*[\s\S]*?\*/|//[^\n]*)"
@@ -34,24 +36,6 @@ def read_json(path):
             result[key] = value
         return result
     return json.loads(path.read_text(), object_pairs_hook=unique_pairs)
-
-
-def readable_names(path):
-    """Match lift_batch's address ordering and first short-name owner."""
-    result, taken = {}, set()
-    for address, full in sorted(read_json(path).items(), key=lambda item: int(item[0], 16)):
-        if not isinstance(full, str):
-            raise ValueError(f"Invalid readable name at {address}")
-        short = full[len("vertrix_"):] if full.startswith("vertrix_") else full
-        if not IDENTIFIER.fullmatch(short):
-            raise ValueError(f"Invalid C identifier at {address}: {short}")
-        address = int(address, 16)
-        if address in result:
-            raise ValueError(f"Duplicate normalized name address: 0x{address:x}")
-        if short not in taken:
-            taken.add(short)
-            result[address] = short
-    return result
 
 
 def token_digest(text, substitutions=None):

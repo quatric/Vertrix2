@@ -311,7 +311,7 @@ enum
     LIFTED_F45E400_STACK = 120,
     LIFTED_TABLE_BUILD_PAIR_STACK = 128,
     LIFTED_F45E490_STACK = 116,
-    LIFTED_F45E530_STACK = 96,
+    LIFTED_UI_BORDER_ARTWORK_BUILD_STACK = 96,
     LIFTED_RESOURCE_ROWS_BUILD_STACK = 124,
     LIFTED_TABLE_BUILD_BY_FLAG_STACK = 116,
     LIFTED_F45E670_STACK = 72,
@@ -1681,8 +1681,9 @@ uint32_t lifted_f45e490(const VertrixCalls *calls, const VertrixFactoryServices 
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x45e530. */
-uint32_t lifted_f45e530(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_ui_border_artwork_build(const VertrixCalls *calls,
+                                        const VertrixFactoryServices *services,
+                                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x45e590. */
 uint32_t lifted_resource_rows_build(const VertrixCalls *calls,

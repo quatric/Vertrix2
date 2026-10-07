@@ -9,22 +9,23 @@
  * null storage returns zero and preserves everything. Pointer fields are original addresses read
  * through the supplied VertrixMemoryRead boundary. */
 
-/* Getters (address: field offset): 0x47e9a0: 0x1c4, 0x480070: 0x4c, 0x4877e0: 0x14, 0x48a2e0: 8,
- * 0x48aa80: 4, 0x4b4500: 0x174, 0x4d5350: 0x98. */
+/* Original variants 0x47e9a0, 0x480070, 0x4877e0, 0x48a2e0, 0x48aa80, 0x4b4500,
+ * 0x4d5350: getters of dwords at offsets 0x1c4, 0x4c, 0x14, 8, 4, 0x174 and 0x98,
+ * respectively. */
 int vertrix_object_dword(const void *storage, size_t size, size_t offset, uint32_t *value);
 
-/* Setters taking edx (address: offset): 0x47ed60: 0x20, 0x47ed70: 0x24, 0x47ed80: 0x28,
- * 0x47ed90: 0x2c, 0x47f8e0: 0x18. Constant stores: 0x481b20: 0x28 = 0x516b14 and 0x484410: 4 =
- * 0x516c84 (original class tokens). */
+/* Original variants 0x47ed60, 0x47ed70, 0x47ed80, 0x47ed90, 0x47f8e0, 0x481b20,
+ * 0x484410, 0x4b65b0: edx stores at offsets 0x20, 0x24, 0x28, 0x2c and 0x18 for the first
+ * five routines; the last three store constants at 0x28 = 0x516b14, 4 = 0x516c84
+ * and 0x174 = 1, respectively. The class tokens are original addresses. */
 int vertrix_object_set_dword(void *storage, size_t size, size_t offset, uint32_t value);
 
-/* Two-field setters: 0x48abe0 (+0 = first, +4 = second), 0x4b35b0 (+0x170, +0x174), 0x4b3c30
- * (+0x184, +0x188), 0x4b4fa0 (+0x188, +0x18c). The offset is that of the first field and the
- * second follows at the given distance. */
+/* Original variants 0x48abe0, 0x4b35b0, 0x4b3c30, 0x4b4fa0: two-field setters at
+ * offsets (0, 4), (0x170, 0x174), (0x184, 0x188) and (0x188, 0x18c), respectively. */
 int vertrix_object_set_pair(void *storage, size_t size, size_t first_offset, size_t second_offset,
                             uint32_t first, uint32_t second);
 
-/* Original0x4879e0 and 0x48d5f0: the count dword at +8 is zero. */
+/* Original variants 0x4879e0, 0x48d5f0: the count dword at +8 is zero. */
 int vertrix_list_empty(const void *storage, size_t size, uint32_t *empty);
 
 /* Original0x487770: when the dword at resource +0x14 is 1, the dword at
@@ -42,13 +43,13 @@ uint32_t vertrix_resource_table_entry(uint32_t resource, uint32_t index, Vertrix
  * short storage or unreadable resource data. */
 int vertrix_actor_refresh_count(void *actor, size_t size, VertrixMemoryRead read, void *context);
 
-/* Original0x487a20, 0x48d630, 0x4b6fa0 and 0x4b79c0: item index of the list whose pointer is the
- * dword at +4 and count the dword at +8; zero past the end. */
+/* Original variants 0x487a20, 0x48d630, 0x4b6fa0, 0x4b79c0: item index of the list
+ * whose pointer is the dword at +4 and count the dword at +8; zero past the end. */
 int vertrix_list_item(const void *storage, size_t size, uint32_t index, VertrixMemoryRead read,
                       void *context, uint32_t *item);
 
-/* Original0x488030 / 0x488040: item index of the table pointed to by the dword at +0x18 /
- * +0x1c, without bounds. */
+/* Original variants 0x488030, 0x488040: item index of the table pointed to by the
+ * dword at +0x18 or +0x1c, respectively, without bounds. */
 int vertrix_table_item(const void *storage, size_t size, size_t pointer_offset, uint32_t index,
                        VertrixMemoryRead read, void *context, uint32_t *item);
 
@@ -74,20 +75,25 @@ int vertrix_object_set_indexed_word(void *storage, size_t size, uint32_t index, 
  * block[0], +8 = block[0] + block[1]. Original0x48aaf0: +4 = block[0] + offset. Original0x48aa70:
  * block[1]. Original0x48aad0: +4 - block[0], also the value the original stores in the global
  * 0x5bb250. */
+/* Original0x48a8a0: +4 = block[0], +8 = block[0] + block[1]. */
 int vertrix_range_start(void *storage, size_t size, VertrixMemoryRead read, void *context);
+/* Original0x48aaf0: +4 = block[0] + offset. */
 int vertrix_range_seek(void *storage, size_t size, uint32_t offset, VertrixMemoryRead read,
                        void *context);
+/* Original0x48aa70: return block[1]. */
 int vertrix_range_block_second(const void *storage, size_t size, VertrixMemoryRead read,
                                void *context, uint32_t *value);
+/* Original0x48aad0: return +4 - block[0], also stored in global 0x5bb250. */
 int vertrix_range_span(const void *storage, size_t size, VertrixMemoryRead read, void *context,
                        uint32_t *length);
 
-/* Original0x4b6530 (word +0x17a = 0, byte +0x178 = value), 0x4b6540 (word +0x17a), 0x4b6550
- * (word +0x17c), 0x4b6590 and 0x4b65a0 (read those words), 0x4b65b0 (dword +0x174 = 1) and 0x4b6560
- * (+0x174 is zero or the signed word +0x17a is not above +0x17c). */
+/* Original0x4b6530: word +0x17a = 0, byte +0x178 = value. */
 int vertrix_timer_reset(void *storage, size_t size, uint8_t value);
+/* Original variants 0x4b6540, 0x4b6550: set the word at +0x17a or +0x17c, respectively. */
 int vertrix_object_set_word(void *storage, size_t size, size_t offset, uint16_t value);
+/* Original variants 0x4b6590, 0x4b65a0: read the word at +0x17c or +0x17a, respectively. */
 int vertrix_object_word(const void *storage, size_t size, size_t offset, uint32_t *value);
+/* Original0x4b6560: +0x174 is zero or signed word +0x17a is not above +0x17c. */
 int vertrix_timer_running(const void *storage, size_t size, uint32_t *running);
 
 /* Original0x4b6690: words +0x16a, +0x16c, +0x16e and +0x170 = a, b, c, d. */
@@ -97,6 +103,7 @@ int vertrix_object_set_four_words(void *storage, size_t size, uint16_t a, uint16
 /* Original0x4d2700: dword +8 = 0, +0 = first, +4 = second. Original0x4d2d70: the dword +0x90 is
  * not 0, 0xe001 or 0xe002. */
 int vertrix_object_reset_triple(void *storage, size_t size, uint32_t first, uint32_t second);
+/* Original0x4d2d70: dword +0x90 is not 0, 0xe001 or 0xe002. */
 int vertrix_object_status_active(const void *storage, size_t size, uint32_t *active);
 
 /* Original0x4c5d60: (255 * (2 * a + 1) + b) / (2 * b) with wrapping 32-bit arithmetic and signed
