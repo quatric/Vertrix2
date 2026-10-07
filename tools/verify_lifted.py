@@ -125,7 +125,7 @@ def run(name, spec=None, meta=None, source=None):
                globals_ranges=spec.get('globals', ()), choices=spec.get('choices'),
                effects=spec.get('effects'), handle_returns=handle_returns, mixed_returns=mixed,
                pool_size=spec.get('pool_size', 0x200), patch=patch if fields or user_patch else None,
-               setup=spec.get('setup'), automap_enabled=spec.get('automap', False), tolerate_faults=spec.get('tolerate', False), fixed_returns=spec.get('fixed_returns'),
+               setup=spec.get('setup'), automap_enabled=spec.get('automap', False), tolerate_faults=spec.get('tolerate', False), small_returns=spec.get('smallregs', False), fixed_returns=spec.get('fixed_returns'),
                post=spec.get('post'))
 
 

@@ -71,7 +71,7 @@ def write_report(build_dir, name, report):
 def run_screen(name, address, sources, function, argtypes, restype, callees, generate, scope,
                *, wrappers=(), allocator=0x4ca000, globals_ranges=(), patch=None, compare=True,
                result_mask=0xffffffff, description='', table_targets=(), lookups=(), pool_size=0x200, effects=None, fixed_returns=None, handle_returns=(), choices=None,
-               setup=None, automap_enabled=False, tolerate_faults=False, extras=None, native_extras_arg=None, post=None, mixed_returns=(),
+               setup=None, automap_enabled=False, tolerate_faults=False, small_returns=False, extras=None, native_extras_arg=None, post=None, mixed_returns=(),
                leading=('calls', 'services', 'globals')):
     """Run `function` against the original routine at `address`.
 
@@ -123,6 +123,8 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
             returns.append(rng.choice(pool.handles))
         elif target in wrappers:
             returns.append(eax)
+        elif small_returns:
+            returns.append(rng.choice([0, 0, 1, 2, 3, rng.randrange(0, 64)]))
         else:
             returns.append(rng.getrandbits(32))
         return returns[-1]

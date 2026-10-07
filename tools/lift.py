@@ -645,6 +645,7 @@ def render(start, name, argument_count=None, include_prelude=True):
     (void)esi;
     (void)edi;
     (void)ebp;
+    (void)esp;
     lift_begin(&env, calls, services, globals, stack, LIFTED_%s_STACK, %d, entry);
 ''' % (name, upper, argument_count, upper, argument_count)
     text = (prelude if include_prelude else '') + function + '\n'.join(body) + '\n}\n'
