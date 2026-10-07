@@ -26498,10 +26498,11 @@ L_459bb1:
     return env.failed ? 0u : eax;
 }
 
-uint32_t lifted_f459e00(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
+uint32_t lifted_title_letter_restart_call(const VertrixCalls *calls,
+                                          const VertrixFactoryServices *services,
+                                          const VertrixGlobals *globals, const LiftEntry *entry)
 {
-    uint8_t stack[LIFTED_F459E00_STACK + 4 + 4 * 0 + 4];
+    uint8_t stack[LIFTED_TITLE_LETTER_RESTART_CALL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
     LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
@@ -26521,7 +26522,8 @@ uint32_t lifted_f459e00(const VertrixCalls *calls, const VertrixFactoryServices 
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F459E00_STACK, 0, entry);
+    lift_begin(&env, calls, services, globals, stack, LIFTED_TITLE_LETTER_RESTART_CALL_STACK, 0,
+               entry);
     {
         uint32_t v = ebp;
         esp -= 4u;

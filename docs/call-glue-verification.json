@@ -84,8 +84,11 @@
     "0x479df0": 2048,
     "0x415e10": 2048,
     "0x48c370": 2048,
-    "0x4b7da0": 2048
+    "0x4b7da0": 2048,
+    "0x417f40": 4096
   },
-  "total_verified_executions": 180224,
-  "scope": "Each wrapper executes completely in the original with its callees stubbed and logged; every callee call (address and registers), the returned eax and the object storage compare."
+  "total_verified_executions": 184320,
+  "matcher_reset_full_return_memory_register_cases": 4096,
+  "scope": "Each wrapper executes completely in the original with its callees stubbed and logged; every callee call (address and registers), the returned eax and the object storage compare. Matcher reset 417f40 additionally compares incoming EAX preservation, exact original global write 540014=0, surrounding 32-byte memory, unchanged pattern/length and original EDX/EBX/ECX preservation.",
+  "matcher_reset_native_null_rejections": 1
 }

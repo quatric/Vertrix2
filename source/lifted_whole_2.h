@@ -230,7 +230,7 @@ enum
     LIFTED_F459AB0_STACK = 96,
     LIFTED_F459B00_STACK = 96,
     LIFTED_F459B60_STACK = 112,
-    LIFTED_F459E00_STACK = 144,
+    LIFTED_TITLE_LETTER_RESTART_CALL_STACK = 144,
     LIFTED_TITLE_LETTER_LAUNCH_STACK = 124,
     LIFTED_F45A3E0_STACK = 104,
     LIFTED_F45A440_STACK = 124,
@@ -1393,8 +1393,9 @@ uint32_t lifted_f459b60(const VertrixCalls *calls, const VertrixFactoryServices 
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x459e00. */
-uint32_t lifted_f459e00(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_title_letter_restart_call(const VertrixCalls *calls,
+                                          const VertrixFactoryServices *services,
+                                          const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x45a0c0. */
 uint32_t lifted_title_letter_launch(const VertrixCalls *calls,

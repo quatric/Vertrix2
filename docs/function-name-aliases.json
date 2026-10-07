@@ -12,15 +12,15 @@
     "reason": "Loads record header and table while restoring saved range state."
   },
   "0x417f40": {
-    "name": "vertrix_matcher_reset",
+    "name": "vertrix_matcher_reset_full",
     "aliases": [
       "vertrix_global_clear",
-      "vertrix_matcher_reset"
+      "vertrix_matcher_reset_full"
     ],
     "evidence": [
       "source/call_glue.h"
     ],
-    "reason": "Resets matcher position; global clear is a shared arithmetic primitive."
+    "reason": "Complete matcher reset clears the position and preserves incoming EAX; the void helper is a fragment and global clear is a shared arithmetic primitive."
   },
   "0x418150": {
     "name": "vertrix_compare_unsigned",
