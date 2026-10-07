@@ -1,0 +1,28 @@
+{
+  "status": "passed",
+  "scope": "Host dispatcher integration; optional routine bodies are not executed or verified by this test.",
+  "test": "tools/test_dispatch.c",
+  "verified_dispatch_entries": 2621,
+  "unsigned_comparator_pairs": 36,
+  "unknown_boundary_forwarding_calls": 1,
+  "optional_lookup_addresses": [
+    "0x42a200",
+    "0x4ccf3b"
+  ],
+  "optional_checks": [
+    "disabled by default",
+    "disabled dispatch preserves output and makes no boundary calls",
+    "enable exposes both addresses",
+    "verified count does not change",
+    "unknown address remains unavailable",
+    "disable hides both addresses again"
+  ],
+  "compile_flags": [
+    "-std=c11",
+    "-O0",
+    "-Wall",
+    "-Wextra",
+    "-Werror"
+  ],
+  "linked_source": "All source/lifted_*.c plus actor_storage.c and call_glue.c"
+}

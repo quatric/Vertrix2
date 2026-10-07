@@ -42,6 +42,7 @@ int main(void)
     static const uint32_t values[] = {0, 1, 0x7fffffffu, 0x80000000u, 0xfffffffeu, 0xffffffffu};
     static const uint32_t targets[] = {0x401010, 0x418150, 0x45f1e0, 0x471e10, 0x4725f0, 0x478da0};
     static const uint32_t screens[] = {0x465af0, 0x466d60, 0x46b810, 0x46c9d0};
+    static const uint32_t optional[] = {0x42a200, 0x4ccf3b};
     Boundary boundary = {0};
     VertrixCalls inner = {boundary_call, &boundary};
     VertrixGlobals globals = {read_global, NULL};
@@ -62,6 +63,31 @@ int main(void)
     for (i = 0; i < sizeof screens / sizeof screens[0]; ++i)
     {
         assert(vertrix_lifted_has(screens[i]));
+    }
+    for (i = 0; i < sizeof optional / sizeof optional[0]; ++i)
+    {
+        uint32_t result = 0xabcdef01;
+        site.target = optional[i];
+        assert(!vertrix_lifted_has(site.target));
+        assert(!vertrix_lifted_dispatch(&adapter.calls, &services, &globals, &site, &result));
+        assert(result == 0xabcdef01);
+        assert(boundary.calls == 0);
+    }
+    {
+        unsigned verified_count = vertrix_lifted_count();
+        vertrix_lifted_allow_unverified(1);
+        for (i = 0; i < sizeof optional / sizeof optional[0]; ++i)
+        {
+            assert(vertrix_lifted_has(optional[i]));
+        }
+        assert(vertrix_lifted_count() == verified_count);
+        assert(!vertrix_lifted_has(0x401000));
+        vertrix_lifted_allow_unverified(0);
+        for (i = 0; i < sizeof optional / sizeof optional[0]; ++i)
+        {
+            assert(!vertrix_lifted_has(optional[i]));
+        }
+        assert(vertrix_lifted_count() == verified_count);
     }
     site.target = 0x418150;
     for (i = 0; i < sizeof values / sizeof values[0]; ++i)
