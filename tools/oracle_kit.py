@@ -73,10 +73,11 @@ class Pool:
         self.resolve = Resolve(self._resolve)
 
     def _resolve(self, handle, storage, size, context):
-        if handle not in self.buffers:
+        index, delta = divmod(handle - POOL, self.size)
+        if handle < POOL or index >= len(self.handles) or self.handles[index] not in self.buffers:
             return 0
-        storage[0] = c.addressof(self.buffers[handle])
-        size[0] = self.size
+        storage[0] = c.addressof(self.buffers[self.handles[index]]) + delta
+        size[0] = self.size - delta
         return 1
 
     def fill(self, rng, patch=None):
