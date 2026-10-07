@@ -26,10 +26,10 @@ enum
     VERTRIX_ANCHOR_NARROW_STRIDE = 5
 };
 
-/* Original0x414a90 (19 groups of up to 60 items; counts 0x53969c, anchors 0x534888 and 0x5348d4,
- * items 0x5396e8 and 0x53a8b8, offsets 0x5372fc and 0x5384cc) and 0x414b10 (5 groups of up to
- * 5 items; counts 0x54021c, anchors 0x540064 and 0x540078, items 0x540230 and 0x540294, offsets
- * 0x540154 and 0x5401b8): for every item compute both offsets and store them together when both
- * are nonnegative (signed). */
+/* Original variants 0x414a90, 0x414b10: 0x414a90 has 19 groups of up to 60 items (counts 0x53969c,
+ * anchors 0x534888 and 0x5348d4, items 0x5396e8 and 0x53a8b8, offsets 0x5372fc and 0x5384cc);
+ * 0x414b10 has 5 groups of up to 5 items (counts 0x54021c, anchors 0x540064 and 0x540078, items
+ * 0x540230 and 0x540294, offsets 0x540154 and 0x5401b8): for every item compute both offsets and
+ * store them together when both are nonnegative (signed). */
 void vertrix_anchor_offsets_update(const VertrixAnchorSet *set);
 #endif

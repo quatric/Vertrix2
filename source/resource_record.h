@@ -44,11 +44,14 @@ uint16_t vertrix_text_width(const uint8_t *text, const uint8_t widths[VERTRIX_WI
  * invoked with the object and flag 2. */
 typedef uint32_t (*VertrixRecordMethod)(uint32_t object, uint32_t flag, void *context);
 
-/* Original0x41a9e0: release the record, then re-read the global cell: when it
+/* Original fragment 0x41a9e0: release the record, then re-read the global cell: when it
  * is still nonzero, run the virtual method it names (the dword at the
  * method-table address in +0x27c, invoked with the object and flag 2) and
- * clear the cell, returning the method's value; otherwise return zero. Short
- * storage and unreadable addresses preserve everything and return zero. */
+ * clear the cell after the callback returns (including any callback write),
+ * returning the method's value. When release clears the global cell, this API
+ * returns zero instead of preserving the original release-register return;
+ * the void release boundary cannot represent that return. Short storage rejects
+ * before release; late lookup failure retains completed release effects and returns zero. */
 int vertrix_record_release_global(uint32_t *global, void *record, size_t record_size,
                                   VertrixRecordRelease release, void *context,
                                   VertrixRecordMethod method, void *method_context,

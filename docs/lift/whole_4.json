@@ -367,7 +367,7 @@
   "virtual": [],
   "address": 4901472
  },
- "f4acab0": {
+ "word_transition_4acab0": {
   "callees": {},
   "stack": 80,
   "arguments": 0,
@@ -645,7 +645,7 @@
   "virtual": [],
   "address": 4904224
  },
- "f4ad530": {
+ "word_transition_4ad530": {
   "callees": {},
   "stack": 80,
   "arguments": 0,
@@ -669,7 +669,7 @@
   "virtual": [],
   "address": 4904320
  },
- "f4ad5e0": {
+ "word_transition_4ad5e0": {
   "callees": {},
   "stack": 80,
   "arguments": 0,
@@ -681,7 +681,7 @@
   "virtual": [],
   "address": 4904416
  },
- "f4ad630": {
+ "word_transition_4ad630": {
   "callees": {},
   "stack": 80,
   "arguments": 0,

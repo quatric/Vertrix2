@@ -31,7 +31,7 @@ def following_name(text):
     """Inspect declarations, skipping only comments, directives and type scaffolding."""
     text = BLOCK_COMMENT.sub(" ", text)
     text = re.sub(r"//[^\n]*", " ", text)
-    text = re.sub(r"^[ \t]*#[^\n]*(?:\\\n[^\n]*)*", " ", text, flags=re.M)
+    text = re.sub(r"^[ \t]*#(?:[^\n]*\\\r?\n)*[^\n]*", " ", text, flags=re.M)
     while text.strip():
         text = text.lstrip()
         found = None if re.match(r"typedef\b", text) else PROTOTYPE.match(text)

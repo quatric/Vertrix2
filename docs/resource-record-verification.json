@@ -7,5 +7,11 @@
     "text_width": 4096,
     "0x41a9e0": 4096
   },
-  "scope": "Complete 441530, 441a80, 441b30, 442b00 and 41a9e0 execute in the original (release 478d80 and draw 47ce10 stubbed and logged, methods stubbed); the whole record, every pool object, the global cell, events and the 16-bit text width compare."
+  "global_method_mutation_cases": 1445,
+  "global_release_method_table_mutation_cases": 724,
+  "global_method_zero_mutation_cases": 349,
+  "limitations": [
+    "Release callbacks changing the global object cell are outside this suite: the native void release boundary omits the original release-register return when the cell becomes zero. Reproduce with --probe-release-clears-global (expected failure)."
+  ],
+  "scope": "Complete 441530, 441a80, 441b30, 442b00 and 41a9e0 execute in the original (release 478d80 and draw 47ce10 stubbed and logged, methods stubbed); the whole record, every pool object, the global cell, events and the 16-bit text width compare. Global-method callbacks observe and mutate the global cell and record storage; native resolution reads independent host memory."
 }

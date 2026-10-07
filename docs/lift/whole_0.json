@@ -3150,7 +3150,7 @@
   "virtual": [],
   "address": 4278928
  },
- "f414b10": {
+ "anchor_offsets_update_414b10": {
   "callees": {},
   "stack": 92,
   "arguments": 0,
@@ -3414,7 +3414,7 @@
   "virtual": [],
   "address": 4283392
  },
- "f415c30": {
+ "table_all_filled_415c30": {
   "callees": {},
   "stack": 72,
   "arguments": 0,
@@ -4568,7 +4568,7 @@
   "virtual": [],
   "address": 4292192
  },
- "f417ed0": {
+ "table_random_empty_417ed0": {
   "callees": {
    "0x4826c0": [
     0,
@@ -9179,7 +9179,7 @@
   "virtual": [],
   "address": 4370768
  },
- "ui_player_preview_draw32": {
+ "f42b290": {
   "callees": {
    "virtual_42b2cf": [
     0,

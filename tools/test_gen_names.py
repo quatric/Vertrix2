@@ -64,6 +64,19 @@ void vertrix_second(void);
             0x4713d0: "vertrix_title_letter_first", 0x400002: "vertrix_second"
         })
 
+    def test_continued_directives_do_not_supply_routine_names(self):
+        for directive in ("#define DECLARE_HELPER", "#if defined(ENABLE_HELPER)"):
+            with self.subTest(directive=directive):
+                text = ("/* Original 0x400001: actual routine follows directives. */\n"
+                        + directive + " \\\n"
+                        + "void vertrix_macro_only(void); \\\n"
+                        + "void vertrix_macro_second(void);\n"
+                        + "void vertrix_actual(void);\n")
+                for ending in ("\n", "\r\n"):
+                    with self.subTest(ending=repr(ending)):
+                        self.assertEqual(dict(header_pairs(text.replace("\n", ending))),
+                                         {0x400001: "vertrix_actual"})
+
     def test_excluded_annotations_end_preceding_evidence(self):
         for marker in ("Original fragment 0x400002", "Original composition 0x400002",
                        "Original400002", "Original routine 400002"):
@@ -179,7 +192,8 @@ void vertrix_unrelated(void);
             self.assertEqual(names[0x43b5b0], "vertrix_ai_reaction_time")
         self.assertNotIn(0x43f200, names)
         self.assertNotIn(0x43f200, conflicts)
-        for fragment in (0x4831b0, 0x483400, 0x40c518, 0x40c5d8, 0x40c7d0,
+        for fragment in (0x41a9e0, 0x42b290, 0x42b310, 0x43eab0, 0x4b6240, 0x4831b0, 0x483400,
+                         0x40c518, 0x40c5d8, 0x40c7d0,
                          0x40e1db, 0x40e77f, 0x40e7ba, 0x40e82c, 0x40eb14, 0x40eb6e):
             self.assertNotIn(fragment, names)
             self.assertNotIn(fragment, conflicts)

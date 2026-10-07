@@ -1,0 +1,31 @@
+{
+  "fixture": "release_callback_clears_global",
+  "case": 0,
+  "address": "0x41a9e0",
+  "input_registers": {
+    "eax": 8417536,
+    "edx": 0,
+    "ebx": 0,
+    "ecx": 0
+  },
+  "original_return": 8413184,
+  "native_return": 0,
+  "original_release_calls": [
+    [
+      4689280,
+      8413184,
+      8417536,
+      8413184,
+      0
+    ],
+    [
+      4689280,
+      8413184,
+      8417536,
+      8413184,
+      0
+    ]
+  ],
+  "original_method_events": [],
+  "native_method_events": []
+}

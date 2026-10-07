@@ -50,6 +50,19 @@
       "report": "docs/ui-preview-pair-verification.json",
       "completed_comparison_cases": 512,
       "correction": "Allocator hook registration and preview loop are reachable; all3072 constructed actors compare;1024 failure-preservation checks follow the completed actor comparisons."
+    },
+    {
+      "tool": "tools/verify_word_transition.py",
+      "report": "docs/word-transition-verification.json",
+      "completed_comparison_cases": 5120,
+      "previous_actual_comparison_cases": 640,
+      "correction": "All five transition entrypoints execute 1024 comparisons each, including movement and arrival. Previously only already-arrived fixtures reached the comparison body."
+    },
+    {
+      "tool": "tools/verify_block_factory.py",
+      "report": "docs/block-factory-verification.json",
+      "completed_comparison_cases": 20480,
+      "correction": "Create and spawn independently assert all callbacks consumed, with exact interleaved allocation sizes, returned handles, random divisors and values. Comparisons occur outside callback bodies."
     }
   ]
 }

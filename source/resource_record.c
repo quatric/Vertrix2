@@ -178,6 +178,7 @@ int vertrix_record_release_global(uint32_t *global, void *record, size_t record_
     {
         return 0;
     }
+    int result = method(object, METHOD_FLAG, method_context);
     *global = 0;
-    return method(object, METHOD_FLAG, method_context);
+    return result;
 }

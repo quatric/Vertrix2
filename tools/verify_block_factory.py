@@ -43,13 +43,16 @@ def main():
     board, fresh_objects = pool.handles[0], pool.handles[1:]
     draws, allocations = [], []
     replay = {'draws': [], 'allocs': []}
+    original_events, native_events = [], []
 
     def handler(address, eax, edx, ebx, ecx, stack):
         if address == 0x4ca000:
             handle = fresh_objects[len(allocations) % len(fresh_objects)]
             allocations.append(handle)
+            original_events.append(("allocate", eax, handle))
             return handle
         draws.append(rng.randrange(edx & 0xffff))
+        original_events.append(("draw", edx & 0xffff, draws[-1]))
         return draws[-1]
 
     stubs = Stubs(cpu, handler)
@@ -58,14 +61,21 @@ def main():
 
     @Draw
     def draw(divisor, context):
+        if not replay['draws']:
+            native_events.append(("unexpected_draw", divisor))
+            return 0
         value = replay['draws'].pop(0)
-        assert value < divisor
+        native_events.append(("draw", divisor, value))
         return value
 
     @Allocate
     def allocate(size, context):
-        assert size == 0x160
-        return replay['allocs'].pop(0)
+        if not replay['allocs']:
+            native_events.append(("unexpected_allocate", size))
+            return 0
+        handle = replay['allocs'].pop(0)
+        native_events.append(("allocate", size, handle))
+        return handle
 
     @Range
     def table_range(index, lo, hi, context):
@@ -87,6 +97,8 @@ def main():
         pool.fill(rng, patch)
         draws.clear()
         allocations.clear()
+        original_events.clear()
+        native_events.clear()
 
     def begin():
         replay['draws'] = list(draws)
@@ -124,6 +136,8 @@ def main():
                                       c.byref(out))
         assert out.value == result, (case, hex(out.value), hex(result))
         assert pool.same(), (case, pool.diff())
+        assert not replay['draws'] and not replay['allocs'], (case, replay)
+        assert native_events == original_events, (case, native_events, original_events)
         count('0x42bbd0')
 # 430800 : spawn on the board
         fresh()
@@ -139,13 +153,15 @@ def main():
                                      c.byref(out))
         assert out.value == result, (case, hex(out.value), hex(result))
         assert pool.same(), (case, pool.diff())
-        assert not replay['draws'] and not replay['allocs']
+        assert not replay['draws'] and not replay['allocs'], (case, replay)
+        assert native_events == original_events, (case, native_events, original_events)
         count('0x430800')
     report = {'status': 'passed', 'complete_original_executions': totals,
               'scope': 'Complete 4ac8d0, 4adf20, 42bb00, 42bbd0 and 430800 execute in the original '
                        '(operator new 4ca000 and the random draw 4826c0 stubbed and replayed, '
                        'the recovered 4abd70, 4ac490, 4ac7b0 and 42ff10 executed); returned '
-                       'handles, whole objects and the draws consumed compare.'}
+                       'handles, whole objects, complete callback consumption, allocation sizes, random '
+                       'divisors and interleaved callback order compare for create and spawn.'}
     (args.build_dir / 'block-factory-verification.json').write_text(
         json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))

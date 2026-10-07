@@ -6,8 +6,8 @@
 #include "call_glue.h"
 #include "object_glue.h"
 
-/* Originals 0x45afe0 and 0x45cff0 (identical bodies; frame is the token for ebp, edx, ebx and ecx
- * the caller's registers): 0x4ac600 and 0x4ac620 run first, and unless 0x4ac620 returns one that
+/* Original variants 0x45afe0, 0x45cff0: identical bodies; frame is the token for ebp, edx, ebx and
+ * ecx the caller's registers: 0x4ac600 and 0x4ac620 run first, and unless 0x4ac620 returns one that
  * eax is the result. Otherwise 0x4ac640 feeds 0x4ac6b0 and, while 0x4ad060 returns zero, two draws
  * of 0x4826c0 (divisor 5 on 0x598d30) set the word at +0x30 and 0x4ac860 the step. 0x4ad1c0 then
  * stores a dword through its stack argument (frame - 0x1c); the word at +0x16 becomes the word at

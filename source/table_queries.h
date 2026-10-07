@@ -55,7 +55,8 @@ uint8_t vertrix_table_last_change(const uint32_t *table, uint32_t n);
  * a zero value or when none qualifies. */
 uint32_t vertrix_table_level_for(const uint16_t *steps, uint32_t value);
 
-/* Original0x415c00 (table 0x5344a4) and 0x415c30 (0x5344f0): 1 when all 19 dwords are nonzero. */
+/* Original variants 0x415c00, 0x415c30: tables 0x5344a4 and 0x5344f0, respectively; 1 when all 19
+ * dwords are nonzero. */
 uint32_t vertrix_table_all_filled(const uint32_t *slots);
 
 /* Supplied boundary for the comparison 0x4ccfe0; zero means equal. */
@@ -107,9 +108,9 @@ uint32_t vertrix_table_groups_used(const uint8_t *flags, uint32_t row);
  * used). */
 typedef uint32_t (*VertrixDraw)(uint32_t limit, void *context);
 
-/* Original0x417e60 (table 0x5344a4) and 0x417ed0 (0x5344f0): draw one of the indices of the
- * zero dwords of the 19, or 0 without drawing when none is zero. The original reads stale stack
- * data for a draw at or above the number of zero dwords; that case returns 0 here. */
+/* Original variants 0x417e60, 0x417ed0: tables 0x5344a4 and 0x5344f0, respectively; draw one of the
+ * indices of the zero dwords of the 19, or 0 without drawing when none is zero. The original reads
+ * stale stack data for a draw at or above the number of zero dwords; that case returns 0 here. */
 uint32_t vertrix_table_random_empty(const uint32_t *slots, VertrixDraw draw, void *context);
 
 /* Original0x418050: number of the first count[column] rows whose dword in the column is 0, 3, 4
