@@ -2,10 +2,10 @@
   "status": "passed",
   "scope": "Current naming, metadata, and generated dispatcher validation after independent verified routine regeneration. Name-only token comparison for the earlier application is archived separately.",
   "reference_commit": "241998d372f40a065d8166730c4999d9cdeb9931",
-  "name_map_entries": 1240,
+  "name_map_entries": 1265,
   "canonical_alias_decisions": 54,
   "verified_chunk_routines": 2616,
-  "readable_chunk_names": 978,
+  "readable_chunk_names": 998,
   "name_application_idempotent": true,
   "all_chunk_addresses_match_passed_batch": true,
   "earlier_name_only_application": "docs/function-naming-application-006cbd2.json",
@@ -21,18 +21,24 @@
     "unsigned_edge_pairs": 36,
     "boundary_forwarding_calls": 1
   },
-  "naming_regression_tests": 17,
-  "post_regeneration_identifier_only_renames": 1,
+  "naming_regression_tests": 18,
+  "post_regeneration_identifier_only_renames": 24,
   "metadata_matches_verified_batch_except_names": true,
   "identifier_only_comparison": {
     "status": "passed",
-    "scope": "Generated lifted identifiers only; the separate native full destructor APIs are original-executable verified.",
-    "reference_commit": "c91784d",
-    "renamed_routines": 1,
+    "scope": "Generated lifted identifiers only. Separate native callback-order corrections have original-executable verification.",
+    "reference_commit": "112d492",
+    "renamed_routines": 24,
     "normalized_files": [
       "source/lifted_dispatch.c",
+      "source/lifted_whole_0.c",
+      "source/lifted_whole_0.h",
+      "source/lifted_whole_2.c",
+      "source/lifted_whole_2.h",
       "source/lifted_whole_3.c",
-      "source/lifted_whole_3.h"
+      "source/lifted_whole_3.h",
+      "source/lifted_whole_4.c",
+      "source/lifted_whole_4.h"
     ],
     "all_metadata_values_unchanged": true
   },
@@ -40,7 +46,12 @@
     "status": "passed",
     "report": "docs/piece-actor-destroy-verification.json",
     "base_original_cases": 4096,
-    "parent_original_cases": 4096,
-    "existing_api_bodies_token_unchanged": true
+    "parent_original_cases": 4096
+  },
+  "native_callback_ordering": {
+    "status": "passed",
+    "slot2_report": "docs/piece-actor-slot2-verification.json",
+    "draw_report": "docs/actor-draw-slot-verification.json",
+    "before_fix_mismatches_reproduced": true
   }
 }

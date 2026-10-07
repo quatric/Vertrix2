@@ -925,7 +925,7 @@
   "virtual": [],
   "address": 4238048
  },
- "f40ab10": {
+ "forward_registers": {
   "callees": {
    "0x40ab20": [
     0,
@@ -1579,7 +1579,7 @@
   "virtual": [],
   "address": 4243936
  },
- "f40c1f0": {
+ "global_pair_call": {
   "callees": {
    "0x4ebce8": [
     0,
@@ -1596,7 +1596,7 @@
   "virtual": [],
   "address": 4243952
  },
- "f40c210": {
+ "global_call": {
   "callees": {
    "0x4ebe60": [
     0,
@@ -4768,7 +4768,7 @@
   "virtual": [],
   "address": 4293360
  },
- "f418550": {
+ "resource_entry_call_418550": {
   "callees": {
    "0x4cea15": [
     0,
@@ -4785,7 +4785,7 @@
   "virtual": [],
   "address": 4293968
  },
- "f418570": {
+ "resource_entry_call_418570": {
   "callees": {
    "0x4cea15": [
     0,
@@ -5113,7 +5113,7 @@
   "virtual": [],
   "address": 4297872
  },
- "f4194b0": {
+ "guarded_call_4194b0": {
   "callees": {
    "0x45fab0": [
     0,

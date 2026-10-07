@@ -906,7 +906,7 @@
   "virtual": [],
   "address": 4906976
  },
- "actor_draw_slot": {
+ "actor_draw_slot_full": {
   "callees": {
    "0x4adfb0": [
     0,
@@ -2939,7 +2939,7 @@
   "virtual": [],
   "address": 4941824
  },
- "forward_registers": {
+ "forward_registers_4b6890": {
   "callees": {
    "0x4ae010": [
     0,
@@ -6315,7 +6315,7 @@
   "virtual": [],
   "address": 5004224
  },
- "f4c5bd0": {
+ "edx_to_eax_call_4c5bd0": {
   "callees": {
    "0x4e7c90": [
     0,
@@ -6332,7 +6332,7 @@
   "virtual": [],
   "address": 5004240
  },
- "f4c5be0": {
+ "edx_to_eax_call_4c5be0": {
   "callees": {
    "0x4ea190": [
     0,
@@ -6386,7 +6386,7 @@
   ],
   "address": 5004288
  },
- "f4c5c10": {
+ "return_zero": {
   "callees": {},
   "stack": 64,
   "arguments": 0,

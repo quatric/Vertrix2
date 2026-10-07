@@ -14385,7 +14385,7 @@
   "virtual": [],
   "address": 4581040
  },
- "f45e720": {
+ "resource_one_frame_45e720": {
   "callees": {
    "0x487640": [
     0,
@@ -14683,7 +14683,7 @@
   "virtual": [],
   "address": 4581856
  },
- "f45ea60": {
+ "indexed_resource_call_45ea60": {
   "callees": {
    "0x487640": [
     0,
@@ -17424,7 +17424,7 @@
   "virtual": [],
   "address": 4659824
  },
- "f471a80": {
+ "list_clear_call_471a80": {
   "callees": {
    "0x4b6200": [
     0,
@@ -17543,7 +17543,7 @@
   "virtual": [],
   "address": 4659952
  },
- "f471b00": {
+ "list_clear_call_471b00": {
   "callees": {
    "0x4b6200": [
     0,
@@ -17662,7 +17662,7 @@
   "virtual": [],
   "address": 4660080
  },
- "f471b80": {
+ "list_clear_call_471b80": {
   "callees": {
    "0x4b6200": [
     0,

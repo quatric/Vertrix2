@@ -64,6 +64,8 @@ enum
 
 /* Original 0x4182f0 (index 7), 0x418550 (index 5) and 0x418570 (index 6): hand eax, the resource
  * table 0x513e60 and the index to 0x4cea15. Returns its eax. */
+/* Original variants 0x4182f0, 0x418550, 0x418570, 0x473cd0: complete callable wrappers;
+ * tools/verify_call_glue.py compares original control flow, call arguments and return values. */
 uint32_t vertrix_resource_entry_call(const VertrixCalls *calls, uint32_t eax, uint32_t index);
 
 /* Original 0x416c10: 0x476160 on the point list 0x54d640 with the object and the 16-bit value.
@@ -80,6 +82,8 @@ uint32_t vertrix_point_list_when_one(const VertrixCalls *calls, uint32_t eax, ui
 
 /* Original 0x45e690 (0x544a34, 0x13) and 0x45e720 (0x5464e4, 0x8): 0x487640 on a fixed resource
  * with a fixed count. Returns its eax. */
+/* Original variants 0x45e690, 0x45e720: complete callable wrappers;
+ * tools/verify_call_glue.py compares original control flow, call arguments and return values. */
 uint32_t vertrix_resource_one_frame(const VertrixCalls *calls, uint32_t resource, uint32_t count);
 
 /* Original 0x45e990: 0x487750 on the grid cell 0x544f90 + 280 * row + 28 * column with the
@@ -111,10 +115,14 @@ enum
 
 /* Original 0x471a70 (list 0x54671c), 0x471a80 (0x546744), 0x471b00 (0x546730), 0x471b80
  * (0x546758) and 0x472350 (0x54676c): 0x4b6200 on a fixed list. Returns its eax. */
+/* Original variants 0x471a70, 0x471a80, 0x471b00, 0x471b80, 0x472350: complete callable wrappers;
+ * tools/verify_call_glue.py compares original control flow, call arguments and return values. */
 uint32_t vertrix_list_clear_call(const VertrixCalls *calls, uint32_t list);
 
 /* Original 0x475d90 (offset 4 to 0x475800), 0x47ed50 (offset 0x1c) and 0x47f8d0 (offset 0x3c), both
  * to 0x4ca370: call target on eax + offset. Returns its eax. */
+/* Original variants 0x475d90, 0x47ed50, 0x47f8d0: complete callable wrappers;
+ * tools/verify_call_glue.py compares original control flow, call arguments and return values. */
 uint32_t vertrix_offset_call(const VertrixCalls *calls, uint32_t target, uint32_t eax,
                              uint32_t offset);
 
@@ -184,8 +192,10 @@ void vertrix_copy_global16(uint8_t *destination, const uint8_t *source);
  * discarded, returns zero), to 0x4ebce8 with eax and edx (returns zero) and to 0x4ebe60 (returns
  * its eax). */
 uint32_t vertrix_global_discard_call(const VertrixCalls *calls, uint32_t global);
+/* Original 0x40c1f0: complete callable wrapper; tools/verify_call_glue.py. */
 uint32_t vertrix_global_pair_call(const VertrixCalls *calls, uint32_t global, uint32_t eax,
                                   uint32_t edx);
+/* Original 0x40c210: complete callable wrapper; tools/verify_call_glue.py. */
 uint32_t vertrix_global_call(const VertrixCalls *calls, uint32_t global);
 
 /* Original 0x40ae80: 0x40a890 on four fixed blocks and then 0x40a800 on zero when the dword at
@@ -194,15 +204,20 @@ uint32_t vertrix_module_reset_calls(const VertrixCalls *calls, uint32_t marker);
 
 /* Original 0x4c5bc0 (target 0x4ea190), 0x4c5bd0 (0x4e7c90) and 0x4c5be0 (0x4ea190): the target on
  * edx. Returns its eax. */
+/* Original variants 0x4c5bc0, 0x4c5bd0, 0x4c5be0: complete callable wrappers;
+ * tools/verify_call_glue.py compares original control flow, call arguments and return values. */
 uint32_t vertrix_edx_to_eax_call(const VertrixCalls *calls, uint32_t target, uint32_t edx,
                                  uint32_t ebx, uint32_t ecx);
 
 /* Original 0x4c5bf0 returns ebx; 0x4c5c10 returns zero. */
 uint32_t vertrix_return_ebx(uint32_t ebx);
+/* Original 0x4c5c10: complete callable wrapper; tools/verify_call_glue.py. */
 uint32_t vertrix_return_zero(void);
 
 /* Original 0x45e8d0 (base 0x546458) and 0x45ea60 (base 0x544d7c): when edx is not zero,
  * 0x487640 on base + 28 * eax with ecx = 4 * eax; eax is returned unchanged for zero. */
+/* Original variants 0x45e8d0, 0x45ea60: complete callable wrappers;
+ * tools/verify_call_glue.py compares original control flow, call arguments and return values. */
 uint32_t vertrix_indexed_resource_call(const VertrixCalls *calls, uint32_t base, uint32_t eax,
                                        uint32_t edx, uint32_t ebx);
 
@@ -223,6 +238,8 @@ uint32_t vertrix_read_global(const uint32_t *global);
 
 /* Original 0x4760f0 (target 0x476140) and 0x4760c0 (0x476120): the target on the object for each
  * index 0 to 255 (edx and ebx the index, ecx the object). Returns the last eax. */
+/* Original variants 0x4760f0, 0x4760c0: complete callable wrappers;
+ * tools/verify_call_glue.py compares original control flow, call arguments and return values. */
 uint32_t vertrix_index_sweep_call(const VertrixCalls *calls, uint32_t target, uint32_t object);
 
 /* Original 0x4765b0: 0x476120 on the object with 0x74, 0x75 and 0xbe to 0xc3, then 0x476140 with
@@ -245,16 +262,22 @@ uint32_t vertrix_neighbour_calls(const VertrixCalls *calls, uint32_t eax, uint32
  * dword cleared. ebx is the caller's. Returns the last eax. */
 uint32_t vertrix_clear_each_call(const VertrixCalls *calls, uint32_t items[76], uint32_t ebx);
 
-/* Original 0x4b6890 (to 0x4ae010): tail call that hands every register through unchanged. */
+/* Original 0x4b6890 (to 0x4ae010): call/return wrapper hands every register through unchanged. */
+/* Original variants 0x4b6890, 0x40ab10, 0x487a10, 0x48d620, 0x46b800: complete callable wrappers;
+ * tools/verify_call_glue.py compares original control flow, call arguments and return values. */
 uint32_t vertrix_forward_registers(const VertrixCalls *calls, uint32_t target, uint32_t eax,
                                    uint32_t edx, uint32_t ebx, uint32_t ecx);
 
 /* Original 0x48d6b0: tail call to 0x4d8950 (and 0x4872b0 to 0x4ea190). Returns its eax. */
+/* Original variants 0x48d6b0, 0x4872b0: complete callable wrappers;
+ * tools/verify_call_glue.py compares original control flow, call arguments and return values. */
 uint32_t vertrix_forward_call(const VertrixCalls *calls, uint32_t target);
 
 /* Original 0x419490 (target 0x45fa70, eax = 0, the guard) and 0x4194b0 (target 0x45fab0, eax = the
  * dword at 0x558c7c): run only while the flag at 0x532b40 is clear and the dword at 0x558958 is
  * zero. Returns the callee's eax; a set flag returns the incoming eax, a set guard the guard. */
+/* Original variants 0x419490, 0x4194b0: complete callable wrappers;
+ * tools/verify_call_glue.py compares original control flow, call arguments and return values. */
 uint32_t vertrix_guarded_call(const VertrixCalls *calls, uint32_t flag, uint32_t guard,
                               uint32_t target, uint32_t eax, uint32_t edx, uint32_t ebx,
                               uint32_t ecx);
@@ -277,7 +300,9 @@ uint32_t vertrix_mode_switch_call(const VertrixCalls *calls, uint32_t frame, uin
  * dword at +0xc when the call returned non-zero, else 0. `stored` is the dword the callee stored
  * at the relevant offset. */
 uint32_t vertrix_find_attribute_flag(const VertrixCalls *calls, uint32_t frame, uint32_t path);
+/* Original 0x4895e0: complete callable wrapper; tools/verify_call_glue.py. */
 uint32_t vertrix_find_succeeded(const VertrixCalls *calls, uint32_t frame, uint32_t path);
+/* Original 0x489610: complete callable wrapper; tools/verify_call_glue.py. */
 uint32_t vertrix_find_size_field(const VertrixCalls *calls, uint32_t frame, uint32_t path);
 
 /* Original 0x482610 (ebp = frame): 0x4ec1a0 with a local at frame-0xc, then 0x482640(eax, edx =

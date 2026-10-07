@@ -29,7 +29,7 @@ class Calls(c.Structure):
     _fields_ = [('call', Call), ('context', c.c_void_p)]
 
 
-CALLEES = {0x418820: 0, 0x4177b0: 0, 0x4cea15: 0, 0x476160: 0, 0x476480: 0, 0x476720: 0, 0x487640: 0, 0x487750: 1,
+CALLEES = {0x4ae010: 0, 0x418820: 0, 0x4177b0: 0, 0x4cea15: 0, 0x476160: 0, 0x476480: 0, 0x476720: 0, 0x487640: 0, 0x487750: 1,
            0x45f0c0: 0, 0x45f1e0: 0, 0x425de0: 0, 0x43f420: 0, 0x4ea190: 0,
            0x4b6200: 0, 0x475800: 0, 0x4ca370: 0, 0x4759e0: 0, 0x475b80: 2, 0x40eea0: 0,
            0x40adc0: 0, 0x4d8950: 0, 0x45fa70: 0, 0x45fab0: 0, 0x4877f0: 0, 0x47cd60: 0,
@@ -434,6 +434,9 @@ def main():
         cpu.mem_write(0x4f6418, struct.pack('<I', marker))
         run('reset', 0x40ae80, lambda: n.vertrix_module_reset_calls(c.byref(calls), marker), eax=0,
             edx=0)
+        run('forward4b6890', 0x4b6890, lambda: n.vertrix_forward_registers(
+            c.byref(calls), 0x4ae010, eax, edx, a, ac),
+            eax=eax, edx=edx, ebx=a, ecx=ac)
         run('f40ab', 0x40ab10, lambda: n.vertrix_forward_registers(c.byref(calls), 0x40ab20, 0,
                                                                    edx, 0, 0), eax=eax, edx=edx)
         for address, target_address in ((0x487a10, 0x487a20), (0x48d620, 0x48d630)):
@@ -493,7 +496,9 @@ def main():
         cpu.mem_write(0x5bd83c, struct.pack('<I', value))
         assert n.vertrix_read_global(c.byref(c.c_uint32(value))) == original.call(0x4b7da0), case
         totals['0x4b7da0'] = totals.get('0x4b7da0', 0) + 1
+    assert totals.get('0x4b6890') == args.cases, (totals.get('0x4b6890'), args.cases)
     report = {'status': 'passed', 'complete_original_executions': totals,
+              'total_verified_executions': sum(totals.values()),
               'scope': 'Each wrapper executes completely in the original with its callees stubbed '
                        'and logged; every callee call (address and registers), the returned eax and '
                        'the object storage compare.'}
