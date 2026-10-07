@@ -7,7 +7,8 @@ import struct
 from pathlib import Path
 
 from original import Original, STACK
-from unicorn.x86_const import UC_X86_REG_ESI
+from unicorn import UC_HOOK_MEM_WRITE
+from unicorn.x86_const import (UC_X86_REG_ESI, UC_X86_REG_EDX, UC_X86_REG_EBX, UC_X86_REG_ECX)
 from oracle_kit import Stubs, build
 
 U = c.c_uint32
@@ -46,6 +47,7 @@ def main():
     parser.add_argument('executable', type=Path)
     parser.add_argument('--build-dir', type=Path, required=True)
     parser.add_argument('--cases', type=int, default=2048)
+    parser.add_argument('--reset-cases', type=int, default=4096)
     args = parser.parse_args()
     n = build(args.build_dir, 'call-glue', ['call_glue.c', 'object_glue.c', 'actor_storage.c', 'table_queries.c'])
     P = c.POINTER(Calls)
@@ -91,6 +93,8 @@ def main():
 
     n.vertrix_matcher_feed.argtypes = [P, c.POINTER(Matcher), U, c.c_uint8, U, U]
     n.vertrix_matcher_feed.restype = U
+    n.vertrix_matcher_reset_full.argtypes = [c.POINTER(Matcher), U]
+    n.vertrix_matcher_reset_full.restype = U
     class Out(c.Structure):
         _fields_ = [(name, U) for name in ('first_word', 'second_word', 'first_dword',
                                            'second_dword')]
@@ -497,11 +501,50 @@ def main():
         assert n.vertrix_read_global(c.byref(c.c_uint32(value))) == original.call(0x4b7da0), case
         totals['0x4b7da0'] = totals.get('0x4b7da0', 0) + 1
     assert totals.get('0x4b6890') == args.cases, (totals.get('0x4b6890'), args.cases)
+    reset_rng = random.Random(0x417f40)
+    reset_writes = []
+
+    def track_reset_write(cpu, access, address, width, value, context):
+        reset_writes.append((address, width, value))
+
+    reset_hook = cpu.hook_add(UC_HOOK_MEM_WRITE, track_reset_write, begin=0x400000, end=0x5fffff)
+    reset_count = 0
+    for case in range(args.reset_cases):
+        memory = bytearray(reset_rng.randbytes(32))
+        pattern = reset_rng.getrandbits(32)
+        index = reset_rng.getrandbits(32)
+        struct.pack_into('<II', memory, 8, pattern, index)
+        cpu.mem_write(0x540008, bytes(memory))
+        length = reset_rng.getrandbits(32)
+        matcher = Matcher(pattern, length, index)
+        eax = (0, 1, 0x80000000, 0xffffffff)[case] if case < 4 else reset_rng.getrandbits(32)
+        edx, ebx, ecx = (reset_rng.getrandbits(32) for _ in range(3))
+        reset_writes.clear()
+        stubs.log.clear()
+        expected = original.call(0x417f40, eax=eax, edx=edx, ebx=ebx, ecx=ecx)
+        got = n.vertrix_matcher_reset_full(c.byref(matcher), eax)
+        struct.pack_into('<II', memory, 8, matcher.pattern or 0, matcher.index)
+        assert expected == got == eax, (case, hex(expected), hex(got), hex(eax))
+        assert matcher.length == length and (matcher.pattern or 0) == pattern, case
+        assert memory == bytes(cpu.mem_read(0x540008, 32)), case
+        assert reset_writes == [(0x540014, 4, 0)], (case, reset_writes)
+        assert not stubs.log, (case, stubs.log)
+        assert [cpu.reg_read(reg) for reg in (UC_X86_REG_EDX, UC_X86_REG_EBX, UC_X86_REG_ECX)] == [edx, ebx, ecx], case
+        reset_count += 1
+    cpu.hook_del(reset_hook)
+    assert reset_count == args.reset_cases
+    totals['0x417f40'] = reset_count
+    assert n.vertrix_matcher_reset_full(None, 0xdeadbeef) == 0
+
     report = {'status': 'passed', 'complete_original_executions': totals,
               'total_verified_executions': sum(totals.values()),
+              'matcher_reset_full_return_memory_register_cases': reset_count,
+              'matcher_reset_native_null_rejections': 1,
               'scope': 'Each wrapper executes completely in the original with its callees stubbed '
                        'and logged; every callee call (address and registers), the returned eax and '
-                       'the object storage compare.'}
+                       'the object storage compare. Matcher reset 417f40 additionally compares incoming EAX '
+                       'preservation, exact original global write 540014=0, surrounding 32-byte memory, '
+                       'unchanged pattern/length and original EDX/EBX/ECX preservation.'}
     (args.build_dir / 'call-glue-verification.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))
 

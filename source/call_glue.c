@@ -196,6 +196,17 @@ void vertrix_copy_dword(uint32_t *destination, const uint32_t *source)
     *destination = *source;
 }
 
+uint32_t vertrix_copy_dword_full(uint32_t *destination, const uint32_t *source)
+{
+    if (!destination || !source)
+    {
+        return 0;
+    }
+    uint32_t value = *source;
+    *destination = value;
+    return value;
+}
+
 uint32_t vertrix_forward_call(const VertrixCalls *calls, uint32_t target)
 {
     return vertrix_call(calls, target, 0, 0, 0, 0, 0);
@@ -638,6 +649,16 @@ uint32_t vertrix_flagged_table_call(const VertrixCalls *calls, uint32_t flags, i
 void vertrix_matcher_reset(VertrixMatcher *matcher)
 {
     matcher->index = 0;
+}
+
+uint32_t vertrix_matcher_reset_full(VertrixMatcher *matcher, uint32_t eax)
+{
+    if (!matcher)
+    {
+        return 0;
+    }
+    vertrix_matcher_reset(matcher);
+    return eax;
 }
 
 uint32_t vertrix_matcher_feed(const VertrixCalls *calls, VertrixMatcher *matcher, uint32_t handle,

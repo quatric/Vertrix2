@@ -214,6 +214,67 @@ int vertrix_title_letter_restart(uint8_t *actor, size_t size, uint32_t elapsed,
     return vertrix_ui_center_on_anchor(actor, size, descriptor, screen_unscaled, screen_mode);
 }
 
+static uint32_t letter_effect_call(const VertrixCalls *calls, uint8_t *actor, size_t size,
+                                   uint32_t object, uint32_t elapsed, uint32_t previous_exception,
+                                   int restart)
+{
+    if (!calls || !calls->call || !actor || size < VERTRIX_LETTER_STORAGE_SIZE)
+    {
+        return 0;
+    }
+    uint32_t edx = 0x4ec1ec;
+    uint32_t ebx = restart ? 0 : 0x515370;
+    uint32_t ecx = restart ? 0x515374 : object;
+    uint32_t counter = get(actor, COUNTER, 4) + elapsed;
+    if (counter >= get(actor, PERIOD, 4))
+    {
+        edx = (uint32_t)(int32_t)(int16_t)get(actor, EFFECT_TARGET, 2);
+    }
+    int arrived = 0;
+    effect_step(actor, size, elapsed, &arrived);
+    if (arrived)
+    {
+        if (restart)
+        {
+            ebx = (uint32_t)(int32_t)(int16_t)get(actor, POSITION_X, 2);
+            ecx = (uint32_t)(int32_t)(int16_t)get(actor, POSITION_Y, 2);
+            put(actor, RADIUS, 2, 1);
+            put(actor, ORIGIN_X, 2, ebx);
+            put(actor, ORIGIN_Y, 2, ecx);
+            put(actor, ANGLE, 2, 0);
+            put(actor, COUNTER, 4, 0);
+            put(actor, EFFECT, 2, 0);
+            put(actor, EFFECT_TARGET, 2, 0x96);
+            put(actor, EFFECT_STEP, 2, 1);
+            edx = VERTRIX_LETTER_HANDLER_DONE;
+        }
+        else
+        {
+            put(actor, EFFECT_TARGET, 2, 0);
+            put(actor, EFFECT_STEP, 2, 5);
+            edx = 0x459e00;
+        }
+        put(actor, 0x154, 4, edx);
+    }
+    VertrixCallSite site = {.target = 0x457890, .eax = object, .edx = edx, .ebx = ebx, .ecx = ecx};
+    calls->call(&site, calls->context);
+    return previous_exception;
+}
+
+uint32_t vertrix_title_letter_settle_call(const VertrixCalls *calls, uint8_t *actor, size_t size,
+                                          uint32_t object, uint32_t elapsed,
+                                          uint32_t previous_exception)
+{
+    return letter_effect_call(calls, actor, size, object, elapsed, previous_exception, 0);
+}
+
+uint32_t vertrix_title_letter_restart_call(const VertrixCalls *calls, uint8_t *actor, size_t size,
+                                           uint32_t object, uint32_t elapsed,
+                                           uint32_t previous_exception)
+{
+    return letter_effect_call(calls, actor, size, object, elapsed, previous_exception, 1);
+}
+
 /* The shared body of 0x459ec0 and 0x45a4f0. *level_zero is 1 when the frame was due and the level
  * byte ended zero (the transition tail then runs). */
 static int fly_core(uint8_t *actor, size_t size, uint32_t elapsed, const VertrixAngleTables *tables,

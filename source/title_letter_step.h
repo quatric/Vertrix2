@@ -1,6 +1,7 @@
 #ifndef VERTRIX_TITLE_LETTER_STEP_H
 #define VERTRIX_TITLE_LETTER_STEP_H
 #include "actor_angle.h"
+#include "call_glue.h"
 #include "fixed_point.h"
 #include "rotation.h"
 #include "ui_slide_setup.h"
@@ -31,7 +32,7 @@ int vertrix_title_letter_count(uint8_t *actor, size_t size, uint32_t elapsed,
                                uint32_t voice_base, const VertrixResourceDimensions *descriptor,
                                uint8_t screen_unscaled, uint8_t screen_mode,
                                VertrixLetterVoice *voice);
-/* Original handlers 0x459d60 and 0x459e00, one frame each. Both advance the counter (0x4ac500)
+/* Original fragment 0x459d60 and 0x459e00, one frame each. Both advance the counter (0x4ac500)
  * and, once it reaches the period, take the quotient (0x4ac540), wrap the counter (0x4ac5b0) and
  * move the signed effect word +0x48 toward +0x4a (0x4ad530). While it moves, and on frames that are
  * not due, they only centre the actor (0x457890). On arrival 0x459d60 sets the target to 0, the
@@ -44,6 +45,21 @@ int vertrix_title_letter_settle(uint8_t *actor, size_t size, uint32_t elapsed,
 int vertrix_title_letter_restart(uint8_t *actor, size_t size, uint32_t elapsed,
                                  const VertrixResourceDimensions *descriptor,
                                  uint8_t screen_unscaled, uint8_t screen_mode);
+/* Original 0x459d60: step the effect and hand the live actor to 0x457890 through calls.
+ * object is the original actor handle; storage is its native backing. The normal return is
+ * previous_exception, the saved exception-chain token restored after the final call. Missing
+ * callback or short storage returns zero without changing the actor. The exception-frame machinery
+ * and exceptional unwinding stay outside the native boundary; the final callback may mutate the
+ * actor and return any eax. */
+uint32_t vertrix_title_letter_settle_call(const VertrixCalls *calls, uint8_t *actor, size_t size,
+                                          uint32_t object, uint32_t elapsed,
+                                          uint32_t previous_exception);
+/* Original 0x459e00: restart the letter on arrival, then make the same live final call and
+ * return the saved exception-chain token, with the boundaries described above. */
+uint32_t vertrix_title_letter_restart_call(const VertrixCalls *calls, uint8_t *actor, size_t size,
+                                           uint32_t object, uint32_t elapsed,
+                                           uint32_t previous_exception);
+
 /* The services handler 0x459ec0 reaches into the rest of the game. glyph is 0x43f420 (the first
  * character of the decimal counter and the signed byte at 0x4f9c05, the descriptor or zero), bind
  * is the bank lookup 0x4877f0 behind 0x4ac8a0 (called only with a bank at +0xb0 that is not zero),

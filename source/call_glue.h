@@ -146,8 +146,12 @@ uint32_t vertrix_forward_first_dword(const VertrixCalls *calls, const void *stor
  * byte of eax. */
 uint32_t vertrix_table_entry_call(const VertrixCalls *calls, const uint32_t *table, uint32_t eax);
 
-/* Original 0x48c370: copy the dword at 0x5bb518 to 0x5bd834. */
+/* Original fragment 0x48c370: copy the dword while omitting its EAX return. */
 void vertrix_copy_dword(uint32_t *destination, const uint32_t *source);
+
+/* Original 0x48c370: copy the dword at 0x5bb518 to 0x5bd834 and return that value.
+ * Callers supply backing for those globals. Null pointers return zero without writing. */
+uint32_t vertrix_copy_dword_full(uint32_t *destination, const uint32_t *source);
 
 /* Original 0x475a80: 0x475af0 on eax, 0x475790 on eax + 4 with a zero stack argument, then
  * 0x4759e0 on eax; the first call receives edx, ebx and ecx unchanged. Returns the eax of the last
@@ -374,8 +378,14 @@ typedef struct VertrixMatcher
     uint32_t index;
 } VertrixMatcher;
 
-/* Original 0x417f40: restart the match. */
+/* Original fragment 0x417f40: restart the match through a void convenience
+ * API that omits the original unchanged EAX return. */
 void vertrix_matcher_reset(VertrixMatcher *matcher);
+
+/* Original 0x417f40: clear matcher index (the global dword at 0x540014),
+ * preserving the pattern/length and returning incoming EAX unchanged.
+ * Null native matcher storage returns zero without changing memory. */
+uint32_t vertrix_matcher_reset_full(VertrixMatcher *matcher, uint32_t eax);
 
 /* Original 0x417f50: 0x4ca710 on the text handle, then the first byte of the text is matched
  * against the pattern (on a mismatch the match restarts, and the byte is tried once more at the

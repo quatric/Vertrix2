@@ -33,7 +33,7 @@ REG32 = {X.X86_REG_EAX: 'eax', X.X86_REG_ECX: 'ecx', X.X86_REG_EDX: 'edx', X.X86
 REG16 = {X.X86_REG_AX: 'eax', X.X86_REG_CX: 'ecx', X.X86_REG_DX: 'edx', X.X86_REG_BX: 'ebx',
          X.X86_REG_SI: 'esi', X.X86_REG_DI: 'edi', X.X86_REG_BP: 'ebp'}
 REG8L = {X.X86_REG_AL: 'eax', X.X86_REG_CL: 'ecx', X.X86_REG_DL: 'edx', X.X86_REG_BL: 'ebx'}
-SEGMENTS = {X.X86_REG_DS, X.X86_REG_ES, X.X86_REG_SS, X.X86_REG_CS, X.X86_REG_GS}
+SEGMENTS = {X.X86_REG_DS, X.X86_REG_ES, X.X86_REG_SS, X.X86_REG_CS, X.X86_REG_GS, X.X86_REG_FS}
 REG8H = {X.X86_REG_AH: 'eax', X.X86_REG_CH: 'ecx', X.X86_REG_DH: 'edx', X.X86_REG_BH: 'ebx'}
 
 CONDITIONS = {
@@ -69,16 +69,21 @@ def insn_at(address):
 
 def callee_args(target, depth=0):
     """The number of stack dwords a callee removes with its ret."""
-    address = target
-    for _ in range(400):
-        insn = insn_at(address)
-        if insn is None:
-            return None
-        if insn.mnemonic == 'ret':
-            return insn.operands[0].imm // 4 if insn.operands else 0
-        if insn.mnemonic == 'jmp' and insn.operands[0].type == X.X86_OP_IMM and depth < 4:
-            return callee_args(insn.operands[0].imm, depth + 1)
-        address += insn.size
+    for limit in (400, 4000):  # a long routine reaches its first ret late; try the short scan first
+        address = target
+        for _ in range(limit):
+            insn = insn_at(address)
+            if insn is None:
+                break
+            if insn.mnemonic == 'ret':
+                return insn.operands[0].imm // 4 if insn.operands else 0
+            if insn.mnemonic == 'jmp' and insn.operands[0].type == X.X86_OP_IMM and depth < 4:
+                return callee_args(insn.operands[0].imm, depth + 1)
+            if (insn.mnemonic == 'jmp' and insn.operands[0].type == X.X86_OP_MEM and
+                    not insn.operands[0].mem.base and not insn.operands[0].mem.index and
+                    insn.operands[0].mem.disp in BY_SLOT):
+                return BY_SLOT[insn.operands[0].mem.disp]  # an import thunk: jmp [slot]
+            address += insn.size
     return None
 
 
@@ -152,7 +157,12 @@ class Lifter:
                 elif address in TABLES:
                     self.targets.update(TABLES[address])
         pushes = sum(1 for i in self.insns.values() if i.mnemonic in ('push', 'call'))
-        sub_esp = sum(int(i.op_str.split(',')[1], 0) for i in self.insns.values()
+        def frame(i):  # `sub esp, reg` is a dynamic allocation: reserve a generous 0x400
+            try:
+                return int(i.op_str.split(',')[1], 0)
+            except ValueError:
+                return 0x400
+        sub_esp = sum(frame(i) for i in self.insns.values()
                       if i.mnemonic == 'sub' and i.op_str.startswith('esp,'))
         self.compute_flag_liveness()
         self.stack_size = (sub_esp + 4 * pushes + 0x40 + 3) & ~3

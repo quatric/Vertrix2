@@ -2,6 +2,8 @@
 
 #include <string.h>
 
+#include "lift_imports.h"
+
 #include "lift_runtime.h"
 
 static int in_image(uint32_t address, unsigned size)
@@ -125,30 +127,115 @@ static void host_list_insert(LiftHost *host, uint32_t list, uint32_t index, uint
     }
 }
 
+uint32_t lift_host_allocate(LiftHost *host, uint32_t size)
+{
+    return host_allocate(size, host);
+}
+
+static uint32_t site_argument(const VertrixCallSite *site, unsigned index)
+{
+    return index == 0   ? site->stack
+           : index == 1 ? site->stack_next
+           : index == 2 ? site->stack_third
+                        : site->stack_rest[index - 3];
+}
+
+static uint32_t host_string_length(LiftHost *host, uint32_t address)
+{
+    uint32_t length = 0;
+    while (bytes_at(host, address + length, 1) != NULL && *bytes_at(host, address + length, 1) != 0)
+    {
+        length++;
+    }
+    return length;
+}
+
+/* The Win32 imports the original's runtime reaches, served on the host. Returns 1 and the result
+ * in *result when the import is implemented. Arguments are the stdcall stack dwords. */
+static int host_import(LiftHost *host, const VertrixCallSite *site, const char *name,
+                       uint32_t *result)
+{
+    uint32_t a0 = site_argument(site, 0), a1 = site_argument(site, 1), a2 = site_argument(site, 2);
+    if (strcmp(name, "lstrlenA") == 0)
+    {
+        *result = host_string_length(host, a0);
+    }
+    else if (strcmp(name, "lstrcpynA") == 0 || strcmp(name, "lstrcpyA") == 0)
+    {
+        uint32_t length = host_string_length(host, a1);
+        uint32_t limit = strcmp(name, "lstrcpynA") == 0 ? (a2 == 0 ? 0 : a2 - 1) : length;
+        uint32_t i;
+        if (limit > length)
+        {
+            limit = length;
+        }
+        for (i = 0; i < limit; i++)
+        {
+            host_write(host, a0 + i, 1, lift_host_read(host, a1 + i, 1));
+        }
+        if (strcmp(name, "lstrcpynA") != 0 || a2 != 0)
+        {
+            host_write(host, a0 + limit, 1, 0);
+        }
+        *result = a0;
+    }
+    else if (strcmp(name, "InterlockedDecrement") == 0 || strcmp(name, "InterlockedIncrement") == 0)
+    {
+        *result = lift_host_read(host, a0, 4) + (name[11] == 'D' ? 0xffffffffu : 1u);
+        host_write(host, a0, 4, *result);
+    }
+    else if (strcmp(name, "InterlockedExchange") == 0)
+    {
+        *result = lift_host_read(host, a0, 4);
+        host_write(host, a0, 4, a1);
+    }
+    else if (strcmp(name, "GlobalAlloc") == 0 || strcmp(name, "LocalAlloc") == 0)
+    {
+        *result = host_allocate(a1, host);
+    }
+    else if (strcmp(name, "GlobalLock") == 0 || strcmp(name, "GlobalHandle") == 0 ||
+             strcmp(name, "GlobalReAlloc") == 0)
+    {
+        *result = a0;
+    }
+    else if (strcmp(name, "GetVersion") == 0)
+    {
+        *result = 0x0a280005u; /* Windows XP style: major 5, minor 1 packs as 0x0a280105 */
+    }
+    else if (strcmp(name, "GlobalFree") == 0 || strcmp(name, "LocalFree") == 0 ||
+             strcmp(name, "GlobalUnlock") == 0 || strcmp(name, "InitializeCriticalSection") == 0 ||
+             strcmp(name, "DeleteCriticalSection") == 0 ||
+             strcmp(name, "EnterCriticalSection") == 0 ||
+             strcmp(name, "LeaveCriticalSection") == 0 || strcmp(name, "SetLastError") == 0 ||
+             strcmp(name, "GetLastError") == 0)
+    {
+        *result = 0;
+    }
+    else
+    {
+        return 0;
+    }
+    return 1;
+}
+
 static uint32_t host_boundary(VertrixCallSite *site, void *context)
 {
     LiftHost *host = context;
     unsigned i;
+    {
+        uint32_t slot = vertrix_import_slot(host->image, LIFT_HOST_IMAGE_BASE, site->target);
+        const char *name = vertrix_import_name(slot);
+        uint32_t result;
+        if (name != NULL && host_import(host, site, name, &result))
+        {
+            return result;
+        }
+        site->target = slot;
+    }
     if (site->target == 0x4d88a0)
     {
         host_list_insert(host, site->eax, site->edx, site->ecx, site->ebx);
         return site->eax;
-    }
-    if (site->target == 0x4f1d24) /* KERNEL32 lstrlenA(stack[0]) */
-    {
-        uint32_t length = 0;
-        while (bytes_at(host, site->stack + length, 1) != NULL &&
-               *bytes_at(host, site->stack + length, 1) != 0)
-        {
-            length++;
-        }
-        return length;
-    }
-    if (site->target == 0x4f1c34) /* KERNEL32 InterlockedDecrement(stack[0]) */
-    {
-        uint32_t value = lift_host_read(host, site->stack, 4) - 1;
-        host_write(host, site->stack, 4, value);
-        return value;
     }
     if (site->target == 0x482310) /* mov [eax + 0x30], 0x516b94; ret */
     {

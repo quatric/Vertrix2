@@ -4078,10 +4078,11 @@ L_475d4d:
     goto L_475d4d;
 }
 
-uint32_t lifted_f475d70(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
+uint32_t lifted_input_queue_ready_full(const VertrixCalls *calls,
+                                       const VertrixFactoryServices *services,
+                                       const VertrixGlobals *globals, const LiftEntry *entry)
 {
-    uint8_t stack[LIFTED_F475D70_STACK + 4 + 4 * 0 + 4];
+    uint8_t stack[LIFTED_INPUT_QUEUE_READY_FULL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
     LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
@@ -4101,7 +4102,8 @@ uint32_t lifted_f475d70(const VertrixCalls *calls, const VertrixFactoryServices 
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F475D70_STACK, 0, entry);
+    lift_begin(&env, calls, services, globals, stack, LIFTED_INPUT_QUEUE_READY_FULL_STACK, 0,
+               entry);
     eax = eax + 0x4u;
     eax = lift_call(&env, 0x475800u, eax, edx, ebx, ecx, 0, esp);
     {

@@ -53,7 +53,7 @@ enum
     LIFTED_QUEUE_NEXT_STACK = 84,
     LIFTED_F475CD0_STACK = 84,
     LIFTED_F475D20_STACK = 88,
-    LIFTED_F475D70_STACK = 68,
+    LIFTED_INPUT_QUEUE_READY_FULL_STACK = 68,
     LIFTED_OBJECT_TRIPLE_STACK = 80,
     LIFTED_PROGRESS_SET_40_STACK = 64,
     LIFTED_F475DE0_STACK = 64,
@@ -532,8 +532,9 @@ uint32_t lifted_f475d20(const VertrixCalls *calls, const VertrixFactoryServices 
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x475d70. */
-uint32_t lifted_f475d70(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_input_queue_ready_full(const VertrixCalls *calls,
+                                       const VertrixFactoryServices *services,
+                                       const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x475da0. */
 uint32_t lifted_object_triple(const VertrixCalls *calls, const VertrixFactoryServices *services,

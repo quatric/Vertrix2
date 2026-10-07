@@ -2,6 +2,8 @@
 import ctypes as c, random, struct
 from unicorn import UC_HOOK_CODE
 from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_EDX
+from oracle_kit import Stubs
+from verify_call_glue import Calls, Call
 from original import Original
 import verify_support as vs
 
@@ -33,6 +35,102 @@ class Fight(c.Structure):
 
 class Voice(c.Structure):
     _fields_ = [('played', c.c_int), ('voice', c.c_uint32), ('variant', c.c_int)]
+
+
+def verify_full_effect(args, native):
+    """Normal complete restart/settle ABI, with only final centering supplied as a boundary."""
+    original = Original(args.executable)
+    cpu = original.cpu
+    rng = random.Random(0x459e00)
+    total, branches, mutations = {}, {}, 0
+    expected_calls, native_calls = [], []
+    callback_result = 0
+    patches = []
+    buffer = None
+
+    def original_center(address, eax, edx, ebx, ecx, stack):
+        expected_calls.append((address, eax, edx, ebx, ecx))
+        for offset, data in patches:
+            cpu.mem_write(eax + offset, data)
+        return callback_result
+
+    stubs = Stubs(cpu, original_center)
+    stubs.add(0x457890)
+
+    @Call
+    def center(site, context):
+        call = site.contents
+        native_calls.append((call.target, call.eax, call.edx, call.ebx, call.ecx))
+        for offset, data in patches:
+            c.memmove(c.addressof(buffer) + offset, data, len(data))
+        return callback_result
+
+    calls = Calls(center, None)
+    for address, name in ((0x459d60, 'settle'), (0x459e00, 'restart')):
+        function = getattr(native, 'vertrix_title_letter_' + name + '_call')
+        function.argtypes = [c.POINTER(Calls), c.POINTER(c.c_uint8), c.c_size_t,
+                             c.c_uint32, c.c_uint32, c.c_uint32]
+        function.restype = c.c_uint32
+        for case in range(args.cases):
+            data = bytearray(rng.randbytes(SIZE))
+            shape = ('not_due', 'moving', 'arrived', 'wrapped', 'random')[case % 5]
+            period = rng.choice([1, 12, 60, rng.randrange(1, 400)])
+            elapsed = rng.choice([0, 1, 16, 0xffffffff, rng.getrandbits(32)])
+            counter = rng.getrandbits(32)
+            current, target = rng.randrange(-32768, 32768), rng.randrange(-32768, 32768)
+            step = rng.choice([-32768, -1, 0, 1, 32767, rng.randrange(-32768, 32768)])
+            if shape == 'not_due':
+                counter, elapsed, period = 0, 0, 1
+            elif shape == 'moving':
+                counter, elapsed, period = 1, 0, 1
+                current, target, step = -200, 200, 1
+            elif shape == 'arrived':
+                counter, elapsed, period = rng.getrandbits(32), 0, 0
+                current = target
+            elif shape == 'wrapped':
+                counter, elapsed = 0xffffffff, 1
+            struct.pack_into('<II', data, 0xbc, counter, period)
+            struct.pack_into('<hhh', data, 0x48, current, target, step)
+            previous_exception = rng.choice([0, 0xffffffff, rng.getrandbits(32)])
+            cpu.mem_write(0, struct.pack('<I', previous_exception))
+            cpu.mem_write(0x5bd834, struct.pack('<I', elapsed))
+            cpu.mem_write(OBJ, bytes(data))
+            callback_result = rng.getrandbits(32)
+            # Mutate fields consumed before centering, fields centering owns, and unrelated tail.
+            patches = [(offset, rng.randbytes(width)) for offset, width in
+                       ((0x08, 4), (0x0e, 2), (0x16, 2), (0x48, 6),
+                        (0xbc, 8), (0x154, 4), (0x15c, 4))] if case % 3 else []
+            expected_calls.clear()
+            native_calls.clear()
+            result = original.call(address, eax=OBJ, edx=rng.getrandbits(32),
+                                   ebx=rng.getrandbits(32), ecx=rng.getrandbits(32))
+            want = bytes(cpu.mem_read(OBJ, SIZE))
+            buffer = (c.c_uint8 * SIZE).from_buffer_copy(bytes(data))
+            got = function(c.byref(calls), buffer, SIZE, OBJ, elapsed, previous_exception)
+            assert got == result == previous_exception, (name, case, got, result)
+            assert len(expected_calls) == len(native_calls) == 1
+            assert expected_calls == native_calls, (name, case, expected_calls, native_calls)
+            assert bytes(buffer) == want, (name, case)
+            assert struct.unpack('<I', bytes(cpu.mem_read(0, 4)))[0] == previous_exception
+            total[hex(address)] = total.get(hex(address), 0) + 1
+            branches[name + '_' + shape] = branches.get(name + '_' + shape, 0) + 1
+            mutations += bool(patches)
+        guard_buffer = (c.c_uint8 * SIZE).from_buffer_copy(bytes(data))
+        before = bytes(guard_buffer)
+        empty_calls = Calls(Call(), None)
+        for missing in (None, c.byref(empty_calls)):
+            assert function(missing, guard_buffer, SIZE, OBJ, elapsed, previous_exception) == 0
+            assert bytes(guard_buffer) == before
+    assert total == {'0x459d60': args.cases, '0x459e00': args.cases}
+    return {'complete_original_executions': total, 'branch_fixtures': branches,
+            'live_actor_mutation_cases': mutations, 'native_missing_boundary_guard_cases': 4,
+            'scope': 'Complete normal 459d60 and 459e00 execute unmodified with real timer, '
+                     'quotient, remainder, transition and setters; only final 457890 is supplied. '
+                     'Every final call target/eax/edx/ebx/ecx, full 0x160 actor bytes and original '
+                     'EAX compare. Random saved FS:[0] tokens restore and return, independently '
+                     'of callback EAX; final callback actor mutations remain live. Exceptional '
+                     'unwinding and callbacks that alter the saved exception stack local are '
+                     'outside this boundary.'}
 
 
 def main():
@@ -249,9 +347,11 @@ def main():
             totals[name] = totals.get(name, 0) + 1
             if struct.unpack_from('<I', want, 0x154)[0] != struct.unpack_from('<I', data, 0x154)[0]:
                 totals[name + '_arrivals'] = totals.get(name + '_arrivals', 0) + 1
+    full_effect = verify_full_effect(args, n)
     vs.write_report(args, 'title-letter-step', {
+        'full_effect_abi': full_effect,
         'status': 'passed', 'complete_original_executions': totals,
-        'scope': 'Complete original handlers 0x459be0, 0x459d60, 0x459e00, 0x45a290, 0x45a3e0, 0x45a440, 0x45a620, 0x45a750 and 0x45a830 (with the real 0x4ac500/0x4ac540/0x4ac5b0, 0x4ad060, 0x4ad260, 0x4ad530 and 0x457890/0x4b14c0) runs in the oracle; only the sound players 0x417260/0x417290/0x4171e0/0x417220 and the generator draw 0x4826c0 are observed and returned. The first 0x160 actor bytes, including the handler token at +0x154, compare after every call.'})
+        'scope': 'State comparisons only for the legacy status APIs: original handlers 0x459be0, 0x459d60, 0x459e00, 0x45a290, 0x45a3e0, 0x45a440, 0x45a620, 0x45a750 and 0x45a830 (with the real 0x4ac500/0x4ac540/0x4ac5b0, 0x4ad060, 0x4ad260, 0x4ad530 and 0x457890/0x4b14c0) runs in the oracle; only the sound players 0x417260/0x417290/0x4171e0/0x417220 and the generator draw 0x4826c0 are observed and returned. The first 0x160 actor bytes, including the handler token at +0x154, compare after every call.'})
 
 
 if __name__ == '__main__':

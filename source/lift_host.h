@@ -45,5 +45,9 @@ void lift_host_init(LiftHost *host, uint8_t *image, const uint8_t *original, uin
 uint32_t lift_host_run(LiftHost *host, uint32_t target, uint32_t eax, uint32_t edx, uint32_t ebx,
                        uint32_t ecx, int *lifted);
 
+/* Allocate zeroed heap memory; returns its address in the original's address space (0 when full).
+ */
+uint32_t lift_host_allocate(LiftHost *host, uint32_t size);
+
 uint32_t lift_host_read(const LiftHost *host, uint32_t address, unsigned size);
 #endif
