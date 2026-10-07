@@ -6,6 +6,7 @@
 
 enum
 {
+    LIFTED_ACTOR_SPAWN_MATCH_BURST_STACK = 184,
     LIFTED_BOARD_RINGS_STACK = 204,
     LIFTED_BOARD_BURST_STACK = 180,
     LIFTED_BLOCK_SPAWN_STACK = 96,
@@ -195,6 +196,7 @@ enum
     LIFTED_F43FB70_STACK = 124,
     LIFTED_FONT_MAPS_INITIALIZE_STACK = 520,
     LIFTED_F440490_STACK = 136,
+    LIFTED_CORNER_TRANSFORM_CALL_STACK = 152,
     LIFTED_F440A20_STACK = 224,
     LIFTED_F440D50_STACK = 244,
     LIFTED_FORWARD_4EA190_STACK = 68,
@@ -423,10 +425,13 @@ enum
     LIFTED_UI_BORDER_STORAGE_UPDATE_450300_STACK = 80,
     LIFTED_BLOCK_FINISH_EFFECT_UPDATE_STACK = 108,
     LIFTED_BLOCK_FINISH_EFFECT_UPDATE_4503B0_STACK = 124,
-    LIFTED_BLOCK_FINISH_EFFECT_UPDATE_450450_STACK = 120,
-    LIFTED_BLOCK_FINISH_EFFECT_UPDATE_4504E0_STACK = 104,
-    LIFTED_BLOCK_FINISH_EFFECT_UPDATE_450550_STACK = 108
+    LIFTED_BLOCK_FINISH_EFFECT_UPDATE_450450_STACK = 120
 };
+
+/* Original 0x4302a0. */
+uint32_t lifted_actor_spawn_match_burst(const VertrixCalls *calls,
+                                        const VertrixFactoryServices *services,
+                                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x430440. */
 uint32_t lifted_board_rings(const VertrixCalls *calls, const VertrixFactoryServices *services,
@@ -1285,6 +1290,11 @@ uint32_t lifted_font_maps_initialize(const VertrixCalls *calls,
 /* Original 0x440490. */
 uint32_t lifted_f440490(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x4408e0. */
+uint32_t lifted_corner_transform_call(const VertrixCalls *calls,
+                                      const VertrixFactoryServices *services,
+                                      const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x440a20. */
 uint32_t lifted_f440a20(const VertrixCalls *calls, const VertrixFactoryServices *services,
@@ -2285,18 +2295,6 @@ uint32_t lifted_block_finish_effect_update_4503b0(const VertrixCalls *calls,
 
 /* Original 0x450450. */
 uint32_t lifted_block_finish_effect_update_450450(const VertrixCalls *calls,
-                                                  const VertrixFactoryServices *services,
-                                                  const VertrixGlobals *globals,
-                                                  const LiftEntry *entry);
-
-/* Original 0x4504e0. */
-uint32_t lifted_block_finish_effect_update_4504e0(const VertrixCalls *calls,
-                                                  const VertrixFactoryServices *services,
-                                                  const VertrixGlobals *globals,
-                                                  const LiftEntry *entry);
-
-/* Original 0x450550. */
-uint32_t lifted_block_finish_effect_update_450550(const VertrixCalls *calls,
                                                   const VertrixFactoryServices *services,
                                                   const VertrixGlobals *globals,
                                                   const LiftEntry *entry);

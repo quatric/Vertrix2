@@ -9,6 +9,7 @@
 #include "lifted_hud_decor.h"
 #include "lifted_select_screen.h"
 #include "lifted_title_screen.h"
+#include "lifted_unverified.h"
 #include "lifted_whole_0.h"
 #include "lifted_whole_1.h"
 #include "lifted_whole_2.h"
@@ -349,6 +350,7 @@ static const LiftedRoutine routines[] = {
     {0x429660, lifted_object_address_plus_4, 64, 0},
     {0x429670, lifted_marker_actor_construct_full, 68, 0},
     {0x429880, lifted_piece_actor_construct_slots, 96, 0},
+    {0x429bf0, lifted_slot_objects_make, 168, 0},
     {0x429d50, lifted_choice_grid_apply, 100, 0},
     {0x429df0, lifted_choice_grid_load_values, 96, 0},
     {0x429e80, lifted_choice_grid_store_values, 92, 0},
@@ -648,6 +650,7 @@ static const LiftedRoutine routines[] = {
     {0x43fb70, lifted_f43fb70, 124, 0},
     {0x43fc50, lifted_font_maps_initialize, 520, 0},
     {0x440490, lifted_f440490, 136, 1},
+    {0x4408e0, lifted_corner_transform_call, 152, 7},
     {0x440a20, lifted_f440a20, 224, 2},
     {0x440d50, lifted_f440d50, 244, 4},
     {0x441120, lifted_forward_4ea190, 68, 0},
@@ -1841,6 +1844,8 @@ static const LiftedRoutine routines[] = {
     {0x4b5560, lifted_f4b5560, 76, 0},
     {0x4b5580, lifted_f4b5580, 136, 0},
     {0x4b5630, lifted_f4b5630, 160, 0},
+    {0x4b5700, lifted_f4b5700, 208, 3},
+    {0x4b58a0, lifted_f4b58a0, 196, 0},
     {0x4b5c60, lifted_object_start_5182c4, 68, 0},
     {0x4b5d40, lifted_object_slot_present_unowned, 84, 0},
     {0x4b5db0, lifted_f4b5db0, 68, 0},
@@ -2658,7 +2663,18 @@ static const LiftedRoutine routines[] = {
     {0x4eea90, lifted_f4eea90, 84, 0},
 };
 
+/* Lifted routines that did not pass the differential oracle. Used only after
+ * vertrix_lifted_allow_unverified(1). */
+static const LiftedRoutine unverified_routines[] = {
+    {0, NULL, 0, 0},
+    {0x42a200, lifted_f42a200, 120, 0},
+    {0x4b6350, lifted_object_construct_labeled_box, 136, 0},
+    {0x4b65d0, lifted_object_label_text, 128, 3},
+    {0x4ccf3b, lifted_f4ccf3b, 120, 0},
+};
+
 static unsigned depth;
+static int unverified_allowed;
 
 static int find_compare(const void *key, const void *item)
 {
@@ -2669,8 +2685,20 @@ static int find_compare(const void *key, const void *item)
 
 static const LiftedRoutine *find(uint32_t target)
 {
-    return bsearch(&target, routines, sizeof routines / sizeof routines[0], sizeof routines[0],
-                   find_compare);
+    const LiftedRoutine *found = bsearch(&target, routines, sizeof routines / sizeof routines[0],
+                                         sizeof routines[0], find_compare);
+    if (found == NULL && unverified_allowed)
+    {
+        found = bsearch(&target, unverified_routines + 1,
+                        sizeof unverified_routines / sizeof unverified_routines[0] - 1,
+                        sizeof unverified_routines[0], find_compare);
+    }
+    return found;
+}
+
+void vertrix_lifted_allow_unverified(int allowed)
+{
+    unverified_allowed = allowed;
 }
 
 unsigned vertrix_lifted_count(void)

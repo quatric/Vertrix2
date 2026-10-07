@@ -316,6 +316,7 @@ enum
     LIFTED_OBJECT_ADDRESS_PLUS_4_STACK = 64,
     LIFTED_MARKER_ACTOR_CONSTRUCT_FULL_STACK = 68,
     LIFTED_PIECE_ACTOR_CONSTRUCT_SLOTS_STACK = 96,
+    LIFTED_SLOT_OBJECTS_MAKE_STACK = 168,
     LIFTED_CHOICE_GRID_APPLY_STACK = 100,
     LIFTED_CHOICE_GRID_LOAD_VALUES_STACK = 96,
     LIFTED_CHOICE_GRID_STORE_VALUES_STACK = 92,
@@ -424,8 +425,7 @@ enum
     LIFTED_BOARD_PLACE_EXTRA_STACK = 76,
     LIFTED_BOARD_PLACE_EXTRA_430100_STACK = 76,
     LIFTED_BOARD_RELEASE_EXTRA_STACK = 80,
-    LIFTED_ACTOR_SPAWN_MATCH_EFFECT_STACK = 152,
-    LIFTED_ACTOR_SPAWN_MATCH_BURST_STACK = 184
+    LIFTED_ACTOR_SPAWN_MATCH_EFFECT_STACK = 152
 };
 
 /* Original 0x401010. */
@@ -1726,6 +1726,10 @@ uint32_t lifted_piece_actor_construct_slots(const VertrixCalls *calls,
                                             const VertrixFactoryServices *services,
                                             const VertrixGlobals *globals, const LiftEntry *entry);
 
+/* Original 0x429bf0. */
+uint32_t lifted_slot_objects_make(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                  const VertrixGlobals *globals, const LiftEntry *entry);
+
 /* Original 0x429d50. */
 uint32_t lifted_choice_grid_apply(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   const VertrixGlobals *globals, const LiftEntry *entry);
@@ -2239,9 +2243,4 @@ uint32_t lifted_board_release_extra(const VertrixCalls *calls,
 uint32_t lifted_actor_spawn_match_effect(const VertrixCalls *calls,
                                          const VertrixFactoryServices *services,
                                          const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4302a0. */
-uint32_t lifted_actor_spawn_match_burst(const VertrixCalls *calls,
-                                        const VertrixFactoryServices *services,
-                                        const VertrixGlobals *globals, const LiftEntry *entry);
 #endif

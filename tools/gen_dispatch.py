@@ -6,8 +6,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 entries = {}
+unverified_entries = {}
 for path in sorted(glob.glob(str(ROOT / 'docs' / 'lift' / '*.json'))):
     name = Path(path).stem
+    if name == 'unverified':
+        for func, meta in json.loads(Path(path).read_text()).items():
+            unverified_entries[meta['address']] = (func, meta)
+        continue
     data = json.loads(Path(path).read_text())
     if 'stack' in data:
         entries[data.get('address') or 0] = (name, data)
@@ -26,7 +31,10 @@ headers = sorted(Path(p).name for p in glob.glob(str(ROOT / 'source' / 'lifted_*
                  if 'dispatch' not in p)
 rows = ['    {0x%x, lifted_%s, %d, %d},' % (a, entries[a][0], entries[a][1]['stack'],
                                          entries[a][1]['arguments']) for a in sorted(entries)]
-maximum = max(e[1]['stack'] for e in entries.values())
+unverified_rows = ['    {0x%x, lifted_%s, %d, %d},' % (a, unverified_entries[a][0], unverified_entries[a][1]['stack'],
+                                                 unverified_entries[a][1]['arguments'])
+                   for a in sorted(unverified_entries) if a not in entries]
+maximum = max(e[1]['stack'] for e in list(entries.values()) + list(unverified_entries.values()))
 (ROOT / 'source' / 'lifted_dispatch.h').write_text('''#ifndef VERTRIX_LIFTED_DISPATCH_H
 #define VERTRIX_LIFTED_DISPATCH_H
 #include <stdint.h>
@@ -35,6 +43,9 @@ maximum = max(e[1]['stack'] for e in entries.values())
 
 /* Number of original routines that run as verified lifted C (tools/gen_dispatch.py). */
 unsigned vertrix_lifted_count(void);
+
+/* Also run the lifted routines that did not pass verification (off by default). */
+void vertrix_lifted_allow_unverified(int allowed);
 
 /* The lifted routine for an original address, or 0 when the routine stays a call boundary. */
 int vertrix_lifted_has(uint32_t target);
@@ -94,7 +105,15 @@ static const LiftedRoutine routines[] = {
 %s
 };
 
+/* Lifted routines that did not pass the differential oracle. Used only after
+ * vertrix_lifted_allow_unverified(1). */
+static const LiftedRoutine unverified_routines[] = {
+    {0, NULL, 0, 0},
+%s
+};
+
 static unsigned depth;
+static int unverified_allowed;
 
 static int find_compare(const void *key, const void *item)
 {
@@ -105,8 +124,20 @@ static int find_compare(const void *key, const void *item)
 
 static const LiftedRoutine *find(uint32_t target)
 {
-    return bsearch(&target, routines, sizeof routines / sizeof routines[0], sizeof routines[0],
-                   find_compare);
+    const LiftedRoutine *found = bsearch(&target, routines, sizeof routines / sizeof routines[0],
+                                         sizeof routines[0], find_compare);
+    if (found == NULL && unverified_allowed)
+    {
+        found = bsearch(&target, unverified_routines + 1,
+                        sizeof unverified_routines / sizeof unverified_routines[0] - 1,
+                        sizeof unverified_routines[0], find_compare);
+    }
+    return found;
+}
+
+void vertrix_lifted_allow_unverified(int allowed)
+{
+    unverified_allowed = allowed;
 }
 
 unsigned vertrix_lifted_count(void)
@@ -175,5 +206,5 @@ void vertrix_lifted_calls_init(VertrixLiftedCalls *adapter, const VertrixCalls *
     adapter->services = services;
     adapter->globals = globals;
 }
-''' % ('\n'.join('#include "%s"' % h for h in headers), maximum, '\n'.join(rows)))
+''' % ('\n'.join('#include "%s"' % h for h in headers), maximum, '\n'.join(rows), '\n'.join(unverified_rows)))
 print(len(rows), 'routines, max stack', maximum)

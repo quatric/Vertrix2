@@ -1,8 +1,30 @@
 {
   "status": "passed",
+  "full_runtime_boundary": {
+    "complete_original_executions": {
+      "0x449360": 8192,
+      "0x449390": 8192,
+      "0x4adfb0": 65536,
+      "0x4adfe0": 65536
+    },
+    "signed_index_categories": {
+      "sentinel": 1,
+      "negative": 32767,
+      "bounded": 6,
+      "positive_outside": 32762
+    },
+    "same_frame_return_cases": 2048,
+    "zero_decay_return_cases": 1387,
+    "callback_mutation_cases": 2048,
+    "exact_callback_register_comparisons": 18432,
+    "exact_raw_global_write_comparisons": 77377,
+    "independent_global_memory_base": "0x59b714",
+    "independent_global_memory_bytes": 262144,
+    "all_65536_refresh_index_patterns": true
+  },
   "complete_original_executions": {
     "decay": 8192,
     "switch": 8192
   },
-  "scope": "Complete 449360 and 449390 execute in the original (4ac8d0, 4ac710 and 4ac8a0 stubbed and logged; 4ad530 and 4adfe0 run for real); the whole actor, the refresh state at 5bb710 and the ordered calls compare."
+  "scope": "Complete 449360 and 449390 execute in the original (4ac8d0, 4ac710 and 4ac8a0 stubbed and logged; 4ad530 and 4adfe0 run for real); the whole actor, the bounded refresh state at 5bb710 and the ordered calls compare for legacy indices -1 and 0..5. Full APIs compare exact EAX, all callback registers and callback mutations, every 16-bit refresh index, exact raw-memory reads/writes and all 262144 bytes of independent globals from 59b714 through 5db713, including signed negative and out-of-range writes."
 }

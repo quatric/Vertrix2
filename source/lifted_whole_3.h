@@ -6,6 +6,8 @@
 
 enum
 {
+    LIFTED_F471D90_STACK = 80,
+    LIFTED_F471DD0_STACK = 80,
     LIFTED_SCENE_LOOKUP_PAIR_STACK = 92,
     LIFTED_OBJECT_FLIP_454_STACK = 72,
     LIFTED_OBJECT_FLIP_454_471E80_STACK = 72,
@@ -423,10 +425,16 @@ enum
     LIFTED_F4AC610_STACK = 64,
     LIFTED_ACTOR_COUNTER_PAIR_REACHED_STACK = 68,
     LIFTED_ACTOR_PROGRESS_QUOTIENT_STACK = 72,
-    LIFTED_ACTOR_PROGRESS_WRAP_STACK = 80,
-    LIFTED_ACTOR_RESET_FRAME_COUNTER_STACK = 64,
-    LIFTED_ACTOR_SET_FRAME_INDEX_STACK = 64
+    LIFTED_ACTOR_PROGRESS_WRAP_STACK = 80
 };
+
+/* Original 0x471d90. */
+uint32_t lifted_f471d90(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x471dd0. */
+uint32_t lifted_f471dd0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x471e10. */
 uint32_t lifted_scene_lookup_pair(const VertrixCalls *calls, const VertrixFactoryServices *services,
@@ -2219,14 +2227,4 @@ uint32_t lifted_actor_progress_quotient(const VertrixCalls *calls,
 uint32_t lifted_actor_progress_wrap(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services,
                                     const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4ac700. */
-uint32_t lifted_actor_reset_frame_counter(const VertrixCalls *calls,
-                                          const VertrixFactoryServices *services,
-                                          const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4ac710. */
-uint32_t lifted_actor_set_frame_index(const VertrixCalls *calls,
-                                      const VertrixFactoryServices *services,
-                                      const VertrixGlobals *globals, const LiftEntry *entry);
 #endif

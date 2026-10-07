@@ -7,6 +7,9 @@
 /* Number of original routines that run as verified lifted C (tools/gen_dispatch.py). */
 unsigned vertrix_lifted_count(void);
 
+/* Also run the lifted routines that did not pass verification (off by default). */
+void vertrix_lifted_allow_unverified(int allowed);
+
 /* The lifted routine for an original address, or 0 when the routine stays a call boundary. */
 int vertrix_lifted_has(uint32_t target);
 

@@ -1,4 +1,38 @@
 {
+ "f471d90": {
+  "callees": {
+   "0x4ac920": [
+    0,
+    false
+   ]
+  },
+  "stack": 80,
+  "arguments": 0,
+  "pointer_callees": [],
+  "pointer_fields": [],
+  "pointer_globals": [],
+  "pointer_maybe": [],
+  "constants": [],
+  "virtual": [],
+  "address": 4660624
+ },
+ "f471dd0": {
+  "callees": {
+   "0x4ac920": [
+    0,
+    false
+   ]
+  },
+  "stack": 80,
+  "arguments": 0,
+  "pointer_callees": [],
+  "pointer_fields": [],
+  "pointer_globals": [],
+  "pointer_maybe": [],
+  "constants": [],
+  "virtual": [],
+  "address": 4660688
+ },
  "scene_lookup_pair": {
   "callees": {
    "0x4b5eb0": [
@@ -10006,29 +10040,5 @@
   "constants": [],
   "virtual": [],
   "address": 4900528
- },
- "actor_reset_frame_counter": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4900608
- },
- "actor_set_frame_index": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4900624
  }
 }

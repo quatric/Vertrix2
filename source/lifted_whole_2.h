@@ -6,6 +6,8 @@
 
 enum
 {
+    LIFTED_BLOCK_FINISH_EFFECT_UPDATE_4504E0_STACK = 104,
+    LIFTED_BLOCK_FINISH_EFFECT_UPDATE_450550_STACK = 108,
     LIFTED_BLOCK_FINISH_EFFECT_UPDATE_4505C0_STACK = 108,
     LIFTED_BLOCK_FINISH_EFFECT_UPDATE_450630_STACK = 104,
     LIFTED_BLOCK_FINISH_EFFECT_UPDATE_4506A0_STACK = 108,
@@ -423,10 +425,20 @@ enum
     LIFTED_ACTOR_LIST_ALL_IDLE_STACK = 80,
     LIFTED_ACTOR_LIST_ALL_IDLE_471CD0_STACK = 80,
     LIFTED_ACTOR_LIST_ALL_IDLE_471D10_STACK = 80,
-    LIFTED_ACTOR_LIST_ALL_IDLE_471D50_STACK = 80,
-    LIFTED_F471D90_STACK = 80,
-    LIFTED_F471DD0_STACK = 80
+    LIFTED_ACTOR_LIST_ALL_IDLE_471D50_STACK = 80
 };
+
+/* Original 0x4504e0. */
+uint32_t lifted_block_finish_effect_update_4504e0(const VertrixCalls *calls,
+                                                  const VertrixFactoryServices *services,
+                                                  const VertrixGlobals *globals,
+                                                  const LiftEntry *entry);
+
+/* Original 0x450550. */
+uint32_t lifted_block_finish_effect_update_450550(const VertrixCalls *calls,
+                                                  const VertrixFactoryServices *services,
+                                                  const VertrixGlobals *globals,
+                                                  const LiftEntry *entry);
 
 /* Original 0x4505c0. */
 uint32_t lifted_block_finish_effect_update_4505c0(const VertrixCalls *calls,
@@ -2252,12 +2264,4 @@ uint32_t lifted_actor_list_all_idle_471d10(const VertrixCalls *calls,
 uint32_t lifted_actor_list_all_idle_471d50(const VertrixCalls *calls,
                                            const VertrixFactoryServices *services,
                                            const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x471d90. */
-uint32_t lifted_f471d90(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x471dd0. */
-uint32_t lifted_f471dd0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
 #endif

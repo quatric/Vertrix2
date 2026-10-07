@@ -48,6 +48,7 @@ int main(void)
     SYS_STDIO_Report(true);
     printf("\nVertrix 2 lifted routines on the Wii: %u in the dispatcher\n\n",
            vertrix_lifted_count());
+    vertrix_lifted_allow_unverified(1);
     run("hud_decor", 0x46b810);
     run("title_screen", 0x465af0);
     run("select_screen", 0x466d60);

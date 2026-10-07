@@ -73,9 +73,9 @@ def readable_names():
     return read_routine_names(ROOT / 'docs' / 'names.json')
 
 
-def combine(scratch, name, out_dir, first=0, count=None, unverified=False):
+def combine(scratch, name, out_dir, first=0, count=None, unverified=False, only=None):
     results = json.loads((scratch / 'results.json').read_text())
-    passed = sorted(n for n, r in results.items() if r['ok'] != unverified)[first:first + count if count else None]
+    passed = sorted(n for n, r in results.items() if r['ok'] != unverified and (only is None or n in only))[first:first + count if count else None]
     body = ['/* Routines lifted from the original by tools/lift.py (see docs/LIFTED.md), each verified\n'
             ' * against the original by tools/verify_lifted.py. */\n#include "lift_runtime.h"\n'
             '\n#include "lifted_%s.h"\n' % name]
@@ -118,5 +118,7 @@ if __name__ == '__main__':
         verify_all(scratch, jobs, cases)
     elif command == 'combine':
         unverified = '--unverified' in sys.argv
-        rest = [a for a in sys.argv[5:] if a != '--unverified']
-        combine(scratch, sys.argv[3], sys.argv[4], *map(int, rest[:2]), unverified=unverified)
+        only = next((a[7:].split(',') for a in sys.argv if a.startswith('--only=')), None)
+        rest = [a for a in sys.argv[5:] if a != '--unverified' and not a.startswith('--only=')]
+        combine(scratch, sys.argv[3], sys.argv[4], *map(int, rest[:2]), unverified=unverified,
+                only=only)

@@ -207,6 +207,15 @@ void vertrix_unrelated(void);
         for address in (0x404580, 0x425f40, 0x4523b0, 0x4713c0,
                         0x471ee0, 0x477930, 0x47f8f0, 0x4b3360):
             self.assertEqual(names[address], "vertrix_return_unchanged")
+        for address, name in ((0x449360, "vertrix_actor_frame_decay_full"),
+                              (0x449390, "vertrix_actor_frame_switch_full"),
+                              (0x4adfb0, "vertrix_actor_refresh_value_full"),
+                              (0x4adfe0, "vertrix_actor_refresh_arm_full"),
+                              (0x45f9f0, "vertrix_ui_panels_destroy_full"),
+                              (0x45fa70, "vertrix_ui_panels_slot1_full"),
+                              (0x45fab0, "vertrix_ui_panels_slot2_full"),
+                              (0x472d50, "vertrix_ui_panel_release_full")):
+            self.assertEqual(names[address], name)
         self.assertEqual(names[0x41a9e0], "vertrix_record_release_global_full")
         self.assertEqual(names[0x441a80], "vertrix_record_release_full")
         self.assertNotIn(0x43f200, names)

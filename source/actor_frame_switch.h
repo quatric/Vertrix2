@@ -14,6 +14,9 @@ typedef struct
     void (*bind)(uint32_t actor, void *context);
 } VertrixActorFrameOps;
 
+/* The bounded legacy helpers return success rather than original EAX, and
+ * accept refresh indices 0xffff and 0..5. */
+
 /* Original fragment 0x449360: when word +0x48 is nonzero, set words +0x4a = 0 and +0x4c = 4, move
  * the word +0x48 toward zero by cycles * 4 (the recovered 0x4ad530 arithmetic) and arm the refresh
  * (0x4adfe0). Returns zero for short storage or an invalid refresh index. */

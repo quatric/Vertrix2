@@ -121,7 +121,32 @@ def plan_renames(root):
         raise ValueError("Identifier substitution targets collide")
 
     texts = {path: path.read_text() for path in generated}
-    for metadata_path, header, body, metadata in chunks:
+    validation_chunks = list(chunks)
+    optional_path = root / "docs" / "lift" / "unverified.json"
+    optional_metadata = {}
+    if optional_path.exists():
+        optional_metadata = read_json(optional_path)
+        if not isinstance(optional_metadata, dict):
+            raise ValueError("Invalid unverified metadata object")
+        optional_addresses = set()
+        for name, meta in optional_metadata.items():
+            if (not IDENTIFIER.fullmatch(name) or not isinstance(meta, dict)
+                    or any(not isinstance(meta.get(key), int) or isinstance(meta[key], bool)
+                           or meta[key] < 0 for key in ("address", "stack", "arguments"))):
+                raise ValueError(f"Invalid unverified routine metadata: {name}")
+            if meta["address"] in optional_addresses or meta["address"] in originals:
+                raise ValueError(f"Duplicate unverified routine address: {name}")
+            optional_addresses.add(meta["address"])
+        header = root / "source" / "lifted_unverified.h"
+        body = root / "source" / "lifted_unverified.c"
+        for path in (header, body):
+            if not path.is_file():
+                raise ValueError("Missing unverified source/header")
+            texts[path] = path.read_text()
+            if set(identifiers(texts[path])).intersection(substitutions):
+                raise ValueError("Whole rename would change unverified identifiers")
+        validation_chunks.append((optional_path, header, body, optional_metadata))
+    for metadata_path, header, body, metadata in validation_chunks:
         expected = {f"lifted_{name}" for name in metadata}
         declarations = SIGNATURE.findall(executable_text(texts[header]))
         definitions = SIGNATURE.findall(executable_text(texts[body]))
@@ -157,7 +182,40 @@ def plan_renames(root):
             raise ValueError(f"Original-address annotation mismatch: {metadata_path.name}")
 
     dispatch_path = root / "source" / "lifted_dispatch.c"
-    rows = DISPATCH.findall(executable_text(texts[dispatch_path]))
+    dispatch_text = executable_text(texts[dispatch_path])
+    tables = {}
+    for match in re.finditer(r"\b(routines|unverified_routines)\s*\[\s*\]\s*=\s*\{([\s\S]*?)\}\s*;",
+                             dispatch_text):
+        if match.group(1) in tables:
+            raise ValueError("Duplicate dispatcher table")
+        tables[match.group(1)] = match.group(2)
+    if optional_path.exists() or "unverified_routines" in tables:
+        if set(tables) != {"routines", "unverified_routines"}:
+            raise ValueError("Missing separate verified/unverified dispatcher tables")
+        optional_rows = DISPATCH.findall(tables["unverified_routines"])
+        optional_expected = {meta["address"]: (f"lifted_{name}", meta["stack"], meta["arguments"])
+                             for name, meta in optional_metadata.items()}
+        optional_actual = {int(address, 16): (name, int(stack), int(arguments))
+                           for address, name, stack, arguments in optional_rows}
+        if len(optional_rows) != len(optional_actual) or optional_actual != optional_expected:
+            raise ValueError("Unverified dispatcher metadata mismatch")
+        remainder = DISPATCH.sub("", tables["unverified_routines"])
+        if not re.fullmatch(r"\s*\{\s*0\s*,\s*NULL\s*,\s*0\s*,\s*0\s*\}\s*,[\s,]*", remainder):
+            raise ValueError("Invalid unverified dispatcher sentinel or row")
+        # Optional rows must remain behind the generated, initially zero gate.
+        if (not re.search(r"\bstatic\s+int\s+unverified_allowed\s*;", dispatch_text)
+                or any(value.strip() != "allowed" for value in
+                       re.findall(r"\bunverified_allowed\s*=(?!=)([^;]+);", dispatch_text))
+                or not re.search(r"if\s*\(\s*found\s*==\s*NULL\s*&&\s*unverified_allowed\s*\)"
+                                 r"\s*\{\s*found\s*=\s*bsearch\s*\([^;]*\bunverified_routines\s*\+\s*1\b",
+                                 dispatch_text)):
+            raise ValueError("Unverified dispatcher must be disabled by default and explicitly gated")
+        rows = DISPATCH.findall(tables["routines"])
+        if len(DISPATCH.findall(dispatch_text)) != len(rows) + len(optional_rows):
+            raise ValueError("Dispatcher rows outside validated tables")
+    else:
+        # Legacy fixtures and dispatchers have only the verified table.
+        rows = DISPATCH.findall(dispatch_text)
     screen_addresses = {
         "hud_decor": 0x46b810, "title_screen": 0x465af0,
         "select_screen": 0x466d60, "game_screen": 0x46c9d0,
@@ -214,6 +272,8 @@ def plan_renames(root):
 
     staged = {}
     for path, text in texts.items():
+        if path not in generated:
+            continue
         replacement = rename_tokens(text, substitutions)
         if token_digest(text, substitutions) != token_digest(replacement):
             raise ValueError(f"Non-identifier semantic change: {path}")

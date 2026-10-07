@@ -260,8 +260,8 @@ def main():
                        'actor, the bounded refresh state at 5bb710 and the ordered calls compare for '
                        'legacy indices -1 and 0..5. Full APIs compare exact EAX, all callback '
                        'registers and callback mutations, every 16-bit refresh index, exact '
-                       'raw-memory reads/writes and all262144 bytes of independent globals '
-                       'from59b714 through5db713, including signed negative and out-of-range writes.'}
+                       'raw-memory reads/writes and all 262144 bytes of independent globals '
+                       'from 59b714 through 5db713, including signed negative and out-of-range writes.'}
     (args.build_dir / 'actor-frame-switch-verification.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))
 
