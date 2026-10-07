@@ -86,7 +86,7 @@ same lifted symbols twice).
 ## Names
 
 `tools/gen_names.py` reads the 'Original 0x...' comments of the recovered headers into
-`docs/names.json` (address -> name of the recovered function, 574 entries). `lift_batch.py combine`
+`docs/names.json` (address -> name of the recovered function, 650 entries). `lift_batch.py combine`
 names each verified lifted routine after it (`lifted_<name>`, the first address wins a name) and
 keeps `lifted_f<address>` for the rest, so 410 routines have readable names and the other ~2,200 keep
 their address until a name is established. A name is never guessed.

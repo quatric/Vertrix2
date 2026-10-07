@@ -1925,7 +1925,7 @@
   "virtual": [],
   "address": 4248144
  },
- "f40dc80": {
+ "mixer_volume_column": {
   "callees": {
    "0x40d090": [
     0,
@@ -2002,7 +2002,7 @@
   "virtual": [],
   "address": 4250752
  },
- "f40df20": {
+ "mixer_trigger_reset": {
   "callees": {},
   "stack": 76,
   "arguments": 0,
@@ -2101,7 +2101,7 @@
   "virtual": [],
   "address": 4253056
  },
- "f40e640": {
+ "mixer_note_release": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -2140,7 +2140,7 @@
   "virtual": [],
   "address": 4253296
  },
- "f40e770": {
+ "mixer_row": {
   "callees": {
    "0x40e690": [
     0,
@@ -2912,7 +2912,7 @@
   "virtual": [],
   "address": 4268192
  },
- "f4121e0": {
+ "record_table_load": {
   "callees": {
    "0x48a8a0": [
     0,
@@ -7885,7 +7885,7 @@
   "virtual": [],
   "address": 4349408
  },
- "f425e00": {
+ "table_used_count": {
   "callees": {},
   "stack": 72,
   "arguments": 0,
@@ -8213,7 +8213,7 @@
   "virtual": [],
   "address": 4362400
  },
- "f4290c0": {
+ "settings_defaults": {
   "callees": {},
   "stack": 116,
   "arguments": 0,
@@ -8263,7 +8263,7 @@
   "virtual": [],
   "address": 4363088
  },
- "f4293e0": {
+ "saved_block_load": {
   "callees": {
    "0x48a8a0": [
     0,
@@ -8424,7 +8424,7 @@
   "virtual": [],
   "address": 4363888
  },
- "f429880": {
+ "piece_actor_construct_slots": {
   "callees": {
    "0x4abd70": [
     0,
@@ -8552,7 +8552,7 @@
   "virtual": [],
   "address": 4366048
  },
- "f429fe0": {
+ "choice_grid_pick_cell": {
   "callees": {
    "0x4826c0": [
     0,
@@ -8958,7 +8958,7 @@
   "virtual": [],
   "address": 4368928
  },
- "f42aab0": {
+ "piece_actor_parent_construct": {
   "callees": {
    "0x4abd70": [
     0,
@@ -9061,7 +9061,7 @@
   "virtual": [],
   "address": 4370224
  },
- "f42af80": {
+ "piece_actor_cycle": {
   "callees": {
    "0x4ac8f0": [
     0,

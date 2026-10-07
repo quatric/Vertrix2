@@ -554,7 +554,7 @@
   "virtual": [],
   "address": 4903616
  },
- "f4ad3c0": {
+ "actor_double_orbit_point": {
   "callees": {
    "0x4ad210": [
     1,
@@ -791,7 +791,7 @@
   ],
   "address": 4906528
  },
- "f4ade60": {
+ "sprite_chain_draw32": {
   "callees": {
    "0x4ac8a0": [
     0,
@@ -3583,7 +3583,7 @@
   "virtual": [],
   "address": 4951996
  },
- "f4b9050": {
+ "render_scale_advances": {
   "callees": {
    "0x4eb5c0": [
     0,

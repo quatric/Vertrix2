@@ -77,7 +77,7 @@ enum
     LIFTED_F453280_STACK = 116,
     LIFTED_STATE_COMBINE_453320_STACK = 120,
     LIFTED_STATE_PAIR_4533B0_STACK = 128,
-    LIFTED_EFFECT_STONE_ARM_STACK = 112,
+    LIFTED_F453460_STACK = 112,
     LIFTED_EFFECT_STONE_APPLY_STACK = 112,
     LIFTED_EFFECT_STONE_CLEAR_STACK = 100,
     LIFTED_F4535D0_STACK = 100,
@@ -109,7 +109,7 @@ enum
     LIFTED_F4542E0_STACK = 120,
     LIFTED_F4543A0_STACK = 156,
     LIFTED_STATE_ASK_454510_STACK = 92,
-    LIFTED_F454560_STACK = 120,
+    LIFTED_SESSION_START_FREEZE_STACK = 120,
     LIFTED_F454600_STACK = 100,
     LIFTED_STATE_CYCLE_4546A0_STACK = 128,
     LIFTED_F454760_STACK = 92,
@@ -375,7 +375,7 @@ enum
     LIFTED_HUD_BUILD_STACK = 1096,
     LIFTED_F46C500_STACK = 152,
     LIFTED_F46C9D0_STACK = 2064,
-    LIFTED_F46E8B0_STACK = 180,
+    LIFTED_MARQUEE_BUILD_STACK = 180,
     LIFTED_F470960_STACK = 240,
     LIFTED_ROW_LABEL_STACK = 240,
     LIFTED_PANEL_GROUP_STACK = 368,
@@ -730,8 +730,8 @@ uint32_t lifted_state_pair_4533b0(const VertrixCalls *calls, const VertrixFactor
                                   const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x453460. */
-uint32_t lifted_effect_stone_arm(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                 const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_f453460(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4534e0. */
 uint32_t lifted_effect_stone_apply(const VertrixCalls *calls,
@@ -860,8 +860,9 @@ uint32_t lifted_state_ask_454510(const VertrixCalls *calls, const VertrixFactory
                                  const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x454560. */
-uint32_t lifted_f454560(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_session_start_freeze(const VertrixCalls *calls,
+                                     const VertrixFactoryServices *services,
+                                     const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x454600. */
 uint32_t lifted_f454600(const VertrixCalls *calls, const VertrixFactoryServices *services,
@@ -1950,8 +1951,8 @@ uint32_t lifted_f46c9d0(const VertrixCalls *calls, const VertrixFactoryServices 
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x46e8b0. */
-uint32_t lifted_f46e8b0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_marquee_build(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                              const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x470960. */
 uint32_t lifted_f470960(const VertrixCalls *calls, const VertrixFactoryServices *services,

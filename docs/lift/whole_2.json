@@ -3025,7 +3025,7 @@
   ],
   "address": 4535216
  },
- "effect_stone_arm": {
+ "f453460": {
   "callees": {
    "0x436fe0": [
     0,
@@ -4682,7 +4682,7 @@
   ],
   "address": 4539664
  },
- "f454560": {
+ "session_start_freeze": {
   "callees": {
    "0x43ac00": [
     0,
@@ -16660,7 +16660,7 @@
   "virtual": [],
   "address": 4639184
  },
- "f46e8b0": {
+ "marquee_build": {
   "callees": {
    "0x4ca000": [
     0,

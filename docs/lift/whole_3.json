@@ -996,7 +996,7 @@
   "virtual": [],
   "address": 4664752
  },
- "f4731a0": {
+ "icons_build": {
   "callees": {
    "0x4ca000": [
     0,
@@ -3679,7 +3679,7 @@
   "virtual": [],
   "address": 4689040
  },
- "f478cd0": {
+ "event_key_index": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -4177,7 +4177,7 @@
   "virtual": [],
   "address": 4705632
  },
- "f47ce10": {
+ "surface_blit": {
   "callees": {
    "0x478eb0": [
     0,
@@ -4328,7 +4328,7 @@
   "virtual": [],
   "address": 4712848
  },
- "f47e9a0": {
+ "object_set_pair": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -9437,7 +9437,7 @@
   ],
   "address": 4773568
  },
- "f4abd70": {
+ "ui_actor_storage_construct": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -9711,7 +9711,7 @@
   "virtual": [],
   "address": 4899728
  },
- "f4ac3b0": {
+ "actor_step_quotient": {
   "callees": {},
   "stack": 72,
   "arguments": 0,
@@ -9947,7 +9947,7 @@
   "virtual": [],
   "address": 4900384
  },
- "f4ac640": {
+ "actor_progress_quotient": {
   "callees": {},
   "stack": 72,
   "arguments": 0,

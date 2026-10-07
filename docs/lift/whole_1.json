@@ -1210,7 +1210,7 @@
   "virtual": [],
   "address": 4404400
  },
- "f433550": {
+ "board_marker_reach": {
   "callees": {
    "0x4327e0": [
     0,
@@ -1738,7 +1738,7 @@
   "virtual": [],
   "address": 4418208
  },
- "f436fe0": {
+ "effect_stone_arm": {
   "callees": {
    "0x4327e0": [
     0,
@@ -1897,7 +1897,7 @@
   "virtual": [],
   "address": 4423520
  },
- "f4383f0": {
+ "board_mark_stones": {
   "callees": {
    "0x4327e0": [
     0,
@@ -2034,7 +2034,7 @@
   "virtual": [],
   "address": 4426000
  },
- "f438960": {
+ "board_set_motion": {
   "callees": {
    "0x4ac7b0": [
     0,
@@ -2275,7 +2275,7 @@
   "virtual": [],
   "address": 4428096
  },
- "f439190": {
+ "board_destroy_marked": {
   "callees": {
    "virtual_4391e3": [
     0,
@@ -2395,7 +2395,7 @@
   "virtual": [],
   "address": 4429072
  },
- "f4398c0": {
+ "board_clear_marked_extra": {
   "callees": {
    "virtual_43990b": [
     0,
@@ -2446,7 +2446,7 @@
   "virtual": [],
   "address": 4432000
  },
- "f43a160": {
+ "piece_child_slots_init": {
   "callees": {
    "0x4abd70": [
     0,
@@ -2465,7 +2465,7 @@
   "virtual": [],
   "address": 4432224
  },
- "f43a310": {
+ "piece_frames_build": {
   "callees": {
    "0x4ca000": [
     0,
@@ -2623,7 +2623,7 @@
   "virtual": [],
   "address": 4433328
  },
- "f43a5f0": {
+ "effect_armed_handler": {
   "callees": {
    "0x4ac8d0": [
     0,
@@ -3092,7 +3092,7 @@
   "virtual": [],
   "address": 4437632
  },
- "f43b6a0": {
+ "player_draw_table_value": {
   "callees": {
    "0x482770": [
     0,
@@ -3552,7 +3552,7 @@
   "virtual": [],
   "address": 4439264
  },
- "f43bd00": {
+ "player_enter_4523d0": {
   "callees": {
    "0x4ac8f0": [
     0,
@@ -4031,7 +4031,7 @@
   "virtual": [],
   "address": 4443824
  },
- "f43cef0": {
+ "player_setup_side_31": {
   "callees": {
    "0x43b930": [
     0,
@@ -5243,7 +5243,7 @@
   ],
   "address": 4457616
  },
- "f440a20": {
+ "font_draw_text_scaled": {
   "callees": {
    "0x4ca000": [
     0,
@@ -5463,7 +5463,7 @@
   "virtual": [],
   "address": 4463232
  },
- "f441b30": {
+ "surface_blit_whole": {
   "callees": {
    "0x47ce10": [
     4,
