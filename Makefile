@@ -26,6 +26,7 @@ $(BUILD)/%.o: source/%.c $(wildcard source/*.h) | $(BUILD)
 	$(PPC_CC) $(CFLAGS) -c $< -o $@
 
 $(BUILD)/libvertrix-recovered.a: $(OBJECTS)
+	rm -f $@
 	$(PPC_AR) rcs $@ $^
 
 format:
@@ -153,3 +154,23 @@ $(BUILD)/vertrix2.dol: $(BUILD)/vertrix2.elf
 # The sequencer, mixer and XM readers are already in libvertrix-recovered.a.
 $(BUILD)/libvertrix-wii-music-deps.a: $(BUILD)/libvertrix-recovered.a
 	cp $< $@
+
+# The lifted screen builders run on the Wii through the dispatcher (not the game loop).
+.PHONY: wii-lifted-probe
+wii-lifted-probe: $(BUILD)/vertrix2-lifted-probe.dol
+
+$(BUILD)/image.bin: Vertrix2.exe tools/dump_image.py | $(BUILD)
+	python3 tools/dump_image.py $@ $<
+
+$(BUILD)/image_bin.o: $(BUILD)/image.bin
+	cd $(BUILD) && /opt/devkitpro/tools/bin/bin2s -H image_bin.h image.bin > image_bin.s
+	$(PPC_CC) -c $(BUILD)/image_bin.s -o $@
+
+$(BUILD)/wii_lifted_probe.o: tools/wii_lifted_probe.c $(wildcard source/*.h) | $(BUILD)
+	$(PPC_CC) $(CFLAGS) -DGEKKO -DHW_RVL -D__wii__ -I$(LIBOGC)/include -Isource -c $< -o $@
+
+$(BUILD)/vertrix2-lifted-probe.elf: $(BUILD)/wii_lifted_probe.o $(BUILD)/image_bin.o $(BUILD)/libvertrix-recovered.a
+	$(PPC_CC) -mrvl $(CFLAGS) $^ -L$(LIBOGC)/lib/wii -lwiiuse -lbte -logc -lm -o $@
+
+$(BUILD)/vertrix2-lifted-probe.dol: $(BUILD)/vertrix2-lifted-probe.elf
+	/opt/devkitpro/tools/bin/elf2dol $< $@

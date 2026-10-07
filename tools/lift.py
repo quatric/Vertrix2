@@ -542,6 +542,17 @@ class Lifter:
                     break
         return found
 
+    def constants(self):
+        """Immediates the routine compares against (and their neighbours): good scalar inputs."""
+        found = set()
+        for insn in self.insns.values():
+            if insn.mnemonic in ('cmp', 'test', 'sub') and len(insn.operands) == 2 and \
+                    insn.operands[1].type == X.X86_OP_IMM:
+                value = insn.operands[1].imm
+                for delta in (-1, 0, 1):
+                    found.add((value + delta) & 0xffffffff)
+        return found
+
     def pointer_maybe(self):
         """Object dwords that are loaded and spilled to a local (they may be object pointers)."""
         found = set()
@@ -674,6 +685,7 @@ uint32_t lifted_%s(const VertrixCalls *calls, const VertrixFactoryServices *serv
             'pointer_fields': sorted(lifter.pointer_fields()),
             'pointer_globals': sorted(lifter.pointer_fields(True)),
             'pointer_maybe': sorted(lifter.pointer_maybe()),
+            'constants': sorted(lifter.constants())[:64],
             'virtual': sorted([f if f is not None else -1, sl, n]
                               for f, sl, n in lifter.virtual_calls())}
     return text, header, meta

@@ -60,3 +60,25 @@ completion this way; their remaining boundary targets are listed by the probe.
 - Not written: the Wii startup and loop that call the lifted screens, and the platform side of the
   unrecovered boundary (heap allocator 0x4e7c90, AnsiString helpers, the actor creators).
 - Nothing has run in Dolphin or on hardware.
+
+## Host runtime and the Wii probe
+
+`source/lift_host.[ch]` is the portable host side of the lifted routines: the original's mapped
+image as writable static data (`tools/dump_image.py`, identical to the oracle's `original_image`),
+a heap arena at original-style addresses, global reads and stores, the object resolver, and a call
+boundary that serves the allocators (`0x4ca000`, the RTL `GetMem` `0x4e7c90`) and records every
+other target it is asked for. It is byte order independent. `tools/host_probe.c` (host) and
+`tools/wii_lifted_probe.c` (`make wii-lifted-probe`, `build/vertrix2-lifted-probe.dol`) run the four
+lifted screens through it. On the host, with the image built by `tools/dump_image.py`:
+
+| screen | allocated | boundary calls left |
+| --- | --- | --- |
+| hud_decor 0x46b810 | - | none |
+| title_screen 0x465af0 | 0xc340 | only 0x4d88a0 (TList insert), 142 |
+| select_screen 0x466d60 | 0x2aa0 | 0x4d88a0, 0x4b6350, 0x4b65d0 |
+| game_screen 0x46c9d0 | 0xe400 | 0x4b6350, 0x4b5700, 0x4b58a0, 0x43a310, 0x4726d0 |
+
+The Wii probe DOL builds. It was not run in Dolphin: Dolphin in this environment produced no
+output at all, even for the older known-good `wii-game/boot.dol`, so there is no capture to show.
+The Makefile now rebuilds `libvertrix-recovered.a` from scratch (a stale member had defined the
+same lifted symbols twice).

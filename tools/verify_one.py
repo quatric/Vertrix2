@@ -35,6 +35,9 @@ scalar_reads = sorted({(int(m.group(1), 16), int(m.group(2))) for m in re.findit
     if int(m.group(1), 16) not in pointer_offsets})
 
 
+constants = meta.get('constants', [])
+
+
 def vtable_patch(rng, handle, data):
     for offset in meta.get('pointer_maybe', []):
         if offset + 4 <= len(data) and rng.random() < 0.6:
@@ -43,6 +46,8 @@ def vtable_patch(rng, handle, data):
     for offset, size in scalar_reads:
         if offset + size <= len(data):
             value = rng.choice([0, 1, 2, 3, 0xffffffff, rng.randrange(0, 30), rng.randrange(0, 256)])
+            if constants and rng.random() < 0.5:
+                value = rng.choice(constants)
             data[offset:offset + size] = (value & ((1 << (8 * size)) - 1)).to_bytes(size, 'little')
     for field, slot, _count in virtual:
         if field >= 0 and field + 4 <= len(data):
