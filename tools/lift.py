@@ -33,6 +33,7 @@ REG32 = {X.X86_REG_EAX: 'eax', X.X86_REG_ECX: 'ecx', X.X86_REG_EDX: 'edx', X.X86
 REG16 = {X.X86_REG_AX: 'eax', X.X86_REG_CX: 'ecx', X.X86_REG_DX: 'edx', X.X86_REG_BX: 'ebx',
          X.X86_REG_SI: 'esi', X.X86_REG_DI: 'edi', X.X86_REG_BP: 'ebp'}
 REG8L = {X.X86_REG_AL: 'eax', X.X86_REG_CL: 'ecx', X.X86_REG_DL: 'edx', X.X86_REG_BL: 'ebx'}
+SEGMENTS = {X.X86_REG_DS, X.X86_REG_ES, X.X86_REG_SS, X.X86_REG_CS, X.X86_REG_GS}
 REG8H = {X.X86_REG_AH: 'eax', X.X86_REG_CH: 'ecx', X.X86_REG_DH: 'edx', X.X86_REG_BH: 'ebx'}
 
 CONDITIONS = {
@@ -157,6 +158,8 @@ class Lifter:
 
     # ---- operand helpers -------------------------------------------------------------------
     def reg_read(self, reg):
+        if reg in SEGMENTS:
+            return '0u'
         if reg in REG32:
             return REG32[reg]
         if reg in REG16:
@@ -168,6 +171,8 @@ class Lifter:
         raise ValueError('register %s' % reg)
 
     def reg_write(self, reg, value):
+        if reg in SEGMENTS:
+            return '(void)(%s);' % value
         if reg in REG32:
             return '%s = %s;' % (REG32[reg], value)
         if reg in REG16:
@@ -254,7 +259,10 @@ class Lifter:
         ops = insn.operands
         if insn.address in self.targets:
             self.out.append('L_%x:' % insn.address)
-        if m in ('nop', 'cld'):
+        if m == 'nop':
+            return
+        if m in ('cld', 'std'):
+            self.emit('fl.df = %d;' % (m == 'std'))
             return
         if m == 'mov' and ops[0].type == X.X86_OP_REG and ops[1].type == X.X86_OP_REG and \
                 ops[0].reg == ops[1].reg and ops[0].reg in REG32:
@@ -639,7 +647,7 @@ def render(start, name, argument_count=None, include_prelude=True):
 {
     uint8_t stack[LIFTED_%s_STACK + 4 + 4 * %d + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;

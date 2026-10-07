@@ -21,6 +21,7 @@ typedef struct LiftFlags
     uint32_t cf;
     uint32_t of;
     uint32_t pf;
+    uint32_t df;
 } LiftFlags;
 
 typedef struct LiftEntry
@@ -564,6 +565,7 @@ static inline void lift_idiv1(unsigned bits, uint32_t a, uint32_t *eax, uint32_t
 static inline void lift_string(LiftEnv *env, int kind, unsigned size, int repeat, uint32_t *eax,
                                uint32_t *ecx, uint32_t *esi, uint32_t *edi, LiftFlags *fl)
 {
+    uint32_t step = fl->df ? (uint32_t)(0u - size) : size;
     for (;;)
     {
         uint32_t a, b;
@@ -575,28 +577,28 @@ static inline void lift_string(LiftEnv *env, int kind, unsigned size, int repeat
         {
             case 0:
                 lift_store(env, *edi, 0, size, lift_load(env, *esi, 0, size));
-                *esi += size;
-                *edi += size;
+                *esi += step;
+                *edi += step;
                 break;
             case 1:
                 lift_store(env, *edi, 0, size, *eax);
-                *edi += size;
+                *edi += step;
                 break;
             case 2:
                 a = lift_load(env, *esi, 0, size);
                 *eax = size == 4 ? a : (*eax & ~lift_mask(size)) | a;
-                *esi += size;
+                *esi += step;
                 break;
             case 3:
                 (void)lift_sub(size * 8, *eax, lift_load(env, *edi, 0, size), fl);
-                *edi += size;
+                *edi += step;
                 break;
             default:
                 a = lift_load(env, *esi, 0, size);
                 b = lift_load(env, *edi, 0, size);
                 (void)lift_sub(size * 8, a, b, fl);
-                *esi += size;
-                *edi += size;
+                *esi += step;
+                *edi += step;
                 break;
         }
         if (repeat == 0)

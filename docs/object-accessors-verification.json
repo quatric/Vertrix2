@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "executions": {
+    "add_elapsed_bc": 4096,
+    "add_elapsed_cc": 4096,
+    "add_elapsed_dc": 4096,
+    "actor_clock_to_period": 4096,
+    "actor_select_ec": 4096,
+    "actor_select_f0": 4096,
+    "actor_clock_reached": 4096,
+    "player_flag_4e8": 4096,
+    "player_bonus_meter_full": 4096,
+    "player_flag_a60": 4096,
+    "player_byte_4c4_is_one": 4096,
+    "player_set_bytes_168": 4096,
+    "object_set_18": 4096
+  },
+  "scope": "Cleaned small actor and player accessors against the complete original routines: every returned value and the whole object compare."
+}
