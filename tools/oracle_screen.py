@@ -71,7 +71,7 @@ def write_report(build_dir, name, report):
 def run_screen(name, address, sources, function, argtypes, restype, callees, generate, scope,
                *, wrappers=(), allocator=0x4ca000, globals_ranges=(), patch=None, compare=True,
                result_mask=0xffffffff, description='', table_targets=(), lookups=(), pool_size=0x200, effects=None, fixed_returns=None, handle_returns=(), choices=None,
-               setup=None, automap_enabled=False, extras=None, native_extras_arg=None, post=None, mixed_returns=(),
+               setup=None, automap_enabled=False, tolerate_faults=False, extras=None, native_extras_arg=None, post=None, mixed_returns=(),
                leading=('calls', 'services', 'globals')):
     """Run `function` against the original routine at `address`.
 
@@ -164,6 +164,7 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
     services = Services(pool.resolve, None, None, None, None)
     reader = global_reader(cpu)
     globals_ = Globals(reader, None)
+    completed = skipped_cases = 0
     for case in range(args.cases):
         if patch:
             pool.fill(rng, lambda handle, data: patch(rng, handle, data))
@@ -177,7 +178,14 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
         outs.clear()
         native_log.clear()
         native_stores.clear()
-        result = original.call(address, args=tuple(stack_args), **kwargs) & 0xffffffff
+        try:
+            result = original.call(address, args=tuple(stack_args), **kwargs) & 0xffffffff
+        except (UcError, RuntimeError):
+            if not tolerate_faults:
+                raise
+            skipped_cases += 1  # the original itself faults or never returns on this input
+            continue
+        completed += 1
         replay[:] = list(returns)
         replay_out[:] = list(outs)
         objects = {'calls': calls, 'services': services, 'globals': globals_}
@@ -196,6 +204,8 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
         if post:
             post(cpu, native_args)
         assert not replay and not replay_out and pool.same(), (case, pool.diff())
+    assert completed >= (max(4, args.cases // 4) if tolerate_faults else args.cases), \
+        ('too few complete original executions', completed, skipped_cases)
     write_report(args.build_dir, name, {
-        'status': 'passed', 'complete_original_executions': {hex(address): args.cases},
+        'status': 'passed', 'complete_original_executions': {hex(address): completed},
         'scope': scope})

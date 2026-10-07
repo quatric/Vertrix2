@@ -34,15 +34,20 @@ def lift_all(scratch, addresses):
 
 
 def verify_one(scratch, name, cases):
-    command = [sys.executable, str(Path(__file__).with_name('verify_one.py')), str(scratch), name,
-               str(cases)]
-    try:
-        done = subprocess.run(command, capture_output=True, text=True, timeout=600, cwd=ROOT / 'tools')
-    except subprocess.TimeoutExpired:
-        return name, False, 'timeout'
-    ok = done.returncode == 0
-    detail = (done.stderr.strip().splitlines() or [''])[-1][:200] if not ok else ''
-    return name, ok, detail
+    last = ''
+    for mode in ('wide', 'small'):
+        command = [sys.executable, str(Path(__file__).with_name('verify_one.py')), str(scratch),
+                   name, str(cases), mode]
+        try:
+            done = subprocess.run(command, capture_output=True, text=True, timeout=600,
+                                  cwd=ROOT / 'tools')
+        except subprocess.TimeoutExpired:
+            last = 'timeout'
+            continue
+        if done.returncode == 0:
+            return name, True, ''
+        last = (done.stderr.strip().splitlines() or [''])[-1][:200]
+    return name, False, last
 
 
 def verify_all(scratch, jobs, cases):

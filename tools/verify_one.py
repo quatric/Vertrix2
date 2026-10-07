@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 
 scratch, name, cases = Path(sys.argv[1]), sys.argv[2], sys.argv[3]
+SMALL = len(sys.argv) > 4 and sys.argv[4] == 'small'
 meta = json.loads((scratch / (name + '.json')).read_text())
 sys.argv = ['verify_one', str(Path(__file__).resolve().parents[1] / 'Vertrix2.exe'), '--build-dir',
             str(Path(__file__).resolve().parents[1] / 'build' / 'batch'), '--cases', cases]
@@ -85,7 +86,7 @@ def co_create(cpu, rng, eax, edx, ebx, ecx, stack):
 
 
 com = {0x4f175c: co_create} if 0x4f175c in imports else None
-spec = dict(effects=com, fixed_returns={0x4f175c: 0} if com else None, address=meta['address'], arguments=meta['arguments'], small=True, keep=tuple(slots) + tuple(pointer_globals) + tuple(imports), mixed=True, handles=True, automap=True,
+spec = dict(effects=com, fixed_returns={0x4f175c: 0} if com else None, address=meta['address'], arguments=meta['arguments'], small=True, keep=tuple(slots) + tuple(pointer_globals) + tuple(imports), mixed=True, handles=True, automap=True, tolerate=True, smallregs=SMALL,
             pool_size=0x1000, patch=vtable_patch,
             setup_case=lambda rng, pool, cpu, kwargs: vtable_setup(cpu),
             setup=vtable_setup if virtual or slots or pointer_globals or imports else None)
