@@ -388,6 +388,14 @@ class Lifter:
                 int(next_insn.op_str.split(',')[1], 0) // 4
             self.callees[op.mem.disp] = (count, cdecl)
             pops = 0 if cdecl else count
+        elif op.type == X.X86_OP_MEM and not op.mem.base and not op.mem.index and \
+                op.mem.segment != X.X86_REG_FS:
+            # a function pointer held in a global slot
+            target_expr = self.read(op)
+            count = int(next_insn.op_str.split(',')[1], 0) // 4 if cdecl else \
+                self.pending_pushes(insn)
+            self.callees[('slot', op.mem.disp)] = (count, cdecl)
+            pops = 0 if cdecl else count
         else:
             target_expr = self.read(op)
             count = int(next_insn.op_str.split(',')[1], 0) // 4 if cdecl else 0
@@ -430,8 +438,9 @@ class Lifter:
                     break
         return found
 
-    def pointer_fields(self):
-        """Offsets of object dwords that are loaded into a register used as a memory base."""
+    def pointer_fields(self, absolute=False):
+        """Offsets of object dwords that are loaded into a register used as a memory base
+        (with absolute, the global dwords instead)."""
         found = set()
         for index, address in enumerate(self.order):
             insn = self.insns[address]
@@ -440,8 +449,11 @@ class Lifter:
                     ops[1].type != X.X86_OP_MEM:
                 continue
             mem = ops[1].mem
-            if ops[1].size != 4 or not mem.base or mem.base in (X.X86_REG_EBP, X.X86_REG_ESP) or \
-                    mem.index or mem.segment == X.X86_REG_FS:
+            if ops[1].size != 4 or mem.index or mem.segment == X.X86_REG_FS:
+                continue
+            if absolute != (not mem.base):
+                continue
+            if mem.base in (X.X86_REG_EBP, X.X86_REG_ESP):
                 continue
             holding = {ops[0].reg}
             for follower in self.order[index + 1:index + 40]:
@@ -563,11 +575,12 @@ uint32_t lifted_%s(const VertrixCalls *calls, const VertrixFactoryServices *serv
                    const VertrixGlobals *globals, const LiftEntry *entry);
 #endif
 ''' % (upper, upper, upper, stack_size, start, upper, name)
-    callees = {('0x%x' % k if isinstance(k, int) else 'virtual_%x' % k[1]): v
+    callees = {('0x%x' % k if isinstance(k, int) else '%s_%x' % (k[0], k[1])): v
                for k, v in lifter.callees.items()}
     meta = {'callees': callees, 'stack': stack_size, 'arguments': argument_count,
             'pointer_callees': sorted('0x%x' % t for t in lifter.pointer_callees()),
             'pointer_fields': sorted(lifter.pointer_fields()),
+            'pointer_globals': sorted(lifter.pointer_fields(True)),
             'virtual': sorted([f if f is not None else -1, sl]
                               for f, sl in lifter.virtual_calls())}
     return text, header, meta

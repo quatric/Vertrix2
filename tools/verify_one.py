@@ -36,12 +36,30 @@ def vtable_patch(rng, handle, data):
             data[field:field + 4] = VTABLE.to_bytes(4, 'little')
 
 
+slots = [int(k[5:], 16) for k in meta['callees'] if k.startswith('slot_')]
+for index, slot in enumerate(slots):
+    meta['callees']['0x%x' % (0x700800 + 16 * index)] = meta['callees'][ 'slot_%x' % slot]
+
+
+pointer_globals = [g for g in meta.get('pointer_globals', []) if g not in slots]
+
+
+imports = [int(k, 16) for k in meta['callees'] if k.startswith('0x') and
+           0x4f1000 <= int(k, 16) < 0x4f4000]
+
+
 def vtable_setup(cpu):
+    for address in imports:
+        cpu.mem_write(address, struct.pack('<I', address))
+    for address in pointer_globals:
+        cpu.mem_write(address, struct.pack('<I', 0x806000))
+    for index, slot in enumerate(slots):
+        cpu.mem_write(slot, struct.pack('<I', 0x700800 + 16 * index))
     for field, slot in virtual:
         cpu.mem_write(VTABLE + slot, struct.pack('<I', LEAF))
 
 
-spec = dict(address=meta['address'], arguments=meta['arguments'], small=True, mixed=True, handles=True,
+spec = dict(address=meta['address'], arguments=meta['arguments'], small=True, keep=tuple(slots) + tuple(pointer_globals) + tuple(imports), mixed=True, handles=True,
             pool_size=0x1000, patch=vtable_patch,
-            setup=vtable_setup if virtual else None)
+            setup=vtable_setup if virtual or slots or pointer_globals or imports else None)
 verify_lifted.run(name, spec, meta, scratch / (name + '.c'))

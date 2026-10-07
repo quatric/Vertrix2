@@ -39,7 +39,7 @@ def callees_for(name, meta=None):
         meta = json.loads((META / (name + '.json')).read_text())
     table = {}
     for target, (count, cdecl) in meta['callees'].items():
-        if target.startswith('virtual_'):
+        if target.startswith('virtual_') or target.startswith('slot_'):
             continue
         table[int(target, 16)] = (count, True) if cdecl else count
     return table, meta['stack'], [int(t, 16) for t in meta.get('pointer_callees', [])], \
