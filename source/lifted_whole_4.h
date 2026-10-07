@@ -66,7 +66,7 @@ enum
     LIFTED_ACTOR_REFRESH_ARM_STACK = 68,
     LIFTED_ACTOR_DRAW_SLOT_FULL_STACK = 120,
     LIFTED_F4AE110_STACK = 64,
-    LIFTED_F4AE140_STACK = 68,
+    LIFTED_ACTOR_CHAIN_WALK_4AE140_STACK = 68,
     LIFTED_F4AE150_STACK = 76,
     LIFTED_F4AE1F0_STACK = 68,
     LIFTED_RENDER_PREPARE_STACK = 80,
@@ -693,8 +693,9 @@ uint32_t lifted_f4ae110(const VertrixCalls *calls, const VertrixFactoryServices 
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4ae140. */
-uint32_t lifted_f4ae140(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_actor_chain_walk_4ae140(const VertrixCalls *calls,
+                                        const VertrixFactoryServices *services,
+                                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4ae150. */
 uint32_t lifted_f4ae150(const VertrixCalls *calls, const VertrixFactoryServices *services,

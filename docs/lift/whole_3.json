@@ -34,7 +34,7 @@
   "virtual": [],
   "address": 4660832
  },
- "f471e80": {
+ "object_flip_454_471e80": {
   "callees": {},
   "stack": 72,
   "arguments": 0,
@@ -60,7 +60,7 @@
   "virtual": [],
   "address": 4660896
  },
- "f471eb0": {
+ "object_get_464": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -72,7 +72,7 @@
   "virtual": [],
   "address": 4660912
  },
- "f471ec0": {
+ "object_get_174": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -84,7 +84,7 @@
   "virtual": [],
   "address": 4660928
  },
- "f471ed0": {
+ "object_get_178": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -1472,7 +1472,7 @@
   "virtual": [],
   "address": 4675552
  },
- "f475800": {
+ "flags_get": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -1484,7 +1484,7 @@
   "virtual": [],
   "address": 4675584
  },
- "f475810": {
+ "flags_dword": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -1496,7 +1496,7 @@
   "virtual": [],
   "address": 4675600
  },
- "f475820": {
+ "flags_dword_475820": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -1508,7 +1508,7 @@
   "virtual": [],
   "address": 4675616
  },
- "f475830": {
+ "flags_dword_475830": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -1547,7 +1547,7 @@
   "virtual": [],
   "address": 4675648
  },
- "f4759d0": {
+ "flags_set": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -1681,7 +1681,7 @@
   "virtual": [],
   "address": 4676336
  },
- "f475b00": {
+ "flags_idle": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2013,7 +2013,7 @@
   "virtual": [],
   "address": 4677088
  },
- "f475df0": {
+ "progress_done": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -2025,7 +2025,7 @@
   "virtual": [],
   "address": 4677104
  },
- "f475e10": {
+ "progress_quotient": {
   "callees": {},
   "stack": 72,
   "arguments": 0,
@@ -2049,7 +2049,7 @@
   "virtual": [],
   "address": 4677168
  },
- "f475e40": {
+ "progress_set_3c": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -3071,7 +3071,7 @@
   "virtual": [],
   "address": 4683712
  },
- "f477870": {
+ "stream_set_class": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -3403,7 +3403,7 @@
   ],
   "address": 4685584
  },
- "f478460": {
+ "rect_commit": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
