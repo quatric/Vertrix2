@@ -197,12 +197,13 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
         else:
             assert got == 1, (case, got)
         assert native_log == stubs.log, (case, native_log, stubs.log)
-        final = {}
+        shadow = {}
         for store_address, value, width in native_stores:
-            final[(store_address, width)] = value
-        for (store_address, width), value in final.items():
-            held = int.from_bytes(bytes(cpu.mem_read(store_address, width)), 'little')
-            assert held == value & ((1 << (8 * width)) - 1), (case, hex(store_address), held, value)
+            for i in range(width):
+                shadow[store_address + i] = (value >> (8 * i)) & 0xff
+        for byte_address, byte in shadow.items():
+            held = bytes(cpu.mem_read(byte_address, 1))[0]
+            assert held == byte, (case, hex(byte_address), held, byte)
         if post:
             post(cpu, native_args)
         assert not replay and not replay_out and pool.same(), (case, pool.diff())

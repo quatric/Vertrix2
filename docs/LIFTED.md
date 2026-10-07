@@ -48,7 +48,7 @@ the host against the original's static data and a heap arena and prints every ca
 the platform boundary. The four lifted screens (0x465af0, 0x466d60, 0x46c9d0, 0x46b810) run to
 completion this way; their remaining boundary targets are listed by the probe.
 
-## Open (as of the last batch: 2,600 of 3,421 lifted routines verify)
+## Open (as of the last batch: 2,605 of 3,421 lifted routines verify)
 
 - 49 routines never complete under the oracle: they wait for a field that a stubbed callee would
   update (animation and state-machine tick loops such as 0x452520), so the original loops until the

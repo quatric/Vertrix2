@@ -88,8 +88,9 @@ def run(name, spec=None, meta=None, source=None):
             if spec.get('smallregs') and rng.random() < 0.85:
                 kwargs[register_name] = rng.choice([0, 1, 2, 3, rng.randrange(0, 64),
                                                     rng.randrange(0, 300)])
-            if spec.get('handles') and not (spec.get('smallregs') and rng.random() < 0.7) and \
-                    (register_name == 'eax' or rng.random() < 0.5):
+            if spec.get('handles') and (
+                    (register_name == 'eax' and not (spec.get('smallregs') and rng.random() < 0.5)) or
+                    (not spec.get('smallregs') and rng.random() < 0.5)):
                 kwargs[register_name] = rng.choice(pool.handles)
         if spec.get('setup_case'):
             spec['setup_case'](rng, pool, cpu, kwargs)
