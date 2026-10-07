@@ -29,13 +29,17 @@ for _field, _slot, _count in virtual:
 import re  # noqa: E402
 
 source_text = (scratch / (name + '.c')).read_text()
-pointer_offsets = set(meta.get('pointer_fields', [])) | {f for f, _, _ in virtual if f >= 0}
+pointer_offsets = set(meta.get('pointer_fields', [])) | set(meta.get('pointer_maybe', [])) | {f for f, _, _ in virtual if f >= 0}
 scalar_reads = sorted({(int(m.group(1), 16), int(m.group(2))) for m in re.finditer(
     r'lift_load\(&env, e\w\w, 0x([0-9a-f]+)u, (\d)\)', source_text)
     if int(m.group(1), 16) not in pointer_offsets})
 
 
 def vtable_patch(rng, handle, data):
+    for offset in meta.get('pointer_maybe', []):
+        if offset + 4 <= len(data) and rng.random() < 0.6:
+            data[offset:offset + 4] = rng.choice(
+                [0x806000 + 0x1000 * i for i in range(4)]).to_bytes(4, 'little')
     for offset, size in scalar_reads:
         if offset + size <= len(data):
             value = rng.choice([0, 1, 2, 3, 0xffffffff, rng.randrange(0, 30), rng.randrange(0, 256)])

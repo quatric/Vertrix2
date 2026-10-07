@@ -499,6 +499,28 @@ class Lifter:
                     break
         return found
 
+    def pointer_maybe(self):
+        """Object dwords that are loaded and spilled to a local (they may be object pointers)."""
+        found = set()
+        for index, address in enumerate(self.order):
+            insn = self.insns[address]
+            ops = insn.operands
+            if insn.mnemonic != 'mov' or ops[0].type != X.X86_OP_REG or \
+                    ops[1].type != X.X86_OP_MEM:
+                continue
+            mem = ops[1].mem
+            if ops[1].size != 4 or not mem.base or mem.index or \
+                    mem.base in (X.X86_REG_EBP, X.X86_REG_ESP) or mem.segment == X.X86_REG_FS:
+                continue
+            for follower in self.order[index + 1:index + 4]:
+                nxt = self.insns[follower]
+                if nxt.mnemonic == 'mov' and nxt.operands[0].type == X.X86_OP_MEM and \
+                        nxt.operands[0].mem.base == X.X86_REG_EBP and \
+                        nxt.operands[1].type == X.X86_OP_REG and \
+                        nxt.operands[1].reg == ops[0].reg:
+                    found.add(mem.disp)
+        return found
+
     def virtual_calls(self):
         """(object field, vtable slot) pairs of `call [reg + slot]` where reg came from a field."""
         found = set()
@@ -607,6 +629,7 @@ uint32_t lifted_%s(const VertrixCalls *calls, const VertrixFactoryServices *serv
             'pointer_callees': sorted('0x%x' % t for t in lifter.pointer_callees()),
             'pointer_fields': sorted(lifter.pointer_fields()),
             'pointer_globals': sorted(lifter.pointer_fields(True)),
+            'pointer_maybe': sorted(lifter.pointer_maybe()),
             'virtual': sorted([f if f is not None else -1, sl, n]
                               for f, sl, n in lifter.virtual_calls())}
     return text, header, meta
