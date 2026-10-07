@@ -22,9 +22,9 @@ enum
 void vertrix_table_byte_pair(const uint8_t *first, const uint8_t *second, uint8_t row,
                              uint8_t column, uint8_t *first_out, uint8_t *second_out);
 
-/* Original0x417cf0, 0x417d10, 0x417d40 and 0x417d70: dword at row * 22 + column of the table at
- * 0x533e1c. The last three add the dword at 0x4f8ce0, 0x4f8ce4 and 0x4f8ce8 to row * 22 and
- * pass it as the column; callers supply that value. */
+/* Original variants 0x417cf0, 0x417d10, 0x417d40, 0x417d70: dword at row * 22 + column of
+ * the table at 0x533e1c. The last three supply the dword at 0x4f8ce0, 0x4f8ce4 and 0x4f8ce8,
+ * respectively, as column. Callers supply the selected column value. */
 uint32_t vertrix_table_grid_value(const uint32_t *grid, uint32_t row, uint32_t column);
 
 /* Original0x417df0: 1 when any of the 13 bytes of the row (table 0x4f9ad8) is nonzero. */

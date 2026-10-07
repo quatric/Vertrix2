@@ -8,12 +8,18 @@
 typedef struct Boundary
 {
     unsigned calls;
+    unsigned comparator_calls;
     VertrixCallSite last;
 } Boundary;
 
 static uint32_t boundary_call(VertrixCallSite *site, void *context)
 {
     Boundary *boundary = context;
+    if (site->target == 0x418150)
+    {
+        boundary->comparator_calls++;
+        return site->eax < site->edx ? UINT32_MAX : site->eax > site->edx;
+    }
     boundary->calls++;
     boundary->last = *site;
     return 7;
@@ -40,7 +46,8 @@ static int resolve_object(uint32_t handle, void **storage, size_t *length, void 
 int main(void)
 {
     static const uint32_t values[] = {0, 1, 0x7fffffffu, 0x80000000u, 0xfffffffeu, 0xffffffffu};
-    static const uint32_t targets[] = {0x401010, 0x418150, 0x45f1e0, 0x471e10, 0x4725f0, 0x478da0};
+    static const uint32_t targets[] = {0x401010, 0x478da0};
+    static const uint32_t removed[] = {0x418150, 0x45f1e0, 0x471e10, 0x4725f0};
     static const uint32_t screens[] = {0x465af0, 0x466d60, 0x46b810, 0x46c9d0};
     static const uint32_t optional[] = {0x42a200, 0x4ccf3b};
     Boundary boundary = {0};
@@ -59,6 +66,10 @@ int main(void)
     for (i = 0; i < sizeof targets / sizeof targets[0]; ++i)
     {
         assert(vertrix_lifted_has(targets[i]));
+    }
+    for (i = 0; i < sizeof removed / sizeof removed[0]; ++i)
+    {
+        assert(!vertrix_lifted_has(removed[i]));
     }
     for (i = 0; i < sizeof screens / sizeof screens[0]; ++i)
     {
@@ -95,15 +106,16 @@ int main(void)
         for (j = 0; j < sizeof values / sizeof values[0]; ++j)
         {
             uint32_t expected = values[i] < values[j] ? UINT32_MAX : values[i] > values[j];
-            uint32_t result = 0;
+            uint32_t result = 0xabcdef01;
             site.eax = values[i];
             site.edx = values[j];
-            assert(vertrix_lifted_dispatch(&adapter.calls, &services, &globals, &site, &result));
-            assert(result == expected);
+            assert(!vertrix_lifted_dispatch(&adapter.calls, &services, &globals, &site, &result));
+            assert(result == 0xabcdef01);
             assert(adapter.calls.call(&site, adapter.calls.context) == expected);
             assert(boundary.calls == 0);
         }
     }
+    assert(boundary.comparator_calls == 36);
     site.target = 0x401000;
     site.eax = 0x12345678;
     site.edx = 0x87654321;

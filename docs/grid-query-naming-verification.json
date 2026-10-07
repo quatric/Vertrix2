@@ -1,0 +1,23 @@
+{
+  "status": "passed",
+  "scope": "Additional grid wrapper naming verification; no native behavior changes.",
+  "addresses": [
+    "0x417d10",
+    "0x417d40",
+    "0x417d70"
+  ],
+  "complete_original_executions": {
+    "0x417cf0": 1024,
+    "0x417d10": 1024,
+    "0x417d40": 1024,
+    "0x417d70": 1024
+  },
+  "proven_mapping": "vertrix_table_grid_value",
+  "column_sources": [
+    "0x4f8ce0",
+    "0x4f8ce4",
+    "0x4f8ce8"
+  ],
+  "verification_command": "tools/verify_table_queries.py Vertrix2.exe --build-dir /tmp/vertrix-grid-naming-proof --cases 1024",
+  "name_map_entries": 1347
+}
