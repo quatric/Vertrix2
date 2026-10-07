@@ -1,6 +1,7 @@
 #ifndef VERTRIX_PARTICLE_INIT_H
 #define VERTRIX_PARTICLE_INIT_H
 #include "board_burst.h"
+#include "call_glue.h"
 #include "surface.h"
 
 /* Screen size words of the original (0x5b9c8e width, 0x5b9c90 height) and the scratch words the
@@ -16,11 +17,11 @@ typedef struct
     uint16_t scratch[4];
 } VertrixParticleScratch;
 
-/* Original0x43e740: initialise a drifting particle on the screen of the given size. The scratch
- * words become width, height, width / 2 and height / 2 (0x541014 .. 0x54101a). The actor takes
- * resource 0x544c10, frame 15, the frame binding and period 1 step, position words +0xe and +0x16
- * zero, word +8 = (draw below width - width / 2) * 150 and word +0xa = (draw below height - height
- * / 2)
+/* Original fragment 0x43e740: initialise a drifting particle on the screen of the given size. The
+ * scratch words become width, height, width / 2 and height / 2 (0x541014 .. 0x54101a). The actor
+ * takes resource 0x544c10, frame 15, the frame binding and period 1 step, position words +0xe and
+ * +0x16 zero, word +8 = (draw below width - width / 2) * 150 and word +0xa = (draw below height -
+ * height / 2)
  * * 150 (16 bit), +0x58 = 200, +0x5c = 0, +0x60 = 1 + a draw below 3 and +0x144 = 0. Returns zero
  * for short storage. */
 int vertrix_particle_init_drift(void *actor, size_t size, uint32_t handle,
@@ -28,11 +29,11 @@ int vertrix_particle_init_drift(void *actor, size_t size, uint32_t handle,
                                 const VertrixFactoryServices *services,
                                 const VertrixBurstHooks *hooks, VertrixParticleScratch *scratch);
 
-/* Original0x43e840: initialise a falling particle: scratch words 0 and 1 become width and height
- * (0x54101c, 0x54101e); resource 0x544c64, frame 0, frame binding, period 5 steps, words +8 = width
- * and +0xa = height, +0xe = a draw below width, +0x16 = a draw below height, handler 0x4574a0,
- * +0x58 = 0, +0x60 = 1, +0x70 = 200, +0x64 = 100, +0x93 = 1, +0x4e = 0, +0x44 = 0 and +0x5c = 100
- * plus a draw below 200. */
+/* Original fragment 0x43e840: initialise a falling particle: scratch words 0 and 1 become width and
+ * height (0x54101c, 0x54101e); resource 0x544c64, frame 0, frame binding, period 5 steps, words +8
+ * = width and +0xa = height, +0xe = a draw below width, +0x16 = a draw below height, handler
+ * 0x4574a0, +0x58 = 0, +0x60 = 1, +0x70 = 200, +0x64 = 100, +0x93 = 1, +0x4e = 0, +0x44 = 0 and
+ * +0x5c = 100 plus a draw below 200. */
 int vertrix_particle_init_fall(void *actor, size_t size, uint32_t handle,
                                const VertrixParticleScreen *screen,
                                const VertrixFactoryServices *services,
@@ -125,4 +126,18 @@ int vertrix_piece_frames_build(void *piece, size_t piece_size, int16_t left, int
  * SEH prologue/epilogue is not reproduced; valid-storage behavior is
  * identical. Short storage preserves everything and returns zero. */
 int vertrix_board_particles_reset(void *board, size_t board_size);
+/* Original 0x43e740: complete burst initialization. Read screen/scratch globals and actor
+ * fields through the memory boundary, including reads after callbacks. Calls represent frame
+ * binding 0x4ac8a0 and random draws 0x4826c0, preserving caller EBX and passing actor in ECX.
+ * Return success separately from original EAX (low word of final draw plus one). */
+int vertrix_particle_init_burst_full(uint32_t actor, uint32_t ebx, VertrixMemoryRead read,
+                                     VertrixMemoryWrite write, void *memory_context,
+                                     const VertrixCalls *calls, uint32_t *result);
+
+/* Original 0x43e840: complete falling initialization, returning the live base at actor +0x64
+ * plus the low word of the final draw. Late boundary failure preserves earlier writes and
+ * callbacks and leaves result untouched. The same failure contract applies to burst_full. */
+int vertrix_particle_init_fall_full(uint32_t actor, uint32_t ebx, VertrixMemoryRead read,
+                                    VertrixMemoryWrite write, void *memory_context,
+                                    const VertrixCalls *calls, uint32_t *result);
 #endif

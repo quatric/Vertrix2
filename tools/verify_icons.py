@@ -34,7 +34,7 @@ def main():
     parser.add_argument('--cases', type=int, default=2048)
     args = parser.parse_args()
     n = build(args.build_dir, 'icons',
-              ['particle_init.c', 'board_burst.c', 'block_factory.c', 'board_cells.c',
+              ['particle_init.c', 'call_glue.c', 'board_burst.c', 'block_factory.c', 'board_cells.c',
                'board_markers.c', 'actor_storage.c', 'actor_fields.c', 'board.c', 'fixed_point.c',
                'board_actions.c', 'surface.c', 'render_pixel.c', 'palette_map.c',
                'palette_tables.c', 'palette_color.c', 'render_dispatch.c', 'render_color.c',

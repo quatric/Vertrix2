@@ -231,6 +231,8 @@ void vertrix_unrelated(void);
         self.assertEqual(names[0x459ec0], "vertrix_title_letter_digit")
         self.assertEqual(names[0x45a290], "vertrix_title_letter_fight_count_call")
         self.assertEqual(names[0x45a620], "vertrix_title_letter_wave_count_call")
+        self.assertEqual(names[0x45a4f0], "vertrix_title_letter_fight_fly_call")
+        self.assertEqual(names[0x45a910], "vertrix_title_letter_wave_fly_call")
 
 
 if __name__ == "__main__":

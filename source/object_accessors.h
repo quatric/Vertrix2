@@ -82,8 +82,6 @@ uint32_t vertrix_player_write_bytes_168(void *player, size_t size, uint32_t obje
                                         uint32_t second, uint32_t third);
 /* Original 0x43b970: exact eax is 1 when dword +0x4e8 is nonzero, otherwise 0. */
 uint32_t vertrix_player_test_4e8(const void *player, size_t size);
-/* Original 0x43ba70: exact eax is 1 when dword +0x18c is 3, otherwise 0. */
-uint32_t vertrix_player_test_bonus_full(const void *player, size_t size);
 /* Original 0x4320c0: exact eax is 1 when dword +0xa60 is nonzero, otherwise 0. */
 uint32_t vertrix_player_test_a60(const void *player, size_t size);
 /* Original 0x43bd40: exact eax is 1 when byte +0x4c4 is 1, otherwise 0. */

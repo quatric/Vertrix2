@@ -68,6 +68,8 @@ def inventory(root):
             "docs/constant-return-verification.json",
             "docs/actor-wrap-verification.json",
             "docs/table-loops-verification.json",
+            "docs/object-accessors-verification.json",
+            "docs/particle-init-verification.json",
         ],
         "dispatcher_report": "docs/dispatcher-integration-verification.json",
         "constant_dispatcher_report": "docs/constant-dispatch-verification.json",

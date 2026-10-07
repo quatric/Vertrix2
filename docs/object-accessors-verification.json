@@ -29,5 +29,33 @@
     "object_clear_slots": 4096,
     "compare_u32": 4096
   },
-  "scope": "Cleaned small actor and player accessors against the complete original routines: every returned value and the whole object compare."
+  "exact_eax_comparisons": {
+    "0x4ac500": 4096,
+    "0x4ac370": 4096,
+    "0x4ac600": 4096,
+    "0x418830": 4096,
+    "0x4ac920": 4096,
+    "0x4ac940": 4096,
+    "0x4ac520": 8192,
+    "0x43b970": 4096,
+    "0x4320c0": 4096,
+    "0x43bd40": 4096,
+    "0x43a4f0": 4096,
+    "0x47f8e0": 4096,
+    "0x4ac390": 4096,
+    "0x4ac620": 4096,
+    "0x4ac470": 4096,
+    "0x4ac7b0": 4096,
+    "0x4ac840": 4096,
+    "0x42ef60": 4096,
+    "0x42ef80": 4096,
+    "0x42f7d0": 4096,
+    "0x42f7f0": 4096,
+    "0x42f810": 4096,
+    "0x42f830": 4096,
+    "0x425de0": 4096,
+    "0x418150": 4096
+  },
+  "native_invalid_storage_guard_cases": 27,
+  "scope": "Complete original routines run unchanged. New full APIs compare exact 32-bit EAX and every byte of 0x1000 object storage; elapsed/copy/byte setters return object tokens, times twelve stores/returns the product, fills return object+count, slot clearing returns object+0x1c and predicates return 0/1. Mapped object identities include 0xfffffffc with split wrapping guest storage, proving end-token wrap. Legacy APIs compare state/out-parameters only. 43ba70 legacy bonus flag remains a projected output here; its existing exact-return bonus_ready API is separately verified in player_slots. Invalid native storage/ranges return zero without writes."
 }

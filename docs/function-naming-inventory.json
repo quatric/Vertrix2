@@ -1,19 +1,19 @@
 {
   "scope": "Current working-tree naming coverage and generated-source consistency only; the whole-chunk tier designation is not independent behavioral proof.",
-  "name_map_entries": 1438,
-  "verified_whole_chunk_entries": 2321,
-  "readable_whole_chunk_names": 902,
-  "anonymous_whole_chunk_names": 1419,
+  "name_map_entries": 1439,
+  "verified_whole_chunk_entries": 2336,
+  "readable_whole_chunk_names": 916,
+  "anonymous_whole_chunk_names": 1420,
   "anonymous_entries_with_unapplied_canonical_names": [],
-  "optional_unverified_entries": 80,
+  "optional_unverified_entries": 124,
   "rename_dry_run": {
     "pending_routine_renames": 0,
     "pending_files": 0
   },
   "source_lines": {
-    "lifters": 325562,
-    "other_source": 74954,
-    "total": 400516
+    "lifters": 335785,
+    "other_source": 75203,
+    "total": 410988
   },
   "line_count_convention": "All files under source, including comments and blank lines; lifters have filenames starting lifted_ or lift_; count LF bytes.",
   "full_native_recovery_reports": [
@@ -29,7 +29,9 @@
     "docs/color-table-verification.json",
     "docs/constant-return-verification.json",
     "docs/actor-wrap-verification.json",
-    "docs/table-loops-verification.json"
+    "docs/table-loops-verification.json",
+    "docs/object-accessors-verification.json",
+    "docs/particle-init-verification.json"
   ],
   "dispatcher_report": "docs/dispatcher-integration-verification.json",
   "constant_dispatcher_report": "docs/constant-dispatch-verification.json",

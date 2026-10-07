@@ -1,9 +1,18 @@
 {
+  "full_return_and_storage_comparisons": {
+    "drift": 2052,
+    "fall": 2052
+  },
+  "mutable_callback_cases": {
+    "drift": 4,
+    "fall": 4
+  },
+  "native_late_failure_cases": 6,
   "status": "passed",
   "complete_original_executions": {
-    "drift": 2048,
-    "fall": 2048,
-    "reset": 4096
+    "drift": 1024,
+    "fall": 1024,
+    "reset": 2048
   },
-  "scope": "Complete 43e740, 43e840 and 43e100 execute in the original (the draw 4826c0 replayed, the frame binding 4ac8a0 logged); the actor storage, the scratch globals, the binding calls and the draws compare."
+  "scope": "Complete 43e740, 43e840 and 43e100 execute in the original (the draw 4826c0 replayed, the frame binding 4ac8a0 logged); the actor storage, the scratch globals, the binding calls and the draws compare. Full APIs additionally compare exact EAX, call registers, independent live mutable storage and boundary failures."
 }

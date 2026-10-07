@@ -492,3 +492,120 @@ int vertrix_board_particles_reset(void *board, size_t board_size)
     }
     return 1;
 }
+
+static int particle_init_full(uint32_t actor, uint32_t ebx, VertrixMemoryRead read,
+                              VertrixMemoryWrite write, void *context, const VertrixCalls *calls,
+                              uint32_t *result, int fall)
+{
+    if (!read || !write || !calls || !calls->call || !result)
+    {
+        return 0;
+    }
+    uint32_t width, height, value, range, half;
+    uint32_t base = fall ? 0x54101c : 0x541014;
+    if (!read(0x5b9c8e, 2, &width, context) || !write(base, 2, width, context) ||
+        !read(0x5b9c90, 2, &height, context))
+    {
+        return 0;
+    }
+    if (!fall && !read(0x5b9c8e, 2, &width, context))
+    {
+        return 0;
+    }
+    if (!write(base + 2, 2, height, context))
+    {
+        return 0;
+    }
+    if (!fall && (!read(0x5b9c90, 2, &height, context) || !write(base + 4, 2, width / 2, context) ||
+                  !write(base + 6, 2, height / 2, context)))
+    {
+        return 0;
+    }
+    if (!write(actor + 0xcc, 4, 0, context) || !write(actor + 0xb8, 4, 0, context) ||
+        !write(actor + 0xb0, 4, fall ? FALL_RESOURCE : DRIFT_RESOURCE, context) ||
+        !write(actor + 0xb8, 4, fall ? 0 : 15, context))
+    {
+        return 0;
+    }
+    vertrix_call(calls, 0x4ac8a0, actor, fall ? 5 : 1, ebx, actor, 0);
+    if (!write(actor + 0xc0, 4, fall ? 60 : 12, context))
+    {
+        return 0;
+    }
+    if (fall)
+    {
+        if (!read(base, 2, &value, context) || !write(actor + 8, 2, value, context) ||
+            !read(base + 2, 2, &value, context) || !read(actor + 8, 2, &range, context) ||
+            !write(actor + 0xa, 2, value, context))
+        {
+            return 0;
+        }
+        value = vertrix_call(calls, 0x4826c0, 0x598d30, range, ebx, actor, 0);
+        if (!write(actor + 0xe, 2, value, context) || !read(actor + 0xa, 2, &range, context))
+        {
+            return 0;
+        }
+        value = vertrix_call(calls, 0x4826c0, 0x598d30, range, ebx, actor, 0);
+        if (!write(actor + 0x16, 2, value, context) ||
+            !write(actor + 0x154, 4, FALL_HANDLER, context) ||
+            !write(actor + 0x58, 4, 0, context) || !write(actor + 0x60, 4, 1, context) ||
+            !write(actor + 0x70, 4, 200, context) || !read(actor + 0x70, 2, &range, context) ||
+            !write(actor + 0x64, 4, 100, context))
+        {
+            return 0;
+        }
+        value = vertrix_call(calls, 0x4826c0, 0x598d30, range, ebx, actor, 0) & 0xffff;
+        if (!write(actor + 0x93, 1, 1, context) || !write(actor + 0x4e, 1, 0, context) ||
+            !read(actor + 0x64, 4, &half, context) || !write(actor + 0x44, 1, 0, context))
+        {
+            return 0;
+        }
+        value += half;
+        if (!write(actor + 0x5c, 4, value, context))
+        {
+            return 0;
+        }
+    }
+    else
+    {
+        if (!write(actor + 0xe, 2, 0, context) || !read(base, 2, &range, context) ||
+            !write(actor + 0x16, 2, 0, context))
+        {
+            return 0;
+        }
+        value = vertrix_call(calls, 0x4826c0, 0x598d30, range, ebx, actor, 0);
+        if (!read(base + 4, 2, &half, context) || !read(base + 2, 2, &range, context) ||
+            !write(actor + 8, 2, (uint16_t)(value - half) * 150u, context))
+        {
+            return 0;
+        }
+        value = vertrix_call(calls, 0x4826c0, 0x598d30, range, ebx, actor, 0);
+        if (!read(base + 6, 2, &half, context) || !write(actor + 0x58, 4, 200, context) ||
+            !write(actor + 0xa, 2, (uint16_t)(value - half) * 150u, context) ||
+            !write(actor + 0x5c, 4, 0, context))
+        {
+            return 0;
+        }
+        value = (vertrix_call(calls, 0x4826c0, 0x598d30, 3, ebx, actor, 0) & 0xffff) + 1;
+        if (!write(actor + 0x144, 4, 0, context) || !write(actor + 0x60, 4, value, context))
+        {
+            return 0;
+        }
+    }
+    *result = value;
+    return 1;
+}
+
+int vertrix_particle_init_burst_full(uint32_t actor, uint32_t ebx, VertrixMemoryRead read,
+                                     VertrixMemoryWrite write, void *memory_context,
+                                     const VertrixCalls *calls, uint32_t *result)
+{
+    return particle_init_full(actor, ebx, read, write, memory_context, calls, result, 0);
+}
+
+int vertrix_particle_init_fall_full(uint32_t actor, uint32_t ebx, VertrixMemoryRead read,
+                                    VertrixMemoryWrite write, void *memory_context,
+                                    const VertrixCalls *calls, uint32_t *result)
+{
+    return particle_init_full(actor, ebx, read, write, memory_context, calls, result, 1);
+}

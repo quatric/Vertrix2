@@ -36,15 +36,15 @@ typedef struct
 int vertrix_spawn_spread(uint32_t scene, uint32_t child, uint16_t width, uint16_t height,
                          VertrixSpawnScratch *scratch, const VertrixSpawnServices *services);
 
-/* Original0x43e740: burst particle. Same placement and velocity as above with period 12, +0x58 =
- * 200, +0x5c = 0, +0x144 = 0 and a lifetime from a draw below 3 plus 1. */
+/* Original fragment 0x43e740: burst particle. Same placement and velocity as above with period 12,
+ * +0x58 = 200, +0x5c = 0, +0x144 = 0 and a lifetime from a draw below 3 plus 1. */
 int vertrix_spawn_burst(uint32_t child, uint16_t width, uint16_t height,
                         VertrixSpawnScratch *scratch, const VertrixSpawnServices *services);
 
-/* Original0x43e840: drifting particle. Attaches resource 0x544c64, frame 0, period 60, size words
- * +0x8/+0xa = width/height, position +0xe/+0x16 from draws below them, handler 0x4574a0 and the
- * timers +0x58 = 0, +0x60 = 1, +0x70 = 200, +0x64 = 100 and +0x5c = 100 plus a draw below 200,
- * byte +0x93 = 1, +0x4e = 0 and +0x44 = 0. scratch receives width and height only. */
+/* Original fragment 0x43e840: drifting particle. Attaches resource 0x544c64, frame 0, period 60,
+ * size words +0x8/+0xa = width/height, position +0xe/+0x16 from draws below them, handler 0x4574a0
+ * and the timers +0x58 = 0, +0x60 = 1, +0x70 = 200, +0x64 = 100 and +0x5c = 100 plus a draw below
+ * 200, byte +0x93 = 1, +0x4e = 0 and +0x44 = 0. scratch receives width and height only. */
 int vertrix_spawn_drift(uint32_t child, uint16_t width, uint16_t height,
                         VertrixSpawnScratch *scratch, const VertrixSpawnServices *services);
 

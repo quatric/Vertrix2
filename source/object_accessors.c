@@ -196,13 +196,6 @@ uint32_t vertrix_player_test_4e8(const void *player, size_t size)
     return result;
 }
 
-uint32_t vertrix_player_test_bonus_full(const void *player, size_t size)
-{
-    uint32_t result = 0;
-    vertrix_player_bonus_meter_full(player, size, &result);
-    return result;
-}
-
 uint32_t vertrix_player_test_a60(const void *player, size_t size)
 {
     uint32_t result = 0;

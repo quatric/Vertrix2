@@ -34,7 +34,7 @@ def main():
     parser.add_argument('--cases', type=int, default=2048)
     args = parser.parse_args()
     n = build(args.build_dir, 'piece-frames',
-              ['particle_init.c', 'board_burst.c', 'block_factory.c', 'board_cells.c',
+              ['particle_init.c', 'call_glue.c', 'board_burst.c', 'block_factory.c', 'board_cells.c',
                'board_markers.c', 'actor_storage.c', 'actor_fields.c', 'board.c', 'fixed_point.c',
                'board_actions.c', 'surface.c', 'render_pixel.c', 'palette_map.c',
                'palette_tables.c', 'palette_color.c', 'render_dispatch.c', 'render_color.c',
@@ -112,7 +112,7 @@ def main():
         assert not replay['allocs'], case
         totals['0x43a310'] = totals.get('0x43a310', 0) + 1
     report = {'status': 'passed', 'complete_original_executions': totals,
-              'scope': 'Complete 4731a0 executes in the original (operator new 4ca000 and the draw '
+              'scope': 'Complete 43a310 executes in the original (operator new 4ca000 and the draw '
                        '4826c0 stubbed and replayed; the frame binding 4ac8a0 and the list append '
                        '4b5e70 logged); the call log and every object compare.'}
     (args.build_dir / 'piece-frames-verification.json').write_text(json.dumps(report, indent=2) + '\n')
