@@ -1,5 +1,5 @@
 {
- "f471e10": {
+ "list_notify_pair": {
   "callees": {
    "0x4b5eb0": [
     0,
@@ -545,7 +545,7 @@
   "virtual": [],
   "address": 4662368
  },
- "f472470": {
+ "actor_spawn": {
   "callees": {
    "0x4ca000": [
     0,
@@ -631,7 +631,7 @@
   "virtual": [],
   "address": 4662512
  },
- "f472570": {
+ "special_actor_spawn": {
   "callees": {
    "0x4ca000": [
     0,
@@ -674,7 +674,7 @@
   "virtual": [],
   "address": 4662640
  },
- "f4725f0": {
+ "list_clear_hit": {
   "callees": {
    "0x4b5eb0": [
     0,
@@ -691,7 +691,7 @@
   "virtual": [],
   "address": 4662768
  },
- "f472620": {
+ "banner_actor_spawn": {
   "callees": {
    "0x4ca000": [
     0,
@@ -804,7 +804,7 @@
   "virtual": [],
   "address": 4664272
  },
- "f472c10": {
+ "overlay_spawn": {
   "callees": {
    "0x4ca000": [
     0,
@@ -854,7 +854,7 @@
   ],
   "address": 4664336
  },
- "f472d00": {
+ "slot_create_call": {
   "callees": {
    "0x472d50": [
     0,
@@ -891,7 +891,7 @@
   "virtual": [],
   "address": 4664576
  },
- "f472d50": {
+ "ui_panel_release": {
   "callees": {
    "virtual_472d78": [
     0,
@@ -1087,7 +1087,7 @@
   "virtual": [],
   "address": 4666512
  },
- "f4735e0": {
+ "point_list_conditional": {
   "callees": {
    "0x476480": [
     0,
@@ -1112,7 +1112,7 @@
   "virtual": [],
   "address": 4666848
  },
- "f473610": {
+ "point_list_when_one": {
   "callees": {
    "0x476720": [
     0,
@@ -1133,7 +1133,7 @@
   "virtual": [],
   "address": 4666896
  },
- "f473630": {
+ "pair_words": {
   "callees": {
    "0x476320": [
     0,
@@ -1169,7 +1169,7 @@
   "virtual": [],
   "address": 4666928
  },
- "f4737d0": {
+ "pair_flags": {
   "callees": {
    "0x476010": [
     0,
@@ -1225,7 +1225,7 @@
   "virtual": [],
   "address": 4667744
  },
- "f473af0": {
+ "pair_scan": {
   "callees": {
    "0x476480": [
     0,
@@ -1369,7 +1369,7 @@
   "virtual": [],
   "address": 4674784
  },
- "f475510": {
+ "release_pair": {
   "callees": {
    "0x4ea190": [
     0,
@@ -1390,7 +1390,7 @@
   "virtual": [],
   "address": 4674832
  },
- "f4756d0": {
+ "sound_simple_clear": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -1402,7 +1402,7 @@
   "virtual": [],
   "address": 4675280
  },
- "f475700": {
+ "object_destroy_flags": {
   "callees": {
    "0x4ca050": [
     0,
@@ -1436,7 +1436,7 @@
   "virtual": [],
   "address": 4675328
  },
- "f475790": {
+ "sound_simple_set": {
   "callees": {},
   "stack": 64,
   "arguments": 1,
@@ -1559,7 +1559,7 @@
   "virtual": [],
   "address": 4676048
  },
- "f4759e0": {
+ "queue_drain": {
   "callees": {
    "0x4d8540": [
     0,
@@ -1590,7 +1590,7 @@
   ],
   "address": 4676064
  },
- "f475a20": {
+ "object_list_init": {
   "callees": {
    "0x475af0": [
     0,
@@ -1615,7 +1615,7 @@
   "virtual": [],
   "address": 4676128
  },
- "f475a80": {
+ "list_reset_calls": {
   "callees": {
    "0x475af0": [
     0,
@@ -1640,7 +1640,7 @@
   "virtual": [],
   "address": 4676224
  },
- "f475ab0": {
+ "list_push_call": {
   "callees": {
    "0x475790": [
     1,
@@ -1657,7 +1657,7 @@
   "virtual": [],
   "address": 4676272
  },
- "f475ad0": {
+ "input_repeat_start": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -1833,7 +1833,7 @@
   ],
   "address": 4676656
  },
- "f475c80": {
+ "queue_next": {
   "callees": {
    "0x4d8540": [
     0,
@@ -1947,7 +1947,7 @@
   "virtual": [],
   "address": 4676976
  },
- "f475d90": {
+ "offset_call": {
   "callees": {
    "0x475800": [
     0,
@@ -2061,7 +2061,7 @@
   "virtual": [],
   "address": 4677184
  },
- "f475e50": {
+ "input_repeat_tick": {
   "callees": {
    "0x475e30": [
     0,
@@ -2099,7 +2099,7 @@
   "virtual": [],
   "address": 4677200
  },
- "f475ec0": {
+ "object_construct_f": {
   "callees": {
    "0x4ccf3b": [
     0,
@@ -2137,7 +2137,7 @@
   "virtual": [],
   "address": 4677312
  },
- "f476010": {
+ "slot_call": {
   "callees": {
    "0x4759e0": [
     0,
@@ -2154,7 +2154,7 @@
   "virtual": [],
   "address": 4677648
  },
- "f476090": {
+ "slot_table_init": {
   "callees": {
    "0x475a20": [
     0,
@@ -2196,7 +2196,7 @@
   "virtual": [],
   "address": 4677824
  },
- "f4760f0": {
+ "index_sweep_call": {
   "callees": {
    "0x476140": [
     0,
@@ -2284,7 +2284,7 @@
   "virtual": [],
   "address": 4678096
  },
- "f476260": {
+ "list_find_call": {
   "callees": {
    "0x475b80": [
     2,
@@ -2326,7 +2326,7 @@
   "virtual": [],
   "address": 4678272
  },
- "f4762e0": {
+ "slot_select": {
   "callees": {
    "0x475790": [
     1,
@@ -2423,7 +2423,7 @@
   "virtual": [],
   "address": 4678784
  },
- "f4764a0": {
+ "slot_store_call": {
   "callees": {
    "0x475da0": [
     0,
@@ -2474,7 +2474,7 @@
   "virtual": [],
   "address": 4678912
  },
- "f476530": {
+ "slot_search_call": {
   "callees": {
    "0x475c80": [
     0,
@@ -2502,7 +2502,7 @@
   "virtual": [],
   "address": 4678960
  },
- "f476590": {
+ "two_codes_call": {
   "callees": {
    "0x476140": [
     0,
@@ -2519,7 +2519,7 @@
   "virtual": [],
   "address": 4679056
  },
- "f4765b0": {
+ "fixed_codes_call": {
   "callees": {
    "0x476120": [
     0,
@@ -2540,7 +2540,7 @@
   "virtual": [],
   "address": 4679088
  },
- "f476650": {
+ "sound_key_is_control": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2569,7 +2569,7 @@
   "virtual": [],
   "address": 4679248
  },
- "f4766f0": {
+ "slot_table_reset": {
   "callees": {
    "0x475a80": [
     0,
@@ -2590,7 +2590,7 @@
   "virtual": [],
   "address": 4679408
  },
- "f476720": {
+ "sound_cue_both": {
   "callees": {
    "0x4761d0": [
     1,
@@ -2611,7 +2611,7 @@
   "virtual": [],
   "address": 4679456
  },
- "f476810": {
+ "resource_entry_256": {
   "callees": {
    "0x4cea15": [
     0,
@@ -2632,7 +2632,7 @@
   "virtual": [],
   "address": 4679696
  },
- "f4768e0": {
+ "sound_bank_clear": {
   "callees": {},
   "stack": 72,
   "arguments": 0,
@@ -2644,7 +2644,7 @@
   "virtual": [],
   "address": 4679904
  },
- "f476a00": {
+ "sound_open_keys": {
   "callees": {
    "0x476aa0": [
     0,
@@ -2665,7 +2665,7 @@
   "virtual": [],
   "address": 4680192
  },
- "f476c80": {
+ "sound_check_primary": {
   "callees": {
    "virtual_476c9e": [
     1,
@@ -2688,7 +2688,7 @@
   ],
   "address": 4680832
  },
- "f476cc0": {
+ "sound_release_primary": {
   "callees": {
    "virtual_476ce4": [
     1,
@@ -2743,7 +2743,7 @@
   "virtual": [],
   "address": 4680992
  },
- "f476fb0": {
+ "sound_cue_offset": {
   "callees": {
    "0x4761d0": [
     1,
@@ -2777,7 +2777,7 @@
   "virtual": [],
   "address": 4681696
  },
- "f477010": {
+ "sound_cue_key": {
   "callees": {
    "0x4761d0": [
     1,
@@ -3031,7 +3031,7 @@
   "virtual": [],
   "address": 4683280
  },
- "f4776a0": {
+ "format_decimal": {
   "callees": {},
   "stack": 100,
   "arguments": 0,
@@ -3050,7 +3050,7 @@
   "virtual": [],
   "address": 4683424
  },
- "f4777c0": {
+ "text_append_call": {
   "callees": {
    "0x4776a0": [
     0,
@@ -3107,7 +3107,7 @@
   "virtual": [],
   "address": 4684080
  },
- "f4779c0": {
+ "sound_slider_clear": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -3136,7 +3136,7 @@
   "virtual": [],
   "address": 4684528
  },
- "f477c30": {
+ "cursor_capture": {
   "callees": {
    "virtual_477c4e": [
     1,
@@ -3216,7 +3216,7 @@
   ],
   "address": 4685072
  },
- "f477d70": {
+ "object_center_setup": {
   "callees": {
    "0x477e10": [
     1,
@@ -3253,7 +3253,7 @@
   "virtual": [],
   "address": 4685328
  },
- "f477e30": {
+ "object_center_place": {
   "callees": {
    "0x477d70": [
     0,
@@ -3274,7 +3274,7 @@
   "virtual": [],
   "address": 4685360
  },
- "f477ed0": {
+ "object_reset_center": {
   "callees": {
    "0x477d70": [
     0,
@@ -3415,7 +3415,7 @@
   "virtual": [],
   "address": 4686944
  },
- "f478480": {
+ "object_clamp_position": {
   "callees": {},
   "stack": 80,
   "arguments": 0,
@@ -3427,7 +3427,7 @@
   "virtual": [],
   "address": 4686976
  },
- "f4784d0": {
+ "sound_cue_position": {
   "callees": {
    "0x4761d0": [
     1,
@@ -3597,7 +3597,7 @@
   "virtual": [],
   "address": 4687776
  },
- "f478b40": {
+ "flagged_call": {
   "callees": {
    "0x40ee60": [
     0,
@@ -3618,7 +3618,7 @@
   "virtual": [],
   "address": 4688704
  },
- "f478b70": {
+ "object_fill_ramp": {
   "callees": {},
   "stack": 84,
   "arguments": 0,
@@ -3637,7 +3637,7 @@
   "virtual": [],
   "address": 4688752
  },
- "f478bd0": {
+ "when_flag_call": {
   "callees": {
    "0x40eea0": [
     0,
@@ -3658,7 +3658,7 @@
   "virtual": [],
   "address": 4688848
  },
- "f478c90": {
+ "literal_copy_call": {
   "callees": {
    "0x40a860": [
     0,
@@ -3753,7 +3753,7 @@
   "virtual": [],
   "address": 4689280
  },
- "f478da0": {
+ "object_remaining": {
   "callees": {},
   "stack": 72,
   "arguments": 0,
@@ -3765,7 +3765,7 @@
   "virtual": [],
   "address": 4689312
  },
- "f478eb0": {
+ "surface_offset": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -3801,7 +3801,7 @@
   "virtual": [],
   "address": 4689616
  },
- "f478f10": {
+ "surface_read": {
   "callees": {
    "0x478eb0": [
     0,
@@ -3827,7 +3827,7 @@
   "virtual": [],
   "address": 4689680
  },
- "f4792d0": {
+ "surface_bounds": {
   "callees": {
    "0x478f10": [
     0,
@@ -3868,7 +3868,7 @@
   "virtual": [],
   "address": 4692464
  },
- "f479a40": {
+ "pixel_pack": {
   "callees": {},
   "stack": 72,
   "arguments": 0,
@@ -3897,7 +3897,7 @@
   "virtual": [],
   "address": 4692784
  },
- "f479b50": {
+ "surface_flip_vertical": {
   "callees": {},
   "stack": 112,
   "arguments": 0,
@@ -3921,7 +3921,7 @@
   "virtual": [],
   "address": 4692816
  },
- "f479d70": {
+ "surface_copy_pixel": {
   "callees": {
    "0x478eb0": [
     0,
@@ -3947,7 +3947,7 @@
   "virtual": [],
   "address": 4693360
  },
- "f479df0": {
+ "neighbour_calls": {
   "callees": {
    "0x479d70": [
     0,
@@ -4108,7 +4108,7 @@
   "virtual": [],
   "address": 4704016
  },
- "f47c930": {
+ "surface_blend": {
   "callees": {},
   "stack": 84,
   "arguments": 5,
@@ -4133,7 +4133,7 @@
   "virtual": [],
   "address": 4704560
  },
- "f47cb40": {
+ "surface_blend_masked": {
   "callees": {},
   "stack": 88,
   "arguments": 5,
@@ -4156,7 +4156,7 @@
   "virtual": [],
   "address": 4705088
  },
- "f47cd60": {
+ "surface_decimate": {
   "callees": {},
   "stack": 88,
   "arguments": 0,
@@ -4214,7 +4214,7 @@
   "virtual": [],
   "address": 4705808
  },
- "f47e200": {
+ "surface_blit_keyed": {
   "callees": {},
   "stack": 92,
   "arguments": 4,
@@ -4395,7 +4395,7 @@
   ],
   "address": 4712880
  },
- "f47ea20": {
+ "display_release_pair": {
   "callees": {
    "virtual_47ea3c": [
     1,
@@ -4798,7 +4798,7 @@
   ],
   "address": 4714736
  },
- "f47f160": {
+ "display_chain_count": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -4813,7 +4813,7 @@
   "virtual": [],
   "address": 4714848
  },
- "f47f190": {
+ "object_chain_at": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -4827,7 +4827,7 @@
   "virtual": [],
   "address": 4714896
  },
- "f47f260": {
+ "object_chain_member": {
   "callees": {
    "0x47f190": [
     0,
@@ -4871,7 +4871,7 @@
   "virtual": [],
   "address": 4715248
  },
- "f47f320": {
+ "display_chain_find": {
   "callees": {},
   "stack": 84,
   "arguments": 0,
@@ -5194,7 +5194,7 @@
   "virtual": [],
   "address": 4716784
  },
- "f47f9b0": {
+ "checked_calls": {
   "callees": {
    "0x47e7d0": [
     0,
@@ -5340,7 +5340,7 @@
   ],
   "address": 4717200
  },
- "f47faf0": {
+ "object_set_text": {
   "callees": {
    "0x47fa40": [
     0,
@@ -5431,7 +5431,7 @@
   "virtual": [],
   "address": 4717792
  },
- "f47fe20": {
+ "display_notify": {
   "callees": {
    "virtual_47fe48": [
     4,
@@ -5903,7 +5903,7 @@
   "virtual": [],
   "address": 4726288
  },
- "f481f30": {
+ "object_create_with_class": {
   "callees": {
    "0x4ccf3b": [
     0,
@@ -6093,7 +6093,7 @@
   "virtual": [],
   "address": 4728512
  },
- "f482720": {
+ "object_alloc_pair": {
   "callees": {
    "0x4ec160": [
     0,
@@ -6110,7 +6110,7 @@
   "virtual": [],
   "address": 4728608
  },
- "f482740": {
+ "forward_first_dword": {
   "callees": {
    "0x4ea190": [
     0,
@@ -6339,7 +6339,7 @@
   "virtual": [],
   "address": 4729280
  },
- "f482a40": {
+ "table_entry_call": {
   "callees": {
    "0x40adc0": [
     0,
@@ -6381,7 +6381,7 @@
   "virtual": [],
   "address": 4729440
  },
- "f482b30": {
+ "call_unless_zero": {
   "callees": {
    "0x4b8170": [
     0,
@@ -6424,7 +6424,7 @@
   "virtual": [],
   "address": 4729664
  },
- "f482bb0": {
+ "flag_pair_call": {
   "callees": {
    "0x48a930": [
     0,
@@ -6599,7 +6599,7 @@
   "virtual": [],
   "address": 4736304
  },
- "f484550": {
+ "rotation_tables_load": {
   "callees": {
    "0x4848f0": [
     0,
@@ -6660,7 +6660,7 @@
   "virtual": [],
   "address": 4737520
  },
- "f484a60": {
+ "object_table_516d34": {
   "callees": {
    "0x481b20": [
     0,
@@ -6752,7 +6752,7 @@
   ],
   "address": 4740256
  },
- "f4856a0": {
+ "surface_pair_make": {
   "callees": {
    "0x4872c0": [
     0,
@@ -6982,7 +6982,7 @@
   ],
   "address": 4747360
  },
- "f487280": {
+ "object_record_new": {
   "callees": {
    "0x4ec160": [
     0,
@@ -7018,7 +7018,7 @@
   "virtual": [],
   "address": 4747952
  },
- "f4872c0": {
+ "object_surface_format": {
   "callees": {
    "0x478d10": [
     0,
@@ -7049,7 +7049,7 @@
   "virtual": [],
   "address": 4748016
  },
- "f4874f0": {
+ "array_list_release": {
   "callees": {
    "0x4830f0": [
     0,
@@ -7091,7 +7091,7 @@
   "virtual": [],
   "address": 4748864
  },
- "f487660": {
+ "array_list_make": {
   "callees": {
    "0x483060": [
     8,
@@ -7110,7 +7110,7 @@
   "virtual": [],
   "address": 4748896
  },
- "f4876c0": {
+ "array_list_each": {
   "callees": {
    "0x483790": [
     0,
@@ -7133,7 +7133,7 @@
   "virtual": [],
   "address": 4748992
  },
- "f487710": {
+ "object_alloc_arrays": {
   "callees": {
    "0x4ec160": [
     0,
@@ -7249,7 +7249,7 @@
   "virtual": [],
   "address": 4749280
  },
- "f4877f0": {
+ "frame_resource_get": {
   "callees": {
    "0x4877e0": [
     0,
@@ -7391,7 +7391,7 @@
   "virtual": [],
   "address": 4749856
  },
- "f487b00": {
+ "object_construct_g": {
   "callees": {
    "0x488b10": [
     0,
@@ -7410,7 +7410,7 @@
   "virtual": [],
   "address": 4750080
  },
- "f487fd0": {
+ "list_find_name": {
   "callees": {
    "0x489d00": [
     0,
@@ -7541,7 +7541,7 @@
   "virtual": [],
   "address": 4752736
  },
- "f4885a0": {
+ "path_last_separator": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -7715,7 +7715,7 @@
   "virtual": [],
   "address": 4753600
  },
- "f488940": {
+ "path_is_network": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -7905,7 +7905,7 @@
   "virtual": [],
   "address": 4758336
  },
- "f489d00": {
+ "rtl_text_equal": {
   "callees": {
    "0x4dabb0": [
     0,
@@ -7929,7 +7929,7 @@
   "virtual": [],
   "address": 4758784
  },
- "f489f90": {
+ "object_table_517644": {
   "callees": {
    "0x4b78d0": [
     0,
@@ -8019,7 +8019,7 @@
   "virtual": [],
   "address": 4760288
  },
- "f48a2f0": {
+ "forward_a2f0": {
   "callees": {
    "0x4b7a80": [
     0,
@@ -8036,7 +8036,7 @@
   "virtual": [],
   "address": 4760304
  },
- "f48a300": {
+ "list_text_lookup_slot": {
   "callees": {
    "0x4b79e0": [
     0,
@@ -8053,7 +8053,7 @@
   "virtual": [],
   "address": 4760320
  },
- "f48a310": {
+ "stream_skip_blank": {
   "callees": {
    "0x48a910": [
     0,
@@ -8097,7 +8097,7 @@
   "virtual": [],
   "address": 4760336
  },
- "f48a380": {
+ "stream_skip_line": {
   "callees": {
    "0x48a910": [
     0,
@@ -8131,7 +8131,7 @@
   "virtual": [],
   "address": 4760448
  },
- "f48a420": {
+ "stream_next_directive": {
   "callees": {
    "0x48a910": [
     0,
@@ -8175,7 +8175,7 @@
   "virtual": [],
   "address": 4760608
  },
- "f48a620": {
+ "object_unknown_init": {
   "callees": {},
   "stack": 80,
   "arguments": 0,
@@ -8191,7 +8191,7 @@
   "virtual": [],
   "address": 4761120
  },
- "f48a670": {
+ "object_destroy_h": {
   "callees": {
    "0x48a8c0": [
     0,
@@ -8333,7 +8333,7 @@
   "virtual": [],
   "address": 4761760
  },
- "f48a8c0": {
+ "object_unknown_reset": {
   "callees": {
    "0x478d80": [
     0,
@@ -8775,7 +8775,7 @@
   "virtual": [],
   "address": 4767984
  },
- "f48c260": {
+ "object_notify_field": {
   "callees": {
    "0x48c9b0": [
     0,
@@ -8792,7 +8792,7 @@
   "virtual": [],
   "address": 4768352
  },
- "f48c280": {
+ "object_notify_global": {
   "callees": {
    "0x48c9b0": [
     0,
@@ -8813,7 +8813,7 @@
   "virtual": [],
   "address": 4768384
  },
- "f48c2b0": {
+ "object_notify_choice": {
   "callees": {
    "0x48c9b0": [
     0,
@@ -8834,7 +8834,7 @@
   "virtual": [],
   "address": 4768432
  },
- "f48c2e0": {
+ "object_notify_byte": {
   "callees": {
    "0x48c9b0": [
     0,
@@ -8889,7 +8889,7 @@
   "virtual": [],
   "address": 4768560
  },
- "f48c370": {
+ "copy_dword": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -9110,7 +9110,7 @@
   ],
   "address": 4770160
  },
- "f48c9b0": {
+ "object_delegate": {
   "callees": {
    "0x47fa40": [
     0,
@@ -9177,7 +9177,7 @@
   "virtual": [],
   "address": 4770288
  },
- "f48d330": {
+ "object_clear_with_table": {
   "callees": {
    "0x48d480": [
     0,
@@ -9194,7 +9194,7 @@
   "virtual": [],
   "address": 4772656
  },
- "f48d3e0": {
+ "record_copy": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -9206,7 +9206,7 @@
   "virtual": [],
   "address": 4772832
  },
- "f48d480": {
+ "object_clear_block": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -9387,7 +9387,7 @@
   ],
   "address": 4773456
  },
- "f48d6b0": {
+ "forward_call": {
   "callees": {
    "0x4d8950": [
     0,
@@ -9511,7 +9511,7 @@
   "virtual": [],
   "address": 4899296
  },
- "f4ac1f0": {
+ "animation_tick": {
   "callees": {
    "0x4ac370": [
     0,
@@ -9861,7 +9861,7 @@
   "virtual": [],
   "address": 4900160
  },
- "f4ac560": {
+ "object_scale_call": {
   "callees": {
    "0x4d74a6": [
     0,
@@ -10000,7 +10000,7 @@
   "virtual": [],
   "address": 4900624
  },
- "f4ac720": {
+ "block_resource_last": {
   "callees": {
    "0x487860": [
     0,

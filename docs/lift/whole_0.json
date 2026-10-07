@@ -1,5 +1,5 @@
 {
- "f401010": {
+ "mixer_output": {
   "callees": {},
   "stack": 92,
   "arguments": 0,
@@ -403,7 +403,7 @@
   "virtual": [],
   "address": 4223008
  },
- "f407280": {
+ "bits_header": {
   "callees": {
    "0x404610": [
     0,
@@ -450,7 +450,7 @@
   "virtual": [],
   "address": 4223616
  },
- "f4074a0": {
+ "bits_fill": {
   "callees": {
    "0x404680": [
     0,
@@ -654,7 +654,7 @@
   "virtual": [],
   "address": 4229344
  },
- "f40a590": {
+ "window_tables": {
   "callees": {
    "0x4d6768": [
     0,
@@ -1271,7 +1271,7 @@
   "virtual": [],
   "address": 4238944
  },
- "f40ae80": {
+ "module_reset_calls": {
   "callees": {
    "0x40a890": [
     0,
@@ -1495,7 +1495,7 @@
   ],
   "address": 4240992
  },
- "f40ba00": {
+ "curve_table_build": {
   "callees": {
    "0x4c9e2f": [
     0,
@@ -1562,7 +1562,7 @@
   "virtual": [],
   "address": 4243904
  },
- "f40c1e0": {
+ "global_discard_call": {
   "callees": {
    "0x4e7eb0": [
     0,
@@ -1784,7 +1784,7 @@
   "virtual": [],
   "address": 4244528
  },
- "f40c460": {
+ "mixer_channel": {
   "callees": {
    "slot_52fc38": [
     3,
@@ -1818,7 +1818,7 @@
   "virtual": [],
   "address": 4244576
  },
- "f40ce20": {
+ "mixer_pitch": {
   "callees": {},
   "stack": 80,
   "arguments": 0,
@@ -1834,7 +1834,7 @@
   "virtual": [],
   "address": 4247072
  },
- "f40ce80": {
+ "mixer_note_period": {
   "callees": {},
   "stack": 72,
   "arguments": 0,
@@ -1856,7 +1856,7 @@
   "virtual": [],
   "address": 4247168
  },
- "f40cff0": {
+ "mixer_portamento": {
   "callees": {
    "0x40ce80": [
     0,
@@ -1877,7 +1877,7 @@
   "virtual": [],
   "address": 4247536
  },
- "f40d090": {
+ "mixer_vibrato": {
   "callees": {},
   "stack": 80,
   "arguments": 0,
@@ -1906,7 +1906,7 @@
   "virtual": [],
   "address": 4247696
  },
- "f40d250": {
+ "mixer_volume_slide": {
   "callees": {},
   "stack": 76,
   "arguments": 0,
@@ -2067,7 +2067,7 @@
   "virtual": [],
   "address": 4251696
  },
- "f40e580": {
+ "mixer_select_sample": {
   "callees": {
    "0x40ce80": [
     0,
@@ -2254,7 +2254,7 @@
   "virtual": [],
   "address": 4253856
  },
- "f40ed70": {
+ "flagged_table_call": {
   "callees": {
    "0x40add0": [
     0,
@@ -2407,7 +2407,7 @@
   "virtual": [],
   "address": 4255552
  },
- "f40ef90": {
+ "object_free_tree": {
   "callees": {
    "0x4ea190": [
     0,
@@ -2452,7 +2452,7 @@
   "virtual": [],
   "address": 4256112
  },
- "f40f910": {
+ "object_attach_item": {
   "callees": {
    "0x4eb860": [
     0,
@@ -3169,7 +3169,7 @@
   "virtual": [],
   "address": 4279056
  },
- "f415180": {
+ "text_table_refresh": {
   "callees": {
    "0x4ca310": [
     0,
@@ -3457,7 +3457,7 @@
   "virtual": [],
   "address": 4283792
  },
- "f415e10": {
+ "clear_each_call": {
   "callees": {
    "0x482b30": [
     0,
@@ -3863,7 +3863,7 @@
   "virtual": [],
   "address": 4287472
  },
- "f416c10": {
+ "point_list_add": {
   "callees": {
    "0x476160": [
     0,
@@ -4147,7 +4147,7 @@
   "virtual": [],
   "address": 4289632
  },
- "f4174f0": {
+ "sfx_allocate_channel_p1": {
   "callees": {
    "0x4828a0": [
     0,
@@ -4168,7 +4168,7 @@
   "virtual": [],
   "address": 4289776
  },
- "f417550": {
+ "sfx_allocate_channel_p2": {
   "callees": {
    "0x4828a0": [
     0,
@@ -4397,7 +4397,7 @@
   "virtual": [],
   "address": 4290928
  },
- "f4179d0": {
+ "quad_average": {
   "callees": {
    "0x417970": [
     0,
@@ -4595,7 +4595,7 @@
   "virtual": [],
   "address": 4292304
  },
- "f417f40": {
+ "matcher_reset": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -4751,7 +4751,7 @@
   "virtual": [],
   "address": 4293312
  },
- "f4182f0": {
+ "resource_entry_call": {
   "callees": {
    "0x4cea15": [
     0,
@@ -4802,7 +4802,7 @@
   "virtual": [],
   "address": 4294000
  },
- "f418760": {
+ "rtl_construct_derived_stream": {
   "callees": {
    "0x4d3e20": [
     0,
@@ -5092,7 +5092,7 @@
   "virtual": [],
   "address": 4297648
  },
- "f419490": {
+ "guarded_call": {
   "callees": {
    "0x45fa70": [
     0,
@@ -5901,7 +5901,7 @@
   "virtual": [],
   "address": 4303936
  },
- "f41ac70": {
+ "surface_clear_second": {
   "callees": {
    "0x478f50": [
     0,
@@ -6681,7 +6681,7 @@
   "virtual": [],
   "address": 4314384
  },
- "f41d5b0": {
+ "gate_dispatch_call": {
   "callees": {
    "0x418820": [
     0,
@@ -7366,7 +7366,7 @@
   "virtual": [],
   "address": 4342272
  },
- "f424760": {
+ "object_center_titled": {
   "callees": {
    "0x477e30": [
     0,
@@ -7856,7 +7856,7 @@
   "virtual": [],
   "address": 4348640
  },
- "f425d30": {
+ "object_set_table": {
   "callees": {
    "0x425de0": [
     0,
@@ -7982,7 +7982,7 @@
   "virtual": [],
   "address": 4350384
  },
- "f427380": {
+ "ai_bomb_search": {
   "callees": {
    "0x4261b0": [
     1,
@@ -8166,7 +8166,7 @@
   "virtual": [],
   "address": 4361840
  },
- "f429000": {
+ "ai_find_best_slot": {
   "callees": {
    "0x425e00": [
     0,
@@ -8196,7 +8196,7 @@
   "virtual": [],
   "address": 4362240
  },
- "f4290a0": {
+ "ai_choose_piece_rotation": {
   "callees": {
    "0x429000": [
     0,
@@ -9519,7 +9519,7 @@
   "virtual": [],
   "address": 4373456
  },
- "f42e870": {
+ "board_construct": {
   "callees": {
    "0x4abd70": [
     0,
@@ -10660,7 +10660,7 @@
   "virtual": [],
   "address": 4389088
  },
- "f42ff10": {
+ "board_clip": {
   "callees": {},
   "stack": 76,
   "arguments": 0,
@@ -10811,7 +10811,7 @@
   ],
   "address": 4391248
  },
- "f430190": {
+ "actor_spawn_match_effect": {
   "callees": {
    "0x4ca000": [
     0,
@@ -10864,7 +10864,7 @@
   "virtual": [],
   "address": 4391312
  },
- "f4302a0": {
+ "actor_spawn_match_burst": {
   "callees": {
    "0x4826c0": [
     0,

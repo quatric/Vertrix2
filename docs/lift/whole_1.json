@@ -341,7 +341,7 @@
   "virtual": [],
   "address": 4395920
  },
- "f431400": {
+ "player_level_side": {
   "callees": {
    "0x4ac7d0": [
     0,
@@ -1140,7 +1140,7 @@
   "virtual": [],
   "address": 4402080
  },
- "f433040": {
+ "board_burst_occupied": {
   "callees": {
    "0x430660": [
     0,
@@ -2759,7 +2759,7 @@
   "virtual": [],
   "address": 4434784
  },
- "f43ab80": {
+ "object_region_verdict": {
   "callees": {
    "0x427ae0": [
     0,
@@ -2808,7 +2808,7 @@
   "virtual": [],
   "address": 4434896
  },
- "f43ac00": {
+ "object_chain_select": {
   "callees": {
    "0x43d320": [
     0,
@@ -2844,7 +2844,7 @@
   "virtual": [],
   "address": 4434944
  },
- "f43acd0": {
+ "object_chain_select_pair": {
   "callees": {
    "0x43d320": [
     0,
@@ -2949,7 +2949,7 @@
   "virtual": [],
   "address": 4436576
  },
- "f43b430": {
+ "player_ai_tick": {
   "callees": {
    "0x4ac500": [
     0,
@@ -3039,7 +3039,7 @@
   "virtual": [],
   "address": 4437392
  },
- "f43b5b0": {
+ "ai_reaction_time": {
   "callees": {
    "0x482770": [
     0,
@@ -3612,7 +3612,7 @@
   "virtual": [],
   "address": 4439392
  },
- "f43bd80": {
+ "board_view_setup_forward": {
   "callees": {
    "0x43bbf0": [
     0,
@@ -3629,7 +3629,7 @@
   "virtual": [],
   "address": 4439424
  },
- "f43c0e0": {
+ "sfx_dispatch_event": {
   "callees": {
    "0x417260": [
     0,
@@ -3655,7 +3655,7 @@
   "virtual": [],
   "address": 4440288
  },
- "f43c110": {
+ "sfx_dispatch_secondary": {
   "callees": {
    "0x4172c0": [
     0,
@@ -4400,7 +4400,7 @@
   ],
   "address": 4444960
  },
- "f43d330": {
+ "object_table_store": {
   "callees": {
    "0x4ca000": [
     0,
@@ -4477,7 +4477,7 @@
   "virtual": [],
   "address": 4445168
  },
- "f43d6a0": {
+ "slot_object_construct": {
   "callees": {
    "0x4abd70": [
     0,
@@ -4521,7 +4521,7 @@
   "virtual": [],
   "address": 4446208
  },
- "f43dc80": {
+ "particle_emit": {
   "callees": {
    "0x4826c0": [
     0,
@@ -4611,7 +4611,7 @@
   "virtual": [],
   "address": 4447904
  },
- "f43dff0": {
+ "object_populate": {
   "callees": {
    "0x4ca000": [
     0,
@@ -4907,7 +4907,7 @@
   "virtual": [],
   "address": 4453360
  },
- "f43f420": {
+ "font_glyph": {
   "callees": {
    "0x48ac00": [
     0,
@@ -4928,7 +4928,7 @@
   "virtual": [],
   "address": 4453408
  },
- "f43f460": {
+ "glyph_present": {
   "callees": {
    "0x43f420": [
     0,
@@ -5098,7 +5098,7 @@
   "virtual": [],
   "address": 4455280
  },
- "f43fc50": {
+ "font_maps_initialize": {
   "callees": {
    "0x48abe0": [
     0,
@@ -5383,7 +5383,7 @@
   ],
   "address": 4459856
  },
- "f441120": {
+ "forward_4ea190": {
   "callees": {
    "0x4ea190": [
     0,
@@ -5400,7 +5400,7 @@
   "virtual": [],
   "address": 4460832
  },
- "f4413b0": {
+ "chain_object_construct": {
   "callees": {
    "0x4b5db0": [
     0,
@@ -10856,7 +10856,7 @@
   "virtual": [],
   "address": 4507968
  },
- "f44c960": {
+ "block_fade_update": {
   "callees": {
    "0x4ac1f0": [
     0,
@@ -10905,7 +10905,7 @@
   "virtual": [],
   "address": 4508000
  },
- "f44c9d0": {
+ "block_pulse_update": {
   "callees": {
    "0x4ac1f0": [
     0,
@@ -11207,7 +11207,7 @@
   "virtual": [],
   "address": 4508768
  },
- "f44ce80": {
+ "block_scale_update": {
   "callees": {
    "0x4ac1f0": [
     0,
@@ -11256,7 +11256,7 @@
   "virtual": [],
   "address": 4509312
  },
- "f44cf00": {
+ "block_return_update": {
   "callees": {
    "0x4ac1f0": [
     0,
@@ -12146,7 +12146,7 @@
   "virtual": [],
   "address": 4511808
  },
- "f44d8b0": {
+ "block_mode_pulse_update": {
   "callees": {
    "0x4ac1f0": [
     0,
@@ -12307,7 +12307,7 @@
   "virtual": [],
   "address": 4512208
  },
- "f44da70": {
+ "block_half_pulse_update": {
   "callees": {
    "0x4ac1f0": [
     0,
@@ -12590,7 +12590,7 @@
   "virtual": [],
   "address": 4513008
  },
- "f44e250": {
+ "block_slide_update": {
   "callees": {
    "0x4ac1f0": [
     0,
@@ -12692,7 +12692,7 @@
   "virtual": [],
   "address": 4514512
  },
- "f44e380": {
+ "block_collapse_update": {
   "callees": {
    "0x4ac1f0": [
     0,
@@ -12798,7 +12798,7 @@
   "virtual": [],
   "address": 4514832
  },
- "f44e4a0": {
+ "block_visibility_update": {
   "callees": {
    "0x4ac1f0": [
     0,
@@ -12896,7 +12896,7 @@
   "virtual": [],
   "address": 4515088
  },
- "f44e590": {
+ "block_swell_update": {
   "callees": {
    "0x4ac1f0": [
     0,
@@ -13043,7 +13043,7 @@
   "virtual": [],
   "address": 4515440
  },
- "f44e6e0": {
+ "block_accelerate_update": {
   "callees": {
    "0x4ac1f0": [
     0,
@@ -13096,7 +13096,7 @@
   "virtual": [],
   "address": 4515552
  },
- "f44e790": {
+ "block_mode_amount_update": {
   "callees": {
    "0x4ac1f0": [
     0,
@@ -13198,7 +13198,7 @@
   "virtual": [],
   "address": 4515840
  },
- "f44e890": {
+ "block_period_update": {
   "callees": {
    "0x4ac1f0": [
     0,
@@ -13249,7 +13249,7 @@
   "virtual": [],
   "address": 4515984
  },
- "f44ebe0": {
+ "block_travel_update": {
   "callees": {
    "0x4ac1f0": [
     0,
@@ -13449,7 +13449,7 @@
   "virtual": [],
   "address": 4518064
  },
- "f44f120": {
+ "block_effect_update": {
   "callees": {
    "0x4ac1f0": [
     0,
@@ -13743,7 +13743,7 @@
   "virtual": [],
   "address": 4518688
  },
- "f44f390": {
+ "block_cycle_update": {
   "callees": {
    "0x4ac1f0": [
     0,
@@ -14527,7 +14527,7 @@
   "virtual": [],
   "address": 4520448
  },
- "f44fa70": {
+ "number_player_update": {
   "callees": {
    "0x4b5eb0": [
     0,

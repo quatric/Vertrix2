@@ -266,7 +266,7 @@
   ],
   "address": 5058576
  },
- "f4d3020": {
+ "rtl_swapped_call": {
   "callees": {
    "0x4d3010": [
     0,
@@ -314,7 +314,7 @@
   "virtual": [],
   "address": 5058800
  },
- "f4d3120": {
+ "rtl_class_chain_contains": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -365,7 +365,7 @@
   "virtual": [],
   "address": 5062176
  },
- "f4d3f70": {
+ "object_destroy_f": {
   "callees": {
    "0x4ccb9f": [
     0,
@@ -442,7 +442,7 @@
   "virtual": [],
   "address": 5062720
  },
- "f4d4060": {
+ "rtl_record_forward": {
   "callees": {
    "0x4ce780": [
     0,
@@ -634,7 +634,7 @@
   "virtual": [],
   "address": 5063424
  },
- "f4d4390": {
+ "rtl_ancestor_search": {
   "callees": {
    "0x4d1890": [
     1,
@@ -2282,7 +2282,7 @@
   "virtual": [],
   "address": 5072560
  },
- "f4d66cd": {
+ "rtl_test_and_set": {
   "callees": {
    "0x4e14b0": [
     0,
@@ -2303,7 +2303,7 @@
   "virtual": [],
   "address": 5072589
  },
- "f4d6710": {
+ "rtl_parse_integer": {
   "callees": {},
   "stack": 76,
   "arguments": 0,
@@ -2342,7 +2342,7 @@
   "virtual": [],
   "address": 5072744
  },
- "f4d6775": {
+ "rtl_integer_to_double": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -2371,7 +2371,7 @@
   "virtual": [],
   "address": 5072808
  },
- "f4d67b2": {
+ "rtl_mode_call": {
   "callees": {
    "0x4d67e4": [
     0,
@@ -2388,7 +2388,7 @@
   "virtual": [],
   "address": 5072818
  },
- "f4d67f0": {
+ "rtl_float_to_integer": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -3036,7 +3036,7 @@
   "virtual": [],
   "address": 5078608
  },
- "f4d8082": {
+ "rtl_sign_compare": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -3127,7 +3127,7 @@
   "virtual": [],
   "address": 5079591
  },
- "f4d82c6": {
+ "rtl_select_float_helpers": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -3144,7 +3144,7 @@
   "virtual": [],
   "address": 5079750
  },
- "f4d8340": {
+ "rtl_construct_chunk_list": {
   "callees": {},
   "stack": 104,
   "arguments": 0,
@@ -3215,7 +3215,7 @@
   "virtual": [],
   "address": 5080048
  },
- "f4d8490": {
+ "node_pool_take_pair": {
   "callees": {
    "0x4e23e0": [
     3,
@@ -3305,7 +3305,7 @@
   "virtual": [],
   "address": 5080384
  },
- "f4d8580": {
+ "rtl_wide_length": {
   "callees": {},
   "stack": 72,
   "arguments": 0,
@@ -3369,7 +3369,7 @@
   "virtual": [],
   "address": 5080572
  },
- "f4d8620": {
+ "rtl_store_in_slot": {
   "callees": {
    "0x4d85f0": [
     0,
@@ -3534,7 +3534,7 @@
   "virtual": [],
   "address": 5081904
  },
- "f4d8b80": {
+ "object_destroy_g": {
   "callees": {
    "0x4ccb9f": [
     0,
@@ -3572,7 +3572,7 @@
   "virtual": [],
   "address": 5081984
  },
- "f4d8c20": {
+ "node_pool_take_initialised": {
   "callees": {
    "0x4e23e0": [
     3,
@@ -3731,7 +3731,7 @@
   "virtual": [],
   "address": 5084208
  },
- "f4d94a0": {
+ "rtl_probe_call": {
   "callees": {
    "0x4db950": [
     3,
@@ -3748,7 +3748,7 @@
   "virtual": [],
   "address": 5084320
  },
- "f4d9930": {
+ "rtl_forward_pair": {
   "callees": {
    "0x4d9ae0": [
     1,
@@ -3846,7 +3846,7 @@
   "virtual": [],
   "address": 5085920
  },
- "f4da66e": {
+ "rtl_zero_call3": {
   "callees": {
    "0x4da3ba": [
     0,
@@ -3888,7 +3888,7 @@
   "virtual": [],
   "address": 5089051
  },
- "f4daab0": {
+ "rtl_copy_terminated": {
   "callees": {
    "0x4e39a0": [
     0,
@@ -3949,7 +3949,7 @@
   "virtual": [],
   "address": 5090464
  },
- "f4dad19": {
+ "rtl_sign_of": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -3961,7 +3961,7 @@
   "virtual": [],
   "address": 5090585
  },
- "f4dad2e": {
+ "rtl_ebx_from_edx_call": {
   "callees": {
    "0x4dad38": [
     0,
@@ -3978,7 +3978,7 @@
   "virtual": [],
   "address": 5090606
  },
- "f4dae4a": {
+ "rtl_negate_double": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -3990,7 +3990,7 @@
   "virtual": [],
   "address": 5090890
  },
- "f4dae62": {
+ "rtl_absolute_double": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -4055,7 +4055,7 @@
   "virtual": [],
   "address": 5091633
  },
- "f4db1fd": {
+ "rtl_split_exponent": {
   "callees": {},
   "stack": 76,
   "arguments": 0,
@@ -4074,7 +4074,7 @@
   "virtual": [],
   "address": 5091837
  },
- "f4db250": {
+ "float_remainder": {
   "callees": {},
   "stack": 104,
   "arguments": 0,
@@ -4114,7 +4114,7 @@
   "virtual": [],
   "address": 5093028
  },
- "f4db6d9": {
+ "rtl_bracket_call": {
   "callees": {
    "0x4db507": [
     0,
@@ -4388,7 +4388,7 @@
   "virtual": [],
   "address": 5095424
  },
- "f4dc160": {
+ "rtl_lookup_call": {
   "callees": {
    "0x4dbcd0": [
     0,
@@ -4759,7 +4759,7 @@
   "virtual": [],
   "address": 5099872
  },
- "f4dd170": {
+ "rtl_record_set_argument": {
   "callees": {
    "0x4ce740": [
     0,
@@ -4797,7 +4797,7 @@
   "virtual": [],
   "address": 5099904
  },
- "f4dd360": {
+ "rtl_construct_list": {
   "callees": {},
   "stack": 104,
   "arguments": 0,
@@ -4844,7 +4844,7 @@
   "virtual": [],
   "address": 5100512
  },
- "f4dd440": {
+ "rtl_pair_call": {
   "callees": {
    "0x4dd3e0": [
     0,
@@ -4992,7 +4992,7 @@
   "virtual": [],
   "address": 5102656
  },
- "f4ddc60": {
+ "rtl_release_list_head": {
   "callees": {
    "0x4ddbe0": [
     0,
@@ -5234,7 +5234,7 @@
   "virtual": [],
   "address": 5106296
  },
- "f4dec60": {
+ "rtl_record_increment": {
   "callees": {
    "0x4ce780": [
     0,
@@ -5309,7 +5309,7 @@
   ],
   "address": 5106800
  },
- "f4decd0": {
+ "rtl_construct_event_table": {
   "callees": {
    "0x4deec0": [
     0,
@@ -5336,7 +5336,7 @@
   "virtual": [],
   "address": 5106896
  },
- "f4deec0": {
+ "rtl_construct_table": {
   "callees": {},
   "stack": 104,
   "arguments": 0,
@@ -5444,7 +5444,7 @@
   "virtual": [],
   "address": 5107664
  },
- "f4df070": {
+ "node_pool_take_quad": {
   "callees": {
    "0x4e23e0": [
     3,
@@ -5535,7 +5535,7 @@
   "virtual": [],
   "address": 5108160
  },
- "f4df6c8": {
+ "format_spec": {
   "callees": {
    "0x4df81c": [
     0,
@@ -5596,7 +5596,7 @@
   "virtual": [],
   "address": 5109448
  },
- "f4df81c": {
+ "rtl_parse_format_flags": {
   "callees": {},
   "stack": 72,
   "arguments": 0,
@@ -5643,7 +5643,7 @@
   "virtual": [],
   "address": 5110388
  },
- "f4dfa7c": {
+ "rtl_distribute_slack": {
   "callees": {},
   "stack": 88,
   "arguments": 0,

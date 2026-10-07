@@ -82,3 +82,11 @@ The Wii probe DOL builds. It was not run in Dolphin: Dolphin in this environment
 output at all, even for the older known-good `wii-game/boot.dol`, so there is no capture to show.
 The Makefile now rebuilds `libvertrix-recovered.a` from scratch (a stale member had defined the
 same lifted symbols twice).
+
+## Names
+
+`tools/gen_names.py` reads the 'Original 0x...' comments of the recovered headers into
+`docs/names.json` (address -> name of the recovered function, 574 entries). `lift_batch.py combine`
+names each verified lifted routine after it (`lifted_<name>`, the first address wins a name) and
+keeps `lifted_f<address>` for the rest, so 410 routines have readable names and the other ~2,200 keep
+their address until a name is established. A name is never guessed.

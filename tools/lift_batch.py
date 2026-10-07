@@ -67,6 +67,20 @@ def verify_all(scratch, jobs, cases):
         print(len(group), detail, group[:3])
 
 
+def readable_names():
+    """address -> short name from docs/names.json (first address wins a name)."""
+    path = ROOT / 'docs' / 'names.json'
+    if not path.exists():
+        return {}
+    taken, result = set(), {}
+    for address, full in sorted(json.loads(path.read_text()).items(), key=lambda i: int(i[0], 16)):
+        short = full[len('vertrix_'):] if full.startswith('vertrix_') else full
+        if short not in taken:
+            taken.add(short)
+            result[int(address, 16)] = short
+    return result
+
+
 def combine(scratch, name, out_dir, first=0, count=None):
     results = json.loads((scratch / 'results.json').read_text())
     passed = sorted(n for n, r in results.items() if r['ok'])[first:first + count if count else None]
@@ -74,16 +88,22 @@ def combine(scratch, name, out_dir, first=0, count=None):
             ' * against the original by tools/verify_lifted.py. */\n#include "lift_runtime.h"\n'
             '\n#include "lifted_%s.h"\n' % name]
     enums, protos, metas = [], [], {}
+    readable = readable_names()
     for n in passed:
         text = (scratch / (n + '.c')).read_text()
         meta = json.loads((scratch / (n + '.json')).read_text())
+        pretty = readable.get(meta['address'], n)
         function = text[text.index('uint32_t lifted_'):]
-        body.append(function)
-        enums.append('    LIFTED_%s_STACK = %d' % (n.upper(), meta['stack']))
         header = (scratch / ('lifted_%s.h' % n)).read_text()
         proto = header[header.index('uint32_t lifted_'):header.index('#endif')]
+        if pretty != n:
+            function = function.replace('lifted_%s(' % n, 'lifted_%s(' % pretty)
+            function = function.replace('LIFTED_%s_STACK' % n.upper(), 'LIFTED_%s_STACK' % pretty.upper())
+            proto = proto.replace('lifted_%s(' % n, 'lifted_%s(' % pretty)
+        body.append(function)
+        enums.append('    LIFTED_%s_STACK = %d' % (pretty.upper(), meta['stack']))
         protos.append('/* Original 0x%x. */\n%s' % (meta['address'], proto.strip()))
-        metas[n] = meta
+        metas[pretty] = meta
     out = Path(out_dir)
     (out / ('lifted_%s.c' % name)).write_text('\n'.join(body))
     (out / ('lifted_%s.h' % name)).write_text(

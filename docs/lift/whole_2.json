@@ -955,7 +955,7 @@
   "virtual": [],
   "address": 4525920
  },
- "f450f80": {
+ "object_start_hold": {
   "callees": {
    "0x4ac8f0": [
     0,
@@ -1065,7 +1065,7 @@
   ],
   "address": 4527088
  },
- "f451490": {
+ "state_steps_451490": {
   "callees": {
    "0x4ac500": [
     0,
@@ -1130,7 +1130,7 @@
   ],
   "address": 4527248
  },
- "f451520": {
+ "state_gate_451520": {
   "callees": {
    "0x4334b0": [
     0,
@@ -1175,7 +1175,7 @@
   ],
   "address": 4527392
  },
- "f451580": {
+ "state_drain_451580": {
   "callees": {
    "0x4ac500": [
     0,
@@ -1241,7 +1241,7 @@
   ],
   "address": 4527488
  },
- "f451630": {
+ "state_check_451630": {
   "callees": {
    "0x42eca0": [
     0,
@@ -1286,7 +1286,7 @@
   ],
   "address": 4527664
  },
- "f451690": {
+ "state_start_451690": {
   "callees": {
    "0x43c0e0": [
     0,
@@ -1544,7 +1544,7 @@
   "virtual": [],
   "address": 4529152
  },
- "f451dd0": {
+ "state_choice_check": {
   "callees": {
    "0x42a1b0": [
     0,
@@ -1581,7 +1581,7 @@
   ],
   "address": 4529616
  },
- "f451e20": {
+ "state_choice_apply": {
   "callees": {
    "0x42a190": [
     0,
@@ -1838,7 +1838,7 @@
   ],
   "address": 4530416
  },
- "f452160": {
+ "state_match_452160": {
   "callees": {
    "0x4328a0": [
     0,
@@ -1911,7 +1911,7 @@
   ],
   "address": 4530528
  },
- "f452250": {
+ "object_arm_hold": {
   "callees": {
    "0x4ac8f0": [
     0,
@@ -1938,7 +1938,7 @@
   "virtual": [],
   "address": 4530768
  },
- "f4522c0": {
+ "object_enter_attack": {
   "callees": {
    "virtual_4522fb": [
     0,
@@ -2065,7 +2065,7 @@
   ],
   "address": 4531152
  },
- "f452440": {
+ "state_attack_452440": {
   "callees": {
    "0x4316c0": [
     0,
@@ -2173,7 +2173,7 @@
   ],
   "address": 4531936
  },
- "f452770": {
+ "state_advance_452770": {
   "callees": {
    "0x4328a0": [
     0,
@@ -2242,7 +2242,7 @@
   ],
   "address": 4532080
  },
- "f452830": {
+ "effect_negated_gate": {
   "callees": {
    "0x43b800": [
     0,
@@ -2287,7 +2287,7 @@
   ],
   "address": 4532272
  },
- "f452880": {
+ "effect_value_gate": {
   "callees": {
    "0x43b800": [
     0,
@@ -2336,7 +2336,7 @@
   ],
   "address": 4532352
  },
- "f4528e0": {
+ "effect_progress_gate": {
   "callees": {
    "0x43b7c0": [
     0,
@@ -2386,7 +2386,7 @@
   ],
   "address": 4532448
  },
- "f452a30": {
+ "effect_arm_handler": {
   "callees": {
    "0x43bad0": [
     0,
@@ -2636,7 +2636,7 @@
   ],
   "address": 4533376
  },
- "f452d10": {
+ "effect_progress_update_gate": {
   "callees": {
    "0x43b720": [
     0,
@@ -2685,7 +2685,7 @@
   ],
   "address": 4533520
  },
- "f452d70": {
+ "effect_progress_compare": {
   "callees": {
    "0x43ac00": [
     0,
@@ -2737,7 +2737,7 @@
   ],
   "address": 4533616
  },
- "f452e00": {
+ "effect_board_match": {
   "callees": {
    "0x438cd0": [
     0,
@@ -2928,7 +2928,7 @@
   ],
   "address": 4534912
  },
- "f453320": {
+ "state_combine_453320": {
   "callees": {
    "0x43c0e0": [
     0,
@@ -2976,7 +2976,7 @@
   ],
   "address": 4535072
  },
- "f4533b0": {
+ "state_pair_4533b0": {
   "callees": {
    "0x42eca0": [
     0,
@@ -3025,7 +3025,7 @@
   ],
   "address": 4535216
  },
- "f453460": {
+ "effect_stone_arm": {
   "callees": {
    "0x436fe0": [
     0,
@@ -3078,7 +3078,7 @@
   ],
   "address": 4535392
  },
- "f4534e0": {
+ "effect_stone_apply": {
   "callees": {
    "0x42eca0": [
     0,
@@ -3131,7 +3131,7 @@
   ],
   "address": 4535520
  },
- "f453570": {
+ "effect_stone_clear": {
   "callees": {
    "0x42eca0": [
     0,
@@ -3904,7 +3904,7 @@
   ],
   "address": 4536960
  },
- "f453b90": {
+ "effect_pair_sound": {
   "callees": {
    "0x43d3b0": [
     0,
@@ -3953,7 +3953,7 @@
   ],
   "address": 4537232
  },
- "f453c00": {
+ "effect_copy_speed": {
   "callees": {
    "0x43ac00": [
     0,
@@ -4167,7 +4167,7 @@
   ],
   "address": 4537680
  },
- "f453ef0": {
+ "state_ask_453ef0": {
   "callees": {
    "0x42eca0": [
     0,
@@ -4406,7 +4406,7 @@
   ],
   "address": 4538512
  },
- "f454200": {
+ "state_ask_454200": {
   "callees": {
    "0x42eca0": [
     0,
@@ -4645,7 +4645,7 @@
   ],
   "address": 4539296
  },
- "f454510": {
+ "state_ask_454510": {
   "callees": {
    "0x42eca0": [
     0,
@@ -4787,7 +4787,7 @@
   ],
   "address": 4539904
  },
- "f4546a0": {
+ "state_cycle_4546a0": {
   "callees": {
    "0x4ac500": [
     0,
@@ -5223,7 +5223,7 @@
   ],
   "address": 4541008
  },
- "f454b20": {
+ "state_drain_454b20": {
   "callees": {
    "0x4ac500": [
     0,
@@ -5285,7 +5285,7 @@
   ],
   "address": 4541216
  },
- "f454bd0": {
+ "state_done_454bd0": {
   "callees": {
    "0x42eca0": [
     0,
@@ -5440,7 +5440,7 @@
   ],
   "address": 4541616
  },
- "f454d80": {
+ "state_drain_454d80": {
   "callees": {
    "0x4ac500": [
     0,
@@ -5657,7 +5657,7 @@
   ],
   "address": 4542208
  },
- "f454fc0": {
+ "state_done_454fc0": {
   "callees": {
    "0x42eca0": [
     0,
@@ -5744,7 +5744,7 @@
   ],
   "address": 4542496
  },
- "f4552b0": {
+ "state_done_4552b0": {
   "callees": {
    "0x42ed40": [
     0,
@@ -5789,7 +5789,7 @@
   ],
   "address": 4543152
  },
- "f455320": {
+ "state_guard_455320": {
   "callees": {
    "0x43a510": [
     0,
@@ -5830,7 +5830,7 @@
   ],
   "address": 4543264
  },
- "f4553a0": {
+ "state_guard_4553a0": {
   "callees": {
    "0x43a510": [
     0,
@@ -5939,7 +5939,7 @@
   ],
   "address": 4543648
  },
- "f455510": {
+ "effect_field_bind": {
   "callees": {
    "0x42eca0": [
     0,
@@ -6652,7 +6652,7 @@
   ],
   "address": 4545424
  },
- "f455c30": {
+ "state_done_455c30": {
   "callees": {
    "0x42eca0": [
     0,
@@ -6799,7 +6799,7 @@
   ],
   "address": 4545808
  },
- "f455db0": {
+ "state_replace_455db0": {
   "callees": {
    "0x42eca0": [
     0,
@@ -6877,7 +6877,7 @@
   ],
   "address": 4546048
  },
- "f455e50": {
+ "effect_slide_begin": {
   "callees": {
    "0x438910": [
     0,
@@ -6941,7 +6941,7 @@
   ],
   "address": 4546128
  },
- "f455f10": {
+ "effect_slide_wait": {
   "callees": {
    "0x4ac500": [
     0,
@@ -6998,7 +6998,7 @@
   ],
   "address": 4546320
  },
- "f455f80": {
+ "effect_slide_advance": {
   "callees": {
    "0x4ac500": [
     0,
@@ -7078,7 +7078,7 @@
   ],
   "address": 4546432
  },
- "f456060": {
+ "effect_slide_end": {
   "callees": {
    "0x4ac500": [
     0,
@@ -8849,7 +8849,7 @@
   "virtual": [],
   "address": 4552560
  },
- "f457810": {
+ "object_flip_side": {
   "callees": {
    "0x4ac370": [
     0,
@@ -10501,7 +10501,7 @@
   "virtual": [],
   "address": 4562432
  },
- "f45a0c0": {
+ "title_letter_launch": {
   "callees": {
    "0x484680": [
     0,
@@ -13417,7 +13417,7 @@
   "virtual": [],
   "address": 4574464
  },
- "f45cdc0": {
+ "actor_refresh_if_active": {
   "callees": {
    "0x45cff0": [
     0,
@@ -14086,7 +14086,7 @@
   "virtual": [],
   "address": 4577200
  },
- "f45d820": {
+ "object_step_toggle": {
   "callees": {
    "0x4b65a0": [
     0,
@@ -14115,7 +14115,7 @@
   "virtual": [],
   "address": 4577312
  },
- "f45e260": {
+ "table_release_everything": {
   "callees": {
    "0x4874f0": [
     0,
@@ -14186,7 +14186,7 @@
   "virtual": [],
   "address": 4580352
  },
- "f45e440": {
+ "table_build_pair": {
   "callees": {
    "0x4875a0": [
     10,
@@ -14261,7 +14261,7 @@
   "virtual": [],
   "address": 4580656
  },
- "f45e590": {
+ "resource_rows_build": {
   "callees": {
    "0x4877f0": [
     0,
@@ -14297,7 +14297,7 @@
   "virtual": [],
   "address": 4580752
  },
- "f45e630": {
+ "table_build_by_flag": {
   "callees": {
    "0x4875a0": [
     10,
@@ -14331,7 +14331,7 @@
   "virtual": [],
   "address": 4580976
  },
- "f45e690": {
+ "resource_one_frame": {
   "callees": {
    "0x487640": [
     0,
@@ -14348,7 +14348,7 @@
   "virtual": [],
   "address": 4581008
  },
- "f45e6b0": {
+ "resource_column_build": {
   "callees": {
    "0x487640": [
     0,
@@ -14402,7 +14402,7 @@
   "virtual": [],
   "address": 4581152
  },
- "f45e740": {
+ "table_release_one": {
   "callees": {
    "0x4874f0": [
     0,
@@ -14419,7 +14419,7 @@
   "virtual": [],
   "address": 4581184
  },
- "f45e750": {
+ "table_fill_slot": {
   "callees": {
    "0x487660": [
     10,
@@ -14511,7 +14511,7 @@
   "virtual": [],
   "address": 4581408
  },
- "f45e830": {
+ "table_release_run": {
   "callees": {
    "0x4874f0": [
     0,
@@ -14528,7 +14528,7 @@
   "virtual": [],
   "address": 4581424
  },
- "f45e850": {
+ "table_fill_indexed": {
   "callees": {
    "0x487660": [
     10,
@@ -14561,7 +14561,7 @@
   "virtual": [],
   "address": 4581456
  },
- "f45e8d0": {
+ "indexed_resource_call": {
   "callees": {
    "0x487640": [
     0,
@@ -14616,7 +14616,7 @@
   "virtual": [],
   "address": 4581648
  },
- "f45e950": {
+ "grid_array_call": {
   "callees": {
    "0x487710": [
     0,
@@ -14633,7 +14633,7 @@
   "virtual": [],
   "address": 4581712
  },
- "f45e990": {
+ "grid_cell_call": {
   "callees": {
    "0x487750": [
     1,
@@ -14751,7 +14751,7 @@
   "virtual": [],
   "address": 4582400
  },
- "f45ec50": {
+ "resource_grid_finish": {
   "callees": {
    "0x4877f0": [
     0,
@@ -14782,7 +14782,7 @@
   "virtual": [],
   "address": 4582480
  },
- "f45ecd0": {
+ "resource_pair_call": {
   "callees": {
    "0x4877f0": [
     0,
@@ -14809,7 +14809,7 @@
   "virtual": [],
   "address": 4582608
  },
- "f45ed10": {
+ "resource_single_finish": {
   "callees": {
    "0x4877f0": [
     0,
@@ -14887,7 +14887,7 @@
   "virtual": [],
   "address": 4582752
  },
- "f45ee30": {
+ "resource_cell_rows": {
   "callees": {
    "0x4877f0": [
     0,
@@ -14958,7 +14958,7 @@
   "virtual": [],
   "address": 4583232
  },
- "f45f020": {
+ "resource_paired_finish": {
   "callees": {
    "0x4877f0": [
     0,
@@ -14990,7 +14990,7 @@
   "virtual": [],
   "address": 4583456
  },
- "f45f0a0": {
+ "seven_steps": {
   "callees": {
    "0x45f0c0": [
     0,
@@ -15047,7 +15047,7 @@
   "virtual": [],
   "address": 4583616
  },
- "f45f140": {
+ "resource_indexed_finish": {
   "callees": {
    "0x4877f0": [
     0,
@@ -15095,7 +15095,7 @@
   "virtual": [],
   "address": 4583904
  },
- "f45f1f0": {
+ "resource_stride_finish": {
   "callees": {
    "0x4877f0": [
     0,
@@ -15124,7 +15124,7 @@
   "virtual": [],
   "address": 4583920
  },
- "f45f250": {
+ "resource_flagged_finish": {
   "callees": {
    "0x4877f0": [
     0,
@@ -15213,7 +15213,7 @@
   ],
   "address": 4584432
  },
- "f45f540": {
+ "string_append": {
   "callees": {},
   "stack": 84,
   "arguments": 0,
@@ -15297,7 +15297,7 @@
   "virtual": [],
   "address": 4585328
  },
- "f45fa70": {
+ "ui_panels_slot1": {
   "callees": {
    "virtual_45fa7c": [
     0,
@@ -15337,7 +15337,7 @@
   ],
   "address": 4586096
  },
- "f45fab0": {
+ "ui_panels_slot2": {
   "callees": {
    "virtual_45fac2": [
     0,
@@ -15377,7 +15377,7 @@
   ],
   "address": 4586160
  },
- "f45fb00": {
+ "label_frame": {
   "callees": {
    "0x4ca000": [
     0,
@@ -15489,7 +15489,7 @@
   "virtual": [],
   "address": 4586624
  },
- "f45fe10": {
+ "label_box": {
   "callees": {
    "0x4ca000": [
     0,
@@ -16064,7 +16064,7 @@
   "virtual": [],
   "address": 4610032
  },
- "f465a70": {
+ "marker_spawn": {
   "callees": {
    "0x4ca000": [
     0,
@@ -16324,7 +16324,7 @@
   "virtual": [],
   "address": 4629520
  },
- "f46b810": {
+ "hud_build": {
   "callees": {
    "0x471100": [
     2,
@@ -16790,7 +16790,7 @@
   "virtual": [],
   "address": 4655456
  },
- "f470b20": {
+ "row_label": {
   "callees": {
    "0x4ca000": [
     0,
@@ -16841,7 +16841,7 @@
   "virtual": [],
   "address": 4655904
  },
- "f470d20": {
+ "panel_group": {
   "callees": {
    "0x4ca000": [
     0,
@@ -16898,7 +16898,7 @@
   "virtual": [],
   "address": 4656416
  },
- "f471020": {
+ "panel_spawn": {
   "callees": {
    "0x4ca000": [
     0,
@@ -16962,7 +16962,7 @@
   "virtual": [],
   "address": 4657360
  },
- "f471100": {
+ "ui_companion_spawn": {
   "callees": {
    "0x4126f0": [
     0,
@@ -17008,7 +17008,7 @@
   "virtual": [],
   "address": 4657408
  },
- "f4711a0": {
+ "slide_pair": {
   "callees": {
    "0x4ca000": [
     0,
@@ -17063,7 +17063,7 @@
   "virtual": [],
   "address": 4657568
  },
- "f471340": {
+ "delay_actor_spawn": {
   "callees": {
    "0x4ca000": [
     0,
@@ -17115,7 +17115,7 @@
   "virtual": [],
   "address": 4658112
  },
- "f4717f0": {
+ "ui_slide_from_below": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -17127,7 +17127,7 @@
   "virtual": [],
   "address": 4659184
  },
- "f471820": {
+ "ui_slide_sideways": {
   "callees": {},
   "stack": 64,
   "arguments": 2,
@@ -17289,7 +17289,7 @@
   "virtual": [],
   "address": 4659584
  },
- "f4719a0": {
+ "ui_slide_from_above": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -17407,7 +17407,7 @@
   "virtual": [],
   "address": 4659808
  },
- "f471a70": {
+ "list_clear_call": {
   "callees": {
    "0x4b6200": [
     0,
@@ -17747,7 +17747,7 @@
   "virtual": [],
   "address": 4660208
  },
- "f471c40": {
+ "actor_list_idle_except": {
   "callees": {
    "0x4ac900": [
     0,
@@ -17764,7 +17764,7 @@
   "virtual": [],
   "address": 4660288
  },
- "f471c90": {
+ "actor_list_all_idle": {
   "callees": {
    "0x4ac900": [
     0,
