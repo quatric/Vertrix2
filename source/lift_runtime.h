@@ -5,12 +5,12 @@
 
 #include "actor_build.h"
 
-/* Runtime of the routines lifted by tools/lift.py: the frame of the original, its flags, its
- * pushed arguments and the memory and call boundaries. */
+/* Runtime of the routines lifted by tools/lift.py: the registers, stack and flags of the
+ * original and the memory and call boundaries. The stack is a byte array covering the bytes below
+ * the entry esp the routine may read before writing, the return slot and the incoming arguments. */
 
 enum
 {
-    LIFT_STACK_DEPTH = 64,
     LIFT_GLOBAL_STORE = 0xf0000000u
 };
 
@@ -20,45 +20,55 @@ typedef struct LiftFlags
     uint32_t sf;
     uint32_t cf;
     uint32_t of;
+    uint32_t pf;
 } LiftFlags;
+
+typedef struct LiftEntry
+{
+    uint32_t eax;
+    uint32_t edx;
+    uint32_t ebx;
+    uint32_t ecx;
+    uint32_t esi;
+    uint32_t edi;
+    uint32_t ebp;
+    uint32_t esp;              /* address of the return slot */
+    const uint32_t *arguments; /* the dwords above the return slot */
+    const uint8_t *garbage;    /* the stack bytes below esp (stack size of them) */
+    uint32_t chain;
+} LiftEntry;
 
 typedef struct LiftEnv
 {
     const VertrixCalls *calls;
     const VertrixFactoryServices *services;
     const VertrixGlobals *globals;
-    uint32_t frame;
-    uint8_t *local;
-    uint32_t locals;
-    uint32_t size;
+    uint8_t *stack;
+    uint32_t low;
+    uint32_t high;
     uint32_t chain;
-    uint32_t stack[LIFT_STACK_DEPTH];
-    unsigned sp;
     int failed;
 } LiftEnv;
 
 static inline void lift_begin(LiftEnv *env, const VertrixCalls *calls,
                               const VertrixFactoryServices *services, const VertrixGlobals *globals,
-                              uint32_t frame, uint8_t *local, uint32_t locals,
-                              unsigned argument_count, const uint8_t *garbage,
-                              const uint32_t *arguments, uint32_t chain)
+                              uint8_t *stack, uint32_t below, unsigned argument_count,
+                              const LiftEntry *entry)
 {
     unsigned i;
     env->calls = calls;
     env->services = services;
     env->globals = globals;
-    env->frame = frame;
-    env->local = local;
-    env->locals = locals;
-    env->size = locals + 8 + 4 * argument_count;
-    env->chain = chain;
-    env->sp = 0;
+    env->stack = stack;
+    env->low = entry->esp - below;
+    env->high = entry->esp + 4 + 4 * argument_count + 4;
+    env->chain = entry->chain;
     env->failed = 0;
-    memcpy(local, garbage, locals);
-    memset(local + locals, 0, 8 + 4 * argument_count + 4);
+    memcpy(stack, entry->garbage, below);
+    memset(stack + below, 0, 4 + 4 * argument_count + 4);
     for (i = 0; i < argument_count; i++)
     {
-        memcpy(local + locals + 8 + 4 * i, &arguments[i], 4);
+        memcpy(stack + below + 4 + 4 * i, &entry->arguments[i], 4);
     }
 }
 
@@ -87,32 +97,9 @@ static inline void lift_put(uint8_t *bytes, unsigned size, uint32_t value)
     }
 }
 
-static inline uint32_t lift_local_read(LiftEnv *env, int32_t disp, unsigned size)
+static inline int lift_in_stack(const LiftEnv *env, uint32_t address, unsigned size)
 {
-    int64_t index = (int64_t)env->locals + disp;
-    if (index < 0 || index + size > env->size)
-    {
-        env->failed = 1;
-        return 0;
-    }
-    return lift_get(env->local + index, size);
-}
-
-static inline void lift_local_write(LiftEnv *env, int32_t disp, unsigned size, uint32_t value)
-{
-    int64_t index = (int64_t)env->locals + disp;
-    if (index < 0 || index + size > env->size)
-    {
-        env->failed = 1;
-        return;
-    }
-    lift_put(env->local + index, size, value);
-}
-
-static inline int lift_in_frame(const LiftEnv *env, uint32_t address, unsigned size)
-{
-    return address >= env->frame - env->locals &&
-           (uint64_t)address + size <= (uint64_t)env->frame + (env->size - env->locals);
+    return address >= env->low && (uint64_t)address + size <= env->high;
 }
 
 static inline uint32_t lift_load(LiftEnv *env, uint32_t base, uint32_t offset, unsigned size)
@@ -121,9 +108,9 @@ static inline uint32_t lift_load(LiftEnv *env, uint32_t base, uint32_t offset, u
     void *storage;
     size_t length;
     uint32_t value;
-    if (lift_in_frame(env, address, size))
+    if (lift_in_stack(env, address, size))
     {
-        return lift_local_read(env, (int32_t)(address - env->frame), size);
+        return lift_get(env->stack + (address - env->low), size);
     }
     if (base != 0 && env->services->resolve(base, &storage, &length, env->services->context) &&
         vertrix_actor_storage_read(storage, length, offset, size, &value))
@@ -137,9 +124,9 @@ static inline void lift_store(LiftEnv *env, uint32_t base, uint32_t offset, unsi
                               uint32_t value)
 {
     uint32_t address = base + offset;
-    if (lift_in_frame(env, address, size))
+    if (lift_in_stack(env, address, size))
     {
-        lift_local_write(env, (int32_t)(address - env->frame), size, value);
+        lift_put(env->stack + (address - env->low), size, value);
     }
     else if (base == 0)
     {
@@ -152,24 +139,24 @@ static inline void lift_store(LiftEnv *env, uint32_t base, uint32_t offset, unsi
     }
 }
 
-/* The effects of the callees that store a dword through the pointer in eax (AnsiString locals). */
+/* A call of an unrecovered routine; the `count` dwords at esp are its stack arguments. The
+ * callees that store a dword through the pointer in eax (AnsiString locals) also do so here. */
 static inline uint32_t lift_call(LiftEnv *env, uint32_t target, uint32_t eax, uint32_t edx,
-                                 uint32_t ebx, uint32_t ecx, unsigned count)
+                                 uint32_t ebx, uint32_t ecx, unsigned count, uint32_t esp)
 {
-    uint32_t stack[LIFT_STACK_DEPTH] = {0};
+    uint32_t stack[32] = {0};
     uint32_t out = 0;
     uint32_t result;
     unsigned i;
-    if (count > env->sp)
+    if (count > 32)
     {
         env->failed = 1;
-        count = env->sp;
+        count = 32;
     }
     for (i = 0; i < count; i++)
     {
-        stack[i] = env->stack[env->sp - 1 - i];
+        stack[i] = lift_load(env, esp, 4 * i, 4);
     }
-    env->sp -= count;
     result = vertrix_calln(env->calls, target, eax, edx, ebx, ecx, stack, count, &out);
     if (target == 0x4ca280 || target == 0x4ca370)
     {
@@ -182,8 +169,13 @@ static inline uint32_t lift_flags_value(unsigned bits, uint64_t result, LiftFlag
 {
     uint32_t mask = bits >= 32 ? 0xffffffffu : (1u << bits) - 1u;
     uint32_t value = (uint32_t)result & mask;
+    uint32_t low = value & 0xffu;
+    low ^= low >> 4;
+    low ^= low >> 2;
+    low ^= low >> 1;
     fl->zf = value == 0;
     fl->sf = (value >> (bits - 1)) & 1u;
+    fl->pf = !(low & 1u);
     return value;
 }
 
@@ -306,5 +298,303 @@ static inline uint32_t lift_sar(unsigned bits, uint32_t a, uint32_t count, LiftF
     }
     fl->cf = (uint32_t)((value >> (count - 1)) & 1);
     return lift_flags_value(bits, (uint64_t)(value >> count), fl);
+}
+
+static inline uint32_t lift_adc(unsigned bits, uint32_t a, uint32_t b, LiftFlags *fl)
+{
+    uint32_t mask = bits >= 32 ? 0xffffffffu : (1u << bits) - 1u;
+    uint64_t wide = (uint64_t)(a & mask) + (b & mask) + fl->cf;
+    uint32_t value = lift_flags_value(bits, wide, fl);
+    fl->cf = (uint32_t)((wide >> bits) & 1u);
+    fl->of = (((a ^ value) & (b ^ value)) >> (bits - 1)) & 1u;
+    return value;
+}
+
+static inline uint32_t lift_sbb(unsigned bits, uint32_t a, uint32_t b, LiftFlags *fl)
+{
+    uint32_t mask = bits >= 32 ? 0xffffffffu : (1u << bits) - 1u;
+    uint32_t borrow = fl->cf;
+    uint64_t wide = (uint64_t)(a & mask) - (b & mask) - borrow;
+    uint32_t value = lift_flags_value(bits, wide, fl);
+    fl->cf = (uint64_t)(a & mask) < (uint64_t)(b & mask) + borrow;
+    fl->of = (((a ^ b) & (a ^ value)) >> (bits - 1)) & 1u;
+    return value;
+}
+
+static inline uint32_t lift_rol(unsigned bits, uint32_t a, uint32_t count, LiftFlags *fl)
+{
+    uint32_t mask = bits >= 32 ? 0xffffffffu : (1u << bits) - 1u;
+    uint32_t value = a & mask;
+    count &= 31u;
+    if (count == 0)
+    {
+        return a;
+    }
+    count %= bits;
+    if (count != 0)
+    {
+        value = ((value << count) | (value >> (bits - count))) & mask;
+    }
+    fl->cf = value & 1u;
+    fl->of = ((value >> (bits - 1)) & 1u) ^ fl->cf;
+    return value;
+}
+
+static inline uint32_t lift_ror(unsigned bits, uint32_t a, uint32_t count, LiftFlags *fl)
+{
+    uint32_t mask = bits >= 32 ? 0xffffffffu : (1u << bits) - 1u;
+    uint32_t value = a & mask;
+    count &= 31u;
+    if (count == 0)
+    {
+        return a;
+    }
+    count %= bits;
+    if (count != 0)
+    {
+        value = ((value >> count) | (value << (bits - count))) & mask;
+    }
+    fl->cf = (value >> (bits - 1)) & 1u;
+    fl->of = ((value >> (bits - 1)) ^ (value >> (bits - 2))) & 1u;
+    return value;
+}
+
+static inline uint32_t lift_rcl(unsigned bits, uint32_t a, uint32_t count, LiftFlags *fl)
+{
+    uint32_t mask = bits >= 32 ? 0xffffffffu : (1u << bits) - 1u;
+    uint32_t value = a & mask;
+    unsigned i;
+    count &= 31u;
+    if (bits < 32)
+    {
+        count %= bits + 1;
+    }
+    for (i = 0; i < count; i++)
+    {
+        uint32_t out = (value >> (bits - 1)) & 1u;
+        value = ((value << 1) | fl->cf) & mask;
+        fl->cf = out;
+    }
+    if (count != 0)
+    {
+        fl->of = ((value >> (bits - 1)) & 1u) ^ fl->cf;
+    }
+    return count == 0 ? a : value;
+}
+
+static inline uint32_t lift_rcr(unsigned bits, uint32_t a, uint32_t count, LiftFlags *fl)
+{
+    uint32_t mask = bits >= 32 ? 0xffffffffu : (1u << bits) - 1u;
+    uint32_t value = a & mask;
+    unsigned i;
+    count &= 31u;
+    if (bits < 32)
+    {
+        count %= bits + 1;
+    }
+    if (count != 0)
+    {
+        fl->of = ((value >> (bits - 1)) & 1u) ^ fl->cf;
+    }
+    for (i = 0; i < count; i++)
+    {
+        uint32_t out = value & 1u;
+        value = (value >> 1) | (fl->cf << (bits - 1));
+        fl->cf = out;
+    }
+    return count == 0 ? a : value;
+}
+
+static inline uint32_t lift_bsr(uint32_t a)
+{
+    uint32_t i = 31;
+    while (!((a >> i) & 1u))
+    {
+        i--;
+    }
+    return i;
+}
+
+static inline uint32_t lift_bsf(uint32_t a)
+{
+    uint32_t i = 0;
+    while (!((a >> i) & 1u))
+    {
+        i++;
+    }
+    return i;
+}
+
+/* One-operand mul/imul/div/idiv on al/ax/eax with the dx/edx high half. */
+static inline void lift_mul1(unsigned bits, uint32_t a, uint32_t *eax, uint32_t *edx, LiftFlags *fl)
+{
+    uint64_t wide;
+    if (bits == 8)
+    {
+        wide = (uint64_t)(*eax & 0xffu) * (a & 0xffu);
+        *eax = (*eax & 0xffff0000u) | (uint32_t)(wide & 0xffffu);
+        fl->cf = fl->of = (wide >> 8) != 0;
+    }
+    else if (bits == 16)
+    {
+        wide = (uint64_t)(*eax & 0xffffu) * (a & 0xffffu);
+        *eax = (*eax & 0xffff0000u) | (uint32_t)(wide & 0xffffu);
+        *edx = (*edx & 0xffff0000u) | (uint32_t)((wide >> 16) & 0xffffu);
+        fl->cf = fl->of = (wide >> 16) != 0;
+    }
+    else
+    {
+        wide = (uint64_t)*eax * a;
+        *eax = (uint32_t)wide;
+        *edx = (uint32_t)(wide >> 32);
+        fl->cf = fl->of = *edx != 0;
+    }
+}
+
+static inline void lift_imul1(unsigned bits, uint32_t a, uint32_t *eax, uint32_t *edx,
+                              LiftFlags *fl)
+{
+    int64_t wide;
+    if (bits == 8)
+    {
+        wide = (int64_t)(int8_t)*eax * (int8_t)a;
+        *eax = (*eax & 0xffff0000u) | (uint32_t)(wide & 0xffffu);
+        fl->cf = fl->of = wide != (int8_t)wide;
+    }
+    else if (bits == 16)
+    {
+        wide = (int64_t)(int16_t)*eax * (int16_t)a;
+        *eax = (*eax & 0xffff0000u) | (uint32_t)(wide & 0xffffu);
+        *edx = (*edx & 0xffff0000u) | (uint32_t)((wide >> 16) & 0xffffu);
+        fl->cf = fl->of = wide != (int16_t)wide;
+    }
+    else
+    {
+        wide = (int64_t)(int32_t)*eax * (int32_t)a;
+        *eax = (uint32_t)wide;
+        *edx = (uint32_t)((uint64_t)wide >> 32);
+        fl->cf = fl->of = wide != (int32_t)wide;
+    }
+}
+
+static inline void lift_div1(unsigned bits, uint32_t a, uint32_t *eax, uint32_t *edx, LiftFlags *fl)
+{
+    (void)fl;
+    if (bits == 8)
+    {
+        uint32_t n = *eax & 0xffffu;
+        uint32_t d = a & 0xffu;
+        if (d != 0 && n / d <= 0xffu)
+        {
+            *eax = (*eax & 0xffff0000u) | ((n % d) << 8) | (n / d);
+        }
+    }
+    else if (bits == 16)
+    {
+        uint32_t n = ((*edx & 0xffffu) << 16) | (*eax & 0xffffu);
+        uint32_t d = a & 0xffffu;
+        if (d != 0 && n / d <= 0xffffu)
+        {
+            *eax = (*eax & 0xffff0000u) | (n / d);
+            *edx = (*edx & 0xffff0000u) | (n % d);
+        }
+    }
+    else
+    {
+        uint64_t n = ((uint64_t)*edx << 32) | *eax;
+        if (a != 0 && n / a <= 0xffffffffu)
+        {
+            *eax = (uint32_t)(n / a);
+            *edx = (uint32_t)(n % a);
+        }
+    }
+}
+
+static inline void lift_idiv1(unsigned bits, uint32_t a, uint32_t *eax, uint32_t *edx,
+                              LiftFlags *fl)
+{
+    (void)fl;
+    if (bits == 8)
+    {
+        int32_t n = (int16_t)*eax;
+        int32_t d = (int8_t)a;
+        if (d != 0 && n / d >= -128 && n / d <= 127)
+        {
+            *eax = (*eax & 0xffff0000u) | (((uint32_t)(n % d) & 0xffu) << 8) |
+                   ((uint32_t)(n / d) & 0xffu);
+        }
+    }
+    else if (bits == 16)
+    {
+        int32_t n = (int32_t)(((*edx & 0xffffu) << 16) | (*eax & 0xffffu));
+        int32_t d = (int16_t)a;
+        if (d != 0 && n / d >= -32768 && n / d <= 32767)
+        {
+            *eax = (*eax & 0xffff0000u) | ((uint32_t)(n / d) & 0xffffu);
+            *edx = (*edx & 0xffff0000u) | ((uint32_t)(n % d) & 0xffffu);
+        }
+    }
+    else
+    {
+        int64_t n = (int64_t)(((uint64_t)*edx << 32) | *eax);
+        int64_t d = (int32_t)a;
+        if (d != 0 && n / d >= INT32_MIN && n / d <= INT32_MAX && !(n == INT64_MIN && d == -1))
+        {
+            *eax = (uint32_t)(n / d);
+            *edx = (uint32_t)(n % d);
+        }
+    }
+}
+
+/* movs/stos/lods/scas/cmps (kind 0..4) with the optional rep prefix (0 none, 1 rep, 2 repe,
+ * 3 repne); the direction flag is clear. */
+static inline void lift_string(LiftEnv *env, int kind, unsigned size, int repeat, uint32_t *eax,
+                               uint32_t *ecx, uint32_t *esi, uint32_t *edi, LiftFlags *fl)
+{
+    for (;;)
+    {
+        uint32_t a, b;
+        if (repeat != 0 && *ecx == 0)
+        {
+            return;
+        }
+        switch (kind)
+        {
+            case 0:
+                lift_store(env, *edi, 0, size, lift_load(env, *esi, 0, size));
+                *esi += size;
+                *edi += size;
+                break;
+            case 1:
+                lift_store(env, *edi, 0, size, *eax);
+                *edi += size;
+                break;
+            case 2:
+                a = lift_load(env, *esi, 0, size);
+                *eax = size == 4 ? a : (*eax & ~lift_mask(size)) | a;
+                *esi += size;
+                break;
+            case 3:
+                (void)lift_sub(size * 8, *eax, lift_load(env, *edi, 0, size), fl);
+                *edi += size;
+                break;
+            default:
+                a = lift_load(env, *esi, 0, size);
+                b = lift_load(env, *edi, 0, size);
+                (void)lift_sub(size * 8, a, b, fl);
+                *esi += size;
+                *edi += size;
+                break;
+        }
+        if (repeat == 0)
+        {
+            return;
+        }
+        *ecx -= 1u;
+        if ((repeat == 2 && !fl->zf) || (repeat == 3 && fl->zf))
+        {
+            return;
+        }
+    }
 }
 #endif

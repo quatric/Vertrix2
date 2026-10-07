@@ -20,7 +20,7 @@ def build(build_dir, name, sources):
     build_dir.mkdir(parents=True, exist_ok=True)
     source = Path(__file__).resolve().parents[1] / 'source'
     library = build_dir / (name + '.dylib')
-    subprocess.run(['cc', '-std=c11', '-shared', '-fPIC', '-O2', '-Wall', '-Wextra', '-Werror',
+    subprocess.run(['cc', '-std=c11', '-shared', '-fPIC', '-O2', '-Wall', '-Wextra', '-Werror', '-I', str(source),
                     *[str(source / item) for item in sources], '-o', str(library)], check=True)
     return c.CDLL(str(library))
 

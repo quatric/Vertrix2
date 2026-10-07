@@ -93,7 +93,8 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
         elif choices and target in choices:
             returns.append(rng.choice(choices[target]))
         elif target in mixed_returns:
-            returns.append(rng.choice(pool.handles + [0, 1, 2, rng.getrandbits(32)]))
+            returns.append(rng.choice(pool.handles + [0, 1, 2, rng.randrange(0, 40)] +
+                                      ([rng.getrandbits(32)] if rng.random() < 0.1 else [])))
         elif target in handle_returns:
             returns.append(rng.choice(pool.handles))
         elif target in lookups:

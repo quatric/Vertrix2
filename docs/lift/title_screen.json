@@ -61,12 +61,14 @@
    false
   ]
  },
- "locals": 88,
+ "stack": 1416,
+ "arguments": 0,
  "pointer_callees": [
   "0x4abd70",
   "0x4b5400",
   "0x4b6350",
   "0x4ca000"
  ],
- "pointer_fields": []
+ "pointer_fields": [],
+ "virtual": []
 }

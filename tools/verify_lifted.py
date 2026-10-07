@@ -8,10 +8,20 @@ import struct
 import sys
 from pathlib import Path
 
+from unicorn.x86_const import (UC_X86_REG_EBP, UC_X86_REG_EDI, UC_X86_REG_ESI)
+
 from original import STACK
 from oracle_screen import run_screen
 
 U = c.c_uint32
+
+
+class LiftEntry(c.Structure):
+    _fields_ = [('eax', U), ('edx', U), ('ebx', U), ('ecx', U), ('esi', U), ('edi', U),
+                ('ebp', U), ('esp', U), ('arguments', c.POINTER(U)),
+                ('garbage', c.POINTER(c.c_uint8)), ('chain', U)]
+
+
 FRAME = STACK - 4
 META = Path(__file__).resolve().parents[1] / 'docs' / 'lift'
 HANDLE_CALLEES = (0x4ca000, 0x4b5400, 0x4b6350, 0x4abd70, 0x4b5c60)
@@ -24,26 +34,26 @@ def register(name, address, arguments=0, **options):
     LIFTED[name] = dict(address=address, arguments=arguments, **options)
 
 
-def callees_for(name):
-    meta = json.loads((META / (name + '.json')).read_text())
+def callees_for(name, meta=None):
+    if meta is None:
+        meta = json.loads((META / (name + '.json')).read_text())
     table = {}
     for target, (count, cdecl) in meta['callees'].items():
         if target.startswith('virtual_'):
             continue
         table[int(target, 16)] = (count, True) if cdecl else count
-    return table, meta['locals'], [int(t, 16) for t in meta.get('pointer_callees', [])], \
+    return table, meta['stack'], [int(t, 16) for t in meta.get('pointer_callees', [])], \
         meta.get('pointer_fields', [])
 
 
-def absolute_reads(name):
+def absolute_reads(source_text):
     import re
-    text = (Path(__file__).resolve().parents[1] / 'source' / ('lifted_%s.c' % name)).read_text()
-    return sorted({int(m.group(1), 16) for m in re.finditer(r'lift_load\(&env, 0u, 0x([0-9a-f]+)u', text)})
+    return sorted({int(m.group(1), 16) for m in re.finditer(
+        r'lift_load\(&env, 0u, 0x([0-9a-f]+)u', source_text)})
 
 
-def small_values(name, spec):
-    addresses = [a for a in absolute_reads(name) if a not in spec.get('keep', ())]
-
+def small_values(source_text, spec):
+    addresses = [a for a in absolute_reads(source_text) if a not in spec.get('keep', ())]
     bounds = spec.get('bounds', ())
 
     def patch_globals(rng, cpu):
@@ -54,9 +64,10 @@ def small_values(name, spec):
     return patch_globals
 
 
-def run(name):
-    spec = LIFTED[name]
-    callees, locals_size, pointers, fields = callees_for(name)
+def run(name, spec=None, meta=None, source=None):
+    spec = spec or LIFTED[name]
+    source = source or (Path(__file__).resolve().parents[1] / 'source' / ('lifted_%s.c' % name))
+    callees, locals_size, pointers, fields = callees_for(name, meta)
     user_patch = spec.get('patch')
 
     def patch(rng, handle, data):
@@ -68,12 +79,14 @@ def run(name):
             user_patch(rng, handle, data)
     callees.update(spec.get('extra_callees', {}))
     count = spec['arguments']
-    small = small_values(name, spec) if spec.get('small') else None
+    small = small_values(Path(source).read_text(), spec) if spec.get('small') else None
 
     def generate(rng, pool, cpu):
         kwargs, stack_args = {}, ()
         for register_name in ('eax', 'edx', 'ebx', 'ecx'):
             kwargs[register_name] = rng.getrandbits(32)
+            if spec.get('handles') and (register_name == 'eax' or rng.random() < 0.5):
+                kwargs[register_name] = rng.choice(pool.handles)
         if spec.get('setup_case'):
             spec['setup_case'](rng, pool, cpu, kwargs)
         if small is not None:
@@ -83,10 +96,12 @@ def run(name):
         chain = struct.unpack('<I', bytes(cpu.mem_read(0, 4)))[0]
         arguments = (U * max(count, 1))(*stack_args)
         buffer = (c.c_uint8 * locals_size).from_buffer_copy(garbage)
-        keep.append((arguments, buffer))
+        entry = LiftEntry(kwargs['eax'], kwargs['edx'], kwargs['ebx'], kwargs['ecx'],
+                          cpu.reg_read(UC_X86_REG_ESI), cpu.reg_read(UC_X86_REG_EDI),
+                          cpu.reg_read(UC_X86_REG_EBP), FRAME, arguments, buffer, chain)
+        keep.append((arguments, buffer, entry))
         del keep[:-4]
-        return kwargs, stack_args, (FRAME, kwargs['eax'], kwargs['edx'], kwargs['ebx'],
-                                    kwargs['ecx'], arguments, buffer, chain)
+        return kwargs, stack_args, (c.pointer(entry),)
 
     keep = []
 
@@ -95,8 +110,8 @@ def run(name):
 
     handle_returns = tuple(sorted(set(t for t in HANDLE_CALLEES if t in callees) | set(pointers)))
     mixed = tuple(t for t in callees if t not in handle_returns and spec.get('mixed'))
-    run_screen('lifted-' + name, spec['address'], ['lifted_%s.c' % name], 'lifted_' + name,
-               [U, U, U, U, U, c.POINTER(U), c.POINTER(c.c_uint8), U], U, callees, generate,
+    run_screen('lifted-' + name, spec['address'], [str(source)], 'lifted_' + name,
+               [c.POINTER(LiftEntry)], U, callees, generate,
                'Lifted instruction by instruction from the original; every call with its '
                'registers and stack arguments, the returned eax, every stored global and every '
                'pool object compare against the original executing completely in Unicorn.',

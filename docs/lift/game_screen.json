@@ -161,7 +161,8 @@
    false
   ]
  },
- "locals": 132,
+ "stack": 2064,
+ "arguments": 0,
  "pointer_callees": [
   "0x429880",
   "0x42b150",
@@ -175,5 +176,6 @@
  ],
  "pointer_fields": [
   348
- ]
+ ],
+ "virtual": []
 }

@@ -1,13 +1,14 @@
 """Lift a routine of the original Vertrix2.exe into C, one x86 instruction at a time.
 
-The generated function keeps the original's registers, its stack frame (locals as a byte array),
-its flags and its control flow (goto) and performs every call of an unrecovered routine through
-the VertrixCalls boundary with the registers and stack arguments the original holds at that call.
-It is meant for the large screen builders whose bodies are long chains of the same few
-instructions; the differential oracle (tools/verify_lifted.py) proves each lifted routine against
-the original executing in Unicorn.
+The generated function keeps the original's registers (including ebp and esp), its stack (a byte
+array below the entry esp whose unwritten bytes are supplied by the caller), its flags and its
+control flow (goto) and performs every call of an unrecovered routine through the VertrixCalls
+boundary with the registers and stack arguments the original holds at that call. It is meant for
+the large builders whose bodies are long chains of the same few instructions; the differential
+oracle (tools/verify_lifted.py) proves each lifted routine against the original executing in
+Unicorn.
 
-usage: lift.py ADDRESS NAME [--args N] [--locals N] > source/lifted_NAME.c
+usage: lift.py ADDRESS NAME [--args N] [--meta FILE] > source/lifted_NAME.c
 """
 import argparse
 import json
@@ -26,17 +27,32 @@ md = capstone.Cs(capstone.CS_ARCH_X86, capstone.CS_MODE_32)
 md.detail = True
 
 REG32 = {X.X86_REG_EAX: 'eax', X.X86_REG_ECX: 'ecx', X.X86_REG_EDX: 'edx', X.X86_REG_EBX: 'ebx',
-         X.X86_REG_ESI: 'esi', X.X86_REG_EDI: 'edi'}
+         X.X86_REG_ESI: 'esi', X.X86_REG_EDI: 'edi', X.X86_REG_EBP: 'ebp', X.X86_REG_ESP: 'esp'}
 REG16 = {X.X86_REG_AX: 'eax', X.X86_REG_CX: 'ecx', X.X86_REG_DX: 'edx', X.X86_REG_BX: 'ebx',
-         X.X86_REG_SI: 'esi', X.X86_REG_DI: 'edi'}
+         X.X86_REG_SI: 'esi', X.X86_REG_DI: 'edi', X.X86_REG_BP: 'ebp'}
 REG8L = {X.X86_REG_AL: 'eax', X.X86_REG_CL: 'ecx', X.X86_REG_DL: 'edx', X.X86_REG_BL: 'ebx'}
 REG8H = {X.X86_REG_AH: 'eax', X.X86_REG_CH: 'ecx', X.X86_REG_DH: 'edx', X.X86_REG_BH: 'ebx'}
 
 CONDITIONS = {
-    'je': 'fl.zf', 'jne': '!fl.zf', 'jb': 'fl.cf', 'jae': '!fl.cf', 'ja': '(!fl.cf && !fl.zf)', 'jbe': '(fl.cf || fl.zf)',
-    'jl': '(fl.sf != fl.of)', 'jge': '(fl.sf == fl.of)', 'jle': '(fl.zf || fl.sf != fl.of)', 'jg': '(!fl.zf && fl.sf == fl.of)',
-    'js': 'fl.sf', 'jns': '!fl.sf', 'jo': 'fl.of', 'jno': '!fl.of',
+    'je': 'fl.zf', 'jne': '!fl.zf', 'jb': 'fl.cf', 'jae': '!fl.cf', 'ja': '!fl.cf && !fl.zf',
+    'jbe': 'fl.cf || fl.zf', 'jl': 'fl.sf != fl.of', 'jge': 'fl.sf == fl.of',
+    'jle': 'fl.zf || fl.sf != fl.of', 'jg': '!fl.zf && fl.sf == fl.of', 'js': 'fl.sf',
+    'jns': '!fl.sf', 'jo': 'fl.of', 'jno': '!fl.of', 'jp': 'fl.pf', 'jnp': '!fl.pf',
 }
+for alias, canonical in (('jz', 'je'), ('jnz', 'jne'), ('jnae', 'jb'), ('jc', 'jb'), ('jnb', 'jae'),
+                         ('jnc', 'jae'), ('jna', 'jbe'), ('jnbe', 'ja'), ('jnge', 'jl'),
+                         ('jnl', 'jge'), ('jng', 'jle'), ('jnle', 'jg'), ('jpe', 'jp'),
+                         ('jpo', 'jnp')):
+    CONDITIONS[alias] = CONDITIONS[canonical]
+
+STRING_OPS = {'movsb': ('mov', 1), 'movsw': ('mov', 2), 'movsd': ('mov', 4),
+              'stosb': ('stos', 1), 'stosw': ('stos', 2), 'stosd': ('stos', 4),
+              'lodsb': ('lods', 1), 'lodsw': ('lods', 2), 'lodsd': ('lods', 4),
+              'scasb': ('scas', 1), 'scasw': ('scas', 2), 'scasd': ('scas', 4),
+              'cmpsb': ('cmps', 1), 'cmpsw': ('cmps', 2), 'cmpsd': ('cmps', 4)}
+STRING_KIND = {'mov': 0, 'stos': 1, 'lods': 2, 'scas': 3, 'cmps': 4}
+REPEATS = {'': 0, 'rep': 1, 'repe': 2, 'repz': 2, 'repne': 3, 'repnz': 3}
+JUMPS = tuple(CONDITIONS) + ('jmp', 'loop', 'jecxz')
 
 
 def code_at(address, size=16):
@@ -71,13 +87,15 @@ def trace(start):
         while address not in seen:
             insn = insn_at(address)
             if insn is None:
-                break
+                raise ValueError('undecodable %x' % address)
             seen[address] = insn
             mnemonic = insn.mnemonic
-            if mnemonic in CONDITIONS or mnemonic == 'jmp':
+            if mnemonic in JUMPS:
                 op = insn.operands[0]
                 if op.type == X.X86_OP_IMM:
                     todo.append(op.imm)
+                elif mnemonic == 'jmp':
+                    raise NotImplementedError('%x indirect jmp' % address)
                 if mnemonic == 'jmp':
                     break
             if mnemonic == 'ret':
@@ -87,62 +105,28 @@ def trace(start):
 
 
 class Lifter:
-    def __init__(self, start, name, argument_count, locals_size):
+    def __init__(self, start, name):
         self.start = start
         self.name = name
-        self.argument_count = argument_count
-        self.locals_size = locals_size
         self.insns = trace(start)
         self.order = sorted(self.insns)
         self.targets = set()
         self.callees = {}
         self.out = []
-        self.skip = set()
-        self.min_disp = 0
         for address, insn in self.insns.items():
-            if insn.mnemonic in CONDITIONS or insn.mnemonic == 'jmp':
+            if insn.mnemonic in JUMPS:
                 op = insn.operands[0]
                 if op.type == X.X86_OP_IMM:
                     self.targets.add(op.imm)
-        self.find_frame()
-
-    # ---- prologue and epilogue -------------------------------------------------------------
-    def find_frame(self):
-        address = self.start
-        while True:
-            insn = self.insns[address]
-            text = insn.mnemonic + ' ' + insn.op_str
-            if (insn.mnemonic == 'push' and insn.op_str in ('ebp', 'ebx', 'ecx', 'edx', 'esi', 'edi')
-                    or text == 'mov ebp, esp' or insn.mnemonic == 'sub' and insn.op_str.startswith(
-                        'esp,')):
-                if insn.mnemonic == 'sub':
-                    self.frame_extra = int(insn.op_str.split(',')[1], 0)
-                self.skip.add(address)
-                address += insn.size
-                continue
-            break
-        self.body = address
-        # epilogue: pops and lea esp before ret
-        for address, insn in self.insns.items():
-            if insn.mnemonic == 'ret':
-                previous = address
-                # walk backwards through the sorted instruction list
-                index = self.order.index(address) - 1
-                while index >= 0:
-                    prior = self.insns[self.order[index]]
-                    if prior.mnemonic == 'pop' or (prior.mnemonic == 'lea' and
-                                                   prior.op_str.startswith('esp,')):
-                        self.skip.add(prior.address)
-                        index -= 1
-                    else:
-                        break
+        pushes = sum(1 for i in self.insns.values() if i.mnemonic in ('push', 'call'))
+        sub_esp = sum(int(i.op_str.split(',')[1], 0) for i in self.insns.values()
+                      if i.mnemonic == 'sub' and i.op_str.startswith('esp,'))
+        self.stack_size = (sub_esp + 4 * pushes + 0x40 + 3) & ~3
 
     # ---- operand helpers -------------------------------------------------------------------
     def reg_read(self, reg):
         if reg in REG32:
             return REG32[reg]
-        if reg == X.X86_REG_EBP:
-            return 'frame'
         if reg in REG16:
             return '(%s & 0xffffu)' % REG16[reg]
         if reg in REG8L:
@@ -173,10 +157,10 @@ class Lifter:
             index = self.reg_read(mem.index)
             if mem.scale != 1:
                 index = '(%s * %du)' % (index, mem.scale)
-        return mem.base, base, index, mem.disp
+        return base, index, mem.disp
 
     def address_expr(self, op):
-        base_reg, base, index, disp = self.address_parts(op)
+        base, index, disp = self.address_parts(op)
         parts = []
         if base:
             parts.append(base)
@@ -189,36 +173,28 @@ class Lifter:
     def is_chain(self, op):
         return op.mem.segment == X.X86_REG_FS
 
+    def offset_expr(self, index, disp):
+        offset = []
+        if index:
+            offset.append(index)
+        offset.append('0x%xu' % (disp & 0xffffffff))
+        return ' + '.join(offset)
+
     def mem_read(self, op):
-        size = op.size
         if self.is_chain(op):
             return 'env.chain'
-        base_reg, base, index, disp = self.address_parts(op)
-        if base_reg == X.X86_REG_EBP and not index:
-            self.min_disp = min(self.min_disp, disp)
-            return 'lift_local_read(&env, %d, %d)' % (disp, size)
-        offset = []
-        if index:
-            offset.append(index)
-        offset.append('0x%xu' % (disp & 0xffffffff))
-        return 'lift_load(&env, %s, %s, %d)' % (base or '0u', ' + '.join(offset), size)
+        base, index, disp = self.address_parts(op)
+        return 'lift_load(&env, %s, %s, %d)' % (base or '0u', self.offset_expr(index, disp),
+                                                op.size)
 
     def mem_write(self, op, value):
-        size = op.size
         if self.is_chain(op):
             return 'env.chain = %s;' % value
-        base_reg, base, index, disp = self.address_parts(op)
-        if base_reg == X.X86_REG_EBP and not index:
-            self.min_disp = min(self.min_disp, disp)
-            return 'lift_local_write(&env, %d, %d, %s);' % (disp, size, value)
-        offset = []
-        if index:
-            offset.append(index)
-        offset.append('0x%xu' % (disp & 0xffffffff))
-        return 'lift_store(&env, %s, %s, %d, %s);' % (base or '0u', ' + '.join(offset), size,
-                                                     value)
+        base, index, disp = self.address_parts(op)
+        return 'lift_store(&env, %s, %s, %d, %s);' % (base or '0u', self.offset_expr(index, disp),
+                                                     op.size, value)
 
-    def read(self, op, size=None):
+    def read(self, op):
         if op.type == X.X86_OP_REG:
             return self.reg_read(op.reg)
         if op.type == X.X86_OP_IMM:
@@ -237,20 +213,29 @@ class Lifter:
     def bits(self, op):
         return op.size * 8
 
-    # ---- instruction translation -----------------------------------------------------------
     def emit(self, text):
         self.out.append('    ' + text)
 
+    # ---- instruction translation -----------------------------------------------------------
     def translate(self, insn, next_insn):
         m = insn.mnemonic
         ops = insn.operands
-        label = 'L_%x' % insn.address
         if insn.address in self.targets:
-            self.out.append('%s:' % label)
-        if insn.address in self.skip:
-            return None
-        if m == 'nop':
-            return None
+            self.out.append('L_%x:' % insn.address)
+        if m in ('nop', 'cld'):
+            return
+        if m == 'mov' and ops[0].type == X.X86_OP_REG and ops[1].type == X.X86_OP_REG and \
+                ops[0].reg == ops[1].reg and ops[0].reg in REG32:
+            return
+        if m == 'lea' and ops[1].type == X.X86_OP_MEM and ops[0].type == X.X86_OP_REG and \
+                ops[1].mem.base == ops[0].reg and not ops[1].mem.index and not ops[1].mem.disp:
+            return
+        if m in REPEATS and m != '':
+            self.string_op(insn, m)
+            return
+        if m in STRING_OPS:
+            self.string_op(insn, '')
+            return
         if m == 'mov':
             self.emit(self.write(ops[0], self.read(ops[1])))
         elif m in ('movzx', 'movsx'):
@@ -261,10 +246,15 @@ class Lifter:
             self.emit(self.write(ops[0], value))
         elif m == 'cwde':
             self.emit('eax = (uint32_t)(int32_t)(int16_t)(uint16_t)eax;')
+        elif m == 'cbw':
+            self.emit('eax = (eax & 0xffff0000u) | (uint32_t)(uint16_t)(int16_t)(int8_t)eax;')
+        elif m == 'cdq':
+            self.emit('edx = (eax & 0x80000000u) ? 0xffffffffu : 0u;')
+        elif m == 'cwd':
+            self.emit('edx = (edx & 0xffff0000u) | ((eax & 0x8000u) ? 0xffffu : 0u);')
         elif m == 'lea':
-            self.emit(self.write(ops[0], self.address_expr(ops[1]) if not self.uses_ebp(ops[1])
-                                 else self.ebp_address(ops[1])))
-        elif m in ('add', 'sub', 'and', 'or', 'xor', 'cmp', 'test'):
+            self.emit(self.write(ops[0], self.address_expr(ops[1])))
+        elif m in ('add', 'sub', 'and', 'or', 'xor', 'cmp', 'test', 'adc', 'sbb'):
             self.arith(m, ops)
         elif m in ('inc', 'dec'):
             bits = self.bits(ops[0])
@@ -274,57 +264,69 @@ class Lifter:
             bits = self.bits(ops[0])
             self.emit('{ uint32_t a = %s; uint32_t r = lift_sub(%d, 0, a, &fl); %s }' % (
                 self.read(ops[0]), bits, self.write(ops[0], 'r')))
-        elif m == 'imul':
+        elif m == 'not':
+            bits = self.bits(ops[0])
+            self.emit('{ uint32_t a = %s; %s }' % (
+                self.read(ops[0]), self.write(ops[0], '(~a) & lift_mask(%d)' % (bits // 8))))
+        elif m == 'imul' and len(ops) >= 2:
             self.imul(ops)
-        elif m in ('shl', 'shr', 'sar'):
+        elif m in ('mul', 'imul', 'div', 'idiv'):
+            self.emit('lift_%s1(%d, %s, &eax, &edx, &fl);' % (m, self.bits(ops[0]),
+                                                            self.read(ops[0])))
+        elif m in ('shl', 'sal', 'shr', 'sar', 'rol', 'ror', 'rcl', 'rcr'):
+            name = 'shl' if m == 'sal' else m
             bits = self.bits(ops[0])
             count = self.read(ops[1]) if len(ops) > 1 else '1u'
             self.emit('{ uint32_t a = %s; uint32_t r = lift_%s(%d, a, %s, &fl); %s }' % (
-                self.read(ops[0]), m, bits, count, self.write(ops[0], 'r')))
+                self.read(ops[0]), name, bits, count, self.write(ops[0], 'r')))
+        elif m in ('bsr', 'bsf'):
+            self.emit('{ uint32_t a = %s; fl.zf = a == 0; if (a != 0) { %s } }' % (
+                self.read(ops[1]), self.write(ops[0], 'lift_%s(a)' % m)))
+        elif m == 'xchg':
+            self.emit('{ uint32_t t = %s; %s %s }' % (self.read(ops[0]),
+                                                      self.write(ops[0], self.read(ops[1])),
+                                                      self.write(ops[1], 't')))
         elif m == 'push':
             value = 'env.chain' if (ops[0].type == X.X86_OP_MEM and self.is_chain(ops[0])) else \
                 self.read(ops[0])
-            self.emit('env.stack[env.sp++] = %s;' % value)
+            if ops[0].type == X.X86_OP_IMM:
+                value = '0x%xu' % (ops[0].imm & 0xffffffff)
+            self.emit('{ uint32_t v = %s; esp -= 4u; lift_store(&env, esp, 0u, 4, v); }' % value)
         elif m == 'pop':
-            self.emit(self.write(ops[0], 'env.stack[--env.sp]'))
+            target = 'env.chain = v;' if (ops[0].type == X.X86_OP_MEM and
+                                          self.is_chain(ops[0])) else self.write(ops[0], 'v')
+            self.emit('{ uint32_t v = lift_load(&env, esp, 0u, 4); esp += 4u; %s }' % target)
+        elif m == 'leave':
+            self.emit('esp = ebp; ebp = lift_load(&env, esp, 0u, 4); esp += 4u;')
         elif m == 'call':
             self.call(insn, next_insn)
         elif m == 'jmp':
             self.emit('goto L_%x;' % ops[0].imm)
         elif m in CONDITIONS:
             self.emit('if (%s) goto L_%x;' % (CONDITIONS[m], ops[0].imm))
+        elif m == 'loop':
+            self.emit('ecx -= 1u; if (ecx != 0u) goto L_%x;' % ops[0].imm)
+        elif m == 'jecxz':
+            self.emit('if (ecx == 0u) goto L_%x;' % ops[0].imm)
+        elif m.startswith('set') and 'j' + m[3:] in CONDITIONS:
+            self.emit(self.write(ops[0], '(%s) ? 1u : 0u' % CONDITIONS['j' + m[3:]]))
+        elif m.startswith('cmov') and 'j' + m[4:] in CONDITIONS:
+            self.emit('if (%s) { %s }' % (CONDITIONS['j' + m[4:]],
+                                          self.write(ops[0], self.read(ops[1]))))
         elif m == 'ret':
-            n = ops[0].imm // 4 if ops else 0
             self.emit('return env.failed ? 0u : eax;')
-        elif m == 'xchg':
-            self.emit('{ uint32_t t = %s; %s %s }' % (self.read(ops[0]),
-                                                      self.write(ops[0], self.read(ops[1])),
-                                                      self.write(ops[1], 't')))
         else:
             raise NotImplementedError('%x %s %s' % (insn.address, m, insn.op_str))
-
-    def uses_ebp(self, op):
-        return op.type == X.X86_OP_MEM and op.mem.base == X.X86_REG_EBP
-
-    def ebp_address(self, op):
-        self.min_disp = min(self.min_disp, op.mem.disp)
-        base_reg, base, index, disp = self.address_parts(op)
-        parts = [base]
-        if index:
-            parts.append(index)
-        if disp:
-            parts.append('0x%xu' % (disp & 0xffffffff))
-        return '(' + ' + '.join(parts) + ')'
 
     def arith(self, m, ops):
         bits = self.bits(ops[0])
         a = self.read(ops[0])
         b = self.read(ops[1])
         if ops[1].type == X.X86_OP_IMM:
-            # sign-extended immediates take the operand size
             b = '0x%xu' % (ops[1].imm & ((1 << bits) - 1))
         func = {'add': 'lift_add', 'sub': 'lift_sub', 'cmp': 'lift_sub', 'and': 'lift_and',
-                'test': 'lift_and', 'or': 'lift_or', 'xor': 'lift_xor'}[m]
+                'test': 'lift_and', 'or': 'lift_or', 'xor': 'lift_xor', 'adc': 'lift_adc',
+                'sbb': 'lift_sbb'}[m]
         if m in ('cmp', 'test'):
             self.emit('{ (void)%s(%d, %s, %s, &fl); }' % (func, bits, a, b))
         else:
@@ -337,13 +339,37 @@ class Lifter:
             a, b = self.read(ops[0]), self.read(ops[1])
         else:
             a, b = self.read(ops[1]), self.read(ops[2])
+            if ops[2].type == X.X86_OP_IMM:
+                b = '0x%xu' % (ops[2].imm & ((1 << bits) - 1))
         self.emit('{ uint32_t r = lift_imul(%d, %s, %s, &fl); %s }' % (
             bits, a, b, self.write(ops[0], 'r')))
 
+    def string_op(self, insn, prefix):
+        if prefix:
+            name = insn.op_str.split(' ')[0]
+        else:
+            name = insn.mnemonic
+        kind, size = STRING_OPS[name]
+        self.emit('lift_string(&env, %d, %d, %d, &eax, &ecx, &esi, &edi, &fl);' % (
+            STRING_KIND[kind], size, REPEATS[prefix]))
+
+    def pending_pushes(self, insn):
+        """Pushes directly preceding an import call (the stdcall argument count)."""
+        index = self.order.index(insn.address)
+        count = 0
+        for address in reversed(self.order[:index]):
+            p = self.insns[address]
+            if p.mnemonic == 'push':
+                count += 1
+            elif p.mnemonic in ('call', 'ret', 'jmp') or p.mnemonic in CONDITIONS or \
+                    address in self.targets:
+                break
+        return count
+
     def call(self, insn, next_insn):
         op = insn.operands[0]
-        cdecl = (next_insn is not None and next_insn.mnemonic == 'add'
-                 and next_insn.op_str.startswith('esp,'))
+        cdecl = (next_insn is not None and next_insn.mnemonic == 'add' and
+                 next_insn.op_str.startswith('esp,'))
         if op.type == X.X86_OP_IMM:
             target = op.imm
             target_expr = '0x%xu' % target
@@ -352,18 +378,28 @@ class Lifter:
                 raise ValueError('callee %x' % target)
             if cdecl:
                 count = int(next_insn.op_str.split(',')[1], 0) // 4
-                self.skip.add(next_insn.address)
             self.callees[target] = (count, cdecl)
+            pops = 0 if cdecl else count
+        elif op.type == X.X86_OP_MEM and not op.mem.base and not op.mem.index and \
+                op.mem.segment != X.X86_REG_FS and 0x4f1000 <= op.mem.disp < 0x4f4000:
+            # an import: the slot address is the target (stdcall)
+            target_expr = '0x%xu' % op.mem.disp
+            count = self.pending_pushes(insn) if not cdecl else \
+                int(next_insn.op_str.split(',')[1], 0) // 4
+            self.callees[op.mem.disp] = (count, cdecl)
+            pops = 0 if cdecl else count
         else:
             target_expr = self.read(op)
             count = int(next_insn.op_str.split(',')[1], 0) // 4 if cdecl else 0
-            if cdecl:
-                self.skip.add(next_insn.address)
             self.callees[('virtual', insn.address)] = (count, cdecl)
-        self.emit('eax = lift_call(&env, %s, eax, edx, ebx, ecx, %d);' % (target_expr, count))
+            pops = 0 if cdecl else count
+        self.emit('eax = lift_call(&env, %s, eax, edx, ebx, ecx, %d, esp);' % (target_expr, count))
+        if pops:
+            self.emit('esp += %du;' % (4 * pops))
 
+    # ---- analyses used by the verifier -----------------------------------------------------
     def pointer_callees(self):
-        """Callees whose result is used as the base of a memory operand before the next call."""
+        """Callees whose result is used as the base of a memory operand before it is replaced."""
         found = set()
         for index, address in enumerate(self.order):
             insn = self.insns[address]
@@ -377,19 +413,19 @@ class Lifter:
                         nxt.operands[0].imm < follower:
                     break
                 if nxt.mnemonic == 'call':
-                    holding -= {X.X86_REG_EAX, X.X86_REG_ECX, X.X86_REG_EDX}
+                    holding -= {X.X86_REG_EAX}
                     if not holding:
                         break
                     continue
-                ops = nxt.operands
-                for op in ops:
+                for op in nxt.operands:
                     if op.type == X.X86_OP_MEM and (op.mem.base in holding):
                         found.add(target)
-                if nxt.mnemonic == 'mov' and ops[0].type == X.X86_OP_REG and \
-                        ops[1].type == X.X86_OP_REG and ops[1].reg in holding:
-                    holding.add(ops[0].reg)
-                elif nxt.mnemonic in ('mov', 'xor', 'lea', 'pop') and ops[0].type == X.X86_OP_REG:
-                    holding.discard(ops[0].reg)
+                if nxt.mnemonic == 'mov' and nxt.operands[0].type == X.X86_OP_REG and \
+                        nxt.operands[1].type == X.X86_OP_REG and nxt.operands[1].reg in holding:
+                    holding.add(nxt.operands[0].reg)
+                elif nxt.mnemonic in ('mov', 'xor', 'lea', 'pop') and \
+                        nxt.operands[0].type == X.X86_OP_REG:
+                    holding.discard(nxt.operands[0].reg)
                 if not holding:
                     break
         return found
@@ -400,11 +436,12 @@ class Lifter:
         for index, address in enumerate(self.order):
             insn = self.insns[address]
             ops = insn.operands
-            if insn.mnemonic != 'mov' or ops[0].type != X.X86_OP_REG or ops[1].type != X.X86_OP_MEM:
+            if insn.mnemonic != 'mov' or ops[0].type != X.X86_OP_REG or \
+                    ops[1].type != X.X86_OP_MEM:
                 continue
             mem = ops[1].mem
-            if ops[1].size != 4 or not mem.base or mem.base == X.X86_REG_EBP or mem.index or \
-                    mem.segment == X.X86_REG_FS:
+            if ops[1].size != 4 or not mem.base or mem.base in (X.X86_REG_EBP, X.X86_REG_ESP) or \
+                    mem.index or mem.segment == X.X86_REG_FS:
                 continue
             holding = {ops[0].reg}
             for follower in self.order[index + 1:index + 40]:
@@ -412,7 +449,7 @@ class Lifter:
                 if nxt.mnemonic in ('ret', 'jmp'):
                     break
                 if nxt.mnemonic == 'call':
-                    holding -= {X.X86_REG_EAX, X.X86_REG_ECX, X.X86_REG_EDX}
+                    holding -= {X.X86_REG_EAX}
                     if not holding:
                         break
                     continue
@@ -429,93 +466,134 @@ class Lifter:
                     break
         return found
 
+    def virtual_calls(self):
+        """(object field, vtable slot) pairs of `call [reg + slot]` where reg came from a field."""
+        found = set()
+        for index, address in enumerate(self.order):
+            insn = self.insns[address]
+            if insn.mnemonic != 'call' or insn.operands[0].type != X.X86_OP_MEM:
+                continue
+            mem = insn.operands[0].mem
+            if not mem.base or mem.index:
+                continue
+            field = None
+            for prior in reversed(self.order[max(0, index - 12):index]):
+                p = self.insns[prior]
+                if p.mnemonic in ('call', 'ret', 'jmp') or p.mnemonic in CONDITIONS:
+                    break
+                if p.operands and p.operands[0].type == X.X86_OP_REG and \
+                        p.operands[0].reg == mem.base:
+                    if p.mnemonic == 'mov' and p.operands[1].type == X.X86_OP_MEM and \
+                            not p.operands[1].mem.index and \
+                            p.operands[1].mem.base not in (X.X86_REG_EBP, X.X86_REG_ESP):
+                        field = p.operands[1].mem.disp
+                    break
+            found.add((field, mem.disp))
+        return found
+
     def lift(self):
-        addresses = [a for a in self.order if a >= self.body or a in self.skip]
         order = self.order
         for index, address in enumerate(order):
             insn = self.insns[address]
-            next_insn = self.insns.get(order[index + 1]) if index + 1 < len(order) else None
-            if address < self.body:
-                continue
-            # pre-mark the add esp that follows a cdecl call before it is visited
-            if insn.mnemonic == 'call' and next_insn and next_insn.mnemonic == 'add' and \
-                    next_insn.op_str.startswith('esp,'):
-                self.skip.add(next_insn.address)
+            next_insn = self.insns.get(address + insn.size)
             self.translate(insn, next_insn)
-            if insn.mnemonic in ('jmp', 'ret') and index + 1 < len(order):
-                following = order[index + 1]
-                if following != address + insn.size:
-                    pass
+            if insn.mnemonic in ('call',) and next_insn is not None and \
+                    next_insn.mnemonic == 'add' and next_insn.op_str.startswith('esp,'):
+                pass
         return self.out
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('address')
-    parser.add_argument('name')
-    parser.add_argument('--args', type=int, default=0, help='stack dwords above the return address')
-    parser.add_argument('--locals', type=int, default=0)
-    parser.add_argument('--meta', type=Path)
-    options = parser.parse_args()
-    start = int(options.address, 16)
-    lifter = Lifter(start, options.name, options.args, options.locals)
+def render(start, name, argument_count=None, include_prelude=True):
+    """Lift one routine. Returns (C text, prototype header text, meta dict)."""
+    if argument_count is None:
+        argument_count = 0
+    lifter = Lifter(start, name)
     body = lifter.lift()
-    locals_size = options.locals or ((-lifter.min_disp + 0x10 + 3) & ~3)
-    header = '''/* Lifted from the original routine at 0x%x by tools/lift.py: every instruction of the original
- * is translated in order (registers, frame, flags and gotos) and every unrecovered callee goes
+    stack_size = lifter.stack_size
+    upper = name.upper()
+    prelude = '''/* Lifted from the original routine at 0x%x by tools/lift.py: every instruction of the original
+ * is translated in order (registers, stack, flags and gotos) and every unrecovered callee goes
  * through the call boundary with the registers and stack arguments the original holds there.
  * Verified against the original by tools/verify_lifted.py. */
 #include "lift_runtime.h"
 
 #include "lifted_%s.h"
 
-uint32_t lifted_%s(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                   const VertrixGlobals *globals, uint32_t frame, uint32_t eax, uint32_t edx,
-                   uint32_t ebx, uint32_t ecx, const uint32_t *arguments, const uint8_t *garbage,
-                   uint32_t chain)
+''' % (start, name)
+    function = '''uint32_t lifted_%s(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                   const VertrixGlobals *globals, const LiftEntry *entry)
 {
-    uint8_t local[LIFTED_%s_LOCALS + 8 + 4 * %d + 4];
+    uint8_t stack[LIFTED_%s_STACK + 4 + 4 * %d + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0};
-    uint32_t esi = 0;
-    uint32_t edi = 0;
-    lift_begin(&env, calls, services, globals, frame, local, LIFTED_%s_LOCALS, %d, garbage,
-               arguments, chain);
-''' % (start, options.name, options.name, options.name.upper(), options.args,
-       options.name.upper(), options.args)
-    footer = '''}
-'''
-    text = header + '\n'.join(body) + '\n' + footer
-    sys.stdout.write(text)
-    header_path = Path(__file__).resolve().parents[1] / 'source' / ('lifted_%s.h' % options.name)
-    header_path.write_text('''#ifndef VERTRIX_LIFTED_%s_H
+    LiftFlags fl = {0, 0, 0, 0, 0};
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi = entry->esi;
+    uint32_t edi = entry->edi;
+    uint32_t ebp = entry->ebp;
+    uint32_t esp = entry->esp;
+    (void)fl;
+    (void)eax;
+    (void)edx;
+    (void)ebx;
+    (void)ecx;
+    (void)esi;
+    (void)edi;
+    (void)ebp;
+    lift_begin(&env, calls, services, globals, stack, LIFTED_%s_STACK, %d, entry);
+''' % (name, upper, argument_count, upper, argument_count)
+    text = (prelude if include_prelude else '') + function + '\n'.join(body) + '\n}\n'
+    header = '''#ifndef VERTRIX_LIFTED_%s_H
 #define VERTRIX_LIFTED_%s_H
 #include <stdint.h>
 
-#include "actor_build.h"
+#include "lift_runtime.h"
 
 enum
 {
-    LIFTED_%s_LOCALS = %d
+    LIFTED_%s_STACK = %d
 };
 
-/* The original routine 0x%x lifted instruction by instruction (see tools/lift.py). `frame` is the
- * token for ebp, eax/edx/ebx/ecx the entry registers, `arguments` the stack dwords above the return
- * address, `garbage` the LIFTED_%s_LOCALS bytes of stack below ebp the routine may read before it
- * writes them and `chain` the value of fs:[0] at entry (the routine returns it). */
+/* The original routine 0x%x lifted instruction by instruction (see tools/lift.py). `entry` holds
+ * the registers at entry, esp (the address of the return slot), the stack dwords above it and
+ * the LIFTED_%s_STACK bytes below it the routine may read before it writes them. */
 uint32_t lifted_%s(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                   const VertrixGlobals *globals, uint32_t frame, uint32_t eax, uint32_t edx,
-                   uint32_t ebx, uint32_t ecx, const uint32_t *arguments, const uint8_t *garbage,
-                   uint32_t chain);
+                   const VertrixGlobals *globals, const LiftEntry *entry);
 #endif
-''' % (options.name.upper(), options.name.upper(), options.name.upper(), locals_size, start,
-       options.name.upper(), options.name))
+''' % (upper, upper, upper, stack_size, start, upper, name)
+    callees = {('0x%x' % k if isinstance(k, int) else 'virtual_%x' % k[1]): v
+               for k, v in lifter.callees.items()}
+    meta = {'callees': callees, 'stack': stack_size, 'arguments': argument_count,
+            'pointer_callees': sorted('0x%x' % t for t in lifter.pointer_callees()),
+            'pointer_fields': sorted(lifter.pointer_fields()),
+            'virtual': sorted([f if f is not None else -1, sl]
+                              for f, sl in lifter.virtual_calls())}
+    return text, header, meta
+
+
+def return_arguments(start):
+    """The stack dwords the routine removes with its ret (the incoming arguments)."""
+    return callee_args(start) or 0
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('address')
+    parser.add_argument('name')
+    parser.add_argument('--args', type=int, default=None,
+                        help='stack dwords above the return address')
+    parser.add_argument('--meta', type=Path)
+    options = parser.parse_args()
+    start = int(options.address, 16)
+    arguments = options.args if options.args is not None else return_arguments(start)
+    text, header, meta = render(start, options.name, arguments)
+    sys.stdout.write(text)
+    header_path = Path(__file__).resolve().parents[1] / 'source' / ('lifted_%s.h' % options.name)
+    header_path.write_text(header)
     if options.meta:
-        callees = {('0x%x' % k if isinstance(k, int) else 'virtual_%x' % k[1]): v
-                   for k, v in lifter.callees.items()}
-        options.meta.write_text(json.dumps({'callees': callees, 'locals': locals_size,
-                                                'pointer_callees': sorted('0x%x' % t for t in lifter.pointer_callees()),
-                                                'pointer_fields': sorted(lifter.pointer_fields())}, indent=1))
+        options.meta.write_text(json.dumps(meta, indent=1))
 
 
 if __name__ == '__main__':
