@@ -391,7 +391,7 @@
   "virtual": [],
   "address": 4901632
  },
- "f4acc10": {
+ "byte_transition": {
   "callees": {},
   "stack": 80,
   "arguments": 0,
@@ -657,7 +657,7 @@
   "virtual": [],
   "address": 4904240
  },
- "f4ad580": {
+ "byte_transition_4ad580": {
   "callees": {},
   "stack": 80,
   "arguments": 0,
@@ -1402,7 +1402,7 @@
   ],
   "address": 4924096
  },
- "board_collection_all_handler": {
+ "f4b2300": {
   "callees": {},
   "stack": 72,
   "arguments": 0,
@@ -1416,7 +1416,7 @@
   "virtual": [],
   "address": 4924160
  },
- "board_collection_set_handler": {
+ "f4b2340": {
   "callees": {
    "0x4ac8f0": [
     0,

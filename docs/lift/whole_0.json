@@ -9630,7 +9630,7 @@
   "virtual": [],
   "address": 4385696
  },
- "f42ebc0": {
+ "board_clear_collection": {
   "callees": {
    "0x4b22c0": [
     0,
@@ -9647,7 +9647,7 @@
   "virtual": [],
   "address": 4385728
  },
- "f42ebe0": {
+ "board_clear_collection_42ebe0": {
   "callees": {
    "0x4b22c0": [
     0,
@@ -9664,7 +9664,7 @@
   "virtual": [],
   "address": 4385760
  },
- "f42ec00": {
+ "board_clear_collection_42ec00": {
   "callees": {
    "0x4b22c0": [
     0,
@@ -9681,7 +9681,7 @@
   "virtual": [],
   "address": 4385792
  },
- "f42ec20": {
+ "board_clear_collection_42ec20": {
   "callees": {
    "0x4b22c0": [
     0,
@@ -9698,7 +9698,7 @@
   "virtual": [],
   "address": 4385824
  },
- "f42ec40": {
+ "board_clear_collection_42ec40": {
   "callees": {
    "0x4b22c0": [
     0,
@@ -9715,7 +9715,7 @@
   "virtual": [],
   "address": 4385856
  },
- "f42ec60": {
+ "board_clear_collection_42ec60": {
   "callees": {
    "0x4b22c0": [
     0,
@@ -9732,7 +9732,7 @@
   "virtual": [],
   "address": 4385888
  },
- "f42ec80": {
+ "board_collection_all_handler": {
   "callees": {
    "0x4b2300": [
     0,
@@ -9749,7 +9749,7 @@
   "virtual": [],
   "address": 4385920
  },
- "f42eca0": {
+ "board_collection_all_handler_42eca0": {
   "callees": {
    "0x4b2300": [
     0,
@@ -9766,7 +9766,7 @@
   "virtual": [],
   "address": 4385952
  },
- "f42ecc0": {
+ "board_collection_all_handler_42ecc0": {
   "callees": {
    "0x4b2300": [
     0,
@@ -9800,7 +9800,7 @@
   "virtual": [],
   "address": 4386112
  },
- "f42ed70": {
+ "board_piece_all_handler_42ed70": {
   "callees": {
    "0x4b2300": [
     0,
@@ -9817,7 +9817,7 @@
   "virtual": [],
   "address": 4386160
  },
- "f42eda0": {
+ "board_collection_set_handler": {
   "callees": {
    "0x4b2340": [
     0,
@@ -9834,7 +9834,7 @@
   "virtual": [],
   "address": 4386208
  },
- "f42edf0": {
+ "board_piece_all_handler_42edf0": {
   "callees": {
    "0x4b2300": [
     0,

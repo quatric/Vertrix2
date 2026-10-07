@@ -20,7 +20,7 @@ VertrixBoardClip vertrix_board_clip(int16_t origin_x, int16_t origin_y);
 int vertrix_board_cell_position(int16_t origin_x, int16_t origin_y, uint32_t column, uint32_t row,
                                 int8_t offset_x, int8_t offset_y, int16_t *x, int16_t *y);
 
-/* Original 0x4310ba..0x4310ee: center a measured resource in a 24x24 cell.
+/* Original fragment 0x4310ba..0x4310ee: center a measured resource in a 24x24 cell.
  * Dimensions come from the separate original resource measurement routine.
  * Subtraction and logical shift retain x86 wrapping; results wrap to words. */
 int vertrix_board_cell_center(int16_t cell_x, int16_t cell_y, int32_t width, int32_t height,
@@ -86,7 +86,7 @@ int vertrix_sprite_draw32(const VertrixSurface *source, VertrixSurface *target, 
  * Read modes 1..15, positions 0..1023. Invalid ranges preserve output. */
 int vertrix_render_scale_advances(uint8_t mode, uint32_t start, uint32_t count, uint8_t *output);
 
-/* Original 0x4ae99f..0x4aea50: consume advance entries for clipped rows/columns
+/* Original fragment 0x4ae99f..0x4aea50: consume advance entries for clipped rows/columns
  * and add their source-pixel displacement to the existing wrapping offset. */
 int vertrix_render_scale_clip_offset(uint8_t mode, uint16_t source_width, uint16_t skipped_columns,
                                      uint16_t skipped_rows, uint32_t initial_offset,
@@ -125,7 +125,7 @@ typedef struct
     uint32_t target_stride;
     uint32_t target_padding;
 } VertrixRenderBinding;
-/* Original 0x4af0ee..0x4af187. source_address is original-address evidence,
+/* Original fragment 0x4af0ee..0x4af187. source_address is original-address evidence,
  * never a native pointer; native storage uses bounded VertrixSurface views. */
 VertrixRenderBinding vertrix_render_binding(uint32_t source_base, uint32_t source_offset,
                                             uint16_t source_width, uint16_t target_width,

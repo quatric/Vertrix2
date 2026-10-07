@@ -8,7 +8,7 @@ typedef struct
     uint32_t children[3];
     int16_t x, y;
 } VertrixScenePiece;
-/* Original complete 0x431c60 object transfer after descent blocks. The active
+/* Original 0x431c60: complete object transfer after descent blocks. The active
  * handle must identify this piece. In-board children transfer into cell slots;
  * out-of-board children are destroyed. Child slots clear before destroying the
  * piece. Top <= -3 leaves children for the piece destructor and reports lock=0.

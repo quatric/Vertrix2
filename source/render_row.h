@@ -2,7 +2,7 @@
 #define VERTRIX_RENDER_ROW_H
 #include "render_pixel.h"
 #include <stddef.h>
-/* Original binary-alpha row 0x492280 with recovered 32-bit pixel dispatch.
+/* Original 0x492280: binary-alpha row with recovered 32-bit pixel dispatch.
  * Source and destination are offsets in one bounded backing. Staging retains
  * forward aliasing behavior; invalid kernels/backing preserve all bytes.
  * Prepared palette/weight views must remain independent of destination. */

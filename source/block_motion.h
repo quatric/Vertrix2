@@ -10,7 +10,7 @@ typedef struct
     int16_t step;
     uint32_t handler;
 } VertrixBlockMotion;
-/* Complete original moving block handler 0x44c880, including 0x4acab0.
+/* Original 0x44c880: complete moving block handler, including 0x4acab0.
  * Animate, advance primary timer, consume due cycles, move/clamp toward target,
  * return to normal handler 0x44c860 on arrival, and bind the selected descriptor.
  * Resolved frame order is required. Invalid animation/storage preserves output. */

@@ -155,6 +155,10 @@ void vertrix_unrelated(void);
             self.assertEqual(names[0x43b5b0], "vertrix_ai_reaction_time")
         self.assertNotIn(0x43f200, names)
         self.assertNotIn(0x43f200, conflicts)
+        for fragment in (0x4831b0, 0x483400, 0x40c518, 0x40c5d8, 0x40c7d0,
+                         0x40e1db, 0x40e77f, 0x40e7ba, 0x40e82c, 0x40eb14, 0x40eb6e):
+            self.assertNotIn(fragment, names)
+            self.assertNotIn(fragment, conflicts)
         self.assertEqual(names[0x4877f0], "vertrix_frame_resource_get")
         self.assertEqual(names[0x4713d0], "vertrix_title_letter_first")
         self.assertEqual(names[0x459be0], "vertrix_title_letter_count")

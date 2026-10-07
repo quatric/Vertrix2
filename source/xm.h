@@ -13,7 +13,7 @@ typedef struct
     uint8_t parameter;
 } VertrixXmEvent;
 
-/* Original packed/unpacked event decoder 0x40e690. Null data with zero size
+/* Original 0x40e690: packed/unpacked event decoder. Null data with zero size
  * means an empty pattern: zero event without cursor advance. Otherwise reads
  * one event and advances cursor. Truncation preserves both outputs. */
 int vertrix_xm_event(const unsigned char *data, size_t size, size_t *cursor,

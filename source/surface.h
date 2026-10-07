@@ -24,7 +24,7 @@ int vertrix_surface_write(VertrixSurface *surface, uint32_t x, uint32_t y, uint3
 int vertrix_surface_copy32(const VertrixSurface *source, uint32_t source_x, uint32_t source_y,
                            VertrixSurface *target, uint32_t target_x, uint32_t target_y,
                            uint16_t width, uint16_t height);
-/* Original 0x4ab380: alpha zero skips, 255 copies, partial alpha adds
+/* Original fragment 0x4ab380: alpha zero skips, 255 copies, partial alpha adds
  * premultiplied source channels to table-scaled destination channels. */
 uint32_t vertrix_surface_alpha_pixel(uint32_t source, uint32_t destination);
 int vertrix_surface_alpha32(const VertrixSurface *source, uint32_t source_x, uint32_t source_y,

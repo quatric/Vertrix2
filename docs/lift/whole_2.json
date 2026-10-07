@@ -134,7 +134,7 @@
   "virtual": [],
   "address": 4523680
  },
- "f450710": {
+ "block_animation_update": {
   "callees": {
    "0x4ac1f0": [
     0,
@@ -155,7 +155,7 @@
   "virtual": [],
   "address": 4523792
  },
- "f450730": {
+ "block_animation_update_450730": {
   "callees": {
    "0x4ac310": [
     0,

@@ -9,8 +9,8 @@ enum
     LIFTED_BLOCK_FINISH_EFFECT_UPDATE_4505C0_STACK = 108,
     LIFTED_BLOCK_FINISH_EFFECT_UPDATE_450630_STACK = 104,
     LIFTED_BLOCK_FINISH_EFFECT_UPDATE_4506A0_STACK = 108,
-    LIFTED_F450710_STACK = 76,
-    LIFTED_F450730_STACK = 76,
+    LIFTED_BLOCK_ANIMATION_UPDATE_STACK = 76,
+    LIFTED_BLOCK_ANIMATION_UPDATE_450730_STACK = 76,
     LIFTED_PLAYER_COUNTDOWN_UPDATE_STACK = 96,
     LIFTED_PLAYER_COUNTDOWN_UPDATE_4507E0_STACK = 88,
     LIFTED_PLAYER_COUNTDOWN_UPDATE_450830_STACK = 88,
@@ -447,12 +447,15 @@ uint32_t lifted_block_finish_effect_update_4506a0(const VertrixCalls *calls,
                                                   const LiftEntry *entry);
 
 /* Original 0x450710. */
-uint32_t lifted_f450710(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_block_animation_update(const VertrixCalls *calls,
+                                       const VertrixFactoryServices *services,
+                                       const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x450730. */
-uint32_t lifted_f450730(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_block_animation_update_450730(const VertrixCalls *calls,
+                                              const VertrixFactoryServices *services,
+                                              const VertrixGlobals *globals,
+                                              const LiftEntry *entry);
 
 /* Original 0x450750. */
 uint32_t lifted_player_countdown_update(const VertrixCalls *calls,

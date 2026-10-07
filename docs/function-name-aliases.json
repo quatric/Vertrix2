@@ -182,18 +182,6 @@
     ],
     "reason": "Both recoveries initialize resource 0x544c64 and handler 0x4574a0."
   },
-  "0x441b30": {
-    "name": "vertrix_record_draw",
-    "aliases": [
-      "vertrix_record_draw",
-      "vertrix_surface_blit_whole"
-    ],
-    "evidence": [
-      "source/resource_record.h",
-      "tools/verify_resource_record.py"
-    ],
-    "reason": "Complete record wrapper; whole-surface blit composes its drawing effect."
-  },
   "0x44ff90": {
     "name": "vertrix_ui_indicator_storage_update",
     "aliases": [
@@ -490,18 +478,6 @@
     ],
     "reason": "Complete sampling traversal; surface implementation is specialized direct copy."
   },
-  "0x4ab380": {
-    "name": "vertrix_render_alpha_image32",
-    "aliases": [
-      "vertrix_render_alpha_image32",
-      "vertrix_surface_alpha_pixel"
-    ],
-    "evidence": [
-      "source/render_row.h",
-      "tools/verify_render_pixel.py"
-    ],
-    "reason": "Complete alpha traversal; alpha pixel helper is only the inner arithmetic."
-  },
   "0x4ac370": {
     "name": "vertrix_actor_add_cc",
     "aliases": [
@@ -627,17 +603,6 @@
       "tools/verify_actor_dword_transition.py"
     ],
     "reason": "Actor transition; raw arithmetic is shared with another original routine."
-  },
-  "0x4b22c0": {
-    "name": "vertrix_object_release_slots",
-    "aliases": [
-      "vertrix_board_clear_collection",
-      "vertrix_object_release_slots"
-    ],
-    "evidence": [
-      "source/object_slots.h"
-    ],
-    "reason": "Generic slot release; board clear annotation describes wrapper callers."
   },
   "0x4b4660": {
     "name": "vertrix_object_cursor_at_end",

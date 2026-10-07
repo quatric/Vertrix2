@@ -4,7 +4,7 @@
 #include <stdint.h>
 /* Original 0x4af2a0: first matching required/allowed flag rule, or 92. */
 uint32_t vertrix_render_rule(uint32_t flags);
-/* Original 0x4b1fb8..0x4b2008: original-address evidence identifier.
+/* Original fragment 0x4b1fb8..0x4b2008: original-address evidence identifier.
  * Zero means no selected kernel. Addresses must never be called by Wii code. */
 uint32_t vertrix_render_kernel_address(uint32_t flags, uint8_t target_format);
 /* Inputs correspond to original renderer globals; names do not infer effect
@@ -45,7 +45,7 @@ typedef struct
     uint32_t row_address;
     uint32_t image_address;
 } VertrixRenderTraversal;
-/* Original 0x4af707..0x4af77d and tables 0x4ff684/0x4ff6c4.
+/* Original fragment 0x4af707..0x4af77d and tables 0x4ff684/0x4ff6c4.
  * Addresses identify recovered behavior; never call them as native pointers.
  * Unsupported target formats preserve output. */
 int vertrix_render_traversal(uint8_t flag_fff, uint8_t scale_738, uint8_t flag_ff0,
@@ -55,7 +55,7 @@ typedef struct
     uint32_t operation_address;
     uint32_t prepare;
 } VertrixRenderOperation;
-/* Original 0x4af786..0x4af86d after valid kernel/row/image binding.
+/* Original fragment 0x4af786..0x4af86d after valid kernel/row/image binding.
  * Selects fast copy, alpha override or prepared image traversal. Addresses
  * remain evidence identifiers. Invalid inputs preserve output. */
 int vertrix_render_operation(uint32_t rule, uint32_t traversal_index, uint32_t traversal_group,

@@ -32,7 +32,7 @@ typedef struct
  * Volume is the stored channel value (original public volume divided by two).
  * Valid public volume 0..64 therefore gives stored volume 0..32. */
 int vertrix_mixer_stereo_gains(uint32_t stored_volume, uint8_t pan, VertrixMixerGains *output);
-/* Original 0x40c7d0 signed PCM8 lookup-table value. Table row 0..64,
+/* Original fragment 0x40c7d0 signed PCM8 lookup-table value. Table row 0..64,
  * master gain 0..256; mono halves master gain before multiplication.
  * Negative products round toward negative infinity, matching x86 SAR. */
 int vertrix_mixer_pcm8_value(uint8_t sample, uint32_t table_row, uint32_t master_gain, int stereo,
@@ -119,7 +119,7 @@ typedef struct
     uint32_t signed_step;
 } VertrixMixerBatch;
 
-/* Original 0x40c518..0x40c547 batch arithmetic for a ready cursor.
+/* Original fragment 0x40c518..0x40c547 batch arithmetic for a ready cursor.
  * Positive step magnitude 1..INT32_MAX. Preserves unsigned product wrapping,
  * signed division and reverse-step negation. Does not repair invalid geometry. */
 int vertrix_mixer_batch(const VertrixMixerCursor *cursor, uint32_t step, uint32_t remaining_frames,
@@ -154,7 +154,7 @@ typedef struct
     int tick;
 } VertrixMixerTickBatch;
 
-/* Original 0x40c5d8..0x40c628 scheduling with a tick callback enabled.
+/* Original fragment 0x40c5d8..0x40c628 scheduling with a tick callback enabled.
  * Counts accumulator values (two per stereo frame), rounded in 64-value
  * chunks. Tick is due before mixing this batch. Zero period is rejected. */
 int vertrix_mixer_tick_batch(uint32_t period, uint32_t phase, uint32_t remaining_values,
@@ -440,7 +440,7 @@ typedef struct
     uint8_t active;
     uint8_t flags;
 } VertrixMixerInstrumentVibrato;
-/* Original 0x40e1db..0x40e57a, including absent/zero-depth bypass. */
+/* Original fragment 0x40e1db..0x40e57a, including absent/zero-depth bypass. */
 int vertrix_mixer_instrument_vibrato(int instrument_present, uint8_t waveform, uint8_t depth,
                                      uint8_t rate, VertrixMixerInstrumentVibrato *state);
 typedef struct
@@ -542,7 +542,7 @@ typedef struct
     uint8_t parameter;
     uint8_t flags;
 } VertrixMixerRowEffects;
-/* Original 0x40e77f..0x40e7ba row transition. Restores base pitch when
+/* Original fragment 0x40e77f..0x40e7ba row transition. Restores base pitch when
  * leaving vibrato/combined vibrato or a nonzero arpeggio for another effect. */
 int vertrix_mixer_row_effects(uint8_t volume_command, uint8_t effect, uint8_t parameter,
                               VertrixMixerRowEffects *state);
@@ -551,7 +551,7 @@ typedef struct
     uint32_t selected;
     uint8_t number;
 } VertrixMixerRowInstrument;
-/* Original 0x40e7ba..0x40e7f8. Native selected is the one-based instrument
+/* Original fragment 0x40e7ba..0x40e7f8. Native selected is the one-based instrument
  * handle; zero or out-of-range incoming numbers preserve prior selection. */
 int vertrix_mixer_row_instrument(uint8_t number, uint16_t instrument_count,
                                  VertrixMixerRowInstrument *state);
@@ -562,7 +562,7 @@ typedef struct
     uint32_t pan;
     uint8_t flags;
 } VertrixMixerRowDefaults;
-/* Original 0x40e82c..0x40e89d. A nonzero incoming instrument and present
+/* Original fragment 0x40e82c..0x40e89d. A nonzero incoming instrument and present
  * sample copy default volume. Module flag 0x80 suppresses default pan. */
 int vertrix_mixer_row_defaults(uint8_t incoming_instrument, int sample_present,
                                uint8_t sample_volume, uint8_t sample_pan, uint8_t module_flags,
@@ -695,10 +695,10 @@ typedef struct
     uint32_t tempo;
     uint8_t flags;
 } VertrixMixerSequenceTick;
-/* Original 0x40eb14..0x40eb3a. Returns -1 invalid, 0 stopped, 1 continue,
+/* Original fragment 0x40eb14..0x40eb3a. Returns -1 invalid, 0 stopped, 1 continue,
  * 2 invoke row advancement before channel effects. Does not reset tick itself. */
 int vertrix_mixer_sequence_begin(VertrixMixerSequenceTick *state);
-/* Original 0x40eb6e..0x40ebf3, after channel effects/envelopes. Consumes
+/* Original fragment 0x40eb6e..0x40ebf3, after channel effects/envelopes. Consumes
  * delay and pending global updates. Tempo output is valid only if changed. */
 int vertrix_mixer_sequence_pending(VertrixMixerSequenceTick *state, uint8_t *channel_flags,
                                    size_t channels, uint32_t *tempo, int *tempo_changed);

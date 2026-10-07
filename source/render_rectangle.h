@@ -3,7 +3,7 @@
 #include "palette_tables.h"
 #include "render_preparation.h"
 #include "surface.h"
-/* Original destination rectangle operation 0x492dc0. half_color is the
+/* Original 0x492dc0: destination rectangle operation. half_color is the
  * prepared packed color at 0x54d5ec. Entire backing is checked before writes.
  * Forward row/pixel order, including overlapping rows, is preserved. */
 int vertrix_render_rectangle_half32(VertrixSurface *target, uint32_t x, uint32_t y, uint16_t width,

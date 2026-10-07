@@ -46,8 +46,8 @@ int vertrix_surface_blit_progress(VertrixBlitSurface *target, const VertrixBlitS
 int vertrix_surface_blit_region(VertrixBlitSurface *target, const VertrixBlitSurface *source,
                                 const uint16_t region[4]);
 
-/* Original0x441b30: copy the source over the target from (0, 0) with the target's width and
- * height. Nothing happens (returns 1) when either surface is absent (a null pointer). */
+/* Original fragment 0x441b30: copy the source over the target from (0, 0) with the target's width
+ * and height. Nothing happens (returns 1) when either surface is absent (a null pointer). */
 int vertrix_surface_blit_whole(VertrixBlitSurface *target, const VertrixBlitSurface *source);
 
 enum

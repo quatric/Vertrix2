@@ -319,10 +319,11 @@ L_4506c3:
     return env.failed ? 0u : eax;
 }
 
-uint32_t lifted_f450710(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
+uint32_t lifted_block_animation_update(const VertrixCalls *calls,
+                                       const VertrixFactoryServices *services,
+                                       const VertrixGlobals *globals, const LiftEntry *entry)
 {
-    uint8_t stack[LIFTED_F450710_STACK + 4 + 4 * 0 + 4];
+    uint8_t stack[LIFTED_BLOCK_ANIMATION_UPDATE_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
     LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
@@ -342,7 +343,8 @@ uint32_t lifted_f450710(const VertrixCalls *calls, const VertrixFactoryServices 
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F450710_STACK, 0, entry);
+    lift_begin(&env, calls, services, globals, stack, LIFTED_BLOCK_ANIMATION_UPDATE_STACK, 0,
+               entry);
     {
         uint32_t v = edx;
         esp -= 4u;
@@ -360,10 +362,11 @@ uint32_t lifted_f450710(const VertrixCalls *calls, const VertrixFactoryServices 
     return env.failed ? 0u : eax;
 }
 
-uint32_t lifted_f450730(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
+uint32_t lifted_block_animation_update_450730(const VertrixCalls *calls,
+                                              const VertrixFactoryServices *services,
+                                              const VertrixGlobals *globals, const LiftEntry *entry)
 {
-    uint8_t stack[LIFTED_F450730_STACK + 4 + 4 * 0 + 4];
+    uint8_t stack[LIFTED_BLOCK_ANIMATION_UPDATE_450730_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
     LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
@@ -383,7 +386,8 @@ uint32_t lifted_f450730(const VertrixCalls *calls, const VertrixFactoryServices 
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F450730_STACK, 0, entry);
+    lift_begin(&env, calls, services, globals, stack, LIFTED_BLOCK_ANIMATION_UPDATE_450730_STACK, 0,
+               entry);
     {
         uint32_t v = edx;
         esp -= 4u;

@@ -10716,7 +10716,7 @@
   "virtual": [],
   "address": 4507632
  },
- "f44c860": {
+ "block_update": {
   "callees": {
    "0x4ac1f0": [
     0,
@@ -10737,7 +10737,7 @@
   "virtual": [],
   "address": 4507744
  },
- "f44c880": {
+ "block_motion_update": {
   "callees": {
    "0x4ac1f0": [
     0,
@@ -11158,7 +11158,7 @@
   "virtual": [],
   "address": 4508656
  },
- "f44cc60": {
+ "block_byte_pulse_update_44cc60": {
   "callees": {
    "0x4ac1f0": [
     0,
@@ -11648,7 +11648,7 @@
   "virtual": [],
   "address": 4510624
  },
- "f44d410": {
+ "block_byte_pulse_update_44d410": {
   "callees": {
    "0x4ac1f0": [
     0,
@@ -11999,7 +11999,7 @@
   "virtual": [],
   "address": 4511440
  },
- "f44d760": {
+ "block_byte_pulse_update_44d760": {
   "callees": {
    "0x4ac1f0": [
     0,

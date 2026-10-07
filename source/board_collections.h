@@ -13,27 +13,32 @@ typedef enum
     VERTRIX_BOARD_AT_324
 } VertrixBoardCollection;
 
-/* Original0x4b22c0 through its wrappers 0x42ebc0 (+0x220), 0x42ebe0 (+0x87c), 0x42ec00 (+0x988),
- * 0x42ec20 (+0x9e8), 0x42ec40 (+0xa2c), 0x42ec60 (+0xbdc) and 0x42eee0 (+0x324, 260 entries):
- * destroy (flag 2) and clear every set entry in order. Returns zero for an unknown collection. */
+/* Original variants 0x42ebc0, 0x42ebe0, 0x42ec00, 0x42ec20, 0x42ec40, 0x42ec60:
+ * through 0x4b22c0, destroy (flag 2) and clear every set entry in order. Collections
+ * are at +0x220, +0x87c, +0x988, +0x9e8, +0xa2c and +0xbdc, respectively.
+ * Related unverified wrapper 0x42eee0 uses +0x324 (260 entries). Returns zero for
+ * an unknown collection. */
 int vertrix_board_clear_collection(VertrixScene *scene, VertrixBoardCollection collection,
                                    VertrixBoardDestroy destroy, void *context);
 
-/* Original0x4b2300 through 0x42ec80, 0x42eca0, 0x42ecc0, 0x42ece0, 0x42ed00 and 0x42ed20:
- * *all is 1 when every set entry's object has handler token +0x154 equal to handler, else 0
- * (stopping at the first mismatch). Returns zero for an unresolvable object reached. */
+/* Original variants 0x42ec80, 0x42eca0, 0x42ecc0, 0x42ece0, 0x42ed00, 0x42ed20:
+ * through 0x4b2300, test collections +0xbdc, +0x220, +0x87c, +0x988, +0x9e8 and
+ * +0xa2c, respectively. *all is 1 when every set entry's object has handler token
+ * +0x154 equal to handler, else 0 (stopping at the first mismatch). Returns zero
+ * for an unresolvable object reached. */
 int vertrix_board_collection_all_handler(const VertrixScene *scene,
                                          VertrixBoardCollection collection, uint32_t handler,
                                          VertrixObjectStorage resolve, void *context,
                                          uint32_t *all);
 
-/* Original0x4b2340 through 0x42eda0 (+0x220): set the handler token of every set entry. */
+/* Original0x42eda0: through 0x4b2340, set the handler token of every set entry at +0x220. */
 int vertrix_board_collection_set_handler(const VertrixScene *scene,
                                          VertrixBoardCollection collection, uint32_t handler,
                                          VertrixObjectStorage resolve, void *context);
 
-/* Original0x42ed40 / 0x42edf0 (list 0, piece +0x15c) and 0x42ed70 (list 1, piece +0x170): the
- * same check over the active piece's three child handles; *all is 1 without an active piece. */
+/* Original variants 0x42ed40, 0x42edf0, 0x42ed70: the same check over the active
+ * piece's three child handles; the first two use list 0 at piece +0x15c and the
+ * third uses list 1 at piece +0x170. *all is 1 without an active piece. */
 int vertrix_board_piece_all_handler(const VertrixScene *scene, int list, uint32_t handler,
                                     VertrixObjectStorage resolve, void *context, uint32_t *all);
 
