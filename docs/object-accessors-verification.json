@@ -13,7 +13,21 @@
     "player_flag_a60": 4096,
     "player_byte_4c4_is_one": 4096,
     "player_set_bytes_168": 4096,
-    "object_set_18": 4096
+    "object_set_18": 4096,
+    "counter_reached_cc": 4096,
+    "counter_reached_dc": 4096,
+    "counter_reached_bc": 4096,
+    "set_times_twelve_d0": 4096,
+    "set_times_twelve_c0": 4096,
+    "set_times_twelve_e0": 4096,
+    "fill_bytes_99c": 4096,
+    "fill_bytes_9a1": 4096,
+    "fill_bytes_9a6": 4096,
+    "fill_bytes_9b3": 4096,
+    "fill_bytes_9c0": 4096,
+    "fill_bytes_9cd": 4096,
+    "object_clear_slots": 4096,
+    "compare_u32": 4096
   },
   "scope": "Cleaned small actor and player accessors against the complete original routines: every returned value and the whole object compare."
 }

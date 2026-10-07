@@ -22,6 +22,12 @@ def main():
     args = parser.parse_args()
     n = build(args.build_dir, 'object-accessors', ['object_accessors.c', 'actor_storage.c'])
     n.vertrix_actor_add_elapsed.argtypes = [c.c_void_p, c.c_size_t, U, U]
+    n.vertrix_actor_counter_reached.argtypes = [c.c_void_p, c.c_size_t, U, U, c.POINTER(U)]
+    n.vertrix_actor_set_times_twelve.argtypes = [c.c_void_p, c.c_size_t, U, U]
+    n.vertrix_player_fill_bytes.argtypes = [c.c_void_p, c.c_size_t, U, U, U]
+    n.vertrix_object_clear_slots.argtypes = [c.c_void_p, c.c_size_t]
+    n.vertrix_compare_u32.argtypes = [U, U]
+    n.vertrix_compare_u32.restype = c.c_int32
     n.vertrix_object_set_18.argtypes = [c.c_void_p, c.c_size_t, U]
     n.vertrix_player_set_bytes_168.argtypes = [c.c_void_p, c.c_size_t, U, U, U]
     for name in ('actor_clock_reached', 'player_flag_4e8', 'player_bonus_meter_full',
@@ -91,6 +97,38 @@ def main():
         assert n.vertrix_object_set_18(buffer, SIZE, value)
         assert buffer.raw == after, case
         count('object_set_18')
+        for address, c_off, l_off in ((0x4ac390, 0xcc, 0xd0), (0x4ac620, 0xdc, 0xe0),
+                                      (0x4ac520, 0xbc, 0xc0)):
+            result, _ = run(address)
+            out = U()
+            assert n.vertrix_actor_counter_reached(fresh(), SIZE, c_off, l_off, c.byref(out))
+            assert out.value == result & 0xff, (hex(address), case)
+            count('counter_reached_%x' % c_off)
+        for address, offset in ((0x4ac470, 0xd0), (0x4ac7b0, 0xc0), (0x4ac840, 0xe0)):
+            value = interesting()
+            _, after = run(address, edx=value)
+            buffer = fresh()
+            assert n.vertrix_actor_set_times_twelve(buffer, SIZE, offset, value)
+            assert buffer.raw == after, (hex(address), case)
+            count('set_times_twelve_%x' % offset)
+        for address, start, length in ((0x42ef60, 0x99c, 5), (0x42ef80, 0x9a1, 5),
+                                       (0x42f7d0, 0x9a6, 13), (0x42f7f0, 0x9b3, 13),
+                                       (0x42f810, 0x9c0, 13), (0x42f830, 0x9cd, 13)):
+            value = interesting()
+            _, after = run(address, edx=value)
+            buffer = fresh()
+            assert n.vertrix_player_fill_bytes(buffer, SIZE, start, length, value)
+            assert buffer.raw == after, (hex(address), case)
+            count('fill_bytes_%x' % start)
+        _, after = run(0x425de0)
+        buffer = fresh()
+        assert n.vertrix_object_clear_slots(buffer, SIZE)
+        assert buffer.raw == after, case
+        count('object_clear_slots')
+        first, second = interesting(), interesting()
+        result = original.call(0x418150, eax=first, edx=second) & 0xffffffff
+        assert n.vertrix_compare_u32(first, second) & 0xffffffff == result, case
+        count('compare_u32')
     report = {'status': 'passed', 'executions': totals,
               'scope': 'Cleaned small actor and player accessors against the complete original '
                        'routines: every returned value and the whole object compare.'}

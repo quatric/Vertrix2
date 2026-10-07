@@ -15,7 +15,8 @@ enum
     PLAYER_BONUS_FULL = 3,
     PLAYER_FLAG_A60 = 0xa60,
     PLAYER_BYTE_4C4 = 0x4c4,
-    OBJECT_FIELD_18 = 0x18
+    OBJECT_FIELD_18 = 0x18,
+    OBJECT_SLOTS_END = 0x1c
 };
 
 static int copy_dword(void *storage, size_t size, size_t from, size_t to)
@@ -108,4 +109,59 @@ int vertrix_player_byte_4c4_is_one(const void *player, size_t size, uint32_t *is
 int vertrix_object_set_18(void *object, size_t size, uint32_t value)
 {
     return vertrix_actor_storage_write(object, size, OBJECT_FIELD_18, 4, value);
+}
+
+int vertrix_actor_counter_reached(const void *actor, size_t size, uint32_t counter_offset,
+                                  uint32_t limit_offset, uint32_t *reached)
+{
+    uint32_t counter;
+    uint32_t limit;
+    if (!reached || !vertrix_actor_storage_read(actor, size, counter_offset, 4, &counter) ||
+        !vertrix_actor_storage_read(actor, size, limit_offset, 4, &limit))
+    {
+        return 0;
+    }
+    *reached = counter >= limit;
+    return 1;
+}
+
+int vertrix_actor_set_times_twelve(void *actor, size_t size, uint32_t offset, uint32_t value)
+{
+    return vertrix_actor_storage_write(actor, size, offset, 4, value * 12u);
+}
+
+int vertrix_player_fill_bytes(void *player, size_t size, uint32_t start, uint32_t count,
+                              uint32_t value)
+{
+    uint32_t probe;
+    uint32_t i;
+    if (count == 0 || !vertrix_actor_storage_read(player, size, start + count - 1, 1, &probe))
+    {
+        return 0;
+    }
+    for (i = 0; i < count; i++)
+    {
+        vertrix_actor_storage_write(player, size, start + i, 1, value);
+    }
+    return 1;
+}
+
+int vertrix_object_clear_slots(void *object, size_t size)
+{
+    uint32_t probe;
+    unsigned i;
+    if (!vertrix_actor_storage_read(object, size, OBJECT_SLOTS_END - 4, 4, &probe))
+    {
+        return 0;
+    }
+    for (i = 0; i < OBJECT_SLOTS_END; i += 4)
+    {
+        vertrix_actor_storage_write(object, size, i, 4, 0xffffffffu);
+    }
+    return 1;
+}
+
+int32_t vertrix_compare_u32(uint32_t first, uint32_t second)
+{
+    return first < second ? -1 : first > second;
 }

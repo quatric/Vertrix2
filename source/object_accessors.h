@@ -39,4 +39,26 @@ int vertrix_player_byte_4c4_is_one(const void *player, size_t size, uint32_t *is
 
 /* Original 0x47f8e0: the dword at +0x18 takes `value`. */
 int vertrix_object_set_18(void *object, size_t size, uint32_t value);
+
+/* Originals 0x4ac390 (counter +0xcc, limit +0xd0), 0x4ac620 (+0xdc, +0xe0) and the clock pair of
+ * 0x4ac520 (+0xbc, +0xc0): 1 when the counter is at least the limit (unsigned). */
+int vertrix_actor_counter_reached(const void *actor, size_t size, uint32_t counter_offset,
+                                  uint32_t limit_offset, uint32_t *reached);
+
+/* Originals 0x4ac470 (offset 0xd0), 0x4ac7b0 (0xc0) and 0x4ac840 (0xe0): the dword at `offset`
+ * becomes 12 * value (wrapping), the frame count converted to a period. */
+int vertrix_actor_set_times_twelve(void *actor, size_t size, uint32_t offset, uint32_t value);
+
+/* Originals 0x42ef60 (+0x99c, 5 bytes), 0x42ef80 (+0x9a1, 5), 0x42f7d0 (+0x9a6, 13), 0x42f7f0
+ * (+0x9b3, 13), 0x42f810 (+0x9c0, 13) and 0x42f830 (+0x9cd, 13): `count` bytes from `start` take
+ * the low byte of `value`. */
+int vertrix_player_fill_bytes(void *player, size_t size, uint32_t start, uint32_t count,
+                              uint32_t value);
+
+/* Original 0x425de0: the first seven dwords of the object become 0xffffffff. */
+int vertrix_object_clear_slots(void *object, size_t size);
+
+/* Original 0x418150: -1, 0 or 1 as the first value is below, equal to or above the second
+ * (unsigned). */
+int32_t vertrix_compare_u32(uint32_t first, uint32_t second);
 #endif
