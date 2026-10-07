@@ -88,7 +88,7 @@ same lifted symbols twice).
 ## Names
 
 `tools/gen_names.py` reads bounded original-address annotations from recovered headers into
-`docs/names.json` (1,230 address/name entries). `docs/function-name-aliases.json` records 54 reviewed
+`docs/names.json` (1,238 address/name entries). `docs/function-name-aliases.json` records 54 reviewed
 canonical choices with exact header candidates, rationale, and evidence. A stale candidate set aborts
 generation. Partial recoveries do not establish a whole-routine name; `0x43f200` fragment annotations are excluded.
 
@@ -99,7 +99,7 @@ map only their first address, so unrelated prototypes and internal branch labels
 
 `lift_batch.py combine` applies the map when generating chunks. `tools/rename_lifted.py` applies it to
 existing verified chunks after validating metadata, declarations, definitions, dispatcher rows, and
-normalized C tokens. The current 2,616 chunk routines include 973 readable names; other routines retain
+normalized C tokens. The current 2,616 chunk routines include 977 readable names; other routines retain
 address identifiers. The dispatcher adds the separately verified reserved screens and contains 2,617
 entries. Applying the current name map again changes zero files.
 

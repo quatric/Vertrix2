@@ -7,13 +7,14 @@ typedef struct
     uint32_t left_x, left_y, right_x, right_y, width, height;
     uint16_t row_height;
 } VertrixPiecePlacement;
-/* Explicit snapshots of original4f89e8..4f89fc and4f90ac. Preserve original
+/* Original0x42acf0: construction with explicit snapshots of placement globals
+ * 0x4f89e8..0x4f89fc and 0x4f90ac. Preserve original
  * low-word wrapping, including runtime changes to placement and dimensions. */
 int vertrix_piece_actor_construct_placed(void *parent, size_t parent_size, void *children,
                                          size_t children_size, const uint32_t frames[7],
                                          const uint32_t handles[7], uint8_t side, int difficulty,
                                          int level, const VertrixPiecePlacement *placement);
-/* Original42acf0 using original initial placement globals: left138/right488,
+/* Original fragment 0x42acf0 using original initial placement globals: left138/right488,
  * baseline248, clip width14/height202. Count non-ffffffff values in seven
  * entries, then use the first count entries exactly as the original does.
  * Caller owns contiguous base child storage and distinct nonzero handles.

@@ -6,7 +6,7 @@
  * Clear the six owned preview handles, preserve all other untouched bytes.
  * Invalid storage below174 bytes remains unchanged. */
 int vertrix_ui_player_preview_parent_construct(void *player, size_t player_size);
-/* Original42b370 three-pair construction and player attachment. Storage order
+/* Original0x42b370: three-pair construction and player attachment. Storage order
  * is companion0,border0,companion1,border1,companion2,border2. Caller owns the
  * actors and supplies distinct nonzero handle identities for its resolver.
  * Parent handles occupy15c..170; linked identity comes from parent field0.

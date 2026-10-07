@@ -10,7 +10,7 @@ typedef struct
     uint32_t auxiliary[255];
 } VertrixPaletteTables;
 
-/* Original475090 RGB/hue/auxiliary table construction. Zero-initialize output;
+/* Original 0x475090: RGB/hue/auxiliary table construction. Zero-initialize output;
  * occupied output is rejected. Tables own their allocations. Allocation
  * failure preserves output. Original global pointer selection is separate. */
 int vertrix_palette_tables_build(VertrixPaletteTables *output);

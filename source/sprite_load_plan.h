@@ -26,7 +26,7 @@ typedef struct
     VertrixSpriteLoadEntry entries[VERTRIX_SPRITE_LOAD_COUNT];
 } VertrixSpriteLoadPlan;
 
-/* Original45dca0 filename selections in execution order. settings contains the
+/* Original fragment 0x45dca0 filename selections in execution order. settings contains the
  * 19 bytes at original513c4d..513c5f; interface_slot is original53bd09. All are
  * supplied runtime values. Original resource tokens are identifiers, not Wii
  * pointers. Resolve names from VF; invalid selections preserve output. This

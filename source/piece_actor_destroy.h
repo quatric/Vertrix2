@@ -1,13 +1,13 @@
 #ifndef VERTRIX_PIECE_ACTOR_DESTROY_H
 #define VERTRIX_PIECE_ACTOR_DESTROY_H
 #include "player_piece.h"
-/* Original4ac130: base actor destructor. Without flag4, store class517af4 at
+/* Original fragment 0x4ac130: base actor destructor. Without flag4, store class517af4 at
  * 0x158, then release the storage through release() when flag2 is set. Flag4
  * is the original virtual-base cleanup path and is rejected. Needs 0x15c bytes.
  * Failure preserves the storage. release receives actor_handle. */
 int vertrix_actor_base_destroy(void *actor, size_t size, uint32_t actor_handle, uint32_t flags,
                                VertrixPlayerActorDestroy release, void *context);
-/* Original 0x42ab10: piece parent destructor. Store class514774, destroy every
+/* Original fragment 0x42ab10: piece parent destructor. Store class514774, destroy every
  * nonzero child handle in slots15c..174 in order (child slots are not cleared),
  * then run the base destructor with the same flags. Flag4 is rejected. Child
  * and storage destruction are supplied boundaries; failure of either preserves

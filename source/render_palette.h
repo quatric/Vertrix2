@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-/* Original48d740/48d7f0 palette conversion. The original54b800 lookup
+/* Original fragment 0x48d740/0x48d7f0: convenience palette conversion. The original54b800 lookup
  * contains262144 dwords; each low byte selects a channel map from
  * original54cdc8. This convenience API uses256-byte rows. Inputs borrow tables.
  * fixed_channels selects original54d5dc/de/e0 instead of the lookup's high
@@ -15,6 +15,8 @@ int vertrix_render_palette_pixel(uint32_t source, const uint32_t *lookup, size_t
 /* Explicit regular pointer-table layout. Original475419 supplies201 rows
  * separated by101 bytes. Fixed word indices retain cross-row byte addressing
  * when within maps_size, just as the executable does. */
+/* Original variants 0x48d740, 0x48d7f0: complete callable palette kernels with explicit
+ * channel-map layout, verified in tools/verify_render_palette.py. */
 int vertrix_render_palette_pixel_layout(uint32_t source, const uint32_t *lookup,
                                         size_t lookup_count, const uint8_t *maps, size_t maps_size,
                                         size_t map_stride, size_t map_count, int fixed_channels,

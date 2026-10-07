@@ -16,7 +16,7 @@ typedef struct
  * Returns 0 without changing output on unsupported/truncated input or failure. */
 int vertrix_image_bmp(VertrixVf *archive, const char *name, VertrixImage *image);
 void vertrix_image_free(VertrixImage *image);
-/* Original483ce0 four-byte branch: mirror packed rows without changing
+/* Original fragment 0x483ce0: four-byte branch: mirror packed rows without changing
  * descriptor origins or channels. Positive dimensions must fit signed words. */
 int vertrix_image_mirror_horizontal(VertrixImage *image);
 /* Original0x4799f0 compares the complete little-endian four-byte pixel to key.
@@ -78,7 +78,7 @@ typedef struct
 int vertrix_image_sprite(VertrixVf *archive, const char *name, uint32_t frame,
                          VertrixSpriteFrame *output);
 void vertrix_sprite_free(VertrixSpriteFrame *frame);
-/* Original483110 owned four-byte clone. Retain serialized metadata and frame
+/* Original fragment 0x483110: owned four-byte clone. Retain serialized metadata and frame
  * count; pixel ownership uses image.rgba. Output must be zero initialized. */
 int vertrix_sprite_clone(const VertrixSpriteFrame *source, VertrixSpriteFrame *output);
 /* Compose original487790 clone replacement then4877d0 horizontal mirror.
@@ -86,11 +86,11 @@ int vertrix_sprite_clone(const VertrixSpriteFrame *source, VertrixSpriteFrame *o
  * Allocate and validate before replacing destination. Preserve source metadata. */
 int vertrix_sprite_replace_mirrored(const VertrixSpriteFrame *source,
                                     VertrixSpriteFrame *destination);
-/* Original487790 then4877d0 on a direct owned frame bank. Preserve all other
+/* Original composition 0x487790 then 0x4877d0 on a direct owned frame bank. Preserve all other
  * entries. Source/destination indices must differ and fit supplied storage. */
 int vertrix_sprite_bank_replace_mirrored(VertrixSpriteFrame *frames, size_t count,
                                          size_t source_index, size_t destination_index);
-/* Original45dd52..45de10 default frame substitutions. First source comes
+/* Original fragment 0x45dd52..0x45de10: default frame substitutions. First source comes
  * from runtime5466c4; other pairs are9->10,11->12,28->29,24->25.
  * Direct owned bank; validate/allocate all replacements before publication. */
 int vertrix_sprite_bank_configure_ui(VertrixSpriteFrame *frames, size_t count, size_t first_source);

@@ -8977,7 +8977,7 @@
   "virtual": [],
   "address": 4369072
  },
- "f42acf0": {
+ "piece_actor_construct_placed": {
   "callees": {
    "0x425e00": [
     0,
@@ -9131,7 +9131,7 @@
   "virtual": [],
   "address": 4370544
  },
- "f42b0f0": {
+ "player_preview_toggle": {
   "callees": {},
   "stack": 72,
   "arguments": 0,
@@ -9143,7 +9143,7 @@
   "virtual": [],
   "address": 4370672
  },
- "f42b110": {
+ "player_preview_set_mode": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -9212,7 +9212,7 @@
   ],
   "address": 4371088
  },
- "f42b370": {
+ "ui_player_previews_construct": {
   "callees": {
    "0x4ca000": [
     0,

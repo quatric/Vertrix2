@@ -341,17 +341,17 @@ enum
     LIFTED_F42A9D0_STACK = 80,
     LIFTED_F42AA20_STACK = 80,
     LIFTED_PIECE_ACTOR_PARENT_CONSTRUCT_STACK = 76,
-    LIFTED_F42ACF0_STACK = 180,
+    LIFTED_PIECE_ACTOR_CONSTRUCT_PLACED_STACK = 180,
     LIFTED_PIECE_ACTOR_LAYOUT_STACK = 80,
     LIFTED_PIECE_ACTOR_CYCLE_STACK = 88,
     LIFTED_PLAYER_PREVIEW_MOTION_START_STACK = 80,
     LIFTED_PLAYER_PREVIEW_BELOW_LIMIT_STACK = 68,
     LIFTED_PLAYER_PREVIEW_FRAME_STACK = 68,
-    LIFTED_F42B0F0_STACK = 72,
-    LIFTED_F42B110_STACK = 64,
+    LIFTED_PLAYER_PREVIEW_TOGGLE_STACK = 72,
+    LIFTED_PLAYER_PREVIEW_SET_MODE_STACK = 64,
     LIFTED_UI_PLAYER_PREVIEW_PARENT_CONSTRUCT_STACK = 76,
     LIFTED_UI_PLAYER_PREVIEW_DRAW32_STACK = 96,
-    LIFTED_F42B370_STACK = 232,
+    LIFTED_UI_PLAYER_PREVIEWS_CONSTRUCT_STACK = 232,
     LIFTED_PIECE_ACTOR_CONSTRUCT_EMPTY_STACK = 68,
     LIFTED_F42B6B0_STACK = 176,
     LIFTED_PIECE_SET_VARIANT_STACK = 72,
@@ -1833,8 +1833,9 @@ uint32_t lifted_piece_actor_parent_construct(const VertrixCalls *calls,
                                              const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42acf0. */
-uint32_t lifted_f42acf0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_piece_actor_construct_placed(const VertrixCalls *calls,
+                                             const VertrixFactoryServices *services,
+                                             const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42af30. */
 uint32_t lifted_piece_actor_layout(const VertrixCalls *calls,
@@ -1861,12 +1862,14 @@ uint32_t lifted_player_preview_frame(const VertrixCalls *calls,
                                      const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42b0f0. */
-uint32_t lifted_f42b0f0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_player_preview_toggle(const VertrixCalls *calls,
+                                      const VertrixFactoryServices *services,
+                                      const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42b110. */
-uint32_t lifted_f42b110(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_player_preview_set_mode(const VertrixCalls *calls,
+                                        const VertrixFactoryServices *services,
+                                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42b150. */
 uint32_t lifted_ui_player_preview_parent_construct(const VertrixCalls *calls,
@@ -1880,8 +1883,9 @@ uint32_t lifted_ui_player_preview_draw32(const VertrixCalls *calls,
                                          const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42b370. */
-uint32_t lifted_f42b370(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_ui_player_previews_construct(const VertrixCalls *calls,
+                                             const VertrixFactoryServices *services,
+                                             const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42b5c0. */
 uint32_t lifted_piece_actor_construct_empty(const VertrixCalls *calls,
