@@ -8,6 +8,8 @@ from collections import Counter
 import hashlib
 import json
 from pathlib import Path
+
+from dispatch_boundaries import NATIVE_UNVERIFIED_BOUNDARIES
 import re
 
 from routine_names import readable_names
@@ -194,7 +196,8 @@ def plan_renames(root):
             raise ValueError("Missing separate verified/unverified dispatcher tables")
         optional_rows = DISPATCH.findall(tables["unverified_routines"])
         optional_expected = {meta["address"]: (f"lifted_{name}", meta["stack"], meta["arguments"])
-                             for name, meta in optional_metadata.items()}
+                             for name, meta in optional_metadata.items()
+                             if meta["address"] not in NATIVE_UNVERIFIED_BOUNDARIES}
         optional_actual = {int(address, 16): (name, int(stack), int(arguments))
                            for address, name, stack, arguments in optional_rows}
         if len(optional_rows) != len(optional_actual) or optional_actual != optional_expected:

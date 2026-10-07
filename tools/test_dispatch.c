@@ -96,6 +96,21 @@ int main(void)
         }
         assert(vertrix_lifted_count() == verified_count);
         assert(!vertrix_lifted_has(0x401000));
+        {
+            Boundary native_boundary = {0};
+            VertrixCalls native_inner = {boundary_call, &native_boundary};
+            VertrixLiftedCalls native_adapter;
+            uint32_t result = 0xabcdef01;
+            site.target = 0x48ae00;
+            site.eax = 0x12345678;
+            assert(!vertrix_lifted_has(site.target));
+            assert(!vertrix_lifted_dispatch(&adapter.calls, &services, &globals, &site, &result));
+            assert(result == 0xabcdef01);
+            vertrix_lifted_calls_init(&native_adapter, &native_inner, &services, &globals);
+            assert(native_adapter.calls.call(&site, native_adapter.calls.context) == 7);
+            assert(native_boundary.calls == 1);
+            assert(memcmp(&native_boundary.last, &site, sizeof site) == 0);
+        }
         vertrix_lifted_allow_unverified(0);
         for (i = 0; i < sizeof optional / sizeof optional[0]; ++i)
         {

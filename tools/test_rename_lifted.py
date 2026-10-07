@@ -203,6 +203,28 @@ if (found == NULL && unverified_allowed)
 void vertrix_lifted_allow_unverified(int allowed) { unverified_allowed = allowed; }
 """)
 
+    def test_native_optional_boundary_is_excluded_but_still_validated(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            self.optional_fixture(root)
+            path = root / "docs/lift/unverified.json"
+            metadata = json.loads(path.read_text())
+            metadata["candidate"]["address"] = 0x48ae00
+            path.write_text(json.dumps(metadata))
+            header = root / "source/lifted_unverified.h"
+            header.write_text(header.read_text().replace("0x403000", "0x48ae00"))
+            dispatch = root / "source/lifted_dispatch.c"
+            dispatch.write_text(dispatch.read_text().replace("{0x403000, lifted_candidate, 8, 0},", ""))
+            plan_renames(root)
+            original = dispatch.read_text()
+            dispatch.write_text(original.replace("{0, NULL, 0, 0},", "{0, NULL, 0, 0}, {0x48ae00, lifted_candidate, 8, 0},"))
+            with self.assertRaisesRegex(ValueError, "Unverified dispatcher metadata mismatch"):
+                plan_renames(root)
+            dispatch.write_text(original)
+            header.write_text(header.read_text().replace("= 8", "= 9"))
+            with self.assertRaises(ValueError):
+                plan_renames(root)
+
     def test_optional_table_validates_without_renaming_unverified_evidence(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory).resolve()

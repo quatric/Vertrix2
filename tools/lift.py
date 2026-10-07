@@ -555,6 +555,8 @@ class Lifter:
             self.callees[('virtual', insn.address)] = (count, cdecl)
             pops = 0 if cdecl else count
         self.emit('eax = lift_call(&env, %s, eax, edx, ebx, ecx, %d, esp);' % (target_expr, count))
+        if target_expr in ('0x4db507u', '0x4d809cu'):
+            self.emit('edx = vertrix_lift_edx;')
         if pops:
             self.emit('esp += %du;' % (4 * pops))
 

@@ -13624,6 +13624,7 @@ L_4db6b6:
     ebx = lift_load(&env, esp, 0x0u, 4);
     ecx = ebp;
     eax = lift_call(&env, 0x4db507u, eax, edx, ebx, ecx, 0, esp);
+    edx = vertrix_lift_edx;
     ecx = esi;
     ebx = lift_load(&env, ecx, 0x0u, 4);
     ecx = lift_load(&env, ecx, 0x4u, 4);

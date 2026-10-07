@@ -60,6 +60,8 @@ enum
 };
 __attribute__((weak)) const LiftEnv *vertrix_lift_frames[LIFT_FRAME_LIMIT];
 __attribute__((weak)) unsigned vertrix_lift_frame_index;
+/* edx of the last RTL double helper (multiply, subtract); the host returns it in out_value. */
+__attribute__((weak)) uint32_t vertrix_lift_edx;
 
 static inline void lift_begin(LiftEnv *env, const VertrixCalls *calls,
                               const VertrixFactoryServices *services, const VertrixGlobals *globals,
@@ -189,6 +191,10 @@ static inline uint32_t lift_call(LiftEnv *env, uint32_t target, uint32_t eax, ui
     else if (target == 0x4f175c && count >= 5)
     {
         lift_store(env, stack[4], 0, 4, out); /* CoCreateInstance stores the interface */
+    }
+    if (target == 0x4db507 || target == 0x4d809c)
+    {
+        vertrix_lift_edx = out;
     }
     return result;
 }

@@ -748,6 +748,15 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
     }
     if (site->target == 0x48ae00) /* JPEG decode: no bitmap until a native decoder exists */
         return 0;
+    if (site->target == 0x4db507 || site->target == 0x4d809c) /* RTL double multiply / subtract: edx:eax op ecx:ebx */
+    {
+        union { uint64_t bits; double value; } left, right, out;
+        left.bits = ((uint64_t)site->edx << 32) | site->eax;
+        right.bits = ((uint64_t)site->ecx << 32) | site->ebx;
+        out.value = site->target == 0x4db507 ? left.value * right.value : left.value - right.value;
+        site->out_value = (uint32_t)(out.bits >> 32);
+        return (uint32_t)out.bits;
+    }
     if (site->target == 0x4e04f4)
     {
         return site->eax; /* a bare ret */
