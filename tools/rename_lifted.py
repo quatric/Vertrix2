@@ -210,7 +210,11 @@ def plan_renames(root):
                                  r"\s*\{\s*found\s*=\s*bsearch\s*\([^;]*\bunverified_routines\s*\+\s*1\b",
                                  dispatch_text)):
             raise ValueError("Unverified dispatcher must be disabled by default and explicitly gated")
+        if len(re.findall(r"\bbsearch\s*\([^;]*\bunverified_routines\b", dispatch_text)) != 1:
+            raise ValueError("Unverified dispatcher lookup must occur only behind the gate")
         rows = DISPATCH.findall(tables["routines"])
+        if not re.fullmatch(r"[\s,]*", DISPATCH.sub("", tables["routines"])):
+            raise ValueError("Invalid verified dispatcher row")
         if len(DISPATCH.findall(dispatch_text)) != len(rows) + len(optional_rows):
             raise ValueError("Dispatcher rows outside validated tables")
     else:

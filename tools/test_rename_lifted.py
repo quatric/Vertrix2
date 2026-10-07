@@ -180,6 +180,91 @@ uint32_t lifted_beta(void)
                     with self.assertRaises(ValueError):
                         readable_names(path)
 
+    def optional_fixture(self, root):
+        self.fixture(root)
+        meta = {"candidate": {"address": 0x403000, "stack": 8, "arguments": 0}}
+        (root / "docs/lift/unverified.json").write_text(json.dumps(meta))
+        (root / "source/lifted_unverified.h").write_text(
+            "enum { LIFTED_CANDIDATE_STACK = 8 };\n"
+            "/* Original 0x403000. */\nuint32_t lifted_candidate(void);\n")
+        (root / "source/lifted_unverified.c").write_text(
+            "uint32_t lifted_candidate(void) { uint8_t stack[LIFTED_CANDIDATE_STACK]; "
+            "return LIFTED_CANDIDATE_STACK; }\n")
+        dispatch = root / "source/lifted_dispatch.c"
+        dispatch.write_text(dispatch.read_text() + """
+static const LiftedRoutine unverified_routines[] = {
+    {0, NULL, 0, 0}, {0x403000, lifted_candidate, 8, 0},
+};
+static int unverified_allowed;
+if (found == NULL && unverified_allowed)
+{
+    found = bsearch(&target, unverified_routines + 1, 1, 1, compare);
+}
+void vertrix_lifted_allow_unverified(int allowed) { unverified_allowed = allowed; }
+""")
+
+    def test_optional_table_validates_without_renaming_unverified_evidence(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            self.optional_fixture(root)
+            protected = [root / "docs/lift/unverified.json",
+                         root / "source/lifted_unverified.c", root / "source/lifted_unverified.h"]
+            before = {path: path.read_bytes() for path in protected}
+            staged, changes = plan_renames(root)
+            self.assertEqual(changes, {"alpha": "first", "beta": "second"})
+            self.assertTrue(set(protected).isdisjoint(staged))
+            self.assertIn("{0x403000, lifted_candidate, 8, 0}",
+                          staged[root / "source/lifted_dispatch.c"])
+            for path, replacement in staged.items():
+                path.write_text(replacement)
+            self.assertEqual(plan_renames(root), ({}, {}))
+            self.assertEqual(before, {path: path.read_bytes() for path in protected})
+
+    def test_optional_rows_and_source_evidence_are_strict(self):
+        mutations = [
+            ("source/lifted_dispatch.c", lambda s: s.replace("lifted_candidate, 8", "lifted_candidate, 9")),
+            ("source/lifted_dispatch.c", lambda s: s.replace("lifted_candidate, 8, 0", "lifted_candidate, 8, 1")),
+            ("source/lifted_dispatch.c", lambda s: s.replace("lifted_candidate, 8", "lifted_invented, 8")),
+            ("source/lifted_dispatch.c", lambda s: s.replace("0x403000", "0x404000")),
+            ("source/lifted_dispatch.c", lambda s: s.replace("{0, NULL, 0, 0}", "{0, NULL, 1, 0}")),
+            ("source/lifted_dispatch.c", lambda s: s.replace("static int unverified_allowed;", "static int unverified_allowed = 1;")),
+            ("source/lifted_dispatch.c", lambda s: s.replace("found == NULL && unverified_allowed", "found == NULL")),
+            ("source/lifted_dispatch.c", lambda s: s + "\nfound = bsearch(&target, unverified_routines + 1, 1, 1, compare);"),
+            ("source/lifted_dispatch.c", lambda s: s.replace("{0x402000, lifted_beta, 12, 1}", "{0x402000, lifted_beta, 12, 1}, {0x404000, invented, 8, 0}")),
+            ("source/lifted_dispatch.c", lambda s: s.replace("{0x402000, lifted_beta, 12, 1}", "{0x403000, lifted_candidate, 8, 0}")),
+            ("source/lifted_dispatch.c", lambda s: s.replace("{0x403000, lifted_candidate, 8, 0},", "{0x403000, lifted_candidate, 8, 0}, {0x403000, lifted_candidate, 8, 0},")),
+            ("source/lifted_unverified.h", lambda s: s.replace("0x403000", "0x403001")),
+            ("source/lifted_unverified.h", lambda s: s.replace("= 8", "= 9")),
+            ("source/lifted_unverified.c", lambda s: s.replace("lifted_candidate(void)", "lifted_candidate(int arg)")),
+            ("docs/lift/unverified.json", lambda s: s.replace('"stack": 8', '"stack": true')),
+        ]
+        for filename, mutate in mutations:
+            with self.subTest(filename=filename), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory).resolve()
+                self.optional_fixture(root)
+                path = root / filename
+                path.write_text(mutate(path.read_text()))
+                before = {file: file.read_bytes() for file in root.rglob("*") if file.is_file()}
+                with self.assertRaises(ValueError):
+                    plan_renames(root)
+                self.assertEqual(before, {file: file.read_bytes() for file in before})
+
+    def test_optional_metadata_and_table_require_each_other(self):
+        for missing in ("docs/lift/unverified.json", "source/lifted_unverified.c"):
+            with self.subTest(missing=missing), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory).resolve()
+                self.optional_fixture(root)
+                (root / missing).unlink()
+                with self.assertRaises(ValueError):
+                    plan_renames(root)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            self.optional_fixture(root)
+            dispatch = root / "source/lifted_dispatch.c"
+            dispatch.write_text(dispatch.read_text().split("static const LiftedRoutine unverified_routines")[0])
+            with self.assertRaises(ValueError):
+                plan_renames(root)
+
     def test_normalized_tokens_cover_enums_and_numeric_behavior(self):
         before = 'enum { LIFTED_A_STACK = 8 }; uint32_t lifted_a(void) { return 17; }'
         mapping = {"lifted_a": "lifted_b", "LIFTED_A_STACK": "LIFTED_B_STACK"}
