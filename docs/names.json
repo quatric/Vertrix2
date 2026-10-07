@@ -730,7 +730,7 @@
  "0x45f020": "vertrix_resource_paired_finish",
  "0x45f0a0": "vertrix_seven_steps",
  "0x45f140": "vertrix_resource_indexed_finish",
- "0x45f1e0": "vertrix_table_identity_cells",
+ "0x45f1e0": "vertrix_table_identity_cells_full",
  "0x45f1f0": "vertrix_resource_stride_finish",
  "0x45f250": "vertrix_resource_flagged_finish",
  "0x45f540": "vertrix_string_append",

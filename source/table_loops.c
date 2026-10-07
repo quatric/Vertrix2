@@ -179,3 +179,13 @@ void vertrix_table_identity_cells(uint8_t cells[7])
         cells[i] = (uint8_t)i;
     }
 }
+
+uint32_t vertrix_table_identity_cells_full(uint8_t cells[7])
+{
+    uint32_t i;
+    for (i = 0; i < 7; ++i)
+    {
+        cells[i] = (uint8_t)i;
+    }
+    return i;
+}

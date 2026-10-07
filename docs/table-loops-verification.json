@@ -1,16 +1,16 @@
 {
   "status": "passed",
   "complete_original_executions": {
-    "0x45e590": 4096,
-    "0x45e6b0": 4096,
-    "0x45ec50": 4096,
-    "0x45ed10": 4096,
-    "0x45ee30": 4096,
-    "0x45f020": 4096,
-    "0x45f140": 4096,
-    "0x45f1f0": 4096,
-    "0x45f250": 4096,
-    "0x45f1e0": 4096
+    "0x45e590": 2048,
+    "0x45e6b0": 2048,
+    "0x45ec50": 2048,
+    "0x45ed10": 2048,
+    "0x45ee30": 2048,
+    "0x45f020": 2048,
+    "0x45f140": 2048,
+    "0x45f1f0": 2048,
+    "0x45f250": 2048,
+    "0x45f1e0": 2048
   },
-  "scope": "Each loop executes completely in the original with its callees stubbed and logged; every callee call (address and registers) and the returned eax compare."
+  "scope": "Each loop executes completely in the original with its callees stubbed and logged; every callee call (address and registers) and the returned eax compare. Identity initializer 45f1e0 also compares exact eax seven and entire guarded table storage across varied caller registers."
 }

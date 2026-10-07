@@ -375,16 +375,16 @@
     "reason": "Both implementations recover the complete handler; use the serialized actor-storage implementation as the canonical routine name."
   },
   "0x45f1e0": {
-    "name": "vertrix_table_identity_cells",
+    "name": "vertrix_table_identity_cells_full",
     "aliases": [
       "vertrix_global_index_bytes",
-      "vertrix_table_identity_cells"
+      "vertrix_table_identity_cells_full"
     ],
     "evidence": [
       "source/table_loops.h",
       "tools/verify_table_loops.py"
     ],
-    "reason": "Writes identity indices zero through six to global table 0x53bcc8."
+    "reason": "Complete initializer writes seven ascending identity bytes and returns seven; the void helper is a state-only fragment."
   },
   "0x471e10": {
     "name": "vertrix_scene_lookup_pair",

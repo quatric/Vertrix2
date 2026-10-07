@@ -52,6 +52,8 @@ def main():
     n.vertrix_resource_stride_finish.argtypes = [P, U]
     n.vertrix_resource_flagged_finish.argtypes = [P, U, U, U]
     n.vertrix_table_identity_cells.argtypes = [c.c_char_p]
+    n.vertrix_table_identity_cells_full.argtypes = [c.c_void_p]
+    n.vertrix_table_identity_cells_full.restype = U
     for name in ('rows_build', 'column_build', 'grid_finish', 'single_finish', 'cell_rows',
                  'paired_finish', 'indexed_finish', 'stride_finish', 'flagged_finish'):
         getattr(n, 'vertrix_resource_' + name).restype = U
@@ -131,17 +133,25 @@ def main():
     # 0x45f1e0 initializes the fixed comparison table to 0..6; exercise it in place.
     clear_rng = random.Random(0x45f1e0)
     for _ in range(args.cases):
-        cells = bytes(clear_rng.getrandbits(8) for _ in range(7))
-        cpu.mem_write(0x53bcc8, cells)
-        original.call(0x45f1e0)
-        host = c.create_string_buffer(cells, 7)
-        n.vertrix_table_identity_cells(host)
-        assert host.raw == bytes(cpu.mem_read(0x53bcc8, 7)) == bytes(range(7))
+        cells = bytes(clear_rng.getrandbits(8) for _ in range(23))
+        cpu.mem_write(0x53bcc0, cells)
+        registers = dict(zip(('eax','edx','ebx','ecx'),(clear_rng.getrandbits(32) for _ in range(4))))
+        wanted = original.call(0x45f1e0,**registers)
+        host = c.create_string_buffer(cells,len(cells))
+        returned = n.vertrix_table_identity_cells_full(c.byref(host,8))
+        assert returned == wanted == 7
+        assert host.raw == bytes(cpu.mem_read(0x53bcc0,len(cells)))
+        assert host.raw[:8] == cells[:8] and host.raw[15:] == cells[15:]
+        assert host.raw[8:15] == bytes(range(7))
+        portable = c.create_string_buffer(cells[8:15],7)
+        n.vertrix_table_identity_cells(portable)
+        assert portable.raw == host.raw[8:15]
         totals['0x45f1e0'] = totals.get('0x45f1e0', 0) + 1
     report = {'status': 'passed', 'complete_original_executions': totals,
               'scope': 'Each loop executes completely in the original with its callees stubbed and '
                        'logged; every callee call (address and registers) and the returned eax '
-                       'compare.'}
+                       'compare. Identity initializer 45f1e0 also compares exact eax seven and entire '
+                       'guarded table storage across varied caller registers.'}
     (args.build_dir / 'table-loops-verification.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))
 
