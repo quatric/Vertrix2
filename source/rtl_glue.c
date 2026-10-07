@@ -1470,6 +1470,11 @@ uint32_t vertrix_path_split_c(const VertrixCalls *calls, const uint8_t *text, ui
     return result;
 }
 
+uint32_t vertrix_rtl_scope_refresh_address(void)
+{
+    return 0x4d2390u;
+}
+
 uint32_t vertrix_rtl_scope_refresh(const VertrixCalls *calls,
                                    const VertrixFactoryServices *services, uint32_t object,
                                    uint32_t edx, uint32_t ebx, uint32_t ecx)

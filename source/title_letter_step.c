@@ -121,6 +121,49 @@ int vertrix_title_letter_count(uint8_t *actor, size_t size, uint32_t elapsed,
     return vertrix_ui_center_on_anchor(actor, size, descriptor, screen_unscaled, screen_mode);
 }
 
+uint32_t vertrix_title_letter_count_call(const VertrixCalls *calls, uint8_t *actor, size_t size,
+                                         uint32_t object, uint32_t elapsed,
+                                         const VertrixAngleTables *tables,
+                                         const uint32_t *voice_base, uint32_t previous_exception)
+{
+    if (!calls || !calls->call || !actor || size < VERTRIX_LETTER_STORAGE_SIZE || !tables ||
+        !voice_base)
+    {
+        return 0;
+    }
+    uint32_t edx = 0x4ec1ec;
+    uint32_t ebx = 0x51536c;
+    uint32_t counter = get(actor, COUNTER, 4) + elapsed;
+    if (counter >= get(actor, PERIOD, 4))
+    {
+        edx = (uint32_t)(int32_t)(int16_t)get(actor, EFFECT_TARGET, 2);
+        ebx = (uint32_t)(int32_t)(int16_t)get(actor, RADIUS, 2);
+    }
+    int parked = 0;
+    VertrixRotationTrace trace = {0};
+    if (!count_core(actor, size, elapsed, tables, &trace, &parked))
+    {
+        return 0;
+    }
+    if (parked)
+    {
+        put(actor, POSITION_X, 2, get(actor, ORIGIN_X, 2));
+        put(actor, LEVEL, 1, 0x10);
+        put(actor, POSITION_Y, 2, get(actor, ORIGIN_Y, 2));
+        uint32_t target = get(actor, MODE, 4) == 1 ? 0x417290 : 0x417260;
+        edx = *voice_base + get(actor, VOICE_INDEX, 4);
+        VertrixCallSite voice = {
+            .target = target, .eax = edx - 1u, .edx = edx, .ebx = ebx, .ecx = object};
+        calls->call(&voice, calls->context);
+        edx = VERTRIX_LETTER_HANDLER_DONE;
+        put(actor, 0x154, 4, edx);
+    }
+    VertrixCallSite center = {
+        .target = 0x457890, .eax = object, .edx = edx, .ebx = ebx, .ecx = object};
+    calls->call(&center, calls->context);
+    return previous_exception;
+}
+
 int vertrix_title_letter_fight_count(uint8_t *actor, size_t size, uint32_t elapsed,
                                      const VertrixAngleTables *tables, VertrixRotationTrace *trace,
                                      const VertrixResourceDimensions *descriptor,

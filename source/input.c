@@ -183,6 +183,57 @@ void vertrix_input_queue_consume(VertrixInputQueue *queue)
     free(node);
 }
 
+int vertrix_input_queue_consume_full(uint32_t actor_handle, VertrixMemoryRead read,
+                                     VertrixMemoryWrite write, void *memory_context,
+                                     const VertrixCalls *calls, uint32_t *result)
+{
+    if (!read || !write || !result)
+    {
+        return 0;
+    }
+    static const unsigned offsets[] = {0x14, 0x18, 4, 8, 0xc, 0x10};
+    static const unsigned widths[] = {2, 4, 1, 4, 4, 4};
+    for (unsigned i = 0; i < sizeof(offsets) / sizeof(offsets[0]); ++i)
+    {
+        if (!write(actor_handle + offsets[i], widths[i], 0, memory_context))
+        {
+            return 0;
+        }
+    }
+    uint32_t count;
+    if (!read(actor_handle + 0x2c, 4, &count, memory_context))
+    {
+        return 0;
+    }
+    if (!count)
+    {
+        *result = actor_handle + 0x20;
+        return 1;
+    }
+    if (!calls || !calls->call)
+    {
+        return 0;
+    }
+    uint32_t event = vertrix_call(calls, 0x4d8540, actor_handle + 0x20, 0, 0, 0, 0);
+    for (unsigned i = 0; i < 4; ++i)
+    {
+        uint32_t value;
+        unsigned width = i ? 4 : 1;
+        if (!read(event + i * 4, width, &value, memory_context) ||
+            !write(actor_handle + 4 + i * 4, width, value, memory_context))
+        {
+            return 0;
+        }
+    }
+    uint32_t table, target;
+    if (!read(event + 0x18, 4, &table, memory_context) || !read(table, 4, &target, memory_context))
+    {
+        return 0;
+    }
+    *result = vertrix_call(calls, target, event, 2, 0, event, 0);
+    return 1;
+}
+
 void vertrix_input_queue_clear(VertrixInputQueue *queue)
 {
     while (queue->head)

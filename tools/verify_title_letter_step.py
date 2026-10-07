@@ -291,6 +291,149 @@ def verify_full_fight_effect(args, native, wave=False):
                      'Faults and register-clobbering callbacks remain outside this boundary.'}
 
 
+def verify_full_count(args, native):
+    """Count ABI with real arithmetic and live voice/final-center boundaries."""
+    original = Original(args.executable)
+    cpu = original.cpu
+    rng = random.Random(0x459be0)
+    xs, ys = [[c.c_int32(rng.getrandbits(32)).value for _ in range(360)] for _ in range(2)]
+    cpu.mem_write(X_TABLE, struct.pack('<360i', *xs))
+    cpu.mem_write(Y_TABLE, struct.pack('<360i', *ys))
+    tables = Tables((c.c_int32 * 360)(*xs), (c.c_int32 * 360)(*ys))
+    voice_base = c.c_uint32()
+    original_events, native_events = [], []
+    patches, base_mutations, returns = [], [], []
+    buffer = None
+
+    def original_boundary(address, eax, edx, ebx, ecx, stack):
+        index = len(original_events)
+        original_events.append((address, eax, edx, ebx, ecx, bytes(cpu.mem_read(OBJ, SIZE)),
+                                struct.unpack('<I', bytes(cpu.mem_read(VOICE_BASE, 4)))[0]))
+        for offset, data in patches[index]:
+            cpu.mem_write(OBJ + offset, data)
+        if base_mutations[index] is not None:
+            cpu.mem_write(VOICE_BASE, struct.pack('<I', base_mutations[index]))
+        return returns[index]
+
+    stubs = Stubs(cpu, original_boundary)
+    for address in (0x417260, 0x417290, 0x457890):
+        stubs.add(address)
+
+    @Call
+    def boundary(site, context):
+        call = site.contents
+        index = len(native_events)
+        native_events.append((call.target, call.eax, call.edx, call.ebx, call.ecx,
+                              bytes(buffer), voice_base.value))
+        for offset, data in patches[index]:
+            c.memmove(c.addressof(buffer) + offset, data, len(data))
+        if base_mutations[index] is not None:
+            voice_base.value = base_mutations[index]
+        return returns[index]
+
+    calls = Calls(boundary, None)
+    function = native.vertrix_title_letter_count_call
+    function.argtypes = [c.POINTER(Calls), c.POINTER(c.c_uint8), c.c_size_t, c.c_uint32,
+                         c.c_uint32, c.POINTER(Tables), c.POINTER(c.c_uint32), c.c_uint32]
+    function.restype = c.c_uint32
+    shapes, voices = {}, {}
+    mutations, base_mutation_count, completed = 0, 0, 0
+    for case in range(args.cases):
+        data = bytearray(rng.randbytes(SIZE))
+        shape = ('not_due', 'opaque', 'fading', 'parked_other', 'parked_one',
+                 'wrapped', 'signed', 'zero_rate')[case % 8]
+        period = rng.choice([1, 2, 60, 100, rng.randrange(1, 400)])
+        counter, elapsed = rng.randrange(period * 3), rng.randrange(500)
+        if counter + elapsed < period:
+            counter = period
+        limit = rng.choice([1, 16, 60, rng.randrange(1, 200)])
+        radius, angle_rate = rng.randrange(1, limit + 1), rng.choice([0, 1, -3, 90, -90, 32767, -32768])
+        mode = rng.choice([0, 1, 2, rng.getrandbits(32)])
+        if shape == 'not_due':
+            counter, elapsed, period = 0, 0, 1
+        elif shape == 'opaque':
+            radius = limit + rng.randrange(1, 100)
+        elif shape.startswith('parked'):
+            radius = 0
+            mode = 1 if shape == 'parked_one' else rng.choice([0, 2, 0xffffffff])
+        elif shape == 'wrapped':
+            counter, elapsed, period = 0xffffffff, 1, 1
+        elif shape == 'signed':
+            radius, limit = rng.choice([-32768, -1, 0, 1, 32767]), rng.choice([-32768, -1, 1, 32767])
+        elif shape == 'zero_rate':
+            counter, elapsed, period, angle_rate = rng.getrandbits(32), 0, 0, 0
+        struct.pack_into('<II', data, 0xbc, counter, period)
+        struct.pack_into('<I', data, 4, mode)
+        struct.pack_into('<I', data, 0x58, rng.getrandbits(32))
+        struct.pack_into('<Hh', data, 0x24, rng.randrange(360), rng.randrange(-32768, 32768))
+        struct.pack_into('<hh', data, 0x28, angle_rate, radius)
+        struct.pack_into('<hh', data, 0x30, limit, rng.randrange(-32768, 32768))
+        struct.pack_into('<hhh', data, 0x48, rng.randrange(-32768, 32768),
+                         rng.randrange(-32768, 32768), rng.randrange(-32768, 32768))
+        previous_exception = rng.choice([0, 0xffffffff, rng.getrandbits(32)])
+        voice_base.value = rng.getrandbits(32)
+        cpu.mem_write(VOICE_BASE, struct.pack('<I', voice_base.value))
+        cpu.mem_write(0, struct.pack('<I', previous_exception))
+        cpu.mem_write(0x5bd834, struct.pack('<I', elapsed))
+        cpu.mem_write(OBJ, bytes(data))
+        patches = [[(offset, rng.randbytes(width)) for offset, width in
+                    ((4, 8), (0x24, 16), (0x44, 1), (0x48, 6), (0x58, 4),
+                     (0xbc, 8), (0x154, 4), (0x15c, 4))] if case % 3 else [] for _ in range(2)]
+        base_mutations = [rng.getrandbits(32) if case % 2 else None for _ in range(2)]
+        returns = [rng.getrandbits(32) for _ in range(2)]
+        original_events.clear()
+        native_events.clear()
+        result = original.call(0x459be0, eax=OBJ, edx=rng.getrandbits(32),
+                               ebx=rng.getrandbits(32), ecx=rng.getrandbits(32))
+        want = bytes(cpu.mem_read(OBJ, SIZE))
+        buffer = (c.c_uint8 * SIZE).from_buffer_copy(bytes(data))
+        got = function(c.byref(calls), buffer, SIZE, OBJ, elapsed, c.byref(tables),
+                       c.byref(voice_base), previous_exception)
+        assert got == result == previous_exception, (shape, case, got, result)
+        assert native_events == original_events, (shape, case, native_events, original_events)
+        assert original_events[-1][0] == 0x457890
+        assert bytes(buffer) == want, (shape, case)
+        assert voice_base.value == struct.unpack('<I', bytes(cpu.mem_read(VOICE_BASE, 4)))[0]
+        assert struct.unpack('<I', bytes(cpu.mem_read(0, 4)))[0] == previous_exception
+        for event in original_events:
+            if event[0] != 0x457890:
+                key = hex(event[0])
+                voices[key] = voices.get(key, 0) + 1
+        shapes[shape] = shapes.get(shape, 0) + 1
+        mutations += sum(bool(patches[i]) for i in range(len(original_events)))
+        base_mutation_count += sum(base_mutations[i] is not None for i in range(len(original_events)))
+        completed += 1
+    assert completed == args.cases
+    if args.cases >= 8:
+        assert set(voices) == {'0x417260', '0x417290'}
+    guard = (c.c_uint8 * SIZE).from_buffer_copy(bytes(data))
+    before = bytes(guard)
+    empty_calls = Calls(Call(), None)
+    for missing in (None, c.byref(empty_calls)):
+        assert function(missing, guard, SIZE, OBJ, elapsed, c.byref(tables),
+                        c.byref(voice_base), previous_exception) == 0
+        assert bytes(guard) == before
+    for table_arg, base_arg, size_arg in ((None, c.byref(voice_base), SIZE),
+                                          (c.byref(tables), None, SIZE),
+                                          (c.byref(tables), c.byref(voice_base), 0x157)):
+        assert function(c.byref(calls), guard, size_arg, OBJ, elapsed, table_arg, base_arg,
+                        previous_exception) == 0
+        assert bytes(guard) == before
+    return {'complete_original_executions': {'0x459be0': completed}, 'branch_fixtures': shapes,
+            'voice_calls': voices, 'live_actor_mutation_calls': mutations,
+            'live_voice_base_mutation_calls': base_mutation_count,
+            'native_missing_boundary_guard_cases': 2, 'native_missing_input_guard_cases': 3,
+            'scope': 'Complete normal 459be0 executes unchanged with real timer, quotient, remainder, '
+                     'angle/orbit, signed transition and setters; only voice 417260/417290 and '
+                     'final 457890 are supplied. Every call register and complete 0x160 actor/live '
+                     'voice-base state compare before callbacks and after completion. EAX returns '
+                     'random saved FS:[0], independent of callback results; SEH chain restores. '
+                     'Fixtures include arbitrary signed radius/limit/step, full-width factors, '
+                     'wrapped timers and full-width quotient with zero angle rate. Faulting '
+                     'division/table inputs, callback register clobbers and exceptional unwinding '
+                     'or mutations to the saved exception stack local remain outside the boundary.'}
+
+
 def main():
     args = vs.parse(__doc__)
     n = vs.build(args, 'title-letter-step', ['title_letter_step.c', 'actor_angle.c', 'actor_fields.c', 'actor_storage.c', 'fixed_point.c', 'rotation.c', 'word_transition.c', 'dword_transition.c', 'ui_slide_setup.c', 'render_geometry.c', 'surface.c', 'render_dispatch.c'])
@@ -508,10 +651,12 @@ def main():
     full_effect = verify_full_effect(args, n)
     full_fight_effect = verify_full_fight_effect(args, n)
     full_wave = verify_full_fight_effect(args, n, wave=True)
+    full_count = verify_full_count(args, n)
     vs.write_report(args, 'title-letter-step', {
         'full_effect_abi': full_effect,
         'full_fight_effect_abi': full_fight_effect,
         'full_wave_abi': full_wave,
+        'full_count_abi': full_count,
         'status': 'passed', 'complete_original_executions': totals,
         'scope': 'State comparisons only for the legacy status APIs: original handlers 0x459be0, 0x459d60, 0x459e00, 0x45a290, 0x45a3e0, 0x45a440, 0x45a620, 0x45a750 and 0x45a830 (with the real 0x4ac500/0x4ac540/0x4ac5b0, 0x4ad060, 0x4ad260, 0x4ad530 and 0x457890/0x4b14c0) runs in the oracle; only the sound players 0x417260/0x417290/0x4171e0/0x417220 and the generator draw 0x4826c0 are observed and returned. The first 0x160 actor bytes, including the handler token at +0x154, compare after every call.'})
 

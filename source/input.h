@@ -72,6 +72,15 @@ void vertrix_input_queue_clear(VertrixInputQueue *queue);
 int vertrix_input_queue_push(VertrixInputQueue *queue, const VertrixInputEvent *event);
 /* 0x475c30: clear current, then copy and remove at most one queued event. */
 void vertrix_input_queue_consume(VertrixInputQueue *queue);
+/* Original 0x475c30: clear the current event and metadata, inspect live queue
+ * count at actor +0x2c, then pop through 0x4d8540 and copy its current event
+ * fields. Invoke its current vtable destructor with flag two. Queue allocation
+ * and event destruction are supplied Calls boundaries, preserving other registers.
+ * Empty returns actor +0x20; nonempty returns destructor eax. Failure retains
+ * all prior writes and calls, leaving result unchanged. */
+int vertrix_input_queue_consume_full(uint32_t actor_handle, VertrixMemoryRead read,
+                                     VertrixMemoryWrite write, void *memory_context,
+                                     const VertrixCalls *calls, uint32_t *result);
 /* 0x476320: acknowledge current action without removing another event. */
 void vertrix_input_queue_acknowledge(VertrixInputQueue *queue);
 /* Original 0x476320: low 16 bits of index select a 96-byte action record. Publish

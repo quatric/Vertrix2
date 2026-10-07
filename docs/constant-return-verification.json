@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4ba210": 1024,
+    "0x4e9d00": 1024,
+    "0x4d2fc0": 1024
+  },
+  "scope": "Native return values match complete original entrypoints. Original non-EAX registers and defined flags are checked; no original memory writes. The address getter does not invoke its target."
+}

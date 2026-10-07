@@ -469,6 +469,10 @@ uint32_t vertrix_rtl_scope_refresh(const VertrixCalls *calls,
                                    const VertrixFactoryServices *services, uint32_t object,
                                    uint32_t edx, uint32_t ebx, uint32_t ecx);
 
+/* Original 0x4d2fc0: return the original callable address 0x4d2390 (scope refresh).
+ * The result is an original-address identity token; the target is not invoked. */
+uint32_t vertrix_rtl_scope_refresh_address(void);
+
 /* Original 0x4c98d0 (eax = source, edx = destination, ebx = blocks): copy blocks * 128 bytes. The
  * original copies forward (a Delphi Move without overlap handling); the blocks never overlap.
  * Returns the byte count (the eax it leaves behind). */

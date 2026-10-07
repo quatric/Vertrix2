@@ -19,7 +19,7 @@ typedef struct
     int variant;
 } VertrixLetterVoice;
 
-/* Original handler 0x459be0, one frame: the counter +0xbc advances by elapsed (0x4ac500); once it
+/* Original fragment 0x459be0, one frame: the counter +0xbc advances by elapsed (0x4ac500); once it
  * reaches the period +0xc0 the quotient (0x4ac540) drives the angle (0x4ad060), the radius word
  * +0x2a shrinks by word +0x32 times the quotient and the signed effect word +0x48 moves (0x4ad530).
  * The orbit point (0x4ad260) is the position +8/+0xa. A radius above the limit word +0x30 keeps
@@ -32,6 +32,18 @@ int vertrix_title_letter_count(uint8_t *actor, size_t size, uint32_t elapsed,
                                uint32_t voice_base, const VertrixResourceDimensions *descriptor,
                                uint8_t screen_unscaled, uint8_t screen_mode,
                                VertrixLetterVoice *voice);
+/* Original 0x459be0: complete normal counter-letter handler, including the voice call at
+ * parking and final 0x457890 through the mandatory callback. voice_base is the live 0x4f81b8
+ * dword, read at parking after actor updates; tables are the original angle factors. Callback
+ * mutations remain live, and the handler write follows the voice. Returns previous_exception,
+ * the saved exception-chain token, independently of callback eax. Missing inputs/short storage
+ * return zero without changes; faulting division/table inputs and exceptional unwinding are
+ * outside the normal boundary. */
+uint32_t vertrix_title_letter_count_call(const VertrixCalls *calls, uint8_t *actor, size_t size,
+                                         uint32_t object, uint32_t elapsed,
+                                         const VertrixAngleTables *tables,
+                                         const uint32_t *voice_base, uint32_t previous_exception);
+
 /* Original fragment 0x459d60 and 0x459e00, one frame each. Both advance the counter (0x4ac500)
  * and, once it reaches the period, take the quotient (0x4ac540), wrap the counter (0x4ac5b0) and
  * move the signed effect word +0x48 toward +0x4a (0x4ad530). While it moves, and on frames that are

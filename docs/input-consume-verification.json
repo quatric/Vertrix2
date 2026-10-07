@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_cases": 2048,
+  "mutable_pop_and_destructor_cases": 512,
+  "native_late_failure_cases": 4,
+  "scope": "Complete original 475c30 and actual475790/4757e0 clear/copy helpers. Pop4d8540 and virtual destructor are independently logged supplied boundaries with live event mutation. Entire actor/event/vtable memory and target/eax/edx/ebx/ecx/return compare, including empty queue. Native late failures retain prior clears/pop/mutations and leave result unchanged. Allocation and destructor bodies remain boundary implementations."
+}

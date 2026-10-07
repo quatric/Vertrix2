@@ -12,12 +12,22 @@ enum
     VERTRIX_COLOR_FRAME_TYPE = 0x515120
 };
 
-/* Original 0x441e30: build the palette entries of the seven rows of three colours. A local format
- * object (the frame local at ebp - 0x58, reached through the token frame) is constructed by
+/* Original fragment 0x441e30: build the palette entries of the seven rows of three colours. A local
+ * format object (the frame local at ebp - 0x58, reached through the token frame) is constructed by
  * 0x481b20, given the masks 0xff0000, 0xff00, 0xff and 0xff000000 through 0x481bc0 and, when that
  * succeeds, asked through 0x481e10 for the entry of each colour (edx the argument, ebx the colour,
  * ecx the column plus one); the entries are stored in out. The object is released through 0x481b30
  * whatever happened. */
 void vertrix_color_table_build(const VertrixCalls *calls, uint32_t frame, uint32_t argument,
                                const uint32_t colors[7][3], uint32_t out[7][3]);
+/* Original 0x441e30: normal palette construction with live dword colors at 0x4fb9f0 and
+ * dword outputs at 0x5440f8. Callees receive the original frame-local format-object handle and
+ * exact register/stack arguments. Returns previous_exception, the saved exception-chain token,
+ * after normal cleanup on both mask-setup paths. Calls/read/write are mandatory; missing
+ * boundaries reject before effects. Late memory failure returns zero retaining completed effects;
+ * exception-stack bookkeeping and unwinding remain outside the runtime boundary. */
+uint32_t vertrix_color_table_build_full(const VertrixCalls *calls, uint32_t frame,
+                                        uint32_t argument, uint32_t previous_exception,
+                                        VertrixMemoryRead read, VertrixMemoryWrite write,
+                                        void *context);
 #endif

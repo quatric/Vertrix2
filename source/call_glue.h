@@ -216,7 +216,8 @@ uint32_t vertrix_edx_to_eax_call(const VertrixCalls *calls, uint32_t target, uin
 
 /* Original 0x4c5bf0 returns ebx; 0x4c5c10 returns zero. */
 uint32_t vertrix_return_ebx(uint32_t ebx);
-/* Original 0x4c5c10: complete callable wrapper; tools/verify_call_glue.py. */
+/* Original variants 0x4ba210, 0x4c5c10, 0x4e9d00: return zero without memory writes.
+ * Additional entries are verified by tools/verify_constant_returns.py. */
 uint32_t vertrix_return_zero(void);
 
 /* Original 0x45e8d0 (base 0x546458) and 0x45ea60 (base 0x544d7c): when edx is not zero,
