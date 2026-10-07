@@ -1,5 +1,6 @@
 #ifndef VERTRIX_OBJECT_SCALARS_H
 #define VERTRIX_OBJECT_SCALARS_H
+#include "actor_gate.h"
 #include "board_cells.h"
 /* One-field accessors of library, piece and player objects, and of single global cells. Object
  * storage is raw bytes; short or null storage returns zero and preserves everything. Handles of
@@ -50,30 +51,31 @@ int vertrix_player_enter_state(void *storage, size_t size);
 int vertrix_player_partner_not_cc_one(const void *storage, size_t size,
                                       VertrixObjectStorage resolve, void *context, uint32_t *flag);
 
-/* Original0x415b30 / 0x415b40 (array cell = 1 for index) and 0x415d90 (the same for the index held
- * in the global at 0x53bb10), 0x415d60 (read that cell): the arrays are caller storage of count
- * dwords; indices outside them return zero. */
-/* Original variants 0x415b30, 0x415b40, 0x415d90: set the selected global cell to one.
- * Complete callable variants verified in tools/verify_object_scalars.py. */
+/* Original fragment 0x415b30 / 0x415b40 (array cell = 1 for index) and 0x415d90 (the same for the
+ * index held in the global at 0x53bb10), 0x415d60 (read that cell): the arrays are caller storage
+ * of count dwords; indices outside them return zero. */
+/* Original fragment variants 0x415b30, 0x415b40, 0x415d90: set the selected global cell to one.
+ * Projected convenience variants verified in tools/verify_object_scalars.py. */
 int vertrix_global_set_cell(uint32_t *cells, uint32_t count, uint32_t index);
-/* Original 0x415d60: read the selected global cell; tools/verify_object_scalars.py. */
+/* Original fragment 0x415d60: read the selected global cell; tools/verify_object_scalars.py. */
 int vertrix_global_cell(const uint32_t *cells, uint32_t count, uint32_t index, uint32_t *value);
 
-/* Original0x417f40 and 0x41a930 clear a global dword; 0x41d660 increments one. */
-/* Original variants 0x417f40, 0x41a930: clear the selected global dword.
- * Complete callable variants verified in tools/verify_object_scalars.py. */
+/* Original fragment 0x417f40 and 0x41a930 clear a global dword; 0x41d660 increments one. */
+/* Original fragment variants 0x417f40, 0x41a930: clear the selected global dword.
+ * Projected convenience variants verified in tools/verify_object_scalars.py. */
 void vertrix_global_clear(uint32_t *cell);
-/* Original 0x41d660: Increment the supplied global dword. */
+/* Original fragment 0x41d660: Increment the supplied global dword. */
 void vertrix_global_increment(uint32_t *cell);
 
-/* Original0x415b10: clear the first 19 dwords of both tables at 0x5344a4 and 0x5344f0. */
+/* Original fragment 0x415b10: clear the first 19 dwords of both tables at 0x5344a4 and 0x5344f0. */
 void vertrix_global_clear_tables(uint32_t first[19], uint32_t second[19]);
 
-/* Original0x415d40: increment the index global at 0x53bb10; 1 while it has not reached 7. */
+/* Original fragment 0x415d40: increment the index global at 0x53bb10; 1 while it has not reached 7.
+ */
 int vertrix_global_next_index(uint32_t *index);
 
-/* Original0x415530: when the global at 0x532b40 equals 1, clear the globals at 0x532b44 and
- * 0x532b48. */
+/* Original fragment 0x415530: when the global at 0x532b40 equals 1, clear the globals at 0x532b44
+ * and 0x532b48. */
 void vertrix_global_reset_pair(uint32_t mode, uint32_t *first, uint32_t *second);
 
 /* Original0x418150: unsigned comparison of two dwords: -1, 0 or 1. */
@@ -85,4 +87,46 @@ uint32_t vertrix_table_used_count(const uint32_t table[7]);
 /* Original0x43bd60: 0 when byte +0x4cc of the object whose handle is at +0x3b0 is 1 or 4. */
 int vertrix_player_partner_free(const void *storage, size_t size, VertrixObjectStorage resolve,
                                 void *context, uint32_t *flag);
+/* Full global APIs use 32-bit wrapping indexed addresses, with no native array bounds
+ * projection. Read/write boundaries report availability; late failure retains earlier writes
+ * and leaves result untouched. Null required boundaries/result fail before effects. */
+/* Original 0x415b30: Set indexed 0x5344a4 to one; return caller EAX. */
+int vertrix_global_set_first_cell_full(uint32_t eax, VertrixMemoryRead read,
+                                       VertrixMemoryWrite write, void *context, uint32_t *result);
+
+/* Original 0x415b40: Set indexed 0x5344f0 to one; return caller EAX. */
+int vertrix_global_set_second_cell_full(uint32_t eax, VertrixMemoryRead read,
+                                        VertrixMemoryWrite write, void *context, uint32_t *result);
+
+/* Original 0x415d90: Read index 0x53bb10, set indexed 0x53baf4 to one and return index. */
+int vertrix_global_set_current_cell_full(uint32_t eax, VertrixMemoryRead read,
+                                         VertrixMemoryWrite write, void *context, uint32_t *result);
+
+/* Original 0x415d60: Read index 0x53bb10 and return indexed 0x53bad8. */
+int vertrix_global_read_current_cell_full(uint32_t eax, VertrixMemoryRead read,
+                                          VertrixMemoryWrite write, void *context,
+                                          uint32_t *result);
+
+/* Original 0x41a930: Clear 0x54004c and preserve caller EAX. */
+int vertrix_global_clear_full(uint32_t eax, VertrixMemoryRead read, VertrixMemoryWrite write,
+                              void *context, uint32_t *result);
+
+/* Original 0x41d660: Increment 0x5329f8 with dword wrapping; preserve caller EAX. */
+int vertrix_global_increment_full(uint32_t eax, VertrixMemoryRead read, VertrixMemoryWrite write,
+                                  void *context, uint32_t *result);
+
+/* Original 0x415b10: Clear 19 pairs at 0x5344a4/0x5344f0, interleaved in ascending order; return
+ * 0x4c. */
+int vertrix_global_clear_tables_full(uint32_t eax, VertrixMemoryRead read, VertrixMemoryWrite write,
+                                     void *context, uint32_t *result);
+
+/* Original 0x415d40: Increment 0x53bb10; return one unless the new value equals seven. */
+int vertrix_global_next_index_full(uint32_t eax, VertrixMemoryRead read, VertrixMemoryWrite write,
+                                   void *context, uint32_t *result);
+
+/* Original 0x415530: When 0x532b40 equals one, clear 0x532b48 then 0x532b44; preserve caller EAX.
+ */
+int vertrix_global_reset_pair_full(uint32_t eax, VertrixMemoryRead read, VertrixMemoryWrite write,
+                                   void *context, uint32_t *result);
+
 #endif

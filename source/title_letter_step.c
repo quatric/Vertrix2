@@ -951,3 +951,123 @@ uint32_t vertrix_title_letter_wave_fly_call(const VertrixCalls *calls, uint8_t *
 {
     return family_fly_call(calls, actor, size, object, frame, elapsed, tables, 0, 0, 0);
 }
+
+uint32_t vertrix_title_letter_digit_call(const VertrixCalls *calls, uint8_t *actor, size_t size,
+                                         uint32_t object, uint32_t frame, uint32_t elapsed,
+                                         const VertrixAngleTables *tables,
+                                         uint32_t previous_exception, VertrixMemoryRead read,
+                                         VertrixMemoryWrite write, void *context)
+{
+    if (!calls || !calls->call || !actor || size < VERTRIX_LETTER_STORAGE_SIZE || !tables ||
+        !read || !write)
+    {
+        return 0;
+    }
+    uint32_t limit = (uint32_t)(int32_t)(int16_t)get(actor, LIMIT, 2);
+    put(actor, COUNTER, 4, get(actor, COUNTER, 4) + elapsed);
+    if (get(actor, COUNTER, 4) < get(actor, PERIOD, 4))
+    {
+        return previous_exception;
+    }
+    uint32_t quotient = 0;
+    vertrix_actor_counter_quotient(actor, size, &quotient);
+    vertrix_actor_counter_wrap(actor, size);
+    int16_t angle = (int16_t)get(actor, ANGLE, 2);
+    VertrixRotationTrace trace = {0};
+    vertrix_rotation_advance(&angle, (int16_t)get(actor, ANGLE_STEP, 2), quotient, &trace);
+    put(actor, ANGLE, 2, (uint16_t)angle);
+    uint16_t x = 0, y = 0;
+    if (!vertrix_actor_orbit_point(actor, size, tables, &x, &y))
+    {
+        return 0;
+    }
+    uint32_t radius = (uint32_t)(int32_t)(int16_t)get(actor, RADIUS, 2);
+    if (radius > limit)
+    {
+        put(actor, LEVEL, 1, 0);
+        put(actor, EFFECT, 2, 0);
+    }
+    else
+    {
+        if (!limit)
+        {
+            return 0;
+        }
+        uint32_t level = 0x10 - (radius << 4) / limit;
+        put(actor, LEVEL, 1, (int32_t)level >= 0x10 ? 0x10 : level & 0xff);
+    }
+    VertrixCallSite measure = {
+        .target = 0x4b14c0, .eax = object, .edx = frame - 0x28, .ebx = frame - 0x24, .ecx = object};
+    calls->call(&measure, calls->context);
+    put(actor, 0xe, 2, (uint16_t)(x - (measure.out_value >> 1)));
+    put(actor, 0x16, 2, (uint16_t)(y - (measure.out_ebx >> 1)));
+    put(actor, RADIUS, 2, get(actor, RADIUS, 2) + get(actor, RADIUS_STEP, 2) * quotient);
+    int16_t effect = (int16_t)get(actor, EFFECT, 2);
+    vertrix_word_transition(&effect, (int16_t)get(actor, EFFECT_TARGET, 2),
+                            (int16_t)get(actor, EFFECT_STEP, 2), quotient);
+    put(actor, EFFECT, 2, (uint16_t)effect);
+
+    if (get(actor, LEVEL, 1))
+    {
+        return previous_exception;
+    }
+    uint32_t digit_moving = 0;
+    vertrix_actor_dword_transition(actor, size, VERTRIX_TRANSITION_FIRST, 1, &digit_moving);
+    if (digit_moving)
+    {
+        uint32_t local = frame - 0x20;
+        VertrixCallSite init = {
+            .target = 0x4ca070, .eax = local, .edx = 1, .ebx = frame - 0x24, .ecx = object};
+        calls->call(&init, calls->context);
+        uint32_t value = get(actor, VOICE_INDEX, 4);
+        VertrixCallSite format = {.target = 0x4cdfb0,
+                                  .eax = local,
+                                  .edx = 1,
+                                  .ebx = value,
+                                  .ecx = object,
+                                  .stack = local,
+                                  .stack_next = 0x50e21d,
+                                  .stack_third = value};
+        calls->call(&format, calls->context);
+        uint32_t character, level;
+        if (!read(format.out_value, 1, &character, context) || !read(0x4f9c02, 4, &level, context))
+        {
+            return 0;
+        }
+        VertrixCallSite glyph = {.target = 0x43f420,
+                                 .eax = (uint32_t)(int32_t)(int8_t)(level >> 24),
+                                 .edx = character & 0xff,
+                                 .ebx = value,
+                                 .ecx = object};
+        put(actor, 0xb4, 4, calls->call(&glyph, calls->context));
+        if (get(actor, 0xb0, 4))
+        {
+            VertrixCallSite bind = {.target = 0x4877f0,
+                                    .eax = get(actor, 0xb0, 4),
+                                    .edx = get(actor, 0xb8, 4),
+                                    .ebx = value,
+                                    .ecx = object};
+            put(actor, 0xb4, 4, calls->call(&bind, calls->context));
+        }
+        put(actor, 0x154, 4, 0x459be0);
+        VertrixCallSite release = {
+            .target = 0x4ca210, .eax = local, .edx = 0, .ebx = value, .ecx = object};
+        calls->call(&release, calls->context);
+    }
+    else
+    {
+        uint32_t entry;
+        if (!read(0x540f88u + 4u * get(actor, MODE, 4), 4, &entry, context))
+        {
+            return 0;
+        }
+        VertrixCallSite related = {
+            .target = 0x450f80, .eax = entry, .edx = 1, .ebx = frame - 0x24, .ecx = object};
+        if (!calls->call(&related, calls->context) && !write(0x532a3c, 4, 1, context))
+        {
+            return 0;
+        }
+        put(actor, 0x154, 4, 0);
+    }
+    return previous_exception;
+}

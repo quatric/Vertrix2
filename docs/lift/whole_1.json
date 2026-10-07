@@ -644,7 +644,7 @@
   "virtual": [],
   "address": 4399120
  },
- "board_has_piece": {
+ "player_test_a60": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2033,7 +2033,7 @@
   "virtual": [],
   "address": 4432912
  },
- "piece_store_preview_kinds": {
+ "player_write_bytes_168": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2738,7 +2738,7 @@
   "virtual": [],
   "address": 4438320
  },
- "player_flag_4e8": {
+ "player_test_4e8": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2818,7 +2818,7 @@
   "virtual": [],
   "address": 4438464
  },
- "player_bonus_meter_full": {
+ "player_bonus_ready": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -3052,7 +3052,7 @@
   "virtual": [],
   "address": 4439296
  },
- "player_byte_4c4_is_one": {
+ "player_test_4c4": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -4115,7 +4115,7 @@
   "virtual": [],
   "address": 4448240
  },
- "board_particles_reset": {
+ "board_particles_reset_full": {
   "callees": {
    "0x4abd70": [
     0,
@@ -4231,7 +4231,7 @@
   "virtual": [],
   "address": 4449488
  },
- "particle_init_drift": {
+ "particle_init_burst_full": {
   "callees": {
    "0x4ac8d0": [
     0,
@@ -4264,7 +4264,7 @@
   "virtual": [],
   "address": 4450112
  },
- "particle_init_fall": {
+ "particle_init_fall_full": {
   "callees": {
    "0x4ac8d0": [
     0,

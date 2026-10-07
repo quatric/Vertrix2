@@ -120,12 +120,21 @@ int vertrix_piece_frames_build(void *piece, size_t piece_size, int16_t left, int
                                int16_t top, int16_t height, int16_t step, uint8_t mode,
                                const VertrixFactoryServices *services);
 
-/* Original0x43e100: reset a board particle field: base actor fields, class
+/* Original fragment 0x43e100: reset a board particle field: base actor fields, class
  * token 0x514e94, 450 zeroed drift dwords at +0x15c, three zeroed plume dwords
  * at +0x864, one zeroed fall dword at +0x870, and active flag +0x968 = 1. The
  * SEH prologue/epilogue is not reproduced; valid-storage behavior is
- * identical. Short storage preserves everything and returns zero. */
+ * identical. This convenience API reports success rather than original EAX. Short
+ * storage preserves completed writes and returns zero. */
 int vertrix_board_particles_reset(void *board, size_t board_size);
+/* Original 0x43e100: initialize the base actor, install the particle class, clear the
+ * 450 drift, three plume and one fall handles in ascending order, and set active to one.
+ * Return the original actor token through result; the C return reports storage success.
+ * Constructor storage shorter than 0x15c fails before writes. Later short storage preserves
+ * completed writes and leaves result untouched. Null result fails before writes. */
+int vertrix_board_particles_reset_full(void *board, size_t board_size, uint32_t actor,
+                                       uint32_t *result);
+
 /* Original 0x43e740: complete burst initialization. Read screen/scratch globals and actor
  * fields through the memory boundary, including reads after callbacks. Calls represent frame
  * binding 0x4ac8a0 and random draws 0x4826c0, preserving caller EBX and passing actor in ECX.

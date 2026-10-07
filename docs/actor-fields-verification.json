@@ -1,13 +1,32 @@
 {
   "status": "passed",
   "complete_original_executions": {
-    "clear_counter": 4096,
-    "set_period_steps": 4096,
-    "set_period": 4096,
-    "set_handler": 4096,
-    "clear_cc": 4096,
-    "set_d0": 4096,
-    "set_frame_index": 4096
+    "0x4ac510": 4096,
+    "0x4ac380": 4096,
+    "0x4ac700": 4096,
+    "0x4ac7d0": 4096,
+    "0x4ac8f0": 4096,
+    "0x4ac490": 4096,
+    "0x4ac710": 4096,
+    "0x4ac860": 4096,
+    "0x4ac910": 4096,
+    "0x4ac930": 4096,
+    "0x4ac950": 4096,
+    "0x4ac4f0": 4096,
+    "0x4ac740": 4096,
+    "0x4ac750": 4096,
+    "0x4ac900": 4096,
+    "0x4ac960": 4096,
+    "0x4ac540": 4096,
+    "0x4ac640": 4096,
+    "0x4ac7a0": 4096,
+    "0x4ac4e0": 4096,
+    "0x4ad510": 4096,
+    "0x4ad520": 4096,
+    "0x4b54d0": 4096
   },
-  "scope": "Complete 4ac510, 4ac7b0, 4ac7d0, 4ac8f0, 4ac380, 4ac490 and 4ac710 execute in the original; whole actor storage compares for random contents and parameters."
+  "exact_eax_and_whole_storage_comparisons": 94208,
+  "preserved_register_and_stack_comparisons": 94208,
+  "native_invalid_storage_guard_cases": 51,
+  "scope": "All 23 listed complete original entrypoints execute unchanged through normal return. Exact 32-bit EAX and every byte of 0x1000 actor storage compare against the individually named full native APIs. Original EDX/EBX/ECX/ESI/EDI/EBP preservation and stack cleanup are checked separately. Guest object tokens include unaligned storage and 0xfffffffc with wrapping guest memory. Fixtures cover unsigned division with zero divisor treated as one, frame counter wrap, full-width scalar values and truncated word stores. Box EAX is the zero-extended height, not the object token. Legacy status-only helpers remain fragments and are not claimed to preserve original EAX. Invalid native storage/offsets return zero without writes."
 }

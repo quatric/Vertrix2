@@ -7,6 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 entries = {}
+NATIVE = {0x48ae00}  # replaced by host boundary handlers
 unverified_entries = {}
 for path in sorted(glob.glob(str(ROOT / 'docs' / 'lift' / '*.json'))):
     name = Path(path).stem
@@ -34,7 +35,7 @@ rows = ['    {0x%x, lifted_%s, %d, %d},' % (a, entries[a][0], entries[a][1]['sta
                                          entries[a][1]['arguments']) for a in sorted(entries)]
 unverified_rows = ['    {0x%x, lifted_%s, %d, %d},' % (a, unverified_entries[a][0], unverified_entries[a][1]['stack'],
                                                  unverified_entries[a][1]['arguments'])
-                   for a in sorted(unverified_entries) if a not in entries]
+                   for a in sorted(unverified_entries) if a not in entries and a not in NATIVE]
 maximum = max(e[1]['stack'] for e in list(entries.values()) + list(unverified_entries.values()))
 (ROOT / 'source' / 'lifted_dispatch.h').write_text('''#ifndef VERTRIX_LIFTED_DISPATCH_H
 #define VERTRIX_LIFTED_DISPATCH_H

@@ -1,5 +1,5 @@
 {
- "actor_reset_frame_counter": {
+ "actor_reset_frame_counter_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -11,7 +11,7 @@
   "virtual": [],
   "address": 4900608
  },
- "actor_set_frame_index": {
+ "actor_set_frame_index_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -40,7 +40,7 @@
   "virtual": [],
   "address": 4900640
  },
- "actor_next_frame_counter": {
+ "actor_next_frame_counter_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -52,7 +52,7 @@
   "virtual": [],
   "address": 4900672
  },
- "actor_previous_frame_counter": {
+ "actor_previous_frame_counter_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -98,7 +98,7 @@
   "virtual": [],
   "address": 4900736
  },
- "actor_frame_counter_is_zero": {
+ "actor_frame_counter_is_zero_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -114,7 +114,7 @@
   "virtual": [],
   "address": 4900768
  },
- "actor_set_period_steps": {
+ "actor_store_times_twelve_4ac7b0": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -126,7 +126,7 @@
   "virtual": [],
   "address": 4900784
  },
- "actor_set_period": {
+ "actor_set_period_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -180,7 +180,7 @@
   "virtual": [],
   "address": 4900880
  },
- "actor_set_e0": {
+ "actor_set_e0_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -234,7 +234,7 @@
   "virtual": [],
   "address": 4901072
  },
- "actor_set_handler": {
+ "actor_set_handler_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -246,7 +246,7 @@
   "virtual": [],
   "address": 4901104
  },
- "actor_get_handler": {
+ "actor_get_handler_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -258,7 +258,7 @@
   "virtual": [],
   "address": 4901120
  },
- "actor_set_ec": {
+ "actor_set_ec_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -270,7 +270,7 @@
   "virtual": [],
   "address": 4901136
  },
- "actor_handler_from_ec": {
+ "actor_choose_handler": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -282,7 +282,7 @@
   "virtual": [],
   "address": 4901152
  },
- "actor_set_f0": {
+ "actor_set_f0_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -294,7 +294,7 @@
   "virtual": [],
   "address": 4901168
  },
- "actor_handler_from_f0": {
+ "actor_choose_handler_4ac940": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -306,7 +306,7 @@
   "virtual": [],
   "address": 4901184
  },
- "actor_set_b4": {
+ "actor_set_b4_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -318,7 +318,7 @@
   "virtual": [],
   "address": 4901200
  },
- "actor_get_b4": {
+ "actor_get_b4_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -583,7 +583,7 @@
   "virtual": [],
   "address": 4904000
  },
- "actor_set_words_2a": {
+ "actor_set_words_2a_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -1875,7 +1875,7 @@
   "virtual": [],
   "address": 4936736
  },
- "actor_set_box": {
+ "actor_set_box_full": {
   "callees": {},
   "stack": 68,
   "arguments": 1,
@@ -5533,6 +5533,18 @@
   "virtual": [],
   "address": 4996992
  },
+ "object_init_4c3fa0": {
+  "callees": {},
+  "stack": 64,
+  "arguments": 0,
+  "pointer_callees": [],
+  "pointer_fields": [],
+  "pointer_globals": [],
+  "pointer_maybe": [],
+  "constants": [],
+  "virtual": [],
+  "address": 4997024
+ },
  "f4c4cc0": {
   "callees": {},
   "stack": 68,
@@ -8781,6 +8793,27 @@
   ],
   "virtual": [],
   "address": 5035996
+ },
+ "f4cd836": {
+  "callees": {
+   "0x4e0eaf": [
+    0,
+    false
+   ],
+   "0x4e0ec7": [
+    0,
+    false
+   ]
+  },
+  "stack": 76,
+  "arguments": 0,
+  "pointer_callees": [],
+  "pointer_fields": [],
+  "pointer_globals": [],
+  "pointer_maybe": [],
+  "constants": [],
+  "virtual": [],
+  "address": 5036086
  },
  "f4cd847": {
   "callees": {

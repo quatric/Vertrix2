@@ -2337,7 +2337,7 @@
   "virtual": [],
   "address": 4281456
  },
- "global_set_cell": {
+ "global_set_first_cell_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2349,7 +2349,7 @@
   "virtual": [],
   "address": 4283184
  },
- "global_set_cell_415b40": {
+ "global_set_second_cell_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -3526,7 +3526,7 @@
   "virtual": [],
   "address": 4294688
  },
- "actor_clock_to_period": {
+ "actor_sync_clock_period": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -4148,7 +4148,7 @@
   "virtual": [],
   "address": 4302848
  },
- "global_clear": {
+ "global_clear_full": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -6497,7 +6497,7 @@
   "virtual": [],
   "address": 4349232
  },
- "object_clear_slots": {
+ "object_reset_slots": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -6565,6 +6565,18 @@
   ],
   "virtual": [],
   "address": 4349680
+ },
+ "return_unchanged_425f40": {
+  "callees": {},
+  "stack": 64,
+  "arguments": 0,
+  "pointer_callees": [],
+  "pointer_fields": [],
+  "pointer_globals": [],
+  "pointer_maybe": [],
+  "constants": [],
+  "virtual": [],
+  "address": 4349760
  },
  "ai_find_best_slot": {
   "callees": {
@@ -6663,6 +6675,41 @@
   "virtual": [],
   "address": 4363088
  },
+ "saved_block_load": {
+  "callees": {
+   "0x48a8a0": [
+    0,
+    false
+   ],
+   "0x48aa70": [
+    0,
+    false
+   ],
+   "0x48a930": [
+    0,
+    false
+   ]
+  },
+  "stack": 96,
+  "arguments": 0,
+  "pointer_callees": [],
+  "pointer_fields": [],
+  "pointer_globals": [],
+  "pointer_maybe": [],
+  "constants": [
+   0,
+   1,
+   2,
+   19,
+   20,
+   21,
+   551,
+   552,
+   553
+  ],
+  "virtual": [],
+  "address": 4363232
+ },
  "f429460": {
   "callees": {
    "0x4895e0": [
@@ -6757,6 +6804,18 @@
   ],
   "virtual": [],
   "address": 4363776
+ },
+ "object_address_plus_4": {
+  "callees": {},
+  "stack": 64,
+  "arguments": 0,
+  "pointer_callees": [],
+  "pointer_fields": [],
+  "pointer_globals": [],
+  "pointer_maybe": [],
+  "constants": [],
+  "virtual": [],
+  "address": 4363872
  },
  "marker_actor_construct_full": {
   "callees": {
@@ -8250,7 +8309,7 @@
   "virtual": [],
   "address": 4386640
  },
- "player_fill_bytes": {
+ "player_fill_byte_range": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -8262,7 +8321,7 @@
   "virtual": [],
   "address": 4386656
  },
- "player_fill_bytes_42ef80": {
+ "player_fill_byte_range_42ef80": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -8682,7 +8741,7 @@
   ],
   "address": 4388704
  },
- "player_fill_bytes_42f7d0": {
+ "player_fill_byte_range_42f7d0": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -8694,7 +8753,7 @@
   "virtual": [],
   "address": 4388816
  },
- "player_fill_bytes_42f7f0": {
+ "player_fill_byte_range_42f7f0": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -8706,7 +8765,7 @@
   "virtual": [],
   "address": 4388848
  },
- "player_fill_bytes_42f810": {
+ "player_fill_byte_range_42f810": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -8718,7 +8777,7 @@
   "virtual": [],
   "address": 4388880
  },
- "player_fill_bytes_42f830": {
+ "player_fill_byte_range_42f830": {
   "callees": {},
   "stack": 68,
   "arguments": 0,

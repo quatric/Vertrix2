@@ -1,4 +1,34 @@
 {
+  "full_digit_abi": {
+    "complete_original_executions": {
+      "0x459ec0": 4096
+    },
+    "branch_fixtures": {
+      "0": 683,
+      "1": 683,
+      "2": 683,
+      "3": 683,
+      "4": 682,
+      "5": 682
+    },
+    "callback_counts": {
+      "0x4b14c0": 3413,
+      "0x4ca070": 1366,
+      "0x4cdfb0": 1366,
+      "0x43f420": 1366,
+      "0x4877f0": 683,
+      "0x4ca210": 1366,
+      "0x450f80": 1364
+    },
+    "exact_callback_register_stack_state_comparisons": 10924,
+    "native_missing_boundary_input_guards": 6,
+    "raw_memory_reads": 4096,
+    "finished_global_writes": 682,
+    "wrapping_negative_table_lookups": 257,
+    "distinct_glyph_characters": 256,
+    "distinct_glyph_levels": 256,
+    "scope": "Full normal digit EAX equals saved exception token; exact callback register/stack and pre/post independent actor/string/local/table/level/finished state compare. Raw text/level/table reads and global writes compare in order under callback mutations, including wrapping negative mode lookup and release-after-handler. Formatter local pointer is adapted through out_value. Arithmetic faults, register clobbers and exception-stack/unwind behavior remain outside boundary."
+  },
   "status": "passed",
   "complete_original_executions": {
     "not_due": 1063,

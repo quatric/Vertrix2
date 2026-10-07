@@ -300,3 +300,188 @@ uint32_t vertrix_actor_progress_consume(void *actor, size_t size)
     wrap(actor, size, ACTOR_DONE, ACTOR_TOTAL, &consumed);
     return consumed;
 }
+
+uint32_t vertrix_actor_clear_field(void *actor, size_t size, uint32_t object, uint32_t offset)
+{
+    return vertrix_actor_storage_write(actor, size, offset, 4, 0) ? object : 0;
+}
+
+uint32_t vertrix_actor_store_field(void *actor, size_t size, uint32_t object, uint32_t offset,
+                                   uint32_t value)
+{
+    return vertrix_actor_storage_write(actor, size, offset, 4, value) ? object : 0;
+}
+
+uint32_t vertrix_actor_step_frame(void *actor, size_t size, uint32_t object, uint32_t delta)
+{
+    uint32_t value;
+    return vertrix_actor_storage_read(actor, size, ACTOR_FRAME_INDEX, 4, &value) &&
+                   vertrix_actor_storage_write(actor, size, ACTOR_FRAME_INDEX, 4, value + delta)
+               ? object
+               : 0;
+}
+
+uint32_t vertrix_actor_read_field(const void *actor, size_t size, uint32_t offset)
+{
+    uint32_t value = 0;
+    vertrix_actor_storage_read(actor, size, offset, 4, &value);
+    return value;
+}
+
+uint32_t vertrix_actor_divide_counter(const void *actor, size_t size, uint32_t dividend_offset,
+                                      uint32_t divisor_offset)
+{
+    uint32_t value = 0;
+    quotient(actor, size, dividend_offset, divisor_offset, &value);
+    return value;
+}
+
+uint32_t vertrix_actor_test_frame_zero(const void *actor, size_t size)
+{
+    uint32_t value = 0;
+    vertrix_actor_frame_counter_is_zero(actor, size, &value);
+    return value;
+}
+
+uint32_t vertrix_actor_store_pair_114(void *actor, size_t size, uint32_t object, uint32_t first,
+                                      uint32_t second)
+{
+    return vertrix_actor_set_114(actor, size, first, second) ? object : 0;
+}
+
+uint32_t vertrix_actor_store_word_triple(void *actor, size_t size, uint32_t object, uint32_t offset,
+                                         uint32_t first, uint32_t second, uint32_t third)
+{
+    return set_three_words(actor, size, offset, (uint16_t)first, (uint16_t)second, (uint16_t)third)
+               ? object
+               : 0;
+}
+
+uint32_t vertrix_actor_store_box(void *actor, size_t size, uint32_t x, uint32_t y, uint32_t width,
+                                 uint32_t height)
+{
+    return vertrix_actor_set_box(actor, size, (uint16_t)x, (uint16_t)y, (uint16_t)width,
+                                 (uint16_t)height)
+               ? (uint16_t)height
+               : 0;
+}
+
+uint32_t vertrix_actor_clear_counter_full(void *actor, size_t size, uint32_t object)
+{
+    return vertrix_actor_clear_field(actor, size, object, 0xbc);
+}
+
+uint32_t vertrix_actor_clear_cc_full(void *actor, size_t size, uint32_t object)
+{
+    return vertrix_actor_clear_field(actor, size, object, 0xcc);
+}
+
+uint32_t vertrix_actor_reset_frame_counter_full(void *actor, size_t size, uint32_t object)
+{
+    return vertrix_actor_clear_field(actor, size, object, 0xb8);
+}
+
+uint32_t vertrix_actor_set_period_full(void *actor, size_t size, uint32_t object, uint32_t value)
+{
+    return vertrix_actor_store_field(actor, size, object, 0xc0, value);
+}
+
+uint32_t vertrix_actor_set_handler_full(void *actor, size_t size, uint32_t object, uint32_t value)
+{
+    return vertrix_actor_store_field(actor, size, object, 0x154, value);
+}
+
+uint32_t vertrix_actor_set_d0_full(void *actor, size_t size, uint32_t object, uint32_t value)
+{
+    return vertrix_actor_store_field(actor, size, object, 0xd0, value);
+}
+
+uint32_t vertrix_actor_set_frame_index_full(void *actor, size_t size, uint32_t object,
+                                            uint32_t value)
+{
+    return vertrix_actor_store_field(actor, size, object, 0xb8, value);
+}
+
+uint32_t vertrix_actor_set_e0_full(void *actor, size_t size, uint32_t object, uint32_t value)
+{
+    return vertrix_actor_store_field(actor, size, object, 0xe0, value);
+}
+
+uint32_t vertrix_actor_set_ec_full(void *actor, size_t size, uint32_t object, uint32_t value)
+{
+    return vertrix_actor_store_field(actor, size, object, 0xec, value);
+}
+
+uint32_t vertrix_actor_set_f0_full(void *actor, size_t size, uint32_t object, uint32_t value)
+{
+    return vertrix_actor_store_field(actor, size, object, 0xf0, value);
+}
+
+uint32_t vertrix_actor_set_b4_full(void *actor, size_t size, uint32_t object, uint32_t value)
+{
+    return vertrix_actor_store_field(actor, size, object, 0xb4, value);
+}
+
+uint32_t vertrix_actor_set_11c_full(void *actor, size_t size, uint32_t object, uint32_t value)
+{
+    return vertrix_actor_store_field(actor, size, object, 0x11c, value);
+}
+
+uint32_t vertrix_actor_next_frame_counter_full(void *actor, size_t size, uint32_t object)
+{
+    return vertrix_actor_step_frame(actor, size, object, 1);
+}
+
+uint32_t vertrix_actor_previous_frame_counter_full(void *actor, size_t size, uint32_t object)
+{
+    return vertrix_actor_step_frame(actor, size, object, UINT32_MAX);
+}
+
+uint32_t vertrix_actor_get_handler_full(const void *actor, size_t size)
+{
+    return vertrix_actor_read_field(actor, size, 0x154);
+}
+
+uint32_t vertrix_actor_get_b4_full(const void *actor, size_t size)
+{
+    return vertrix_actor_read_field(actor, size, 0xb4);
+}
+
+uint32_t vertrix_actor_counter_quotient_full(const void *actor, size_t size)
+{
+    return vertrix_actor_divide_counter(actor, size, 0xbc, 0xc0);
+}
+
+uint32_t vertrix_actor_progress_quotient_full(const void *actor, size_t size)
+{
+    return vertrix_actor_divide_counter(actor, size, 0xdc, 0xe0);
+}
+
+uint32_t vertrix_actor_frame_counter_is_zero_full(const void *actor, size_t size)
+{
+    return vertrix_actor_test_frame_zero(actor, size);
+}
+
+uint32_t vertrix_actor_set_114_full(void *actor, size_t size, uint32_t object, uint32_t first,
+                                    uint32_t second)
+{
+    return vertrix_actor_store_pair_114(actor, size, object, first, second);
+}
+
+uint32_t vertrix_actor_set_words_2a_full(void *actor, size_t size, uint32_t object, uint32_t first,
+                                         uint32_t second, uint32_t third)
+{
+    return vertrix_actor_store_word_triple(actor, size, object, 0x2a, first, second, third);
+}
+
+uint32_t vertrix_actor_set_words_3a_full(void *actor, size_t size, uint32_t object, uint32_t first,
+                                         uint32_t second, uint32_t third)
+{
+    return vertrix_actor_store_word_triple(actor, size, object, 0x3a, first, second, third);
+}
+
+uint32_t vertrix_actor_set_box_full(void *actor, size_t size, uint32_t x, uint32_t y,
+                                    uint32_t width, uint32_t height)
+{
+    return vertrix_actor_store_box(actor, size, x, y, width, height);
+}

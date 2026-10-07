@@ -229,3 +229,165 @@ int vertrix_player_partner_free(const void *storage, size_t size, VertrixObjectS
     *flag = value != 1 && value != 4;
     return 1;
 }
+
+int vertrix_global_set_first_cell_full(uint32_t eax, VertrixMemoryRead read,
+                                       VertrixMemoryWrite write, void *context, uint32_t *result)
+{
+    (void)read;
+    if (!result)
+    {
+        return 0;
+    }
+    if (!write || !write(0x5344a4u + eax * 4u, 4, 1, context))
+    {
+        return 0;
+    }
+    *result = eax;
+    return 1;
+}
+
+int vertrix_global_set_second_cell_full(uint32_t eax, VertrixMemoryRead read,
+                                        VertrixMemoryWrite write, void *context, uint32_t *result)
+{
+    (void)read;
+    if (!result)
+    {
+        return 0;
+    }
+    if (!write || !write(0x5344f0u + eax * 4u, 4, 1, context))
+    {
+        return 0;
+    }
+    *result = eax;
+    return 1;
+}
+
+int vertrix_global_set_current_cell_full(uint32_t eax, VertrixMemoryRead read,
+                                         VertrixMemoryWrite write, void *context, uint32_t *result)
+{
+    if (!result)
+    {
+        return 0;
+    }
+    if (!read || !write || !read(0x53bb10, 4, &eax, context) ||
+        !write(0x53baf4u + eax * 4u, 4, 1, context))
+    {
+        return 0;
+    }
+    *result = eax;
+    return 1;
+}
+
+int vertrix_global_read_current_cell_full(uint32_t eax, VertrixMemoryRead read,
+                                          VertrixMemoryWrite write, void *context, uint32_t *result)
+{
+    (void)write;
+    if (!result)
+    {
+        return 0;
+    }
+    if (!read || !read(0x53bb10, 4, &eax, context) || !read(0x53bad8u + eax * 4u, 4, &eax, context))
+    {
+        return 0;
+    }
+    *result = eax;
+    return 1;
+}
+
+int vertrix_global_clear_full(uint32_t eax, VertrixMemoryRead read, VertrixMemoryWrite write,
+                              void *context, uint32_t *result)
+{
+    (void)read;
+    if (!result)
+    {
+        return 0;
+    }
+    if (!write || !write(0x54004c, 4, 0, context))
+    {
+        return 0;
+    }
+    *result = eax;
+    return 1;
+}
+
+int vertrix_global_increment_full(uint32_t eax, VertrixMemoryRead read, VertrixMemoryWrite write,
+                                  void *context, uint32_t *result)
+{
+    if (!result)
+    {
+        return 0;
+    }
+    uint32_t value;
+    if (!read || !write || !read(0x5329f8, 4, &value, context) ||
+        !write(0x5329f8, 4, value + 1u, context))
+    {
+        return 0;
+    }
+    *result = eax;
+    return 1;
+}
+
+int vertrix_global_clear_tables_full(uint32_t eax, VertrixMemoryRead read, VertrixMemoryWrite write,
+                                     void *context, uint32_t *result)
+{
+    (void)read;
+    if (!result)
+    {
+        return 0;
+    }
+    if (!write)
+    {
+        return 0;
+    }
+    for (uint32_t offset = 0; offset < 76; offset += 4)
+    {
+        if (!write(0x5344a4 + offset, 4, 0, context) || !write(0x5344f0 + offset, 4, 0, context))
+        {
+            return 0;
+        }
+    }
+    eax = 76;
+    *result = eax;
+    return 1;
+}
+
+int vertrix_global_next_index_full(uint32_t eax, VertrixMemoryRead read, VertrixMemoryWrite write,
+                                   void *context, uint32_t *result)
+{
+    if (!result)
+    {
+        return 0;
+    }
+    uint32_t value;
+    if (!read || !write || !read(0x53bb10, 4, &value, context) ||
+        !write(0x53bb10, 4, value + 1u, context))
+    {
+        return 0;
+    }
+    eax = value + 1u != 7;
+    *result = eax;
+    return 1;
+}
+
+int vertrix_global_reset_pair_full(uint32_t eax, VertrixMemoryRead read, VertrixMemoryWrite write,
+                                   void *context, uint32_t *result)
+{
+    if (!result)
+    {
+        return 0;
+    }
+    uint32_t value;
+    if (!read || !read(0x532b40, 4, &value, context))
+    {
+        return 0;
+    }
+    if (value == 1)
+    {
+        if (!write || !write(0x532b48, 4, 0, context) || !write(0x532b44, 4, 0, context))
+        {
+            return 0;
+        }
+    }
+    *result = eax;
+    return 1;
+}

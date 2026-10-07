@@ -7,6 +7,7 @@ import struct
 from pathlib import Path
 
 from original import Original
+from unicorn import UC_HOOK_MEM_WRITE
 from oracle_kit import Resolve, Stubs, build
 from verify_call_glue import Call, Calls
 
@@ -54,6 +55,7 @@ def main():
         getattr(n, 'vertrix_particle_init_' + name).argtypes = [
             c.c_void_p, c.c_size_t, U, c.POINTER(Screen), c.POINTER(Services), c.POINTER(Hooks),
             c.POINTER(Scratch)]
+    n.vertrix_board_particles_reset_full.argtypes = [c.c_void_p, c.c_size_t, U, c.POINTER(U)]
     n.vertrix_board_particles_reset.argtypes = [c.c_void_p, c.c_size_t]
     original = Original(args.executable)
     cpu = original.cpu
@@ -111,24 +113,83 @@ def main():
         assert not replay['draws'], case
         totals[name] = totals.get(name, 0) + 1
     board_rng = random.Random(0x43e100)
-    for _ in range(args.cases):
+    reset_writes = []
+    reset_actor = ACTOR
+
+    def written(cpu, access, address, width, value, context):
+        if reset_actor <= address and address + width <= reset_actor + 0xd00:
+            reset_writes.append((address - reset_actor, width, value))
+
+    write_hook = cpu.hook_add(UC_HOOK_MEM_WRITE, written)
+    reset_full = 0
+    for case in range(args.cases):
         raw = board_rng.randbytes(0xd00)
-        cpu.mem_write(ACTOR, raw)
-        original.call(0x43e100, eax=ACTOR)
-        expected = bytes(cpu.mem_read(ACTOR, 0xd00))
+        reset_actor = ACTOR + (case % 3) * 0x1000
+        cpu.mem_write(reset_actor, raw)
+        reset_writes.clear()
+        returned = original.call(0x43e100, eax=reset_actor, edx=board_rng.getrandbits(32),
+                                 ebx=board_rng.getrandbits(32), ecx=board_rng.getrandbits(32))
+        expected = bytes(cpu.mem_read(reset_actor, 0xd00))
+        assert returned == reset_actor
         host = c.create_string_buffer(raw, 0xd00)
         assert n.vertrix_board_particles_reset(host, 0xd00) == 1
         assert host.raw == expected
         totals['reset'] = totals.get('reset', 0) + 1
+        guard = bytes([0x57]) * 16
+        host = c.create_string_buffer(guard + raw + guard, 0xd20)
+        output = U(0xdeadbeef)
+        assert n.vertrix_board_particles_reset_full(c.byref(host, 16), 0xd00,
+                                                   reset_actor, c.byref(output))
+        assert output.value == returned
+        assert host.raw == guard + expected + guard
+        # Trace is executable evidence: class replacement precedes ascending handle fills.
+        class_index = next(i for i, item in enumerate(reset_writes) if item == (0x158, 4, 0x514e94))
+        assert reset_writes[class_index + 1:] == \
+            [(offset, 4, 0) for offset in range(0x15c, 0x874, 4)] + [(0x968, 4, 1)]
+        reset_full += 1
+    cpu.hook_del(write_hook)
+    reset_failures = verify_reset_failures(n, raw, reset_writes)
+    assert reset_full == args.cases
     full, mutations, failures = verify_full(n, Original(args.executable), args.cases)
     report = {'full_return_and_storage_comparisons': full,
-              'mutable_callback_cases': mutations, 'native_late_failure_cases': failures, 'status': 'passed', 'complete_original_executions': totals,
+              'reset_full_return_guarded_storage_cases': reset_full,
+              'reset_storage_failure_cases': reset_failures, 'mutable_callback_cases': mutations, 'native_late_failure_cases': failures, 'status': 'passed', 'complete_original_executions': totals,
               'scope': 'Complete 43e740, 43e840 and 43e100 execute in the original (the draw 4826c0 '
                        'replayed, the frame binding 4ac8a0 logged); the actor storage, the '
                        'scratch globals, the binding calls and the draws compare. Full APIs additionally compare '
-                       'exact EAX, call registers, independent live mutable storage and boundary failures.'}
+                       'exact EAX, call registers, independent live mutable storage and boundary failures. '
+                       'Reset also compares actor identity, executable write order, entire guarded storage '
+                       'and partial-storage effects against prefixes of the original write trace.'}
     (args.build_dir / 'particle-init-verification.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))
+
+
+def verify_reset_failures(native, raw, original_writes):
+    # Expected partial effects come from executed original writes, not native defaults.
+    sizes = [0, 1, 0x15b, 0x15c, 0x15d, 0x160, 0x163, 0x864, 0x86b, 0x870, 0x873,
+             0x874, 0x968, 0x96b]
+    checked = 0
+    for size in sizes:
+        expected = bytearray(raw)
+        if size >= 0x15c:
+            for offset, width, value in original_writes:
+                if offset + width > size:
+                    break
+                expected[offset:offset + width] = value.to_bytes(width, 'little')
+        guard = bytes([0x39]) * 16
+        storage = c.create_string_buffer(guard + raw + guard, 0xd20)
+        result = U(0xdeadbeef)
+        assert not native.vertrix_board_particles_reset_full(c.byref(storage, 16), size,
+                                                           0x12345678, c.byref(result)), size
+        assert result.value == 0xdeadbeef and storage.raw == guard + expected + guard, size
+        checked += 1
+    storage = c.create_string_buffer(raw, len(raw))
+    assert not native.vertrix_board_particles_reset_full(storage, len(raw), 123, None)
+    assert storage.raw == raw
+    result = U(0xdeadbeef)
+    assert not native.vertrix_board_particles_reset_full(None, len(raw), 123, c.byref(result))
+    assert result.value == 0xdeadbeef
+    return checked + 2
 
 
 Read = c.CFUNCTYPE(c.c_int, U, c.c_uint, c.POINTER(U), c.c_void_p)

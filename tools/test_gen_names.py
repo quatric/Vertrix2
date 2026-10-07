@@ -228,7 +228,7 @@ void vertrix_unrelated(void);
         self.assertEqual(names[0x4877f0], "vertrix_frame_resource_get")
         self.assertEqual(names[0x4713d0], "vertrix_title_letter_first")
         self.assertEqual(names[0x459be0], "vertrix_title_letter_count_call")
-        self.assertEqual(names[0x459ec0], "vertrix_title_letter_digit")
+        self.assertEqual(names[0x459ec0], "vertrix_title_letter_digit_call")
         self.assertEqual(names[0x45a290], "vertrix_title_letter_fight_count_call")
         self.assertEqual(names[0x45a620], "vertrix_title_letter_wave_count_call")
         self.assertEqual(names[0x45a4f0], "vertrix_title_letter_fight_fly_call")

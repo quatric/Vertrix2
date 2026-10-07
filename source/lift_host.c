@@ -337,6 +337,14 @@ static int host_import(LiftHost *host, const VertrixCallSite *site, const char *
         }
         *result = 1;
     }
+    else if (strcmp(name, "LoadLibraryA") == 0)
+    {
+        *result = 0x70000000u; /* a library handle; GetProcAddress is not served */
+    }
+    else if (strcmp(name, "FreeLibrary") == 0)
+    {
+        *result = 1;
+    }
     else if (strcmp(name, "CharUpperA") == 0)
     {
         if (a0 < 0x10000u)
@@ -738,6 +746,8 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
         host_write(host, site->eax + 0x30, 4, 0x516b94);
         return site->eax;
     }
+    if (site->target == 0x48ae00) /* JPEG decode: no bitmap until a native decoder exists */
+        return 0;
     if (site->target == 0x4e04f4)
     {
         return site->eax; /* a bare ret */

@@ -3,6 +3,8 @@
     "drift": 2052,
     "fall": 2052
   },
+  "reset_full_return_guarded_storage_cases": 2048,
+  "reset_storage_failure_cases": 16,
   "mutable_callback_cases": {
     "drift": 4,
     "fall": 4
@@ -14,5 +16,5 @@
     "fall": 1024,
     "reset": 2048
   },
-  "scope": "Complete 43e740, 43e840 and 43e100 execute in the original (the draw 4826c0 replayed, the frame binding 4ac8a0 logged); the actor storage, the scratch globals, the binding calls and the draws compare. Full APIs additionally compare exact EAX, call registers, independent live mutable storage and boundary failures."
+  "scope": "Complete 43e740, 43e840 and 43e100 execute in the original (the draw 4826c0 replayed, the frame binding 4ac8a0 logged); the actor storage, the scratch globals, the binding calls and the draws compare. Full APIs additionally compare exact EAX, call registers, independent live mutable storage and boundary failures. Reset also compares actor identity, executable write order, entire guarded storage and partial-storage effects against prefixes of the original write trace."
 }

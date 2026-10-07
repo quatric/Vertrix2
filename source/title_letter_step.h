@@ -84,7 +84,7 @@ typedef struct
     void *context;
 } VertrixLetterServices;
 
-/* Original handler 0x459ec0, one frame (the digit step). Like 0x459be0 up to the orbit point, but
+/* Original fragment 0x459ec0, one frame (the digit step). Like 0x459be0 up to the orbit point, but
  * the radius grows by word +0x32 times the quotient and the glyph is placed with its measured
  * size (0x4b14c0): +0xe = x - width / 2, +0x16 = y - height / 2, +8/+0xa unchanged. A level byte
  * +0x44 other than zero ends the frame. Otherwise the dword transition 0x4ad6e0 (cycles 1) moves
@@ -97,6 +97,22 @@ int vertrix_title_letter_digit(uint8_t *actor, size_t size, uint32_t elapsed,
                                const VertrixResourceDimensions *descriptor, uint8_t screen_unscaled,
                                uint8_t screen_mode, int8_t glyph_level,
                                const VertrixLetterServices *services, uint32_t *finished);
+/* Original 0x459ec0: complete normal digit step with mandatory runtime/read/write boundaries.
+ * Measurement 0x4b14c0 returns width in out_value, height in out_ebx; its local pointers are
+ * frame-0x28/-0x24. String init/format/release use frame-0x20; format returns the string pointer
+ * in out_value. read supplies its first byte and the live dword at 0x4f9c02 whose high byte
+ * is the signed glyph level. Glyph and bank
+ * callbacks observe live actor state; raw table lookup uses wrapping mode*4 at 0x540f88.
+ * Cleanup follows the handler write. Returns previous_exception on every normal branch.
+ * Missing inputs/short storage reject before effects; late memory failure retains effects.
+ * Faulting arithmetic/table inputs, callback register clobbers and exception-stack machinery or
+ * unwinding remain outside the normal boundary. */
+uint32_t vertrix_title_letter_digit_call(const VertrixCalls *calls, uint8_t *actor, size_t size,
+                                         uint32_t object, uint32_t frame, uint32_t elapsed,
+                                         const VertrixAngleTables *tables,
+                                         uint32_t previous_exception, VertrixMemoryRead read,
+                                         VertrixMemoryWrite write, void *context);
+
 /* The calls the "fight" letters make: fight is the pair 0x4171e0 / 0x417220 (both with the sound
  * entry [0x4f81c4] and 0x32), draw is 0x4826c0 on the generator at 0x598d30 (the value below the
  * modulus). */

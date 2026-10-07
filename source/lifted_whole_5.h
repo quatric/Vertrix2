@@ -116,7 +116,10 @@ enum
     LIFTED_RTL_TEST_AND_SET_STACK = 80,
     LIFTED_RTL_PARSE_INTEGER_STACK = 76,
     LIFTED_F4D6768_STACK = 68,
+    LIFTED_RTL_INTEGER_TO_DOUBLE_STACK = 68,
     LIFTED_F4D67A8_STACK = 72,
+    LIFTED_RTL_MODE_CALL_STACK = 72,
+    LIFTED_RTL_FLOAT_TO_INTEGER_STACK = 64,
     LIFTED_F4D6A30_STACK = 80,
     LIFTED_F4D6F10_STACK = 108,
     LIFTED_F4D6F50_STACK = 112,
@@ -140,6 +143,7 @@ enum
     LIFTED_F4D7C00_STACK = 88,
     LIFTED_F4D7D70_STACK = 120,
     LIFTED_F4D7E50_STACK = 1748,
+    LIFTED_RTL_SIGN_COMPARE_STACK = 64,
     LIFTED_F4D80D5_STACK = 84,
     LIFTED_F4D8198_STACK = 80,
     LIFTED_F4D8227_STACK = 88,
@@ -170,6 +174,7 @@ enum
     LIFTED_F4D9AE0_STACK = 64,
     LIFTED_RTL_ZERO_CALL3_STACK = 100,
     LIFTED_F4DA71B_STACK = 100,
+    LIFTED_RTL_COPY_TERMINATED_STACK = 84,
     LIFTED_F4DABB0_STACK = 64,
     LIFTED_F4DACA0_STACK = 72,
     LIFTED_RTL_NEGATE_DOUBLE_STACK = 64,
@@ -905,9 +910,23 @@ uint32_t lifted_rtl_parse_integer(const VertrixCalls *calls, const VertrixFactor
 uint32_t lifted_f4d6768(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
+/* Original 0x4d6775. */
+uint32_t lifted_rtl_integer_to_double(const VertrixCalls *calls,
+                                      const VertrixFactoryServices *services,
+                                      const VertrixGlobals *globals, const LiftEntry *entry);
+
 /* Original 0x4d67a8. */
 uint32_t lifted_f4d67a8(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x4d67b2. */
+uint32_t lifted_rtl_mode_call(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                              const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x4d67f0. */
+uint32_t lifted_rtl_float_to_integer(const VertrixCalls *calls,
+                                     const VertrixFactoryServices *services,
+                                     const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4d6a30. */
 uint32_t lifted_f4d6a30(const VertrixCalls *calls, const VertrixFactoryServices *services,
@@ -1006,6 +1025,10 @@ uint32_t lifted_f4d7d70(const VertrixCalls *calls, const VertrixFactoryServices 
 /* Original 0x4d7e50. */
 uint32_t lifted_f4d7e50(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x4d8082. */
+uint32_t lifted_rtl_sign_compare(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                 const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4d80d5. */
 uint32_t lifted_f4d80d5(const VertrixCalls *calls, const VertrixFactoryServices *services,
@@ -1129,6 +1152,11 @@ uint32_t lifted_rtl_zero_call3(const VertrixCalls *calls, const VertrixFactorySe
 /* Original 0x4da71b. */
 uint32_t lifted_f4da71b(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x4daab0. */
+uint32_t lifted_rtl_copy_terminated(const VertrixCalls *calls,
+                                    const VertrixFactoryServices *services,
+                                    const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4dabb0. */
 uint32_t lifted_f4dabb0(const VertrixCalls *calls, const VertrixFactoryServices *services,

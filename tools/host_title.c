@@ -52,7 +52,7 @@ int main(int argc, char **argv)
 {
     FILE *file;
     signal(SIGALRM, on_alarm);
-    alarm(20);
+    alarm(getenv("ALARM") ? atoi(getenv("ALARM")) : 20);
     setvbuf(stdout, NULL, _IOLBF, 0);
     LiftHost host;
     int lifted, frame, frames = argc > 2 ? atoi(argv[2]) : 1;
@@ -68,6 +68,21 @@ int main(int argc, char **argv)
     host.archive = vertrix_vf_open(getenv("VF") ? getenv("VF") : "hardware-check/Vertrix2.vf");
     if (host.archive == NULL) { fprintf(stderr, "no archive\n"); return 2; }
     vertrix_lifted_allow_unverified(1);
+    if (getenv("MASTER"))
+    {
+        uint32_t form = lift_host_allocate(&host, 0x1000);
+        uint32_t display = lift_host_allocate(&host, 0x800);
+        host_store(&host, 0x544070, display);
+        if (getenv("TRACE")) vertrix_lifted_set_trace(1);
+        result = lift_host_run(&host, 0x41a080, form, 0, 0, 0, &lifted);
+        report("startup 41a080", &host, result);
+        host.boundary_calls = host.boundary_distinct = 0;
+        result = lift_host_run(&host, 0x41a540, form, 0, 0, 0, &lifted);
+        report("load 41a540", &host, result);
+        vertrix_lifted_set_trace(0);
+        host.boundary_calls = host.boundary_distinct = 0;
+    }
+    else
     {
         uint32_t display = lift_host_allocate(&host, 0x800);
         host_store(&host, 0x544070, display);
@@ -79,13 +94,15 @@ int main(int argc, char **argv)
                lift_host_read(&host, 0x5b9c50 + 0x6c, 4), host.primary_surface, host.display_bits);
         host.boundary_calls = host.boundary_distinct = 0;
     }
-    if (getenv("TRACE")) vertrix_lifted_set_trace(1);
-    result = lift_host_run(&host, 0x413bd0, 0, 0, 0, 0, &lifted);
-    report("init tables 413bd0", &host, result);
-    host.boundary_calls = host.boundary_distinct = 0;
-    result = lift_host_run(&host, 0x45dca0, 0, 0, 0, 0, &lifted);
-    report("load banks 45dca0", &host, result);
-    host.boundary_calls = host.boundary_distinct = 0;
+    if (!getenv("MASTER"))
+    {
+        result = lift_host_run(&host, 0x413bd0, 0, 0, 0, 0, &lifted);
+        report("init tables 413bd0", &host, result);
+        host.boundary_calls = host.boundary_distinct = 0;
+        result = lift_host_run(&host, 0x45dca0, 0, 0, 0, 0, &lifted);
+        report("load banks 45dca0", &host, result);
+        host.boundary_calls = host.boundary_distinct = 0;
+    }
     result = lift_host_run(&host, 0x465af0, 0, 0xffffffffu, 0, 0, &lifted);
     report("title build", &host, result);
     surface = lift_host_allocate(&host, 0x20);
@@ -116,6 +133,12 @@ int main(int argc, char **argv)
         host_store(&host, wrapper + 0xc, bytes); /* bytes per pixel; sub-format byte 0 */
         host_store(&host, wrapper + 0x10, 0);
         host_store(&host, wrapper + 0x14, pitch);
+        host_store(&host, 0x5bc010, wrapper); /* the current render target */
+        {
+            uint32_t view = lift_host_read(&host, 0x544070, 4);
+            host_store(&host, view + 0x208, 640);
+            host_store(&host, view + 0x20c, 480);
+        }
     }
     printf("scene list count %u\n", lift_host_read(&host, 0x54671c + 8, 4));
     for (frame = 0; frame < frames; frame++)
@@ -124,7 +147,9 @@ int main(int argc, char **argv)
         result = lift_host_run(&host, 0x4b6200, 0x54671c, 0, 0, 0, &lifted);
         report("update", &host, result);
         host.boundary_calls = host.boundary_distinct = 0;
+        if (getenv("TRACE_DRAW")) vertrix_lifted_set_trace(1);
         result = lift_host_run(&host, 0x4b6240, 0x54671c, wrapper, 0, 0, &lifted);
+        vertrix_lifted_set_trace(0);
         report("draw", &host, result);
     }
     {
@@ -157,7 +182,7 @@ int main(int argc, char **argv)
             for (x = 0; x < w; x++)
             {
                 uint32_t p = lift_host_read(&host, base + y * pitch + x * bytes, bytes);
-                painted += p != 0;
+                painted += (p & 0xffffff) != 0;
                 if (out != NULL)
                 {
                     fputc(bytes == 4 ? (p >> 16) & 255 : p & 255, out);

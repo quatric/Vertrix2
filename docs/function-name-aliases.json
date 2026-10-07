@@ -11,17 +11,6 @@
     ],
     "reason": "Loads record header and table while restoring saved range state."
   },
-  "0x417f40": {
-    "name": "vertrix_matcher_reset_full",
-    "aliases": [
-      "vertrix_global_clear",
-      "vertrix_matcher_reset_full"
-    ],
-    "evidence": [
-      "source/call_glue.h"
-    ],
-    "reason": "Complete matcher reset clears the position and preserves incoming EAX; the void helper is a fragment and global clear is a shared arithmetic primitive."
-  },
   "0x418150": {
     "name": "vertrix_compare_unsigned",
     "aliases": [
@@ -448,78 +437,6 @@
     ],
     "reason": "Complete sampling traversal; surface implementation is specialized direct copy."
   },
-  "0x4ac370": {
-    "name": "vertrix_actor_advance_elapsed",
-    "aliases": [
-      "vertrix_actor_add_cc",
-      "vertrix_actor_advance_elapsed"
-    ],
-    "evidence": [
-      "source/object_accessors.h",
-      "tools/verify_object_accessors.py"
-    ],
-    "reason": "Complete normal entrypoint preserves exact 32-bit EAX and whole object state; older status and output-parameter helpers are fragments."
-  },
-  "0x4ac390": {
-    "name": "vertrix_actor_test_counter_pair",
-    "aliases": [
-      "vertrix_actor_cc_reached",
-      "vertrix_actor_test_counter_pair"
-    ],
-    "evidence": [
-      "source/object_accessors.h",
-      "tools/verify_object_accessors.py"
-    ],
-    "reason": "Complete normal entrypoint preserves exact 32-bit EAX and whole object state; older status and output-parameter helpers are fragments."
-  },
-  "0x4ac470": {
-    "name": "vertrix_actor_store_times_twelve",
-    "aliases": [
-      "vertrix_actor_set_d0_steps",
-      "vertrix_actor_store_times_twelve"
-    ],
-    "evidence": [
-      "source/object_accessors.h",
-      "tools/verify_object_accessors.py"
-    ],
-    "reason": "Complete normal entrypoint preserves exact 32-bit EAX and whole object state; older status and output-parameter helpers are fragments."
-  },
-  "0x4ac520": {
-    "name": "vertrix_actor_test_counter_pair",
-    "aliases": [
-      "vertrix_actor_counter_reached",
-      "vertrix_actor_test_counter_pair"
-    ],
-    "evidence": [
-      "source/object_accessors.h",
-      "tools/verify_object_accessors.py"
-    ],
-    "reason": "Complete normal entrypoint preserves exact 32-bit EAX and whole object state; older status and output-parameter helpers are fragments."
-  },
-  "0x4ac7b0": {
-    "name": "vertrix_actor_store_times_twelve",
-    "aliases": [
-      "vertrix_actor_set_period_steps",
-      "vertrix_actor_store_times_twelve"
-    ],
-    "evidence": [
-      "source/object_accessors.h",
-      "tools/verify_object_accessors.py"
-    ],
-    "reason": "Complete normal entrypoint preserves exact 32-bit EAX and whole object state; older status and output-parameter helpers are fragments."
-  },
-  "0x4ac840": {
-    "name": "vertrix_actor_store_times_twelve",
-    "aliases": [
-      "vertrix_actor_set_e0_steps",
-      "vertrix_actor_store_times_twelve"
-    ],
-    "evidence": [
-      "source/object_accessors.h",
-      "tools/verify_object_accessors.py"
-    ],
-    "reason": "Complete normal entrypoint preserves exact 32-bit EAX and whole object state; older status and output-parameter helpers are fragments."
-  },
   "0x4ac8d0": {
     "name": "vertrix_actor_attach_resource",
     "aliases": [
@@ -531,30 +448,6 @@
       "tools/verify_block_factory.py"
     ],
     "reason": "Complete actor resource attachment; block variant is a wrapper."
-  },
-  "0x4ac920": {
-    "name": "vertrix_actor_choose_handler",
-    "aliases": [
-      "vertrix_actor_choose_handler",
-      "vertrix_actor_handler_from_ec"
-    ],
-    "evidence": [
-      "source/object_accessors.h",
-      "tools/verify_object_accessors.py"
-    ],
-    "reason": "Complete normal entrypoint preserves exact 32-bit EAX and whole object state; older status and output-parameter helpers are fragments."
-  },
-  "0x4ac940": {
-    "name": "vertrix_actor_choose_handler",
-    "aliases": [
-      "vertrix_actor_choose_handler",
-      "vertrix_actor_handler_from_f0"
-    ],
-    "evidence": [
-      "source/object_accessors.h",
-      "tools/verify_object_accessors.py"
-    ],
-    "reason": "Complete normal entrypoint preserves exact 32-bit EAX and whole object state; older status and output-parameter helpers are fragments."
   },
   "0x4ad1c0": {
     "name": "vertrix_actor_polar_offset",

@@ -493,6 +493,17 @@ int vertrix_board_particles_reset(void *board, size_t board_size)
     return 1;
 }
 
+int vertrix_board_particles_reset_full(void *board, size_t board_size, uint32_t actor,
+                                       uint32_t *result)
+{
+    if (!result || !vertrix_board_particles_reset(board, board_size))
+    {
+        return 0;
+    }
+    *result = actor;
+    return 1;
+}
+
 static int particle_init_full(uint32_t actor, uint32_t ebx, VertrixMemoryRead read,
                               VertrixMemoryWrite write, void *context, const VertrixCalls *calls,
                               uint32_t *result, int fall)

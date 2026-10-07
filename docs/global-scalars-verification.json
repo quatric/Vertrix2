@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x415b30": 2048,
+    "0x415b40": 2048,
+    "0x415d90": 2048,
+    "0x415d60": 2048,
+    "0x41a930": 2048,
+    "0x41d660": 2048,
+    "0x415b10": 2048,
+    "0x415d40": 2048,
+    "0x415530": 2048
+  },
+  "native_boundary_failure_cases": 52,
+  "null_result_no_effect_cases": 9,
+  "scope": "Nine complete original routines; independent guarded global storage, exact EAX, ordered reads/writes and context. Indexed addressing includes high-bit wrapping, negative-offset indices and index/global aliasing. Increment wrap and all reset modes compare. Every access in representative executions is failed to verify retained effects."
+}
