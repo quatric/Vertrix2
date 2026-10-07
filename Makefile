@@ -179,7 +179,7 @@ $(BUILD)/vertrix2-lifted-probe.dol: $(BUILD)/vertrix2-lifted-probe.elf
 # make wii-sync SYNC=/path/to/Load/WiiSDSync
 SYNC ?= ../dolphin-user/Load/WiiSDSync
 wii-sync: $(BUILD)/vertrix2.dol
-	mkdir -p $(SYNC)/apps/vertrix2
-	cp $(BUILD)/vertrix2.dol $(SYNC)/apps/vertrix2/boot.dol
-	cp wii-game/meta.xml $(SYNC)/apps/vertrix2/meta.xml
-	cp hardware-check/Vertrix2.vf $(SYNC)/apps/vertrix2/Vertrix2.vf
+	mkdir -p "$(SYNC)/apps/vertrix2"
+	cp $(BUILD)/vertrix2.dol "$(SYNC)/apps/vertrix2"/boot.dol
+	cp wii-game/meta.xml "$(SYNC)/apps/vertrix2"/meta.xml
+	cp hardware-check/Vertrix2.vf "$(SYNC)/apps/vertrix2"/Vertrix2.vf

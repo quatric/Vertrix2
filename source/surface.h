@@ -15,9 +15,10 @@ typedef struct
 
 /* Original 0x478eb0: low-32-bit byte offset, independent of host pointers. */
 uint32_t vertrix_surface_offset(uint32_t stride, uint8_t bytes_per_pixel, int32_t x, int32_t y);
-/* Original 0x478f10/0x478ed0: little-endian values for 1/2/4-byte pixels.
+/* Original 0x478f10: little-endian values for 1/2/4-byte pixels.
  * Bounds/storage validation precedes access; invalid operations preserve output. */
 int vertrix_surface_read(const VertrixSurface *surface, uint32_t x, uint32_t y, uint32_t *value);
+/* Original 0x478ed0: write a little-endian 1/2/4-byte pixel. */
 int vertrix_surface_write(VertrixSurface *surface, uint32_t x, uint32_t y, uint32_t value);
 /* Original opaque 32-bit row traversal 0x4ab310. Validates the entire rectangle
  * before copying. Forward pixel order is retained, including overlapping views. */

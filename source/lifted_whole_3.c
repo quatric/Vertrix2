@@ -2531,10 +2531,11 @@ L_472d42:
     return env.failed ? 0u : eax;
 }
 
-uint32_t lifted_ui_panel_release(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                 const VertrixGlobals *globals, const LiftEntry *entry)
+uint32_t lifted_ui_panel_release_full(const VertrixCalls *calls,
+                                      const VertrixFactoryServices *services,
+                                      const VertrixGlobals *globals, const LiftEntry *entry)
 {
-    uint8_t stack[LIFTED_UI_PANEL_RELEASE_STACK + 4 + 4 * 0 + 4];
+    uint8_t stack[LIFTED_UI_PANEL_RELEASE_FULL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
     LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
@@ -2554,7 +2555,7 @@ uint32_t lifted_ui_panel_release(const VertrixCalls *calls, const VertrixFactory
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_UI_PANEL_RELEASE_STACK, 0, entry);
+    lift_begin(&env, calls, services, globals, stack, LIFTED_UI_PANEL_RELEASE_FULL_STACK, 0, entry);
     {
         uint32_t v = ebx;
         esp -= 4u;
@@ -13957,10 +13958,10 @@ uint32_t lifted_surface_offset(const VertrixCalls *calls, const VertrixFactorySe
     return env.failed ? 0u : eax;
 }
 
-uint32_t lifted_f478ed0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
+uint32_t lifted_surface_write(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                              const VertrixGlobals *globals, const LiftEntry *entry)
 {
-    uint8_t stack[LIFTED_F478ED0_STACK + 4 + 4 * 0 + 4];
+    uint8_t stack[LIFTED_SURFACE_WRITE_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
     LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
@@ -13980,7 +13981,7 @@ uint32_t lifted_f478ed0(const VertrixCalls *calls, const VertrixFactoryServices 
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F478ED0_STACK, 0, entry);
+    lift_begin(&env, calls, services, globals, stack, LIFTED_SURFACE_WRITE_STACK, 0, entry);
     {
         uint32_t v = esi;
         esp -= 4u;

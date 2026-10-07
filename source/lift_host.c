@@ -82,10 +82,72 @@ static uint32_t host_allocate(uint32_t size, void *context)
     return address;
 }
 
+static void host_write(LiftHost *host, uint32_t address, unsigned size, uint32_t value);
+
+/* Move (0x4e1140): eax = destination, edx = source, ebx = byte count; overlap-safe. */
+static void host_move(LiftHost *host, uint32_t destination, uint32_t source, uint32_t count)
+{
+    uint8_t *to = bytes_at(host, destination, count);
+    uint8_t *from = bytes_at(host, source, count);
+    if (to != NULL && from != NULL && count != 0)
+    {
+        memmove(to, from, count);
+    }
+}
+
+/* TList insert (0x4d88a0): eax = list, edx = index, ecx = number of slots, ebx = the value stored
+ * in each new slot. A list is { +4 items, +8 count, +0xc capacity }; 0x4d8770 resizes it. */
+static void host_list_insert(LiftHost *host, uint32_t list, uint32_t index, uint32_t count,
+                             uint32_t value)
+{
+    VertrixCallSite resize;
+    uint32_t old = lift_host_read(host, list + 8, 4);
+    uint32_t items;
+    uint32_t i;
+    memset(&resize, 0, sizeof resize);
+    resize.target = 0x4d8770;
+    resize.eax = list;
+    resize.edx = (index >= old ? index : old) + count;
+    resize.ebx = 0xffffffffu;
+    host->calls.calls.call(&resize, host->calls.calls.context);
+    items = lift_host_read(host, list + 4, 4);
+    if (index < old)
+    {
+        host_move(host, items + (index + count) * 4, items + index * 4, (old - index) * 4);
+        if (count != 0 && bytes_at(host, items + index * 4, count * 4) != NULL)
+        {
+            memset(bytes_at(host, items + index * 4, count * 4), 0, count * 4);
+        }
+    }
+    for (i = 0; i < count; i++)
+    {
+        host_write(host, items + (index + i) * 4, 4, value);
+    }
+}
+
 static uint32_t host_boundary(VertrixCallSite *site, void *context)
 {
     LiftHost *host = context;
     unsigned i;
+    if (site->target == 0x4d88a0)
+    {
+        host_list_insert(host, site->eax, site->edx, site->ecx, site->ebx);
+        return site->eax;
+    }
+    if (site->target == 0x4e04f4)
+    {
+        return site->eax; /* a bare ret */
+    }
+    if (site->target == 0x4eb5e0)
+    {
+        host_move(host, site->eax, site->edx, site->ebx); /* copy edx to eax, ebx bytes */
+        return site->eax;
+    }
+    if (site->target == 0x4e1140)
+    {
+        host_move(host, site->eax, site->edx, site->ebx);
+        return site->eax;
+    }
     if (site->target == LIFT_GLOBAL_STORE)
     {
         host_write(host, site->eax, site->stack, site->edx);

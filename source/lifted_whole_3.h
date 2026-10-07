@@ -36,7 +36,7 @@ enum
     LIFTED_F472BD0_STACK = 84,
     LIFTED_OVERLAY_SPAWN_STACK = 132,
     LIFTED_SLOT_CREATE_CALL_STACK = 92,
-    LIFTED_UI_PANEL_RELEASE_STACK = 80,
+    LIFTED_UI_PANEL_RELEASE_FULL_STACK = 80,
     LIFTED_F472DB0_STACK = 228,
     LIFTED_ICONS_BUILD_STACK = 288,
     LIFTED_F473490_STACK = 140,
@@ -165,7 +165,7 @@ enum
     LIFTED_F478D80_STACK = 76,
     LIFTED_EVENT_SCALE_FIELDS_STACK = 72,
     LIFTED_SURFACE_OFFSET_STACK = 68,
-    LIFTED_F478ED0_STACK = 72,
+    LIFTED_SURFACE_WRITE_STACK = 72,
     LIFTED_SURFACE_READ_STACK = 72,
     LIFTED_SURFACE_BOUNDS_STACK = 124,
     LIFTED_IMAGE_COLOR_KEY_STACK = 76,
@@ -556,8 +556,9 @@ uint32_t lifted_slot_create_call(const VertrixCalls *calls, const VertrixFactory
                                  const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x472d50. */
-uint32_t lifted_ui_panel_release(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                 const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_ui_panel_release_full(const VertrixCalls *calls,
+                                      const VertrixFactoryServices *services,
+                                      const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x472db0. */
 uint32_t lifted_f472db0(const VertrixCalls *calls, const VertrixFactoryServices *services,
@@ -1115,8 +1116,8 @@ uint32_t lifted_surface_offset(const VertrixCalls *calls, const VertrixFactorySe
                                const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x478ed0. */
-uint32_t lifted_f478ed0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_surface_write(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                              const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x478f10. */
 uint32_t lifted_surface_read(const VertrixCalls *calls, const VertrixFactoryServices *services,

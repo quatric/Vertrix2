@@ -8679,7 +8679,7 @@
   "virtual": [],
   "address": 4494064
  },
- "actor_frame_decay": {
+ "actor_frame_decay_full": {
   "callees": {
    "0x4ad530": [
     0,
@@ -8704,7 +8704,7 @@
   "virtual": [],
   "address": 4494176
  },
- "actor_frame_switch": {
+ "actor_frame_switch_full": {
   "callees": {
    "0x4ac8d0": [
     0,

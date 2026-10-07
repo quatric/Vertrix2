@@ -269,8 +269,8 @@ enum
     LIFTED_F448ED0_STACK = 144,
     LIFTED_F448FB0_STACK = 144,
     LIFTED_F4492F0_STACK = 100,
-    LIFTED_ACTOR_FRAME_DECAY_STACK = 76,
-    LIFTED_ACTOR_FRAME_SWITCH_STACK = 88,
+    LIFTED_ACTOR_FRAME_DECAY_FULL_STACK = 76,
+    LIFTED_ACTOR_FRAME_SWITCH_FULL_STACK = 88,
     LIFTED_F4493D0_STACK = 108,
     LIFTED_F449460_STACK = 92,
     LIFTED_F4494C0_STACK = 92,
@@ -1585,13 +1585,14 @@ uint32_t lifted_f4492f0(const VertrixCalls *calls, const VertrixFactoryServices 
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x449360. */
-uint32_t lifted_actor_frame_decay(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                  const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_actor_frame_decay_full(const VertrixCalls *calls,
+                                       const VertrixFactoryServices *services,
+                                       const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x449390. */
-uint32_t lifted_actor_frame_switch(const VertrixCalls *calls,
-                                   const VertrixFactoryServices *services,
-                                   const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_actor_frame_switch_full(const VertrixCalls *calls,
+                                        const VertrixFactoryServices *services,
+                                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4493d0. */
 uint32_t lifted_f4493d0(const VertrixCalls *calls, const VertrixFactoryServices *services,

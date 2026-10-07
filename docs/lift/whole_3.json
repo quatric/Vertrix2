@@ -891,7 +891,7 @@
   "virtual": [],
   "address": 4664576
  },
- "ui_panel_release": {
+ "ui_panel_release_full": {
   "callees": {
    "virtual_472d78": [
     0,
@@ -3777,7 +3777,7 @@
   "virtual": [],
   "address": 4689584
  },
- "f478ed0": {
+ "surface_write": {
   "callees": {
    "0x478eb0": [
     0,

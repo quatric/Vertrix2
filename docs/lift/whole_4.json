@@ -869,7 +869,7 @@
   "virtual": [],
   "address": 4906912
  },
- "actor_refresh_value": {
+ "actor_refresh_value_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -885,7 +885,7 @@
   "virtual": [],
   "address": 4906928
  },
- "actor_refresh_arm": {
+ "actor_refresh_arm_full": {
   "callees": {
    "0x4ac1e0": [
     0,

@@ -22,7 +22,7 @@ class LiftEntry(c.Structure):
                 ('garbage', c.POINTER(c.c_uint8)), ('chain', U)]
 
 
-FRAME = STACK - 4
+FRAME = STACK
 META = Path(__file__).resolve().parents[1] / 'docs' / 'lift'
 HANDLE_CALLEES = (0x4ca000, 0x4b5400, 0x4b6350, 0x4abd70, 0x4b5c60)
 

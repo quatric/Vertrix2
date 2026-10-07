@@ -14314,7 +14314,7 @@
   "virtual": [],
   "address": 4580912
  },
- "f45e670": {
+ "table_release_by_flag": {
   "callees": {
    "0x4874f0": [
     0,
@@ -14448,7 +14448,7 @@
   "virtual": [],
   "address": 4581200
  },
- "f45e7b0": {
+ "table_fill_slot_45e7b0": {
   "callees": {
    "0x487660": [
     10,
@@ -14477,7 +14477,7 @@
   "virtual": [],
   "address": 4581296
  },
- "f45e810": {
+ "table_release_one_45e810": {
   "callees": {
    "0x4874f0": [
     0,
@@ -14494,7 +14494,7 @@
   "virtual": [],
   "address": 4581392
  },
- "f45e820": {
+ "table_release_one_45e820": {
   "callees": {
    "0x4874f0": [
     0,
@@ -14578,7 +14578,7 @@
   "virtual": [],
   "address": 4581584
  },
- "f45e8f0": {
+ "table_release_run_45e8f0": {
   "callees": {
    "0x4874f0": [
     0,
@@ -14595,7 +14595,7 @@
   "virtual": [],
   "address": 4581616
  },
- "f45e910": {
+ "table_release_rows": {
   "callees": {
    "0x4874f0": [
     0,
@@ -14650,7 +14650,7 @@
   "virtual": [],
   "address": 4581776
  },
- "f45e9e0": {
+ "table_fill_indexed_45e9e0": {
   "callees": {
    "0x487660": [
     10,
@@ -14700,7 +14700,7 @@
   "virtual": [],
   "address": 4581984
  },
- "f45ea80": {
+ "table_release_pair": {
   "callees": {
    "0x4874f0": [
     0,
@@ -14834,7 +14834,7 @@
   "virtual": [],
   "address": 4582672
  },
- "f45ed40": {
+ "table_visit_all": {
   "callees": {
    "0x4876c0": [
     0,
@@ -15297,7 +15297,7 @@
   "virtual": [],
   "address": 4585328
  },
- "ui_panels_slot1": {
+ "ui_panels_slot1_full": {
   "callees": {
    "virtual_45fa7c": [
     0,
@@ -15337,7 +15337,7 @@
   ],
   "address": 4586096
  },
- "ui_panels_slot2": {
+ "ui_panels_slot2_full": {
   "callees": {
    "virtual_45fac2": [
     0,

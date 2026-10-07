@@ -12,23 +12,29 @@ enum
 /* Original 0x45e740 (0x5464e4), 0x45e810 (0x544a34) and 0x45e820 (0x544a50): release the array
  * list object at the address; 0x45e670 releases 0x544d44 for a null eax and 0x544d60 otherwise;
  * 0x45ed40 (vertrix_table_visit_all) visits the items of 0x544a88 with 0x50. Each returns eax. */
+/* Original variants 0x45e740, 0x45e810, 0x45e820: release one array list. */
 uint32_t vertrix_table_release_one(const VertrixCalls *calls,
                                    const VertrixFactoryServices *services, uint32_t address,
                                    uint32_t edx);
+/* Original 0x45e670: release the array list selected by eax. */
 uint32_t vertrix_table_release_by_flag(const VertrixCalls *calls,
                                        const VertrixFactoryServices *services, uint32_t eax,
                                        uint32_t edx);
+/* Original 0x45ed40: visit all items with argument 0x50. */
 uint32_t vertrix_table_visit_all(const VertrixCalls *calls, const VertrixFactoryServices *services);
 
 /* Original 0x45e830 (5 objects from 0x546458), 0x45e8f0 (19 from 0x544d7c), 0x45ea80 (7 from
  * 0x544ac0 then 7 from 0x546554) and 0x45e910 (19 rows of 10 from 0x544f90, a row being 0x118
  * bytes): release the consecutive array lists, with edx the address of the next one. Returns the
  * last release's eax. */
+/* Original variants 0x45e830, 0x45e8f0: release a consecutive run of array lists. */
 uint32_t vertrix_table_release_run(const VertrixCalls *calls,
                                    const VertrixFactoryServices *services, uint32_t first,
                                    uint32_t count);
+/* Original 0x45e910: release the nineteen rows of ten array lists. */
 uint32_t vertrix_table_release_rows(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services);
+/* Original 0x45ea80: release the two runs of seven array lists. */
 uint32_t vertrix_table_release_pair(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services);
 
@@ -36,6 +42,7 @@ uint32_t vertrix_table_release_pair(const VertrixCalls *calls,
  * flag 1, the pair being the caller's ebx and ecx): 0x487660 builds the slot `index` from the
  * record `source` (whose dwords at +4 and +8 are field4 and field8), 0x4877f0 fetches the slot,
  * 0x482e10 applies the record to it and 0x483ed0 finishes it. Returns eax. */
+/* Original variants 0x45e750, 0x45e7b0: fill the selected array-list slot. */
 uint32_t vertrix_table_fill_slot(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                  uint32_t table, uint32_t index, uint32_t source, uint32_t field4,
                                  uint32_t field8, uint32_t pair_ebx, uint32_t pair_ecx,
@@ -43,6 +50,7 @@ uint32_t vertrix_table_fill_slot(const VertrixCalls *calls, const VertrixFactory
 /* Originals 0x45e850 (base 0x546458) and 0x45e9e0 (base 0x544d7c) (ret 4; eax = row, edx = index,
  * ebx = record, ecx, the stack argument): the fill of vertrix_table_fill_slot for the list at
  * base + 28 * row, with the record's dwords at +4 and +8 and flag 1. Returns its eax. */
+/* Original variants 0x45e850, 0x45e9e0: fill the slot in the indexed array list. */
 uint32_t vertrix_table_fill_indexed(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services, uint32_t base,
                                     uint32_t row, uint32_t index, uint32_t record, uint32_t field4,

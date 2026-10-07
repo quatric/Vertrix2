@@ -4964,11 +4964,11 @@ uint32_t lifted_f4adfa0(const VertrixCalls *calls, const VertrixFactoryServices 
     return env.failed ? 0u : eax;
 }
 
-uint32_t lifted_actor_refresh_value(const VertrixCalls *calls,
-                                    const VertrixFactoryServices *services,
-                                    const VertrixGlobals *globals, const LiftEntry *entry)
+uint32_t lifted_actor_refresh_value_full(const VertrixCalls *calls,
+                                         const VertrixFactoryServices *services,
+                                         const VertrixGlobals *globals, const LiftEntry *entry)
 {
-    uint8_t stack[LIFTED_ACTOR_REFRESH_VALUE_STACK + 4 + 4 * 0 + 4];
+    uint8_t stack[LIFTED_ACTOR_REFRESH_VALUE_FULL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
     LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
@@ -4988,7 +4988,8 @@ uint32_t lifted_actor_refresh_value(const VertrixCalls *calls,
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_ACTOR_REFRESH_VALUE_STACK, 0, entry);
+    lift_begin(&env, calls, services, globals, stack, LIFTED_ACTOR_REFRESH_VALUE_FULL_STACK, 0,
+               entry);
     {
         (void)lift_sub(16, lift_load(&env, eax, 0x148u, 2), 0xffffu, &fl);
     }
@@ -5007,10 +5008,11 @@ L_4adfcb:
     return env.failed ? 0u : eax;
 }
 
-uint32_t lifted_actor_refresh_arm(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                  const VertrixGlobals *globals, const LiftEntry *entry)
+uint32_t lifted_actor_refresh_arm_full(const VertrixCalls *calls,
+                                       const VertrixFactoryServices *services,
+                                       const VertrixGlobals *globals, const LiftEntry *entry)
 {
-    uint8_t stack[LIFTED_ACTOR_REFRESH_ARM_STACK + 4 + 4 * 0 + 4];
+    uint8_t stack[LIFTED_ACTOR_REFRESH_ARM_FULL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
     LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
@@ -5030,7 +5032,8 @@ uint32_t lifted_actor_refresh_arm(const VertrixCalls *calls, const VertrixFactor
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_ACTOR_REFRESH_ARM_STACK, 0, entry);
+    lift_begin(&env, calls, services, globals, stack, LIFTED_ACTOR_REFRESH_ARM_FULL_STACK, 0,
+               entry);
     {
         (void)lift_sub(16, lift_load(&env, eax, 0x148u, 2), 0xffffu, &fl);
     }
