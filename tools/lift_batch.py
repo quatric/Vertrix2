@@ -105,6 +105,9 @@ def combine(scratch, name, out_dir, first=0, count=None, unverified=False, only=
     (ROOT / 'docs' / 'lift' / (name + '.json')).write_text(json.dumps(metas, indent=1))
     if unverified:
         (out / ('lifted_%s.c' % name)).write_text((out / ('lifted_%s.c' % name)).read_text().replace('Routines lifted from the original by tools/lift.py (see docs/LIFTED.md), each verified\n * against the original by tools/verify_lifted.py.', 'Routines lifted from the original by tools/lift.py (see docs/LIFTED.md) that did NOT pass\n * tools/verify_lifted.py: unverified, used only when explicitly enabled.'))
+    subprocess.run(['clang-format', '-i', '--style=file:' + str(ROOT / '.clang-format'),
+                    str(out / ('lifted_%s.c' % name)),
+                    str(out / ('lifted_%s.h' % name))], check=True)
     print('combined', len(passed))
 
 

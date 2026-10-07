@@ -2,6 +2,7 @@
 address and the dispatcher that runs one for a call arriving at the boundary."""
 import glob
 import json
+import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -207,4 +208,6 @@ void vertrix_lifted_calls_init(VertrixLiftedCalls *adapter, const VertrixCalls *
     adapter->globals = globals;
 }
 ''' % ('\n'.join('#include "%s"' % h for h in headers), maximum, '\n'.join(rows), '\n'.join(unverified_rows)))
+subprocess.run(['clang-format', '-i', str(ROOT / 'source' / 'lifted_dispatch.c'),
+                str(ROOT / 'source' / 'lifted_dispatch.h')], check=True)
 print(len(rows), 'routines, max stack', maximum)
