@@ -395,7 +395,7 @@ enum
     LIFTED_F48D6C0_STACK = 100,
     LIFTED_SURFACE_MASK32_STACK = 96,
     LIFTED_ACTOR_STORAGE_CONSTRUCT_STACK = 64,
-    LIFTED_F4AC130_STACK = 136,
+    LIFTED_ACTOR_BASE_DESTROY_FULL_STACK = 136,
     LIFTED_F4AC1C0_STACK = 68,
     LIFTED_F4AC1E0_STACK = 64,
     LIFTED_ANIMATION_TICK_STACK = 104,
@@ -2055,8 +2055,9 @@ uint32_t lifted_actor_storage_construct(const VertrixCalls *calls,
                                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4ac130. */
-uint32_t lifted_f4ac130(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_actor_base_destroy_full(const VertrixCalls *calls,
+                                        const VertrixFactoryServices *services,
+                                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4ac1c0. */
 uint32_t lifted_f4ac1c0(const VertrixCalls *calls, const VertrixFactoryServices *services,

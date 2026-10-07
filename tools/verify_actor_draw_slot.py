@@ -25,7 +25,7 @@ def main():
     build.mkdir(parents=True, exist_ok=True)
     source = Path(__file__).resolve().parents[1] / 'source'
     library = build / 'actor-draw-slot.dylib'
-    names = ['actor_draw_slot.c', 'actor_refresh_state.c', 'piece_actor_destroy.c', 'player_piece.c', 'piece_actor_construct.c', 'piece_actor_layout.c', 'piece_child_update.c', 'actor_storage.c', 'timer.c', 'timing.c', 'dword_transition.c', 'frame_resource.c', 'piece_actor_update.c']
+    names = ['actor_draw_slot.c', 'actor_refresh_state.c', 'piece_actor_destroy.c', 'call_glue.c', 'player_piece.c', 'piece_actor_construct.c', 'piece_actor_layout.c', 'piece_child_update.c', 'actor_storage.c', 'timer.c', 'timing.c', 'dword_transition.c', 'frame_resource.c', 'piece_actor_update.c']
     subprocess.run(['cc', '-shared', '-fPIC', '-O2', '-Wall', '-Wextra', '-Werror', * [str(source / n) for n in names], '-o', str(library)], check=True)
     n = c.CDLL(str(library))
     P, S, SZ, U = c.POINTER(State), c.c_void_p, c.c_size_t, c.c_uint32

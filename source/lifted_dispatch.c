@@ -1689,7 +1689,7 @@ static const LiftedRoutine routines[] = {
     {0x48d6c0, lifted_f48d6c0, 100, 0},
     {0x4ab200, lifted_surface_mask32, 96, 0},
     {0x4abd70, lifted_actor_storage_construct, 64, 0},
-    {0x4ac130, lifted_f4ac130, 136, 0},
+    {0x4ac130, lifted_actor_base_destroy_full, 136, 0},
     {0x4ac1c0, lifted_f4ac1c0, 68, 0},
     {0x4ac1e0, lifted_f4ac1e0, 64, 0},
     {0x4ac1f0, lifted_animation_tick, 104, 0},

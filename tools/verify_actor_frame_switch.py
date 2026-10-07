@@ -32,7 +32,7 @@ def main():
     args = parser.parse_args()
     n = build(args.build_dir, 'actor-frame-switch',
               ['actor_frame_switch.c', 'actor_refresh_state.c', 'word_transition.c', 'actor_storage.c',
-               'piece_actor_destroy.c', 'player_piece.c', 'piece_actor_construct.c',
+               'piece_actor_destroy.c', 'call_glue.c', 'player_piece.c', 'piece_actor_construct.c',
                'piece_actor_layout.c', 'piece_child_update.c', 'timer.c', 'timing.c',
                'dword_transition.c', 'frame_resource.c', 'piece_actor_update.c'])
     n.vertrix_actor_frame_decay.argtypes = [c.POINTER(State), c.c_void_p, c.c_size_t, U]

@@ -2,6 +2,15 @@
   "status": "passed",
   "complete_original_piece_destructor_cases": 4096,
   "complete_original_base_destructor_cases": 4096,
-  "rejected_cases": 16384,
-  "scope": "Complete 42ab10 and 4ac130 execute with only the child virtual destructor and heap free supplied as recorded boundaries (stub ret). Whole parent storage, child destruction order/identity/flag2 and free argument match. Flag4 virtual-base cleanup is not modelled. Child destructor bodies remain separate."
+  "flag4_piece_cleanup_cases": 2048,
+  "flag4_base_cleanup_cases": 2048,
+  "normal_piece_cases": 2048,
+  "normal_base_cases": 2048,
+  "mutating_child_callback_cases": 512,
+  "zero_cleanup_token_cases": 1020,
+  "flag4_and_flag2_cases": 2048,
+  "partial_piece_wrapper_cases": 4096,
+  "partial_base_wrapper_cases": 4096,
+  "rejected_partial_wrapper_cases": 16384,
+  "scope": "Complete 42ab10 and 4ac130 across full-width flags including every low-bit combination. Whole parent storage, original eax returns, child destruction order/flag2 and normal heap free match. Flag4 cleanup takes precedence over flag2: 4ccb9f class token and caller registers, its arbitrary returned token (including zero), and the subsequent 4ca040 registers match recorded runtime boundaries. Mutating child callbacks change later slots and parent storage identically, verifying sequential slot reads. Runtime cleanup, heap free and child destructor bodies remain supplied boundaries. Existing partial wrappers retain flag4 rejection and their 4096-case normal checks."
 }

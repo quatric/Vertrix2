@@ -1,6 +1,28 @@
 #ifndef VERTRIX_PIECE_ACTOR_DESTROY_H
 #define VERTRIX_PIECE_ACTOR_DESTROY_H
+#include "call_glue.h"
 #include "player_piece.h"
+/* Original0x4ac130: complete base destructor. Flag 4 takes precedence: run runtime
+ * 0x4ccb9f(actor, 0x517b10) then 0x4ca040 on its returned allocation token with edx zero,
+ * preserving caller ebx and setting ecx to actor. Otherwise use the normal release callback.
+ * Returns the original actor handle, or zero for invalid storage or a failed normal callback.
+ * Runtime cleanup/free are supplied boundaries; flag 4 does not write the actor's class. */
+uint32_t vertrix_actor_base_destroy_full(void *actor, size_t size, uint32_t actor_handle,
+                                         uint32_t flags, VertrixPlayerActorDestroy release,
+                                         void *context, const VertrixCalls *runtime,
+                                         uint32_t caller_ebx, uint32_t caller_ecx);
+
+/* Original0x42ab10: complete parent destructor. Flag 4 runs the same cleanup/free pair
+ * with class token 0x514790 and the caller's ebx/ecx, without destroying children. Otherwise
+ * destroy nonzero children in slot order, reading each slot when reached, run the base
+ * destructor, then release the parent when flag 2 is set. Returns the parent handle, or
+ * zero for invalid input or failed normal callbacks. Earlier callback effects are retained. */
+uint32_t vertrix_piece_actor_destroy_full(void *parent, size_t size, uint32_t parent_handle,
+                                          uint32_t flags, VertrixPlayerActorDestroy destroy_child,
+                                          void *child_context, VertrixPlayerActorDestroy release,
+                                          void *release_context, const VertrixCalls *runtime,
+                                          uint32_t caller_ebx, uint32_t caller_ecx);
+
 /* Original fragment 0x4ac130: base actor destructor. Without flag4, store class517af4 at
  * 0x158, then release the storage through release() when flag2 is set. Flag4
  * is the original virtual-base cleanup path and is rejected. Needs 0x15c bytes.

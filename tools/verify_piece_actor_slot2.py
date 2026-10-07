@@ -19,7 +19,7 @@ def main():
     build.mkdir(parents=True, exist_ok=True)
     source = Path(__file__).resolve().parents[1] / 'source'
     library = build / 'piece-actor-slot2.dylib'
-    names = ['piece_actor_destroy.c', 'player_piece.c', 'piece_actor_construct.c', 'piece_actor_layout.c',
+    names = ['piece_actor_destroy.c', 'call_glue.c', 'player_piece.c', 'piece_actor_construct.c', 'piece_actor_layout.c',
              'piece_child_update.c', 'actor_storage.c', 'timer.c', 'timing.c', 'dword_transition.c',
              'frame_resource.c', 'piece_actor_update.c']
     subprocess.run(['cc', '-shared', '-fPIC', '-O2', '-Wall', '-Wextra', '-Werror',

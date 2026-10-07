@@ -9480,7 +9480,7 @@
   "virtual": [],
   "address": 4898160
  },
- "f4ac130": {
+ "actor_base_destroy_full": {
   "callees": {
    "0x4ca050": [
     0,
