@@ -21,8 +21,9 @@ uint32_t vertrix_pair_words(const VertrixCalls *calls, const VertrixFactoryServi
                             uint32_t first, uint32_t second, uint32_t gate, uint32_t gate_after,
                             uint32_t value);
 
-/* Originals 0x4737d0 (flags 0x5bb4ec..0x5bb4ef and 0x5bb4f4..0x5bb4f7) and 0x473960 (0x5bb4f0..
- * 0x5bb4f3 and 0x5bb4f8..0x5bb4fb): 0x476010 on the table, then, with the global 0x532a7c (gate)
+/* Original variants 0x4737d0, 0x473960: flags 0x5bb4ec..0x5bb4ef and
+ * 0x5bb4f4..0x5bb4f7, or 0x5bb4f0..0x5bb4f3 and 0x5bb4f8..0x5bb4fb, respectively.
+ * 0x476010 on the table, then, with the global 0x532a7c (gate)
  * one, the words +0x16c, +0x16e, +0x168 and +0x16a of the second object take the flags 0..3 and
  * those of the first object the flags 4..7, through 0x473610; otherwise the objects swap roles.
  * Returns the eax of the last call. */

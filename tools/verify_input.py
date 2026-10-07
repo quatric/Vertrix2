@@ -177,6 +177,78 @@ def verify_configuration(native, oracle, rng):
         assert bytes(actions) == before
     return 500
 
+def verify_full_repeat(native, oracle, cases):
+    import struct
+    from original import BOARD
+    from verify_call_glue import Call, Calls
+    from unicorn import UC_HOOK_CODE
+    from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_EDX, UC_X86_REG_EBX, UC_X86_REG_ECX, UC_X86_REG_EIP, UC_X86_REG_ESP
+    native.vertrix_input_repeat_tick_full.argtypes = [ctypes.POINTER(Repeat), ctypes.c_uint32,
+        ctypes.c_uint32, ctypes.POINTER(Calls), ctypes.POINTER(ctypes.c_uint32)]
+    original_events, native_events, contexts = [], [], []
+    returns = []
+    mutation = False
+    repeat = None
+    def mutate_native():
+        repeat.payload[:] = (101, 202, 303)
+        repeat.counter, repeat.period, repeat.repeat_delay, repeat.enabled = 77, 88, 99, 0
+    def insert(cpu, address, size, context):
+        original_events.append((address, *[cpu.reg_read(r) for r in
+            (UC_X86_REG_EAX, UC_X86_REG_EDX, UC_X86_REG_EBX, UC_X86_REG_ECX)]))
+        if mutation and len(original_events) == 1:
+            cpu.mem_write(BOARD+0x4c, struct.pack('<3I', 101, 202, 303))
+            cpu.mem_write(BOARD+0x40, struct.pack('<3I', 99, 77, 88))
+            cpu.mem_write(BOARD+0x5a, b'\0')
+        cpu.reg_write(UC_X86_REG_EAX, returns[len(original_events)-1])
+        stack = cpu.reg_read(UC_X86_REG_ESP)
+        cpu.reg_write(UC_X86_REG_EIP, struct.unpack('<I',cpu.mem_read(stack,4))[0])
+        cpu.reg_write(UC_X86_REG_ESP,stack+4)
+    @Call
+    def callback(site_pointer, context):
+        site = site_pointer.contents
+        native_events.append((site.target,site.eax,site.edx,site.ebx,site.ecx))
+        contexts.append(context)
+        if mutation and len(native_events) == 1: mutate_native()
+        return returns[len(native_events)-1] if len(native_events) <= len(returns) else 0
+    boundary = Calls(callback,0x1234)
+    hook = oracle.cpu.hook_add(UC_HOOK_CODE,insert,begin=0x475b20,end=0x475b20)
+    completed = mutation_cases = 0
+    try:
+        fixtures = [(case,False) for case in cases]
+        fixtures += [(([100,50,0,2,7,8,9],1,8,None,False),True)]
+        fixtures += [(([100,50,0,0,7,8,9],1,0,None,False),False)]
+        for (values,enabled,elapsed,payload,stop),mutation in fixtures:
+            repeat = Repeat(*values[:4],(ctypes.c_uint32*3)(*values[4:]),enabled)
+            if payload is not None:
+                native.vertrix_input_repeat_start(ctypes.byref(repeat),(ctypes.c_uint32*3)(*payload))
+            if stop: native.vertrix_input_repeat_stop(ctypes.byref(repeat))
+            raw = bytearray(0x60)
+            struct.pack_into('<7I',raw,0x3c,repeat.initial_delay,repeat.repeat_delay,repeat.counter,repeat.period,*repeat.payload)
+            raw[0x5a] = repeat.enabled
+            oracle.cpu.mem_write(BOARD,bytes(raw))
+            original_events.clear(); native_events.clear(); contexts.clear()
+            returns = [(0x80000000 + i*17) & 0xffffffff for i in range(10001)]
+            wanted = oracle.call(0x475e50,eax=BOARD,edx=elapsed,ebx=0x12345678,ecx=0x87654321)
+            result = ctypes.c_uint32(0xdeadbeef)
+            assert native.vertrix_input_repeat_tick_full(ctypes.byref(repeat),BOARD,elapsed,ctypes.byref(boundary),ctypes.byref(result))
+            assert result.value == wanted and original_events == native_events, (completed,result.value,wanted,original_events,native_events)
+            assert contexts == [0x1234]*len(native_events)
+            expected = struct.unpack('<7I',oracle.cpu.mem_read(BOARD+0x3c,28))
+            assert (repeat.initial_delay,repeat.repeat_delay,repeat.counter,repeat.period,*repeat.payload) == expected
+            assert repeat.enabled == bytes(oracle.cpu.mem_read(BOARD+0x5a,1))[0]
+            completed += 1
+            if mutation:
+                assert len(native_events)==4 and native_events[1][2:] == (101,202,303)
+                mutation_cases += 1
+    finally:
+        oracle.cpu.hook_del(hook)
+    repeat = Repeat(100,50,0,2,(ctypes.c_uint32*3)(7,8,9),1)
+    result = ctypes.c_uint32(0xdeadbeef)
+    assert not native.vertrix_input_repeat_tick_full(ctypes.byref(repeat),BOARD,8,None,ctypes.byref(result))
+    assert repeat.counter==0 and repeat.period==50 and result.value==0xdeadbeef
+    assert completed == len(cases)+2
+    return completed,mutation_cases
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("executable", type=Path)
@@ -186,7 +258,8 @@ def main():
     root = Path(__file__).resolve().parents[1]
     library = args.build_dir.resolve() / "input.dylib"
     subprocess.run(["cc", "-shared", "-fPIC", "-O2", "-Wall", "-Wextra",
-                    "-Werror", str(root / "source/input.c"), "-o", str(library)], check=True)
+                    "-Werror", str(root / "source/input.c"), str(root / "source/call_glue.c"),
+                    str(root / "source/actor_storage.c"), "-o", str(library)], check=True)
     native = ctypes.CDLL(str(library))
     native.vertrix_input_repeat_tick.argtypes = [ctypes.POINTER(Repeat), ctypes.c_uint32]
     native.vertrix_input_repeat_tick.restype = ctypes.c_uint32
@@ -221,14 +294,18 @@ def main():
         actual = (repeat.initial_delay, repeat.repeat_delay, repeat.counter, repeat.period, *repeat.payload)
         assert actual == expected[:7] and repeat.enabled == expected_enabled, (values, enabled, elapsed)
         assert count == len(events) and all(event == tuple(repeat.payload) for event in events)
+    full_repeat_comparisons, repeat_mutation_cases = verify_full_repeat(native,oracle,cases)
     queue_comparisons = verify_queues(native, oracle, rng)
     action_comparisons = verify_actions(native, oracle, rng)
     configuration_comparisons = verify_configuration(native, oracle, rng)
     report = {"status": "passed", "repeat_scheduler_comparisons": len(cases),
+              "full_repeat_scheduler_comparisons": full_repeat_comparisons,
+              "repeat_insertion_mutation_cases": repeat_mutation_cases,
+              "repeat_missing_boundary_cases": 1,
               "queue_operation_comparisons": queue_comparisons,
               "integrated_action_comparisons": action_comparisons,
               "control_configuration_comparisons": configuration_comparisons,
-              "scope": "Original repeat scheduler and FIFO action consumption/update/acknowledgment; host allocation replaces original pool; press/release wrappers, repeat generation and deferred delivery integrated; polling, bindings and gameplay dispatch remain separate"}
+              "scope": "Full original475e50 insertion target/registers/return/state matched independently, including live payload/state mutation and fixed due count; missing insertion boundary retains timing updates. Original repeat scheduler and FIFO action consumption/update/acknowledgment; host allocation replaces original pool; press/release wrappers, repeat generation and deferred delivery integrated; polling, bindings and gameplay dispatch remain separate"}
     (args.build_dir / "input-verification.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report, indent=2))
 

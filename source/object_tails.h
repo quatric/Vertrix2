@@ -35,13 +35,15 @@ uint32_t vertrix_object_table_517644(const VertrixCalls *calls,
                                      const VertrixFactoryServices *services, uint32_t eax,
                                      uint32_t edx);
 
-/* Original 0x4b4600 (step -1), 0x4b4610 (step +1) and 0x4b4620 (set minus one): adjust the dword at
- * +0x170 then 0x4b4690 on the object. Returns its eax. */
+/* Original variants 0x4b4600, 0x4b4610, 0x4b4620: step -1, step +1 and set
+ * minus one, respectively. Adjust the dword at +0x170 then 0x4b4690 on the
+ * object. Returns its eax. */
 uint32_t vertrix_object_step_text_length(const VertrixCalls *calls, uint32_t object, void *storage,
                                          size_t size, uint32_t mode);
 
-/* Original 0x4b5500 (word at +0x15c) and 0x4b6700 (word at +0x172): one when the word is not zero
- * and 0x476480 on the point list returns one, after 0x4762e0 on it. Zero otherwise. */
+/* Original variants 0x4b5500, 0x4b6700: words at +0x15c and +0x172,
+ * respectively. One when the word is not zero and 0x476480 on the point list
+ * returns one, after 0x4762e0 on it. Zero otherwise. */
 uint32_t vertrix_object_slot_present(const VertrixCalls *calls, const void *storage, size_t size,
                                      size_t field, uint32_t object);
 

@@ -36,6 +36,41 @@ uint32_t vertrix_input_repeat_tick(VertrixInputRepeat *repeat, uint32_t elapsed)
     return count;
 }
 
+int vertrix_input_repeat_tick_full(VertrixInputRepeat *repeat, uint32_t actor_handle,
+                                   uint32_t elapsed, const VertrixCalls *calls, uint32_t *result)
+{
+    if (!repeat || !result)
+    {
+        return 0;
+    }
+    if (repeat->enabled != 1 || repeat->repeat_delay == 0)
+    {
+        *result = actor_handle;
+        return 1;
+    }
+    repeat->counter += elapsed;
+    if (repeat->counter < repeat->period)
+    {
+        *result = 0;
+        return 1;
+    }
+    uint32_t count = repeat->counter / (repeat->period ? repeat->period : 1);
+    repeat->counter = 0;
+    repeat->period = repeat->repeat_delay;
+    uint32_t returned = repeat->repeat_delay;
+    for (uint32_t i = 0; i < count; ++i)
+    {
+        if (!calls || !calls->call)
+        {
+            return 0;
+        }
+        returned = vertrix_call(calls, 0x475b20, actor_handle, repeat->payload[0],
+                                repeat->payload[1], repeat->payload[2], 0);
+    }
+    *result = returned;
+    return 1;
+}
+
 struct VertrixInputNode
 {
     VertrixInputEvent event;

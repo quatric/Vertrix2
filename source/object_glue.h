@@ -30,8 +30,9 @@ enum
 uint32_t vertrix_object_set_mode(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                  uint32_t object, void *storage, size_t size, uint32_t value);
 
-/* Original 0x4b4c90 (field 0x188) and 0x4b4cd0 (field 0x18c): 0x4ca370 on the parent list at +0x15c
- * of the object +0x160 names, with the dword of the field. Returns its eax. */
+/* Original variants 0x4b4c90, 0x4b4cd0: fields 0x188 and 0x18c, respectively.
+ * 0x4ca370 on the parent list at +0x15c of the object +0x160 names, with the
+ * dword of the field. Returns its eax. */
 uint32_t vertrix_object_parent_append(const VertrixCalls *calls, uint32_t object,
                                       const void *storage, size_t size, size_t field);
 
@@ -56,7 +57,8 @@ uint32_t vertrix_object_glyph_layout(const VertrixCalls *calls, const void *stor
 uint32_t vertrix_object_glyph_present(const VertrixCalls *calls, const void *storage, size_t size,
                                       uint32_t edx);
 
-/* Original 0x4b6f70: 0x4d88a0 on the object, its dword at +8, edx and one. Returns zero. */
+/* Original variants 0x4b6f70, 0x4879f0, 0x48d600, 0x4b79a0: 0x4d88a0 on the
+ * object, its dword at +8, edx and one. Returns zero. */
 uint32_t vertrix_object_release_call(const VertrixCalls *calls, uint32_t object,
                                      const void *storage, size_t size, uint32_t edx);
 
@@ -159,9 +161,9 @@ enum
     VERTRIX_OBJECT_BLOCK_COPY = 0xa4
 };
 
-/* Original 0x48c260 (offset 0x1cc), 0x48c310 (0x1e4) and 0x48c330 (0x1e5): vertrix_object_delegate
- * (0x48c9b0) on the object with the address of the field at offset and a size of one. Returns its
- * eax. */
+/* Original variants 0x48c260, 0x48c310, 0x48c330: offsets 0x1cc, 0x1e4 and
+ * 0x1e5, respectively. vertrix_object_delegate (0x48c9b0) on the object with
+ * the address of the field at offset and a size of one. Returns its eax. */
 uint32_t vertrix_object_notify_field(const VertrixCalls *calls, uint32_t object,
                                      const void *storage, size_t size, uint32_t offset);
 
@@ -185,8 +187,9 @@ uint32_t vertrix_object_parent_glyph(const VertrixCalls *calls,
                                      const VertrixFactoryServices *services, const void *storage,
                                      size_t size, uint32_t edx);
 
-/* Original 0x4b78d0 (table 0x518704) and 0x48d520 (0x517a94): 0x4d8650, then the table stored at
- * +0 of the object it returns, which is returned. */
+/* Original variants 0x4b78d0, 0x48d520: tables 0x518704 and 0x517a94,
+ * respectively. 0x4d8650, then the table stored at +0 of the object it
+ * returns, which is returned. */
 uint32_t vertrix_object_table_new(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   uint32_t eax, uint32_t edx, uint32_t table);
 

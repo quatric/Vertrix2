@@ -1,0 +1,39 @@
+{
+  "status": "passed",
+  "scope": "Verified whole chunk naming only. Native repeat scheduler recovery has a separate original-executable report; optional generated routines and dispatcher behavior are outside this token proof.",
+  "renamed_routines": {
+    "input_repeat_tick": "input_repeat_tick_full",
+    "f4879f0": "object_release_call",
+    "f48c310": "object_notify_field_48c310",
+    "f48d520": "object_table_new",
+    "f48d600": "object_release_call_48d600",
+    "f4b6700": "object_slot_present_4b6700",
+    "object_table_new": "object_table_new_4b78d0"
+  },
+  "metadata_values_unchanged": true,
+  "normalized_whole_chunk_files": [
+    "source/lifted_whole_0.c",
+    "source/lifted_whole_0.h",
+    "source/lifted_whole_1.c",
+    "source/lifted_whole_1.h",
+    "source/lifted_whole_2.c",
+    "source/lifted_whole_2.h",
+    "source/lifted_whole_3.c",
+    "source/lifted_whole_3.h",
+    "source/lifted_whole_4.c",
+    "source/lifted_whole_4.h",
+    "source/lifted_whole_5.c",
+    "source/lifted_whole_5.h",
+    "source/lifted_whole_6.c",
+    "source/lifted_whole_6.h"
+  ],
+  "name_map_entries": 1344,
+  "readable_whole_chunk_names": 791,
+  "full_repeat_report": "docs/input-verification.json",
+  "variant_original_executions": 16600,
+  "variant_verifier_commands": [
+    "tools/verify_object_glue.py Vertrix2.exe --build-dir /tmp/vertrix-name-audit-glue --cases 600",
+    "tools/verify_object_tails.py Vertrix2.exe --build-dir /tmp/vertrix-name-audit-tails --cases 4000",
+    "tools/verify_pair_sync.py Vertrix2.exe --build-dir /tmp/vertrix-name-audit-pair --cases 400"
+  ]
+}

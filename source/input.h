@@ -1,6 +1,7 @@
 #ifndef VERTRIX_INPUT_H
 #define VERTRIX_INPUT_H
 
+#include "call_glue.h"
 #include <stddef.h>
 #include <stdint.h>
 
@@ -17,9 +18,19 @@ typedef struct
 /* Original 0x475ad0 / 0x475af0. Scheduling parameters are supplied by callers. */
 void vertrix_input_repeat_start(VertrixInputRepeat *repeat, const uint32_t payload[3]);
 void vertrix_input_repeat_stop(VertrixInputRepeat *repeat);
-/* Original 0x475e50. Each returned event uses the stored three-word payload.
+/* Original fragment 0x475e50. Each returned event uses the stored three-word payload.
  * The caller must emit every event in order. Platform polling is separate. */
 uint32_t vertrix_input_repeat_tick(VertrixInputRepeat *repeat, uint32_t elapsed);
+
+/* Original0x475e50: complete scheduler with queue insertion475b20 supplied through
+ * calls. The due count is captured once; clear counter and reset period before
+ * inserting. Read the live payload for each call, allowing earlier insertions to
+ * change payload/state. Returns success and original eax through result (actor
+ * handle when disabled, zero when not due, last insertion eax otherwise).
+ * Missing insertion boundary fails after timing changes; earlier effects persist.
+ * The callee boundary preserves other registers, as in VertrixCalls. */
+int vertrix_input_repeat_tick_full(VertrixInputRepeat *repeat, uint32_t actor_handle,
+                                   uint32_t elapsed, const VertrixCalls *calls, uint32_t *result);
 
 typedef struct
 {
