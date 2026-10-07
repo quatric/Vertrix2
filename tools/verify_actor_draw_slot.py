@@ -36,15 +36,56 @@ def main():
     for address, code in ((DRAW, b'\xc2\x10\x00'), (VISIT_A, b'\xc3'), (VISIT_B, b'\xc3')):
         cpu.mem_write(address, code)
     events, native = [], []
+    mutation = None
+    current_actor = current_companion = None
+    current_alternate = None
+    global_handle = COMPANION
+    service_events = []
+    expected_context = 0x1234
+    GlobalRead = c.CFUNCTYPE(c.c_uint32, c.c_uint32, c.c_void_p)
+    Resolve = c.CFUNCTYPE(c.c_int, c.c_uint32, c.POINTER(c.c_void_p), c.POINTER(c.c_size_t), c.c_void_p)
+    class Globals(c.Structure):
+        _fields_ = [("read", GlobalRead), ("context", c.c_void_p)]
+    @GlobalRead
+    def global_read(address, context):
+        assert address == POINTER and context == expected_context
+        service_events.append(("global", address))
+        return global_handle
+    @Resolve
+    def resolve(handle, storage, size, context):
+        assert context == expected_context
+        service_events.append(("resolve", handle))
+        buffer = {COMPANION: current_companion, 0x803000: current_alternate}.get(handle)
+        if buffer is None: return 0
+        storage[0], size[0] = c.addressof(buffer), len(buffer)
+        return 1
+    globals_service = Globals(global_read, expected_context)
+    n.vertrix_actor_draw_slot_full.argtypes = [P, S, SZ, U, U, c.POINTER(Globals), Resolve, S, Draw, S]
     def hook_draw(cpu, a, s, x):
         esp = cpu.reg_read(UC_X86_REG_ESP)
         events.append(('draw', cpu.reg_read(UC_X86_REG_EAX), cpu.reg_read(UC_X86_REG_EDX), cpu.reg_read(UC_X86_REG_ECX), * struct.unpack('<4I', bytes(cpu.mem_read(esp + 4, 16)))))
+        if len(events) == 1 and mutation is not None:
+            for address, data in mutation:
+                cpu.mem_write(address, data)
     cpu.hook_add(UC_HOOK_CODE, hook_draw, begin=DRAW, end=DRAW)
     cpu.hook_add(UC_HOOK_CODE, lambda cpu, a, s, x: events.append(('a', cpu.reg_read(UC_X86_REG_EAX), 0)), begin=VISIT_A, end=VISIT_A)
     cpu.hook_add(UC_HOOK_CODE, lambda cpu, a, s, x: events.append(('b', cpu.reg_read(UC_X86_REG_EAX), cpu.reg_read(UC_X86_REG_EDX))), begin=VISIT_B, end=VISIT_B)
     @ Draw
     def draw(handle, selector, x, y, a, b, context):
+        nonlocal global_handle
         native.append(('draw', handle, selector, y & 0xffffffff, x & 0xffffffff, y & 0xffffffff, a, b))
+        if mutation is not None:
+            assert context == expected_context
+        if len(native) == 1 and mutation is not None:
+            for address, data in mutation:
+                if ACTOR <= address < ACTOR + len(current_actor):
+                    c.memmove(c.addressof(current_actor) + address - ACTOR, data, len(data))
+                elif COMPANION <= address < COMPANION + len(current_companion):
+                    c.memmove(c.addressof(current_companion) + address - COMPANION, data, len(data))
+                elif 0x803000 <= address < 0x803000 + len(current_alternate):
+                    c.memmove(c.addressof(current_alternate) + address - 0x803000, data, len(data))
+                elif address == POINTER:
+                    global_handle = struct.unpack('<I', data)[0]
         return 1
     @ Visit
     def visit_a(node, arg, context):
@@ -60,7 +101,7 @@ def main():
         out[0] = links[node]
         return 1
     rng = random.Random(0x4ae010)
-    totals = {'draw': 0, 'draw_drawn': 0, 'draw_companion': 0, 'chain': 0, 'chain_nodes': 0}
+    totals = {'draw': 0, 'full_draw': 0, 'draw_drawn': 0, 'draw_companion': 0, 'chain': 0, 'chain_nodes': 0}
     def setup():
         raw = bytearray(rng.randbytes(0x200))
         index = rng.choice([0xffff, 0xffff, 0, 1, 2, 3, 4, 5])
@@ -92,6 +133,18 @@ def main():
             assert e[1: 3] == m[1: 3] and e[3] == m[3] and e[4:
                 ] == m[4:
                     ], (case, e, m)
+        current_actor, current_companion = actor, companion
+        global_handle = COMPANION
+        events.clear(); native.clear(); service_events.clear()
+        cpu.mem_write(ACTOR, actor.raw)
+        cpu.mem_write(COMPANION, companion.raw)
+        cpu.mem_write(GLOBALS, bytes(state))
+        cpu.mem_write(POINTER, struct.pack('<I', COMPANION))
+        original.call(0x4ae010, eax=ACTOR, edx=surface, ebx=selector)
+        assert n.vertrix_actor_draw_slot_full(c.byref(state), actor, len(actor), surface, selector,
+            c.byref(globals_service), resolve, expected_context, draw, expected_context)
+        assert events == native, (case, 'full API', events, native)
+        totals['full_draw'] += 1
         totals['draw_drawn'] += bool(events)
         totals['draw_companion'] += len(events) == 2
 #rejection preserves
@@ -99,6 +152,59 @@ def main():
         native.clear()
         assert not n.vertrix_actor_draw_slot(c.byref(state), actor, 0x100, surface, selector, companion, len(companion), draw, None)
         assert not native and actor.raw == before
+    mutations = [
+        (0, [(ACTOR + 0x140, struct.pack('<I', 1))]),
+        (1, [(ACTOR + 0x140, struct.pack('<I', 0))]),
+        (1, [(ACTOR + 0x128, struct.pack('<hhII', -123, 234, 0, 0))]),
+        (1, [(COMPANION + 0x274, struct.pack('<II', 91, 92))]),
+        (1, [(POINTER, struct.pack('<I', 0x803000))]),
+    ]
+    totals['callback_mutations'] = 0
+    for initial_flag, updates in mutations:
+        actor, companion, state = setup()
+        for offset, value in ((0x120, 1), (0x124, 1), (0x138, 1), (0x12c, 7), (0x130, 8), (0x140, initial_flag)):
+            struct.pack_into('<I', actor, offset, value)
+        struct.pack_into('<H', actor, 0x148, 0xffff)
+        current_actor, current_companion = actor, companion
+        current_alternate = c.create_string_buffer(bytes(0x300), 0x300)
+        struct.pack_into('<II', current_alternate, 0x274, 101, 102)
+        cpu.mem_write(ACTOR, actor.raw)
+        cpu.mem_write(COMPANION, companion.raw)
+        cpu.mem_write(0x803000, current_alternate.raw)
+        cpu.mem_write(GLOBALS, bytes(state))
+        cpu.mem_write(POINTER, struct.pack('<I', COMPANION))
+        global_handle = COMPANION
+        before_actor, before_companion = actor.raw, companion.raw
+        mutation = updates
+        events.clear(); native.clear(); service_events.clear()
+        original.call(0x4ae010, eax=ACTOR, edx=4, ebx=5)
+        assert n.vertrix_actor_draw_slot_full(c.byref(state), actor, len(actor), 4, 5,
+            c.byref(globals_service), resolve, expected_context, draw, expected_context)
+        assert events == native, ('callback mutation', events, native)
+        assert actor.raw == bytes(cpu.mem_read(ACTOR, len(actor)))
+        assert companion.raw == bytes(cpu.mem_read(COMPANION, len(companion)))
+        assert len(service_events) == (2 if len(events) == 2 else 0)
+        if not any(address == POINTER for address, _ in updates):
+            c.memmove(actor, before_actor, len(actor))
+            c.memmove(companion, before_companion, len(companion))
+            native.clear()
+            assert n.vertrix_actor_draw_slot(c.byref(state), actor, len(actor), 4, 5,
+                companion, len(companion), draw, expected_context)
+            assert events == native, ('fixed-companion mutation', events, native)
+        totals['callback_mutations'] += 1
+    # Missing late services/short companion retain the primary callback.
+    late_failure_cases = 0
+    for missing_globals, bad_handle, short in [(True, False, False), (False, True, False), (False, False, True)]:
+        struct.pack_into('<I', actor, 0x140, 1)
+        mutation = []
+        global_handle = 0xdeadbeef if bad_handle else COMPANION
+        current_companion = c.create_string_buffer(bytes(0x100), 0x100) if short else companion
+        native.clear(); service_events.clear()
+        assert not n.vertrix_actor_draw_slot_full(c.byref(state), actor, len(actor), 4, 5,
+            None if missing_globals else c.byref(globals_service), resolve, expected_context, draw, expected_context)
+        assert len(native) == 1
+        late_failure_cases += 1
+    mutation = None
     for case in range(2048):
         count = rng.randrange(0, 9)
         nodes = [NODES + 0x200 * i for i in range(count)]
@@ -120,7 +226,9 @@ def main():
         links[NODES] = NODES
         native.clear()
         assert not n.vertrix_actor_chain_walk(NODES, 0, visit_a, visit_b, follow, None)
-    report = {'status': 'passed', 'complete_original_cases': totals, 'scope': 'Complete 4ae010, 4ade60 and 4ae140 execute in the original. Draw 47ce10 and chain ' 'visits 4ac8a0/4af8c0 are recorded stubs; their eax/edx/ecx and four stack arguments ' 'and call order match. Actor storage and 5bb710..5bb728 compare whole. Native ' 'cyclic chains and short storage are rejected.'}
+    report = {'status': 'passed', 'complete_original_cases': totals, 'native_late_failure_cases': late_failure_cases, 'scope': 'Complete 4ae010, 4ade60 and 4ae140 execute in the original. Draw 47ce10 and chain ' 'visits 4ac8a0/4af8c0 are recorded stubs; their eax/edx/ecx and four stack arguments ' 'and call order match. Actor storage and 5bb710..5bb728 compare whole. Native ' 'cyclic chains and short storage are rejected. Both draw APIs cover 8192 cases; five original-backed '
+                       'callback mutations cover flag toggles, fresh rectangle/resource and companion fields, '
+                       'and global companion replacement. Three native late failures retain the first draw.'}
     (build / 'actor-draw-slot-verification.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))
 if __name__ == '__main__':

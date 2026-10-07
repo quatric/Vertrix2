@@ -124,18 +124,13 @@ int vertrix_piece_actor_forward_slot2(void *parent, size_t size, uint32_t arg,
     {
         return 0;
     }
-    uint32_t handles[7], vtables[7];
     for (size_t i = 0; i < 7; ++i)
     {
-        vertrix_actor_storage_read(parent, size, 0x15c + i * 4, 4, &handles[i]);
-        if (handles[i] && !vtable_of(handles[i], &vtables[i], vtable_context))
-        {
-            return 0;
-        }
-    }
-    for (size_t i = 0; i < 7; ++i)
-    {
-        if (handles[i] && !call(handles[i], vtables[i], arg, context))
+        uint32_t handle;
+        uint32_t vtable;
+        vertrix_actor_storage_read(parent, size, 0x15c + i * 4, 4, &handle);
+        if (handle &&
+            (!vtable_of(handle, &vtable, vtable_context) || !call(handle, vtable, arg, context)))
         {
             return 0;
         }

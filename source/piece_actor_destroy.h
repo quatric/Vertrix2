@@ -41,7 +41,9 @@ int vertrix_piece_actor_destroy(void *parent, size_t size, uint32_t parent_handl
  * 0x158, arg the original edx. The target body is a separate recovery. */
 typedef int (*VertrixActorSlot2)(uint32_t handle, uint32_t vtable, uint32_t arg, void *context);
 /* Original 0x42abf0: call slot 2 with arg for each nonzero child in15c..174 in
- * order. Needs 0x178 bytes. Child vtables are supplied by the resolver. */
+ * order, reading each handle and resolving its current vtable when reached. Callbacks can
+ * change later slots or child vtables. A failed resolver or callback returns zero while
+ * retaining preceding calls and their effects. Needs 0x178 bytes. */
 typedef int (*VertrixActorVtable)(uint32_t handle, uint32_t *vtable, void *context);
 int vertrix_piece_actor_forward_slot2(void *parent, size_t size, uint32_t arg,
                                       VertrixActorVtable vtable_of, void *vtable_context,
