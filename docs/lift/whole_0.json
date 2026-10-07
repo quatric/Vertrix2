@@ -58,7 +58,7 @@
   "virtual": [],
   "address": 4211840
  },
- "f404580": {
+ "return_unchanged": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -7942,7 +7942,7 @@
   "virtual": [],
   "address": 4349680
  },
- "f425f40": {
+ "return_unchanged_425f40": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -8708,7 +8708,7 @@
   "virtual": [],
   "address": 4367120
  },
- "piece_release_children": {
+ "piece_release_children_full": {
   "callees": {
    "0x4b22c0": [
     0,
@@ -8725,7 +8725,7 @@
   "virtual": [],
   "address": 4367488
  },
- "f42a4a0": {
+ "piece_release_children_full_42a4a0": {
   "callees": {
    "0x4b22c0": [
     0,
@@ -9613,7 +9613,7 @@
   ],
   "address": 4385632
  },
- "board_release_piece_children": {
+ "board_release_piece_children_full": {
   "callees": {
    "0x42a4a0": [
     0,

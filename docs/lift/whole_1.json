@@ -4504,7 +4504,7 @@
   "virtual": [],
   "address": 4445856
  },
- "effects_release_all": {
+ "effects_release_all_full": {
   "callees": {
    "0x4b22c0": [
     0,
@@ -4682,7 +4682,7 @@
   "virtual": [],
   "address": 4448512
  },
- "arena_release_all": {
+ "arena_release_all_full": {
   "callees": {
    "0x4b22c0": [
     0,

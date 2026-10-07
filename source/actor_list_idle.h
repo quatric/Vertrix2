@@ -8,7 +8,7 @@
  * Objects are resolved through VertrixObjectStorage; an unresolvable object returns 0 and leaves
  * the result untouched. */
 
-/* Original 0x471c90, 0x471cd0, 0x471d10, 0x471d50 and 0x472360: result 1 when every actor's
+/* Original variants 0x471c90, 0x471cd0, 0x471d10, 0x471d50, 0x472360: result 1 when every actor's
  * handler token (+0x154) is zero, else 0. Scanning stops at the first busy actor. */
 int vertrix_actor_list_all_idle(const uint32_t *handles, uint32_t count,
                                 VertrixObjectStorage resolve, void *context, uint32_t *idle);

@@ -195,3 +195,119 @@ int vertrix_actors_handler_from_ec_unlinked(const uint32_t *handles, uint32_t co
     }
     return 1;
 }
+
+static uint32_t release_slots_full(void *storage, size_t size, size_t offset, int32_t count,
+                                   uint32_t object, const VertrixCalls *runtime,
+                                   VertrixMemoryRead read, void *read_context, int *ok)
+{
+    uint32_t result = object + (uint32_t)offset;
+    *ok = 1;
+    if (count == 0)
+    {
+        return result;
+    }
+    if (count < 0)
+    {
+        count = 1;
+    }
+    if (!storage || offset > size || (size_t)count > (size - offset) / 4)
+    {
+        *ok = 0;
+        return 0;
+    }
+    for (int32_t slot = 0; slot < count; ++slot)
+    {
+        size_t at = offset + (size_t)slot * 4;
+        uint32_t handle, table, entry;
+        vertrix_actor_storage_read(storage, size, at, 4, &handle);
+        if (handle)
+        {
+            if (!read || !read(handle + 0x158, 4, &table, read_context) ||
+                !read(table, 4, &entry, read_context) || !entry)
+            {
+                *ok = 0;
+                return 0;
+            }
+            result = vertrix_call(runtime, entry, handle, 2, table, object + (uint32_t)at, 0);
+        }
+        vertrix_actor_storage_write(storage, size, at, 4, 0);
+    }
+    return result;
+}
+
+uint32_t vertrix_object_release_slots_full(void *storage, size_t size, size_t offset, int32_t count,
+                                           uint32_t object, const VertrixCalls *runtime,
+                                           VertrixMemoryRead read, void *read_context)
+{
+    int ok;
+    return release_slots_full(storage, size, offset, count, object, runtime, read, read_context,
+                              &ok);
+}
+
+uint32_t vertrix_piece_release_children_full(void *storage, size_t size, int second_list,
+                                             uint32_t object, const VertrixCalls *runtime,
+                                             VertrixMemoryRead read, void *read_context)
+{
+    return vertrix_object_release_slots_full(storage, size,
+                                             second_list ? PIECE_SECOND_LIST : PIECE_FIRST_LIST,
+                                             PIECE_CHILDREN, object, runtime, read, read_context);
+}
+
+uint32_t vertrix_effects_release_all_full(void *storage, size_t size, uint32_t object,
+                                          const VertrixCalls *runtime, VertrixMemoryRead read,
+                                          void *read_context)
+{
+    int ok;
+    release_slots_full(storage, size, EFFECT_SLOTS_FIRST, EFFECT_SLOTS, object, runtime, read,
+                       read_context, &ok);
+    if (!ok)
+    {
+        return 0;
+    }
+    return release_slots_full(storage, size, EFFECT_EXTRA_FIRST, EFFECT_EXTRA_SLOTS, object,
+                              runtime, read, read_context, &ok);
+}
+
+uint32_t vertrix_arena_release_all_full(void *storage, size_t size, uint32_t object,
+                                        const VertrixCalls *runtime, VertrixMemoryRead read,
+                                        void *read_context)
+{
+    int ok;
+    release_slots_full(storage, size, ARENA_FIRST, ARENA_SLOTS, object, runtime, read, read_context,
+                       &ok);
+    if (!ok)
+    {
+        return 0;
+    }
+    release_slots_full(storage, size, ARENA_PAIRS_FIRST, ARENA_PAIRS_SLOTS, object, runtime, read,
+                       read_context, &ok);
+    if (!ok)
+    {
+        return 0;
+    }
+    return release_slots_full(storage, size, ARENA_LAST_FIRST, ARENA_LAST_SLOTS, object, runtime,
+                              read, read_context, &ok);
+}
+
+uint32_t vertrix_board_release_piece_children_full(
+    const void *board, size_t board_size, uint32_t board_handle, VertrixObjectStorage resolve,
+    void *resolve_context, const VertrixCalls *runtime, VertrixMemoryRead read, void *read_context)
+{
+    uint32_t piece;
+    void *storage;
+    size_t size;
+    if (!vertrix_actor_storage_read(board, board_size, BOARD_PIECE, 4, &piece))
+    {
+        return 0;
+    }
+    if (!piece)
+    {
+        return board_handle;
+    }
+    if (!resolve || !resolve(piece, &storage, &size, resolve_context))
+    {
+        return 0;
+    }
+    return vertrix_piece_release_children_full(storage, size, 1, piece, runtime, read,
+                                               read_context);
+}

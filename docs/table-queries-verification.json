@@ -5,9 +5,9 @@
     "0x4153e0": 4096,
     "0x415c00": 4096,
     "0x415c30": 4096,
-    "0x415e40": 4096,
+    "0x415e40": 4098,
     "0x415e80": 4096,
-    "0x415eb0": 4096,
+    "0x415eb0": 4098,
     "0x415ed0": 4096,
     "0x417840": 4096,
     "0x417930": 4096,
@@ -26,5 +26,5 @@
     "0x418050": 4096,
     "0x4180a0": 4096
   },
-  "scope": "Complete 4153e0, 417970, 417da0, 417e60, 417ed0 (draw 4826c0 stubbed and replayed), 418050, 4180a0, 417930, 417cf0, 417d10, 417d40, 417d70, 417df0, 417e20, 417fc0, 418000, 417840, 40f170, 415c00, 415c30, 415e40, 415e80, 415eb0 and 415ed0 run unmodified in the original over randomized table memory; only the comparison 4ccfe0 is replaced by a data-driven stub."
+  "scope": "Complete 4153e0, 417970, 417da0, 417e60, 417ed0 (draw 4826c0 stubbed and replayed), 418050, 4180a0, 417930, 417cf0, 417d10, 417d40, 417d70, 417df0, 417e20, 417fc0, 418000, 417840, 40f170, 415c00, 415c30, 415e40, 415e80, 415eb0 and 415ed0 run unmodified in the original over randomized table memory; comparison 4ccfe0 is stubbed with exact argument/order/count/context/return replay, including signed nonzero results. Four independent original/native mutable-array fixtures cover later-item reads and values read after the last match."
 }

@@ -23,6 +23,7 @@ int vertrix_sound_simple_set(uint8_t *object, size_t size, uint8_t kind, uint32_
  * only the tail (+0x24..+0xa0 and +0xa4..+0xb0). */
 #define VERTRIX_SOUND_BANK_SIZE 0xd4
 int vertrix_sound_bank_clear(uint8_t *object, size_t size);
+/* Original 0x476d20: Clear the bank tail only. */
 int vertrix_sound_bank_clear_tail(uint8_t *object, size_t size);
 
 /* Original 0x4779c0 (object of 0x78 bytes): vtable token 0x516804 at +0x74 and the clamp
@@ -30,6 +31,7 @@ int vertrix_sound_bank_clear_tail(uint8_t *object, size_t size);
 #define VERTRIX_SOUND_SLIDER_SIZE 0x78
 int vertrix_sound_slider_clear(uint8_t *object, size_t size);
 #define VERTRIX_SOUND_RANGE_SIZE 0xc
+/* Original 0x477910: Store the three range dwords (0, 0, 0x1800000). */
 int vertrix_sound_range_clear(uint8_t *object, size_t size);
 
 /* Original 0x476650: 1 for the function key codes 0x70..0x75 and 0xbe..0xc3 (low word only). */
@@ -47,8 +49,10 @@ int vertrix_sound_check_primary(uint8_t *object, size_t size, VertrixVirtualCall
  * 0x477d10: owner +8, playing +0xc, buffer +0x30, secondary +4. */
 int vertrix_sound_release_primary(uint8_t *object, size_t size, VertrixVirtualCall call,
                                   void *context);
+/* Original 0x477320: Release the stream buffer and secondary interface. */
 int vertrix_sound_release_stream(uint8_t *object, size_t size, VertrixVirtualCall call,
                                  void *context);
+/* Original 0x477d10: Release the looped buffer and secondary interface. */
 int vertrix_sound_release_looped(uint8_t *object, size_t size, VertrixVirtualCall call,
                                  void *context);
 
@@ -64,8 +68,10 @@ typedef uint32_t (*VertrixSoundBuilder)(void *context, uint32_t object, uint32_t
 uint32_t vertrix_sound_open_keys(uint8_t *object, size_t size, uint32_t handle, uint32_t mode,
                                  uint8_t flag, uint32_t argument, VertrixSoundBuilder build,
                                  void *context);
+/* Original 0x4772f0: Open the stream with the supplied builder boundary. */
 uint32_t vertrix_sound_open_stream(uint8_t *object, size_t size, uint32_t handle, uint8_t flag,
                                    uint32_t argument, VertrixSoundBuilder build, void *context);
+/* Original 0x477af0: Open the looped buffer with the supplied builder boundary. */
 uint32_t vertrix_sound_open_looped(uint8_t *object, size_t size, uint32_t handle, uint8_t flag,
                                    uint32_t argument, VertrixSoundBuilder build, void *context);
 #endif

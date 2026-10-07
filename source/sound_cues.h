@@ -36,10 +36,13 @@ typedef enum
     VERTRIX_CUE_KEY_THIRD = 0xc0,
     VERTRIX_CUE_KEY_FOURTH = 0xc4
 } VertrixCueKey;
+/* Original variants 0x477010, 0x477040, 0x477070, 0x4770a0, 0x4770d0, 0x477100,
+ * 0x477130, 0x477160: complete key cue wrappers with supplied start/stop boundaries. */
 int vertrix_sound_cue_key(const uint8_t *object, size_t size, VertrixCueKey key,
                           VertrixCueOperation operation, VertrixCueCall call, void *context);
 
-/* Original 0x476fb0 (start) and 0x476fe0 (stop): entry (delta + word +0xc8) & 0xffff. */
+/* Original variants 0x476fb0, 0x476fe0: start and stop, respectively; entry (delta + word +0xc8) &
+ * 0xffff. */
 int vertrix_sound_cue_offset(const uint8_t *object, size_t size, uint32_t delta,
                              VertrixCueOperation operation, VertrixCueCall call, void *context);
 
@@ -48,6 +51,8 @@ int vertrix_sound_cue_offset(const uint8_t *object, size_t size, uint32_t delta,
  * wrappers use the entries 0x72 (0x478570 start, 0x4785c0 stop), 0x73 (0x478610, 0x478660),
  * 0x70 (0x4786b0, 0x478700) and 0x71 (0x478750, 0x4787a0) with the same rule; pass the entry in
  * index. Needs 0x64 bytes. */
+/* Original variants 0x4784d0, 0x478520, 0x478570, 0x4785c0, 0x478610, 0x478660,
+ * 0x4786b0, 0x478700, 0x478750, 0x4787a0: complete indexed and fixed-entry cue wrappers. */
 int vertrix_sound_cue_position(const uint8_t *object, size_t size, uint32_t index,
                                VertrixCueOperation operation, VertrixCueCall call, void *context);
 

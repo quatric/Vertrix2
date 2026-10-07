@@ -62,10 +62,21 @@ def main():
 
     original.call = verified_call
     rng = random.Random(0x417930)
-    compare_log = []
+    compare_log, compare_replay, compare_contexts = [], [], []
+    callback_context = 0x1234
+    mutable_items = mutable_values = None
+    mutation_enabled = False
     def on_compare(uc):
         item, key = uc.reg_read(UC_X86_REG_EAX), uc.reg_read(UC_X86_REG_EDX)
-        cpu.mem_write(common.DATA, struct.pack('<I', fake_compare(item, key)))
+        result = fake_compare(item, key)
+        # Equality means zero; all other signed 32-bit values must reject.
+        if result:
+            result = (-1, -2147483648, 2147483647)[len(compare_log) % 3]
+        compare_log.append((item, key, result))
+        if mutation_enabled:
+            cpu.mem_write(0x806000 + 12, struct.pack('<I', 9))
+            cpu.mem_write(0x806400 + 12, struct.pack('<I', 0xfedcba98))
+        cpu.mem_write(common.DATA, struct.pack('<I', result & 0xffffffff))
     common.stub(cpu, 0x4ccfe0, on_compare)
     draws = []
     def on_draw(uc):
@@ -81,7 +92,14 @@ def main():
         return draws[len(replay) - 1][1]
     @ Compare
     def compare(item, key, context):
-        return fake_compare(item, key)
+        index = len(compare_replay)
+        result = compare_log[index][2] if index < len(compare_log) else 1
+        compare_replay.append((item, key, result))
+        compare_contexts.append(context)
+        if mutation_enabled:
+            mutable_items[3] = 9
+            mutable_values[3] = 0xfedcba98
+        return result
     def fill(address, size, low=0, high=255):
         data = bytes(rng.randrange(low, high + 1) for _ in range(size))
         cpu.mem_write(address, data)
@@ -147,13 +165,19 @@ def main():
         items = words(0x806000, 16, 1, 2, 3, 4, 5, 6)
         total = rng.randrange(17)
         key = rng.randrange(1, 8)
+        compare_log.clear(); compare_replay.clear(); compare_contexts.clear()
         want = original.call(0x415e40, eax=key, edx=0x806000, ebx=total) & 0xffffffff
-        assert n.vertrix_table_find_matching(items, total, key, compare, None) & 0xffffffff == want, case
+        assert n.vertrix_table_find_matching(items, total, key, compare, callback_context) & 0xffffffff == want, case
+        assert compare_log == compare_replay and len(compare_log) == total
+        assert compare_contexts == [callback_context] * total
         want = original.call(0x415e80, eax=key, edx=0x806000, ebx=total) & 0xffffffff
         assert n.vertrix_table_find_equal(items, total, key) & 0xffffffff == want, case
         values = words(0x806400, 16)
+        compare_log.clear(); compare_replay.clear(); compare_contexts.clear()
         want = original.call(0x415eb0, eax=key, edx=0x806000, ebx=0x806400, ecx=total) & 0xffffffff
-        assert n.vertrix_table_value_matching(items, values, total, key, compare, None) == want, case
+        assert n.vertrix_table_value_matching(items, values, total, key, compare, callback_context) == want, case
+        assert compare_log == compare_replay and len(compare_log) == total
+        assert compare_contexts == [callback_context] * total
         want = original.call(0x415ed0, eax=key, edx=0x806400, ebx=0x806000, ecx=total) & 0xffffffff
         assert n.vertrix_table_value_equal(items, values, total, key) == want, case
 # 4153e0
@@ -205,6 +229,30 @@ def main():
         assert n.vertrix_table_column_open(cgrid, counts, column) == original.call(0x418050, eax=column), case
         nth = rng.randrange(0, 12)
         assert n.vertrix_table_column_open_nth(cgrid, counts, column, nth) == original.call(0x4180a0, eax=column, edx=nth), case
+    mutation_cases = {0x415e40: 0, 0x415eb0: 0}
+    for address in mutation_cases:
+        for initial in ((3, 4, 5, 4), (1, 2, 3, 6)):
+            mutable_items = (U * 4)(*initial)
+            mutable_values = (U * 4)(11, 22, 33, 44)
+            cpu.mem_write(0x806000, bytes(mutable_items))
+            cpu.mem_write(0x806400, bytes(mutable_values))
+            compare_log.clear(); compare_replay.clear(); compare_contexts.clear()
+            mutation_enabled = True
+            if address == 0x415e40:
+                want = original.call(address, eax=0, edx=0x806000, ebx=4) & 0xffffffff
+                got = n.vertrix_table_find_matching(mutable_items, 4, 0, compare, callback_context) & 0xffffffff
+            else:
+                want = original.call(address, eax=0, edx=0x806000, ebx=0x806400, ecx=4)
+                got = n.vertrix_table_value_matching(mutable_items, mutable_values, 4, 0, compare, callback_context)
+            assert want == got, (hex(address), 'mutable comparator', want, got)
+            assert compare_log == compare_replay and len(compare_log) == 4
+            assert compare_contexts == [callback_context] * 4
+            assert bytes(mutable_items) == bytes(cpu.mem_read(0x806000, 16))
+            assert bytes(mutable_values) == bytes(cpu.mem_read(0x806400, 16))
+            assert compare_log[-1][0] == 9
+            assert got == (3 if address == 0x415e40 else 0xfedcba98)
+            mutation_cases[address] += 1
+    mutation_enabled = False
     expected_addresses = {
         0x4153e0, 0x417970, 0x417da0, 0x417e60, 0x417ed0, 0x418050,
         0x4180a0, 0x417930, 0x417cf0, 0x417d10, 0x417d40, 0x417d70,
@@ -212,8 +260,8 @@ def main():
         0x415c00, 0x415c30, 0x415e40, 0x415e80, 0x415eb0, 0x415ed0,
     }
     assert set(executions) == expected_addresses, executions
-    assert all(total == args.cases for total in executions.values()), executions
+    assert all(total == args.cases + mutation_cases.get(address, 0) for address, total in executions.items()), executions
     totals = {hex(address): total for address, total in sorted(executions.items())}
-    common.report(args, 'table-queries', totals, 'Complete 4153e0, 417970, 417da0, 417e60, 417ed0 (draw 4826c0 stubbed and replayed), 418050, 4180a0, 417930, 417cf0, 417d10, 417d40, 417d70, 417df0, 417e20, 417fc0, 418000, ' '417840, 40f170, 415c00, 415c30, 415e40, 415e80, 415eb0 and 415ed0 run unmodified in the original over ' 'randomized table memory; only the comparison 4ccfe0 is replaced by a data-driven stub.')
+    common.report(args, 'table-queries', totals, 'Complete 4153e0, 417970, 417da0, 417e60, 417ed0 (draw 4826c0 stubbed and replayed), 418050, 4180a0, 417930, 417cf0, 417d10, 417d40, 417d70, 417df0, 417e20, 417fc0, 418000, ' '417840, 40f170, 415c00, 415c30, 415e40, 415e80, 415eb0 and 415ed0 run unmodified in the original over ' 'randomized table memory; comparison 4ccfe0 is stubbed with exact argument/order/count/context/return replay, including signed nonzero results. Four independent original/native mutable-array fixtures cover later-item reads and values read after the last match.')
 if __name__ == '__main__':
     main()

@@ -204,6 +204,9 @@ void vertrix_unrelated(void);
         if registry.exists():
             names, conflicts = resolve_aliases(names, conflicts, json.loads(registry.read_text()), root)
             self.assertEqual(names[0x43b5b0], "vertrix_ai_reaction_time")
+        for address in (0x404580, 0x425f40, 0x4523b0, 0x4713c0,
+                        0x471ee0, 0x477930, 0x47f8f0, 0x4b3360):
+            self.assertEqual(names[address], "vertrix_return_unchanged")
         self.assertEqual(names[0x41a9e0], "vertrix_record_release_global_full")
         self.assertEqual(names[0x441a80], "vertrix_record_release_full")
         self.assertNotIn(0x43f200, names)

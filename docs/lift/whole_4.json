@@ -1377,7 +1377,7 @@
   "virtual": [],
   "address": 4924048
  },
- "object_release_slots": {
+ "object_release_slots_full": {
   "callees": {
    "virtual_4b22e7": [
     0,
@@ -1529,7 +1529,7 @@
   ],
   "address": 4928320
  },
- "f4b3360": {
+ "return_unchanged_4b3360": {
   "callees": {},
   "stack": 64,
   "arguments": 0,

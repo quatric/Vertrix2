@@ -171,12 +171,12 @@ enum
     LIFTED_F43D370_STACK = 80,
     LIFTED_F43D3F0_STACK = 68,
     LIFTED_SLOT_OBJECT_CONSTRUCT_STACK = 136,
-    LIFTED_EFFECTS_RELEASE_ALL_STACK = 80,
+    LIFTED_EFFECTS_RELEASE_ALL_FULL_STACK = 80,
     LIFTED_PARTICLE_EMIT_STACK = 156,
     LIFTED_SPAWN_SPREAD_STACK = 108,
     LIFTED_OBJECT_POPULATE_STACK = 184,
     LIFTED_BOARD_PARTICLES_RESET_STACK = 140,
-    LIFTED_ARENA_RELEASE_ALL_STACK = 84,
+    LIFTED_ARENA_RELEASE_ALL_FULL_STACK = 84,
     LIFTED_BOARD_PARTICLES_SETUP_STACK = 264,
     LIFTED_PARTICLE_INIT_DRIFT_STACK = 96,
     LIFTED_PARTICLE_INIT_FALL_STACK = 100,
@@ -1184,9 +1184,9 @@ uint32_t lifted_slot_object_construct(const VertrixCalls *calls,
                                       const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x43d800. */
-uint32_t lifted_effects_release_all(const VertrixCalls *calls,
-                                    const VertrixFactoryServices *services,
-                                    const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_effects_release_all_full(const VertrixCalls *calls,
+                                         const VertrixFactoryServices *services,
+                                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x43dc80. */
 uint32_t lifted_particle_emit(const VertrixCalls *calls, const VertrixFactoryServices *services,
@@ -1206,8 +1206,9 @@ uint32_t lifted_board_particles_reset(const VertrixCalls *calls,
                                       const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x43e260. */
-uint32_t lifted_arena_release_all(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                  const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_arena_release_all_full(const VertrixCalls *calls,
+                                       const VertrixFactoryServices *services,
+                                       const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x43e4d0. */
 uint32_t lifted_board_particles_setup(const VertrixCalls *calls,

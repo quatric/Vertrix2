@@ -98,7 +98,7 @@
   "virtual": [],
   "address": 4660944
  },
- "f471ee0": {
+ "return_unchanged_471ee0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -443,7 +443,7 @@
   "virtual": [],
   "address": 4662096
  },
- "f472360": {
+ "actor_list_all_idle_472360": {
   "callees": {
    "0x4ac900": [
     0,
@@ -2731,7 +2731,7 @@
   ],
   "address": 4680896
  },
- "f476d20": {
+ "sound_bank_clear_tail": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -2760,7 +2760,7 @@
   "virtual": [],
   "address": 4681648
  },
- "f476fe0": {
+ "sound_cue_offset_476fe0": {
   "callees": {
    "0x476280": [
     1,
@@ -2794,7 +2794,7 @@
   "virtual": [],
   "address": 4681744
  },
- "f477040": {
+ "sound_cue_key_477040": {
   "callees": {
    "0x476280": [
     1,
@@ -2811,7 +2811,7 @@
   "virtual": [],
   "address": 4681792
  },
- "f477070": {
+ "sound_cue_key_477070": {
   "callees": {
    "0x4761d0": [
     1,
@@ -2828,7 +2828,7 @@
   "virtual": [],
   "address": 4681840
  },
- "f4770a0": {
+ "sound_cue_key_4770a0": {
   "callees": {
    "0x476280": [
     1,
@@ -2845,7 +2845,7 @@
   "virtual": [],
   "address": 4681888
  },
- "f4770d0": {
+ "sound_cue_key_4770d0": {
   "callees": {
    "0x4761d0": [
     1,
@@ -2862,7 +2862,7 @@
   "virtual": [],
   "address": 4681936
  },
- "f477100": {
+ "sound_cue_key_477100": {
   "callees": {
    "0x476280": [
     1,
@@ -2879,7 +2879,7 @@
   "virtual": [],
   "address": 4681984
  },
- "f477130": {
+ "sound_cue_key_477130": {
   "callees": {
    "0x4761d0": [
     1,
@@ -2896,7 +2896,7 @@
   "virtual": [],
   "address": 4682032
  },
- "f477160": {
+ "sound_cue_key_477160": {
   "callees": {
    "0x476280": [
     1,
@@ -2925,7 +2925,7 @@
   "virtual": [],
   "address": 4682304
  },
- "f4772f0": {
+ "sound_open_stream": {
   "callees": {
    "0x477390": [
     0,
@@ -2942,7 +2942,7 @@
   "virtual": [],
   "address": 4682480
  },
- "f477320": {
+ "sound_release_stream": {
   "callees": {
    "virtual_47733e": [
     1,
@@ -3083,7 +3083,7 @@
   "virtual": [],
   "address": 4683888
  },
- "f477910": {
+ "sound_range_clear": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -3095,7 +3095,7 @@
   "virtual": [],
   "address": 4684048
  },
- "f477930": {
+ "return_unchanged_477930": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -3119,7 +3119,7 @@
   "virtual": [],
   "address": 4684224
  },
- "f477af0": {
+ "sound_open_looped": {
   "callees": {
    "0x477b10": [
     0,
@@ -3173,7 +3173,7 @@
   ],
   "address": 4684848
  },
- "f477d10": {
+ "sound_release_looped": {
   "callees": {
    "virtual_477d34": [
     1,
@@ -3444,7 +3444,7 @@
   "virtual": [],
   "address": 4687056
  },
- "f478520": {
+ "sound_cue_position_478520": {
   "callees": {
    "0x476280": [
     1,
@@ -3461,7 +3461,7 @@
   "virtual": [],
   "address": 4687136
  },
- "f478570": {
+ "sound_cue_position_478570": {
   "callees": {
    "0x4761d0": [
     1,
@@ -3478,7 +3478,7 @@
   "virtual": [],
   "address": 4687216
  },
- "f4785c0": {
+ "sound_cue_position_4785c0": {
   "callees": {
    "0x476280": [
     1,
@@ -3495,7 +3495,7 @@
   "virtual": [],
   "address": 4687296
  },
- "f478610": {
+ "sound_cue_position_478610": {
   "callees": {
    "0x4761d0": [
     1,
@@ -3512,7 +3512,7 @@
   "virtual": [],
   "address": 4687376
  },
- "f478660": {
+ "sound_cue_position_478660": {
   "callees": {
    "0x476280": [
     1,
@@ -3529,7 +3529,7 @@
   "virtual": [],
   "address": 4687456
  },
- "f4786b0": {
+ "sound_cue_position_4786b0": {
   "callees": {
    "0x4761d0": [
     1,
@@ -3546,7 +3546,7 @@
   "virtual": [],
   "address": 4687536
  },
- "f478700": {
+ "sound_cue_position_478700": {
   "callees": {
    "0x476280": [
     1,
@@ -3563,7 +3563,7 @@
   "virtual": [],
   "address": 4687616
  },
- "f478750": {
+ "sound_cue_position_478750": {
   "callees": {
    "0x4761d0": [
     1,
@@ -3580,7 +3580,7 @@
   "virtual": [],
   "address": 4687696
  },
- "f4787a0": {
+ "sound_cue_position_4787a0": {
   "callees": {
    "0x476280": [
     1,
@@ -5182,7 +5182,7 @@
   "virtual": [],
   "address": 4716768
  },
- "f47f8f0": {
+ "return_unchanged_47f8f0": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
