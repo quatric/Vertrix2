@@ -81,9 +81,13 @@ def combine(scratch, name, out_dir, first=0, count=None, unverified=False, only=
             '\n#include "lifted_%s.h"\n' % name]
     enums, protos, metas = [], [], {}
     readable = readable_names()
+    removed_path = ROOT / 'docs' / 'lifted-removed.json'
+    removed = {int(a, 16) for a in json.loads(removed_path.read_text())} if removed_path.exists() else set()
     for n in passed:
         text = (scratch / (n + '.c')).read_text()
         meta = json.loads((scratch / (n + '.json')).read_text())
+        if meta['address'] in removed and not unverified:
+            continue
         pretty = readable.get(meta['address'], n)
         function = text[text.index('uint32_t lifted_'):]
         header = (scratch / ('lifted_%s.h' % n)).read_text()

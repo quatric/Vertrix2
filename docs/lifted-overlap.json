@@ -11920,7 +11920,9 @@
  },
  "0x4879f0": {
   "lifted": "f4879f0",
-  "hand_files": [],
+  "hand_files": [
+   "object_glue.h"
+  ],
   "verification": [
    "object-chain-select-pair-verification.json",
    "object-chain-select-verification.json",
@@ -12516,7 +12518,9 @@
  },
  "0x48d600": {
   "lifted": "f48d600",
-  "hand_files": [],
+  "hand_files": [
+   "object_glue.h"
+  ],
   "verification": [
    "object-glue-verification.json"
   ]
@@ -14435,7 +14439,9 @@
  },
  "0x4b79a0": {
   "lifted": "f4b79a0",
-  "hand_files": [],
+  "hand_files": [
+   "object_glue.h"
+  ],
   "verification": [
    "object-glue-verification.json"
   ]
@@ -17618,6 +17624,13 @@
   ],
   "verification": []
  },
+ "0x4df320": {
+  "lifted": "f4df320",
+  "hand_files": [
+   "rtl_glue.h"
+  ],
+  "verification": []
+ },
  "0x4df6c8": {
   "lifted": "format_spec",
   "hand_files": [
@@ -17652,6 +17665,16 @@
   "verification": [
    "rtl-glue-verification.json"
   ]
+ },
+ "0x4dfac0": {
+  "lifted": "f4dfac0",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4dfb24": {
+  "lifted": "f4dfb24",
+  "hand_files": [],
+  "verification": []
  },
  "0x4e012c": {
   "lifted": "f4e012c",

@@ -350,6 +350,11 @@ class Lifter:
                 size = ops[1].size
                 value = '(uint32_t)(int32_t)(int%d_t)(uint%d_t)%s' % (size * 8, size * 8, value)
             self.emit(self.write(ops[0], value))
+        elif m == 'les':
+            # far pointer: the offset dword goes to the register, the selector is ignored (flat)
+            base, index, disp = self.address_parts(ops[1])
+            self.emit(self.write(ops[0], 'lift_load(&env, %s, %s, 4)' % (
+                base or '0u', self.offset_expr(index, disp))))
         elif m == 'cwde':
             self.emit('eax = (uint32_t)(int32_t)(int16_t)(uint16_t)eax;')
         elif m == 'cbw':
