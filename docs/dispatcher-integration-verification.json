@@ -2,7 +2,7 @@
   "status": "passed",
   "scope": "Host dispatcher integration; optional routine bodies are not executed or verified by this test.",
   "test": "tools/test_dispatch.c",
-  "verified_dispatch_entries": 2322,
+  "verified_dispatch_entries": 2337,
   "unsigned_comparator_pairs": 36,
   "unknown_boundary_forwarding_calls": 1,
   "optional_lookup_addresses": [
@@ -40,5 +40,12 @@
     "0x4c6a80",
     "0x4c93c0"
   ],
-  "leaf_scope": "Six unsigned EAX edge inputs at each directly dispatched leaf preserve the result, make no boundary calls and restore depth to zero."
+  "leaf_scope": "Six unsigned EAX edge inputs at each directly dispatched leaf preserve the result, make no boundary calls and restore depth to zero.",
+  "native_optional_boundary_checks": {
+    "0x48ae00": [
+      "Unavailable even while optional lifting is enabled",
+      "Direct dispatch declines and preserves output",
+      "Adapter forwards the complete call site to the supplied native boundary"
+    ]
+  }
 }

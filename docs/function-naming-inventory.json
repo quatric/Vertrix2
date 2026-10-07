@@ -6,6 +6,9 @@
   "anonymous_whole_chunk_names": 1420,
   "anonymous_entries_with_unapplied_canonical_names": [],
   "optional_unverified_entries": 124,
+  "optional_entries_kept_at_native_boundary": [
+    "0x48ae00"
+  ],
   "rename_dry_run": {
     "pending_routine_renames": 0,
     "pending_files": 0

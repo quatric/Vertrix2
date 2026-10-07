@@ -5,6 +5,7 @@ from pathlib import Path
 
 from rename_lifted import plan_renames, read_json
 from routine_names import readable_names
+from dispatch_boundaries import NATIVE_UNVERIFIED_BOUNDARIES
 
 
 def snapshot(root):
@@ -49,6 +50,10 @@ def inventory(root):
         "anonymous_whole_chunk_names": len(anonymous),
         "anonymous_entries_with_unapplied_canonical_names": pending,
         "optional_unverified_entries": len(optional),
+        "optional_entries_kept_at_native_boundary": [
+            hex(address) for address in sorted(NATIVE_UNVERIFIED_BOUNDARIES)
+            if any(metadata["address"] == address for metadata in optional.values())
+        ],
         "rename_dry_run": {"pending_routine_renames": len(changes),
                            "pending_files": len(staged)},
         "source_lines": line_counts,
