@@ -47,3 +47,16 @@ Dolphin or on hardware.
 the host against the original's static data and a heap arena and prints every call that reaches
 the platform boundary. The four lifted screens (0x465af0, 0x466d60, 0x46c9d0, 0x46b810) run to
 completion this way; their remaining boundary targets are listed by the probe.
+
+## Open (as of the last batch: 2,600 of 3,421 lifted routines verify)
+
+- 49 routines never complete under the oracle: they wait for a field that a stubbed callee would
+  update (animation and state-machine tick loops such as 0x452520), so the original loops until the
+  instruction limit. They need per-routine effects that model the callee's write.
+- About 9 time out, about 8 read memory the oracle never maps, about 40 differ in pool contents or
+  call logs; each needs a per-routine look.
+- 139 routines do not lift: x87 code (Delphi `Extended` is 80-bit, which the host's `long double`
+  does not reproduce), `enter`, `daa` and a few segment/FPU control instructions.
+- Not written: the Wii startup and loop that call the lifted screens, and the platform side of the
+  unrecovered boundary (heap allocator 0x4e7c90, AnsiString helpers, the actor creators).
+- Nothing has run in Dolphin or on hardware.
