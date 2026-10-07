@@ -4718,7 +4718,7 @@
   "virtual": [],
   "address": 4292912
  },
- "f418150": {
+ "compare_u32": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -4833,7 +4833,7 @@
   "virtual": [],
   "address": 4294688
  },
- "f418830": {
+ "actor_clock_to_period": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -7873,7 +7873,7 @@
   "virtual": [],
   "address": 4349232
  },
- "f425de0": {
+ "object_clear_slots": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -10035,7 +10035,7 @@
   "virtual": [],
   "address": 4386640
  },
- "f42ef60": {
+ "player_fill_bytes": {
   "callees": {},
   "stack": 68,
   "arguments": 0,

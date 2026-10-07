@@ -821,7 +821,7 @@
   "virtual": [],
   "address": 4399120
  },
- "f4320c0": {
+ "player_flag_a60": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2540,7 +2540,7 @@
   "virtual": [],
   "address": 4432912
  },
- "f43a4f0": {
+ "player_set_bytes_168": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -3261,7 +3261,7 @@
   "virtual": [],
   "address": 4438320
  },
- "f43b970": {
+ "player_flag_4e8": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -3341,7 +3341,7 @@
   "virtual": [],
   "address": 4438464
  },
- "f43ba70": {
+ "player_bonus_meter_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -3575,7 +3575,7 @@
   "virtual": [],
   "address": 4439296
  },
- "f43bd40": {
+ "player_byte_4c4_is_one": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
