@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x465af0": 4096
+  },
+  "scope": "Lifted instruction by instruction from the original; every call with its registers and stack arguments, the returned eax, every stored global and every pool object compare against the original executing completely in Unicorn."
+}

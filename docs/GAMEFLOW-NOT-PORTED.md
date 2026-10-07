@@ -61,6 +61,10 @@ recovered (or have unmodeled global state):
   `docs/options-screen-verification.json`, 4,096 executions; `VertrixCallSite` now carries up to 17
   stack arguments, `run_screen` gained a `post` check for the stored global `0x532a48`).
 
+- ~~`0x465af0`~~, ~~`0x466d60`~~, ~~`0x46c9d0`~~ LIFTED instruction by instruction
+  (`source/lifted_{title,select,game}_screen.c`, `docs/LIFTED.md`, `tools/verify_lifted.py`,
+  `docs/lifted-*-verification.json`, 4,096 executions each).
+
 ## Player state handlers (bonus system range 0x450ff0..0x456033)
 
 - RECOVERED: `0x451490`, `0x451520`, `0x451580`, `0x451630`, `0x451690`, `0x451730`, `0x451dd0`,

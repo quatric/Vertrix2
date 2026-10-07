@@ -1,0 +1,72 @@
+{
+ "callees": {
+  "0x4ca000": [
+   0,
+   false
+  ],
+  "0x4adf20": [
+   5,
+   false
+  ],
+  "0x4b54d0": [
+   1,
+   false
+  ],
+  "0x4ac7b0": [
+   0,
+   false
+  ],
+  "0x4b5e70": [
+   0,
+   false
+  ],
+  "0x4b5400": [
+   0,
+   false
+  ],
+  "0x4b6350": [
+   0,
+   false
+  ],
+  "0x4b65d0": [
+   3,
+   false
+  ],
+  "0x4ac910": [
+   0,
+   false
+  ],
+  "0x4ac4e0": [
+   0,
+   false
+  ],
+  "0x4abd70": [
+   0,
+   false
+  ],
+  "0x4ac8d0": [
+   0,
+   false
+  ],
+  "0x4ac710": [
+   0,
+   false
+  ],
+  "0x4ac8a0": [
+   0,
+   false
+  ],
+  "0x465a70": [
+   0,
+   false
+  ]
+ },
+ "locals": 88,
+ "pointer_callees": [
+  "0x4abd70",
+  "0x4b5400",
+  "0x4b6350",
+  "0x4ca000"
+ ],
+ "pointer_fields": []
+}

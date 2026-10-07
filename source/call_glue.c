@@ -48,7 +48,7 @@ uint32_t vertrix_calln(const VertrixCalls *calls, uint32_t target, uint32_t eax,
         {
             site.stack_third = stack[i];
         }
-        else
+        else if (i - 3 < sizeof site.stack_rest / sizeof site.stack_rest[0])
         {
             site.stack_rest[i - 3] = stack[i];
         }

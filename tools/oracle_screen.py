@@ -51,7 +51,7 @@ def write_report(build_dir, name, report):
 def run_screen(name, address, sources, function, argtypes, restype, callees, generate, scope,
                *, wrappers=(), allocator=0x4ca000, globals_ranges=(), patch=None, compare=True,
                result_mask=0xffffffff, description='', table_targets=(), lookups=(), pool_size=0x200, effects=None, fixed_returns=None, handle_returns=(), choices=None,
-               setup=None, extras=None, native_extras_arg=None, post=None,
+               setup=None, extras=None, native_extras_arg=None, post=None, mixed_returns=(),
                leading=('calls', 'services', 'globals')):
     """Run `function` against the original routine at `address`.
 
@@ -82,7 +82,7 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
     cpu = original.cpu
     rng = random.Random(address)
     pool = Pool(cpu, 4, pool_size)
-    returns, native_log, replay, replay_out = [], [], [], []
+    returns, native_log, replay, replay_out, native_stores = [], [], [], [], []
     native_extras = native_extras_arg or {}
 
     def handler(target, eax, edx, ebx, ecx, stack):
@@ -92,6 +92,8 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
             returns.append(fixed_returns[target])
         elif choices and target in choices:
             returns.append(rng.choice(choices[target]))
+        elif target in mixed_returns:
+            returns.append(rng.choice(pool.handles + [0, 1, 2, rng.getrandbits(32)]))
         elif target in handle_returns:
             returns.append(rng.choice(pool.handles))
         elif target in lookups:
@@ -110,16 +112,21 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
     fixed_returns = fixed_returns or {}
     outs = []
     callees = dict(callees)
+    cdecl_targets = {t for t, n in callees.items() if isinstance(n, tuple)}
+    callees = {t: (n[0] if isinstance(n, tuple) else n) for t, n in callees.items()}
     for table in table_targets:
         callees[struct.unpack('<I', bytes(cpu.mem_read(table, 4)))[0]] = 0
     stubs = Stubs(cpu, handler)
     for target, count in callees.items():
-        stubs.add(target, count)
+        stubs.add(target, count, cdecl=target in cdecl_targets)
     stubs.extras.update(extras or {})
 
     @Call
     def call(site, context):
         s = site.contents
+        if s.target == 0xf0000000:
+            native_stores.append((s.eax, s.edx, s.stack))
+            return 0
         native_log.append(site_log(s, callees[s.target]) + tuple(
             native_extras[s.target](s) if s.target in native_extras else ()))
         if s.target in effects:
@@ -146,6 +153,7 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
         returns.clear()
         outs.clear()
         native_log.clear()
+        native_stores.clear()
         result = original.call(address, args=tuple(stack_args), **kwargs) & 0xffffffff
         replay[:] = list(returns)
         replay_out[:] = list(outs)
@@ -156,6 +164,12 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
         else:
             assert got == 1, (case, got)
         assert native_log == stubs.log, (case, native_log, stubs.log)
+        final = {}
+        for store_address, value, width in native_stores:
+            final[(store_address, width)] = value
+        for (store_address, width), value in final.items():
+            held = int.from_bytes(bytes(cpu.mem_read(store_address, width)), 'little')
+            assert held == value & ((1 << (8 * width)) - 1), (case, hex(store_address), held, value)
         if post:
             post(cpu, native_args)
         assert not replay and not replay_out and pool.same(), (case, pool.diff())
