@@ -1,0 +1,18 @@
+{
+  "scope": "Current address/name inventory and consistency only. Original behavior verification is recorded in separate routine reports.",
+  "name_map_entries": 1333,
+  "verified_whole_chunk_entries": 2620,
+  "readable_whole_chunk_names": 1070,
+  "anonymous_whole_chunk_names": 1550,
+  "anonymous_entries_with_unapplied_canonical_names": [],
+  "rename_dry_run": {
+    "pending_routine_renames": 0,
+    "pending_files": 0
+  },
+  "full_native_recovery_reports": [
+    "docs/actor-frame-switch-verification.json",
+    "docs/ui-panel-dispatch-verification.json"
+  ],
+  "dispatcher_report": "docs/dispatcher-integration-verification.json",
+  "remaining_work": "Recover names and behavior for anonymous routines; complete repeat input queue effects and runtime integration. Optional lifted routines require independent behavioral verification."
+}
