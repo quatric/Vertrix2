@@ -16,9 +16,18 @@ typedef struct
     uint8_t enabled;
 } VertrixInputRepeat;
 
-/* Original 0x475ad0 / 0x475af0. Scheduling parameters are supplied by callers. */
+/* Original fragment 0x475ad0 / 0x475af0. Scheduling parameters are supplied by callers. */
 void vertrix_input_repeat_start(VertrixInputRepeat *repeat, const uint32_t payload[3]);
 void vertrix_input_repeat_stop(VertrixInputRepeat *repeat);
+/* Original 0x475ad0: clear counter +0x44, copy initial delay +0x3c to period
+ * +0x48, enable byte +0x5a, then store edx/ebx/ecx at +0x4c/+0x50/+0x54.
+ * Scalar register arguments are captured before mutation; eax remains actor_handle.
+ * Invalid storage/result rejects without mutation. */
+int vertrix_input_repeat_start_full(void *actor, size_t size, uint32_t actor_handle, uint32_t edx,
+                                    uint32_t ebx, uint32_t ecx, uint32_t *result);
+/* Original 0x475af0: clear only byte +0x5a; eax remains actor_handle. */
+int vertrix_input_repeat_stop_full(void *actor, size_t size, uint32_t actor_handle,
+                                   uint32_t *result);
 /* Original fragment 0x475e50. Each returned event uses the stored three-word payload.
  * The caller must emit every event in order. Platform polling is separate. */
 uint32_t vertrix_input_repeat_tick(VertrixInputRepeat *repeat, uint32_t elapsed);

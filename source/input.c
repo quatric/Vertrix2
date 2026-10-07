@@ -20,6 +20,36 @@ void vertrix_input_repeat_stop(VertrixInputRepeat *repeat)
     repeat->enabled = 0;
 }
 
+int vertrix_input_repeat_start_full(void *actor, size_t size, uint32_t actor_handle, uint32_t edx,
+                                    uint32_t ebx, uint32_t ecx, uint32_t *result)
+{
+    if (!actor || size < 0x5b || !result)
+    {
+        return 0;
+    }
+    uint32_t delay;
+    vertrix_actor_storage_write(actor, size, 0x44, 4, 0);
+    vertrix_actor_storage_read(actor, size, 0x3c, 4, &delay);
+    vertrix_actor_storage_write(actor, size, 0x48, 4, delay);
+    vertrix_actor_storage_write(actor, size, 0x5a, 1, 1);
+    vertrix_actor_storage_write(actor, size, 0x4c, 4, edx);
+    vertrix_actor_storage_write(actor, size, 0x50, 4, ebx);
+    vertrix_actor_storage_write(actor, size, 0x54, 4, ecx);
+    *result = actor_handle;
+    return 1;
+}
+
+int vertrix_input_repeat_stop_full(void *actor, size_t size, uint32_t actor_handle,
+                                   uint32_t *result)
+{
+    if (!result || !vertrix_actor_storage_write(actor, size, 0x5a, 1, 0))
+    {
+        return 0;
+    }
+    *result = actor_handle;
+    return 1;
+}
+
 uint32_t vertrix_input_repeat_tick(VertrixInputRepeat *repeat, uint32_t elapsed)
 {
     if (repeat->enabled != 1 || repeat->repeat_delay == 0)

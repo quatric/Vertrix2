@@ -338,6 +338,38 @@ def verify_full_acknowledge(native, oracle, rng):
     assert completed == 1025
     return completed
 
+def verify_full_repeat_edges(native, oracle, rng):
+    from original import BOARD
+    native.vertrix_input_repeat_start_full.argtypes = [ctypes.c_void_p,ctypes.c_size_t,
+        ctypes.c_uint32,ctypes.c_uint32,ctypes.c_uint32,ctypes.c_uint32,ctypes.POINTER(ctypes.c_uint32)]
+    native.vertrix_input_repeat_stop_full.argtypes = [ctypes.c_void_p,ctypes.c_size_t,
+        ctypes.c_uint32,ctypes.POINTER(ctypes.c_uint32)]
+    counts = {'start':0,'stop':0}
+    for state in range(256):
+        for name,address in [('start',0x475ad0),('stop',0x475af0)]:
+            raw = bytearray(rng.randbytes(0x80)); raw[0x5a]=state
+            edx,ebx,ecx = [rng.getrandbits(32) for _ in range(3)]
+            storage = ctypes.create_string_buffer(bytes(raw),len(raw))
+            oracle.cpu.mem_write(BOARD,bytes(raw))
+            wanted = oracle.call(address,eax=BOARD,edx=edx,ebx=ebx,ecx=ecx)
+            result = ctypes.c_uint32(0xdeadbeef)
+            if name=='start':
+                success = native.vertrix_input_repeat_start_full(storage,len(raw),BOARD,edx,ebx,ecx,ctypes.byref(result))
+            else:
+                success = native.vertrix_input_repeat_stop_full(storage,len(raw),BOARD,ctypes.byref(result))
+            assert success and result.value == wanted == BOARD
+            assert storage.raw == bytes(oracle.cpu.mem_read(BOARD,len(raw)))
+            counts[name] += 1
+    before = storage.raw; result=ctypes.c_uint32(0xdeadbeef)
+    for actor,size in [(None,len(storage)),(storage,0x5a)]:
+        assert not native.vertrix_input_repeat_start_full(actor,size,BOARD,1,2,3,ctypes.byref(result))
+        assert not native.vertrix_input_repeat_stop_full(actor,size,BOARD,ctypes.byref(result))
+        assert result.value==0xdeadbeef and storage.raw==before
+    assert not native.vertrix_input_repeat_start_full(storage,len(storage),BOARD,1,2,3,None)
+    assert not native.vertrix_input_repeat_stop_full(storage,len(storage),BOARD,None)
+    assert storage.raw==before and counts == {'start':256,'stop':256}
+    return counts
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("executable", type=Path)
@@ -389,16 +421,18 @@ def main():
     configuration_comparisons = verify_configuration(native, oracle, rng)
     full_ready_comparisons = verify_full_ready(native,oracle,rng)
     full_acknowledge_comparisons = verify_full_acknowledge(native,oracle,rng)
+    full_repeat_edge_comparisons = verify_full_repeat_edges(native,oracle,rng)
     report = {"status": "passed", "repeat_scheduler_comparisons": len(cases),
               "full_ready_check_comparisons": full_ready_comparisons,
               "full_acknowledge_comparisons": full_acknowledge_comparisons,
+              "full_repeat_edge_comparisons": full_repeat_edge_comparisons,
               "full_repeat_scheduler_comparisons": full_repeat_comparisons,
               "repeat_insertion_mutation_cases": repeat_mutation_cases,
               "repeat_missing_boundary_cases": 1,
               "queue_operation_comparisons": queue_comparisons,
               "integrated_action_comparisons": action_comparisons,
               "control_configuration_comparisons": configuration_comparisons,
-              "scope": "Full original 0x476320 record selection/global publication/return and entire action-table mutation match across state bytes and low-word indices. Failed publication retains callback effects; invalid storage rejects before publication. Full original 0x475d70 ready-check return and whole unchanged actor storage match all 256 state bytes with varied caller registers. Full original475e50 insertion target/registers/return/state matched independently, including live payload/state mutation and fixed due count; missing insertion boundary retains timing updates. Original repeat scheduler and FIFO action consumption/update/acknowledgment; host allocation replaces original pool; press/release wrappers, repeat generation and deferred delivery integrated; polling, bindings and gameplay dispatch remain separate"}
+              "scope": "Full original 0x475ad0/0x475af0 exact returned actor handle and whole raw storage match all enabled state bytes and random register payloads; invalid API storage/result preserves input. Full original 0x476320 record selection/global publication/return and entire action-table mutation match across state bytes and low-word indices. Failed publication retains callback effects; invalid storage rejects before publication. Full original 0x475d70 ready-check return and whole unchanged actor storage match all 256 state bytes with varied caller registers. Full original475e50 insertion target/registers/return/state matched independently, including live payload/state mutation and fixed due count; missing insertion boundary retains timing updates. Original repeat scheduler and FIFO action consumption/update/acknowledgment; host allocation replaces original pool; press/release wrappers, repeat generation and deferred delivery integrated; polling, bindings and gameplay dispatch remain separate"}
     (args.build_dir / "input-verification.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report, indent=2))
 
