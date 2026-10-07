@@ -201,7 +201,7 @@
  "0x429350": "vertrix_object_destroy_c",
  "0x4293e0": "vertrix_saved_block_load",
  "0x429660": "vertrix_object_address_plus_4",
- "0x429670": "vertrix_marker_actor_construct",
+ "0x429670": "vertrix_marker_actor_construct_full",
  "0x429880": "vertrix_piece_actor_construct_slots",
  "0x429bf0": "vertrix_slot_objects_make",
  "0x429d50": "vertrix_choice_grid_apply",

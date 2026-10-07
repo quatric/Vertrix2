@@ -1,5 +1,53 @@
 {
   "status": "passed",
+  "full_runtime_boundary": {
+    "complete_original_executions": {
+      "0x4b22c0": 4096,
+      "0x42a480": 4096,
+      "0x42a4a0": 4096,
+      "0x43d800": 4096,
+      "0x43e260": 4096,
+      "0x42eba0": 4096,
+      "0x429670": 4096
+    },
+    "callback_mutation_cases": {
+      "0x4b22c0": 1536,
+      "0x42a480": 1024,
+      "0x42a4a0": 1024,
+      "0x43d800": 1024,
+      "0x43e260": 1024,
+      "0x42eba0": 1024,
+      "0x429670": 0
+    },
+    "no_callback_cases": {
+      "0x4b22c0": 1171,
+      "0x42a480": 588,
+      "0x42a4a0": 610,
+      "0x43d800": 512,
+      "0x43e260": 512,
+      "0x42eba0": 614,
+      "0x429670": 4096
+    },
+    "changed_later_vtable_cases": {
+      "0x4b22c0": 512,
+      "0x42a480": 1024,
+      "0x42a4a0": 1024,
+      "0x43d800": 1024,
+      "0x43e260": 1024,
+      "0x42eba0": 1024,
+      "0x429670": 0
+    },
+    "zero_count_cases": 512,
+    "negative_count_single_slot_cases": 1024,
+    "exact_callback_register_comparisons": 2338673,
+    "marker_constructor_object_handles": {
+      "0x806000": 834,
+      "0x809000": 845,
+      "0x80b000": 804,
+      "0x808000": 838,
+      "0x80a000": 775
+    }
+  },
   "complete_original_executions": {
     "0x42a480": 2048,
     "0x42a4a0": 2048,
@@ -17,5 +65,5 @@
     "0x471dd0": 2048,
     "0x471bf0": 2048
   },
-  "scope": "Complete 43e260, 42eba0, 42a480, 42a4a0, 43d800, 429660, 429670, 43d300, 475da0, 476120 476140, 471bb0, 471bf0, 471d90 and 471dd0 execute in the original (virtual destructors stubbed and logged); whole objects, destroy events and returned values compare."
+  "scope": "Complete 43e260, 42eba0, 42a480, 42a4a0, 43d800, 429660, 429670, 43d300, 475da0, 476120 476140, 471bb0, 471bf0, 471d90 and 471dd0 execute in the original (virtual destructors stubbed and logged); whole objects and destroy events compare, with return checks on scalar helpers. Full slot release APIs additionally compare six whole release routines and the complete marker constructor with exact EAX and callback registers, independent native memory, late slot/vtable mutations, overwritten current-slot writes, zero counts, negative counts processing one slot and empty final groups."
 }

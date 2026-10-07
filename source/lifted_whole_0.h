@@ -314,7 +314,7 @@ enum
     LIFTED_F429460_STACK = 148,
     LIFTED_F429600_STACK = 88,
     LIFTED_OBJECT_ADDRESS_PLUS_4_STACK = 64,
-    LIFTED_MARKER_ACTOR_CONSTRUCT_STACK = 68,
+    LIFTED_MARKER_ACTOR_CONSTRUCT_FULL_STACK = 68,
     LIFTED_PIECE_ACTOR_CONSTRUCT_SLOTS_STACK = 96,
     LIFTED_CHOICE_GRID_APPLY_STACK = 100,
     LIFTED_CHOICE_GRID_LOAD_VALUES_STACK = 96,
@@ -1717,9 +1717,9 @@ uint32_t lifted_object_address_plus_4(const VertrixCalls *calls,
                                       const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x429670. */
-uint32_t lifted_marker_actor_construct(const VertrixCalls *calls,
-                                       const VertrixFactoryServices *services,
-                                       const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_marker_actor_construct_full(const VertrixCalls *calls,
+                                            const VertrixFactoryServices *services,
+                                            const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x429880. */
 uint32_t lifted_piece_actor_construct_slots(const VertrixCalls *calls,

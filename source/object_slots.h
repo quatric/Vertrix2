@@ -7,6 +7,9 @@
  * Storage is raw object bytes. Rejected storage returns zero; late resolution failures
  * in full runtime-boundary APIs retain completed callback effects. */
 
+/* Legacy release helpers return success rather than original EAX, and their
+ * callback exposes handle/flag rather than every original register input. */
+
 /* Original fragment 0x4b22c0 on an array in object storage: destroy (virtual destructor, flag 2)
  * and clear every set handle of count dwords at offset, in order. The destroy callback may change
  * the storage before the slot is cleared, as in the original. Returns zero when the array does not
@@ -36,8 +39,9 @@ int vertrix_board_release_piece_children(const void *board, size_t board_size,
                                          VertrixObjectStorage resolve, VertrixBoardDestroy destroy,
                                          void *context);
 
-/* Original0x429670: construct a base actor (0x4abd70) and mark it: dword +0x158 = 0x5145a4, bytes
- * +0x94 = 0, +0x95 = 3, +0x15c = 0xff and dword +0x160 = 1. Returns zero for short storage. */
+/* Original fragment 0x429670: construct a base actor (0x4abd70) and mark it: dword +0x158 =
+ * 0x5145a4, bytes +0x94 = 0, +0x95 = 3, +0x15c = 0xff and dword +0x160 = 1. Returns zero for short
+ * storage. */
 int vertrix_marker_actor_construct(void *storage, size_t size);
 
 /* Original0x429660: the address four bytes into an object. */
@@ -101,5 +105,9 @@ uint32_t vertrix_arena_release_all_full(void *storage, size_t size, uint32_t obj
 uint32_t vertrix_board_release_piece_children_full(
     const void *board, size_t board_size, uint32_t board_handle, VertrixObjectStorage resolve,
     void *resolve_context, const VertrixCalls *runtime, VertrixMemoryRead read, void *read_context);
+
+/* Original0x429670: construct the marked base actor, preserving the original
+ * object-handle return. Short storage returns zero before any field writes. */
+uint32_t vertrix_marker_actor_construct_full(void *storage, size_t size, uint32_t object);
 
 #endif

@@ -119,3 +119,9 @@ See `docs/FUNCTION-NAMING.md` for the workflow. These checks do not establish fu
 The full resource-release APIs preserve original EAX and callback arguments for `0x441a80` and
 `0x41a9e0`, including release callbacks that clear or redirect the global. The older void-release
 helpers remain fragments; see `docs/resource-record-verification.json` for 4,096 fixtures per full API.
+
+Full object-slot cleanup APIs preserve original EAX and destructor register inputs for six entrypoints.
+They read later slots and vtables after preceding callbacks and preserve the original negative-count
+behavior (one slot). Evidence is in `docs/object-slots-verification.json`. Shared unchanged-return
+names for eight entrypoints describe only their verified register behavior, not their game roles;
+see `docs/register-return-verification.json`.

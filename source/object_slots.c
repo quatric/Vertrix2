@@ -311,3 +311,8 @@ uint32_t vertrix_board_release_piece_children_full(
     return vertrix_piece_release_children_full(storage, size, 1, piece, runtime, read,
                                                read_context);
 }
+
+uint32_t vertrix_marker_actor_construct_full(void *storage, size_t size, uint32_t object)
+{
+    return vertrix_marker_actor_construct(storage, size) ? object : 0;
+}

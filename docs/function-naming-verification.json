@@ -22,13 +22,13 @@
     "boundary_forwarding_calls": 1
   },
   "naming_regression_tests": 20,
-  "post_regeneration_identifier_only_renames": 41,
+  "post_regeneration_identifier_only_renames": 42,
   "metadata_matches_verified_batch_except_names": true,
   "identifier_only_comparison": {
     "status": "passed",
     "scope": "Generated lifted identifiers only; native callback recovery verified separately.",
-    "reference_commit": "64f19baf79902b180700befbf2184142939f5892",
-    "renamed_routines": 41,
+    "reference_commit": "64f19ba",
+    "renamed_routines": 42,
     "normalized_files": [
       "source/lifted_dispatch.c",
       "source/lifted_whole_0.c",
@@ -89,5 +89,15 @@
     "report": "docs/table-queries-verification.json",
     "mutable_array_fixtures": 4,
     "callback_arguments_order_count_context_checked": true
+  },
+  "native_object_slot_recovery": {
+    "status": "passed",
+    "report": "docs/object-slots-verification.json",
+    "full_original_routines": 7,
+    "full_original_executions": 28672,
+    "exact_callback_register_comparisons": 2338673,
+    "negative_count_single_slot_cases": 1024,
+    "marker_constructor_cases": 4096,
+    "total_original_executions": 59392
   }
 }

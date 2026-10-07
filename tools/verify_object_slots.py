@@ -18,7 +18,7 @@ SIZE = 0xb00
 Destroy = c.CFUNCTYPE(None, c.c_uint32, c.c_uint32, c.c_void_p)
 
 
-def verify_full(n, args):
+def verify_full(n, args, only_marker=False):
     original = Original(args.executable)
     cpu = original.cpu
     OBJ, BOARD = 0x806000, 0x807000
@@ -31,6 +31,8 @@ def verify_full(n, args):
                                                       U, runtime_pointer, Read, c.c_void_p]
     for name in ('vertrix_effects_release_all_full', 'vertrix_arena_release_all_full'):
         getattr(n, name).argtypes = [c.c_void_p, c.c_size_t, U, runtime_pointer, Read, c.c_void_p]
+    n.vertrix_marker_actor_construct_full.argtypes = [c.c_void_p, c.c_size_t, U]
+    n.vertrix_marker_actor_construct_full.restype = U
     n.vertrix_board_release_piece_children_full.argtypes = [c.c_void_p, c.c_size_t, U,
                                                             Resolve, c.c_void_p, runtime_pointer,
                                                             Read, c.c_void_p]
@@ -53,6 +55,7 @@ def verify_full(n, args):
     zero_count_cases = 0
     negative_count_cases = 0
     callback_count = 0
+    marker_handles = {}
 
     def writes(slot):
         return [(slot, replacement), (slot + 4, ACTORS[2]),
@@ -111,7 +114,9 @@ def verify_full(n, args):
     routines = [(0x4b22c0, [(0x15c, 16)]), (0x42a480, [(0x15c, 3)]),
                 (0x42a4a0, [(0x170, 3)]), (0x43d800, [(0x15c, 500), (0x92c, 8)]),
                 (0x43e260, [(0x15c, 450), (0x864, 3), (0x870, 1)]),
-                (0x42eba0, [(0x170, 3)])]
+                (0x42eba0, [(0x170, 3)]), (0x429670, [])]
+    if only_marker:
+        routines = [(0x429670, [])]
     for address, ranges in routines:
         key = hex(address)
         full_counts[key] = mutation_counts[key] = no_call_counts[key] = changed_vtable_cases[key] = 0
@@ -123,7 +128,7 @@ def verify_full(n, args):
                 for slot in range(count):
                     handle = 0 if case % 8 == 1 else rng.choice((*ACTORS, 0, 0))
                     struct.pack_into('<I', initial[OBJ], offset + 4 * slot, handle)
-            mutates = case % 4 == 0 or (address == 0x4b22c0 and case % 8 == 7)
+            mutates = address != 0x429670 and (case % 4 == 0 or (address == 0x4b22c0 and case % 8 == 7))
             if mutates:
                 first = ranges[0][0]
                 struct.pack_into('<III', initial[OBJ], first, ACTORS[0], ACTORS[1], ACTORS[1])
@@ -140,7 +145,13 @@ def verify_full(n, args):
             tokens = [0 if case % 7 == 0 else rng.getrandbits(32) for _ in range(512)]
             replacement = rng.getrandbits(32)
             ebx, ecx, edx = (rng.getrandbits(32) for _ in range(3))
-            if address == 0x4b22c0:
+            if address == 0x429670:
+                marker_object = rng.choice((OBJ, *ACTORS))
+                marker_handles[hex(marker_object)] = marker_handles.get(hex(marker_object), 0) + 1
+                expect = original.call(address, eax=marker_object, edx=edx, ebx=ebx, ecx=ecx)
+                got = n.vertrix_marker_actor_construct_full(host[marker_object], SIZE, marker_object)
+                assert got == marker_object, (key, case)
+            elif address == 0x4b22c0:
                 count = (-0x80000000, -1, 0, 1, 2, 7, 8, 13)[case % 8]
                 zero_count_cases += count == 0
                 negative_count_cases += count < 0
@@ -173,11 +184,15 @@ def verify_full(n, args):
             changed_vtable_cases[key] += any(call[0] == METHOD2 for call in native_calls)
             callback_count += len(native_calls)
     assert all(count == args.full_cases for count in full_counts.values())
-    assert all(count > 0 for count in mutation_counts.values())
+    assert all(count > 0 for key, count in mutation_counts.items() if key != '0x429670')
     assert all(count > 0 for count in no_call_counts.values())
-    assert all(count > 0 for count in changed_vtable_cases.values())
-    assert zero_count_cases > 0 and negative_count_cases > 0
+    assert all(count > 0 for key, count in changed_vtable_cases.items() if key != '0x429670')
+    if not only_marker:
+        assert zero_count_cases > 0 and negative_count_cases > 0
+    assert sum(marker_handles.values()) == args.full_cases
+    assert len(marker_handles) > 1
     return {'complete_original_executions': full_counts,
+            'marker_constructor_object_handles': marker_handles,
             'callback_mutation_cases': mutation_counts, 'no_callback_cases': no_call_counts,
             'changed_later_vtable_cases': changed_vtable_cases,
             'zero_count_cases': zero_count_cases, 'negative_count_single_slot_cases': negative_count_cases,
@@ -335,8 +350,9 @@ def main():
     report = {'status': 'passed', 'full_runtime_boundary': full_report, 'complete_original_executions': totals,
               'scope': 'Complete 43e260, 42eba0, 42a480, 42a4a0, 43d800, 429660, 429670, 43d300, 475da0, 476120 '
                        '476140, 471bb0, 471bf0, 471d90 and 471dd0 execute in the original (virtual destructors stubbed and '
-                       'logged); whole objects, destroy events and returned values compare. Full slot release '
-                       'APIs additionally compare six whole routines with exact EAX and callback '
+                       'logged); whole objects and destroy events compare, with return checks on scalar '
+                       'helpers. Full slot release '
+                       'APIs additionally compare six whole release routines and the complete marker constructor with exact EAX and callback '
                        'registers, independent native memory, late slot/vtable mutations, overwritten '
                        'current-slot writes, zero counts, negative counts processing one slot and empty final groups.'}
     (args.build_dir / 'object-slots-verification.json').write_text(

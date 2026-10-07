@@ -347,7 +347,7 @@ static const LiftedRoutine routines[] = {
     {0x429460, lifted_f429460, 148, 0},
     {0x429600, lifted_f429600, 88, 0},
     {0x429660, lifted_object_address_plus_4, 64, 0},
-    {0x429670, lifted_marker_actor_construct, 68, 0},
+    {0x429670, lifted_marker_actor_construct_full, 68, 0},
     {0x429880, lifted_piece_actor_construct_slots, 96, 0},
     {0x429d50, lifted_choice_grid_apply, 100, 0},
     {0x429df0, lifted_choice_grid_load_values, 96, 0},
