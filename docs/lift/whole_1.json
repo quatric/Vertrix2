@@ -1428,7 +1428,7 @@
   "virtual": [],
   "address": 4408048
  },
- "board_markers_for_mode": {
+ "f435e80": {
   "callees": {
    "0x4327e0": [
     0,
@@ -1460,7 +1460,7 @@
   "virtual": [],
   "address": 4415104
  },
- "board_markers_top": {
+ "f435f30": {
   "callees": {
    "0x4327e0": [
     0,
@@ -1590,7 +1590,7 @@
   "virtual": [],
   "address": 4415744
  },
- "board_markers_checker": {
+ "f436850": {
   "callees": {
    "0x4327e0": [
     0,
@@ -1678,7 +1678,7 @@
   "virtual": [],
   "address": 4417760
  },
- "board_markers_kind": {
+ "f436a10": {
   "callees": {
    "0x4327e0": [
     0,
@@ -1709,7 +1709,7 @@
   "virtual": [],
   "address": 4418064
  },
- "board_markers_for_power": {
+ "f436aa0": {
   "callees": {
    "0x4327e0": [
     0,
@@ -1738,7 +1738,7 @@
   "virtual": [],
   "address": 4418208
  },
- "board_markers_stones": {
+ "f436fe0": {
   "callees": {
    "0x4327e0": [
     0,
@@ -2312,7 +2312,7 @@
   ],
   "address": 4428176
  },
- "board_markers_equal": {
+ "f439370": {
   "callees": {
    "0x4327e0": [
     0,
@@ -10097,7 +10097,7 @@
   "virtual": [],
   "address": 4506208
  },
- "f44c2a0": {
+ "piece_child_update": {
   "callees": {
    "0x4ac8a0": [
     0,
@@ -10114,7 +10114,7 @@
   "virtual": [],
   "address": 4506272
  },
- "f44c2b0": {
+ "piece_child_update_44c2b0": {
   "callees": {
    "0x4ac500": [
     0,
@@ -10159,7 +10159,7 @@
   "virtual": [],
   "address": 4506288
  },
- "f44c310": {
+ "piece_child_update_44c310": {
   "callees": {
    "0x4ac500": [
     0,
@@ -10204,7 +10204,7 @@
   "virtual": [],
   "address": 4506384
  },
- "f44c370": {
+ "piece_child_update_44c370": {
   "callees": {
    "0x4ac500": [
     0,
@@ -14575,7 +14575,7 @@
   "virtual": [],
   "address": 4520608
  },
- "f44fad0": {
+ "number_transition_update": {
   "callees": {
    "0x4b5eb0": [
     0,
@@ -14606,7 +14606,7 @@
   "virtual": [],
   "address": 4520656
  },
- "f44fb40": {
+ "number_transition_update_44fb40": {
   "callees": {
    "0x4ac500": [
     0,
@@ -14651,7 +14651,7 @@
   "virtual": [],
   "address": 4520768
  },
- "f44fbb0": {
+ "number_transition_update_44fbb0": {
   "callees": {
    "0x4ac500": [
     0,
@@ -14740,7 +14740,7 @@
   "virtual": [],
   "address": 4521008
  },
- "f44fc60": {
+ "number_transition_configured": {
   "callees": {
    "0x4b5eb0": [
     0,
@@ -14775,7 +14775,7 @@
   "virtual": [],
   "address": 4521056
  },
- "f44fcf0": {
+ "number_transition_configured_44fcf0": {
   "callees": {
    "0x4ac500": [
     0,
@@ -14820,7 +14820,7 @@
   "virtual": [],
   "address": 4521200
  },
- "f44fd60": {
+ "number_transition_configured_44fd60": {
   "callees": {
    "0x4ac500": [
     0,
@@ -14861,7 +14861,7 @@
   "virtual": [],
   "address": 4521312
  },
- "f44fdb0": {
+ "number_transition_configured_44fdb0": {
   "callees": {
    "0x4ac500": [
     0,
@@ -14908,7 +14908,7 @@
   "virtual": [],
   "address": 4521392
  },
- "f44fe30": {
+ "number_transition_configured_44fe30": {
   "callees": {
    "0x4ac500": [
     0,
@@ -14949,7 +14949,7 @@
   "virtual": [],
   "address": 4521520
  },
- "f44fe80": {
+ "player_indicator_update": {
   "callees": {
    "0x43ba70": [
     0,
@@ -14978,7 +14978,7 @@
   "virtual": [],
   "address": 4521600
  },
- "f44fed0": {
+ "player_indicator_update_44fed0": {
   "callees": {
    "0x4ac500": [
     0,
@@ -15019,7 +15019,7 @@
   "virtual": [],
   "address": 4521680
  },
- "f44ff30": {
+ "player_indicator_update_44ff30": {
   "callees": {
    "0x4ac600": [
     0,
@@ -15052,7 +15052,7 @@
   "virtual": [],
   "address": 4521776
  },
- "f44ff60": {
+ "player_indicator_update_44ff60": {
   "callees": {
    "0x43ba70": [
     0,
@@ -15445,7 +15445,7 @@
   "virtual": [],
   "address": 4522752
  },
- "f450330": {
+ "block_finish_effect_update": {
   "callees": {
    "0x4ac1f0": [
     0,
@@ -15494,7 +15494,7 @@
   "virtual": [],
   "address": 4522800
  },
- "f4503b0": {
+ "block_finish_effect_update_4503b0": {
   "callees": {
    "0x4ac1f0": [
     0,
@@ -15547,7 +15547,7 @@
   "virtual": [],
   "address": 4522928
  },
- "f450450": {
+ "block_finish_effect_update_450450": {
   "callees": {
    "0x4ac1f0": [
     0,
@@ -15600,7 +15600,7 @@
   "virtual": [],
   "address": 4523088
  },
- "f4504e0": {
+ "block_finish_effect_update_4504e0": {
   "callees": {
    "0x4ac500": [
     0,
@@ -15645,7 +15645,7 @@
   "virtual": [],
   "address": 4523232
  },
- "f450550": {
+ "block_finish_effect_update_450550": {
   "callees": {
    "0x4ac500": [
     0,

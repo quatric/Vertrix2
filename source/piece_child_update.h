@@ -13,7 +13,7 @@ typedef struct
  * destination; untouched bytes remain unchanged. */
 int vertrix_piece_child_construct(void *storage, size_t size, uint32_t frame,
                                   const VertrixPieceChildBounds *bounds, int last_child);
-/* Original44c2a0/44c2b0/44c310/44c370. Explicit resolved resource token and
+/* Original variants 0x44c2a0, 0x44c2b0, 0x44c310, 0x44c370: Explicit resolved resource token and
  * borrowed graph supply original4ac8a0 binding. Zero actorb0 skips binding.
  * Valid callbacks update primary timer and signed value58 transitions. Invalid
  * storage/handler/resource binding preserves the actor. Base virtual refresh

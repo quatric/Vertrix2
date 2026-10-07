@@ -28,38 +28,40 @@ Verified: `0x46b810` (also hand ported in `source/hud_builder.c`; the lift agree
 
 ## Uniform stack model
 
-`tools/lift.py` now lifts every register (including ebp and esp), the stack as a byte array and the
-flags (with pf); calls go through `lift_call` with the dwords at esp. `source/lifted_whole_*.c` (2600 of 3421 lifted routines of 0x401000..0x4f1000)
-holds the 116 of 133 routines of 0x450ff0..0x456033 that verified against the original
-(`tools/lift_batch.py`). The four screens (hud_decor, title, select, game) re-verify 4096/4096.
-Open: the 17 routines that fail (out-param callees, loops, virtual calls through garbage locals).
+`tools/lift.py` lifts every register (including ebp and esp), the stack as a byte array and the
+flags (with pf); calls go through `lift_call` with the dwords at esp. The completed whole-range
+batch verified 2,616 of 3,460 attempted routines in `0x401000..0x4f1000`, using 64 cases in each
+of the wide and small oracle modes. The successful routines are checked into
+`source/lifted_whole_*.c`. `docs/lifted-batch-verification.json` records successful addresses and
+failures; unsupported instructions are recorded separately by the batch's skip report.
+The four reserved screen builders each passed 4,096 complete original executions after regeneration.
 
 ## Dispatcher
 
 `tools/gen_dispatch.py` writes `source/lifted_dispatch.[ch]`: a table of every verified lifted
-routine by original address (2,601) and `VertrixLiftedCalls`, a `VertrixCalls` adapter that runs the
+routine by original address (2,617) and `VertrixLiftedCalls`, a `VertrixCalls` adapter that runs the
 lifted routine for a target when one exists and forwards everything else to the platform's call
-boundary. `tools/test_dispatch.c` exercises it on the host. The Wii startup, the game loop and the
-platform implementation of the remaining boundary calls are not written; nothing has run in
-Dolphin or on hardware.
+boundary. `tools/test_dispatch.c` exercises it on the host. The Wii probe runs lifted screen
+builders; the separate Wii game target composes recovered native routines. The game loop does
+not yet run the lifted title-screen animation, and remaining platform boundary calls still need
+recovery. Build and oracle checks do not prove a complete Wii gameplay port.
 
 `tools/host_probe.c` (with `tools/dump_image.py`) runs one lifted routine through the dispatcher on
 the host against the original's static data and a heap arena and prints every call that reaches
 the platform boundary. The four lifted screens (0x465af0, 0x466d60, 0x46c9d0, 0x46b810) run to
 completion this way; their remaining boundary targets are listed by the probe.
 
-## Open (as of the last batch: 2,615 of 3,460 lifted routines verify)
+## Open after the completed batch
 
-- 49 routines never complete under the oracle: they wait for a field that a stubbed callee would
-  update (animation and state-machine tick loops such as 0x452520), so the original loops until the
-  instruction limit. They need per-routine effects that model the callee's write.
-- About 9 time out, about 8 read memory the oracle never maps, about 40 differ in pool contents or
-  call logs; each needs a per-routine look.
-- 139 routines do not lift: x87 code (Delphi `Extended` is 80-bit, which the host's `long double`
-  does not reproduce), `enter`, `daa` and a few segment/FPU control instructions.
-- Not written: the Wii startup and loop that call the lifted screens, and the platform side of the
-  unrecovered boundary (heap allocator 0x4e7c90, AnsiString helpers, the actor creators).
-- Nothing has run in Dolphin or on hardware.
+- 844 attempted routines did not pass verification. The saved failure details distinguish
+  incomplete original execution, timeouts, unmapped reads, and comparison failures. Callee hooks
+  can leave state-machine loops waiting for writes; each failure needs an individual investigation.
+- 100 routines were skipped by the batch. Unsupported instructions and lift errors need separate
+  recovery; a skipped routine is not a verified routine.
+- The Wii game target still needs the lifted title-screen runtime and the remaining platform
+  boundaries. The probe and individual routine comparisons do not establish full gameplay fidelity.
+- The current renamed snapshot has passed the Wii library build, formatting, and host dispatcher
+  integration; execution on hardware remains unverified.
 
 ## Host runtime and the Wii probe
 
@@ -86,9 +88,9 @@ same lifted symbols twice).
 ## Names
 
 `tools/gen_names.py` reads bounded original-address annotations from recovered headers into
-`docs/names.json` (1,115 address/name entries). `docs/function-name-aliases.json` records 57 reviewed
+`docs/names.json` (1,141 address/name entries). `docs/function-name-aliases.json` records 57 reviewed
 canonical choices with exact header candidates, rationale, and evidence. A stale candidate set aborts
-generation. Partial recoveries do not establish a whole-routine name; `0x43f200` remains unresolved.
+generation. Partial recoveries do not establish a whole-routine name; `0x43f200` fragment annotations are excluded.
 
 Explicit `Original variants` annotations record independently callable entrypoints implemented by
 one generalized native helper. `tools/routine_names.py` gives the first address its recovered base
@@ -97,7 +99,7 @@ map only their first address, so unrelated prototypes and internal branch labels
 
 `lift_batch.py combine` applies the map when generating chunks. `tools/rename_lifted.py` applies it to
 existing verified chunks after validating metadata, declarations, definitions, dispatcher rows, and
-normalized C tokens. The current 2,616 chunk routines include 853 readable names; other routines retain
+normalized C tokens. The current 2,616 chunk routines include 877 readable names; other routines retain
 address identifiers. The dispatcher adds the separately verified reserved screens and contains 2,617
 entries. Applying the current name map again changes zero files.
 

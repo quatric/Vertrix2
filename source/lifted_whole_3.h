@@ -269,7 +269,7 @@ enum
     LIFTED_FLAG_PAIR_CALL_STACK = 76,
     LIFTED_F483060_STACK = 88,
     LIFTED_F4830F0_STACK = 76,
-    LIFTED_FONT_STENCIL_STACK = 204,
+    LIFTED_F4831B0_STACK = 204,
     LIFTED_F483CE0_STACK = 92,
     LIFTED_OBJECT_SET_DWORD_484410_STACK = 64,
     LIFTED_F4844B0_STACK = 100,
@@ -1522,8 +1522,8 @@ uint32_t lifted_f4830f0(const VertrixCalls *calls, const VertrixFactoryServices 
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4831b0. */
-uint32_t lifted_font_stencil(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                             const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_f4831b0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x483ce0. */
 uint32_t lifted_f483ce0(const VertrixCalls *calls, const VertrixFactoryServices *services,

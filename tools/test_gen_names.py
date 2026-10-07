@@ -144,7 +144,7 @@ void vertrix_unrelated(void);
         root = Path(__file__).resolve().parents[1]
         source = root / "source"
         names, conflicts = collect_names(source)
-        self.assertEqual(names[0x436fe0], "vertrix_board_markers_stones")
+        self.assertNotIn(0x436fe0, names)
         self.assertEqual(names[0x453460], "vertrix_effect_stone_arm")
         self.assertNotIn(0x4f8d38, names)
         self.assertNotIn(0x43b5b0, names)
@@ -154,7 +154,7 @@ void vertrix_unrelated(void);
             names, conflicts = resolve_aliases(names, conflicts, json.loads(registry.read_text()), root)
             self.assertEqual(names[0x43b5b0], "vertrix_ai_reaction_time")
         self.assertNotIn(0x43f200, names)
-        self.assertIn(0x43f200, conflicts)
+        self.assertNotIn(0x43f200, conflicts)
         self.assertEqual(names[0x4877f0], "vertrix_frame_resource_get")
         self.assertEqual(names[0x4713d0], "vertrix_title_letter_first")
         self.assertEqual(names[0x459be0], "vertrix_title_letter_count")

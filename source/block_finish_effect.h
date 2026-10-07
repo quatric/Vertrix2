@@ -6,7 +6,8 @@ typedef struct
     VertrixBlockCombined transition;
     uint8_t state;
 } VertrixBlockFinishEffect;
-/* Original450330/4503b0/450450 and non-animating4504e0/450550/4505c0/450630/4506a0;
+/* Original variants 0x450330, 0x4503b0, 0x450450, 0x4504e0, 0x450550, 0x4505c0,
+ * 0x450630, 0x4506a0: the latter five handlers are non-animating;
  * state is object byte15d. The latter handlers bind the existing frame. */
 int vertrix_block_finish_effect_update(VertrixAnimation *animation, const uint32_t *frames,
                                        size_t storage, uint32_t elapsed, uint32_t *descriptor,

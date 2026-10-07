@@ -22,7 +22,7 @@ int vertrix_image_mirror_horizontal(VertrixImage *image);
 /* Original0x4799f0 compares the complete little-endian four-byte pixel to key.
  * Matching pixels get alpha0; others alpha255. RGB is preserved. */
 int vertrix_image_color_key(VertrixImage *image, uint32_t key);
-/* Original0x43f200 missing-mask BMP branch uses the top-left pixel as key.
+/* Original fragment 0x43f200: missing-mask BMP branch uses the top-left pixel as key.
  * Output must be empty. Reads artwork directly from the original VF. */
 int vertrix_image_bmp_keyed(VertrixVf *archive, const char *name, VertrixImage *output);
 /* Original font crop482f80/47ce10, four-byte pixels and bordered sheets.

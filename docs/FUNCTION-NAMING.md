@@ -10,7 +10,7 @@ For ordinary annotations grouping multiple routines, only the first address is m
 
 Validate extraction with `python3 tools/test_gen_names.py`. This check exercises annotation boundaries, padded addresses, callback comments, and known recovered mappings without changing executable behavior.
 
-The reviewed registry resolves 57 overlapping recoveries. `0x43f200` remains unnamed: `font_cell` and `image_bmp_keyed` recover different fragments, and neither proves a whole-routine name. Canonical aliases identify an original routine; they do not assert that native C functions with different boundary APIs are interchangeable.
+The reviewed registry resolves 57 overlapping recoveries. `0x43f200` fragment annotations are excluded: `font_cell` and `image_bmp_keyed` recover different fragments, and neither proves a whole-routine name. Canonical aliases identify an original routine; they do not assert that native C functions with different boundary APIs are interchangeable.
 
 Apply the map to existing verified chunks with `python3 tools/rename_lifted.py` (dry run), then `python3 tools/rename_lifted.py --write`. This changes exact lifted identifiers, stack constants, and metadata keys together. It validates declarations, definitions, dispatcher addresses, and unchanged metadata values before writing, and compares normalized C tokens to prove function bodies only change by identifier substitution. Reserved screen functions retain their explicit dispatcher entries. Run `python3 tools/test_rename_lifted.py` to validate that workflow.
 

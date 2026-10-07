@@ -28804,10 +28804,10 @@ L_4830f9:
     return env.failed ? 0u : eax;
 }
 
-uint32_t lifted_font_stencil(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                             const VertrixGlobals *globals, const LiftEntry *entry)
+uint32_t lifted_f4831b0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry)
 {
-    uint8_t stack[LIFTED_FONT_STENCIL_STACK + 4 + 4 * 0 + 4];
+    uint8_t stack[LIFTED_F4831B0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
     LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
@@ -28827,7 +28827,7 @@ uint32_t lifted_font_stencil(const VertrixCalls *calls, const VertrixFactoryServ
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_FONT_STENCIL_STACK, 0, entry);
+    lift_begin(&env, calls, services, globals, stack, LIFTED_F4831B0_STACK, 0, entry);
     {
         uint32_t v = ebp;
         esp -= 4u;

@@ -14,14 +14,14 @@ int vertrix_board_snapshot_kinds(const uint32_t *slots, uint32_t count,
 /* Original0x432840: clear 65 mask dwords. */
 void vertrix_board_clear_mask(uint32_t mask[VERTRIX_MARKER_CELLS]);
 
-/* Original0x435e80 after its snapshot: marker 1 where the kind is selectable for mode (all
- * non-empty kinds for mode 2; everything but stones for mode 1; ordinary kinds, excluding
+/* Original fragment 0x435e80 after its snapshot: marker 1 where the kind is selectable for mode
+ * (all non-empty kinds for mode 2; everything but stones for mode 1; ordinary kinds, excluding
  * stones and bombs, for mode 0; none for other modes), else 0. */
 void vertrix_board_markers_for_mode(const uint8_t kinds[VERTRIX_MARKER_CELLS], uint32_t mode,
                                     uint8_t markers[VERTRIX_MARKER_CELLS]);
 
-/* Original0x435f30 after its snapshot: clear the markers, then mark the first occupied cell of
- * every column when it is not a stone. */
+/* Original fragment 0x435f30 after its snapshot: clear the markers, then mark the first occupied
+ * cell of every column when it is not a stone. */
 void vertrix_board_markers_top(const uint8_t kinds[VERTRIX_MARKER_CELLS],
                                uint8_t markers[VERTRIX_MARKER_CELLS]);
 
@@ -36,22 +36,24 @@ int vertrix_board_marker_nth_by_column(const uint8_t markers[VERTRIX_MARKER_CELL
 int vertrix_board_marker_nth_by_row(const uint8_t markers[VERTRIX_MARKER_CELLS], uint8_t kind,
                                     uint32_t n, uint32_t *column, uint32_t *row);
 
-/* Original0x436850 (stones excluded) and 0x4372c0 (stones included), after their snapshots:
- * marker 1 for every even cell index (column-major, 13 per column) holding a block, else 0. */
+/* Original fragment 0x436850 (stones excluded) and 0x4372c0 (stones included), after their
+ * snapshots: marker 1 for every even cell index (column-major, 13 per column) holding a block, else
+ * 0. */
 void vertrix_board_markers_checker(const uint8_t kinds[VERTRIX_MARKER_CELLS], int include_stones,
                                    uint8_t markers[VERTRIX_MARKER_CELLS]);
 
-/* Original0x436fe0 and 0x437240 (identical), after their snapshots: marker 1 for stones. */
+/* Original fragment 0x436fe0 and 0x437240 (identical), after their snapshots: marker 1 for stones.
+ */
 void vertrix_board_markers_stones(const uint8_t kinds[VERTRIX_MARKER_CELLS],
                                   uint8_t markers[VERTRIX_MARKER_CELLS]);
 
-/* Original0x436a10 after its snapshot: marker 1 where the kind, as a signed byte, equals wanted.
- * Returns the number of markers set (the original stores it through its pointer). */
+/* Original fragment 0x436a10 after its snapshot: marker 1 where the kind, as a signed byte, equals
+ * wanted. Returns the number of markers set (the original stores it through its pointer). */
 uint32_t vertrix_board_markers_kind(const uint8_t kinds[VERTRIX_MARKER_CELLS], uint32_t wanted,
                                     uint8_t markers[VERTRIX_MARKER_CELLS]);
 
-/* Original0x436aa0 after its snapshot: stones and empty cells are never marked; bombs are marked
- * for mode 5; other kinds for modes 5 and 6. */
+/* Original fragment 0x436aa0 after its snapshot: stones and empty cells are never marked; bombs are
+ * marked for mode 5; other kinds for modes 5 and 6. */
 void vertrix_board_markers_for_power(const uint8_t kinds[VERTRIX_MARKER_CELLS], uint32_t mode,
                                      uint8_t markers[VERTRIX_MARKER_CELLS]);
 /* Original0x438830 (kind 1) and 0x4388a0 (kind 2): searching one column from its bottom row up,
@@ -71,8 +73,8 @@ int vertrix_board_any_bottom(const uint32_t *slots, int32_t first, int32_t secon
 int vertrix_board_any_block(const uint32_t *slots, int32_t first, int32_t second,
                             VertrixObjectStorage resolve, void *context,
                             uint8_t kinds[VERTRIX_MARKER_CELLS], uint32_t *occupied);
-/* Original0x439370 after its snapshot: marker 1 where the kind, as a sign-extended byte (empty
- * cells are -1), equals wanted. */
+/* Original fragment 0x439370 after its snapshot: marker 1 where the kind, as a sign-extended byte
+ * (empty cells are -1), equals wanted. */
 void vertrix_board_markers_equal(const uint8_t kinds[VERTRIX_MARKER_CELLS], int32_t wanted,
                                  uint8_t markers[VERTRIX_MARKER_CELLS]);
 

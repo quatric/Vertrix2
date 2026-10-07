@@ -10,9 +10,9 @@ typedef struct
     VertrixAnimation animation;
     const VertrixFrameResource *resource;
 } VertrixLinkedAlternating;
-/* Original450a10/450aa0/450b30/450b90/450bf0/450c70. Resources correspond
- * to546618 and546634; startingY is533d78. Borrowed resources stay live.
- * Caller resolves first matching linked object. Failed updates preserve state. */
+/* Original variants 0x450a10, 0x450aa0, 0x450b30, 0x450b90, 0x450bf0, 0x450c70: Resources
+ * correspond to546618 and546634; startingY is533d78. Borrowed resources stay live. Caller resolves
+ * first matching linked object. Failed updates preserve state. */
 int vertrix_linked_alternating_update(VertrixLinkedAlternating *display, int linked_present,
                                       uint32_t linked_value, uint32_t linked_state, int16_t start_y,
                                       uint32_t elapsed, const VertrixFrameResource *resource_one,

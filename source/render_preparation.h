@@ -15,7 +15,7 @@ typedef struct
     uint8_t cycle_enabled;
     uint8_t cycle;
 } VertrixRenderPreparation;
-/* Complete original4ae250 decisions. Views borrow weights; fixed color is
+/* Original 0x4ae250: complete decisions. Views borrow weights; fixed color is
  * refreshed only for format mismatch, weights only when flag739 equals1.
  * map_shift is the signed pointer-table shift, NOT a clamped channel row.
  * cycle describes original4754e0 auxiliary binding, not host pointer arithmetic.
