@@ -249,6 +249,30 @@ def verify_full_repeat(native, oracle, cases):
     assert completed == len(cases)+2
     return completed,mutation_cases
 
+def verify_full_ready(native, oracle, rng):
+    from original import BOARD
+    native.vertrix_input_queue_ready_full.argtypes = [ctypes.c_void_p,ctypes.c_size_t,ctypes.POINTER(ctypes.c_uint32)]
+    completed = 0
+    for state in range(256):
+        for variant in range(4):
+            raw = bytearray(rng.randbytes(0x60))
+            raw[4] = state
+            storage = ctypes.create_string_buffer(bytes(raw),len(raw))
+            oracle.cpu.mem_write(BOARD,bytes(raw))
+            eax = oracle.call(0x475d70,eax=BOARD,edx=rng.getrandbits(32),ebx=rng.getrandbits(32),ecx=rng.getrandbits(32))
+            result = ctypes.c_uint32(0xdeadbeef)
+            assert native.vertrix_input_queue_ready_full(storage,len(raw),ctypes.byref(result))
+            assert result.value == eax == int(state==1)
+            assert storage.raw == bytes(raw) == bytes(oracle.cpu.mem_read(BOARD,len(raw)))
+            completed += 1
+    result = ctypes.c_uint32(0xdeadbeef)
+    for actor,size in [(None,0x60),(storage,4)]:
+        assert not native.vertrix_input_queue_ready_full(actor,size,ctypes.byref(result))
+        assert result.value == 0xdeadbeef and storage.raw == bytes(raw)
+    assert not native.vertrix_input_queue_ready_full(storage,len(raw),None)
+    assert completed == 1024
+    return completed
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("executable", type=Path)
@@ -298,14 +322,16 @@ def main():
     queue_comparisons = verify_queues(native, oracle, rng)
     action_comparisons = verify_actions(native, oracle, rng)
     configuration_comparisons = verify_configuration(native, oracle, rng)
+    full_ready_comparisons = verify_full_ready(native,oracle,rng)
     report = {"status": "passed", "repeat_scheduler_comparisons": len(cases),
+              "full_ready_check_comparisons": full_ready_comparisons,
               "full_repeat_scheduler_comparisons": full_repeat_comparisons,
               "repeat_insertion_mutation_cases": repeat_mutation_cases,
               "repeat_missing_boundary_cases": 1,
               "queue_operation_comparisons": queue_comparisons,
               "integrated_action_comparisons": action_comparisons,
               "control_configuration_comparisons": configuration_comparisons,
-              "scope": "Full original475e50 insertion target/registers/return/state matched independently, including live payload/state mutation and fixed due count; missing insertion boundary retains timing updates. Original repeat scheduler and FIFO action consumption/update/acknowledgment; host allocation replaces original pool; press/release wrappers, repeat generation and deferred delivery integrated; polling, bindings and gameplay dispatch remain separate"}
+              "scope": "Full original 0x475d70 ready-check return and whole unchanged actor storage match all 256 state bytes with varied caller registers. Full original475e50 insertion target/registers/return/state matched independently, including live payload/state mutation and fixed due count; missing insertion boundary retains timing updates. Original repeat scheduler and FIFO action consumption/update/acknowledgment; host allocation replaces original pool; press/release wrappers, repeat generation and deferred delivery integrated; polling, bindings and gameplay dispatch remain separate"}
     (args.build_dir / "input-verification.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report, indent=2))
 

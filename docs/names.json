@@ -811,6 +811,7 @@
  "0x475ad0": "vertrix_input_repeat_start",
  "0x475b00": "vertrix_flags_idle",
  "0x475c80": "vertrix_queue_next",
+ "0x475d70": "vertrix_input_queue_ready_full",
  "0x475d90": "vertrix_offset_call",
  "0x475da0": "vertrix_object_triple",
  "0x475dd0": "vertrix_progress_set_40",

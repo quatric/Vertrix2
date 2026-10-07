@@ -22,8 +22,8 @@ void vertrix_input_repeat_stop(VertrixInputRepeat *repeat);
  * The caller must emit every event in order. Platform polling is separate. */
 uint32_t vertrix_input_repeat_tick(VertrixInputRepeat *repeat, uint32_t elapsed);
 
-/* Original0x475e50: complete scheduler with queue insertion475b20 supplied through
- * calls. The due count is captured once; clear counter and reset period before
+/* Original 0x475e50: complete scheduler with queue insertion 0x475b20 supplied through
+ * calls. The due count is captured once; clear the counter and reset the period before
  * inserting. Read the live payload for each call, allowing earlier insertions to
  * change payload/state. Returns success and original eax through result (actor
  * handle when disabled, zero when not due, last insertion eax otherwise).
@@ -66,6 +66,10 @@ void vertrix_input_queue_consume(VertrixInputQueue *queue);
 void vertrix_input_queue_acknowledge(VertrixInputQueue *queue);
 /* 0x475d70: only state exactly 1 is ready. */
 int vertrix_input_queue_ready(const VertrixInputQueue *queue);
+/* Original 0x475d70: read the current event state at original actor +4 through
+ * 0x475800; eax is exactly one for state byte one, otherwise zero. No mutation.
+ * Null or short storage rejects and leaves result unchanged. */
+int vertrix_input_queue_ready_full(const void *actor, size_t size, uint32_t *result);
 /* 0x475cd0 / 0x475d20, after repeat generation. deferred is original
  * global 0x553648 != 0, affecting only the single-event update. */
 void vertrix_input_queue_update(VertrixInputQueue *queue, VertrixInputUpdate update, int deferred);

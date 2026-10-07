@@ -1,4 +1,5 @@
 #include "input.h"
+#include "actor_storage.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -140,6 +141,17 @@ void vertrix_input_queue_clear(VertrixInputQueue *queue)
 int vertrix_input_queue_ready(const VertrixInputQueue *queue)
 {
     return queue->current.state == 1;
+}
+
+int vertrix_input_queue_ready_full(const void *actor, size_t size, uint32_t *result)
+{
+    uint32_t state;
+    if (!result || !vertrix_actor_storage_read(actor, size, 4, 1, &state))
+    {
+        return 0;
+    }
+    *result = state == 1;
+    return 1;
 }
 
 void vertrix_input_queue_update(VertrixInputQueue *queue, VertrixInputUpdate update, int deferred)
