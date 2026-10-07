@@ -355,12 +355,26 @@ class Lifter:
         self.emit('lift_string(&env, %d, %d, %d, &eax, &ecx, &esi, &edi, &fl);' % (
             STRING_KIND[kind], size, REPEATS[prefix]))
 
+    def prologue_end(self):
+        """The address after the register saves and frame setup at the start of the routine."""
+        address = self.start
+        while True:
+            insn = self.insns.get(address)
+            if insn is None or not (insn.mnemonic == 'push' or
+                                    (insn.mnemonic == 'mov' and insn.op_str == 'ebp, esp') or
+                                    (insn.mnemonic == 'sub' and insn.op_str.startswith('esp,'))):
+                return address
+            address += insn.size
+
     def pending_pushes(self, insn):
         """Pushes directly preceding an import call (the stdcall argument count)."""
         index = self.order.index(insn.address)
         count = 0
+        prologue = self.prologue_end()
         for address in reversed(self.order[:index]):
             p = self.insns[address]
+            if address < prologue:
+                break
             if p.mnemonic == 'push':
                 count += 1
             elif p.mnemonic in ('call', 'ret', 'jmp') or p.mnemonic in CONDITIONS or \
@@ -404,7 +418,8 @@ class Lifter:
             pops = 0 if cdecl else count
         else:
             target_expr = self.read(op)
-            count = int(next_insn.op_str.split(',')[1], 0) // 4 if cdecl else 0
+            count = int(next_insn.op_str.split(',')[1], 0) // 4 if cdecl else \
+                self.pending_pushes(insn)
             self.callees[('virtual', insn.address)] = (count, cdecl)
             pops = 0 if cdecl else count
         self.emit('eax = lift_call(&env, %s, eax, edx, ebx, ecx, %d, esp);' % (target_expr, count))
@@ -506,7 +521,12 @@ class Lifter:
                             p.operands[1].mem.base not in (X.X86_REG_EBP, X.X86_REG_ESP):
                         field = p.operands[1].mem.disp
                     break
-            found.add((field, mem.disp))
+            nxt = self.insns.get(address + insn.size)
+            if nxt is not None and nxt.mnemonic == 'add' and nxt.op_str.startswith('esp,'):
+                count = int(nxt.op_str.split(',')[1], 0) // 4
+            else:
+                count = self.pending_pushes(insn)
+            found.add((field, mem.disp, count))
         return found
 
     def lift(self):
@@ -587,8 +607,8 @@ uint32_t lifted_%s(const VertrixCalls *calls, const VertrixFactoryServices *serv
             'pointer_callees': sorted('0x%x' % t for t in lifter.pointer_callees()),
             'pointer_fields': sorted(lifter.pointer_fields()),
             'pointer_globals': sorted(lifter.pointer_fields(True)),
-            'virtual': sorted([f if f is not None else -1, sl]
-                              for f, sl in lifter.virtual_calls())}
+            'virtual': sorted([f if f is not None else -1, sl, n]
+                              for f, sl, n in lifter.virtual_calls())}
     return text, header, meta
 
 

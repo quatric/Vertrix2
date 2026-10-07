@@ -163,6 +163,10 @@ static inline uint32_t lift_call(LiftEnv *env, uint32_t target, uint32_t eax, ui
     {
         lift_store(env, eax, 0, 4, out);
     }
+    else if (target == 0x4f175c && count >= 5)
+    {
+        lift_store(env, stack[4], 0, 4, out); /* CoCreateInstance stores the interface */
+    }
     return result;
 }
 
