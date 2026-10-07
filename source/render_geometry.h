@@ -46,7 +46,7 @@ int vertrix_resource_measure_state(const VertrixResourceDimensions *descriptor,
                                    uint8_t screen_override, uint8_t screen_unscaled,
                                    uint8_t screen_mode, int32_t *width, int32_t *height);
 
-/* Original 0x4b15e0: measured bounds subtract the descriptor anchor from position.
+/* Original fragment 0x4b15e0: measured bounds subtract the descriptor anchor from position.
  * Anchor scaling uses signed measured dimensions, truncation toward zero and
  * signed-word wrapping. Non-16 modes require nonzero source dimensions. */
 int vertrix_resource_bounds(uint16_t source_width, uint16_t source_height, int16_t anchor_x,
@@ -68,7 +68,7 @@ typedef struct
 int vertrix_sprite_clip(int16_t x, int16_t y, uint16_t width, uint16_t height,
                         VertrixBoardClip clip, VertrixSpriteClip *output);
 
-/* Original 0x4b1a99..0x4b1f27: modes 0/1 use target dimensions, 2 bypasses
+/* Original fragment 0x4b1a99..0x4b1f27: modes 0/1 use target dimensions, 2 bypasses
  * clipping, 3 uses object bounds, remaining byte values retain cached bounds. */
 int vertrix_sprite_clip_mode(int16_t x, int16_t y, uint16_t width, uint16_t height, uint8_t mode,
                              uint16_t target_width, uint16_t target_height,

@@ -12,7 +12,7 @@ typedef struct
     const VertrixSpriteBankBinding *bindings;
     size_t count;
 } VertrixSpriteBankMap;
-/* Original4ac8a0 binding followed by4af8c0 draw for direct5449fc VF banks.
+/* Original fragment 0x4ac8a0: binding followed by4af8c0 draw for direct5449fc VF banks.
  * Requires initialized actor geometry13c and direct-coordinate mode144=1.
  * Binding writes the local frame ID to actorb4 even when later drawing rejects
  * or clips, matching original binding-before-draw order. Keep the bank live.

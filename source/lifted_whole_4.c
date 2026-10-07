@@ -524,11 +524,11 @@ uint32_t lifted_actor_set_e0(const VertrixCalls *calls, const VertrixFactoryServ
     return env.failed ? 0u : eax;
 }
 
-uint32_t lifted_block_resource_bind(const VertrixCalls *calls,
-                                    const VertrixFactoryServices *services,
-                                    const VertrixGlobals *globals, const LiftEntry *entry)
+uint32_t lifted_actor_lookup_image(const VertrixCalls *calls,
+                                   const VertrixFactoryServices *services,
+                                   const VertrixGlobals *globals, const LiftEntry *entry)
 {
-    uint8_t stack[LIFTED_BLOCK_RESOURCE_BIND_STACK + 4 + 4 * 0 + 4];
+    uint8_t stack[LIFTED_ACTOR_LOOKUP_IMAGE_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
     LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
@@ -548,7 +548,7 @@ uint32_t lifted_block_resource_bind(const VertrixCalls *calls,
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_BLOCK_RESOURCE_BIND_STACK, 0, entry);
+    lift_begin(&env, calls, services, globals, stack, LIFTED_ACTOR_LOOKUP_IMAGE_STACK, 0, entry);
     {
         uint32_t v = ecx;
         esp -= 4u;
@@ -4779,10 +4779,10 @@ L_4ade47:
     return env.failed ? 0u : eax;
 }
 
-uint32_t lifted_f4ade60(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
+uint32_t lifted_actor_chain_walk(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                 const VertrixGlobals *globals, const LiftEntry *entry)
 {
-    uint8_t stack[LIFTED_F4ADE60_STACK + 4 + 4 * 0 + 4];
+    uint8_t stack[LIFTED_ACTOR_CHAIN_WALK_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
     LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
@@ -4802,7 +4802,7 @@ uint32_t lifted_f4ade60(const VertrixCalls *calls, const VertrixFactoryServices 
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F4ADE60_STACK, 0, entry);
+    lift_begin(&env, calls, services, globals, stack, LIFTED_ACTOR_CHAIN_WALK_STACK, 0, entry);
     {
         uint32_t v = ebx;
         esp -= 4u;
@@ -7961,10 +7961,11 @@ L_4b1570:
     goto L_4b1504;
 }
 
-uint32_t lifted_resource_bounds(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                const VertrixGlobals *globals, const LiftEntry *entry)
+uint32_t lifted_actor_image_bounds(const VertrixCalls *calls,
+                                   const VertrixFactoryServices *services,
+                                   const VertrixGlobals *globals, const LiftEntry *entry)
 {
-    uint8_t stack[LIFTED_RESOURCE_BOUNDS_STACK + 4 + 4 * 1 + 4];
+    uint8_t stack[LIFTED_ACTOR_IMAGE_BOUNDS_STACK + 4 + 4 * 1 + 4];
     LiftEnv env;
     LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
@@ -7984,7 +7985,7 @@ uint32_t lifted_resource_bounds(const VertrixCalls *calls, const VertrixFactoryS
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_RESOURCE_BOUNDS_STACK, 1, entry);
+    lift_begin(&env, calls, services, globals, stack, LIFTED_ACTOR_IMAGE_BOUNDS_STACK, 1, entry);
     {
         uint32_t v = esi;
         esp -= 4u;
@@ -13131,10 +13132,11 @@ L_4b5e3d:
     return env.failed ? 0u : eax;
 }
 
-uint32_t lifted_f4b5e70(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
+uint32_t lifted_owned_object_list_append(const VertrixCalls *calls,
+                                         const VertrixFactoryServices *services,
+                                         const VertrixGlobals *globals, const LiftEntry *entry)
 {
-    uint8_t stack[LIFTED_F4B5E70_STACK + 4 + 4 * 0 + 4];
+    uint8_t stack[LIFTED_OWNED_OBJECT_LIST_APPEND_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
     LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
@@ -13154,7 +13156,8 @@ uint32_t lifted_f4b5e70(const VertrixCalls *calls, const VertrixFactoryServices 
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F4B5E70_STACK, 0, entry);
+    lift_begin(&env, calls, services, globals, stack, LIFTED_OWNED_OBJECT_LIST_APPEND_STACK, 0,
+               entry);
     {
         uint32_t v = ebx;
         esp -= 4u;

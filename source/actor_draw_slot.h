@@ -17,7 +17,7 @@ int vertrix_actor_draw_slot(const VertrixActorRefresh *state, const void *actor,
  * node+0x108. */
 typedef int (*VertrixChainVisit)(uint32_t node, uint32_t arg, void *context);
 typedef int (*VertrixChainNext)(uint32_t node, uint32_t *next, void *context);
-/* Original4ade60 (also base slot 2 0x4ae140): for each node from the first until
+/* Original 0x4ade60 (also base slot 2 0x4ae140): for each node from the first until
  * a zero link, call visit twice (4ac8a0 then 4af8c0 with arg) then follow next.
  * Native walks reject chains longer than 4096. */
 int vertrix_actor_chain_walk(uint32_t first, uint32_t arg, VertrixChainVisit visit_a,

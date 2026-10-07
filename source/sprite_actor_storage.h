@@ -1,7 +1,7 @@
 #ifndef VERTRIX_SPRITE_ACTOR_STORAGE_H
 #define VERTRIX_SPRITE_ACTOR_STORAGE_H
 #include "actor_storage.h"
-/* Original471100 actor initialization before list registration. Configuration
+/* Original fragment 0x471100: actor initialization before list registration. Configuration
  * contains index*12 style records and dword availability at5cc+index*4. Only
  * availability1 creates an actor. Disabled/invalid inputs preserve storage.
  * Resource5449fc is an identity token. Caller allocates and registers storage. */

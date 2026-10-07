@@ -15073,7 +15073,7 @@
   "virtual": [],
   "address": 4521824
  },
- "f44ff90": {
+ "ui_indicator_storage_update": {
   "callees": {
    "0x4b5eb0": [
     0,
@@ -15104,7 +15104,7 @@
   "virtual": [],
   "address": 4521872
  },
- "f44fff0": {
+ "ui_indicator_storage_update_44fff0": {
   "callees": {
    "0x4ac500": [
     0,
@@ -15145,7 +15145,7 @@
   "virtual": [],
   "address": 4521968
  },
- "f450040": {
+ "ui_indicator_storage_update_450040": {
   "callees": {
    "0x4b5eb0": [
     0,
@@ -15176,7 +15176,7 @@
   "virtual": [],
   "address": 4522048
  },
- "f4500b0": {
+ "ui_indicator_storage_update_4500b0": {
   "callees": {
    "0x4ac500": [
     0,
@@ -15221,7 +15221,7 @@
   "virtual": [],
   "address": 4522160
  },
- "f450100": {
+ "ui_indicator_storage_update_450100": {
   "callees": {
    "0x4b5eb0": [
     0,
@@ -15248,7 +15248,7 @@
   "virtual": [],
   "address": 4522240
  },
- "f450130": {
+ "ui_border_storage_update": {
   "callees": {
    "0x4b5eb0": [
     0,
@@ -15287,7 +15287,7 @@
   "virtual": [],
   "address": 4522288
  },
- "f4501a0": {
+ "ui_border_storage_update_4501a0": {
   "callees": {
    "0x4ac500": [
     0,
@@ -15328,7 +15328,7 @@
   "virtual": [],
   "address": 4522400
  },
- "f450200": {
+ "ui_border_storage_update_450200": {
   "callees": {
    "0x4ac500": [
     0,
@@ -15369,7 +15369,7 @@
   "virtual": [],
   "address": 4522496
  },
- "f450270": {
+ "ui_border_storage_update_450270": {
   "callees": {
    "0x4ac500": [
     0,
@@ -15418,7 +15418,7 @@
   "virtual": [],
   "address": 4522608
  },
- "f450300": {
+ "ui_border_storage_update_450300": {
   "callees": {
    "0x4b5eb0": [
     0,

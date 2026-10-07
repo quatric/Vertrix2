@@ -6,10 +6,12 @@ Names identify recovered behavior; they are not original debug symbols. Keep exe
 
 A routine annotation must belong to its declaration. Do not infer ownership from arbitrary Markdown lines: these often mention callees or data addresses. In particular, `0x436fe0` is the board stone marker helper, whereas the stone effect arm routine is `0x453460`; `0x4f8d38` is a data table and must not receive a function name.
 
-For annotations grouping multiple routines, only the first address is mapped to the first declaration. Additional variants need explicit individual annotations before they can be named safely.
+For ordinary annotations grouping multiple routines, only the first address is mapped to the first declaration. Use individual annotations when the following prototypes each implement a different entrypoint. Explicit `Original variants 0xADDR, 0xADDR: ...` annotations may name all listed entrypoints only when complete original-executable verification proves the shared helper implements each independently callable routine. Data addresses and internal case labels must not be listed.
 
 Validate extraction with `python3 tools/test_gen_names.py`. This check exercises annotation boundaries, padded addresses, callback comments, and known recovered mappings without changing executable behavior.
 
-The reviewed registry resolves thirty overlapping recoveries. `0x43f200` remains unnamed: `font_cell` and `image_bmp_keyed` recover different fragments, and neither proves a whole-routine name. Canonical aliases identify an original routine; they do not assert that native C functions with different boundary APIs are interchangeable.
+The reviewed registry resolves 57 overlapping recoveries. `0x43f200` remains unnamed: `font_cell` and `image_bmp_keyed` recover different fragments, and neither proves a whole-routine name. Canonical aliases identify an original routine; they do not assert that native C functions with different boundary APIs are interchangeable.
 
 Apply the map to existing verified chunks with `python3 tools/rename_lifted.py` (dry run), then `python3 tools/rename_lifted.py --write`. This changes exact lifted identifiers, stack constants, and metadata keys together. It validates declarations, definitions, dispatcher addresses, and unchanged metadata values before writing, and compares normalized C tokens to prove function bodies only change by identifier substitution. Reserved screen functions retain their explicit dispatcher entries. Run `python3 tools/test_rename_lifted.py` to validate that workflow.
+
+`tools/routine_names.py` is shared by the batch combiner and existing-chunk renamer. The first address keeps its recovered base name; later callable variants keep that base plus their original address. All real base names are reserved before suffixes are assigned, preventing a generated variant from stealing another recovered name.

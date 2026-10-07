@@ -180,7 +180,7 @@
   "virtual": [],
   "address": 4900960
  },
- "block_resource_bind": {
+ "actor_lookup_image": {
   "callees": {
    "0x4877f0": [
     0,
@@ -808,7 +808,7 @@
   ],
   "address": 4906528
  },
- "f4ade60": {
+ "actor_chain_walk": {
   "callees": {
    "0x4ac8a0": [
     0,
@@ -1265,7 +1265,7 @@
   "virtual": [],
   "address": 4920512
  },
- "resource_bounds": {
+ "actor_image_bounds": {
   "callees": {},
   "stack": 96,
   "arguments": 1,
@@ -2452,7 +2452,7 @@
   "virtual": [],
   "address": 4939200
  },
- "f4b5e70": {
+ "owned_object_list_append": {
   "callees": {
    "0x4d88a0": [
     0,

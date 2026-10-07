@@ -2,7 +2,7 @@
 #define VERTRIX_SPRITE_ACTOR_IMAGE_H
 #include "actor_storage.h"
 #include "ui_sprite_bank.h"
-/* Original4ac8a0/4877f0 descriptor binding for direct5449fc bank. Bind selected
+/* Original fragment 0x4ac8a0/4877f0: descriptor binding for direct5449fc bank. Bind selected
  * actor frame to its local descriptor ID and borrow configured VF pixels/origins.
  * Invalid resource/frame/storage preserves actor and outputs. Keep bank live.
  * This supplies image data; drawing/effect application remains external. */

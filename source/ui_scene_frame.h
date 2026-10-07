@@ -3,7 +3,7 @@
 #include "ui_actor_frame.h"
 typedef int (*VertrixActorStorageMutableResolve)(uint32_t handle, void **storage, size_t *size,
                                                  void *context);
-/* Original4b6200 snapshot count, read each handle as reached, virtual update.
+/* Original composition 0x4b6200: snapshot count, read each handle as reached, virtual update.
  * Supports recovered base-class interface actors. Resolver preserves list
  * allocation/count and actor storage lifetime during a frame. On unsupported
  * state/resolution, returns0 after any preceding actors have updated. */

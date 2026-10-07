@@ -1,0 +1,27 @@
+{
+  "status": "passed",
+  "renamed_routines": 305,
+  "verified_chunk_routines": 2615,
+  "readable_chunk_names": 740,
+  "metadata_values_unchanged": true,
+  "normalized_c_tokens_unchanged_except_identifiers": true,
+  "files_checked": [
+    "source/lifted_whole_0.c",
+    "source/lifted_whole_0.h",
+    "source/lifted_whole_1.c",
+    "source/lifted_whole_1.h",
+    "source/lifted_whole_2.c",
+    "source/lifted_whole_2.h",
+    "source/lifted_whole_3.c",
+    "source/lifted_whole_3.h",
+    "source/lifted_whole_4.c",
+    "source/lifted_whole_4.h",
+    "source/lifted_whole_5.c",
+    "source/lifted_whole_5.h",
+    "source/lifted_whole_6.c",
+    "source/lifted_whole_6.h",
+    "source/lifted_dispatch.c"
+  ],
+  "reference_commit": "d8eab3cdc7afa2157667e2331fc6d3de1c83fef3",
+  "application_commit": "006cbd2"
+}

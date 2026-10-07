@@ -7,13 +7,15 @@ typedef struct
     uint32_t origin_x[2], origin_y[2];
     unsigned ready;
 } VertrixUiArtwork;
-/* Original45e490: selected source stencilled solid/hollow with Circle frame9.
+/* Original fragment 0x45e490: convenience composition loads VF banks before generating
+ * the selected source stencilled solid/hollow with Circle frame9.
  * Owned images represent546618/546634, retaining wrapping descriptor origins.
  * Caller supplies filename/first-source selector and source index4fbfac (default34). */
 int vertrix_ui_artwork_load(VertrixVf *archive, const char *name, const uint32_t masks[3],
                             size_t first_source, uint32_t source_index, VertrixUiArtwork *output);
 void vertrix_ui_artwork_free(VertrixUiArtwork *artwork);
-/* Original45e490 using already loaded5449fc and546538 banks. Borrows inputs;
+/* Original0x45e490: generate images from already loaded banks at 0x5449fc and 0x546538.
+ * Borrows inputs;
  * owns the generated images. Uses frame9 of the supplied stencil bank, retaining
  * source origins. No VF reread or hardcoded stencil selection. */
 int vertrix_ui_artwork_build(const VertrixUiSpriteBank *bank, const VertrixUiSpriteBank *stencils,

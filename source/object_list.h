@@ -9,7 +9,7 @@ typedef struct
     size_t count;
     size_t capacity;
 } VertrixObjectList;
-/* Original4b5e70 append within reserved storage. Caller owns allocation and
+/* Original fragment 0x4b5e70: append within reserved storage. Caller owns allocation and
  * reserves capacity before registration. Retains order and duplicate handles.
  * Invalid/full storage rejects before mutation; growth is external. */
 int vertrix_object_list_append(VertrixObjectList *list, uint32_t object);

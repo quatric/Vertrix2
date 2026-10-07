@@ -3,7 +3,7 @@
 #include "sprite_actor_draw.h"
 typedef int (*VertrixSpriteActorResolve)(uint32_t handle, void **storage, size_t *size,
                                          void *context);
-/* Original4ade60: bind and draw current actor, then read its next108 handle.
+/* Original fragment 0x4ade60: bind and draw current actor, then read its next108 handle.
  * Resolved actors use the direct5449fc bank and initialized direct geometry.
  * Resolver preserves actor/bank ownership. Budget bounds malformed cycles.
  * Returns1 on chain end,0 on failure/budget exhaustion. Completed counts actors

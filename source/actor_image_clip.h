@@ -2,7 +2,7 @@
 #define VERTRIX_ACTOR_IMAGE_CLIP_H
 #include "actor_image_bounds.h"
 #include "render_geometry.h"
-/* Original4b1a99 clipping with actor8e and inclusive boundsA8..AE. Inputs are
+/* Original fragment 0x4b1a99: clipping with actor8e and inclusive boundsA8..AE. Inputs are
  * measured image bounds and target dimensions. Returns1 visible,0 clipped,
  * -1 invalid actor/input; unsuccessful calls preserve output. Source offset is
  * the unscaled traversal offset; scaled drawing must apply scale-table advances

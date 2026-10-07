@@ -194,6 +194,198 @@
     ],
     "reason": "Complete record wrapper; whole-surface blit composes its drawing effect."
   },
+  "0x44ff90": {
+    "name": "vertrix_ui_indicator_storage_update",
+    "aliases": [
+      "vertrix_linked_indicator_update",
+      "vertrix_ui_indicator_storage_update"
+    ],
+    "evidence": [
+      "source/linked_indicator.h",
+      "tools/verify_linked_indicator.py"
+    ],
+    "reason": "Both implementations recover the complete handler; use the serialized actor-storage implementation as the canonical routine name."
+  },
+  "0x44fff0": {
+    "name": "vertrix_ui_indicator_storage_update",
+    "aliases": [
+      "vertrix_linked_indicator_update",
+      "vertrix_ui_indicator_storage_update"
+    ],
+    "evidence": [
+      "source/linked_indicator.h",
+      "tools/verify_linked_indicator.py"
+    ],
+    "reason": "Both implementations recover the complete handler; use the serialized actor-storage implementation as the canonical routine name."
+  },
+  "0x450040": {
+    "name": "vertrix_ui_indicator_storage_update",
+    "aliases": [
+      "vertrix_linked_indicator_update",
+      "vertrix_ui_indicator_storage_update"
+    ],
+    "evidence": [
+      "source/linked_indicator.h",
+      "tools/verify_linked_indicator.py"
+    ],
+    "reason": "Both implementations recover the complete handler; use the serialized actor-storage implementation as the canonical routine name."
+  },
+  "0x4500b0": {
+    "name": "vertrix_ui_indicator_storage_update",
+    "aliases": [
+      "vertrix_linked_indicator_update",
+      "vertrix_ui_indicator_storage_update"
+    ],
+    "evidence": [
+      "source/linked_indicator.h",
+      "tools/verify_linked_indicator.py"
+    ],
+    "reason": "Both implementations recover the complete handler; use the serialized actor-storage implementation as the canonical routine name."
+  },
+  "0x450100": {
+    "name": "vertrix_ui_indicator_storage_update",
+    "aliases": [
+      "vertrix_linked_indicator_update",
+      "vertrix_ui_indicator_storage_update"
+    ],
+    "evidence": [
+      "source/linked_indicator.h",
+      "tools/verify_linked_indicator.py"
+    ],
+    "reason": "Both implementations recover the complete handler; use the serialized actor-storage implementation as the canonical routine name."
+  },
+  "0x450130": {
+    "name": "vertrix_ui_border_storage_update",
+    "aliases": [
+      "vertrix_linked_burst_update",
+      "vertrix_ui_border_storage_update"
+    ],
+    "evidence": [
+      "source/linked_burst.h",
+      "tools/verify_linked_burst.py"
+    ],
+    "reason": "Both implementations recover the complete handler; use the serialized actor-storage implementation as the canonical routine name."
+  },
+  "0x4501a0": {
+    "name": "vertrix_ui_border_storage_update",
+    "aliases": [
+      "vertrix_linked_burst_update",
+      "vertrix_ui_border_storage_update"
+    ],
+    "evidence": [
+      "source/linked_burst.h",
+      "tools/verify_linked_burst.py"
+    ],
+    "reason": "Both implementations recover the complete handler; use the serialized actor-storage implementation as the canonical routine name."
+  },
+  "0x450200": {
+    "name": "vertrix_ui_border_storage_update",
+    "aliases": [
+      "vertrix_linked_burst_update",
+      "vertrix_ui_border_storage_update"
+    ],
+    "evidence": [
+      "source/linked_burst.h",
+      "tools/verify_linked_burst.py"
+    ],
+    "reason": "Both implementations recover the complete handler; use the serialized actor-storage implementation as the canonical routine name."
+  },
+  "0x450270": {
+    "name": "vertrix_ui_border_storage_update",
+    "aliases": [
+      "vertrix_linked_burst_update",
+      "vertrix_ui_border_storage_update"
+    ],
+    "evidence": [
+      "source/linked_burst.h",
+      "tools/verify_linked_burst.py"
+    ],
+    "reason": "Both implementations recover the complete handler; use the serialized actor-storage implementation as the canonical routine name."
+  },
+  "0x450300": {
+    "name": "vertrix_ui_border_storage_update",
+    "aliases": [
+      "vertrix_linked_burst_update",
+      "vertrix_ui_border_storage_update"
+    ],
+    "evidence": [
+      "source/linked_burst.h",
+      "tools/verify_linked_burst.py"
+    ],
+    "reason": "Both implementations recover the complete handler; use the serialized actor-storage implementation as the canonical routine name."
+  },
+  "0x450860": {
+    "name": "vertrix_ui_companion_storage_update",
+    "aliases": [
+      "vertrix_linked_movement_update",
+      "vertrix_ui_companion_storage_update"
+    ],
+    "evidence": [
+      "source/linked_movement.h",
+      "tools/verify_linked_movement.py"
+    ],
+    "reason": "Both implementations recover the complete handler; use the serialized actor-storage implementation as the canonical routine name."
+  },
+  "0x4508c0": {
+    "name": "vertrix_ui_companion_storage_update",
+    "aliases": [
+      "vertrix_linked_movement_update",
+      "vertrix_ui_companion_storage_update"
+    ],
+    "evidence": [
+      "source/linked_movement.h",
+      "tools/verify_linked_movement.py"
+    ],
+    "reason": "Both implementations recover the complete handler; use the serialized actor-storage implementation as the canonical routine name."
+  },
+  "0x450920": {
+    "name": "vertrix_ui_companion_storage_update",
+    "aliases": [
+      "vertrix_linked_movement_update",
+      "vertrix_ui_companion_storage_update"
+    ],
+    "evidence": [
+      "source/linked_movement.h",
+      "tools/verify_linked_movement.py"
+    ],
+    "reason": "Both implementations recover the complete handler; use the serialized actor-storage implementation as the canonical routine name."
+  },
+  "0x450960": {
+    "name": "vertrix_ui_companion_storage_update",
+    "aliases": [
+      "vertrix_linked_movement_update",
+      "vertrix_ui_companion_storage_update"
+    ],
+    "evidence": [
+      "source/linked_movement.h",
+      "tools/verify_linked_movement.py"
+    ],
+    "reason": "Both implementations recover the complete handler; use the serialized actor-storage implementation as the canonical routine name."
+  },
+  "0x4509a0": {
+    "name": "vertrix_ui_companion_storage_update",
+    "aliases": [
+      "vertrix_linked_movement_update",
+      "vertrix_ui_companion_storage_update"
+    ],
+    "evidence": [
+      "source/linked_movement.h",
+      "tools/verify_linked_movement.py"
+    ],
+    "reason": "Both implementations recover the complete handler; use the serialized actor-storage implementation as the canonical routine name."
+  },
+  "0x4509d0": {
+    "name": "vertrix_ui_companion_storage_update",
+    "aliases": [
+      "vertrix_linked_movement_update",
+      "vertrix_ui_companion_storage_update"
+    ],
+    "evidence": [
+      "source/linked_movement.h",
+      "tools/verify_linked_movement.py"
+    ],
+    "reason": "Both implementations recover the complete handler; use the serialized actor-storage implementation as the canonical routine name."
+  },
   "0x45f1e0": {
     "name": "vertrix_table_identity_cells",
     "aliases": [

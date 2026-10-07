@@ -11,7 +11,9 @@ typedef struct
  * this rule. Initial allocation equals requested count. Shrinking retains stale
  * tail; expanding initializes only newly active slots. Resize0 frees storage. */
 int vertrix_owned_object_list_resize(VertrixOwnedObjectList *owned, size_t count);
-/* Original4b5e70 registration including allocation growth. */
+/* Original 0x4b5e70: registration including allocation growth.
+ * Reserved append is verified by tools/verify_object_append.py; allocation growth
+ * is verified separately by tools/verify_object_growth.py against 0x4d8770. */
 int vertrix_owned_object_list_append(VertrixOwnedObjectList *owned, uint32_t object);
 void vertrix_owned_object_list_free(VertrixOwnedObjectList *owned);
 #endif

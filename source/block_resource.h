@@ -8,7 +8,7 @@
 int vertrix_block_resource_attach(VertrixAnimation *animation,
                                   const VertrixFrameResource **attached,
                                   const VertrixFrameResource *resource);
-/* Original 0x4ac8a0: NULL resource leaves descriptor unchanged. */
+/* Original fragment 0x4ac8a0: NULL resource leaves descriptor unchanged. */
 int vertrix_block_resource_bind(const VertrixAnimation *animation,
                                 const VertrixFrameResource *resource, size_t traversal_budget,
                                 uint32_t *descriptor);

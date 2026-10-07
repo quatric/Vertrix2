@@ -6,7 +6,7 @@ typedef struct
 {
     int32_t x, y, width, height;
 } VertrixActorImageBounds;
-/* Original4b15e0 descriptor geometry. Pixels/origins come from the resolved
+/* Original 0x4b15e0: complete actor descriptor bounds. Pixels/origins come from the resolved
  * VF image; mode44/override91 and positionE/16 come from actor storage.
  * Screen override inputs correspond to screen220/221. Invalid inputs preserve
  * output. Effect application, clipping and rasterization remain separate. */

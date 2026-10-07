@@ -1,7 +1,7 @@
 #ifndef VERTRIX_UI_COMPANION_STORAGE_H
 #define VERTRIX_UI_COMPANION_STORAGE_H
 #include "sprite_actor_storage.h"
-/* Original471100 followed by46e022..46e0a3/46e1b2..46e232. Configuration
+/* Original composition 0x471100 followed by46e022..46e0a3/46e1b2..46e232. Configuration
  * indices64+pair are shared by both sides. Parameters correspond to initialized
  * dwords4f8c48/4f8c4c; callers supply recovered/runtime values, not guesses.
  * Allocation/list registration and image descriptor binding remain external. */

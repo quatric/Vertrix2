@@ -281,7 +281,7 @@
   "virtual": [],
   "address": 4524080
  },
- "f450860": {
+ "ui_companion_storage_update": {
   "callees": {
    "0x4b5eb0": [
     0,
@@ -312,7 +312,7 @@
   "virtual": [],
   "address": 4524128
  },
- "f4508c0": {
+ "ui_companion_storage_update_4508c0": {
   "callees": {
    "0x4ac500": [
     0,
@@ -361,7 +361,7 @@
   "virtual": [],
   "address": 4524224
  },
- "f450920": {
+ "ui_companion_storage_update_450920": {
   "callees": {
    "0x4b5eb0": [
     0,
@@ -392,7 +392,7 @@
   "virtual": [],
   "address": 4524320
  },
- "f450960": {
+ "ui_companion_storage_update_450960": {
   "callees": {
    "0x4ac600": [
     0,
@@ -433,7 +433,7 @@
   "virtual": [],
   "address": 4524384
  },
- "f4509a0": {
+ "ui_companion_storage_update_4509a0": {
   "callees": {
    "0x4ac600": [
     0,
@@ -466,7 +466,7 @@
   "virtual": [],
   "address": 4524448
  },
- "f4509d0": {
+ "ui_companion_storage_update_4509d0": {
   "callees": {
    "0x4b5eb0": [
     0,
@@ -14203,7 +14203,7 @@
   "virtual": [],
   "address": 4580416
  },
- "f45e490": {
+ "ui_artwork_build": {
   "callees": {
    "0x487640": [
     0,

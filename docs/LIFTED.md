@@ -86,16 +86,28 @@ same lifted symbols twice).
 ## Names
 
 `tools/gen_names.py` reads bounded original-address annotations from recovered headers into
-`docs/names.json` (968 entries). `docs/function-name-aliases.json` records thirty reviewed canonical
-choices with their header candidates, rationale, and evidence. A stale candidate set aborts generation.
-Partial recoveries do not establish a whole-routine name; `0x43f200` remains unresolved.
+`docs/names.json` (1,115 address/name entries). `docs/function-name-aliases.json` records 57 reviewed
+canonical choices with exact header candidates, rationale, and evidence. A stale candidate set aborts
+generation. Partial recoveries do not establish a whole-routine name; `0x43f200` remains unresolved.
 
-`lift_batch.py combine` applies the map when generating chunks. For existing verified chunks,
-`tools/rename_lifted.py` validates metadata, declarations, definitions and dispatcher rows, then
-changes exact identifiers and stack constants without regenerating bodies. The current 2,615
-chunk routines include 740 readable names; the remainder retain address identifiers. The latest
-application renamed 305 routines. `docs/function-naming-verification.json` records unchanged metadata
-values and normalized C tokens except for the intended identifier substitutions.
+Explicit `Original variants` annotations record independently callable entrypoints implemented by
+one generalized native helper. `tools/routine_names.py` gives the first address its recovered base
+name and later variants a unique base-plus-address identifier. Ordinary grouped annotations still
+map only their first address, so unrelated prototypes and internal branch labels are not inferred.
 
-Run `python3 tools/test_gen_names.py` and `python3 tools/test_rename_lifted.py` for the extraction
-and application regression checks. See `docs/FUNCTION-NAMING.md` for the workflow.
+`lift_batch.py combine` applies the map when generating chunks. `tools/rename_lifted.py` applies it to
+existing verified chunks after validating metadata, declarations, definitions, dispatcher rows, and
+normalized C tokens. The current 2,616 chunk routines include 853 readable names; other routines retain
+address identifiers. The dispatcher adds the separately verified reserved screens and contains 2,617
+entries. Applying the current name map again changes zero files.
+
+`docs/function-naming-application-006cbd2.json` preserves the earlier name-only token comparison.
+`docs/function-naming-verification.json` validates the current regenerated chunks against the completed
+batch; the later flag-liveness regeneration changed bodies separately from naming.
+`docs/lifted-batch-verification.json` records all 2,616 successful addresses and the remaining failures.
+All four reserved screens were reverified with 4,096 complete original executions each after regeneration.
+The host dispatch integration check covers renamed targets, unsigned comparisons, reserved screen
+entries, and exact forwarding of unknown boundary calls.
+
+Run `python3 tools/test_gen_names.py` and `python3 tools/test_rename_lifted.py` for naming regressions.
+See `docs/FUNCTION-NAMING.md` for the workflow. These checks do not establish full gameplay integration.
