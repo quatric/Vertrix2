@@ -134,6 +134,27 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
         host_list_insert(host, site->eax, site->edx, site->ecx, site->ebx);
         return site->eax;
     }
+    if (site->target == 0x4f1d24) /* KERNEL32 lstrlenA(stack[0]) */
+    {
+        uint32_t length = 0;
+        while (bytes_at(host, site->stack + length, 1) != NULL &&
+               *bytes_at(host, site->stack + length, 1) != 0)
+        {
+            length++;
+        }
+        return length;
+    }
+    if (site->target == 0x4f1c34) /* KERNEL32 InterlockedDecrement(stack[0]) */
+    {
+        uint32_t value = lift_host_read(host, site->stack, 4) - 1;
+        host_write(host, site->stack, 4, value);
+        return value;
+    }
+    if (site->target == 0x482310) /* mov [eax + 0x30], 0x516b94; ret */
+    {
+        host_write(host, site->eax + 0x30, 4, 0x516b94);
+        return site->eax;
+    }
     if (site->target == 0x4e04f4)
     {
         return site->eax; /* a bare ret */

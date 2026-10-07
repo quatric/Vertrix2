@@ -2668,9 +2668,17 @@ static const LiftedRoutine routines[] = {
 static const LiftedRoutine unverified_routines[] = {
     {0, NULL, 0, 0},
     {0x42a200, lifted_f42a200, 120, 0},
+    {0x43d3b0, lifted_player_mode_in_group_a, 64, 0},
+    {0x43d3d0, lifted_player_mode_in_group_b, 64, 0},
+    {0x440610, lifted_font_measure, 264, 1},
+    {0x440990, lifted_text_layout, 72, 4},
+    {0x4726d0, lifted_f4726d0, 428, 0},
     {0x4b6350, lifted_object_construct_labeled_box, 136, 0},
     {0x4b65d0, lifted_object_label_text, 128, 3},
+    {0x4ca5a0, lifted_f4ca5a0, 96, 0},
     {0x4ccf3b, lifted_f4ccf3b, 120, 0},
+    {0x4cdbe0, lifted_f4cdbe0, 192, 0},
+    {0x4cdfb0, lifted_f4cdfb0, 80, 0},
 };
 
 static unsigned depth;
