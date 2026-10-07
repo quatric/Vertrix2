@@ -40,7 +40,7 @@
   "virtual": [],
   "address": 4900688
  },
- "f4ac760": {
+ "actor_frame_is_count": {
   "callees": {
    "0x487860": [
     0,
@@ -57,7 +57,7 @@
   "virtual": [],
   "address": 4900704
  },
- "f4ac780": {
+ "actor_frame_is_last": {
   "callees": {
    "0x487860": [
     0,
@@ -90,7 +90,7 @@
   "virtual": [],
   "address": 4900768
  },
- "f4ac7b0": {
+ "actor_set_period_steps": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -102,7 +102,7 @@
   "virtual": [],
   "address": 4900784
  },
- "f4ac7d0": {
+ "actor_set_period": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -114,7 +114,7 @@
   "virtual": [],
   "address": 4900816
  },
- "f4ac7e0": {
+ "actor_randomize_period": {
   "callees": {
    "0x4826c0": [
     0,
@@ -135,7 +135,7 @@
   "virtual": [],
   "address": 4900832
  },
- "f4ac810": {
+ "actor_randomize_d0": {
   "callees": {
    "0x4826c0": [
     0,
@@ -156,7 +156,7 @@
   "virtual": [],
   "address": 4900880
  },
- "f4ac840": {
+ "actor_set_e0_steps": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -201,7 +201,7 @@
   "virtual": [],
   "address": 4901024
  },
- "block_resource_attach": {
+ "actor_attach_resource": {
   "callees": {
    "0x4ac380": [
     0,
@@ -222,7 +222,7 @@
   "virtual": [],
   "address": 4901072
  },
- "f4ac8f0": {
+ "actor_set_handler": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -234,7 +234,7 @@
   "virtual": [],
   "address": 4901104
  },
- "f4ac900": {
+ "actor_get_handler": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -258,7 +258,7 @@
   "virtual": [],
   "address": 4901136
  },
- "actor_select_ec": {
+ "actor_handler_from_ec": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -318,7 +318,7 @@
   "virtual": [],
   "address": 4901216
  },
- "f4ac980": {
+ "step_toward": {
   "callees": {},
   "stack": 64,
   "arguments": 1,
@@ -379,7 +379,7 @@
   "virtual": [],
   "address": 4901552
  },
- "f4acb00": {
+ "actor_step_word": {
   "callees": {},
   "stack": 80,
   "arguments": 0,
@@ -443,7 +443,7 @@
   "virtual": [],
   "address": 4902192
  },
- "f4ace40": {
+ "actor_turn_toward": {
   "callees": {},
   "stack": 84,
   "arguments": 0,
@@ -475,7 +475,7 @@
   "virtual": [],
   "address": 4903008
  },
- "f4ad110": {
+ "actor_spin": {
   "callees": {},
   "stack": 80,
   "arguments": 0,
@@ -491,7 +491,7 @@
   "virtual": [],
   "address": 4903184
  },
- "rotation_coordinates": {
+ "actor_polar_offset": {
   "callees": {
    "0x4849e0": [
     0,
@@ -525,7 +525,7 @@
   "virtual": [],
   "address": 4903440
  },
- "f4ad260": {
+ "actor_orbit_point": {
   "callees": {
    "0x4ad1c0": [
     1,
@@ -596,7 +596,7 @@
   "virtual": [],
   "address": 4903872
  },
- "f4ad440": {
+ "actor_chain_orbit_point": {
   "callees": {
    "0x4ad1c0": [
     1,
@@ -621,7 +621,7 @@
   "virtual": [],
   "address": 4904000
  },
- "f4ad510": {
+ "actor_set_words_2a": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -693,7 +693,7 @@
   "virtual": [],
   "address": 4904496
  },
- "dword_transition": {
+ "actor_dword_transition": {
   "callees": {},
   "stack": 76,
   "arguments": 0,
@@ -722,7 +722,7 @@
   "virtual": [],
   "address": 4904736
  },
- "f4ad750": {
+ "object_step_dword": {
   "callees": {},
   "stack": 76,
   "arguments": 0,
@@ -808,7 +808,7 @@
   ],
   "address": 4906528
  },
- "sprite_chain_draw32": {
+ "f4ade60": {
   "callees": {
    "0x4ac8a0": [
     0,
@@ -829,7 +829,7 @@
   "virtual": [],
   "address": 4906592
  },
- "f4adf20": {
+ "actor_initialize": {
   "callees": {},
   "stack": 64,
   "arguments": 5,
@@ -1365,7 +1365,7 @@
   "virtual": [],
   "address": 4923296
  },
- "f4b2290": {
+ "object_zero_dwords": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -1377,7 +1377,7 @@
   "virtual": [],
   "address": 4924048
  },
- "f4b22c0": {
+ "object_release_slots": {
   "callees": {
    "virtual_4b22e7": [
     0,
@@ -1402,7 +1402,7 @@
   ],
   "address": 4924096
  },
- "f4b2300": {
+ "board_collection_all_handler": {
   "callees": {},
   "stack": 72,
   "arguments": 0,
@@ -1416,7 +1416,7 @@
   "virtual": [],
   "address": 4924160
  },
- "f4b2340": {
+ "board_collection_set_handler": {
   "callees": {
    "0x4ac8f0": [
     0,
@@ -2128,7 +2128,7 @@
   "virtual": [],
   "address": 4936016
  },
- "f4b5400": {
+ "actor_construct_518174": {
   "callees": {
    "0x4abd70": [
     0,
@@ -2185,7 +2185,7 @@
   "virtual": [],
   "address": 4936736
  },
- "f4b54d0": {
+ "actor_set_box": {
   "callees": {},
   "stack": 68,
   "arguments": 1,
@@ -2773,7 +2773,7 @@
   "virtual": [],
   "address": 4940896
  },
- "f4b6530": {
+ "timer_reset": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2861,7 +2861,7 @@
   "virtual": [],
   "address": 4941232
  },
- "f4b6690": {
+ "object_set_four_words": {
   "callees": {},
   "stack": 64,
   "arguments": 1,
@@ -3600,7 +3600,7 @@
   "virtual": [],
   "address": 4951996
  },
- "render_scale_advances": {
+ "f4b9050": {
   "callees": {
    "0x4eb5c0": [
     0,
@@ -5289,7 +5289,7 @@
   ],
   "address": 4982880
  },
- "f4c0990": {
+ "object_release_links": {
   "callees": {},
   "stack": 68,
   "arguments": 0,
@@ -6410,7 +6410,7 @@
   "virtual": [],
   "address": 5004320
  },
- "f4c5d60": {
+ "scaled_round": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -11298,7 +11298,7 @@
   "virtual": [],
   "address": 5055968
  },
- "f4d2700": {
+ "object_reset_triple": {
   "callees": {},
   "stack": 64,
   "arguments": 0,

@@ -85,8 +85,17 @@ same lifted symbols twice).
 
 ## Names
 
-`tools/gen_names.py` reads the 'Original 0x...' comments of the recovered headers into
-`docs/names.json` (address -> name of the recovered function, 650 entries). `lift_batch.py combine`
-names each verified lifted routine after it (`lifted_<name>`, the first address wins a name) and
-keeps `lifted_f<address>` for the rest, so 410 routines have readable names and the other ~2,200 keep
-their address until a name is established. A name is never guessed.
+`tools/gen_names.py` reads bounded original-address annotations from recovered headers into
+`docs/names.json` (968 entries). `docs/function-name-aliases.json` records thirty reviewed canonical
+choices with their header candidates, rationale, and evidence. A stale candidate set aborts generation.
+Partial recoveries do not establish a whole-routine name; `0x43f200` remains unresolved.
+
+`lift_batch.py combine` applies the map when generating chunks. For existing verified chunks,
+`tools/rename_lifted.py` validates metadata, declarations, definitions and dispatcher rows, then
+changes exact identifiers and stack constants without regenerating bodies. The current 2,615
+chunk routines include 740 readable names; the remainder retain address identifiers. The latest
+application renamed 305 routines. `docs/function-naming-verification.json` records unchanged metadata
+values and normalized C tokens except for the intended identifier substitutions.
+
+Run `python3 tools/test_gen_names.py` and `python3 tools/test_rename_lifted.py` for the extraction
+and application regression checks. See `docs/FUNCTION-NAMING.md` for the workflow.

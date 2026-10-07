@@ -1405,7 +1405,7 @@
   ],
   "address": 4527920
  },
- "f451a60": {
+ "player_start_bonus": {
   "callees": {
    "0x4320d0": [
     0,
@@ -3025,7 +3025,7 @@
   ],
   "address": 4535216
  },
- "f453460": {
+ "effect_stone_arm": {
   "callees": {
    "0x436fe0": [
     0,
@@ -4682,7 +4682,7 @@
   ],
   "address": 4539664
  },
- "session_start_freeze": {
+ "f454560": {
   "callees": {
    "0x43ac00": [
     0,
@@ -15079,7 +15079,7 @@
   "virtual": [],
   "address": 4583744
  },
- "f45f1e0": {
+ "table_identity_cells": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -16945,7 +16945,7 @@
   ],
   "address": 4657184
  },
- "f4710d0": {
+ "ui_actor_place": {
   "callees": {
    "0x4adf20": [
     5,
@@ -17713,7 +17713,7 @@
   "virtual": [],
   "address": 4660128
  },
- "f471bb0": {
+ "actors_handler_from_ec": {
   "callees": {
    "0x4ac920": [
     0,
@@ -17730,7 +17730,7 @@
   "virtual": [],
   "address": 4660144
  },
- "f471bf0": {
+ "actors_handler_from_ec_unlinked": {
   "callees": {
    "0x4ac920": [
     0,
