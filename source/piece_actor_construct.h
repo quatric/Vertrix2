@@ -24,7 +24,7 @@ int vertrix_piece_actor_construct(void *parent, size_t parent_size, void *childr
                                   size_t children_size, const uint32_t frames[7],
                                   const uint32_t handles[7], uint8_t side, int difficulty,
                                   int level, uint16_t row_height);
-/* Original429880: construct a slotted actor (base fields 0x4abd70) with class
+/* Original 0x429880: construct a slotted actor (base fields 0x4abd70) with class
  * token 0x514624, flag byte +0x274 = 0xff and dword +0x278 = 1, then clear
  * seven rows: four dwords at +0x15c and four at +0x1cc per 16-byte row stride,
  * plus flag bytes spanning +0x23c..+0x257 and +0x258..+0x273 (the inner edx

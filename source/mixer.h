@@ -48,7 +48,7 @@ typedef struct
     uint8_t last_sample;
 } VertrixMixerReadState;
 
-/* Original noninterpolated PCM8 mono kernel 0x40109c. Accumulates into
+/* Original 0x40109c: noninterpolated PCM8 mono kernel. Accumulates into
  * existing signed 32-bit samples with wrapping. Caller handles loop boundaries.
  * The original prefetches the sample at the final position; it must be readable.
  * Invalid bounds preserve destination and state; zero frames is a native no-op. */
@@ -56,7 +56,7 @@ int vertrix_mixer_pcm8_mono(const uint8_t *samples, size_t sample_count, uint32_
                             uint32_t stored_volume, uint32_t master_gain,
                             VertrixMixerReadState *state, int32_t *output, size_t frames,
                             size_t output_capacity);
-/* Original noninterpolated PCM8 stereo kernel 0x401328. Same bounded
+/* Original 0x401328: noninterpolated PCM8 stereo kernel. Same bounded
  * traversal contract as mono; capacity counts interleaved 32-bit values. */
 int vertrix_mixer_pcm8_stereo(const uint8_t *samples, size_t sample_count, uint32_t step,
                               uint32_t stored_volume, uint32_t master_gain, uint8_t pan,
@@ -79,7 +79,7 @@ int vertrix_mixer_pcm16_stereo(const uint8_t *samples, size_t byte_count, uint32
  * Quantized weight 0..31 is abs(step) >> 7. The returned raw signed PCM8
  * bit pattern becomes channel byte +23 for the next output sample. */
 int vertrix_mixer_filter(uint8_t previous, uint8_t sample, uint32_t weight, uint8_t *output);
-/* Complete original 0x401cd0 PCM8 mono interpolated kernel, including
+/* Original 0x401cd0: complete PCM8 mono interpolated kernel, including
  * signed |step| >= 4096 fallback. Small-step mode reads frames samples,
  * persists filtered byte, and does not prefetch the final position. */
 int vertrix_mixer_pcm8_mono_interpolated(const uint8_t *samples, size_t sample_count, uint32_t step,
@@ -157,7 +157,7 @@ typedef struct
  * chunks. Tick is due before mixing this batch. Zero period is rejected. */
 int vertrix_mixer_tick_batch(uint32_t period, uint32_t phase, uint32_t remaining_values,
                              VertrixMixerTickBatch *output);
-/* Original tempo setter 0x40cd40: BPM 32..255, period in accumulator
+/* Original 0x40cd40: tempo setter: BPM 32..255, period in accumulator
  * values. Stereo doubles the rate before wrapped multiplication by five. */
 int vertrix_mixer_tempo(uint32_t bpm, uint32_t output_rate, int stereo, uint32_t *period);
 /* Original 0x40ce20 pitch-to-frequency conversion. Nonpositive periods
@@ -167,7 +167,7 @@ uint32_t vertrix_mixer_pitch(int32_t period, int linear);
  * Arguments retain original signed 32-bit register bit patterns. */
 uint32_t vertrix_mixer_note_period(int32_t note, int32_t relative_note, int32_t finetune,
                                    int linear);
-/* Original arpeggio effect 0x40cef0. Parameter zero leaves period/flags
+/* Original 0x40cef0: arpeggio effect. Parameter zero leaves period/flags
  * unchanged. Tick uses signed remainder modulo three; nonpositive remainders
  * select the base note. Output pointers are required. */
 int vertrix_mixer_arpeggio(uint8_t parameter, int32_t tick, uint8_t note, int32_t relative_note,
@@ -305,7 +305,7 @@ int vertrix_mixer_pattern_loop(uint8_t parameter, int32_t tick, uint32_t current
 /* Original extended note-cut case 0x40d7ec: zero base/output volume and
  * set dirty bit 2 exactly when signed tick equals the low nibble. */
 int vertrix_mixer_note_cut(uint8_t parameter, int32_t tick, VertrixMixerVolumeSlide *state);
-/* Original note release 0x40e640. Clears active byte; instrument volume
+/* Original 0x40e640: note release. Clears active byte; instrument volume
  * envelope flag 1 preserves volume/flags, absent envelope clears volume and
  * sets flags 0x12, absent instrument sets flag 0x10 without clearing volume. */
 int vertrix_mixer_note_release(int instrument_present, uint8_t envelope_flags, uint8_t *active,
@@ -343,7 +343,7 @@ typedef struct
     uint8_t state_114;
     uint8_t state_115;
 } VertrixMixerTriggerReset;
-/* Complete original 0x40df20 reset. Null instrument preserves instrument
+/* Original 0x40df20: complete reset. Null instrument preserves instrument
  * dependent fields. Envelope flags and instrument bytes are explicit inputs. */
 int vertrix_mixer_trigger_reset(int instrument_present, uint8_t volume_flags, uint8_t pan_flags,
                                 uint16_t fade_step, uint8_t sweep, uint8_t depth,
@@ -514,7 +514,7 @@ typedef struct
     uint32_t loop_end;
     uint8_t flags;
 } VertrixMixerSampleBinding;
-/* Complete original 0x40c9d0 for an already-selected channel. Rebinds the
+/* Original 0x40c9d0: complete routine for an already-selected channel. Rebinds the
  * source and cursor while preserving step, volume, pan and interpolation cache.
  * Returns 0 success, 1 invalid native storage. Does not take buffer ownership. */
 int vertrix_mixer_attach(const VertrixMixerSampleBinding *sample, VertrixMixerChannel *channel,
@@ -576,7 +576,7 @@ typedef struct
     VertrixMixerRowDefaults defaults;
     uint8_t parameter;
 } VertrixMixerRowState;
-/* Complete original 0x40e770 after event decoding. Event order is note,
+/* Original 0x40e770: complete routine after event decoding. Event order is note,
  * instrument, volume command, effect, parameter. Sample ownership is tracked
  * separately because changing instruments can preserve the previous sample.
  * Selection flags are authoritative; invalid native storage rejects atomically. */
@@ -598,7 +598,7 @@ typedef struct
     uint8_t waveform;
     uint8_t flags;
 } VertrixMixerVolumeColumn;
-/* Complete original 0x40dc80 volume-column dispatch. Later B/F commands
+/* Original 0x40dc80: complete volume-column dispatch. Later B/F commands
  * invoke existing vibrato/portamento with the channel's effect parameter. */
 int vertrix_mixer_volume_column(uint8_t command, uint8_t effect_parameter, int32_t tick,
                                 VertrixMixerVolumeColumn *state);

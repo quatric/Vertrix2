@@ -45,7 +45,7 @@ typedef struct
 /* Resolver must not mutate scene. Dimensions come from the recovered resource
  * measurement routine; mode 16 ignores them. */
 typedef VertrixSceneObject *(*VertrixSceneResolve)(uint32_t object, void *context);
-/* Complete original 0x430930 positioning. An unresolved nonzero handle returns
+/* Original 0x430930: complete positioning. An unresolved nonzero handle returns
  * 0 after any earlier objects have been positioned. */
 int vertrix_scene_layout(const VertrixScene *scene, int16_t origin_x, int16_t origin_y,
                          VertrixSceneResolve resolve, void *context);

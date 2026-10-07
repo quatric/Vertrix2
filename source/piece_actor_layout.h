@@ -1,7 +1,7 @@
 #ifndef VERTRIX_PIECE_ACTOR_LAYOUT_H
 #define VERTRIX_PIECE_ACTOR_LAYOUT_H
 #include "ui_scene_frame.h"
-/* Complete original42aab0: base constructor, class514774, seven null child
+/* Original 0x42aab0: complete routine: base constructor, class514774, seven null child
  * handles and zero movement/mode/flag/count178..188. Minimum18c bytes;
  * preserve all untouched bytes and reject short storage before mutation. */
 int vertrix_piece_actor_parent_construct(void *parent, size_t parent_size);
@@ -12,7 +12,7 @@ int vertrix_piece_actor_parent_construct(void *parent, size_t parent_size);
  * writes; this helper does not update timers, callbacks or parent position. */
 int vertrix_piece_actor_layout(void *parent, size_t parent_size, uint16_t row_height,
                                VertrixActorStorageMutableResolve resolve, void *context);
-/* Original42af80: for count188 >=2, rotate active handles left, then set
+/* Original 0x42af80: for count188 >=2, rotate active handles left, then set
  * penultimate callback44c370 and final callback44c2b0. Counts0..7 supported;
  * counts0/1 require no resolver. Invalid storage/count/required resolution
  * preserves parent and children. Resolver keeps handles/storage stable. */

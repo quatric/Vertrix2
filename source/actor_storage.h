@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 #define VERTRIX_ACTOR_BASE_SIZE 0x15c
-/* Original4abd70. Write only constructor-defined fields into existing storage.
+/* Original 0x4abd70. Write only constructor-defined fields into existing storage.
  * Byte order remains explicitly little endian on all platforms. Original class,
  * resource and handler addresses are identity tokens; never native pointers.
  * Derived actor storage may exceed base size. Short/null storage is preserved. */

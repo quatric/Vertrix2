@@ -36,7 +36,7 @@ uint32_t vertrix_audio_buffer_bytes(uint8_t flag_4, uint8_t flag_5, uint16_t rat
  * byte/LE-word sums wrap at 8/16 bits. Odd final byte is untouched in word mode.
  * Each call starts its accumulator at zero, matching one sample resource. */
 int vertrix_audio_delta_decode(unsigned char *samples, size_t byte_count, int sixteen_bit);
-/* Original software-mixer sample update 0x40c990. Forward-loop flag 0x10
+/* Original 0x40c990: software-mixer sample update. Forward-loop flag 0x10
  * copies four bytes from loop start to loop end; otherwise an update reaching
  * byte_count writes four zero guard bytes at the end. Range failures preserve
  * storage. updated_offset + updated_bytes uses original uint32 wrapping. */

@@ -13,7 +13,7 @@ int vertrix_player_preview_set_mode(void *player, size_t size, uint32_t mode);
 int vertrix_player_preview_frame(const void *player, size_t size,
                                  VertrixActorStorageResolve resolve, void *context,
                                  uint32_t *frame);
-/* Original42b090/425de0: initialize seven output DWORDs toffffffff, then copy
+/* Original 0x42b090/425de0: initialize seven output DWORDs toffffffff, then copy
  * frameb8 from each active companion in slot order. Counts0..3 are supported.
  * Output is a native uint32 array; missing/invalid actor resolution preserves
  * the entire output. Resolver keeps player handles/count and actors stable. */

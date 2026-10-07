@@ -147,7 +147,7 @@ typedef struct
     int linear;
     uint8_t module_flags;
 } VertrixSequenceSong;
-/* Complete original 0x40eb10 tick composition. Returns 0 already stopped,
+/* Original 0x40eb10: complete tick composition. Returns 0 already stopped,
  * 1 processed, -1 invalid runtime data. A stop set during row advancement
  * still finishes this tick, as in the original. Row advancement allocates
  * temporary storage; real-time suitability is not yet established. */
