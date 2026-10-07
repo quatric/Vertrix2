@@ -11,7 +11,7 @@ uint32_t lifted_select_screen(const VertrixCalls *calls, const VertrixFactorySer
 {
     uint8_t stack[LIFTED_SELECT_SCREEN_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;

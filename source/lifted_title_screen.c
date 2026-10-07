@@ -11,7 +11,7 @@ uint32_t lifted_title_screen(const VertrixCalls *calls, const VertrixFactoryServ
 {
     uint8_t stack[LIFTED_TITLE_SCREEN_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;

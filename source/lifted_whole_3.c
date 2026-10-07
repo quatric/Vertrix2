@@ -9,7 +9,7 @@ uint32_t lifted_list_notify_pair(const VertrixCalls *calls, const VertrixFactory
 {
     uint8_t stack[LIFTED_LIST_NOTIFY_PAIR_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -115,7 +115,7 @@ uint32_t lifted_f471e60(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F471E60_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -170,7 +170,7 @@ uint32_t lifted_f471e80(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F471E80_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -225,7 +225,7 @@ uint32_t lifted_f471ea0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F471EA0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -254,7 +254,7 @@ uint32_t lifted_f471eb0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F471EB0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -283,7 +283,7 @@ uint32_t lifted_f471ec0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F471EC0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -312,7 +312,7 @@ uint32_t lifted_f471ed0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F471ED0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -341,7 +341,7 @@ uint32_t lifted_f471ee0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F471EE0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -368,7 +368,7 @@ uint32_t lifted_f472020(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F472020_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -503,7 +503,7 @@ uint32_t lifted_f472090(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F472090_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -638,7 +638,7 @@ uint32_t lifted_f472100(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F472100_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -773,7 +773,7 @@ uint32_t lifted_f472170(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F472170_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -907,7 +907,7 @@ uint32_t lifted_f4721e0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4721E0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -1042,7 +1042,7 @@ uint32_t lifted_f472250(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F472250_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -1177,7 +1177,7 @@ uint32_t lifted_f4722c0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4722C0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -1312,7 +1312,7 @@ uint32_t lifted_f472330(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F472330_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -1341,7 +1341,7 @@ uint32_t lifted_f472350(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F472350_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -1370,7 +1370,7 @@ uint32_t lifted_f472360(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F472360_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -1488,7 +1488,7 @@ uint32_t lifted_f4723a0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4723A0_STACK + 4 + 4 * 1 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -1680,7 +1680,7 @@ uint32_t lifted_f472440(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F472440_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -1711,7 +1711,7 @@ uint32_t lifted_f472460(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F472460_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -1751,7 +1751,7 @@ uint32_t lifted_actor_spawn(const VertrixCalls *calls, const VertrixFactoryServi
 {
     uint8_t stack[LIFTED_ACTOR_SPAWN_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -1889,7 +1889,7 @@ uint32_t lifted_f4724f0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4724F0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -2028,7 +2028,7 @@ uint32_t lifted_special_actor_spawn(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_SPECIAL_ACTOR_SPAWN_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -2166,7 +2166,7 @@ uint32_t lifted_list_clear_hit(const VertrixCalls *calls, const VertrixFactorySe
 {
     uint8_t stack[LIFTED_LIST_CLEAR_HIT_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -2220,7 +2220,7 @@ uint32_t lifted_banner_actor_spawn(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_BANNER_ACTOR_SPAWN_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -2354,7 +2354,7 @@ uint32_t lifted_f472ad0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F472AD0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -2420,7 +2420,7 @@ uint32_t lifted_f472bd0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F472BD0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -2474,7 +2474,7 @@ uint32_t lifted_overlay_spawn(const VertrixCalls *calls, const VertrixFactorySer
 {
     uint8_t stack[LIFTED_OVERLAY_SPAWN_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -2641,7 +2641,7 @@ uint32_t lifted_slot_create_call(const VertrixCalls *calls, const VertrixFactory
 {
     uint8_t stack[LIFTED_SLOT_CREATE_CALL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -2711,7 +2711,7 @@ uint32_t lifted_ui_panel_release(const VertrixCalls *calls, const VertrixFactory
 {
     uint8_t stack[LIFTED_UI_PANEL_RELEASE_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -2808,7 +2808,7 @@ uint32_t lifted_f472db0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F472DB0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -3113,7 +3113,7 @@ uint32_t lifted_icons_build(const VertrixCalls *calls, const VertrixFactoryServi
 {
     uint8_t stack[LIFTED_ICONS_BUILD_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -3492,7 +3492,7 @@ uint32_t lifted_f473490(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F473490_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -3664,7 +3664,7 @@ uint32_t lifted_point_list_conditional(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_POINT_LIST_CONDITIONAL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -3730,7 +3730,7 @@ uint32_t lifted_point_list_when_one(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_POINT_LIST_WHEN_ONE_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -3771,7 +3771,7 @@ uint32_t lifted_pair_words(const VertrixCalls *calls, const VertrixFactoryServic
 {
     uint8_t stack[LIFTED_PAIR_WORDS_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -4008,7 +4008,7 @@ uint32_t lifted_pair_flags(const VertrixCalls *calls, const VertrixFactoryServic
 {
     uint8_t stack[LIFTED_PAIR_FLAGS_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -4271,7 +4271,7 @@ uint32_t lifted_f473960(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F473960_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -4534,7 +4534,7 @@ uint32_t lifted_pair_scan(const VertrixCalls *calls, const VertrixFactoryService
 {
     uint8_t stack[LIFTED_PAIR_SCAN_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -4723,7 +4723,7 @@ uint32_t lifted_f473cd0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F473CD0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -4763,7 +4763,7 @@ uint32_t lifted_f473e60(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F473E60_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -4943,7 +4943,7 @@ uint32_t lifted_f474540(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F474540_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -4996,7 +4996,7 @@ uint32_t lifted_f4754e0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4754E0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -5065,7 +5065,7 @@ uint32_t lifted_release_pair(const VertrixCalls *calls, const VertrixFactoryServ
 {
     uint8_t stack[LIFTED_RELEASE_PAIR_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -5166,7 +5166,7 @@ uint32_t lifted_sound_simple_clear(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_SOUND_SIMPLE_CLEAR_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -5201,7 +5201,7 @@ uint32_t lifted_object_destroy_flags(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_OBJECT_DESTROY_FLAGS_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -5364,7 +5364,7 @@ uint32_t lifted_sound_simple_set(const VertrixCalls *calls, const VertrixFactory
 {
     uint8_t stack[LIFTED_SOUND_SIMPLE_SET_STACK + 4 + 4 * 1 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -5398,7 +5398,7 @@ uint32_t lifted_f4757b0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4757B0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -5426,7 +5426,7 @@ uint32_t lifted_f4757e0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4757E0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -5481,7 +5481,7 @@ uint32_t lifted_f475800(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F475800_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -5509,7 +5509,7 @@ uint32_t lifted_f475810(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F475810_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -5537,7 +5537,7 @@ uint32_t lifted_f475820(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F475820_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -5565,7 +5565,7 @@ uint32_t lifted_f475830(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F475830_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -5593,7 +5593,7 @@ uint32_t lifted_f475840(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F475840_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -5742,7 +5742,7 @@ uint32_t lifted_f4759d0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4759D0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -5770,7 +5770,7 @@ uint32_t lifted_queue_drain(const VertrixCalls *calls, const VertrixFactoryServi
 {
     uint8_t stack[LIFTED_QUEUE_DRAIN_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -5872,7 +5872,7 @@ uint32_t lifted_object_list_init(const VertrixCalls *calls, const VertrixFactory
 {
     uint8_t stack[LIFTED_OBJECT_LIST_INIT_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -5971,7 +5971,7 @@ uint32_t lifted_list_reset_calls(const VertrixCalls *calls, const VertrixFactory
 {
     uint8_t stack[LIFTED_LIST_RESET_CALLS_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -6062,7 +6062,7 @@ uint32_t lifted_list_push_call(const VertrixCalls *calls, const VertrixFactorySe
 {
     uint8_t stack[LIFTED_LIST_PUSH_CALL_STACK + 4 + 4 * 1 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -6124,7 +6124,7 @@ uint32_t lifted_input_repeat_start(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_INPUT_REPEAT_START_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -6168,7 +6168,7 @@ uint32_t lifted_f475af0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F475AF0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -6196,7 +6196,7 @@ uint32_t lifted_f475b00(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F475B00_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -6231,7 +6231,7 @@ uint32_t lifted_f475b20(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F475B20_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -6345,7 +6345,7 @@ uint32_t lifted_f475b80(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F475B80_STACK + 4 + 4 * 2 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -6445,7 +6445,7 @@ uint32_t lifted_f475be0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F475BE0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -6535,7 +6535,7 @@ uint32_t lifted_f475c30(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F475C30_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -6670,7 +6670,7 @@ uint32_t lifted_queue_next(const VertrixCalls *calls, const VertrixFactoryServic
 {
     uint8_t stack[LIFTED_QUEUE_NEXT_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -6790,7 +6790,7 @@ uint32_t lifted_f475cd0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F475CD0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -6882,7 +6882,7 @@ uint32_t lifted_f475d20(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F475D20_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -6981,7 +6981,7 @@ uint32_t lifted_f475d70(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F475D70_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -7021,7 +7021,7 @@ uint32_t lifted_offset_call(const VertrixCalls *calls, const VertrixFactoryServi
 {
     uint8_t stack[LIFTED_OFFSET_CALL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -7053,7 +7053,7 @@ uint32_t lifted_f475da0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F475DA0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -7101,7 +7101,7 @@ uint32_t lifted_f475dd0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F475DD0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -7129,7 +7129,7 @@ uint32_t lifted_f475de0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F475DE0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -7157,7 +7157,7 @@ uint32_t lifted_f475df0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F475DF0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -7203,7 +7203,7 @@ uint32_t lifted_f475e10(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F475E10_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -7264,7 +7264,7 @@ uint32_t lifted_f475e30(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F475E30_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -7295,7 +7295,7 @@ uint32_t lifted_f475e40(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F475E40_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -7323,7 +7323,7 @@ uint32_t lifted_input_repeat_tick(const VertrixCalls *calls, const VertrixFactor
 {
     uint8_t stack[LIFTED_INPUT_REPEAT_TICK_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -7463,7 +7463,7 @@ uint32_t lifted_object_construct_f(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_OBJECT_CONSTRUCT_F_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -7632,7 +7632,7 @@ uint32_t lifted_slot_call(const VertrixCalls *calls, const VertrixFactoryService
 {
     uint8_t stack[LIFTED_SLOT_CALL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -7689,7 +7689,7 @@ uint32_t lifted_slot_table_init(const VertrixCalls *calls, const VertrixFactoryS
 {
     uint8_t stack[LIFTED_SLOT_TABLE_INIT_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -7787,7 +7787,7 @@ uint32_t lifted_f4760c0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4760C0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -7869,7 +7869,7 @@ uint32_t lifted_index_sweep_call(const VertrixCalls *calls, const VertrixFactory
 {
     uint8_t stack[LIFTED_INDEX_SWEEP_CALL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -7951,7 +7951,7 @@ uint32_t lifted_f476120(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F476120_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -8008,7 +8008,7 @@ uint32_t lifted_f476140(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F476140_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -8065,7 +8065,7 @@ uint32_t lifted_f4761d0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4761D0_STACK + 4 + 4 * 1 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -8199,7 +8199,7 @@ uint32_t lifted_list_find_call(const VertrixCalls *calls, const VertrixFactorySe
 {
     uint8_t stack[LIFTED_LIST_FIND_CALL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -8258,7 +8258,7 @@ uint32_t lifted_f476280(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F476280_STACK + 4 + 4 * 1 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -8361,7 +8361,7 @@ uint32_t lifted_slot_select(const VertrixCalls *calls, const VertrixFactoryServi
 {
     uint8_t stack[LIFTED_SLOT_SELECT_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -8467,7 +8467,7 @@ uint32_t lifted_f476320(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F476320_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -8554,7 +8554,7 @@ uint32_t lifted_f476400(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F476400_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -8669,7 +8669,7 @@ uint32_t lifted_f476440(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F476440_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -8784,7 +8784,7 @@ uint32_t lifted_f476480(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F476480_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -8841,7 +8841,7 @@ uint32_t lifted_slot_store_call(const VertrixCalls *calls, const VertrixFactoryS
 {
     uint8_t stack[LIFTED_SLOT_STORE_CALL_STACK + 4 + 4 * 1 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -8914,7 +8914,7 @@ uint32_t lifted_f4764d0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4764D0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -8984,7 +8984,7 @@ uint32_t lifted_f476500(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F476500_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -9054,7 +9054,7 @@ uint32_t lifted_slot_search_call(const VertrixCalls *calls, const VertrixFactory
 {
     uint8_t stack[LIFTED_SLOT_SEARCH_CALL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -9185,7 +9185,7 @@ uint32_t lifted_two_codes_call(const VertrixCalls *calls, const VertrixFactorySe
 {
     uint8_t stack[LIFTED_TWO_CODES_CALL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -9238,7 +9238,7 @@ uint32_t lifted_fixed_codes_call(const VertrixCalls *calls, const VertrixFactory
 {
     uint8_t stack[LIFTED_FIXED_CODES_CALL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -9322,7 +9322,7 @@ uint32_t lifted_sound_key_is_control(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_SOUND_KEY_IS_CONTROL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -9417,7 +9417,7 @@ uint32_t lifted_slot_table_reset(const VertrixCalls *calls, const VertrixFactory
 {
     uint8_t stack[LIFTED_SLOT_TABLE_RESET_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -9515,7 +9515,7 @@ uint32_t lifted_sound_cue_both(const VertrixCalls *calls, const VertrixFactorySe
 {
     uint8_t stack[LIFTED_SOUND_CUE_BOTH_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -9622,7 +9622,7 @@ uint32_t lifted_resource_entry_256(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_RESOURCE_ENTRY_256_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -9725,7 +9725,7 @@ uint32_t lifted_sound_bank_clear(const VertrixCalls *calls, const VertrixFactory
 {
     uint8_t stack[LIFTED_SOUND_BANK_CLEAR_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -9799,7 +9799,7 @@ uint32_t lifted_sound_open_keys(const VertrixCalls *calls, const VertrixFactoryS
 {
     uint8_t stack[LIFTED_SOUND_OPEN_KEYS_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -9890,7 +9890,7 @@ uint32_t lifted_sound_check_primary(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_SOUND_CHECK_PRIMARY_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -9994,7 +9994,7 @@ uint32_t lifted_sound_release_primary(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_SOUND_RELEASE_PRIMARY_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -10139,7 +10139,7 @@ uint32_t lifted_f476d20(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F476D20_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -10193,7 +10193,7 @@ uint32_t lifted_sound_cue_offset(const VertrixCalls *calls, const VertrixFactory
 {
     uint8_t stack[LIFTED_SOUND_CUE_OFFSET_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -10269,7 +10269,7 @@ uint32_t lifted_f476fe0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F476FE0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -10345,7 +10345,7 @@ uint32_t lifted_sound_cue_key(const VertrixCalls *calls, const VertrixFactorySer
 {
     uint8_t stack[LIFTED_SOUND_CUE_KEY_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -10417,7 +10417,7 @@ uint32_t lifted_f477040(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F477040_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -10489,7 +10489,7 @@ uint32_t lifted_f477070(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F477070_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -10561,7 +10561,7 @@ uint32_t lifted_f4770a0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4770A0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -10633,7 +10633,7 @@ uint32_t lifted_f4770d0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4770D0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -10705,7 +10705,7 @@ uint32_t lifted_f477100(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F477100_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -10777,7 +10777,7 @@ uint32_t lifted_f477130(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F477130_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -10849,7 +10849,7 @@ uint32_t lifted_f477160(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F477160_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -10921,7 +10921,7 @@ uint32_t lifted_f477240(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F477240_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -10951,7 +10951,7 @@ uint32_t lifted_f4772f0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4772F0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -11015,7 +11015,7 @@ uint32_t lifted_f477320(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F477320_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -11161,7 +11161,7 @@ uint32_t lifted_f477610(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F477610_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -11266,7 +11266,7 @@ uint32_t lifted_format_decimal(const VertrixCalls *calls, const VertrixFactorySe
 {
     uint8_t stack[LIFTED_FORMAT_DECIMAL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -11505,7 +11505,7 @@ uint32_t lifted_text_append_call(const VertrixCalls *calls, const VertrixFactory
 {
     uint8_t stack[LIFTED_TEXT_APPEND_CALL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -11628,7 +11628,7 @@ uint32_t lifted_f477870(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F477870_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -11656,7 +11656,7 @@ uint32_t lifted_f477910(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F477910_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -11686,7 +11686,7 @@ uint32_t lifted_f477930(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F477930_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -11714,7 +11714,7 @@ uint32_t lifted_sound_slider_clear(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_SOUND_SLIDER_CLEAR_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -11764,7 +11764,7 @@ uint32_t lifted_f477af0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F477AF0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -11824,7 +11824,7 @@ uint32_t lifted_cursor_capture(const VertrixCalls *calls, const VertrixFactorySe
 {
     uint8_t stack[LIFTED_CURSOR_CAPTURE_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -11956,7 +11956,7 @@ uint32_t lifted_f477d10(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F477D10_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -12102,7 +12102,7 @@ uint32_t lifted_object_center_setup(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_OBJECT_CENTER_SETUP_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -12291,7 +12291,7 @@ uint32_t lifted_f477e10(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F477E10_STACK + 4 + 4 * 1 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -12324,7 +12324,7 @@ uint32_t lifted_object_center_place(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_OBJECT_CENTER_PLACE_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -12503,7 +12503,7 @@ uint32_t lifted_object_reset_center(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_OBJECT_RESET_CENTER_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -12599,7 +12599,7 @@ uint32_t lifted_f477f10(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F477F10_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -13422,7 +13422,7 @@ uint32_t lifted_f478460(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F478460_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -13464,7 +13464,7 @@ uint32_t lifted_object_clamp_position(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_OBJECT_CLAMP_POSITION_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -13602,7 +13602,7 @@ uint32_t lifted_sound_cue_position(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_SOUND_CUE_POSITION_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -13699,7 +13699,7 @@ uint32_t lifted_f478520(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F478520_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -13796,7 +13796,7 @@ uint32_t lifted_f478570(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F478570_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -13906,7 +13906,7 @@ uint32_t lifted_f4785c0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4785C0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -14016,7 +14016,7 @@ uint32_t lifted_f478610(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F478610_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -14126,7 +14126,7 @@ uint32_t lifted_f478660(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F478660_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -14236,7 +14236,7 @@ uint32_t lifted_f4786b0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4786B0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -14346,7 +14346,7 @@ uint32_t lifted_f478700(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F478700_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -14456,7 +14456,7 @@ uint32_t lifted_f478750(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F478750_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -14566,7 +14566,7 @@ uint32_t lifted_f4787a0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4787A0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -14676,7 +14676,7 @@ uint32_t lifted_flagged_call(const VertrixCalls *calls, const VertrixFactoryServ
 {
     uint8_t stack[LIFTED_FLAGGED_CALL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -14738,7 +14738,7 @@ uint32_t lifted_object_fill_ramp(const VertrixCalls *calls, const VertrixFactory
 {
     uint8_t stack[LIFTED_OBJECT_FILL_RAMP_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -14885,7 +14885,7 @@ uint32_t lifted_when_flag_call(const VertrixCalls *calls, const VertrixFactorySe
 {
     uint8_t stack[LIFTED_WHEN_FLAG_CALL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -14943,7 +14943,7 @@ uint32_t lifted_literal_copy_call(const VertrixCalls *calls, const VertrixFactor
 {
     uint8_t stack[LIFTED_LITERAL_COPY_CALL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -15061,7 +15061,7 @@ uint32_t lifted_event_key_index(const VertrixCalls *calls, const VertrixFactoryS
 {
     uint8_t stack[LIFTED_EVENT_KEY_INDEX_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -15128,7 +15128,7 @@ uint32_t lifted_f478d10(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F478D10_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -15250,7 +15250,7 @@ uint32_t lifted_f478d80(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F478D80_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -15292,7 +15292,7 @@ uint32_t lifted_object_remaining(const VertrixCalls *calls, const VertrixFactory
 {
     uint8_t stack[LIFTED_OBJECT_REMAINING_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -15362,7 +15362,7 @@ uint32_t lifted_surface_offset(const VertrixCalls *calls, const VertrixFactorySe
 {
     uint8_t stack[LIFTED_SURFACE_OFFSET_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -15421,7 +15421,7 @@ uint32_t lifted_f478ed0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F478ED0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -15502,7 +15502,7 @@ uint32_t lifted_surface_read(const VertrixCalls *calls, const VertrixFactoryServ
 {
     uint8_t stack[LIFTED_SURFACE_READ_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -15595,7 +15595,7 @@ uint32_t lifted_surface_bounds(const VertrixCalls *calls, const VertrixFactorySe
 {
     uint8_t stack[LIFTED_SURFACE_BOUNDS_STACK + 4 + 4 * 1 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -15957,7 +15957,7 @@ uint32_t lifted_f4799f0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4799F0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -16062,7 +16062,7 @@ uint32_t lifted_pixel_pack(const VertrixCalls *calls, const VertrixFactoryServic
 {
     uint8_t stack[LIFTED_PIXEL_PACK_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -16245,7 +16245,7 @@ uint32_t lifted_f479b30(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F479B30_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -16287,7 +16287,7 @@ uint32_t lifted_surface_flip_vertical(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_SURFACE_FLIP_VERTICAL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -16802,7 +16802,7 @@ uint32_t lifted_surface_copy_pixel(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_SURFACE_COPY_PIXEL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -16944,7 +16944,7 @@ uint32_t lifted_neighbour_calls(const VertrixCalls *calls, const VertrixFactoryS
 {
     uint8_t stack[LIFTED_NEIGHBOUR_CALLS_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -17048,7 +17048,7 @@ uint32_t lifted_f47bd80(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47BD80_STACK + 4 + 4 * 3 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -17784,7 +17784,7 @@ uint32_t lifted_f47c250(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47C250_STACK + 4 + 4 * 2 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -18077,7 +18077,7 @@ uint32_t lifted_f47c3b0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47C3B0_STACK + 4 + 4 * 2 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -18346,7 +18346,7 @@ uint32_t lifted_f47c710(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47C710_STACK + 4 + 4 * 7 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -18625,7 +18625,7 @@ uint32_t lifted_surface_blend(const VertrixCalls *calls, const VertrixFactorySer
 {
     uint8_t stack[LIFTED_SURFACE_BLEND_STACK + 4 + 4 * 5 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -18998,7 +18998,7 @@ uint32_t lifted_surface_blend_masked(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_SURFACE_BLEND_MASKED_STACK + 4 + 4 * 5 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -19382,7 +19382,7 @@ uint32_t lifted_surface_decimate(const VertrixCalls *calls, const VertrixFactory
 {
     uint8_t stack[LIFTED_SURFACE_DECIMATE_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -19550,7 +19550,7 @@ uint32_t lifted_surface_blit(const VertrixCalls *calls, const VertrixFactoryServ
 {
     uint8_t stack[LIFTED_SURFACE_BLIT_STACK + 4 + 4 * 4 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -22619,7 +22619,7 @@ uint32_t lifted_surface_blit_keyed(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_SURFACE_BLIT_KEYED_STACK + 4 + 4 * 4 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -22868,7 +22868,7 @@ uint32_t lifted_f47e780(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47E780_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -22945,7 +22945,7 @@ uint32_t lifted_f47e7d0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47E7D0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -23159,7 +23159,7 @@ uint32_t lifted_f47e990(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47E990_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -23194,7 +23194,7 @@ uint32_t lifted_object_set_pair(const VertrixCalls *calls, const VertrixFactoryS
 {
     uint8_t stack[LIFTED_OBJECT_SET_PAIR_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -23222,7 +23222,7 @@ uint32_t lifted_f47e9b0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47E9B0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -23405,7 +23405,7 @@ uint32_t lifted_display_release_pair(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_DISPLAY_RELEASE_PAIR_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -23534,7 +23534,7 @@ uint32_t lifted_f47eab0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47EAB0_STACK + 4 + 4 * 3 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -23742,7 +23742,7 @@ uint32_t lifted_f47eb60(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47EB60_STACK + 4 + 4 * 3 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -23855,7 +23855,7 @@ uint32_t lifted_f47ecf0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47ECF0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -23898,7 +23898,7 @@ uint32_t lifted_f47ed10(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47ED10_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -23942,7 +23942,7 @@ uint32_t lifted_f47ed30(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47ED30_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -23998,7 +23998,7 @@ uint32_t lifted_f47ed60(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47ED60_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -24026,7 +24026,7 @@ uint32_t lifted_f47ed70(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47ED70_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -24054,7 +24054,7 @@ uint32_t lifted_f47ed80(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47ED80_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -24082,7 +24082,7 @@ uint32_t lifted_f47ed90(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47ED90_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -24110,7 +24110,7 @@ uint32_t lifted_f47eda0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47EDA0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -24433,7 +24433,7 @@ uint32_t lifted_f47eeb0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47EEB0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -24810,7 +24810,7 @@ uint32_t lifted_f47f0f0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47F0F0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -24943,7 +24943,7 @@ uint32_t lifted_display_chain_count(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_DISPLAY_CHAIN_COUNT_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -25004,7 +25004,7 @@ uint32_t lifted_object_chain_at(const VertrixCalls *calls, const VertrixFactoryS
 {
     uint8_t stack[LIFTED_OBJECT_CHAIN_AT_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -25076,7 +25076,7 @@ uint32_t lifted_object_chain_member(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_OBJECT_CHAIN_MEMBER_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -25116,7 +25116,7 @@ uint32_t lifted_f47f2f0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47F2F0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -25195,7 +25195,7 @@ uint32_t lifted_display_chain_find(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_DISPLAY_CHAIN_FIND_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -25343,7 +25343,7 @@ uint32_t lifted_f47f370(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47F370_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -25523,7 +25523,7 @@ uint32_t lifted_f47f3d0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47F3D0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -25627,7 +25627,7 @@ uint32_t lifted_f47f4b0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47F4B0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -25941,7 +25941,7 @@ uint32_t lifted_f47f590(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47F590_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -26090,7 +26090,7 @@ uint32_t lifted_f47f750(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47F750_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -26155,7 +26155,7 @@ uint32_t lifted_f47f770(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47F770_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -26207,7 +26207,7 @@ uint32_t lifted_f47f790(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47F790_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -26418,7 +26418,7 @@ uint32_t lifted_f47f830(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47F830_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -26629,7 +26629,7 @@ uint32_t lifted_f47f8e0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47F8E0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -26657,7 +26657,7 @@ uint32_t lifted_f47f8f0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47F8F0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -26684,7 +26684,7 @@ uint32_t lifted_checked_calls(const VertrixCalls *calls, const VertrixFactorySer
 {
     uint8_t stack[LIFTED_CHECKED_CALLS_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -26781,7 +26781,7 @@ uint32_t lifted_f47f9e0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47F9E0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -26882,7 +26882,7 @@ uint32_t lifted_f47fa20(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47FA20_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -26923,7 +26923,7 @@ uint32_t lifted_f47fa40(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47FA40_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -27058,7 +27058,7 @@ uint32_t lifted_f47fa90(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47FA90_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -27214,7 +27214,7 @@ uint32_t lifted_object_set_text(const VertrixCalls *calls, const VertrixFactoryS
 {
     uint8_t stack[LIFTED_OBJECT_SET_TEXT_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -27388,7 +27388,7 @@ uint32_t lifted_f47fc10(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47FC10_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -27513,7 +27513,7 @@ uint32_t lifted_f47fc50(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47FC50_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -27617,7 +27617,7 @@ uint32_t lifted_f47fce0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47FCE0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -27663,7 +27663,7 @@ uint32_t lifted_display_notify(const VertrixCalls *calls, const VertrixFactorySe
 {
     uint8_t stack[LIFTED_DISPLAY_NOTIFY_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -27773,7 +27773,7 @@ uint32_t lifted_f47fe50(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47FE50_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -27883,7 +27883,7 @@ uint32_t lifted_f47fe80(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F47FE80_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -27993,7 +27993,7 @@ uint32_t lifted_f480030(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F480030_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -28122,7 +28122,7 @@ uint32_t lifted_f480070(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F480070_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -28150,7 +28150,7 @@ uint32_t lifted_f480890(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F480890_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -28264,7 +28264,7 @@ uint32_t lifted_f4808f0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4808F0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -28370,7 +28370,7 @@ uint32_t lifted_f480940(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F480940_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -28462,7 +28462,7 @@ uint32_t lifted_f480990(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F480990_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -28557,7 +28557,7 @@ uint32_t lifted_f480b20(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F480B20_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -28650,7 +28650,7 @@ uint32_t lifted_f481420(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F481420_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -28790,7 +28790,7 @@ uint32_t lifted_f481460(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F481460_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -28843,7 +28843,7 @@ uint32_t lifted_f4817a0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4817A0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -29008,7 +29008,7 @@ uint32_t lifted_f481b20(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F481B20_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -29036,7 +29036,7 @@ uint32_t lifted_f481b30(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F481B30_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -29199,7 +29199,7 @@ uint32_t lifted_f481bc0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F481BC0_STACK + 4 + 4 * 1 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -29674,7 +29674,7 @@ uint32_t lifted_f481d90(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F481D90_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -29870,7 +29870,7 @@ uint32_t lifted_f481e10(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F481E10_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -30178,7 +30178,7 @@ uint32_t lifted_object_create_with_class(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_OBJECT_CREATE_WITH_CLASS_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -30300,7 +30300,7 @@ uint32_t lifted_f481fb0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F481FB0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -30472,7 +30472,7 @@ uint32_t lifted_f482050(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F482050_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -30500,7 +30500,7 @@ uint32_t lifted_f482060(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F482060_STACK + 4 + 4 * 11 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -30620,7 +30620,7 @@ uint32_t lifted_f482110(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F482110_STACK + 4 + 4 * 11 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -30843,7 +30843,7 @@ uint32_t lifted_f4823b0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4823B0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -30946,7 +30946,7 @@ uint32_t lifted_f482480(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F482480_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -30979,7 +30979,7 @@ uint32_t lifted_f482540(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F482540_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -31019,7 +31019,7 @@ uint32_t lifted_f4826c0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4826C0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -31142,7 +31142,7 @@ uint32_t lifted_object_alloc_pair(const VertrixCalls *calls, const VertrixFactor
 {
     uint8_t stack[LIFTED_OBJECT_ALLOC_PAIR_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -31196,7 +31196,7 @@ uint32_t lifted_forward_first_dword(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_FORWARD_FIRST_DWORD_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -31225,7 +31225,7 @@ uint32_t lifted_f482750(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F482750_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -31291,7 +31291,7 @@ uint32_t lifted_f482770(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F482770_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -31366,7 +31366,7 @@ uint32_t lifted_f4827c0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4827C0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -31507,7 +31507,7 @@ uint32_t lifted_f482860(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F482860_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -31596,7 +31596,7 @@ uint32_t lifted_f4828a0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4828A0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -31712,7 +31712,7 @@ uint32_t lifted_f4828f0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4828F0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -31805,7 +31805,7 @@ uint32_t lifted_f482930(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F482930_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -31881,7 +31881,7 @@ uint32_t lifted_f4829c0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4829C0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -31988,7 +31988,7 @@ uint32_t lifted_table_entry_call(const VertrixCalls *calls, const VertrixFactory
 {
     uint8_t stack[LIFTED_TABLE_ENTRY_CALL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -32021,7 +32021,7 @@ uint32_t lifted_f482a60(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F482A60_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -32079,7 +32079,7 @@ uint32_t lifted_call_unless_zero(const VertrixCalls *calls, const VertrixFactory
 {
     uint8_t stack[LIFTED_CALL_UNLESS_ZERO_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -32114,7 +32114,7 @@ uint32_t lifted_f482b40(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F482B40_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -32225,7 +32225,7 @@ uint32_t lifted_flag_pair_call(const VertrixCalls *calls, const VertrixFactorySe
 {
     uint8_t stack[LIFTED_FLAG_PAIR_CALL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -32275,7 +32275,7 @@ uint32_t lifted_f483060(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F483060_STACK + 4 + 4 * 8 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -32385,7 +32385,7 @@ uint32_t lifted_f4830f0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4830F0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -32439,7 +32439,7 @@ uint32_t lifted_f4831b0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4831B0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -33026,7 +33026,7 @@ uint32_t lifted_f483ce0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F483CE0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -33294,7 +33294,7 @@ uint32_t lifted_f484410(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F484410_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -33322,7 +33322,7 @@ uint32_t lifted_f4844b0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4844B0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -33439,7 +33439,7 @@ uint32_t lifted_f484500(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F484500_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -33494,7 +33494,7 @@ uint32_t lifted_f484530(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F484530_STACK + 4 + 4 * 5 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -33548,7 +33548,7 @@ uint32_t lifted_rotation_tables_load(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_ROTATION_TABLES_LOAD_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -33656,7 +33656,7 @@ uint32_t lifted_f4845d0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4845D0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -33768,7 +33768,7 @@ uint32_t lifted_f4849e0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4849E0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -33812,7 +33812,7 @@ uint32_t lifted_f4849f0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4849F0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -33863,7 +33863,7 @@ uint32_t lifted_object_table_516d34(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_OBJECT_TABLE_516D34_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -33900,7 +33900,7 @@ uint32_t lifted_f484b30(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F484B30_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -33979,7 +33979,7 @@ uint32_t lifted_f4854a0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4854A0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -34165,7 +34165,7 @@ uint32_t lifted_surface_pair_make(const VertrixCalls *calls, const VertrixFactor
 {
     uint8_t stack[LIFTED_SURFACE_PAIR_MAKE_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -34229,7 +34229,7 @@ uint32_t lifted_f485700(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F485700_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -41467,7 +41467,7 @@ uint32_t lifted_f486d00(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F486D00_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -41680,7 +41680,7 @@ uint32_t lifted_f487020(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F487020_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -41814,7 +41814,7 @@ uint32_t lifted_f487060(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F487060_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -41892,7 +41892,7 @@ uint32_t lifted_object_record_new(const VertrixCalls *calls, const VertrixFactor
 {
     uint8_t stack[LIFTED_OBJECT_RECORD_NEW_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -41949,7 +41949,7 @@ uint32_t lifted_f4872b0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4872B0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -41978,7 +41978,7 @@ uint32_t lifted_object_surface_format(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_OBJECT_SURFACE_FORMAT_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -42054,7 +42054,7 @@ uint32_t lifted_f4872f0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4872F0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -42089,7 +42089,7 @@ uint32_t lifted_array_list_release(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_ARRAY_LIST_RELEASE_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -42275,7 +42275,7 @@ uint32_t lifted_f487640(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F487640_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -42318,7 +42318,7 @@ uint32_t lifted_array_list_make(const VertrixCalls *calls, const VertrixFactoryS
 {
     uint8_t stack[LIFTED_ARRAY_LIST_MAKE_STACK + 4 + 4 * 10 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -42454,7 +42454,7 @@ uint32_t lifted_array_list_each(const VertrixCalls *calls, const VertrixFactoryS
 {
     uint8_t stack[LIFTED_ARRAY_LIST_EACH_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -42611,7 +42611,7 @@ uint32_t lifted_object_alloc_arrays(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_OBJECT_ALLOC_ARRAYS_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -42663,7 +42663,7 @@ uint32_t lifted_f487750(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F487750_STACK + 4 + 4 * 1 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -42716,7 +42716,7 @@ uint32_t lifted_f487770(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F487770_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -42773,7 +42773,7 @@ uint32_t lifted_f487790(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F487790_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -42858,7 +42858,7 @@ uint32_t lifted_f4877d0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4877D0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -42894,7 +42894,7 @@ uint32_t lifted_f4877e0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4877E0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -42923,7 +42923,7 @@ uint32_t lifted_frame_resource_get(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_FRAME_RESOURCE_GET_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -42990,7 +42990,7 @@ uint32_t lifted_f487850(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F487850_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -43019,7 +43019,7 @@ uint32_t lifted_f487860(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F487860_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -43047,7 +43047,7 @@ uint32_t lifted_f487870(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F487870_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -43089,7 +43089,7 @@ uint32_t lifted_f487920(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F487920_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -43118,7 +43118,7 @@ uint32_t lifted_f4879e0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4879E0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -43154,7 +43154,7 @@ uint32_t lifted_f4879f0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4879F0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -43220,7 +43220,7 @@ uint32_t lifted_f487a10(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F487A10_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -43262,7 +43262,7 @@ uint32_t lifted_f487a20(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F487A20_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -43319,7 +43319,7 @@ uint32_t lifted_object_construct_g(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_OBJECT_CONSTRUCT_G_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -43353,7 +43353,7 @@ uint32_t lifted_list_find_name(const VertrixCalls *calls, const VertrixFactorySe
 {
     uint8_t stack[LIFTED_LIST_FIND_NAME_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -43522,7 +43522,7 @@ uint32_t lifted_f488030(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F488030_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -43551,7 +43551,7 @@ uint32_t lifted_f488040(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F488040_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -43580,7 +43580,7 @@ uint32_t lifted_f488050(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F488050_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -43681,7 +43681,7 @@ uint32_t lifted_f488510(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F488510_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -43819,7 +43819,7 @@ uint32_t lifted_f488560(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F488560_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -43968,7 +43968,7 @@ uint32_t lifted_path_last_separator(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_PATH_LAST_SEPARATOR_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -44029,7 +44029,7 @@ uint32_t lifted_f4885c0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4885C0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -44167,7 +44167,7 @@ uint32_t lifted_f488620(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F488620_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -44410,7 +44410,7 @@ uint32_t lifted_f4886f0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4886F0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -44471,7 +44471,7 @@ uint32_t lifted_f488850(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F488850_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -44661,7 +44661,7 @@ uint32_t lifted_f4888c0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4888C0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -44782,7 +44782,7 @@ uint32_t lifted_path_is_network(const VertrixCalls *calls, const VertrixFactoryS
 {
     uint8_t stack[LIFTED_PATH_IS_NETWORK_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -44842,7 +44842,7 @@ uint32_t lifted_f488960(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F488960_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -44975,7 +44975,7 @@ uint32_t lifted_f4889a0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4889A0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -45193,7 +45193,7 @@ uint32_t lifted_f488a20(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F488A20_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -45320,7 +45320,7 @@ uint32_t lifted_f488b90(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F488B90_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -45501,7 +45501,7 @@ uint32_t lifted_f489b20(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F489B20_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -45554,7 +45554,7 @@ uint32_t lifted_f489b40(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F489B40_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -45688,7 +45688,7 @@ uint32_t lifted_rtl_text_equal(const VertrixCalls *calls, const VertrixFactorySe
 {
     uint8_t stack[LIFTED_RTL_TEXT_EQUAL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -45877,7 +45877,7 @@ uint32_t lifted_object_table_517644(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_OBJECT_TABLE_517644_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -45906,7 +45906,7 @@ uint32_t lifted_f489fa0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F489FA0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -46086,7 +46086,7 @@ uint32_t lifted_f48a2d0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48A2D0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -46114,7 +46114,7 @@ uint32_t lifted_f48a2e0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48A2E0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -46142,7 +46142,7 @@ uint32_t lifted_forward_a2f0(const VertrixCalls *calls, const VertrixFactoryServ
 {
     uint8_t stack[LIFTED_FORWARD_A2F0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -46171,7 +46171,7 @@ uint32_t lifted_list_text_lookup_slot(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_LIST_TEXT_LOOKUP_SLOT_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -46211,7 +46211,7 @@ uint32_t lifted_stream_skip_blank(const VertrixCalls *calls, const VertrixFactor
 {
     uint8_t stack[LIFTED_STREAM_SKIP_BLANK_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -46360,7 +46360,7 @@ uint32_t lifted_stream_skip_line(const VertrixCalls *calls, const VertrixFactory
 {
     uint8_t stack[LIFTED_STREAM_SKIP_LINE_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -46452,7 +46452,7 @@ uint32_t lifted_stream_next_directive(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_STREAM_NEXT_DIRECTIVE_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -46617,7 +46617,7 @@ uint32_t lifted_object_unknown_init(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_OBJECT_UNKNOWN_INIT_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -46716,7 +46716,7 @@ uint32_t lifted_object_destroy_h(const VertrixCalls *calls, const VertrixFactory
 {
     uint8_t stack[LIFTED_OBJECT_DESTROY_H_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -46881,7 +46881,7 @@ uint32_t lifted_f48a710(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48A710_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -47145,7 +47145,7 @@ uint32_t lifted_f48a8a0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48A8A0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -47204,7 +47204,7 @@ uint32_t lifted_object_unknown_reset(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_OBJECT_UNKNOWN_RESET_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -47322,7 +47322,7 @@ uint32_t lifted_f48a910(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48A910_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -47368,7 +47368,7 @@ uint32_t lifted_f48aa70(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48AA70_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -47397,7 +47397,7 @@ uint32_t lifted_f48aa80(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48AA80_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -47425,7 +47425,7 @@ uint32_t lifted_f48aa90(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48AA90_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -47515,7 +47515,7 @@ uint32_t lifted_f48aad0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48AAD0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -47572,7 +47572,7 @@ uint32_t lifted_f48aaf0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48AAF0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -47616,7 +47616,7 @@ uint32_t lifted_f48abe0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48ABE0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -47645,7 +47645,7 @@ uint32_t lifted_f48abf0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48ABF0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -47677,7 +47677,7 @@ uint32_t lifted_f48ac00(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48AC00_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -47709,7 +47709,7 @@ uint32_t lifted_f48b550(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48B550_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -47881,7 +47881,7 @@ uint32_t lifted_f48b770(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48B770_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -47928,7 +47928,7 @@ uint32_t lifted_f48b7e0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48B7E0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -48263,7 +48263,7 @@ uint32_t lifted_f48bb80(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48BB80_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -48520,7 +48520,7 @@ uint32_t lifted_f48bca0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48BCA0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -48677,7 +48677,7 @@ uint32_t lifted_f48bdf0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48BDF0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -48813,7 +48813,7 @@ uint32_t lifted_f48be70(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48BE70_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -48972,7 +48972,7 @@ uint32_t lifted_f48c0f0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48C0F0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -49231,7 +49231,7 @@ uint32_t lifted_object_notify_field(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_OBJECT_NOTIFY_FIELD_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -49282,7 +49282,7 @@ uint32_t lifted_object_notify_global(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_OBJECT_NOTIFY_GLOBAL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -49356,7 +49356,7 @@ uint32_t lifted_object_notify_choice(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_OBJECT_NOTIFY_CHOICE_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -49418,7 +49418,7 @@ uint32_t lifted_object_notify_byte(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_OBJECT_NOTIFY_BYTE_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -49491,7 +49491,7 @@ uint32_t lifted_f48c310(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48C310_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -49541,7 +49541,7 @@ uint32_t lifted_f48c330(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48C330_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -49591,7 +49591,7 @@ uint32_t lifted_copy_dword(const VertrixCalls *calls, const VertrixFactoryServic
 {
     uint8_t stack[LIFTED_COPY_DWORD_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -49620,7 +49620,7 @@ uint32_t lifted_f48c390(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48C390_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -49672,7 +49672,7 @@ uint32_t lifted_f48c3b0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48C3B0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -49724,7 +49724,7 @@ uint32_t lifted_f48c3d0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48C3D0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -49830,7 +49830,7 @@ uint32_t lifted_f48c460(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48C460_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -49882,7 +49882,7 @@ uint32_t lifted_f48c480(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48C480_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -49924,7 +49924,7 @@ uint32_t lifted_f48c610(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48C610_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -50045,7 +50045,7 @@ uint32_t lifted_f48c680(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48C680_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -50149,7 +50149,7 @@ uint32_t lifted_f48c970(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48C970_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -50289,7 +50289,7 @@ uint32_t lifted_object_delegate(const VertrixCalls *calls, const VertrixFactoryS
 {
     uint8_t stack[LIFTED_OBJECT_DELEGATE_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -50345,7 +50345,7 @@ uint32_t lifted_f48c9d0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48C9D0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -50401,7 +50401,7 @@ uint32_t lifted_f48c9f0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48C9F0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -50444,7 +50444,7 @@ uint32_t lifted_object_clear_with_table(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_OBJECT_CLEAR_WITH_TABLE_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -50486,7 +50486,7 @@ uint32_t lifted_record_copy(const VertrixCalls *calls, const VertrixFactoryServi
 {
     uint8_t stack[LIFTED_RECORD_COPY_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -50574,7 +50574,7 @@ uint32_t lifted_object_clear_block(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_OBJECT_CLEAR_BLOCK_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -50626,7 +50626,7 @@ uint32_t lifted_f48d500(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48D500_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -50667,7 +50667,7 @@ uint32_t lifted_f48d520(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48D520_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -50696,7 +50696,7 @@ uint32_t lifted_f48d530(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48D530_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -50876,7 +50876,7 @@ uint32_t lifted_f48d5f0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48D5F0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -50912,7 +50912,7 @@ uint32_t lifted_f48d600(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48D600_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -50978,7 +50978,7 @@ uint32_t lifted_f48d620(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48D620_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -51020,7 +51020,7 @@ uint32_t lifted_f48d630(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48D630_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -51076,7 +51076,7 @@ uint32_t lifted_f48d650(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48D650_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -51201,7 +51201,7 @@ uint32_t lifted_forward_call(const VertrixCalls *calls, const VertrixFactoryServ
 {
     uint8_t stack[LIFTED_FORWARD_CALL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -51229,7 +51229,7 @@ uint32_t lifted_f48d6c0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F48D6C0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -51374,7 +51374,7 @@ uint32_t lifted_ui_actor_storage_construct(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_UI_ACTOR_STORAGE_CONSTRUCT_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -51523,7 +51523,7 @@ uint32_t lifted_f4ac130(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4AC130_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -51686,7 +51686,7 @@ uint32_t lifted_f4ac1c0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4AC1C0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -51742,7 +51742,7 @@ uint32_t lifted_f4ac1e0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4AC1E0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -51770,7 +51770,7 @@ uint32_t lifted_animation_tick(const VertrixCalls *calls, const VertrixFactorySe
 {
     uint8_t stack[LIFTED_ANIMATION_TICK_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -51880,7 +51880,7 @@ uint32_t lifted_f4ac250(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4AC250_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -52040,7 +52040,7 @@ uint32_t lifted_f4ac2b0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4AC2B0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -52200,7 +52200,7 @@ uint32_t lifted_f4ac310(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4AC310_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -52310,7 +52310,7 @@ uint32_t lifted_f4ac370(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4AC370_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -52352,7 +52352,7 @@ uint32_t lifted_f4ac380(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4AC380_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -52380,7 +52380,7 @@ uint32_t lifted_f4ac390(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4AC390_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -52427,7 +52427,7 @@ uint32_t lifted_actor_step_quotient(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_ACTOR_STEP_QUOTIENT_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -52488,7 +52488,7 @@ uint32_t lifted_f4ac420(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4AC420_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -52590,7 +52590,7 @@ uint32_t lifted_f4ac470(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4AC470_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -52639,7 +52639,7 @@ uint32_t lifted_f4ac490(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4AC490_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -52667,7 +52667,7 @@ uint32_t lifted_f4ac4a0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4AC4A0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -52745,7 +52745,7 @@ uint32_t lifted_f4ac4e0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4AC4E0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -52774,7 +52774,7 @@ uint32_t lifted_f4ac4f0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4AC4F0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -52802,7 +52802,7 @@ uint32_t lifted_f4ac500(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4AC500_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -52844,7 +52844,7 @@ uint32_t lifted_f4ac510(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4AC510_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -52872,7 +52872,7 @@ uint32_t lifted_f4ac520(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4AC520_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -52918,7 +52918,7 @@ uint32_t lifted_f4ac540(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4AC540_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -52979,7 +52979,7 @@ uint32_t lifted_object_scale_call(const VertrixCalls *calls, const VertrixFactor
 {
     uint8_t stack[LIFTED_OBJECT_SCALE_CALL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -53040,7 +53040,7 @@ uint32_t lifted_f4ac590(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4AC590_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -53095,7 +53095,7 @@ uint32_t lifted_f4ac5b0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4AC5B0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -53197,7 +53197,7 @@ uint32_t lifted_f4ac600(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4AC600_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -53239,7 +53239,7 @@ uint32_t lifted_f4ac610(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4AC610_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -53267,7 +53267,7 @@ uint32_t lifted_f4ac620(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4AC620_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -53314,7 +53314,7 @@ uint32_t lifted_actor_progress_quotient(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_ACTOR_PROGRESS_QUOTIENT_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -53376,7 +53376,7 @@ uint32_t lifted_f4ac6b0(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4AC6B0_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -53478,7 +53478,7 @@ uint32_t lifted_f4ac700(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4AC700_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -53506,7 +53506,7 @@ uint32_t lifted_f4ac710(const VertrixCalls *calls, const VertrixFactoryServices 
 {
     uint8_t stack[LIFTED_F4AC710_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
@@ -53535,7 +53535,7 @@ uint32_t lifted_block_resource_last(const VertrixCalls *calls,
 {
     uint8_t stack[LIFTED_BLOCK_RESOURCE_LAST_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0};
+    LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
     uint32_t ebx = entry->ebx;
