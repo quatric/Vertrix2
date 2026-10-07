@@ -75,9 +75,59 @@ def collect_names(source):
     return names, conflicts
 
 
+def resolve_aliases(names, conflicts, registry, root):
+    """Apply reviewed canonical names only while their evidence still matches."""
+    if not isinstance(registry, dict):
+        raise ValueError("Canonical name registry must be an object")
+    resolved = dict(names)
+    unresolved = dict(conflicts)
+    root = root.resolve()
+    seen = set()
+    for key, entry in registry.items():
+        if not isinstance(key, str) or not re.fullmatch(r"0x[0-9a-fA-F]+", key):
+            raise ValueError(f"Invalid registry address: {key!r}")
+        address = int(key, 16)
+        if address in seen:
+            raise ValueError(f"Duplicate registry address: {key}")
+        seen.add(address)
+        candidates = conflicts.get(address)
+        if candidates is None:
+            raise ValueError(f"Stale registry entry: {key} has no header conflict")
+        if not isinstance(entry, dict):
+            raise ValueError(f"Invalid registry entry: {key}")
+        chosen = entry.get("name")
+        aliases = entry.get("aliases")
+        if not isinstance(chosen, str) or chosen not in candidates:
+            raise ValueError(f"Canonical name for {key} is not a header candidate")
+        if (not isinstance(aliases, list) or not all(isinstance(value, str) for value in aliases)
+                or len(aliases) != len(set(aliases)) or set(aliases) != candidates):
+            raise ValueError(f"Registry aliases for {key} do not match header candidates")
+        reason = entry.get("reason")
+        if not isinstance(reason, str) or not reason.strip():
+            raise ValueError(f"Missing canonical-name reason for {key}")
+        evidence = entry.get("evidence")
+        if not isinstance(evidence, list) or not evidence:
+            raise ValueError(f"Missing canonical-name evidence for {key}")
+        for reference in evidence:
+            if not isinstance(reference, str) or not reference.strip():
+                raise ValueError(f"Invalid evidence path for {key}")
+            path = Path(reference)
+            if path.is_absolute():
+                raise ValueError(f"Evidence path for {key} must be relative")
+            path = (root / path).resolve()
+            if not path.is_relative_to(root) or not path.is_file():
+                raise ValueError(f"Evidence path for {key} must name an existing root-contained file")
+        resolved[address] = chosen
+        del unresolved[address]
+    return resolved, unresolved
+
+
 def main():
     root = Path(__file__).resolve().parents[1]
     names, conflicts = collect_names(root / "source")
+    registry_path = root / "docs" / "function-name-aliases.json"
+    if registry_path.exists():
+        names, conflicts = resolve_aliases(names, conflicts, json.loads(registry_path.read_text()), root)
     for address, values in sorted(conflicts.items()):
         print(f"Excluded conflicting annotation 0x{address:x}: {', '.join(sorted(values))}", file=sys.stderr)
     (root / "docs" / "names.json").write_text(

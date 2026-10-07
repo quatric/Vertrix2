@@ -22,7 +22,7 @@ def main():
     args = parser.parse_args()
     n = build(args.build_dir, 'object-accessors', ['object_accessors.c', 'actor_storage.c'])
     n.vertrix_actor_add_elapsed.argtypes = [c.c_void_p, c.c_size_t, U, U]
-    n.vertrix_actor_counter_reached.argtypes = [c.c_void_p, c.c_size_t, U, U, c.POINTER(U)]
+    n.vertrix_actor_counter_pair_reached.argtypes = [c.c_void_p, c.c_size_t, U, U, c.POINTER(U)]
     n.vertrix_actor_set_times_twelve.argtypes = [c.c_void_p, c.c_size_t, U, U]
     n.vertrix_player_fill_bytes.argtypes = [c.c_void_p, c.c_size_t, U, U, U]
     n.vertrix_object_clear_slots.argtypes = [c.c_void_p, c.c_size_t]
@@ -101,7 +101,7 @@ def main():
                                       (0x4ac520, 0xbc, 0xc0)):
             result, _ = run(address)
             out = U()
-            assert n.vertrix_actor_counter_reached(fresh(), SIZE, c_off, l_off, c.byref(out))
+            assert n.vertrix_actor_counter_pair_reached(fresh(), SIZE, c_off, l_off, c.byref(out))
             assert out.value == result & 0xff, (hex(address), case)
             count('counter_reached_%x' % c_off)
         for address, offset in ((0x4ac470, 0xd0), (0x4ac7b0, 0xc0), (0x4ac840, 0xe0)):

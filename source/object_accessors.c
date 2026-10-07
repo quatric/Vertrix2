@@ -111,8 +111,8 @@ int vertrix_object_set_18(void *object, size_t size, uint32_t value)
     return vertrix_actor_storage_write(object, size, OBJECT_FIELD_18, 4, value);
 }
 
-int vertrix_actor_counter_reached(const void *actor, size_t size, uint32_t counter_offset,
-                                  uint32_t limit_offset, uint32_t *reached)
+int vertrix_actor_counter_pair_reached(const void *actor, size_t size, uint32_t counter_offset,
+                                       uint32_t limit_offset, uint32_t *reached)
 {
     uint32_t counter;
     uint32_t limit;

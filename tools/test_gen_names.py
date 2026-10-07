@@ -1,9 +1,11 @@
 """Regression checks for evidence boundaries in recovered name generation."""
+import copy
+import json
 import tempfile
 import unittest
 from pathlib import Path
 
-from gen_names import collect_names, header_pairs
+from gen_names import collect_names, header_pairs, resolve_aliases
 
 
 class NameEvidenceTests(unittest.TestCase):
@@ -64,14 +66,73 @@ void vertrix_unrelated(void);
             self.assertEqual(names, {})
             self.assertEqual(conflicts, {0x400001: {"vertrix_first", "vertrix_second"}})
 
+    def test_reviewed_aliases_and_invalid_evidence(self):
+        candidates = {0x400001: {"vertrix_first", "vertrix_second"}}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "evidence.h").write_text("original annotation evidence")
+            valid = {"0x400001": {
+                "name": "vertrix_first",
+                "aliases": ["vertrix_first", "vertrix_second"],
+                "evidence": ["evidence.h"],
+                "reason": "Both declarations recover the same complete routine.",
+            }}
+            names, conflicts = resolve_aliases({0x400002: "vertrix_other"}, candidates, valid, root)
+            self.assertEqual(names, {0x400001: "vertrix_first", 0x400002: "vertrix_other"})
+            self.assertEqual(conflicts, {})
+            self.assertEqual(candidates, {0x400001: {"vertrix_first", "vertrix_second"}})
+            changes = [
+                ("name", "vertrix_unknown"),
+                ("aliases", ["vertrix_first"]),
+                ("aliases", ["vertrix_first", "vertrix_second", "vertrix_second"]),
+                ("aliases", "vertrix_first"),
+                ("evidence", []),
+                ("evidence", ["missing.h"]),
+                ("evidence", ["../outside.h"]),
+                ("evidence", [str(root / "evidence.h")]),
+                ("evidence", ["."]),
+                ("evidence", [None]),
+                ("reason", " "),
+                ("reason", None),
+            ]
+            for field, value in changes:
+                with self.subTest(field=field, value=value):
+                    invalid = copy.deepcopy(valid)
+                    invalid["0x400001"][field] = value
+                    with self.assertRaises(ValueError):
+                        resolve_aliases({}, candidates, invalid, root)
+            with self.assertRaises(ValueError):
+                resolve_aliases({}, {}, valid, root)
+            with self.assertRaises(ValueError):
+                resolve_aliases({}, candidates, [], root)
+            duplicate = copy.deepcopy(valid)
+            duplicate["0x00400001"] = duplicate["0x400001"]
+            with self.assertRaises(ValueError):
+                resolve_aliases({}, candidates, duplicate, root)
+            with tempfile.TemporaryDirectory() as outside_directory:
+                outside = Path(outside_directory) / "outside.h"
+                outside.write_text("outside evidence")
+                (root / "link.h").symlink_to(outside)
+                invalid = copy.deepcopy(valid)
+                invalid["0x400001"]["evidence"] = ["link.h"]
+                with self.assertRaises(ValueError):
+                    resolve_aliases({}, candidates, invalid, root)
+
     def test_repository_evidence(self):
-        source = Path(__file__).resolve().parents[1] / "source"
+        root = Path(__file__).resolve().parents[1]
+        source = root / "source"
         names, conflicts = collect_names(source)
         self.assertEqual(names[0x436fe0], "vertrix_board_markers_stones")
         self.assertEqual(names[0x453460], "vertrix_effect_stone_arm")
         self.assertNotIn(0x4f8d38, names)
         self.assertNotIn(0x43b5b0, names)
         self.assertEqual(conflicts[0x43b5b0], {"vertrix_ai_reaction_time", "vertrix_player_draw_delay_0"})
+        registry = root / "docs" / "function-name-aliases.json"
+        if registry.exists():
+            names, conflicts = resolve_aliases(names, conflicts, json.loads(registry.read_text()), root)
+            self.assertEqual(names[0x43b5b0], "vertrix_ai_reaction_time")
+        self.assertNotIn(0x43f200, names)
+        self.assertIn(0x43f200, conflicts)
         self.assertEqual(names[0x4877f0], "vertrix_frame_resource_get")
         self.assertEqual(names[0x4713d0], "vertrix_title_letter_first")
         self.assertEqual(names[0x459be0], "vertrix_title_letter_count")

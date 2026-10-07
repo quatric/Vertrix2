@@ -76,7 +76,7 @@ uint32_t vertrix_resource_stride_finish(const VertrixCalls *calls, uint32_t argu
 uint32_t vertrix_resource_flagged_finish(const VertrixCalls *calls, uint32_t argument,
                                          uint32_t flag, uint32_t count);
 
-/* Original0x45f1e0: clear seven scratch bytes (the comparison table at
+/* Original0x45f1e0: initialize seven scratch bytes to 0..6 (the comparison table at
  * 0x53bcc8, element-compared at 0x43635e/0x436404). */
 void vertrix_table_identity_cells(uint8_t cells[7]);
 #endif

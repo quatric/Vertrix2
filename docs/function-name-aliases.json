@@ -1,0 +1,352 @@
+{
+  "0x4121e0": {
+    "name": "vertrix_record_table_load",
+    "aliases": [
+      "vertrix_range_save_copy",
+      "vertrix_record_table_load"
+    ],
+    "evidence": [
+      "source/record_stream.h",
+      "tools/verify_record_stream.py"
+    ],
+    "reason": "Loads record header and table while restoring saved range state."
+  },
+  "0x417f40": {
+    "name": "vertrix_matcher_reset",
+    "aliases": [
+      "vertrix_global_clear",
+      "vertrix_matcher_reset"
+    ],
+    "evidence": [
+      "source/call_glue.h"
+    ],
+    "reason": "Resets matcher position; global clear is a shared arithmetic primitive."
+  },
+  "0x418150": {
+    "name": "vertrix_compare_unsigned",
+    "aliases": [
+      "vertrix_compare_u32",
+      "vertrix_compare_unsigned"
+    ],
+    "evidence": [
+      "source/object_scalars.h",
+      "tools/verify_object_scalars.py"
+    ],
+    "reason": "Both recoveries compare unsigned dwords returning minus one, zero, or one."
+  },
+  "0x42ff10": {
+    "name": "vertrix_board_set_actor_clip",
+    "aliases": [
+      "vertrix_board_clip",
+      "vertrix_board_set_actor_clip"
+    ],
+    "evidence": [
+      "source/board_cells.h"
+    ],
+    "reason": "Complete actor clip mode and bounds update; rectangle helper is partial."
+  },
+  "0x4320c0": {
+    "name": "vertrix_board_has_piece",
+    "aliases": [
+      "vertrix_board_has_piece",
+      "vertrix_player_flag_a60"
+    ],
+    "evidence": [
+      "source/board_piece.h"
+    ],
+    "reason": "Tests the board active-piece handle at offset 0xa60."
+  },
+  "0x437b70": {
+    "name": "vertrix_board_stamp_companions",
+    "aliases": [
+      "vertrix_board_prime_companions",
+      "vertrix_board_stamp_companions"
+    ],
+    "evidence": [
+      "source/board_markers.h",
+      "tools/verify_board_markers.py"
+    ],
+    "reason": "Thirteen random draws followed by companion field stamping."
+  },
+  "0x43a4f0": {
+    "name": "vertrix_piece_store_preview_kinds",
+    "aliases": [
+      "vertrix_piece_store_preview_kinds",
+      "vertrix_player_set_bytes_168"
+    ],
+    "evidence": [
+      "source/piece_children.h"
+    ],
+    "reason": "Stores three generated kinds in preview bytes 0x168 through 0x16a."
+  },
+  "0x43b5b0": {
+    "name": "vertrix_ai_reaction_time",
+    "aliases": [
+      "vertrix_ai_reaction_time",
+      "vertrix_player_draw_delay_0"
+    ],
+    "evidence": [
+      "source/ai_timing.h",
+      "tools/verify_ai_timing.py"
+    ],
+    "reason": "Player delay parameter zero is explicitly the AI reaction-time routine."
+  },
+  "0x43ba70": {
+    "name": "vertrix_player_bonus_meter_full",
+    "aliases": [
+      "vertrix_player_bonus_meter_full",
+      "vertrix_player_bonus_ready"
+    ],
+    "evidence": [
+      "source/object_accessors.h",
+      "tools/verify_object_accessors.py"
+    ],
+    "reason": "Tests player bonus meter at offset 0x18c for value three."
+  },
+  "0x43e740": {
+    "name": "vertrix_particle_init_drift",
+    "aliases": [
+      "vertrix_particle_init_drift",
+      "vertrix_spawn_burst"
+    ],
+    "evidence": [
+      "source/particle_init.h",
+      "tools/verify_particle_init.py"
+    ],
+    "reason": "Both recoveries initialize resource 0x544c10 and frame fifteen."
+  },
+  "0x43e840": {
+    "name": "vertrix_particle_init_fall",
+    "aliases": [
+      "vertrix_particle_init_fall",
+      "vertrix_spawn_drift"
+    ],
+    "evidence": [
+      "source/particle_init.h",
+      "tools/verify_particle_init.py"
+    ],
+    "reason": "Both recoveries initialize resource 0x544c64 and handler 0x4574a0."
+  },
+  "0x441b30": {
+    "name": "vertrix_record_draw",
+    "aliases": [
+      "vertrix_record_draw",
+      "vertrix_surface_blit_whole"
+    ],
+    "evidence": [
+      "source/resource_record.h",
+      "tools/verify_resource_record.py"
+    ],
+    "reason": "Complete record wrapper; whole-surface blit composes its drawing effect."
+  },
+  "0x45f1e0": {
+    "name": "vertrix_table_identity_cells",
+    "aliases": [
+      "vertrix_global_index_bytes",
+      "vertrix_table_identity_cells"
+    ],
+    "evidence": [
+      "source/table_loops.h",
+      "tools/verify_table_loops.py"
+    ],
+    "reason": "Writes identity indices zero through six to global table 0x53bcc8."
+  },
+  "0x471e10": {
+    "name": "vertrix_scene_lookup_pair",
+    "aliases": [
+      "vertrix_list_notify_pair",
+      "vertrix_scene_lookup_pair"
+    ],
+    "evidence": [
+      "source/scene_lookups.h"
+    ],
+    "reason": "Looks up kinds 0x15 and 0x16 and notifies each hit."
+  },
+  "0x4725f0": {
+    "name": "vertrix_scene_clear_marker",
+    "aliases": [
+      "vertrix_list_clear_hit",
+      "vertrix_scene_clear_marker"
+    ],
+    "evidence": [
+      "source/scene_lookups.h"
+    ],
+    "reason": "Looks up kind 0x190 and clears hit field 0x94c."
+  },
+  "0x478da0": {
+    "name": "vertrix_event_scale_fields",
+    "aliases": [
+      "vertrix_event_scale_fields",
+      "vertrix_object_remaining"
+    ],
+    "evidence": [
+      "source/event_frame_draw.h"
+    ],
+    "reason": "Event frame caller establishes context for remaining value and activity flag."
+  },
+  "0x48a930": {
+    "name": "vertrix_stream_read_exact",
+    "aliases": [
+      "vertrix_range_copy",
+      "vertrix_stream_read_exact"
+    ],
+    "evidence": [
+      "source/stream_read.h",
+      "tools/verify_stream_read.py"
+    ],
+    "reason": "Clamps requested wrapping product and advances absolute read pointer."
+  },
+  "0x492550": {
+    "name": "vertrix_render_sample_binary_row32",
+    "aliases": [
+      "vertrix_render_sample_binary_row32",
+      "vertrix_surface_sample_binary_row32"
+    ],
+    "evidence": [
+      "source/render_row.h",
+      "tools/verify_render_pixel.py"
+    ],
+    "reason": "Complete sampling traversal; surface implementation is specialized direct copy."
+  },
+  "0x492710": {
+    "name": "vertrix_render_sample_row32",
+    "aliases": [
+      "vertrix_render_sample_row32",
+      "vertrix_surface_sample_row32"
+    ],
+    "evidence": [
+      "source/render_row.h",
+      "tools/verify_render_pixel.py"
+    ],
+    "reason": "Complete sampling traversal; surface implementation is specialized direct copy."
+  },
+  "0x4928f0": {
+    "name": "vertrix_render_sample32",
+    "aliases": [
+      "vertrix_render_sample32",
+      "vertrix_surface_sample32"
+    ],
+    "evidence": [
+      "source/render_row.h",
+      "tools/verify_render_pixel.py"
+    ],
+    "reason": "Complete sampling traversal; surface implementation is specialized direct copy."
+  },
+  "0x4ab380": {
+    "name": "vertrix_render_alpha_image32",
+    "aliases": [
+      "vertrix_render_alpha_image32",
+      "vertrix_surface_alpha_pixel"
+    ],
+    "evidence": [
+      "source/render_row.h",
+      "tools/verify_render_pixel.py"
+    ],
+    "reason": "Complete alpha traversal; alpha pixel helper is only the inner arithmetic."
+  },
+  "0x4ac470": {
+    "name": "vertrix_actor_set_d0_steps",
+    "aliases": [
+      "vertrix_actor_set_d0_steps",
+      "vertrix_actor_set_times_twelve"
+    ],
+    "evidence": [
+      "source/actor_fields.h"
+    ],
+    "reason": "Specific period setter; times-twelve helper covers three different offsets."
+  },
+  "0x4ac520": {
+    "name": "vertrix_actor_clock_reached",
+    "aliases": [
+      "vertrix_actor_clock_reached",
+      "vertrix_actor_counter_reached"
+    ],
+    "evidence": [
+      "source/object_accessors.h",
+      "tools/verify_object_accessors.py"
+    ],
+    "reason": "Tests actor clock at offset 0xbc against period at 0xc0."
+  },
+  "0x4ac8d0": {
+    "name": "vertrix_actor_attach_resource",
+    "aliases": [
+      "vertrix_actor_attach_resource",
+      "vertrix_block_resource_attach"
+    ],
+    "evidence": [
+      "source/block_factory.h",
+      "tools/verify_block_factory.py"
+    ],
+    "reason": "Complete actor resource attachment; block variant is a wrapper."
+  },
+  "0x4ac920": {
+    "name": "vertrix_actor_handler_from_ec",
+    "aliases": [
+      "vertrix_actor_handler_from_ec",
+      "vertrix_actor_select_ec"
+    ],
+    "evidence": [
+      "source/actor_fields.h"
+    ],
+    "reason": "Copies actor handler token from offset 0xec to active handler at 0x154."
+  },
+  "0x4ad1c0": {
+    "name": "vertrix_actor_polar_offset",
+    "aliases": [
+      "vertrix_actor_polar_offset",
+      "vertrix_rotation_coordinates"
+    ],
+    "evidence": [
+      "source/actor_angle.h",
+      "tools/verify_actor_angle.py"
+    ],
+    "reason": "Reads actor angle before offset arithmetic; coordinates helper omits object access."
+  },
+  "0x4ad6e0": {
+    "name": "vertrix_actor_dword_transition",
+    "aliases": [
+      "vertrix_actor_dword_transition",
+      "vertrix_dword_transition"
+    ],
+    "evidence": [
+      "source/dword_transition.h",
+      "tools/verify_actor_dword_transition.py"
+    ],
+    "reason": "Actor transition; raw arithmetic is shared with another original routine."
+  },
+  "0x4b22c0": {
+    "name": "vertrix_object_release_slots",
+    "aliases": [
+      "vertrix_board_clear_collection",
+      "vertrix_object_release_slots"
+    ],
+    "evidence": [
+      "source/object_slots.h"
+    ],
+    "reason": "Generic slot release; board clear annotation describes wrapper callers."
+  },
+  "0x4b4660": {
+    "name": "vertrix_object_cursor_at_end",
+    "aliases": [
+      "vertrix_object_cursor_at_end",
+      "vertrix_object_text_length_matches"
+    ],
+    "evidence": [
+      "source/list_text.h",
+      "tools/verify_text_seek.py"
+    ],
+    "reason": "Tests cursor against text length; native recoveries have different boundary APIs."
+  },
+  "0x4b4690": {
+    "name": "vertrix_object_cursor_clamp",
+    "aliases": [
+      "vertrix_object_clamp_text_length",
+      "vertrix_object_cursor_clamp"
+    ],
+    "evidence": [
+      "source/list_text.h",
+      "tools/verify_text_seek.py"
+    ],
+    "reason": "Clamps cursor to text length; native recoveries have different boundary APIs."
+  }
+}

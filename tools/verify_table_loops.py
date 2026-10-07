@@ -128,7 +128,7 @@ def main():
         flag, count = rng.choice([0, 1, 1, 2]), rng.choice([0, rng.randrange(1, 9)])
         run('flagged', 0x45f250, lambda: n.vertrix_resource_flagged_finish(
             c.byref(calls), argument, flag, count), eax=argument, edx=flag, ebx=count)
-    # 0x45f1e0 clears the fixed comparison table; exercise it in place.
+    # 0x45f1e0 initializes the fixed comparison table to 0..6; exercise it in place.
     clear_rng = random.Random(0x45f1e0)
     for _ in range(args.cases):
         cells = bytes(clear_rng.getrandbits(8) for _ in range(7))

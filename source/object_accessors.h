@@ -42,8 +42,8 @@ int vertrix_object_set_18(void *object, size_t size, uint32_t value);
 
 /* Originals 0x4ac390 (counter +0xcc, limit +0xd0), 0x4ac620 (+0xdc, +0xe0) and the clock pair of
  * 0x4ac520 (+0xbc, +0xc0): 1 when the counter is at least the limit (unsigned). */
-int vertrix_actor_counter_reached(const void *actor, size_t size, uint32_t counter_offset,
-                                  uint32_t limit_offset, uint32_t *reached);
+int vertrix_actor_counter_pair_reached(const void *actor, size_t size, uint32_t counter_offset,
+                                       uint32_t limit_offset, uint32_t *reached);
 
 /* Originals 0x4ac470 (offset 0xd0), 0x4ac7b0 (0xc0) and 0x4ac840 (0xe0): the dword at `offset`
  * becomes 12 * value (wrapping), the frame count converted to a period. */
