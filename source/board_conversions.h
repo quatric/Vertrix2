@@ -182,6 +182,7 @@ int vertrix_board_deal_first_row(void *board, size_t board_size, int32_t a, int3
                                  const VertrixFactoryServices *services,
                                  VertrixBoardDestroy destroy, void *destroy_context,
                                  uint32_t *dealt);
+/* Original 0x431930: the second-row dealing routine described above. */
 int vertrix_board_deal_second_row(void *board, size_t board_size, int32_t a, int32_t b,
                                   const VertrixDealTable *table,
                                   const VertrixFactoryServices *services,

@@ -1,7 +1,7 @@
 #ifndef VERTRIX_SCENE_DESCENT_H
 #define VERTRIX_SCENE_DESCENT_H
 #include "scene_lock.h"
-/* Original 0x42fc2d..0x42fc56/0x42fe81 pixel loop with real object transfer.
+/* Original fragment 0x42fc2d..0x42fc56/0x42fe81 pixel loop with real object transfer.
  * Uses first 65 scene slots as occupancy. A live piece object must resolve;
  * its native coordinates stay synchronized while falling. Failure flag is
  * original board +0xbd8, changed only when the piece locks. Invalid probes or

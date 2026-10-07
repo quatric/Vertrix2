@@ -7,6 +7,7 @@
 /* Original0x431380 (board +0xa60, field 0x168), 0x432000 (+0xa60, 0x17c), 0x431480 (+0xb70,
  * 0x170) and 0x431490 (+0xb78, 0x178): read a dword field of the object whose handle is stored at
  * the given board offset. */
+/* Original variants 0x431380, 0x432000, 0x431480, 0x431490: object-field accessors. */
 int vertrix_board_object_field(const void *board, size_t board_size, uint32_t pointer_offset,
                                uint32_t field_offset, VertrixObjectStorage resolve, void *context,
                                uint32_t *value);

@@ -8229,7 +8229,7 @@
   "virtual": [],
   "address": 4362432
  },
- "f429350": {
+ "object_destroy_c": {
   "callees": {
    "0x4ca050": [
     0,
@@ -10314,7 +10314,7 @@
   "virtual": [],
   "address": 4388128
  },
- "f42f550": {
+ "board_piece_store_touch_42f550": {
   "callees": {
    "0x4320c0": [
     0,
@@ -10430,7 +10430,7 @@
   "virtual": [],
   "address": 4388576
  },
- "f42f720": {
+ "board_piece_shift_42f720": {
   "callees": {
    "0x4320c0": [
     0,
@@ -10769,7 +10769,7 @@
   "virtual": [],
   "address": 4391088
  },
- "f430100": {
+ "board_place_extra_430100": {
   "callees": {
    "0x4ac8f0": [
     0,

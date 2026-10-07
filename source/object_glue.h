@@ -309,8 +309,10 @@ uint32_t vertrix_object_construct_labeled_box(const VertrixCalls *calls,
  * 0x4d86d0(object, 1) and 0x4823b0(object, 0). Each returns the original's eax. */
 uint32_t vertrix_object_destroy_a(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   uint32_t object, uint32_t flags);
+/* Original0x481fb0: Destructor described above, with class 0x516b84 at +0x20c. */
 uint32_t vertrix_object_destroy_b(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   uint32_t object, uint32_t flags);
+/* Original0x429350: Destructor described above, with class 0x514554 at +0x228. */
 uint32_t vertrix_object_destroy_c(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   uint32_t object, uint32_t flags, uint32_t ebx);
 
@@ -319,6 +321,7 @@ uint32_t vertrix_object_destroy_c(const VertrixCalls *calls, const VertrixFactor
  * vertrix_object_destroy_a. Each returns the original's eax. */
 uint32_t vertrix_object_destroy_d(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   uint32_t object, uint32_t flags);
+/* Original0x488b90: Destructor described above, with class 0x5174b4 at +0. */
 uint32_t vertrix_object_destroy_e(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   uint32_t object, uint32_t flags);
 

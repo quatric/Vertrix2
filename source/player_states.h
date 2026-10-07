@@ -19,6 +19,7 @@ uint32_t vertrix_state_steps_451490(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services,
                                     const VertrixGlobals *globals, uint32_t player, uint32_t edx,
                                     uint32_t ebx);
+/* Original 0x451730: complete player-state entry point; tools/verify_player_states.py. */
 uint32_t vertrix_state_steps_451730(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services,
                                     const VertrixGlobals *globals, uint32_t player, uint32_t edx,
@@ -161,6 +162,7 @@ uint32_t vertrix_state_ask_454200(const VertrixCalls *calls, const VertrixFactor
 /* Original 0x454510 and 0x454760 are the same routine as 0x453ef0. */
 uint32_t vertrix_state_ask_454510(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   const VertrixGlobals *globals, uint32_t player);
+/* Original 0x454760: complete player-state entry point; tools/verify_player_states.py. */
 uint32_t vertrix_state_ask_454760(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   const VertrixGlobals *globals, uint32_t player);
 
@@ -197,6 +199,7 @@ uint32_t vertrix_state_drain_454d80(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services,
                                     const VertrixGlobals *globals, uint32_t player, uint32_t edx,
                                     uint32_t ebx);
+/* Original 0x454e30: complete player-state entry point; tools/verify_player_states.py. */
 uint32_t vertrix_state_done_454e30(const VertrixCalls *calls,
                                    const VertrixFactoryServices *services,
                                    const VertrixGlobals *globals, uint32_t player);
@@ -237,6 +240,7 @@ uint32_t vertrix_state_guard_4553a0(const VertrixCalls *calls,
 uint32_t vertrix_state_done_455c30(const VertrixCalls *calls,
                                    const VertrixFactoryServices *services,
                                    const VertrixGlobals *globals, uint32_t player);
+/* Original 0x455e00: complete player-state entry point; tools/verify_player_states.py. */
 uint32_t vertrix_state_ask_455e00(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   const VertrixGlobals *globals, uint32_t player);
 

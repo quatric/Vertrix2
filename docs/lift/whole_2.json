@@ -1344,7 +1344,7 @@
   ],
   "address": 4527760
  },
- "f451730": {
+ "state_steps_451730": {
   "callees": {
    "0x4ac500": [
     0,
@@ -2407,7 +2407,7 @@
   "virtual": [],
   "address": 4532784
  },
- "f452a50": {
+ "effect_armed_handler": {
   "callees": {
    "0x43a5f0": [
     3,
@@ -2447,7 +2447,7 @@
   ],
   "address": 4532816
  },
- "f452b00": {
+ "effect_arm_handler_452b00": {
   "callees": {
    "0x43bad0": [
     0,
@@ -2468,7 +2468,7 @@
   "virtual": [],
   "address": 4532992
  },
- "f452b20": {
+ "effect_armed_handler_452b20": {
   "callees": {
    "0x43a5f0": [
     3,
@@ -2510,7 +2510,7 @@
   ],
   "address": 4533024
  },
- "f452bb0": {
+ "effect_arm_handler_452bb0": {
   "callees": {
    "0x43bad0": [
     0,
@@ -2531,7 +2531,7 @@
   "virtual": [],
   "address": 4533168
  },
- "f452bd0": {
+ "effect_armed_handler_452bd0": {
   "callees": {
    "0x43a5f0": [
     3,
@@ -2573,7 +2573,7 @@
   ],
   "address": 4533200
  },
- "f452c60": {
+ "effect_arm_handler_452c60": {
   "callees": {
    "0x43bad0": [
     0,
@@ -2594,7 +2594,7 @@
   "virtual": [],
   "address": 4533344
  },
- "f452c80": {
+ "effect_armed_handler_452c80": {
   "callees": {
    "0x43a5f0": [
     3,
@@ -3176,7 +3176,7 @@
   ],
   "address": 4535664
  },
- "f4535d0": {
+ "effect_state_gate": {
   "callees": {
    "0x43acd0": [
     0,
@@ -3222,7 +3222,7 @@
   ],
   "address": 4535760
  },
- "f453620": {
+ "effect_state_gate_453620": {
   "callees": {
    "0x43acd0": [
     0,
@@ -3267,7 +3267,7 @@
   ],
   "address": 4535840
  },
- "f453670": {
+ "effect_state_gate_453670": {
   "callees": {
    "0x43acd0": [
     0,
@@ -3312,7 +3312,7 @@
   ],
   "address": 4535920
  },
- "f4536c0": {
+ "effect_state_gate_4536c0": {
   "callees": {
    "0x43acd0": [
     0,
@@ -3357,7 +3357,7 @@
   ],
   "address": 4536000
  },
- "f453710": {
+ "effect_state_gate_453710": {
   "callees": {
    "0x43acd0": [
     0,
@@ -3402,7 +3402,7 @@
   ],
   "address": 4536080
  },
- "f453760": {
+ "effect_state_gate_453760": {
   "callees": {
    "0x43acd0": [
     0,
@@ -3447,7 +3447,7 @@
   ],
   "address": 4536160
  },
- "f4537b0": {
+ "effect_state_gate_4537b0": {
   "callees": {
    "0x43acd0": [
     0,
@@ -3493,7 +3493,7 @@
   ],
   "address": 4536240
  },
- "f453800": {
+ "effect_state_gate_453800": {
   "callees": {
    "0x43acd0": [
     0,
@@ -3539,7 +3539,7 @@
   ],
   "address": 4536320
  },
- "f453850": {
+ "effect_state_gate_453850": {
   "callees": {
    "0x43acd0": [
     0,
@@ -3585,7 +3585,7 @@
   ],
   "address": 4536400
  },
- "f4538a0": {
+ "effect_state_gate_4538a0": {
   "callees": {
    "0x43acd0": [
     0,
@@ -3631,7 +3631,7 @@
   ],
   "address": 4536480
  },
- "f4538f0": {
+ "effect_state_gate_4538f0": {
   "callees": {
    "0x43acd0": [
     0,
@@ -3676,7 +3676,7 @@
   ],
   "address": 4536560
  },
- "f453940": {
+ "effect_state_gate_453940": {
   "callees": {
    "0x43acd0": [
     0,
@@ -3721,7 +3721,7 @@
   ],
   "address": 4536640
  },
- "f453990": {
+ "effect_state_gate_453990": {
   "callees": {
    "0x43acd0": [
     0,
@@ -3767,7 +3767,7 @@
   ],
   "address": 4536720
  },
- "f4539e0": {
+ "effect_state_gate_4539e0": {
   "callees": {
    "0x43acd0": [
     0,
@@ -3813,7 +3813,7 @@
   ],
   "address": 4536800
  },
- "f453a30": {
+ "effect_state_gate_453a30": {
   "callees": {
    "0x43acd0": [
     0,
@@ -3858,7 +3858,7 @@
   ],
   "address": 4536880
  },
- "f453a80": {
+ "effect_state_gate_453a80": {
   "callees": {
    "0x43acd0": [
     0,
@@ -3999,7 +3999,7 @@
   ],
   "address": 4537344
  },
- "f453c90": {
+ "effect_slide_start": {
   "callees": {
    "0x4314a0": [
     0,
@@ -4204,7 +4204,7 @@
   ],
   "address": 4538096
  },
- "f453f40": {
+ "effect_attack": {
   "callees": {
    "0x43ac00": [
     0,
@@ -4250,7 +4250,7 @@
   ],
   "address": 4538176
  },
- "f453fd0": {
+ "effect_slide_start_453fd0": {
   "callees": {
    "0x431780": [
     0,
@@ -4443,7 +4443,7 @@
   ],
   "address": 4538880
  },
- "f454250": {
+ "effect_attack_454250": {
   "callees": {
    "0x43ac00": [
     0,
@@ -4489,7 +4489,7 @@
   ],
   "address": 4538960
  },
- "f4542e0": {
+ "effect_slide_start_4542e0": {
   "callees": {
    "0x431930": [
     0,
@@ -4682,7 +4682,7 @@
   ],
   "address": 4539664
  },
- "f454560": {
+ "effect_attack_454560": {
   "callees": {
    "0x43ac00": [
     0,
@@ -4859,7 +4859,7 @@
   ],
   "address": 4540064
  },
- "f454760": {
+ "state_ask_454760": {
   "callees": {
    "0x42eca0": [
     0,
@@ -4896,7 +4896,7 @@
   ],
   "address": 4540256
  },
- "f4547b0": {
+ "effect_attack_4547b0": {
   "callees": {
    "0x43bb60": [
     0,
@@ -5112,7 +5112,7 @@
   ],
   "address": 4540784
  },
- "f4549d0": {
+ "effect_attack_4549d0": {
   "callees": {
    "0x43bb60": [
     0,
@@ -5330,7 +5330,7 @@
   ],
   "address": 4541392
  },
- "f454c30": {
+ "effect_attack_454c30": {
   "callees": {
    "0x43bb60": [
     0,
@@ -5502,7 +5502,7 @@
   ],
   "address": 4541824
  },
- "f454e30": {
+ "state_done_454e30": {
   "callees": {
    "0x42eca0": [
     0,
@@ -5547,7 +5547,7 @@
   ],
   "address": 4542000
  },
- "f454e90": {
+ "effect_attack_454e90": {
   "callees": {
    "0x43bb60": [
     0,
@@ -5702,7 +5702,7 @@
   ],
   "address": 4542400
  },
- "f455020": {
+ "effect_attack_455020": {
   "callees": {
    "0x43bb60": [
     0,
@@ -5886,7 +5886,7 @@
   ],
   "address": 4543392
  },
- "f4554a0": {
+ "effect_check_bind": {
   "callees": {
    "0x4372c0": [
     0,
@@ -6041,7 +6041,7 @@
   ],
   "address": 4543872
  },
- "f455600": {
+ "effect_check_bind_455600": {
   "callees": {
    "0x437240": [
     0,
@@ -6094,7 +6094,7 @@
   ],
   "address": 4544000
  },
- "f455670": {
+ "effect_check_bind_455670": {
   "callees": {
    "0x4375a0": [
     0,
@@ -6200,7 +6200,7 @@
   ],
   "address": 4544256
  },
- "f455790": {
+ "effect_check_bind_455790": {
   "callees": {
    "0x4375a0": [
     0,
@@ -6334,7 +6334,7 @@
   ],
   "address": 4544560
  },
- "f4558e0": {
+ "effect_check_bind_4558e0": {
   "callees": {
    "0x4375a0": [
     0,
@@ -6440,7 +6440,7 @@
   ],
   "address": 4544880
  },
- "f455a00": {
+ "effect_check_bind_455a00": {
   "callees": {
    "0x4375a0": [
     0,
@@ -6550,7 +6550,7 @@
   ],
   "address": 4545168
  },
- "f455b20": {
+ "effect_attack_455b20": {
   "callees": {
    "0x43bb60": [
     0,
@@ -6697,7 +6697,7 @@
   ],
   "address": 4545584
  },
- "f455ca0": {
+ "effect_attack_455ca0": {
   "callees": {
    "0x43bb60": [
     0,
@@ -6840,7 +6840,7 @@
   ],
   "address": 4545968
  },
- "f455e00": {
+ "state_ask_455e00": {
   "callees": {
    "0x42eca0": [
     0,
@@ -11950,7 +11950,7 @@
   "virtual": [],
   "address": 4569424
  },
- "f45b9c0": {
+ "effect_attack_45b9c0": {
   "callees": {
    "0x43bb60": [
     0,

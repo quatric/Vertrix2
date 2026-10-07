@@ -111,6 +111,10 @@ typedef struct
 #define VERTRIX_STATE_GATE_COUNT 16
 extern const VertrixStateGate vertrix_state_gates[VERTRIX_STATE_GATE_COUNT];
 
+/* Original variants 0x4535d0, 0x453620, 0x453670, 0x4536c0, 0x453710, 0x453760, 0x4537b0, 0x453800,
+ * 0x453850, 0x4538a0, 0x4538f0, 0x453940, 0x453990, 0x4539e0, 0x453a30, 0x453a80: Complete callable
+ * handlers verified by tools/verify_bonus_effects.py; the recovered table or selector supplies each
+ * entry points parameters. */
 uint32_t vertrix_effect_state_gate(const VertrixEffectServices *services, uint32_t player,
                                    const VertrixStateGate *gate);
 
@@ -139,6 +143,9 @@ uint32_t vertrix_effect_progress_gate(const VertrixEffectServices *services, uin
  * player's board and plays sound 9 (the dword at 0x4f81a4, 0x43c0e0); the result is that of the
  * sound. entry_ebx is the caller's ebx; the step's ebx is its low byte replaced by the state
  * byte until +0x3c4 is read. */
+/* Original variants 0x452a30, 0x452b00, 0x452bb0, 0x452c60:
+ * Complete callable handlers verified by tools/verify_bonus_effects.py;
+ * the recovered table or selector supplies the parameters for each entry point. */
 uint32_t vertrix_effect_arm_handler(const VertrixEffectServices *services, uint32_t player,
                                     uint32_t entry_ebx, unsigned index);
 
@@ -149,6 +156,9 @@ uint32_t vertrix_effect_arm_handler(const VertrixEffectServices *services, uint3
  * ebx -1, ecx 6, stack 1, 0, 1 for +0x3c4 equal to two. Slot 1 of the board follows; only when all
  * three dwords were zero 0x43bbf0 runs on the player and its result is returned, otherwise the
  * result of the slot. */
+/* Original variants 0x452a50, 0x452b20, 0x452bd0, 0x452c80:
+ * Complete callable handlers verified by tools/verify_bonus_effects.py;
+ * the recovered table or selector supplies the parameters for each entry point. */
 uint32_t vertrix_effect_armed_handler(const VertrixEffectServices *services, uint32_t player,
                                       uint32_t entry_ebx, unsigned which);
 
@@ -213,6 +223,10 @@ typedef struct
 #define VERTRIX_ATTACK_COUNT 12
 extern const VertrixAttack vertrix_attacks[VERTRIX_ATTACK_COUNT];
 
+/* Original variants 0x453f40, 0x454250, 0x454560, 0x4547b0, 0x4549d0, 0x454c30, 0x454e90, 0x455020,
+ * 0x455b20, 0x455ca0, 0x45b9c0: Complete callable handlers verified by
+ * tools/verify_bonus_effects.py; the recovered table or selector supplies each entry points
+ * parameters. */
 uint32_t vertrix_effect_attack(const VertrixEffectServices *services, uint32_t player,
                                uint32_t entry_edx, const VertrixAttack *attack);
 
@@ -244,6 +258,9 @@ typedef struct
 #define VERTRIX_CHECK_BIND_COUNT 6
 extern const VertrixCheckBind vertrix_check_binds[VERTRIX_CHECK_BIND_COUNT];
 
+/* Original variants 0x4554a0, 0x455600, 0x455670, 0x455790, 0x4558e0, 0x455a00:
+ * Complete callable handlers verified by tools/verify_bonus_effects.py;
+ * the recovered table or selector supplies the parameters for each entry point. */
 uint32_t vertrix_effect_check_bind(const VertrixEffectServices *services, uint32_t player,
                                    uint32_t entry_edx, const VertrixCheckBind *check);
 
@@ -302,6 +319,9 @@ typedef struct
 #define VERTRIX_SLIDE_START_COUNT 3
 extern const VertrixSlideStart vertrix_slide_starts[VERTRIX_SLIDE_START_COUNT];
 
+/* Original variants 0x453c90, 0x453fd0, 0x4542e0:
+ * Complete callable handlers verified by tools/verify_bonus_effects.py;
+ * the recovered table or selector supplies the parameters for each entry point. */
 uint32_t vertrix_effect_slide_start(const VertrixEffectServices *services, uint32_t player,
                                     const VertrixSlideStart *start);
 #endif

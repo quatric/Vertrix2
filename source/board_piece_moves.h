@@ -24,6 +24,7 @@ int vertrix_board_piece_shape_fits(const void *board, size_t board_size, uint32_
  * piece, from top to bottom, has a nonzero byte 0x4f9ad8[13 * (shape + rotation) + row] next to
  * the piece's column: at the board edge (column 0 left, column 4 right) or beside an occupied
  * cell of the block grid (+0x220). */
+/* Original variants 0x42f030, 0x42f120: left and right occupied-side queries. */
 int vertrix_board_piece_touches_side(const void *board, size_t board_size, uint32_t shape,
                                      uint32_t rotation, int side,
                                      const VertrixPieceServices *services, uint32_t *touches);
@@ -39,12 +40,14 @@ int vertrix_board_piece_store_negated_always(void *board, size_t board_size,
 
 /* Original0x42f520 (side = -1) and 0x42f550 (side = 1): when the piece touches that side, store
  * the board byte +0x58 at +0xa64. */
+/* Original variants 0x42f520, 0x42f550: left and right touch stores. */
 int vertrix_board_piece_store_touch(void *board, size_t board_size, uint32_t shape,
                                     uint32_t rotation, int side,
                                     const VertrixPieceServices *services);
 
 /* Original0x42f6e0 (side = -1, 0x18 added to the piece x word +0xe) and 0x42f720 (side = 1,
  * subtracted): when the piece touches that side, move it by one column. */
+/* Original variants 0x42f6e0, 0x42f720: left and right piece shifts. */
 int vertrix_board_piece_shift(const void *board, size_t board_size, uint32_t shape,
                               uint32_t rotation, int side, const VertrixPieceServices *services);
 #endif

@@ -15,6 +15,7 @@ int vertrix_object_release_slots(void *storage, size_t size, size_t offset, uint
  * +0x92c. */
 int vertrix_piece_release_children(void *storage, size_t size, int second_list,
                                    VertrixBoardDestroy destroy, void *context);
+/* Original0x43d800: Release the 500 handles at +0x15c, then the eight handles at +0x92c. */
 int vertrix_effects_release_all(void *storage, size_t size, VertrixBoardDestroy destroy,
                                 void *context);
 
@@ -47,6 +48,7 @@ int vertrix_object_triple(const void *storage, size_t size, uint32_t values[3]);
 /* Original0x476120 / 0x476140: clear / set the flag byte at the start of record (index & 0xffff)
  * of the 0x60-byte records that begin at the storage. */
 int vertrix_record_clear_flag(void *storage, size_t size, uint32_t index);
+/* Original0x476140: Set the flag byte of record (index & 0xffff), stride 0x60. */
 int vertrix_record_set_flag(void *storage, size_t size, uint32_t index);
 
 /* Original0x471bb0, 0x471d90 and 0x471dd0 (the actor lists at globals 0x546720, 0x546748 and

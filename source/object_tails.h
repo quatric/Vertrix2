@@ -70,6 +70,7 @@ uint32_t vertrix_object_table_516d34(const VertrixCalls *calls,
 /* Original 0x48d330 (table 0x517a44 at +0x34 first) and 0x48d500 (ones at +0x20 and +0x2c after):
  * vertrix_object_clear_block on the object. Return the object, zero for short storage. */
 uint32_t vertrix_object_clear_with_table(void *storage, size_t size, uint32_t object);
+/* Original0x48d500: Clear the object block, then set dwords +0x20 and +0x2c to one. */
 uint32_t vertrix_object_clear_with_ones(void *storage, size_t size, uint32_t object);
 
 /* Original 0x4b4630: the dword at +0x170 becomes the text length minus one, then 0x4b4690 on the

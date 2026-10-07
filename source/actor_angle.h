@@ -27,6 +27,7 @@ int vertrix_actor_turn_toward(void *actor, size_t size, int32_t count, uint32_t 
  * outside 0..359 (the original would read past the tables). */
 int vertrix_actor_polar_offset(const void *actor, size_t size, const VertrixAngleTables *tables,
                                int32_t radius_x, int32_t radius_y, int32_t *x, int32_t *y);
+/* Original0x4ad210: Scale x/y factors of the angle word at +0x34 by the two radii. */
 int vertrix_actor_polar_offset_second(const void *actor, size_t size,
                                       const VertrixAngleTables *tables, int32_t radius_x,
                                       int32_t radius_y, int32_t *x, int32_t *y);

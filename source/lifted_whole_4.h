@@ -41,7 +41,7 @@ enum
     LIFTED_ROTATION_ADVANCE_STACK = 80,
     LIFTED_ACTOR_SPIN_STACK = 80,
     LIFTED_ACTOR_POLAR_OFFSET_STACK = 80,
-    LIFTED_F4AD210_STACK = 80,
+    LIFTED_ACTOR_POLAR_OFFSET_SECOND_STACK = 80,
     LIFTED_ACTOR_ORBIT_POINT_STACK = 92,
     LIFTED_F4AD2C0_STACK = 100,
     LIFTED_ACTOR_DOUBLE_ORBIT_POINT_STACK = 100,
@@ -584,8 +584,9 @@ uint32_t lifted_actor_polar_offset(const VertrixCalls *calls,
                                    const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4ad210. */
-uint32_t lifted_f4ad210(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_actor_polar_offset_second(const VertrixCalls *calls,
+                                          const VertrixFactoryServices *services,
+                                          const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4ad260. */
 uint32_t lifted_actor_orbit_point(const VertrixCalls *calls, const VertrixFactoryServices *services,

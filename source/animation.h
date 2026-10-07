@@ -18,7 +18,7 @@ typedef struct
     uint32_t frame_count;
 } VertrixAnimation;
 
-/* Original 0x4ac1f0/250/2b0/310. Returns 1 while playing, 0 when a
+/* Original variants 0x4ac1f0, 0x4ac250, 0x4ac2b0, 0x4ac310: Returns 1 while playing, 0 when a
  * one-shot attempts to step past its endpoint, -1 for invalid state/mode.
  * Resource decoding supplies frame_count; no guessed sprite counts. */
 int vertrix_animation_tick(VertrixAnimation *animation, uint32_t elapsed,

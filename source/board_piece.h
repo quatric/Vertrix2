@@ -24,6 +24,7 @@ int vertrix_board_flash_children(const void *board, size_t board_size, VertrixOb
 /* Original0x432040 (right = 1, column >= 5) and 0x432080 (right = 0, column <= 0): compare the
  * active piece's board column, (piece x - board x) / 24 with signed 16-bit positions, with the
  * edge of the five-column board. */
+/* Original variants 0x432040, 0x432080: right and left board-edge queries. */
 int vertrix_board_piece_past_edge(const void *board, size_t board_size,
                                   VertrixObjectStorage resolve, void *context, int right,
                                   uint32_t *past);

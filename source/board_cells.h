@@ -52,6 +52,7 @@ int vertrix_board_restart_slots(const VertrixScene *scene, uint32_t steps,
  * +0x18 becomes board_y + 0x108 (or +0x138), word +0x1a becomes table_word (the entry of the
  * word table at 0x4f7d08 selected by the dword at 0x532bbc, read at the boundary) and its
  * handler becomes 0x44c880 (or 0x44c8e0). Short extra storage is preserved. */
+/* Original variants 0x4300b0, 0x430100: upper and lower extra-object placement. */
 int vertrix_board_place_extra(void *extra, size_t size, uint16_t board_y, uint16_t table_word,
                               int lower);
 /* Original0x432200: destroy and clear every slot of the grid at +0x220 whose object has type
@@ -65,8 +66,10 @@ int vertrix_board_purge_type_two(VertrixScene *scene, VertrixObjectStorage resol
  * unresolvable object reached before a match. */
 int vertrix_board_has_type_one(const VertrixScene *scene, VertrixObjectStorage resolve,
                                void *context);
+/* Original 0x4322f0: the grid kind-six scan described above. */
 int vertrix_board_has_kind_six(const VertrixScene *scene, VertrixObjectStorage resolve,
                                void *context);
+/* Original 0x4334b0: the extra collection type-one scan described above. */
 int vertrix_board_has_type_one_extra(const VertrixScene *scene, VertrixObjectStorage resolve,
                                      void *context);
 

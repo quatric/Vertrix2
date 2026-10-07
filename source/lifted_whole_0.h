@@ -309,7 +309,7 @@ enum
     LIFTED_AI_FIND_BEST_SLOT_STACK = 104,
     LIFTED_AI_CHOOSE_PIECE_ROTATION_STACK = 76,
     LIFTED_SETTINGS_DEFAULTS_STACK = 116,
-    LIFTED_F429350_STACK = 136,
+    LIFTED_OBJECT_DESTROY_C_STACK = 136,
     LIFTED_SAVED_BLOCK_LOAD_STACK = 96,
     LIFTED_F429460_STACK = 148,
     LIFTED_F429600_STACK = 88,
@@ -400,11 +400,11 @@ enum
     LIFTED_BOARD_MARK_ROWS_FIRST_STACK = 100,
     LIFTED_BOARD_MARK_ROWS_SECOND_STACK = 100,
     LIFTED_BOARD_PIECE_STORE_TOUCH_STACK = 76,
-    LIFTED_F42F550_STACK = 76,
+    LIFTED_BOARD_PIECE_STORE_TOUCH_42F550_STACK = 76,
     LIFTED_F42F580_STACK = 96,
     LIFTED_F42F620_STACK = 104,
     LIFTED_BOARD_PIECE_SHIFT_STACK = 76,
-    LIFTED_F42F720_STACK = 76,
+    LIFTED_BOARD_PIECE_SHIFT_42F720_STACK = 76,
     LIFTED_BOARD_DROP_COLUMNS_STACK = 88,
     LIFTED_PLAYER_FILL_BYTES_42F7D0_STACK = 68,
     LIFTED_PLAYER_FILL_BYTES_42F7F0_STACK = 68,
@@ -422,7 +422,7 @@ enum
     LIFTED_BOARD_CREATE_OVERLAY_STACK = 164,
     LIFTED_BOARD_EXTRA_IS_IDLE_STACK = 68,
     LIFTED_BOARD_PLACE_EXTRA_STACK = 76,
-    LIFTED_F430100_STACK = 76,
+    LIFTED_BOARD_PLACE_EXTRA_430100_STACK = 76,
     LIFTED_BOARD_RELEASE_EXTRA_STACK = 80,
     LIFTED_ACTOR_SPAWN_MATCH_EFFECT_STACK = 152,
     LIFTED_ACTOR_SPAWN_MATCH_BURST_STACK = 184
@@ -1689,8 +1689,8 @@ uint32_t lifted_settings_defaults(const VertrixCalls *calls, const VertrixFactor
                                   const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x429350. */
-uint32_t lifted_f429350(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_object_destroy_c(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                 const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4293e0. */
 uint32_t lifted_saved_block_load(const VertrixCalls *calls, const VertrixFactoryServices *services,
@@ -2114,8 +2114,10 @@ uint32_t lifted_board_piece_store_touch(const VertrixCalls *calls,
                                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42f550. */
-uint32_t lifted_f42f550(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_board_piece_store_touch_42f550(const VertrixCalls *calls,
+                                               const VertrixFactoryServices *services,
+                                               const VertrixGlobals *globals,
+                                               const LiftEntry *entry);
 
 /* Original 0x42f580. */
 uint32_t lifted_f42f580(const VertrixCalls *calls, const VertrixFactoryServices *services,
@@ -2130,8 +2132,9 @@ uint32_t lifted_board_piece_shift(const VertrixCalls *calls, const VertrixFactor
                                   const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42f720. */
-uint32_t lifted_f42f720(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_board_piece_shift_42f720(const VertrixCalls *calls,
+                                         const VertrixFactoryServices *services,
+                                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42f760. */
 uint32_t lifted_board_drop_columns(const VertrixCalls *calls,
@@ -2210,8 +2213,9 @@ uint32_t lifted_board_place_extra(const VertrixCalls *calls, const VertrixFactor
                                   const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x430100. */
-uint32_t lifted_f430100(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_board_place_extra_430100(const VertrixCalls *calls,
+                                         const VertrixFactoryServices *services,
+                                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x430150. */
 uint32_t lifted_board_release_extra(const VertrixCalls *calls,
