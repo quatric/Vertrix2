@@ -1,6 +1,9 @@
 {
   "status": "passed",
   "cases": 2048,
+  "compared_cases": 2048,
+  "original_executions": 2047,
+  "object_comparisons": 6144,
   "transferred_blocks": 5637,
   "destructor_calls": 2349,
   "scope": "Original 0x42fc2d..0x42fc56/0x42fe81 pixel loop, actual downward probe and complete object lock; only virtual destructors captured. Cell handles, ownership observed at each destructor, child clearing, active clearing, lock result and whole block records match. Actual object destructors, timer/scene composition and complete game remain unfinished."

@@ -1,6 +1,9 @@
 {
   "status": "passed",
   "cases": 4096,
+  "compared_cases": 4096,
+  "original_executions": 4096,
+  "object_comparisons": 12288,
   "transferred_blocks": 6865,
   "destructor_calls": 6927,
   "failed_lock_results": 864,

@@ -1,5 +1,6 @@
 {
   "status": "passed",
   "effect_cases": 30000,
+  "compared_cases": 30000,
   "scope": "Complete original 0x40cef0 effect, all 256 parameters, signed full-width ticks, both tuning modes, random base notes/relative notes/finetunes and prior output state. Period and dirty bit match including zero-parameter preservation. Excludes complete sequencer dispatch and other effects."
 }

@@ -32,23 +32,26 @@ def main():
     rng = random.Random(0x474e00)
     permutations = list(itertools.permutations((0xff0000, 0xff00, 0xff)))
     permutations += list(itertools.permutations((0xf800, 0x7e0, 0x1f)))
+    completed = 0
     for case in range(256):
         masks = (c.c_uint32 * 3)(* permutations[case % len(permutations)])
-    row_bytes = rng.randbytes(101)
-    row = c.create_string_buffer(row_bytes, 101)
-    original.cpu.mem_write(0x900800, row_bytes)
-    original.cpu.mem_write(0x804000, bytes(40))
-    original.call(0x481bc0, eax=0x804000, edx=masks[0], ebx=masks[1], ecx=masks[2], args=(0xff000000,))
-    original.call(0x474e00, eax=0x804000)
-    output = Bank()
-    assert native.vertrix_render_color_bank_build(masks, row, 101, c.byref(output)) == 1
-    assert tuple(output.lookup) == struct.unpack('<13I', original.cpu.mem_read(0x54b808, 52)), case
-    assert tuple(output.colors) == struct.unpack('<13I', original.cpu.mem_read(0x54b83c, 52)), case
-    assert tuple(output.format_colors) == struct.unpack('<12I', original.cpu.mem_read(0x54d5f4, 48)), case
-    before = bytes(output)
-    assert native.vertrix_render_color_bank_build(masks, row, 100, c.byref(output)) == 0
-    assert bytes(output) == before
-    report = {'status': 'passed', 'cases': 256, 'scope': 'Complete original474e00 executes without hooks, including original ' 'format setup/conversion. Native13 lookup/colors and12 format colors ' 'match across RGB32/RGB565 mask permutations and selected channel rows. ' 'Complete render preparation and playable application remain unfinished.'}
+        row_bytes = rng.randbytes(101)
+        row = c.create_string_buffer(row_bytes, 101)
+        original.cpu.mem_write(0x900800, row_bytes)
+        original.cpu.mem_write(0x804000, bytes(40))
+        original.call(0x481bc0, eax=0x804000, edx=masks[0], ebx=masks[1], ecx=masks[2], args=(0xff000000,))
+        original.call(0x474e00, eax=0x804000)
+        output = Bank()
+        assert native.vertrix_render_color_bank_build(masks, row, 101, c.byref(output)) == 1
+        assert tuple(output.lookup) == struct.unpack('<13I', original.cpu.mem_read(0x54b808, 52)), case
+        assert tuple(output.colors) == struct.unpack('<13I', original.cpu.mem_read(0x54b83c, 52)), case
+        assert tuple(output.format_colors) == struct.unpack('<12I', original.cpu.mem_read(0x54d5f4, 48)), case
+        before = bytes(output)
+        assert native.vertrix_render_color_bank_build(masks, row, 100, c.byref(output)) == 0
+        assert bytes(output) == before
+        completed += 1
+    assert completed == 256, completed
+    report = {'status': 'passed', 'cases': completed, 'complete_original_executions': {'0x474e00': completed}, 'scope': 'Complete original474e00 executes without hooks, including original ' 'format setup/conversion. Native13 lookup/colors and12 format colors ' 'match across RGB32/RGB565 mask permutations and selected channel rows. ' 'Complete render preparation and playable application remain unfinished.'}
     (args.build_dir / 'render-color-bank-verification.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))
 if __name__ == '__main__':

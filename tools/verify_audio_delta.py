@@ -24,6 +24,7 @@ def main():
     original = Original(args.executable)
     rng = random.Random(0x411280)
     cases = 20000
+    compared_cases = 0
     for index in range(cases):
         count = rng.randrange(257)
         flags = rng.randrange(256)
@@ -34,13 +35,15 @@ def main():
         original.cpu.mem_write(BOARD + 0x16, bytes([flags]))
         original.cpu.mem_write(BLOCKS, data)
         original.call(0x411280)
-    expected = bytes(original.cpu.mem_read(BLOCKS, len(data)))
-    samples = (ctypes.c_uint8 * len(data)).from_buffer_copy(data)
-    assert native.vertrix_audio_delta_decode(samples, count, flags & 1)
-    assert bytes(samples) == expected, (count, flags)
+        expected = bytes(original.cpu.mem_read(BLOCKS, len(data)))
+        samples = (ctypes.c_uint8 * len(data)).from_buffer_copy(data)
+        assert native.vertrix_audio_delta_decode(samples, count, flags & 1)
+        assert bytes(samples) == expected, (count, flags)
+        compared_cases += 1
+    assert compared_cases == cases, (compared_cases, cases)
     assert native.vertrix_audio_delta_decode(None, 0, 1)
     assert not native.vertrix_audio_delta_decode(None, 1, 0)
-    report = {"status": "passed", "cases": cases, "scope": "Original 0x411280 full delta decoder, 8/16-bit modes, odd counts, zero counts, " "upper flags and trailing storage guards. Does not recover XM playback."}
+    report = {"status": "passed", "cases": cases, "compared_cases": compared_cases, "scope": "Original 0x411280 full delta decoder, 8/16-bit modes, odd counts, zero counts, " "upper flags and trailing storage guards. Does not recover XM playback."}
     (build / "audio-delta-verification.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report, indent=2))
 if __name__ == "__main__":

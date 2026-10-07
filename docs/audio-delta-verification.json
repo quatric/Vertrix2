@@ -1,5 +1,6 @@
 {
   "status": "passed",
   "cases": 20000,
+  "compared_cases": 20000,
   "scope": "Original 0x411280 full delta decoder, 8/16-bit modes, odd counts, zero counts, upper flags and trailing storage guards. Does not recover XM playback."
 }

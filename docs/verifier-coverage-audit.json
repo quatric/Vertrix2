@@ -1,0 +1,55 @@
+{
+  "status": "passed",
+  "scope": "Corrected loop reachability and fixture ordering in original-executable differential verifiers. Counts prove only the explicit covered routines and fragments, not full Wii gameplay.",
+  "reference_commit": "a037f34",
+  "verifiers": [
+    {
+      "tool": "tools/verify_audio_delta.py",
+      "report": "docs/audio-delta-verification.json",
+      "completed_comparison_cases": 20000,
+      "correction": "Each decoded output and trailing guard matches; native comparison now executes inside the fixture loop."
+    },
+    {
+      "tool": "tools/verify_board_collections.py",
+      "report": "docs/board-collections-verification.json",
+      "completed_comparison_cases": 57344,
+      "correction": "Every clear/test/piece/marked/effect variant executes and compares inside its loop; category totals are asserted."
+    },
+    {
+      "tool": "tools/verify_mixer_arpeggio.py",
+      "report": "docs/mixer-arpeggio-verification.json",
+      "completed_comparison_cases": 30000,
+      "correction": "Each period and flag result compares inside the fixture loop."
+    },
+    {
+      "tool": "tools/verify_mixer_pattern_change.py",
+      "report": "docs/mixer-pattern-change-verification.json",
+      "completed_comparison_cases": 60000,
+      "correction": "Order-jump and row-break selectors each compare30000 fixtures inside both loops."
+    },
+    {
+      "tool": "tools/verify_render_color_bank.py",
+      "report": "docs/render-color-bank-verification.json",
+      "completed_comparison_cases": 256,
+      "correction": "Each mask/channel fixture executes and compares before incrementing completed coverage."
+    },
+    {
+      "tool": "tools/verify_scene_lock.py",
+      "report": "docs/scene-lock-verification.json",
+      "completed_comparison_cases": 4096,
+      "correction": "Initialize all three block records before one original execution and native comparison;12288 whole block comparisons."
+    },
+    {
+      "tool": "tools/verify_scene_descent.py",
+      "report": "docs/scene-descent-verification.json",
+      "completed_comparison_cases": 2048,
+      "correction": "Initialize all three block records before original execution/native comparison;2047 positive-pixel executions plus zero-pixel no-op,6144 whole block comparisons."
+    },
+    {
+      "tool": "tools/verify_ui_preview_pair.py",
+      "report": "docs/ui-preview-pair-verification.json",
+      "completed_comparison_cases": 512,
+      "correction": "Allocator hook registration and preview loop are reachable; all3072 constructed actors compare;1024 failure-preservation checks follow the completed actor comparisons."
+    }
+  ]
+}

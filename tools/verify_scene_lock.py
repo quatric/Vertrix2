@@ -50,7 +50,9 @@ def main():
     o.cpu.hook_add(UC_HOOK_CODE, original_visit, begin=0x700100, end=0x700100)
     rng = random.Random(0x431c60)
     destructions = transfers = failed = 0
-    for case in range(4096):
+    cases = 4096
+    original_executions = compared_cases = object_comparisons = 0
+    for case in range(cases):
         scene = Scene()
         scene.active = piece_handle
         ox = rng.randrange(- 30000, 30001)
@@ -76,17 +78,19 @@ def main():
             struct.pack_into('<I', data, 0x158, 0x709000)
             initial.append(bytes(data))
             o.cpu.mem_write(handle, bytes(data))
-            record = bytearray(512)
-            struct.pack_into('<h', record, 14, x)
-            struct.pack_into('<h', record, 22, y)
-            struct.pack_into('<I', record, 0x158, 0x709000)
-            struct.pack_into('<3I', record, 0x15c, * children)
-            o.cpu.mem_write(piece_handle, bytes(record))
-            o.cpu.mem_write(BOARD, bytes(raw))
-            original_events.clear()
-            native_events.clear()
-            expected = o.call(0x431c60, eax=BOARD)
-            locked = c.c_int(- 1)
+        assert len(initial) == len(objects)
+        record = bytearray(512)
+        struct.pack_into('<h', record, 14, x)
+        struct.pack_into('<h', record, 22, y)
+        struct.pack_into('<I', record, 0x158, 0x709000)
+        struct.pack_into('<3I', record, 0x15c, * children)
+        o.cpu.mem_write(piece_handle, bytes(record))
+        o.cpu.mem_write(BOARD, bytes(raw))
+        original_events.clear()
+        native_events.clear()
+        expected = o.call(0x431c60, eax=BOARD)
+        original_executions += 1
+        locked = c.c_int(- 1)
         assert n.vertrix_scene_lock(c.byref(scene), c.byref(piece), ox, oy, resolve, visit, None, c.byref(locked))
         assert locked.value == expected and scene.active == 0, (case, 'result')
         assert native_events == original_events, (case, 'destruction/ownership')
@@ -98,11 +102,17 @@ def main():
             data[0x4e] = obj.field_4e
             struct.pack_into('<H', data, 0x48, obj.effect)
             assert bytes(data) == bytes(o.cpu.mem_read(handle, 512)), (case, hex(handle), 'block metadata')
+            object_comparisons += 1
+        compared_cases += 1
         destructions += len(native_events)
         transfers += sum(h in scene.slots[: 65] for h in children)
         failed += not locked.value
         assert not n.vertrix_scene_lock(None, c.byref(piece), 0, 0, resolve, visit, None, c.byref(locked))
-    report = {'status': 'passed', 'cases': 4096, 'transferred_blocks': transfers, 'destructor_calls': destructions, 'failed_lock_results': failed, 'scope': 'Complete original 0x431c60 including original coordinate conversion and block metadata writes; only virtual destructors captured. Cell handles, ownership observed at each destructor, child clearing, active clearing, lock result and whole block records match. Actual object destructors, surrounding descent/scene composition and complete game remain unfinished.'}
+    assert compared_cases == cases, (compared_cases, cases)
+    assert original_executions == cases, (original_executions, cases)
+    assert object_comparisons == cases * len(objects)
+    report = {'status': 'passed', 'cases': cases, 'compared_cases': compared_cases,
+              'original_executions': original_executions, 'object_comparisons': object_comparisons, 'transferred_blocks': transfers, 'destructor_calls': destructions, 'failed_lock_results': failed, 'scope': 'Complete original 0x431c60 including original coordinate conversion and block metadata writes; only virtual destructors captured. Cell handles, ownership observed at each destructor, child clearing, active clearing, lock result and whole block records match. Actual object destructors, surrounding descent/scene composition and complete game remain unfinished.'}
     (a.build_dir / 'scene-lock-verification.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))
 if __name__ == '__main__':

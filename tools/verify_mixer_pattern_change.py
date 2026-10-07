@@ -24,6 +24,7 @@ def main():
     rng = random.Random(0x40d450)
     cases = 30000
     original.cpu.mem_write(0x53043C, struct.pack("<I", MASK))
+    comparisons = 0
     for row_break, address in ((0, 0x40D450), (1, 0x40D4C0)):
         for index in range(cases):
             parameter = index % 256
@@ -37,12 +38,14 @@ def main():
             original.cpu.mem_write(0x531B70, struct.pack("<II", order, row))
             original.cpu.mem_write(0x531B44, bytes([flags]))
             original.call(address, eax=BOARD)
-    expected = (* struct.unpack("<II", original.cpu.mem_read(0x531B70, 8)), original.cpu.mem_read(0x531B44, 1)[0])
-    state = State(order, row, flags)
-    assert native.vertrix_mixer_pattern_change(parameter, tick, row_break, length, ctypes.byref(state))
-    assert (state.order, state.row, state.flags) == expected, (row_break, index)
+            expected = (* struct.unpack("<II", original.cpu.mem_read(0x531B70, 8)), original.cpu.mem_read(0x531B44, 1)[0])
+            state = State(order, row, flags)
+            assert native.vertrix_mixer_pattern_change(parameter, tick, row_break, length, ctypes.byref(state))
+            assert (state.order, state.row, state.flags) == expected, (row_break, index)
+            comparisons += 1
     assert not native.vertrix_mixer_pattern_change(1, 0, 0, 128, None)
-    report = {"status": "passed", "effect_cases": cases * 2, "scope": "Complete original 0x40d450/0x40d4c0: all parameter bytes, song-length limits, " "zero/nonzero signed ticks, prior order/row/flags. Includes decimal-invalid " "nibbles in row breaks. Excludes consumption of pending changes by sequencer."}
+    assert comparisons == cases * 2, (comparisons, cases * 2)
+    report = {"status": "passed", "effect_cases": comparisons, "scope": "Complete original 0x40d450/0x40d4c0: all parameter bytes, song-length limits, " "zero/nonzero signed ticks, prior order/row/flags. Includes decimal-invalid " "nibbles in row breaks. Excludes consumption of pending changes by sequencer."}
     (build / "mixer-pattern-change-verification.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report, indent=2))
 if __name__ == "__main__":

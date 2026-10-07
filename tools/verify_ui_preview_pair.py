@@ -101,10 +101,11 @@ def main():
         cpu.reg_write(UC_X86_REG_EAX, result)
         cpu.reg_write(UC_X86_REG_ESP, stack + 4)
         cpu.reg_write(UC_X86_REG_EIP, destination)
-        hook = cpu.hook_add(UC_HOOK_CODE, allocate, begin=0x4ca000, end=0x4ca000)
-        try:
-            for case in range(512):
-                allocated.clear()
+    preview_cases = preview_actors = preview_failures = 0
+    hook = cpu.hook_add(UC_HOOK_CODE, allocate, begin=0x4ca000, end=0x4ca000)
+    try:
+        for case in range(512):
+            allocated.clear()
             parent_raw = rng.randbytes(0x180)
             actor_raw = rng.randbytes(6 * 0x15c)
             parent = c.create_string_buffer(parent_raw, len(parent_raw))
@@ -130,17 +131,21 @@ def main():
                 assert struct.unpack_from('<I', expected, 0xb4)[0] == 0x812000 + descriptor * 40
                 struct.pack_into('<I', expected, 0xb4, descriptor)
                 assert actors.raw[i * 0x15c: (i + 1) * 0x15c] == expected, (case, i)
-                before = parent.raw, actors.raw
-#The third companion binding fails after two valid staged pairs.
-                limited = Bank(bank_frames, source + 2)
-                assert not player_construct(parent, len(parent_raw), actors, len(actor_raw), handles, side, source, c.byref(limited), c.byref(border_bank))
-                assert (parent.raw, actors.raw) == before
-                handles[5] = handles[0]
-                assert not player_construct(parent, len(parent_raw), actors, len(actor_raw), handles, side, source, c.byref(interface), c.byref(border_bank))
-                assert (parent.raw, actors.raw) == before
-        finally:
-            cpu.hook_del(hook)
-    report = {'status': 'passed', 'original_pair_cases': 2048, 'actors_compared': 4096, 'failure_preservation_cases': 6144, 'complete_original_preview_parent_constructor_cases': 2048, 'parent_constructor_failure_preservation_cases': 2048, 'complete_original_player_preview_cases': 512, 'complete_original_player_preview_actors': 3072, 'player_failure_preservation_cases': 1024, 'scope': 'Original constructors and complete companion/border setup fragments ' 'execute without hooks, including actual4877f0 binding and final callbacks. ' 'Original descriptor pointers normalize to verified bank-local indices. ' 'Entire extended actors match. Complete42b370 construction also matches ' 'all six actors and all parent bytes with only heap allocation supplied. ' 'Direct resource fixtures; native ownership, scene registration and ' 'full gameplay remain separate.'}
+                preview_actors += 1
+            before = parent.raw, actors.raw
+            # The third companion binding fails after two valid staged pairs.
+            limited = Bank(bank_frames, source + 2)
+            assert not player_construct(parent, len(parent_raw), actors, len(actor_raw), handles, side, source, c.byref(limited), c.byref(border_bank))
+            assert (parent.raw, actors.raw) == before
+            handles[5] = handles[0]
+            assert not player_construct(parent, len(parent_raw), actors, len(actor_raw), handles, side, source, c.byref(interface), c.byref(border_bank))
+            assert (parent.raw, actors.raw) == before
+            preview_cases += 1
+            preview_failures += 2
+    finally:
+        cpu.hook_del(hook)
+    assert (preview_cases, preview_actors, preview_failures) == (512, 3072, 1024)
+    report = {'status': 'passed', 'original_pair_cases': 2048, 'actors_compared': 4096, 'failure_preservation_cases': 6144, 'complete_original_preview_parent_constructor_cases': 2048, 'parent_constructor_failure_preservation_cases': 2048, 'complete_original_player_preview_cases': preview_cases, 'complete_original_player_preview_actors': preview_actors, 'player_failure_preservation_cases': preview_failures, 'scope': 'Original constructors and complete companion/border setup fragments ' 'execute without hooks, including actual4877f0 binding and final callbacks. ' 'Original descriptor pointers normalize to verified bank-local indices. ' 'Entire extended actors match. Complete42b370 construction also matches ' 'all six actors and all parent bytes with only heap allocation supplied. ' 'Direct resource fixtures; native ownership, scene registration and ' 'full gameplay remain separate.'}
     (build / 'ui-preview-pair-verification.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))
 if __name__ == '__main__':
