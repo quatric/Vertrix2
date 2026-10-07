@@ -15,6 +15,8 @@ BLOCK_COMMENT = re.compile(r"/\*[\s\S]*?\*/")
 ANNOTATION = re.compile(
     r"/\*\s*Original(?:s|\s+routines?|\s+handlers?|\s+variants)?\s*0x([0-9a-f]+)\b", re.I
 )
+# Excluded fragment/composition and malformed annotations still end preceding evidence.
+ANNOTATION_BOUNDARY = re.compile(r"/\*\s*Original(?:s)?(?=\b|0x|[0-9])", re.I)
 VARIANTS = re.compile(
     r"/\*\s*Original\s+variants\s+"
     r"(0x[0-9a-f]+(?:\s*(?:,|and|/)\s*0x[0-9a-f]+)*)\s*:", re.I
@@ -56,8 +58,10 @@ def following_name(text):
 
 def header_pairs(text):
     comments = list(BLOCK_COMMENT.finditer(text))
-    annotations = [m for m in comments if ANNOTATION.match(m.group())]
+    annotations = [m for m in comments if ANNOTATION_BOUNDARY.match(m.group())]
     for index, annotation in enumerate(annotations):
+        if not ANNOTATION.match(annotation.group()):
+            continue
         # Callback/member comments are not annotations for a later declaration.
         line_start = text.rfind("\n", 0, annotation.start()) + 1
         if text[line_start:annotation.start()].strip():

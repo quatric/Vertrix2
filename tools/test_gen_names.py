@@ -64,6 +64,20 @@ void vertrix_second(void);
             0x4713d0: "vertrix_title_letter_first", 0x400002: "vertrix_second"
         })
 
+    def test_excluded_annotations_end_preceding_evidence(self):
+        for marker in ("Original fragment 0x400002", "Original composition 0x400002",
+                       "Original400002", "Original routine 400002"):
+            with self.subTest(marker=marker):
+                text = f"""
+/* Original 0x400001: no recovered declaration. */
+#define ONLY_CONSTANT 1
+/* {marker}: not a whole-routine association. */
+void vertrix_fragment(void);
+/* Original 0x400003: complete routine. */
+void vertrix_complete(void);
+"""
+                self.assertEqual(dict(header_pairs(text)), {0x400003: "vertrix_complete"})
+
     def test_member_callback_comment_does_not_leak(self):
         text = """
 typedef struct {
