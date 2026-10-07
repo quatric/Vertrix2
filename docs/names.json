@@ -830,6 +830,7 @@
  "0x476160": "vertrix_string_table_assign",
  "0x476260": "vertrix_list_find_call",
  "0x4762e0": "vertrix_slot_select",
+ "0x476320": "vertrix_input_queue_acknowledge_full",
  "0x4764a0": "vertrix_slot_store_call",
  "0x476530": "vertrix_slot_search_call",
  "0x476590": "vertrix_two_codes_call",
@@ -1238,6 +1239,8 @@
  "0x4b7e80": "vertrix_wave_load",
  "0x4b8170": "vertrix_two_step_call",
  "0x4b8fbc": "vertrix_record_prefix_sum",
+ "0x4b9ce0": "vertrix_return_unchanged",
+ "0x4bb260": "vertrix_return_unchanged",
  "0x4c0990": "vertrix_object_release_links",
  "0x4c0b51": "vertrix_object_is_idle",
  "0x4c3fa0": "vertrix_object_init_4c3fa0",
@@ -1246,7 +1249,10 @@
  "0x4c5be0": "vertrix_edx_to_eax_call",
  "0x4c5bf0": "vertrix_return_ebx",
  "0x4c5c10": "vertrix_return_zero",
+ "0x4c5c20": "vertrix_return_unchanged",
  "0x4c5d60": "vertrix_scaled_round",
+ "0x4c6a80": "vertrix_return_unchanged",
+ "0x4c93c0": "vertrix_return_unchanged",
  "0x4c9840": "vertrix_round_up",
  "0x4c9860": "vertrix_rtl_copy_rows",
  "0x4c98d0": "vertrix_rtl_copy_blocks",
@@ -1347,5 +1353,7 @@
  "0x4df884": "vertrix_rtl_length_limit",
  "0x4df8a8": "vertrix_rtl_wide_byte_count",
  "0x4df914": "vertrix_rtl_pad_zeros",
- "0x4dfa7c": "vertrix_rtl_distribute_slack"
+ "0x4dfa7c": "vertrix_rtl_distribute_slack",
+ "0x4e3697": "vertrix_return_unchanged",
+ "0x4ec8c0": "vertrix_return_unchanged"
 }

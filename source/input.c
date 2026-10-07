@@ -89,6 +89,30 @@ void vertrix_input_queue_acknowledge(VertrixInputQueue *queue)
     memset(&queue->current, 0, sizeof(queue->current));
 }
 
+int vertrix_input_queue_acknowledge_full(void *actions, size_t size, uint32_t base_handle,
+                                         uint32_t index, VertrixMemoryWrite write, void *context,
+                                         uint32_t *result)
+{
+    size_t offset = (size_t)(index & 0xffff) * 0x60;
+    if (!actions || !write || !result || offset > size || size - offset < 0x1c)
+    {
+        return 0;
+    }
+    uint32_t handle = base_handle + (uint32_t)offset;
+    if (!write(0x54d634, 4, handle, context))
+    {
+        return 0;
+    }
+    vertrix_actor_storage_write(actions, size, offset + 0x14, 2, 0);
+    vertrix_actor_storage_write(actions, size, offset + 0x18, 4, 0);
+    vertrix_actor_storage_write(actions, size, offset + 4, 1, 0);
+    vertrix_actor_storage_write(actions, size, offset + 8, 4, 0);
+    vertrix_actor_storage_write(actions, size, offset + 0xc, 4, 0);
+    vertrix_actor_storage_write(actions, size, offset + 0x10, 4, 0);
+    *result = handle + 4;
+    return 1;
+}
+
 int vertrix_input_queue_push(VertrixInputQueue *queue, const VertrixInputEvent *event)
 {
     VertrixInputNode *node = malloc(sizeof(*node));

@@ -8,8 +8,15 @@
     "0x471ee0": 1024,
     "0x477930": 1024,
     "0x47f8f0": 1024,
-    "0x4b3360": 1024
+    "0x4b3360": 1024,
+    "0x4b9ce0": 1024,
+    "0x4bb260": 1024,
+    "0x4c5c20": 1024,
+    "0x4c6a80": 1024,
+    "0x4c93c0": 1024,
+    "0x4e3697": 1024,
+    "0x4ec8c0": 1024
   },
-  "total_original_executions": 8192,
+  "total_original_executions": 15360,
   "scope": "Complete callable entrypoints return incoming EAX with no memory writes, unchanged general registers and arithmetic flags. No callees stubbed. The shared name describes this behavior; game-specific roles remain unknown."
 }

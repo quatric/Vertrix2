@@ -7387,7 +7387,7 @@
   "virtual": [],
   "address": 5125780
  },
- "f4e3697": {
+ "return_unchanged_4e3697": {
   "callees": {},
   "stack": 64,
   "arguments": 0,

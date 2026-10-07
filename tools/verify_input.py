@@ -273,6 +273,71 @@ def verify_full_ready(native, oracle, rng):
     assert completed == 1024
     return completed
 
+def verify_full_acknowledge(native, oracle, rng):
+    import struct
+    from original import BOARD
+    Write = ctypes.CFUNCTYPE(ctypes.c_int,ctypes.c_uint32,ctypes.c_uint,ctypes.c_uint32,ctypes.c_void_p)
+    native.vertrix_input_queue_acknowledge_full.argtypes = [ctypes.c_void_p,ctypes.c_size_t,
+        ctypes.c_uint32,ctypes.c_uint32,Write,ctypes.c_void_p,ctypes.POINTER(ctypes.c_uint32)]
+    events = []
+    storage = None
+    fail = False
+    mutate = False
+    @Write
+    def publish(address,width,value,context):
+        events.append((address,width,value,context))
+        if mutate:
+            # A publication observer can mutate fields which the original then clears,
+            # and untouched padding which must survive.
+            ctypes.memmove(ctypes.addressof(storage)+5,b'xyz',3)
+            ctypes.memmove(ctypes.addressof(storage)+8,b'abcd',4)
+        return not fail
+    completed = 0
+    for state in range(256):
+        for index in (0,1,2,0x10003):
+            raw = bytearray(rng.randbytes(4*0x60))
+            raw[(index & 0xffff)*0x60+4] = state
+            storage = ctypes.create_string_buffer(bytes(raw),len(raw))
+            oracle.cpu.mem_write(BOARD,bytes(raw))
+            wanted = oracle.call(0x476320,eax=BOARD,edx=index,ebx=rng.getrandbits(32),ecx=rng.getrandbits(32))
+            result = ctypes.c_uint32(0xdeadbeef)
+            events.clear()
+            assert native.vertrix_input_queue_acknowledge_full(storage,len(raw),BOARD,index,publish,0x1234,ctypes.byref(result))
+            selected = BOARD+(index & 0xffff)*0x60
+            assert events == [(0x54d634,4,selected,0x1234)]
+            assert struct.unpack('<I',oracle.cpu.mem_read(0x54d634,4))[0] == selected
+            assert wanted == result.value == selected+4
+            assert storage.raw == bytes(oracle.cpu.mem_read(BOARD,len(raw)))
+            completed += 1
+    # Invalid calls leave memory/output and do not publish.
+    events.clear(); before = storage.raw; result = ctypes.c_uint32(0xdeadbeef)
+    assert not native.vertrix_input_queue_acknowledge_full(storage,0x1b,BOARD,0,publish,0x1234,ctypes.byref(result))
+    assert not native.vertrix_input_queue_acknowledge_full(None,len(storage),BOARD,0,publish,0x1234,ctypes.byref(result))
+    assert not events and result.value==0xdeadbeef and storage.raw==before
+    fail = mutate = True
+    assert not native.vertrix_input_queue_acknowledge_full(storage,len(storage),BOARD,0,publish,0x1234,ctypes.byref(result))
+    assert result.value==0xdeadbeef and storage.raw[5:12]==b'xyzabcd'
+    fail = False
+    from unicorn import UC_HOOK_CODE
+    observed_publications = []
+    def publication_observer(cpu,address,size,context):
+        observed_publications.append(struct.unpack('<I',cpu.mem_read(0x54d634,4))[0])
+        cpu.mem_write(BOARD+5,b'xyz')
+        cpu.mem_write(BOARD+8,b'abcd')
+    oracle.cpu.mem_write(BOARD,storage.raw)
+    hook = oracle.cpu.hook_add(UC_HOOK_CODE,publication_observer,begin=0x475790,end=0x475790)
+    try:
+        wanted = oracle.call(0x476320,eax=BOARD,edx=0,ebx=7,ecx=8)
+    finally:
+        oracle.cpu.hook_del(hook)
+    assert observed_publications == [BOARD]
+    assert native.vertrix_input_queue_acknowledge_full(storage,len(storage),BOARD,0,publish,0x1234,ctypes.byref(result))
+    assert storage.raw[5:8]==b'xyz' and storage.raw[8:12]==bytes(4)
+    assert storage.raw == bytes(oracle.cpu.mem_read(BOARD,len(storage))) and result.value == wanted
+    completed += 1
+    assert completed == 1025
+    return completed
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("executable", type=Path)
@@ -323,15 +388,17 @@ def main():
     action_comparisons = verify_actions(native, oracle, rng)
     configuration_comparisons = verify_configuration(native, oracle, rng)
     full_ready_comparisons = verify_full_ready(native,oracle,rng)
+    full_acknowledge_comparisons = verify_full_acknowledge(native,oracle,rng)
     report = {"status": "passed", "repeat_scheduler_comparisons": len(cases),
               "full_ready_check_comparisons": full_ready_comparisons,
+              "full_acknowledge_comparisons": full_acknowledge_comparisons,
               "full_repeat_scheduler_comparisons": full_repeat_comparisons,
               "repeat_insertion_mutation_cases": repeat_mutation_cases,
               "repeat_missing_boundary_cases": 1,
               "queue_operation_comparisons": queue_comparisons,
               "integrated_action_comparisons": action_comparisons,
               "control_configuration_comparisons": configuration_comparisons,
-              "scope": "Full original 0x475d70 ready-check return and whole unchanged actor storage match all 256 state bytes with varied caller registers. Full original475e50 insertion target/registers/return/state matched independently, including live payload/state mutation and fixed due count; missing insertion boundary retains timing updates. Original repeat scheduler and FIFO action consumption/update/acknowledgment; host allocation replaces original pool; press/release wrappers, repeat generation and deferred delivery integrated; polling, bindings and gameplay dispatch remain separate"}
+              "scope": "Full original 0x476320 record selection/global publication/return and entire action-table mutation match across state bytes and low-word indices. Failed publication retains callback effects; invalid storage rejects before publication. Full original 0x475d70 ready-check return and whole unchanged actor storage match all 256 state bytes with varied caller registers. Full original475e50 insertion target/registers/return/state matched independently, including live payload/state mutation and fixed due count; missing insertion boundary retains timing updates. Original repeat scheduler and FIFO action consumption/update/acknowledgment; host allocation replaces original pool; press/release wrappers, repeat generation and deferred delivery integrated; polling, bindings and gameplay dispatch remain separate"}
     (args.build_dir / "input-verification.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report, indent=2))
 

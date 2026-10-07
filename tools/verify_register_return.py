@@ -13,7 +13,9 @@ from unicorn.x86_const import (
 )
 
 ADDRESSES = (0x404580, 0x425f40, 0x4523b0, 0x4713c0,
-             0x471ee0, 0x477930, 0x47f8f0, 0x4b3360)
+             0x471ee0, 0x477930, 0x47f8f0, 0x4b3360,
+             0x4b9ce0, 0x4bb260, 0x4c5c20, 0x4c6a80,
+             0x4c93c0, 0x4e3697, 0x4ec8c0)
 REGISTERS = (UC_X86_REG_EAX, UC_X86_REG_EDX, UC_X86_REG_EBX, UC_X86_REG_ECX,
              UC_X86_REG_ESI, UC_X86_REG_EDI, UC_X86_REG_EBP)
 

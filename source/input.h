@@ -1,6 +1,7 @@
 #ifndef VERTRIX_INPUT_H
 #define VERTRIX_INPUT_H
 
+#include "actor_gate.h"
 #include "call_glue.h"
 #include <stddef.h>
 #include <stdint.h>
@@ -64,6 +65,14 @@ int vertrix_input_queue_push(VertrixInputQueue *queue, const VertrixInputEvent *
 void vertrix_input_queue_consume(VertrixInputQueue *queue);
 /* 0x476320: acknowledge current action without removing another event. */
 void vertrix_input_queue_acknowledge(VertrixInputQueue *queue);
+/* Original 0x476320: low 16 bits of index select a 96-byte action record. Publish
+ * its handle at global 0x54d634 before clearing the event state/payload and its
+ * word +0x14/dword +0x18. Preserve padding and other fields; eax is record +4.
+ * Invalid table/output/boundary rejects before mutation. Failed global write
+ * retains the boundary's effects, leaves the record uncleared and result unchanged. */
+int vertrix_input_queue_acknowledge_full(void *actions, size_t size, uint32_t base_handle,
+                                         uint32_t index, VertrixMemoryWrite write, void *context,
+                                         uint32_t *result);
 /* 0x475d70: only state exactly 1 is ready. */
 int vertrix_input_queue_ready(const VertrixInputQueue *queue);
 /* Original 0x475d70: read the current event state at original actor +4 through

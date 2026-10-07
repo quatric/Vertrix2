@@ -2,11 +2,12 @@
   "status": "passed",
   "repeat_scheduler_comparisons": 6420,
   "full_ready_check_comparisons": 1024,
+  "full_acknowledge_comparisons": 1025,
   "full_repeat_scheduler_comparisons": 6422,
   "repeat_insertion_mutation_cases": 1,
   "repeat_missing_boundary_cases": 1,
   "queue_operation_comparisons": 126482,
   "integrated_action_comparisons": 80000,
   "control_configuration_comparisons": 500,
-  "scope": "Full original 0x475d70 ready-check return and whole unchanged actor storage match all 256 state bytes with varied caller registers. Full original475e50 insertion target/registers/return/state matched independently, including live payload/state mutation and fixed due count; missing insertion boundary retains timing updates. Original repeat scheduler and FIFO action consumption/update/acknowledgment; host allocation replaces original pool; press/release wrappers, repeat generation and deferred delivery integrated; polling, bindings and gameplay dispatch remain separate"
+  "scope": "Full original 0x476320 record selection/global publication/return and entire action-table mutation match across state bytes and low-word indices. Failed publication retains callback effects; invalid storage rejects before publication. Full original 0x475d70 ready-check return and whole unchanged actor storage match all 256 state bytes with varied caller registers. Full original475e50 insertion target/registers/return/state matched independently, including live payload/state mutation and fixed due count; missing insertion boundary retains timing updates. Original repeat scheduler and FIFO action consumption/update/acknowledgment; host allocation replaces original pool; press/release wrappers, repeat generation and deferred delivery integrated; polling, bindings and gameplay dispatch remain separate"
 }
