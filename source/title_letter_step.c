@@ -451,6 +451,69 @@ int vertrix_title_letter_fight_restart(uint8_t *actor, size_t size, uint32_t ela
     return vertrix_ui_center_on_anchor(actor, size, descriptor, screen_unscaled, screen_mode);
 }
 
+static uint32_t fight_effect_call(const VertrixCalls *calls, uint8_t *actor, size_t size,
+                                  uint32_t object, uint32_t elapsed, uint32_t edx, uint32_t ebx,
+                                  uint32_t ecx, int restart)
+{
+    if (!calls || !calls->call || !actor || size < VERTRIX_LETTER_STORAGE_SIZE)
+    {
+        return 0;
+    }
+    uint32_t counter = get(actor, COUNTER, 4) + elapsed;
+    if (counter >= get(actor, PERIOD, 4))
+    {
+        edx = (uint32_t)(int32_t)(int16_t)get(actor, EFFECT_TARGET, 2);
+    }
+    int arrived = 0;
+    effect_step(actor, size, elapsed, &arrived);
+    if (arrived)
+    {
+        if (restart)
+        {
+            ebx = (uint32_t)(int32_t)(int16_t)get(actor, POSITION_X, 2);
+            ecx = (uint32_t)(int32_t)(int16_t)get(actor, POSITION_Y, 2);
+            put(actor, LIMIT, 2, 0xa0);
+            put(actor, RADIUS, 2, 1);
+            put(actor, ORIGIN_X, 2, ebx);
+            put(actor, ORIGIN_Y, 2, ecx);
+            VertrixCallSite draw = {
+                .target = 0x4826c0, .eax = 0x598d30, .edx = 0x168, .ebx = ebx, .ecx = ecx};
+            uint32_t angle = calls->call(&draw, calls->context);
+            put(actor, ANGLE, 2, angle);
+            draw = (VertrixCallSite){
+                .target = 0x4826c0, .eax = 0x598d30, .edx = 10, .ebx = ebx, .ecx = ecx};
+            uint32_t rate = calls->call(&draw, calls->context);
+            put(actor, ANGLE_STEP, 2, rate + 10u);
+            put(actor, RADIUS_STEP, 2, 2);
+            edx = 0x45a4f0;
+        }
+        else
+        {
+            put(actor, EFFECT_TARGET, 2, 0);
+            put(actor, EFFECT_STEP, 2, 5);
+            edx = 0x45a440;
+        }
+        put(actor, 0x154, 4, edx);
+    }
+    VertrixCallSite center = {
+        .target = 0x457890, .eax = object, .edx = edx, .ebx = ebx, .ecx = ecx};
+    return calls->call(&center, calls->context);
+}
+
+uint32_t vertrix_title_letter_fight_settle_call(const VertrixCalls *calls, uint8_t *actor,
+                                                size_t size, uint32_t object, uint32_t elapsed,
+                                                uint32_t edx, uint32_t ebx)
+{
+    return fight_effect_call(calls, actor, size, object, elapsed, edx, ebx, object, 0);
+}
+
+uint32_t vertrix_title_letter_fight_restart_call(const VertrixCalls *calls, uint8_t *actor,
+                                                 size_t size, uint32_t object, uint32_t elapsed,
+                                                 uint32_t edx, uint32_t ebx, uint32_t ecx)
+{
+    return fight_effect_call(calls, actor, size, object, elapsed, edx, ebx, ecx, 1);
+}
+
 int vertrix_title_letter_fly_out(uint8_t *actor, size_t size, uint32_t elapsed,
                                  const VertrixAngleTables *tables, VertrixRotationTrace *trace,
                                  const VertrixResourceDimensions *descriptor,

@@ -20,6 +20,28 @@
     "native_missing_boundary_guard_cases": 4,
     "scope": "Complete normal 459d60 and 459e00 execute unmodified with real timer, quotient, remainder, transition and setters; only final 457890 is supplied. Every final call target/eax/edx/ebx/ecx, full 0x160 actor bytes and original EAX compare. Random saved FS:[0] tokens restore and return, independently of callback EAX; final callback actor mutations remain live. Exceptional unwinding and callbacks that alter the saved exception stack local are outside this boundary."
   },
+  "full_fight_effect_abi": {
+    "complete_original_executions": {
+      "0x45a3e0": 4096,
+      "0x45a440": 4096
+    },
+    "branch_fixtures": {
+      "settle_not_due": 820,
+      "settle_moving": 819,
+      "settle_arrived": 819,
+      "settle_wrapped": 819,
+      "settle_random": 819,
+      "restart_not_due": 820,
+      "restart_moving": 819,
+      "restart_arrived": 819,
+      "restart_wrapped": 819,
+      "restart_random": 819
+    },
+    "draw_boundary_calls": 2180,
+    "live_actor_mutation_calls": 6922,
+    "native_missing_boundary_guard_cases": 4,
+    "scope": "Complete normal 45a3e0 and 45a440 run unchanged with real timer, quotient, remainder, signed transition and setters. Only draws 4826c0 and final centering 457890 are supplied; every target/eax/edx/ebx/ecx, entire 0x160 actor before each call and after completion, and final original EAX compare. Arbitrary caller registers, wrapped timer values, full-width draw returns and live actor mutations at either draw and centering are covered. Callbacks preserve input registers other than returned EAX; faults and exceptional unwinding remain outside the normal boundary."
+  },
   "status": "passed",
   "complete_original_executions": {
     "not_due": 984,

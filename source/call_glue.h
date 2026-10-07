@@ -1,5 +1,6 @@
 #ifndef VERTRIX_CALL_GLUE_H
 #define VERTRIX_CALL_GLUE_H
+#include "actor_gate.h"
 #include <stddef.h>
 #include <stdint.h>
 
@@ -328,13 +329,24 @@ uint32_t vertrix_offset_pair_call(const VertrixCalls *calls, uint32_t frame, uin
 uint32_t vertrix_offset_pair_clamp_call(const VertrixCalls *calls, uint32_t frame, uint32_t flag,
                                         uint32_t eax, uint32_t edx);
 
-/* Original 0x41d5b0 (eax = object; the exception frame is ignored and the original's eax, the
- * restored exception chain, is not comparable): 0x418820 runs on the object; when the global
+/* Original fragment 0x41d5b0 (eax = object; the exception frame is ignored and the original's eax,
+ * the restored exception chain, is not comparable): 0x418820 runs on the object; when the global
  * 0x532a8c (gate) is zero, 0x4177b0 on the global 0x532aa4 (value) gives a signed byte, 0xff
  * meaning none, which is stored (sign extended) to the global 0x532ab4 (*stored) before
  * 0x418820 runs again with the second handler. Returns the last call's eax, or zero. */
 uint32_t vertrix_gate_dispatch_call(const VertrixCalls *calls, uint32_t object, uint32_t gate,
                                     uint32_t value, uint32_t *stored);
+
+/* Original 0x41d5b0: normal-return dispatch with live reads of gate 0x532a8c
+ * and value 0x532aa4 after the first runtime callback, and a signed-byte
+ * result stored at 0x532ab4 before the second dispatch. Returns the saved
+ * previous_exception token on every normal branch; runtime EAX is ignored.
+ * Call/read/write boundaries are mandatory. Missing boundaries reject before
+ * callbacks; a later memory failure returns zero, retaining completed effects.
+ * Exception unwinding stays outside this normal-return boundary. */
+uint32_t vertrix_gate_dispatch_call_full(const VertrixCalls *calls, uint32_t object,
+                                         uint32_t previous_exception, VertrixMemoryRead read,
+                                         VertrixMemoryWrite write, void *context);
 
 /* Original 0x416010 (frame is the token for ebp, the exception frame being ignored; the original's
  * eax is the restored exception chain and is not comparable): the global 0x532c40 (*flag) is set

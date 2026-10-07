@@ -821,6 +821,44 @@ uint32_t vertrix_gate_dispatch_call(const VertrixCalls *calls, uint32_t object, 
                         0);
 }
 
+uint32_t vertrix_gate_dispatch_call_full(const VertrixCalls *calls, uint32_t object,
+                                         uint32_t previous_exception, VertrixMemoryRead read,
+                                         VertrixMemoryWrite write, void *context)
+{
+    if (!calls || !calls->call || !read || !write)
+    {
+        return 0;
+    }
+    vertrix_call(calls, DISPATCH_FIRST, object, DISPATCH_EDX_FIRST, DISPATCH_EBX, object, 0);
+    uint32_t gate, value;
+    if (!read(0x532a8c, 4, &gate, context))
+    {
+        return 0;
+    }
+    if (gate)
+    {
+        return previous_exception;
+    }
+    if (!read(0x532aa4, 4, &value, context))
+    {
+        return 0;
+    }
+    uint32_t probe =
+        vertrix_call(calls, DISPATCH_PROBE, value, DISPATCH_EDX_FIRST, DISPATCH_EBX, object, 0);
+    uint32_t byte = probe & 0xffu;
+    if (byte == DISPATCH_NONE)
+    {
+        return previous_exception;
+    }
+    uint32_t stored = byte < 0x80u ? byte : byte | 0xffffff00u;
+    if (!write(0x532ab4, 4, stored, context))
+    {
+        return 0;
+    }
+    vertrix_call(calls, DISPATCH_FIRST, object, DISPATCH_EDX_SECOND, DISPATCH_EBX, object, 0);
+    return previous_exception;
+}
+
 enum
 {
     NOTICE_PROBE = 0x47f9b0,

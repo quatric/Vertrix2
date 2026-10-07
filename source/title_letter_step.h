@@ -95,9 +95,9 @@ typedef struct
     void *context;
 } VertrixFightServices;
 
-/* Original handlers 0x45a290, 0x45a3e0 and 0x45a440, the letters of the second title word. They
- * are 0x459be0, 0x459d60 and 0x459e00 with other endings: 0x45a290 parks at the origin, plays the
- * fight pair, sets +0x48 = 0, target 0x96, step 5 and takes 0x45a3e0 (no voice); 0x45a3e0
+/* Original 0x45a290, with state fragments of 0x45a3e0 and 0x45a440, the letters of the second title
+ * word. They are 0x459be0, 0x459d60 and 0x459e00 with other endings: 0x45a290 parks at the origin,
+ * plays the fight pair, sets +0x48 = 0, target 0x96, step 5 and takes 0x45a3e0 (no voice); 0x45a3e0
  * settles (target 0, step 5) into 0x45a440; 0x45a440 sets +0x30 = 0xa0 and the words +0x2a = 1,
  * +0x2c, +0x2e from +8 and +0xa, draws +0x24 (below 0x168) and +0x28 (below 10, plus 10), sets
  * +0x32 = 2 and takes handler 0x45a4f0. */
@@ -106,13 +106,29 @@ int vertrix_title_letter_fight_count(uint8_t *actor, size_t size, uint32_t elaps
                                      const VertrixResourceDimensions *descriptor,
                                      uint8_t screen_unscaled, uint8_t screen_mode,
                                      const VertrixFightServices *services);
+/* Original fragment 0x45a3e0: state recovery with native centering and status return only. */
 int vertrix_title_letter_fight_settle(uint8_t *actor, size_t size, uint32_t elapsed,
                                       const VertrixResourceDimensions *descriptor,
                                       uint8_t screen_unscaled, uint8_t screen_mode);
+/* Original fragment 0x45a440: state recovery with projected draw service and status return. */
 int vertrix_title_letter_fight_restart(uint8_t *actor, size_t size, uint32_t elapsed,
                                        const VertrixResourceDimensions *descriptor,
                                        uint8_t screen_unscaled, uint8_t screen_mode,
                                        const VertrixFightServices *services);
+/* Original 0x45a3e0: the complete normal effect settle, returning the mandatory 0x457890
+ * callback's eax. edx and ebx are the caller's registers; ecx becomes object. Short storage or
+ * missing callback returns zero before touching the actor. */
+uint32_t vertrix_title_letter_fight_settle_call(const VertrixCalls *calls, uint8_t *actor,
+                                                size_t size, uint32_t object, uint32_t elapsed,
+                                                uint32_t edx, uint32_t ebx);
+/* Original 0x45a440: the complete normal restart, including the two 0x4826c0 draws and final
+ * 0x457890 call through the mandatory callback. Returns the final call's eax. The three register
+ * inputs are the caller's; arrival substitutes the signed position words for ebx/ecx before
+ * drawing. Callback actor mutations are live. Missing callback or short storage changes nothing. */
+uint32_t vertrix_title_letter_fight_restart_call(const VertrixCalls *calls, uint8_t *actor,
+                                                 size_t size, uint32_t object, uint32_t elapsed,
+                                                 uint32_t edx, uint32_t ebx, uint32_t ecx);
+
 /* Original handler 0x45a4f0 (the fight letters flying out): handler 0x459ec0 up to its level test.
  * When the frame is due and the level byte is zero the handler token becomes zero and *finished
  * is set (the original stores 1 at 0x532a40, which the caller applies). */

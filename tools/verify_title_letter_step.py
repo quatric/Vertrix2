@@ -133,6 +133,110 @@ def verify_full_effect(args, native):
                      'outside this boundary.'}
 
 
+def verify_full_fight_effect(args, native):
+    """Compare normal fight settle/restart ABI and actor state at every supplied call."""
+    original = Original(args.executable)
+    cpu = original.cpu
+    rng = random.Random(0x45a440)
+    original_events, native_events = [], []
+    returns, patches = [], []
+    buffer = None
+    total, shapes = {}, {}
+    mutation_calls, draw_calls = 0, 0
+
+    def original_boundary(address, eax, edx, ebx, ecx, stack):
+        index = len(original_events)
+        original_events.append((address, eax, edx, ebx, ecx, bytes(cpu.mem_read(OBJ, SIZE))))
+        for offset, data in patches[index]:
+            cpu.mem_write(OBJ + offset, data)
+        return returns[index]
+
+    stubs = Stubs(cpu, original_boundary)
+    stubs.add(0x4826c0)
+    stubs.add(0x457890)
+
+    @Call
+    def boundary(site, context):
+        call = site.contents
+        index = len(native_events)
+        native_events.append((call.target, call.eax, call.edx, call.ebx, call.ecx, bytes(buffer)))
+        for offset, data in patches[index]:
+            c.memmove(c.addressof(buffer) + offset, data, len(data))
+        return returns[index]
+
+    calls = Calls(boundary, None)
+    for address, name in ((0x45a3e0, 'settle'), (0x45a440, 'restart')):
+        function = getattr(native, 'vertrix_title_letter_fight_' + name + '_call')
+        function.argtypes = [c.POINTER(Calls), c.POINTER(c.c_uint8), c.c_size_t,
+                             c.c_uint32, c.c_uint32, c.c_uint32, c.c_uint32] + (
+                                 [c.c_uint32] if name == 'restart' else [])
+        function.restype = c.c_uint32
+        for case in range(args.cases):
+            data = bytearray(rng.randbytes(SIZE))
+            shape = ('not_due', 'moving', 'arrived', 'wrapped', 'random')[case % 5]
+            period, counter = rng.choice([0, 1, 12, 60, rng.getrandbits(32)]), rng.getrandbits(32)
+            elapsed = rng.choice([0, 1, 16, 0xffffffff, rng.getrandbits(32)])
+            current, target = rng.randrange(-32768, 32768), rng.randrange(-32768, 32768)
+            step = rng.choice([-32768, -1, 0, 1, 32767, rng.randrange(-32768, 32768)])
+            if shape == 'not_due':
+                counter, elapsed, period = 0, 0, 1
+            elif shape == 'moving':
+                counter, elapsed, period = 1, 0, 1
+                current, target, step = -200, 200, 1
+            elif shape == 'arrived':
+                counter, elapsed, period = rng.getrandbits(32), 0, 0
+                current = target
+            elif shape == 'wrapped':
+                counter, elapsed, period = 0xffffffff, 1, 1
+            struct.pack_into('<II', data, 0xbc, counter, period)
+            struct.pack_into('<hhh', data, 0x48, current, target, step)
+            cpu.mem_write(0x5bd834, struct.pack('<I', elapsed))
+            cpu.mem_write(OBJ, bytes(data))
+            edx, ebx, ecx = [rng.getrandbits(32) for _ in range(3)]
+            # Full-width draw returns deliberately exercise narrowing and wrapped rate +10.
+            returns = [rng.choice([0, 1, 0xffffffff, 0xfffffff6, rng.getrandbits(32)])
+                       for _ in range(3)]
+            patches = [[(offset, rng.randbytes(width)) for offset, width in
+                        ((0x08, 4), (0x24, 2), (0x28, 12), (0x48, 6),
+                         (0xbc, 8), (0x154, 4), (0x15c, 4))] if case % 3 else []
+                       for _ in range(3)]
+            original_events.clear()
+            native_events.clear()
+            result = original.call(address, eax=OBJ, edx=edx, ebx=ebx, ecx=ecx)
+            want = bytes(cpu.mem_read(OBJ, SIZE))
+            buffer = (c.c_uint8 * SIZE).from_buffer_copy(bytes(data))
+            extra = (ecx,) if name == 'restart' else ()
+            got = function(c.byref(calls), buffer, SIZE, OBJ, elapsed, edx, ebx, *extra)
+            assert got == result == returns[len(original_events) - 1], (name, case, got, result)
+            assert original_events == native_events, (name, case, original_events, native_events)
+            assert original_events[-1][0] == 0x457890
+            assert bytes(buffer) == want, (name, case)
+            total[hex(address)] = total.get(hex(address), 0) + 1
+            shapes[name + '_' + shape] = shapes.get(name + '_' + shape, 0) + 1
+            mutation_calls += sum(bool(patches[i]) for i in range(len(original_events)))
+            draw_calls += sum(event[0] == 0x4826c0 for event in original_events)
+        guard_buffer = (c.c_uint8 * SIZE).from_buffer_copy(bytes(data))
+        before = bytes(guard_buffer)
+        empty_calls = Calls(Call(), None)
+        for missing in (None, c.byref(empty_calls)):
+            assert function(missing, guard_buffer, SIZE, OBJ, elapsed, edx, ebx, *extra) == 0
+            assert bytes(guard_buffer) == before
+    assert total == {'0x45a3e0': args.cases, '0x45a440': args.cases}
+    if args.cases >= 5:
+        assert draw_calls > 0 and mutation_calls > 0
+    return {'complete_original_executions': total, 'branch_fixtures': shapes,
+            'draw_boundary_calls': draw_calls, 'live_actor_mutation_calls': mutation_calls,
+            'native_missing_boundary_guard_cases': 4,
+            'scope': 'Complete normal 45a3e0 and 45a440 run unchanged with real timer, quotient, '
+                     'remainder, signed transition and setters. Only draws 4826c0 and final '
+                     'centering 457890 are supplied; every target/eax/edx/ebx/ecx, entire 0x160 '
+                     'actor before each call and after completion, and final original EAX '
+                     'compare. Arbitrary caller registers, wrapped timer values, full-width draw '
+                     'returns and live actor mutations at either draw and centering are covered. '
+                     'Callbacks preserve input registers other than returned EAX; faults and '
+                     'exceptional unwinding remain outside the normal boundary.'}
+
+
 def main():
     args = vs.parse(__doc__)
     n = vs.build(args, 'title-letter-step', ['title_letter_step.c', 'actor_angle.c', 'actor_fields.c', 'actor_storage.c', 'fixed_point.c', 'rotation.c', 'word_transition.c', 'dword_transition.c', 'ui_slide_setup.c', 'render_geometry.c', 'surface.c', 'render_dispatch.c'])
@@ -348,8 +452,10 @@ def main():
             if struct.unpack_from('<I', want, 0x154)[0] != struct.unpack_from('<I', data, 0x154)[0]:
                 totals[name + '_arrivals'] = totals.get(name + '_arrivals', 0) + 1
     full_effect = verify_full_effect(args, n)
+    full_fight_effect = verify_full_fight_effect(args, n)
     vs.write_report(args, 'title-letter-step', {
         'full_effect_abi': full_effect,
+        'full_fight_effect_abi': full_fight_effect,
         'status': 'passed', 'complete_original_executions': totals,
         'scope': 'State comparisons only for the legacy status APIs: original handlers 0x459be0, 0x459d60, 0x459e00, 0x45a290, 0x45a3e0, 0x45a440, 0x45a620, 0x45a750 and 0x45a830 (with the real 0x4ac500/0x4ac540/0x4ac5b0, 0x4ad060, 0x4ad260, 0x4ad530 and 0x457890/0x4b14c0) runs in the oracle; only the sound players 0x417260/0x417290/0x4171e0/0x417220 and the generator draw 0x4826c0 are observed and returned. The first 0x160 actor bytes, including the handler token at +0x154, compare after every call.'})
 

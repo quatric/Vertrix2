@@ -1,5 +1,20 @@
 {
   "status": "passed",
+  "gate_dispatch_full": {
+    "complete_original_executions": 4096,
+    "branch_counts": {
+      "gate_blocked": 2048,
+      "probe_none": 5,
+      "second_dispatch": 2043
+    },
+    "exact_callback_register_comparisons": 8187,
+    "live_gate_mutation_cases": 2731,
+    "live_value_mutation_cases": 2048,
+    "distinct_probe_low_bytes": 256,
+    "native_missing_boundary_rejections": 4,
+    "native_late_read_failure_cases": 1,
+    "scope": "Normal returns only: exact saved exception token, live global reads/writes, all callback input registers, 64 independent global bytes, callback mutations and restored original exception chain/caller registers. Exception unwinding is outside this boundary."
+  },
   "complete_original_executions": {
     "0x4182f0": 2048,
     "0x418550": 2048,
@@ -41,7 +56,7 @@
     "0x482610": 2048,
     "0x478bf0": 2048,
     "0x478c40": 2048,
-    "0x41d5b0": 2048,
+    "0x41d5b0": 6144,
     "0x472d00": 2048,
     "0x476530": 8192,
     "0x4777c0": 2048,
@@ -87,8 +102,8 @@
     "0x4b7da0": 2048,
     "0x417f40": 4096
   },
-  "total_verified_executions": 184320,
+  "total_verified_executions": 188416,
   "matcher_reset_full_return_memory_register_cases": 4096,
-  "scope": "Each wrapper executes completely in the original with its callees stubbed and logged; every callee call (address and registers), the returned eax and the object storage compare. Matcher reset 417f40 additionally compares incoming EAX preservation, exact original global write 540014=0, surrounding 32-byte memory, unchanged pattern/length and original EDX/EBX/ECX preservation.",
-  "matcher_reset_native_null_rejections": 1
+  "matcher_reset_native_null_rejections": 1,
+  "scope": "Each wrapper executes completely in the original with its callees stubbed and logged; callee calls and recovered storage effects compare. Return-preserving helpers compare EAX; legacy void and exception helpers compare documented recovered effects. Full gate dispatch separately verifies every normal return, live memory access and callback register under mutations. Matcher reset 417f40 additionally compares incoming EAX preservation, exact original global write 540014=0, surrounding 32-byte memory, unchanged pattern/length and original EDX/EBX/ECX preservation."
 }

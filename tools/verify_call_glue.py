@@ -7,7 +7,7 @@ import struct
 from pathlib import Path
 
 from original import Original, STACK
-from unicorn import UC_HOOK_MEM_WRITE
+from unicorn import UC_HOOK_MEM_WRITE, UC_HOOK_MEM_READ
 from unicorn.x86_const import (UC_X86_REG_ESI, UC_X86_REG_EDX, UC_X86_REG_EBX, UC_X86_REG_ECX)
 from oracle_kit import Stubs, build
 
@@ -42,12 +42,176 @@ CALLEES = {0x4ae010: 0, 0x418820: 0, 0x4177b0: 0, 0x4cea15: 0, 0x476160: 0, 0x47
            0x4ebe60: 0, 0x40a890: 0, 0x40a800: 0, 0x40ab20: 0, 0x487a20: 0, 0x48d630: 0, 0x4e7c90: 0, 0x487710: 0, 0x40aca0: 0, 0x47f190: 0, 0x479d70: 0, 0x476120: 0, 0x482b30: 0}
 
 
+def verify_gate_dispatch_full(n, args):
+    original = Original(args.executable)
+    cpu = original.cpu
+    BASE, SIZE = 0x532a80, 0x40
+    Read = c.CFUNCTYPE(c.c_int, U, c.c_uint, c.POINTER(U), c.c_void_p)
+    Write = c.CFUNCTYPE(c.c_int, U, c.c_uint, U, c.c_void_p)
+    n.vertrix_gate_dispatch_call_full.argtypes = [c.POINTER(Calls), U, U, Read, Write, c.c_void_p]
+    n.vertrix_gate_dispatch_call_full.restype = U
+    rng = random.Random(0x41d5b0)
+    host = bytearray(SIZE)
+    original_reads, original_writes, native_reads, native_writes = [], [], [], []
+    native_calls, original_observed, native_observed, errors = [], [], [], []
+    mode = 0
+    tokens = []
+    probe = changed_value = 0
+    failed_read = None
+
+    def track_read(cpu, access, address, width, value, context):
+        original_reads.append((address, width, int.from_bytes(cpu.mem_read(address, width), 'little')))
+
+    def track_write(cpu, access, address, width, value, context):
+        original_writes.append((address, width, value & 0xffffffff))
+
+    cpu.hook_add(UC_HOOK_MEM_READ, track_read, begin=BASE, end=BASE + SIZE - 1)
+    cpu.hook_add(UC_HOOK_MEM_WRITE, track_write, begin=BASE, end=BASE + SIZE - 1)
+
+    def callback_writes(index):
+        if index == 0:
+            return [(0x532a8c, 0 if mode in (0, 2, 5) else 1), (0x532aa4, changed_value)]
+        if index == 1:
+            return [(0x532a8c, 1), (0x532ab4, tokens[1])]
+        return [(0x532aa4, tokens[2])]
+
+    def handler(address, eax, edx, ebx, ecx, stack):
+        index = len(stubs.log) - 1
+        if index == 2:
+            original_observed.append(int.from_bytes(cpu.mem_read(0x532ab4, 4), 'little'))
+        for at, value in callback_writes(index):
+            cpu.mem_write(at, struct.pack('<I', value))
+        return probe if address == 0x4177b0 else tokens[index]
+
+    stubs = Stubs(cpu, handler)
+    stubs.add(0x418820)
+    stubs.add(0x4177b0)
+
+    @Call
+    def call(site, context):
+        x = site.contents
+        index = len(native_calls)
+        native_calls.append((x.target, x.eax, x.edx, x.ebx, x.ecx))
+        if index >= 3:
+            errors.append(('extra_callback', index))
+            return 0
+        if index == 2:
+            native_observed.append(int.from_bytes(host[0x34:0x38], 'little'))
+        for at, value in callback_writes(index):
+            host[at - BASE:at - BASE + 4] = value.to_bytes(4, 'little')
+        return probe if x.target == 0x4177b0 else tokens[index]
+
+    @Read
+    def read(address, width, value, context):
+        if address == failed_read:
+            return 0
+        offset = address - BASE
+        if width != 4 or not 0 <= offset <= SIZE - width:
+            errors.append(('read', address, width))
+            return 0
+        value[0] = int.from_bytes(host[offset:offset + width], 'little')
+        native_reads.append((address, width, value[0]))
+        return 1
+
+    @Write
+    def write(address, width, value, context):
+        offset = address - BASE
+        if width != 4 or not 0 <= offset <= SIZE - width:
+            errors.append(('write', address, width))
+            return 0
+        native_writes.append((address, width, value))
+        host[offset:offset + width] = value.to_bytes(width, 'little')
+        return 1
+
+    runtime = Calls(call, None)
+    branch_counts = {'gate_blocked': 0, 'probe_none': 0, 'second_dispatch': 0}
+    seen_bytes = set()
+    live_gate_changes = live_value_changes = 0
+    callback_comparisons = 0
+    for case in range(args.dispatch_cases):
+        mode = case % 6
+        memory = bytearray(rng.randbytes(SIZE))
+        initial_gate = 1 if mode == 0 else 0
+        initial_value = rng.getrandbits(32)
+        struct.pack_into('<I', memory, 0xc, initial_gate)
+        struct.pack_into('<I', memory, 0x24, initial_value)
+        host = bytearray(memory)
+        cpu.mem_write(BASE, bytes(memory))
+        previous_exception = (0, 0xffffffff)[case] if case < 2 else rng.getrandbits(32)
+        cpu.mem_write(0, struct.pack('<I', previous_exception))
+        probe = (rng.getrandbits(24) << 8) | (case & 0xff)
+        changed_value = initial_value ^ 0xffffffff
+        tokens = [rng.getrandbits(32) for _ in range(3)]
+        object = rng.getrandbits(32)
+        edx, ebx, ecx = (rng.getrandbits(32) for _ in range(3))
+        original_reads.clear()
+        original_writes.clear()
+        native_reads.clear()
+        native_writes.clear()
+        stubs.log.clear()
+        native_calls.clear()
+        original_observed.clear()
+        native_observed.clear()
+        errors.clear()
+        expected = original.call(0x41d5b0, eax=object, edx=edx, ebx=ebx, ecx=ecx)
+        got = n.vertrix_gate_dispatch_call_full(c.byref(runtime), object, previous_exception,
+                                                read, write, None)
+        assert not errors, (case, errors)
+        assert got == expected == previous_exception, (case, hex(got), hex(expected))
+        assert host == bytes(cpu.mem_read(BASE, SIZE)), case
+        assert native_calls == stubs.log, (case, native_calls, stubs.log)
+        assert native_reads == original_reads, (case, native_reads, original_reads)
+        assert native_writes == original_writes, (case, native_writes, original_writes)
+        assert native_observed == original_observed, case
+        assert int.from_bytes(cpu.mem_read(0, 4), 'little') == previous_exception, case
+        assert [cpu.reg_read(reg) for reg in (UC_X86_REG_EDX, UC_X86_REG_EBX, UC_X86_REG_ECX)] == [edx, ebx, ecx], case
+        callback_comparisons += len(native_calls)
+        live_gate_changes += initial_gate != (0 if mode in (0, 2, 5) else 1)
+        if len(native_calls) == 1:
+            branch_counts['gate_blocked'] += 1
+        else:
+            seen_bytes.add(probe & 0xff)
+            live_value_changes += changed_value != initial_value
+            branch_counts['probe_none' if len(native_calls) == 2 else 'second_dispatch'] += 1
+    assert sum(branch_counts.values()) == args.dispatch_cases
+    assert all(count > 0 for count in branch_counts.values())
+    if args.dispatch_cases >= 1536:
+        assert len(seen_bytes) == 256
+    assert live_gate_changes > 0 and live_value_changes > 0
+    null_read, null_write = Read(), Write()
+    empty_runtime = Calls(Call(), None)
+    missing = [(None, read, write), (c.byref(empty_runtime), read, write),
+               (c.byref(runtime), null_read, write), (c.byref(runtime), read, null_write)]
+    for boundary, reader, writer in missing:
+        before = bytes(host)
+        native_calls.clear()
+        assert n.vertrix_gate_dispatch_call_full(boundary, 0x801000, 0x12345678,
+                                                reader, writer, None) == 0
+        assert not native_calls and host == before
+    failed_read = 0x532a8c
+    mode = 0
+    native_calls.clear()
+    assert n.vertrix_gate_dispatch_call_full(c.byref(runtime), 0x801000, 0x12345678,
+                                            read, write, None) == 0
+    assert len(native_calls) == 1
+    assert int.from_bytes(host[0xc:0x10], 'little') == 0
+    return {'complete_original_executions': args.dispatch_cases, 'branch_counts': branch_counts,
+            'exact_callback_register_comparisons': callback_comparisons,
+            'live_gate_mutation_cases': live_gate_changes, 'live_value_mutation_cases': live_value_changes,
+            'distinct_probe_low_bytes': len(seen_bytes), 'native_missing_boundary_rejections': len(missing),
+            'native_late_read_failure_cases': 1,
+            'scope': 'Normal returns only: exact saved exception token, live global reads/writes, '
+                     'all callback input registers, 64 independent global bytes, callback mutations '
+                     'and restored original exception chain/caller registers. Exception unwinding is outside this boundary.'}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('executable', type=Path)
     parser.add_argument('--build-dir', type=Path, required=True)
     parser.add_argument('--cases', type=int, default=2048)
     parser.add_argument('--reset-cases', type=int, default=4096)
+    parser.add_argument('--dispatch-cases', type=int, default=4096)
     args = parser.parse_args()
     n = build(args.build_dir, 'call-glue', ['call_glue.c', 'object_glue.c', 'actor_storage.c', 'table_queries.c'])
     P = c.POINTER(Calls)
@@ -536,13 +700,17 @@ def main():
     totals['0x417f40'] = reset_count
     assert n.vertrix_matcher_reset_full(None, 0xdeadbeef) == 0
 
-    report = {'status': 'passed', 'complete_original_executions': totals,
+    dispatch_report = verify_gate_dispatch_full(n, args)
+    totals['0x41d5b0'] += dispatch_report['complete_original_executions']
+    report = {'status': 'passed', 'gate_dispatch_full': dispatch_report, 'complete_original_executions': totals,
               'total_verified_executions': sum(totals.values()),
               'matcher_reset_full_return_memory_register_cases': reset_count,
               'matcher_reset_native_null_rejections': 1,
               'scope': 'Each wrapper executes completely in the original with its callees stubbed '
-                       'and logged; every callee call (address and registers), the returned eax and '
-                       'the object storage compare. Matcher reset 417f40 additionally compares incoming EAX '
+                       'and logged; callee calls and recovered storage effects compare. Return-preserving '
+                       'helpers compare EAX; legacy void and exception helpers compare documented '
+                       'recovered effects. Full gate dispatch separately verifies every normal return, '
+                       'live memory access and callback register under mutations. Matcher reset 417f40 additionally compares incoming EAX '
                        'preservation, exact original global write 540014=0, surrounding 32-byte memory, '
                        'unchanged pattern/length and original EDX/EBX/ECX preservation.'}
     (args.build_dir / 'call-glue-verification.json').write_text(json.dumps(report, indent=2) + '\n')
