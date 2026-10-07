@@ -602,4 +602,34 @@ static inline void lift_string(LiftEnv *env, int kind, unsigned size, int repeat
         }
     }
 }
+
+static inline uint32_t lift_shld(unsigned bits, uint32_t a, uint32_t b, uint32_t count,
+                                 LiftFlags *fl)
+{
+    uint32_t mask = bits >= 32 ? 0xffffffffu : (1u << bits) - 1u;
+    uint64_t wide;
+    count &= 31u;
+    if (count == 0 || count > bits)
+    {
+        return a;
+    }
+    wide = (((uint64_t)(a & mask) << bits) | (b & mask)) << count;
+    fl->cf = (uint32_t)((wide >> (2 * bits)) & 1u);
+    return lift_flags_value(bits, wide >> bits, fl);
+}
+
+static inline uint32_t lift_shrd(unsigned bits, uint32_t a, uint32_t b, uint32_t count,
+                                 LiftFlags *fl)
+{
+    uint32_t mask = bits >= 32 ? 0xffffffffu : (1u << bits) - 1u;
+    uint64_t wide;
+    count &= 31u;
+    if (count == 0 || count > bits)
+    {
+        return a;
+    }
+    wide = (((uint64_t)(b & mask) << bits) | (a & mask));
+    fl->cf = (uint32_t)((wide >> (count - 1)) & 1u);
+    return lift_flags_value(bits, wide >> count, fl);
+}
 #endif

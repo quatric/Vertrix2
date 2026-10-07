@@ -81,6 +81,32 @@ def callee_args(target, depth=0):
     return None
 
 
+TABLES = {}
+
+
+def jump_table(seen, insn):
+    """The targets of `jmp [index*4 + table]`; the bound comes from the cmp before it."""
+    mem = insn.operands[0].mem
+    if insn.operands[0].type != X.X86_OP_MEM or mem.base or not mem.index or mem.scale != 4:
+        raise NotImplementedError('%x indirect jmp' % insn.address)
+    count = None
+    for address in sorted((a for a in seen if a < insn.address), reverse=True)[:8]:
+        prior = seen[address]
+        if prior.mnemonic == 'cmp' and prior.operands[1].type == X.X86_OP_IMM:
+            count = prior.operands[1].imm + 1
+            break
+    if count is None or not 0 < count <= 512:
+        raise NotImplementedError('%x indirect jmp without a bound' % insn.address)
+    base = mem.disp & 0xffffffff
+    targets = []
+    for i in range(count):
+        target = int.from_bytes(pe.get_data(base - BASE + 4 * i, 4), 'little')
+        if not BASE <= target < BASE + 0xf1000:
+            raise NotImplementedError('%x jump table entry' % insn.address)
+        targets.append(target)
+    return targets
+
+
 def trace(start):
     """Every reachable instruction of the routine, keyed by address."""
     seen, todo = {}, [start]
@@ -97,7 +123,9 @@ def trace(start):
                 if op.type == X.X86_OP_IMM:
                     todo.append(op.imm)
                 elif mnemonic == 'jmp':
-                    raise NotImplementedError('%x indirect jmp' % address)
+                    targets = jump_table(seen, insn)
+                    TABLES[insn.address] = targets
+                    todo.extend(targets)
                 if mnemonic == 'jmp':
                     break
             if mnemonic == 'ret':
@@ -120,6 +148,8 @@ class Lifter:
                 op = insn.operands[0]
                 if op.type == X.X86_OP_IMM:
                     self.targets.add(op.imm)
+                elif address in TABLES:
+                    self.targets.update(TABLES[address])
         pushes = sum(1 for i in self.insns.values() if i.mnemonic in ('push', 'call'))
         sub_esp = sum(int(i.op_str.split(',')[1], 0) for i in self.insns.values()
                       if i.mnemonic == 'sub' and i.op_str.startswith('esp,'))
@@ -232,11 +262,23 @@ class Lifter:
         if m == 'lea' and ops[1].type == X.X86_OP_MEM and ops[0].type == X.X86_OP_REG and \
                 ops[1].mem.base == ops[0].reg and not ops[1].mem.index and not ops[1].mem.disp:
             return
-        if m in REPEATS and m != '':
-            self.string_op(insn, m)
+        parts = m.split(' ')
+        if len(parts) == 2 and parts[0] in REPEATS and parts[1] in STRING_OPS:
+            self.string_op(parts[1], parts[0])
             return
         if m in STRING_OPS:
-            self.string_op(insn, '')
+            self.string_op(m, '')
+            return
+        if m in ('stc', 'clc', 'cmc'):
+            self.emit({'stc': 'fl.cf = 1;', 'clc': 'fl.cf = 0;', 'cmc': 'fl.cf = !fl.cf;'}[m])
+            return
+        if m == 'wait':
+            return
+        if m in ('shld', 'shrd'):
+            bits = self.bits(ops[0])
+            self.emit('{ uint32_t a = %s; uint32_t r = lift_%s(%d, a, %s, %s, &fl); %s }' % (
+                self.read(ops[0]), m, bits, self.read(ops[1]), self.read(ops[2]),
+                self.write(ops[0], 'r')))
             return
         if m == 'mov':
             self.emit(self.write(ops[0], self.read(ops[1])))
@@ -302,6 +344,11 @@ class Lifter:
             self.emit('esp = ebp; ebp = lift_load(&env, esp, 0u, 4); esp += 4u;')
         elif m == 'call':
             self.call(insn, next_insn)
+        elif m == 'jmp' and ops[0].type == X.X86_OP_MEM:
+            cases = ' '.join('case %d: goto L_%x;' % (i, t)
+                             for i, t in enumerate(TABLES[insn.address]))
+            self.emit('{ uint32_t i = %s; switch (i) { %s default: return 0u; } }' % (
+                self.reg_read(ops[0].mem.index), cases))
         elif m == 'jmp':
             self.emit('goto L_%x;' % ops[0].imm)
         elif m in CONDITIONS:
@@ -346,11 +393,7 @@ class Lifter:
         self.emit('{ uint32_t r = lift_imul(%d, %s, %s, &fl); %s }' % (
             bits, a, b, self.write(ops[0], 'r')))
 
-    def string_op(self, insn, prefix):
-        if prefix:
-            name = insn.op_str.split(' ')[0]
-        else:
-            name = insn.mnemonic
+    def string_op(self, name, prefix):
         kind, size = STRING_OPS[name]
         self.emit('lift_string(&env, %d, %d, %d, &eax, &ecx, &esi, &edi, &fl);' % (
             STRING_KIND[kind], size, REPEATS[prefix]))
