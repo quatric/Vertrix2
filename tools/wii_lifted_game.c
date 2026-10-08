@@ -63,7 +63,8 @@ static void fail(const char *message)
 }
 
 /* The back buffer is little-endian x86 memory (bytes B, G, R, unused); the frame texture reads
- * the bytes in that order with the masks below, so copy the bytes and make the unused one opaque. */
+ * the bytes in that order with the masks below, so copy the bytes and make the unused one opaque.
+ */
 static void gather(const LiftHost *host, uint32_t base)
 {
     unsigned i;
@@ -113,7 +114,7 @@ int main(void)
     printf("done master startup at %u ms\n", (unsigned)ticks_to_millisecs(gettime()));
     lift_host_run(&host, 0x41a540, form, 0, 0, 0, &lifted); /* loader */
     printf("done loader at %u ms\n", (unsigned)ticks_to_millisecs(gettime()));
-    lift_host_run(&host, 0x45dca0, 0, 0, 0, 0, &lifted);    /* sprite banks */
+    lift_host_run(&host, 0x45dca0, 0, 0, 0, 0, &lifted); /* sprite banks */
     printf("done sprite banks at %u ms\n", (unsigned)ticks_to_millisecs(gettime()));
     lift_host_run(&host, 0x465af0, 0, 0xffffffffu, 0, 0, &lifted); /* title scene */
     printf("done title scene at %u ms\n", (unsigned)ticks_to_millisecs(gettime()));
@@ -148,7 +149,7 @@ int main(void)
         {
             break;
         }
-        lift_host_run(&host, 0x4b6200, 0x54671c, 0, 0, 0, &lifted); /* update */
+        lift_host_run(&host, 0x4b6200, 0x54671c, 0, 0, 0, &lifted);       /* update */
         lift_host_run(&host, 0x4b6240, 0x54671c, wrapper, 0, 0, &lifted); /* draw */
         gather(&host, base);
         if (shown < 6)
@@ -158,7 +159,8 @@ int main(void)
             {
                 nz += (pixels[4 * k] | pixels[4 * k + 1] | pixels[4 * k + 2]) != 0;
             }
-            printf("frame %u: %u ms, %u lit pixels\n", shown++, (unsigned)(ticks_to_millisecs(gettime()) - start), nz);
+            printf("frame %u: %u ms, %u lit pixels\n", shown++,
+                   (unsigned)(ticks_to_millisecs(gettime()) - start), nz);
         }
         if (!vertrix_wii_frame_texture_update(&frame, masks, &texture) ||
             !vertrix_wii_frame_present(&video.presenter, &texture))
