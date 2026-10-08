@@ -159,7 +159,9 @@ enum
 {
     LIFT_COM_BASE = 0xe0000000u,
     COM_DRAW = 1,
-    COM_SURFACE = 2
+    COM_SURFACE = 2,
+    COM_INPUT = 3,
+    COM_DEVICE = 4
 };
 
 static uint32_t host_com_object(LiftHost *host, unsigned interface_id);
@@ -232,8 +234,9 @@ static int host_import(LiftHost *host, const VertrixCallSite *site, const char *
     }
     else if (strcmp(name, "DirectInput8Create") == 0) /* (instance, version, iid, out, outer) */
     {
-        host_write(host, site_argument(site, 3), 4, 0);
-        *result = 0x80004002u; /* E_NOINTERFACE: no input device layer yet */
+        uint32_t input = host_com_object(host, COM_INPUT);
+        host_write(host, site_argument(site, 3), 4, input);
+        *result = input == 0 ? 0x8007000eu : 0;
     }
     else if (strcmp(name, "CoInitialize") == 0 || strcmp(name, "CoUninitialize") == 0 ||
              strcmp(name, "CoInitializeEx") == 0)
@@ -664,10 +667,75 @@ static void host_surface_copy(LiftHost *host, uint32_t target, uint32_t tx, uint
     }
 }
 
+void lift_host_key(LiftHost *host, unsigned scan_code, int down)
+{
+    unsigned next = (host->key_tail + 1) % 64;
+    if (next != host->key_head)
+    {
+        host->key_queue[host->key_tail][0] = scan_code;
+        host->key_queue[host->key_tail][1] = down ? 0x80 : 0;
+        host->key_tail = next;
+    }
+}
+
+/* DirectInput: IDirectInput8 (3) creates devices; only the system keyboard (GUID 6F1D2B61) has
+ * events, which GetDeviceData hands out as DIDEVICEOBJECTDATA { offset, data, time, sequence,
+ * app data }. The mouse and joystick read as idle and EnumDevices finds nothing. */
+static uint32_t host_input(LiftHost *host, unsigned interface_id, unsigned index,
+                           const VertrixCallSite *site)
+{
+    uint32_t this_ = site_argument(site, 0);
+    if (interface_id == COM_INPUT)
+    {
+        if (index == 3) /* CreateDevice(this, guid, out, outer) */
+        {
+            uint32_t device = host_com_object(host, COM_DEVICE);
+            if (device == 0)
+            {
+                return 0x8007000eu;
+            }
+            host_write(host, device + 24, 4, lift_host_read(host, site_argument(site, 1), 4) == 0x6f1d2b61u);
+            host_write(host, site_argument(site, 2), 4, device);
+        }
+        return 0;
+    }
+    if (index == 10 && lift_host_read(host, this_ + 24, 4) != 0) /* GetDeviceData(this, size, data, count, flags) */
+    {
+        uint32_t size = site_argument(site, 1), data = site_argument(site, 2), count = site_argument(site, 3);
+        uint32_t room = lift_host_read(host, count, 4), n = 0;
+        while (n < room && host->key_head != host->key_tail && size >= 20)
+        {
+            uint32_t at = data + n * size;
+            host_write(host, at, 4, host->key_queue[host->key_head][0]);
+            host_write(host, at + 4, 4, host->key_queue[host->key_head][1]);
+            host_write(host, at + 8, 4, host->clock_ms);
+            host_write(host, at + 12, 4, n);
+            host_write(host, at + 16, 4, 0);
+            host->key_head = (host->key_head + 1) % 64;
+            n++;
+        }
+        host_write(host, count, 4, n);
+        return 0;
+    }
+    if (index == 9) /* GetDeviceState(this, size, buffer): nothing pressed */
+    {
+        uint32_t i, size = site_argument(site, 1), buffer = site_argument(site, 2);
+        for (i = 0; i < size; i++)
+        {
+            host_write(host, buffer + i, 1, 0);
+        }
+    }
+    return 0;
+}
+
 static uint32_t host_com(LiftHost *host, unsigned interface_id, unsigned index,
                          const VertrixCallSite *site)
 {
     uint32_t this_ = site_argument(site, 0);
+    if (interface_id == COM_INPUT || interface_id == COM_DEVICE)
+    {
+        return host_input(host, interface_id, index, site);
+    }
     if (getenv("TRACE_IMPORTS"))
     {
         printf("com %s[%u](%x, %x, %x)\n", interface_id == COM_DRAW ? "DirectDraw" : "Surface",
@@ -928,7 +996,7 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
 {
     LiftHost *host = context;
     unsigned i;
-    if (site->target >= LIFT_COM_BASE && site->target < LIFT_COM_BASE + 0x400)
+    if (site->target >= LIFT_COM_BASE && site->target < LIFT_COM_BASE + 0x500)
     {
         return host_com(host, (site->target - LIFT_COM_BASE) >> 8,
                         (site->target - LIFT_COM_BASE) & 0xff, site);
@@ -988,7 +1056,7 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
             {
                 const uint8_t *p = pixels + 4 * ((size_t)y * width + x);
                 host_write(host, base + y * pitch + 4 * x, 4,
-                           (uint32_t)p[2] | (uint32_t)p[1] << 8 | (uint32_t)p[0] << 16);
+                           (uint32_t)p[0] | (uint32_t)p[1] << 8 | (uint32_t)p[2] << 16); /* the decoder gives B, G, R */
             }
         }
         if (lift_host_trace_files)

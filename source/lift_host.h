@@ -50,6 +50,8 @@ typedef struct LiftHost
      * supplied by the driver, which links the platform JPEG library. Returns 0 on failure. */
     int (*decode_jpeg)(VertrixVf *archive, const char *name, uint8_t **pixels, uint32_t *width,
                        uint32_t *height);
+    uint32_t key_queue[64][2]; /* pending keyboard events: DIK scan code, 0x80 down / 0 up */
+    unsigned key_head, key_tail;
     uint32_t clock_ms; /* what timeGetTime and GetTickCount return; the driver advances it */
     uint32_t timer_proc, timer_user, timer_period;
     uint32_t primary_surface;
@@ -67,6 +69,9 @@ typedef struct LiftHost
 } LiftHost;
 
 /* The pixel memory (original address), width, height and byte pitch of a surface object, or 0. */
+/* Queue a keyboard event the original's buffered DirectInput keyboard reads (scan code, down). */
+void lift_host_key(LiftHost *host, unsigned scan_code, int down);
+
 uint32_t lift_host_surface(const LiftHost *host, uint32_t surface, uint32_t *width,
                            uint32_t *height, uint32_t *pitch, uint32_t *bytes_per_pixel);
 

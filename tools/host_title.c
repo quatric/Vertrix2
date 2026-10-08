@@ -224,6 +224,7 @@ int main(int argc, char **argv)
             host.boundary_calls = host.boundary_distinct = 0;
             host.clock_ms += getenv("CLOCKSTEP") ? (uint32_t)atoi(getenv("CLOCKSTEP")) : 14;
             if (getenv("SHOWALL") && t >= (unsigned)atoi(getenv("SHOWALL"))) { uint32_t lst = lift_host_read(&host, 0x54671c + 4, 4), cnt = lift_host_read(&host, 0x54671c + 8, 4), q; for (q = 0; q < cnt; q++) host_write_dword(&host, lift_host_read(&host, lst + 4 * q, 4) + 0x124, 0); }
+            if (getenv("KEY") && t >= (unsigned)atoi(getenv("KEYAT") ? getenv("KEYAT") : "100") && (t - (unsigned)atoi(getenv("KEYAT") ? getenv("KEYAT") : "100")) % 20 == 0) { unsigned k = (unsigned)strtoul(getenv("KEY"), 0, 0); lift_host_key(&host, k, 1); lift_host_key(&host, k, 0); }
             if (getenv("UNHIDE") && t >= (unsigned)atoi(getenv("UNHIDE"))) host_write_dword(&host, 0x5bb710, 0);
             if (getenv("REQ") && t == (unsigned)atoi(getenv("REQAT") ? getenv("REQAT") : "100")) { uint32_t v = (uint32_t)strtoul(getenv("REQ"), 0, 0); host_write_dword(&host, 0x532a4c, v); }
             if (getenv("HOOKAT") && t == (unsigned)atoi(getenv("HOOKAT"))) { g_hook_host = &host; g_hook_last = lit_target(); g_hook_on = 1; vertrix_lifted_after_hook = after_hook; }
