@@ -206,6 +206,7 @@ int main(int argc, char **argv)
             int ran;
             host.boundary_calls = host.boundary_distinct = 0;
             host.clock_ms += getenv("CLOCKSTEP") ? (uint32_t)atoi(getenv("CLOCKSTEP")) : 14;
+            if (getenv("SHOWALL") && t >= (unsigned)atoi(getenv("SHOWALL"))) { uint32_t lst = lift_host_read(&host, 0x54671c + 4, 4), cnt = lift_host_read(&host, 0x54671c + 8, 4), q; for (q = 0; q < cnt; q++) host_write_dword(&host, lift_host_read(&host, lst + 4 * q, 4) + 0x124, 0); }
             if (getenv("UNHIDE") && t >= (unsigned)atoi(getenv("UNHIDE"))) host_write_dword(&host, 0x5bb710, 0);
             if (getenv("REQ") && t == (unsigned)atoi(getenv("REQAT") ? getenv("REQAT") : "100")) { uint32_t v = (uint32_t)strtoul(getenv("REQ"), 0, 0); host_write_dword(&host, 0x532a4c, v); }
             if (getenv("TRACEFROM") && t == (unsigned)atoi(getenv("TRACEFROM"))) vertrix_lifted_set_trace(1);
@@ -222,12 +223,13 @@ int main(int argc, char **argv)
           fprintf(o, "P6\n%u %u\n255\n", w, h);
           for (k = 0; k < w * h; k++) { uint32_t v = lift_host_read(&host, base + 4 * k, 4); if (v) nz++; fputc((v >> 16) & 255, o); fputc((v >> 8) & 255, o); fputc(v & 255, o); }
           fclose(o);
+          printf("surfaces: primary %x back %x bgobj-surface %x\n", host.primary_surface, host.back_surface, lift_host_read(&host, lift_host_read(&host, 0x544070, 4) + 0x268, 4));
           { uint32_t wr = lift_host_read(&host, 0x5bc010, 4), px = lift_host_read(&host, wr, 4), ww = lift_host_read(&host, wr + 4, 4), wh = lift_host_read(&host, wr + 8, 4), q, nzw = 0;
             for (q = 0; q < ww * wh; q++) if (lift_host_read(&host, px + 4 * q, 4)) nzw++;
             printf("render target %x: %ux%u px %x lit %u; scenes n=%u\n", wr, ww, wh, px, nzw, lift_host_read(&host, 0x54671c + 8, 4)); }
           { uint32_t lst = lift_host_read(&host, 0x54671c + 4, 4), cnt = lift_host_read(&host, 0x54671c + 8, 4), q;
             for (q = 0; q < cnt; q++) { uint32_t o = lift_host_read(&host, lst + 4 * q, 4);
-              printf("draw obj %x: 104=%x b4=%x 120=%x 124=%x 128=%x 12c=%x 130=%x 138=%x 146=%x 148=%x\n", o, lift_host_read(&host,o+0x104,4), lift_host_read(&host,lift_host_read(&host,o+0x104,4)+0xb4,4), lift_host_read(&host,o+0x120,4), lift_host_read(&host,o+0x124,4), lift_host_read(&host,o+0x128,4), lift_host_read(&host,o+0x12c,4), lift_host_read(&host,o+0x130,4), lift_host_read(&host,o+0x138,4), lift_host_read(&host,o+0x146,4), lift_host_read(&host,o+0x148,2)); } }
+              printf("draw obj %x: bank=%x img=%x frame=%x vt=%x 120=%x 124=%x 128=%x 12c=%x 130=%x 138=%x 146=%x 148=%x\n", o, lift_host_read(&host,o+0xb0,4), lift_host_read(&host,o+0xb4,4), lift_host_read(&host,o+0xb8,4), lift_host_read(&host,o+0x158,4), lift_host_read(&host,o+0x120,4), lift_host_read(&host,o+0x124,4), lift_host_read(&host,o+0x128,4), lift_host_read(&host,o+0x12c,4), lift_host_read(&host,o+0x130,4), lift_host_read(&host,o+0x138,4), lift_host_read(&host,o+0x146,4), lift_host_read(&host,o+0x148,2)); } }
           { uint32_t g[4] = {0x558c7c, 0x558c80, 0x558c84, 0x558c88}, gi;
             for (gi = 0; gi < 4; gi++) { uint32_t wr = lift_host_read(&host, g[gi], 4), px = lift_host_read(&host, wr, 4), ww = lift_host_read(&host, wr + 4, 4), wh = lift_host_read(&host, wr + 8, 4), q, nzw = 0;
               if (ww && wh && ww < 4096 && wh < 4096) for (q = 0; q < ww * wh; q++) if (lift_host_read(&host, px + 4 * q, 4)) nzw++;

@@ -33,6 +33,10 @@ for address in [a for a in entries if a == 0]:
 for address in NATIVE_PORTS:
     entries.pop(address, None)
     unverified_entries.pop(address, None)
+# The platform implements these boundaries itself (the host JPEG decode, the palette builder): a
+# lifted copy, verified or not, must not shadow it.
+for address in NATIVE_UNVERIFIED_BOUNDARIES:
+    entries.pop(address, None)
 headers = sorted(Path(p).name for p in glob.glob(str(ROOT / 'source' / 'lifted_*.h'))
                  if 'dispatch' not in p)
 row_text = {a: '    {0x%x, lifted_%s, %d, %d},' % (a, entries[a][0], entries[a][1]['stack'],

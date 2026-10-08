@@ -717,6 +717,8 @@ static uint32_t host_com(LiftHost *host, unsigned interface_id, unsigned index,
         if (index == 5) /* Blt(this, target rect, source, source rect, flags, effects) */
         {
             uint32_t target_rect = site_argument(site, 1);
+            if (getenv("TRACE_BLT"))
+                fprintf(stderr, "Blt dst %x src %x rect %x\n", (unsigned)this_, (unsigned)site_argument(site, 2), (unsigned)target_rect);
             host_surface_copy(host, this_,
                               target_rect != 0 ? lift_host_read(host, target_rect, 4) : 0,
                               target_rect != 0 ? lift_host_read(host, target_rect + 4, 4) : 0,
@@ -725,6 +727,8 @@ static uint32_t host_com(LiftHost *host, unsigned interface_id, unsigned index,
         }
         if (index == 7) /* BltFast(this, x, y, source, source rect, flags) */
         {
+            if (getenv("TRACE_BLT"))
+                fprintf(stderr, "BltFast dst %x src %x x %u y %u\n", (unsigned)this_, (unsigned)site_argument(site, 3), (unsigned)site_argument(site, 1), (unsigned)site_argument(site, 2));
             host_surface_copy(host, this_, site_argument(site, 1), site_argument(site, 2),
                               site_argument(site, 3), site_argument(site, 4));
             return 0;
