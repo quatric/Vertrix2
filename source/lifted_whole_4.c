@@ -613,8 +613,8 @@ L_4ac8b0:
 }
 
 uint32_t lifted_actor_attach_resource_full(const VertrixCalls *calls,
-                                      const VertrixFactoryServices *services,
-                                      const VertrixGlobals *globals, const LiftEntry *entry)
+                                           const VertrixFactoryServices *services,
+                                           const VertrixGlobals *globals, const LiftEntry *entry)
 {
     uint8_t stack[LIFTED_ACTOR_ATTACH_RESOURCE_FULL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
@@ -636,7 +636,8 @@ uint32_t lifted_actor_attach_resource_full(const VertrixCalls *calls,
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_ACTOR_ATTACH_RESOURCE_FULL_STACK, 0, entry);
+    lift_begin(&env, calls, services, globals, stack, LIFTED_ACTOR_ATTACH_RESOURCE_FULL_STACK, 0,
+               entry);
     {
         uint32_t v = ecx;
         esp -= 4u;
@@ -4577,8 +4578,9 @@ L_4ade90:
     return env.failed ? 0u : eax;
 }
 
-uint32_t lifted_actor_initialize_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                 const VertrixGlobals *globals, const LiftEntry *entry)
+uint32_t lifted_actor_initialize_full(const VertrixCalls *calls,
+                                      const VertrixFactoryServices *services,
+                                      const VertrixGlobals *globals, const LiftEntry *entry)
 {
     uint8_t stack[LIFTED_ACTOR_INITIALIZE_FULL_STACK + 4 + 4 * 5 + 4];
     LiftEnv env;
@@ -10797,8 +10799,8 @@ L_4b52cb:
 }
 
 uint32_t lifted_actor_construct_518174_full(const VertrixCalls *calls,
-                                       const VertrixFactoryServices *services,
-                                       const VertrixGlobals *globals, const LiftEntry *entry)
+                                            const VertrixFactoryServices *services,
+                                            const VertrixGlobals *globals, const LiftEntry *entry)
 {
     uint8_t stack[LIFTED_ACTOR_CONSTRUCT_518174_FULL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;

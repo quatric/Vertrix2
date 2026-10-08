@@ -32690,8 +32690,9 @@ L_42bad3:
     return env.failed ? 0u : eax;
 }
 
-uint32_t lifted_block_construct_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                const VertrixGlobals *globals, const LiftEntry *entry)
+uint32_t lifted_block_construct_full(const VertrixCalls *calls,
+                                     const VertrixFactoryServices *services,
+                                     const VertrixGlobals *globals, const LiftEntry *entry)
 {
     uint8_t stack[LIFTED_BLOCK_CONSTRUCT_FULL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
@@ -32722,7 +32723,7 @@ uint32_t lifted_block_construct_full(const VertrixCalls *calls, const VertrixFac
 }
 
 uint32_t lifted_block_create_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                             const VertrixGlobals *globals, const LiftEntry *entry)
+                                  const VertrixGlobals *globals, const LiftEntry *entry)
 {
     uint8_t stack[LIFTED_BLOCK_CREATE_FULL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;

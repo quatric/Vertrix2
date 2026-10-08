@@ -1545,12 +1545,13 @@ uint32_t lifted_f42bab0(const VertrixCalls *calls, const VertrixFactoryServices 
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42bb00. */
-uint32_t lifted_block_construct_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_block_construct_full(const VertrixCalls *calls,
+                                     const VertrixFactoryServices *services,
+                                     const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42bbd0. */
 uint32_t lifted_block_create_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                             const VertrixGlobals *globals, const LiftEntry *entry);
+                                  const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42e870. */
 uint32_t lifted_board_construct(const VertrixCalls *calls, const VertrixFactoryServices *services,

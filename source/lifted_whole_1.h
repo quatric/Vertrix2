@@ -405,7 +405,7 @@ uint32_t lifted_board_burst(const VertrixCalls *calls, const VertrixFactoryServi
 
 /* Original 0x430800. */
 uint32_t lifted_block_spawn_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                            const VertrixGlobals *globals, const LiftEntry *entry);
+                                 const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x430850. */
 uint32_t lifted_f430850(const VertrixCalls *calls, const VertrixFactoryServices *services,
@@ -668,8 +668,9 @@ uint32_t lifted_board_clear_marked_extra(const VertrixCalls *calls,
 
 /* Original 0x43a080. */
 uint32_t lifted_block_construct_kind_one_full(const VertrixCalls *calls,
-                                         const VertrixFactoryServices *services,
-                                         const VertrixGlobals *globals, const LiftEntry *entry);
+                                              const VertrixFactoryServices *services,
+                                              const VertrixGlobals *globals,
+                                              const LiftEntry *entry);
 
 /* Original 0x43a160. */
 uint32_t lifted_piece_child_slots_init(const VertrixCalls *calls,

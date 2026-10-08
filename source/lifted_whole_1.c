@@ -235,7 +235,7 @@ L_4307f1:
 }
 
 uint32_t lifted_block_spawn_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                            const VertrixGlobals *globals, const LiftEntry *entry)
+                                 const VertrixGlobals *globals, const LiftEntry *entry)
 {
     uint8_t stack[LIFTED_BLOCK_SPAWN_FULL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
@@ -9994,8 +9994,8 @@ L_439917:
 }
 
 uint32_t lifted_block_construct_kind_one_full(const VertrixCalls *calls,
-                                         const VertrixFactoryServices *services,
-                                         const VertrixGlobals *globals, const LiftEntry *entry)
+                                              const VertrixFactoryServices *services,
+                                              const VertrixGlobals *globals, const LiftEntry *entry)
 {
     uint8_t stack[LIFTED_BLOCK_CONSTRUCT_KIND_ONE_FULL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;

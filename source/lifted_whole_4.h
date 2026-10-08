@@ -463,8 +463,8 @@ uint32_t lifted_actor_lookup_image(const VertrixCalls *calls,
 
 /* Original 0x4ac8d0. */
 uint32_t lifted_actor_attach_resource_full(const VertrixCalls *calls,
-                                      const VertrixFactoryServices *services,
-                                      const VertrixGlobals *globals, const LiftEntry *entry);
+                                           const VertrixFactoryServices *services,
+                                           const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4ac8f0. */
 uint32_t lifted_actor_set_handler_full(const VertrixCalls *calls,
@@ -623,8 +623,9 @@ uint32_t lifted_actor_chain_walk(const VertrixCalls *calls, const VertrixFactory
                                  const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4adf20. */
-uint32_t lifted_actor_initialize_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                 const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_actor_initialize_full(const VertrixCalls *calls,
+                                      const VertrixFactoryServices *services,
+                                      const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4adf70. */
 uint32_t lifted_f4adf70(const VertrixCalls *calls, const VertrixFactoryServices *services,
@@ -819,8 +820,8 @@ uint32_t lifted_f4b5150(const VertrixCalls *calls, const VertrixFactoryServices 
 
 /* Original 0x4b5400. */
 uint32_t lifted_actor_construct_518174_full(const VertrixCalls *calls,
-                                       const VertrixFactoryServices *services,
-                                       const VertrixGlobals *globals, const LiftEntry *entry);
+                                            const VertrixFactoryServices *services,
+                                            const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4b5420. */
 uint32_t lifted_object_destroy_call(const VertrixCalls *calls,
