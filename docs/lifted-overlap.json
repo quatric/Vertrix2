@@ -973,6 +973,7 @@
    "object_scalars.h"
   ],
   "verification": [
+   "game-frame-verification.json",
    "global-scalars-verification.json",
    "object-scalars-verification.json"
   ]
@@ -1003,6 +1004,7 @@
    "session_registers.h"
   ],
   "verification": [
+   "game-frame-verification.json",
    "session-registers-verification.json"
   ]
  },
@@ -1012,6 +1014,7 @@
    "session_registers.h"
   ],
   "verification": [
+   "game-frame-verification.json",
    "session-registers-verification.json"
   ]
  },
@@ -1021,6 +1024,7 @@
    "session_registers.h"
   ],
   "verification": [
+   "game-frame-verification.json",
    "session-registers-verification.json"
   ]
  },
@@ -1689,11 +1693,13 @@
  "0x418840": {
   "lifted": "object_set_counter_full",
   "hand_files": [
+   "game_frame.h",
    "object_glue.h",
    "object_scalars.h",
    "title_frame.h"
   ],
   "verification": [
+   "game-frame-verification.json",
    "object-scalar-returns-verification.json",
    "object-scalars-verification.json",
    "title-frame-verification.json"
@@ -2021,11 +2027,6 @@
   "hand_files": [],
   "verification": []
  },
- "0x41b820": {
-  "lifted": "f41b820",
-  "hand_files": [],
-  "verification": []
- },
  "0x41c020": {
   "lifted": "f41c020",
   "hand_files": [],
@@ -2038,7 +2039,9 @@
  },
  "0x41c0c0": {
   "lifted": "f41c0c0",
-  "hand_files": [],
+  "hand_files": [
+   "game_frame.h"
+  ],
   "verification": []
  },
  "0x41c0f0": {
@@ -2048,22 +2051,30 @@
  },
  "0x41c160": {
   "lifted": "f41c160",
-  "hand_files": [],
+  "hand_files": [
+   "game_frame.h"
+  ],
   "verification": []
  },
  "0x41c1d0": {
   "lifted": "f41c1d0",
-  "hand_files": [],
+  "hand_files": [
+   "game_frame.h"
+  ],
   "verification": []
  },
  "0x41c240": {
   "lifted": "f41c240",
-  "hand_files": [],
+  "hand_files": [
+   "game_frame.h"
+  ],
   "verification": []
  },
  "0x41c2b0": {
   "lifted": "f41c2b0",
-  "hand_files": [],
+  "hand_files": [
+   "game_frame.h"
+  ],
   "verification": []
  },
  "0x41c390": {
@@ -10538,27 +10549,41 @@
  "0x461360": {
   "lifted": "f461360",
   "hand_files": [],
-  "verification": []
+  "verification": [
+   "game-frame-verification.json"
+  ]
  },
  "0x4614c0": {
   "lifted": "f4614c0",
   "hand_files": [],
-  "verification": []
+  "verification": [
+   "game-frame-verification.json"
+  ]
  },
  "0x461610": {
   "lifted": "f461610",
-  "hand_files": [],
-  "verification": []
+  "hand_files": [
+   "game_frame.h"
+  ],
+  "verification": [
+   "game-frame-verification.json"
+  ]
  },
  "0x461790": {
   "lifted": "f461790",
-  "hand_files": [],
-  "verification": []
+  "hand_files": [
+   "game_frame.h"
+  ],
+  "verification": [
+   "game-frame-verification.json"
+  ]
  },
  "0x461930": {
   "lifted": "f461930",
   "hand_files": [],
-  "verification": []
+  "verification": [
+   "game-frame-verification.json"
+  ]
  },
  "0x461fc0": {
   "lifted": "options_build",
@@ -10566,23 +10591,30 @@
    "options_screen.h"
   ],
   "verification": [
+   "game-frame-verification.json",
    "options-screen-verification.json"
   ]
  },
  "0x4627a0": {
   "lifted": "f4627a0",
   "hand_files": [],
-  "verification": []
+  "verification": [
+   "game-frame-verification.json"
+  ]
  },
  "0x4633b0": {
   "lifted": "f4633b0",
   "hand_files": [],
-  "verification": []
+  "verification": [
+   "game-frame-verification.json"
+  ]
  },
  "0x4651b0": {
   "lifted": "f4651b0",
   "hand_files": [],
-  "verification": []
+  "verification": [
+   "game-frame-verification.json"
+  ]
  },
  "0x4657f0": {
   "lifted": "f4657f0",
@@ -10844,6 +10876,7 @@
    "object_list.h"
   ],
   "verification": [
+   "game-frame-verification.json",
    "object-broadcast-verification.json",
    "title-frame-verification.json"
   ]
@@ -11001,6 +11034,7 @@
    "object_list.h"
   ],
   "verification": [
+   "game-frame-verification.json",
    "object-broadcast-verification.json"
   ]
  },
@@ -14665,7 +14699,9 @@
  "0x48b770": {
   "lifted": "f48b770",
   "hand_files": [],
-  "verification": []
+  "verification": [
+   "game-frame-verification.json"
+  ]
  },
  "0x48b7e0": {
   "lifted": "f48b7e0",
@@ -14721,6 +14757,7 @@
    "object_glue.h"
   ],
   "verification": [
+   "game-frame-verification.json",
    "object-glue-verification.json"
   ]
  },
@@ -14803,7 +14840,9 @@
  "0x48c6c0": {
   "lifted": "f48c6c0",
   "hand_files": [],
-  "verification": []
+  "verification": [
+   "game-frame-verification.json"
+  ]
  },
  "0x48c860": {
   "lifted": "f48c860",

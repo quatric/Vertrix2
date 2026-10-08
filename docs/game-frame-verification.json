@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x41b820": 4096
+  },
+  "distinct_call_sequences": 494,
+  "scope": "The complete original 0x41b820 runs with every callee it reaches (the stage routines, the scene-list wrappers 0x471a20..0x471b70, the screen routines 0x4614c0, 0x461610, 0x461790, 0x461360, 0x461930, 0x461fc0, 0x4627a0, 0x4651b0, 0x4633b0, the level resets 0x415b50, 0x415b10, 0x415b90, 0x415bd0, 0x415c60, the dialog routines 0x48c6c0, 0x48c2b0, 0x48b770 and the handler installer 0x418840) replaced by a logging stub, over random flags, screen tables (with repeated numbers) and current and requested screens. The order of every call with the registers it reads (EAX, and EDX for the scene-list pairs and 0x418840) matches the native sequence, as do the stores between two calls (as a set when they hit distinct addresses), the final values of every stored static, preserved ESI/EDI/EBP and the stack cleanup. Callees are assumed to read no register other than the ones compared, and 0x415b50, 0x415b10 and 0x48c6c0 to preserve EDX."
+}

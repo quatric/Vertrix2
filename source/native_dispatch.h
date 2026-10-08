@@ -12,4 +12,9 @@ uint32_t vertrix_native_title_frame(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services,
                                     const VertrixGlobals *globals, const LiftEntry *entry);
 
+/* Original 0x41b820, see game_frame.h. */
+uint32_t vertrix_native_game_frame(const VertrixCalls *calls,
+                                   const VertrixFactoryServices *services,
+                                   const VertrixGlobals *globals, const LiftEntry *entry);
+
 #endif

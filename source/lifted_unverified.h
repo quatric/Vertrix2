@@ -15,7 +15,6 @@ enum
     LIFTED_F41A040_STACK = 84,
     LIFTED_RECORD_RELEASE_GLOBAL_FULL_STACK = 80,
     LIFTED_F41B310_STACK = 1060,
-    LIFTED_F41B820_STACK = 480,
     LIFTED_F41C410_STACK = 572,
     LIFTED_GLOBAL_INCREMENT_FULL_STACK = 64,
     LIFTED_F41D6D0_STACK = 392,
@@ -620,10 +619,6 @@ uint32_t lifted_record_release_global_full(const VertrixCalls *calls,
 
 /* Original 0x41b310. */
 uint32_t lifted_f41b310(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x41b820. */
-uint32_t lifted_f41b820(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x41c410. */

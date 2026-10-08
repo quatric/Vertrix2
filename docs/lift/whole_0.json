@@ -2743,38 +2743,6 @@
   "virtual": [],
   "address": 4281456
  },
- "global_reset_pair_full": {
-  "callees": {},
-  "stack": 68,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2
-  ],
-  "virtual": [],
-  "address": 4281648
- },
- "session_latch_release": {
-  "callees": {},
-  "stack": 68,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2
-  ],
-  "virtual": [],
-  "address": 4281680
- },
  "f415580": {
   "callees": {
    "0x4895e0": [
@@ -2828,22 +2796,6 @@
   "virtual": [],
   "address": 4281728
  },
- "global_clear_tables_full": {
-  "callees": {},
-  "stack": 68,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   75,
-   76,
-   77
-  ],
-  "virtual": [],
-  "address": 4283152
- },
  "global_set_first_cell_full": {
   "callees": {},
   "stack": 64,
@@ -2867,42 +2819,6 @@
   "constants": [],
   "virtual": [],
   "address": 4283200
- },
- "session_registers_reset": {
-  "callees": {},
-  "stack": 68,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4283216
- },
- "session_registers_reset_open": {
-  "callees": {},
-  "stack": 72,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4283280
- },
- "session_registers_reset_secondary": {
-  "callees": {},
-  "stack": 68,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4283344
  },
  "table_all_filled": {
   "callees": {},
@@ -5485,27 +5401,6 @@
   ],
   "virtual": [],
   "address": 4297872
- },
- "guarded_call_4194b0": {
-  "callees": {
-   "0x45fab0": [
-    0,
-    false
-   ]
-  },
-  "stack": 68,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 4297904
  },
  "f419ef0": {
   "callees": {
