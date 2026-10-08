@@ -1,8 +1,20 @@
 {
+  "full_builder_abi": {
+    "complete_original_executions": {
+      "0x4713d0": 4096,
+      "0x4715a0": 4096
+    },
+    "exact_callback_register_stack_state_comparisons": 114688,
+    "native_missing_boundary_guards": 8,
+    "mutable_string_pointer_replacement_cases": 8192,
+    "constructor_result_handle_change_cases": 4096,
+    "cdecl_formatter_calls": 8192,
+    "scope": "Full normal builder return equals saved exception token. All callback registers/stack and independent actor/string/global/local storage compare before every callback and after completion under mutations, including constructor output handle changes and local string pointer replacement after formatting. Cdecl formatter stack cleanup and restored FS chain are verified. Faulting allocation, register clobbers and exception stack/unwind behavior remain outside boundary."
+  },
   "status": "passed",
   "complete_original_executions": {
-    "0x4713d0": 528,
-    "0x4715a0": 496
+    "0x4713d0": 2064,
+    "0x4715a0": 2032
   },
   "scope": "The routine executes completely in the original with the string runtime, the allocation and the actor setters stubbed and logged (0x4cdfb0 storing the new string through its stack pointer); every call with its registers and stack arguments and every actor object compare."
 }

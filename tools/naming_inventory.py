@@ -81,6 +81,7 @@ def inventory(root):
             "docs/object-scalar-returns-verification.json",
             "docs/particle-spawn-full-verification.json",
             "docs/title-letter-launch-verification.json",
+            "docs/title-letter-verification.json",
         ],
         "dispatcher_report": "docs/dispatcher-integration-verification.json",
         "constant_dispatcher_report": "docs/constant-dispatch-verification.json",
