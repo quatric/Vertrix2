@@ -8,6 +8,8 @@
 #include "lift_imports.h"
 
 #include "lift_runtime.h"
+#include "rtl_double_add.h"
+#include "rtl_double_multiply.h"
 #include "rtl_float.h"
 #include "rtl_single_divide.h"
 #include "rtl_single_multiply.h"
@@ -773,7 +775,7 @@ static void host_single_exception(uint32_t target, VertrixRtlFloatState *state, 
     host_single_refresh(state, host);
 }
 
-static uint32_t host_single(VertrixCallSite *site, LiftHost *host)
+static uint32_t host_rtl_arithmetic(VertrixCallSite *site, LiftHost *host)
 {
     VertrixRtlFloatState state = {site->eax,
                                   site->edx,
@@ -790,6 +792,12 @@ static uint32_t host_single(VertrixCallSite *site, LiftHost *host)
     int ok;
     switch (site->target)
     {
+        case 0x4db350:
+            ok = vertrix_rtl_double_add_full(&state, call, &context);
+            break;
+        case 0x4db507:
+            ok = vertrix_rtl_double_multiply_full(&state, call, &context);
+            break;
         case 0x4d809c:
             ok = vertrix_rtl_single_subtract_full(&state, call, &context);
             break;
@@ -848,26 +856,12 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
     }
     if (site->target == 0x48ae00) /* JPEG decode: no bitmap until a native decoder exists */
         return 0;
-    if (site->target == 0x4db507) /* RTL double multiply: edx:eax * ecx:ebx -> edx:eax */
-    {
-        union
-        {
-            uint64_t bits;
-            double value;
-        } left, right, out;
-        left.bits = ((uint64_t)site->edx << 32) | site->eax;
-        right.bits = ((uint64_t)site->ecx << 32) | site->ebx;
-        out.value = left.value * right.value;
-        site->out_value = (uint32_t)(out.bits >> 32);
-        return (uint32_t)out.bits;
-    }
     if (site->target == 0x4d809c || site->target == 0x4d80a6 || site->target == 0x4d8177 ||
-        site->target == 0x4d81fe)
+        site->target == 0x4d81fe || site->target == 0x4db350 || site->target == 0x4db507)
     {
-        return host_single(site, host);
+        return host_rtl_arithmetic(site, host);
     }
-    if (site->target == 0x4eb652 ||
-        site->target == 0x4db350) /* RTL double divide / add: edx:eax op ecx:ebx */
+    if (site->target == 0x4eb652) /* RTL double divide: edx:eax / ecx:ebx */
     {
         union
         {
@@ -876,7 +870,7 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
         } left, right, out;
         left.bits = ((uint64_t)site->edx << 32) | site->eax;
         right.bits = ((uint64_t)site->ecx << 32) | site->ebx;
-        out.value = site->target == 0x4eb652 ? left.value / right.value : left.value + right.value;
+        out.value = left.value / right.value;
         if ((uint32_t)(out.bits >> 32) == 0x80000000u)
         {
             out.bits = 0;

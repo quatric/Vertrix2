@@ -1,0 +1,91 @@
+{
+  "status": "passed",
+  "cases_per_entry_and_mode": 4096,
+  "complete_original_executions": {
+    "add": {
+      "software": 4096,
+      "hardware_pc0_rc0": 4096,
+      "hardware_pc0_rc1": 4096,
+      "hardware_pc0_rc2": 4096,
+      "hardware_pc0_rc3": 4096,
+      "hardware_pc2_rc0": 4096,
+      "hardware_pc2_rc1": 4096,
+      "hardware_pc2_rc2": 4096,
+      "hardware_pc2_rc3": 4096,
+      "hardware_pc3_rc0": 4096,
+      "hardware_pc3_rc1": 4096,
+      "hardware_pc3_rc2": 4096,
+      "hardware_pc3_rc3": 4096
+    },
+    "multiply": {
+      "software": 4096,
+      "hardware_pc0_rc0": 4096,
+      "hardware_pc0_rc1": 4096,
+      "hardware_pc0_rc2": 4096,
+      "hardware_pc0_rc3": 4096,
+      "hardware_pc2_rc0": 4096,
+      "hardware_pc2_rc1": 4096,
+      "hardware_pc2_rc2": 4096,
+      "hardware_pc2_rc3": 4096,
+      "hardware_pc3_rc0": 4096,
+      "hardware_pc3_rc1": 4096,
+      "hardware_pc3_rc2": 4096,
+      "hardware_pc3_rc3": 4096
+    }
+  },
+  "original_math_executions": 106502,
+  "actual_host_and_lift_call_comparisons": 426008,
+  "software_error_calls_per_original_target": {
+    "0x4dae94": 783,
+    "0x4e7280": 783
+  },
+  "software_error_codes": {
+    "0x84": 783
+  },
+  "targeted_double_rounding": {
+    "add": {
+      "hardware_pc0_rc0": "0x3ff0000000000000",
+      "hardware_pc2_rc0": "0x3ff0000000000001",
+      "hardware_pc3_rc0": "0x3ff0000000000000"
+    },
+    "multiply": {
+      "hardware_pc0_rc0": "0x3ff8000000000000",
+      "hardware_pc2_rc0": "0x3ff8000000000003",
+      "hardware_pc3_rc0": "0x3ff8000000000002"
+    }
+  },
+  "targeted_highword_negative_cleanup": {
+    "add": {
+      "hardware_pc0_rc0": 0,
+      "hardware_pc0_rc1": 0,
+      "hardware_pc0_rc2": 0,
+      "hardware_pc0_rc3": 0,
+      "hardware_pc2_rc0": 0,
+      "hardware_pc2_rc1": 0,
+      "hardware_pc2_rc2": 0,
+      "hardware_pc2_rc3": 0,
+      "hardware_pc3_rc0": 0,
+      "hardware_pc3_rc1": 0,
+      "hardware_pc3_rc2": 0,
+      "hardware_pc3_rc3": 0
+    },
+    "multiply": {
+      "hardware_pc0_rc0": 0,
+      "hardware_pc0_rc1": 0,
+      "hardware_pc0_rc2": 0,
+      "hardware_pc0_rc3": 0,
+      "hardware_pc2_rc0": 0,
+      "hardware_pc2_rc1": 0,
+      "hardware_pc2_rc2": 0,
+      "hardware_pc2_rc3": 0,
+      "hardware_pc3_rc0": 0,
+      "hardware_pc3_rc1": 0,
+      "hardware_pc3_rc2": 0,
+      "hardware_pc3_rc3": 0
+    }
+  },
+  "unconfigured_early_zero_original_cases": 6,
+  "unsupported_host_execution_guards": 12,
+  "initialized_host_control": "0x037f",
+  "scope": "Compile actual lift_host.c and call its public inner.calls, then actual lift_call/call_glue EAX/EDX transport. Both double4db350/add and4db507/multiply execute original software and12 masked hardware PC/RC controls. Direct host EAX/EDX/EBX/ECX and caller EAX/EDX compare against original, with live cache/hardware/capability/control snapshots and exact error callback inputs/outputs. Each case repeats direct host-global and explicit callback-state mutation paths. EBX/ECX transport through lift_call is not exposed or claimed; their direct-host results are verified. Targeted x87-to-double double rounding and highword-only negative-result clearing compare actual output bits. Host guards preserve all inputs/globals and increment rtl_single_failures. Unrelated lifted dispatch and palette behavior are isolated; full game callers, callee internals, FPSW/x87 stack/pending exceptions, unmasked traps and caller flags remain outside scope."
+}

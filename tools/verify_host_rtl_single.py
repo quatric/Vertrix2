@@ -161,6 +161,8 @@ def main():
                     '-I', str(root / 'source'), str(fixture),
                     *[str(root / 'source' / (name + '.c')) for name in
                       ('lift_host', 'rtl_float', 'rtl_single_multiply', 'rtl_single_divide',
+                       'rtl_double_add', 'rtl_double_multiply', 'palette_tables', 'palette_color',
+                       'render_palette',
                        'lift_imports', 'vf', 'call_glue', 'actor_storage')],
                     '-o', str(library)], check=True)
     n = c.CDLL(str(library))

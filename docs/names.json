@@ -1422,6 +1422,8 @@
  "0x4db10a": "vertrix_rtl_scratch_triple_call",
  "0x4db1fd": "vertrix_rtl_split_exponent",
  "0x4db250": "vertrix_float_remainder",
+ "0x4db350": "vertrix_rtl_double_add_full",
+ "0x4db507": "vertrix_rtl_double_multiply_full",
  "0x4db6d9": "vertrix_rtl_bracket_call",
  "0x4db866": "vertrix_rtl_flags_call",
  "0x4db896": "vertrix_rtl_natural_log",
