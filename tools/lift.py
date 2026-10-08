@@ -339,7 +339,10 @@ class Lifter:
             self.string_op(parts[1], parts[0])
             return
         if m in STRING_OPS:
-            self.string_op(m, '')
+            # Capstone drops the F2/F3 prefix of `f2 a5` (the Delphi runtime's bulk dword copy);
+            # read it from the encoding so the copy repeats.
+            prefix = {0xf2: 'repne', 0xf3: 'rep'}.get(insn.bytes[0], '')
+            self.string_op(m, prefix)
             return
         if m in ('stc', 'clc', 'cmc'):
             self.emit({'stc': 'fl.cf = 1;', 'clc': 'fl.cf = 0;', 'cmc': 'fl.cf = !fl.cf;'}[m])

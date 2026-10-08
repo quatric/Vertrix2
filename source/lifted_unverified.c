@@ -21511,7 +21511,7 @@ uint32_t lifted_f482d00(const VertrixCalls *calls, const VertrixFactoryServices 
         uint32_t r = lift_shr(32, a, 0x2u, &fl);
         ecx = r;
     }
-    lift_string(&env, 0, 4, 0, &eax, &ecx, &esi, &edi, &fl);
+    lift_string(&env, 0, 4, 3, &eax, &ecx, &esi, &edi, &fl);
     ecx = (ecx & 0xffffff00u) | (((eax & 0xffu)) & 0xffu);
     {
         uint32_t r = lift_and(8, (ecx & 0xffu), 0x3u, &fl);
@@ -21812,7 +21812,7 @@ L_483133:
         uint32_t r = lift_shr(32, a, 0x2u, &fl);
         ecx = r;
     }
-    lift_string(&env, 0, 4, 0, &eax, &ecx, &esi, &edi, &fl);
+    lift_string(&env, 0, 4, 3, &eax, &ecx, &esi, &edi, &fl);
     ecx = (ecx & 0xffffff00u) | (((eax & 0xffu)) & 0xffu);
     {
         uint32_t r = lift_and(8, (ecx & 0xffu), 0x3u, &fl);
@@ -21855,7 +21855,7 @@ L_483133:
         uint32_t r = lift_shr(32, a, 0x2u, &fl);
         ecx = r;
     }
-    lift_string(&env, 0, 4, 0, &eax, &ecx, &esi, &edi, &fl);
+    lift_string(&env, 0, 4, 3, &eax, &ecx, &esi, &edi, &fl);
     ecx = (ecx & 0xffffff00u) | (((eax & 0xffu)) & 0xffu);
     {
         uint32_t r = lift_and(8, (ecx & 0xffu), 0x3u, &fl);
@@ -22488,7 +22488,7 @@ L_4837c2:
         uint32_t r = lift_shr(32, a, 0x2u, &fl);
         ecx = r;
     }
-    lift_string(&env, 0, 4, 0, &eax, &ecx, &esi, &edi, &fl);
+    lift_string(&env, 0, 4, 3, &eax, &ecx, &esi, &edi, &fl);
     ecx = (ecx & 0xffffff00u) | (((eax & 0xffu)) & 0xffu);
     {
         uint32_t r = lift_and(8, (ecx & 0xffu), 0x3u, &fl);
@@ -27428,7 +27428,7 @@ L_48a991:
         uint32_t r = lift_shr(32, a, 0x2u, &fl);
         ecx = r;
     }
-    lift_string(&env, 0, 4, 0, &eax, &ecx, &esi, &edi, &fl);
+    lift_string(&env, 0, 4, 3, &eax, &ecx, &esi, &edi, &fl);
     ecx = (ecx & 0xffffff00u) | (((eax & 0xffu)) & 0xffu);
     {
         uint32_t r = lift_and(8, (ecx & 0xffu), 0x3u, &fl);

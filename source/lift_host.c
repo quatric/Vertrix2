@@ -751,6 +751,17 @@ static uint32_t host_com(LiftHost *host, unsigned interface_id, unsigned index,
             host_write(host, desc + 16, 4, lift_host_read(host, this_ + 16, 4));
             host_write(host, desc + 36, 4, pixels);
             host_write(host, desc + 84, 4, 8 * lift_host_read(host, this_ + 20, 4));
+            /* The DDPIXELFORMAT the original reads to pick its renderer: the channel masks of the
+             * host's pixel layout (red in bits 16-23, as the JPEG loader packs it and the Wii display reads it). An 8-bit surface keeps zero masks. */
+            host_write(host, desc + 72, 4, 32);
+            if (lift_host_read(host, this_ + 20, 4) == 4)
+            {
+                host_write(host, desc + 76, 4, 0x40); /* DDPF_RGB */
+                host_write(host, desc + 88, 4, 0x00ff0000);
+                host_write(host, desc + 92, 4, 0x0000ff00);
+                host_write(host, desc + 96, 4, 0x000000ff);
+                host_write(host, desc + 100, 4, 0);
+            }
         }
         return 0; /* Unlock, Blt, GetFlipStatus, Restore, Release... report DD_OK */
     }
@@ -957,7 +968,7 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
         text[k] = 0;
         if (host->decode_jpeg == NULL || !host->decode_jpeg(host->archive, text, &pixels, &width, &height))
         {
-            if (lift_host_trace_files)
+            if (lift_host_trace_files || getenv("TRACE_FILES"))
             {
                 printf("image %s: not decoded\n", text);
             }
@@ -977,7 +988,7 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
             {
                 const uint8_t *p = pixels + 4 * ((size_t)y * width + x);
                 host_write(host, base + y * pitch + 4 * x, 4,
-                           (uint32_t)p[0] | (uint32_t)p[1] << 8 | (uint32_t)p[2] << 16);
+                           (uint32_t)p[2] | (uint32_t)p[1] << 8 | (uint32_t)p[0] << 16);
             }
         }
         if (lift_host_trace_files)

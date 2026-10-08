@@ -66,6 +66,23 @@ static void report(const char *what, const LiftHost *host, uint32_t result)
 
 static void host_write_dword(LiftHost *h, uint32_t a, uint32_t v) { unsigned i; for (i = 0; i < 4; i++) { uint8_t b = (uint8_t)(v >> (8 * i)); if (a >= LIFT_HOST_HEAP_BASE) h->heap[a - LIFT_HOST_HEAP_BASE + i] = b; else h->image[a - LIFT_HOST_IMAGE_BASE + i] = b; } }
 
+
+static LiftHost *g_hook_host;
+static unsigned g_hook_last, g_hook_on;
+static unsigned lit_target(void)
+{
+    uint32_t wr = lift_host_read(g_hook_host, 0x558c7c, 4), px = lift_host_read(g_hook_host, wr, 4), n = lift_host_read(g_hook_host, wr + 4, 4) * lift_host_read(g_hook_host, wr + 8, 4), q, lit = 0;
+    for (q = 0; q < n; q++) if (lift_host_read(g_hook_host, px + 4 * q, 4)) lit++;
+    return lit;
+}
+static void after_hook(uint32_t target, uint32_t eax)
+{
+    if (g_hook_on && getenv("HOOK478")) { if (target == 0x478d10 || target == 0x47ce10 || target == 0x482f80 || target == 0x483ed0 || target == 0x48ac50) fprintf(stderr, "ret %x eax=%x\n", target, eax); return; }
+    if (g_hook_on && getenv("HOOKV")) fprintf(stderr, "hook %x\n", target);
+    if (!g_hook_on || (!getenv("HOOKALL") && target != 0x4ae0f0 && target != 0x4af560 && target != 0x4ae3e0 && target != 0x4ae140)) return;
+    if (getenv("HOOK478") && target == 0x478d10) fprintf(stderr, "created surface %x\n", eax);
+    { unsigned lit = lit_target(); if (lit != g_hook_last) { fprintf(stderr, "HOOK after %x eax=%x: lit %u -> %u\n", target, eax, g_hook_last, lit); g_hook_last = lit; } }
+}
 int main(int argc, char **argv)
 {
     FILE *file;
@@ -209,6 +226,8 @@ int main(int argc, char **argv)
             if (getenv("SHOWALL") && t >= (unsigned)atoi(getenv("SHOWALL"))) { uint32_t lst = lift_host_read(&host, 0x54671c + 4, 4), cnt = lift_host_read(&host, 0x54671c + 8, 4), q; for (q = 0; q < cnt; q++) host_write_dword(&host, lift_host_read(&host, lst + 4 * q, 4) + 0x124, 0); }
             if (getenv("UNHIDE") && t >= (unsigned)atoi(getenv("UNHIDE"))) host_write_dword(&host, 0x5bb710, 0);
             if (getenv("REQ") && t == (unsigned)atoi(getenv("REQAT") ? getenv("REQAT") : "100")) { uint32_t v = (uint32_t)strtoul(getenv("REQ"), 0, 0); host_write_dword(&host, 0x532a4c, v); }
+            if (getenv("HOOKAT") && t == (unsigned)atoi(getenv("HOOKAT"))) { g_hook_host = &host; g_hook_last = lit_target(); g_hook_on = 1; vertrix_lifted_after_hook = after_hook; }
+            if (getenv("HOOKAT") && t == (unsigned)atoi(getenv("HOOKAT")) + (getenv("HOOKLEN") ? (unsigned)atoi(getenv("HOOKLEN")) : 1)) g_hook_on = 0;
             if (getenv("TRACEFROM") && t == (unsigned)atoi(getenv("TRACEFROM"))) vertrix_lifted_set_trace(1);
             if (host.timer_proc && getenv("TIMERTICK")) { unsigned k, per = host.timer_period ? host.timer_period : 10, cs = getenv("CLOCKSTEP") ? (unsigned)atoi(getenv("CLOCKSTEP")) : 14; int ok; for (k = 0; k < cs / per; k++) lift_host_run(&host, 0x4b7b80, 0, 0, 0, 0, &ok); }
             { clock_t c0 = clock(); r = lift_host_run(&host, handler, g_form, 0, 0, 0, &ran); if (getenv("TICKTIME") && (double)(clock() - c0) / CLOCKS_PER_SEC > 0.2) printf("tick %u handler %x took %.2fs\n", t, handler, (double)(clock() - c0) / CLOCKS_PER_SEC); }
@@ -223,13 +242,17 @@ int main(int argc, char **argv)
           fprintf(o, "P6\n%u %u\n255\n", w, h);
           for (k = 0; k < w * h; k++) { uint32_t v = lift_host_read(&host, base + 4 * k, 4); if (v) nz++; fputc((v >> 16) & 255, o); fputc((v >> 8) & 255, o); fputc(v & 255, o); }
           fclose(o);
+          { uint32_t t = lift_host_read(&host, 0x558c7c, 4); printf("target %x: +0 %x +4 %u +8 %u +c %x +d %x +10 %x +14 %x\n", t, lift_host_read(&host,t,4), lift_host_read(&host,t+4,4), lift_host_read(&host,t+8,4), lift_host_read(&host,t+0xc,1), lift_host_read(&host,t+0xd,1), lift_host_read(&host,t+0x10,4), lift_host_read(&host,t+0x14,4)); }
+          { uint32_t d = lift_host_read(&host, 0x544070, 4); printf("display %x: 208=%u 20c=%u 214=%u 216=%u 226=%u 268=%x 270=%x 274=%x\n", d, lift_host_read(&host,d+0x208,2), lift_host_read(&host,d+0x20c,2), lift_host_read(&host,d+0x214,2), lift_host_read(&host,d+0x216,2), lift_host_read(&host,d+0x226,2), lift_host_read(&host,d+0x268,4), lift_host_read(&host,d+0x270,4), lift_host_read(&host,d+0x274,4)); }
+          { uint32_t list[] = {0x15440b0, 0x16705b0, 0x1670540, 0x16bb5d0, 0x2d3cb90, 0x259f450 - 0x30, 0x1706710, 0x27eaa90}, gi; for (gi = 0; gi < 8; gi++) { uint32_t t = list[gi]; printf("fmt surface %x: w=%u h=%u +c=%u +d=%u\n", t, lift_host_read(&host,t+4,4), lift_host_read(&host,t+8,4), lift_host_read(&host,t+0xc,1), lift_host_read(&host,t+0xd,1)); } }
           printf("surfaces: primary %x back %x bgobj-surface %x\n", host.primary_surface, host.back_surface, lift_host_read(&host, lift_host_read(&host, 0x544070, 4) + 0x268, 4));
           { uint32_t wr = lift_host_read(&host, 0x5bc010, 4), px = lift_host_read(&host, wr, 4), ww = lift_host_read(&host, wr + 4, 4), wh = lift_host_read(&host, wr + 8, 4), q, nzw = 0;
             for (q = 0; q < ww * wh; q++) if (lift_host_read(&host, px + 4 * q, 4)) nzw++;
             printf("render target %x: %ux%u px %x lit %u; scenes n=%u\n", wr, ww, wh, px, nzw, lift_host_read(&host, 0x54671c + 8, 4)); }
           { uint32_t lst = lift_host_read(&host, 0x54671c + 4, 4), cnt = lift_host_read(&host, 0x54671c + 8, 4), q;
             for (q = 0; q < cnt; q++) { uint32_t o = lift_host_read(&host, lst + 4 * q, 4);
-              printf("draw obj %x: bank=%x img=%x frame=%x vt=%x 120=%x 124=%x 128=%x 12c=%x 130=%x 138=%x 146=%x 148=%x\n", o, lift_host_read(&host,o+0xb0,4), lift_host_read(&host,o+0xb4,4), lift_host_read(&host,o+0xb8,4), lift_host_read(&host,o+0x158,4), lift_host_read(&host,o+0x120,4), lift_host_read(&host,o+0x124,4), lift_host_read(&host,o+0x128,4), lift_host_read(&host,o+0x12c,4), lift_host_read(&host,o+0x130,4), lift_host_read(&host,o+0x138,4), lift_host_read(&host,o+0x146,4), lift_host_read(&host,o+0x148,2)); } }
+              { uint32_t im = lift_host_read(&host, o + 0xb4, 4); if (im && getenv("IMGSTAT")) { uint32_t px=lift_host_read(&host,im,4),w=lift_host_read(&host,im+4,4),h=lift_host_read(&host,im+8,4),q,a=0,nz=0; for(q=0;q<w*h&&q<200000;q++){uint32_t v=lift_host_read(&host,px+4*q,4); a+=(v>>24)!=0; nz+=v!=0;} printf("imgstat %x %ux%u alpha-nz=%u nz=%u first=%x\n",im,w,h,a,nz,lift_host_read(&host,px,4)); } printf("pos obj %x: x=%d y=%d z1e=%d img+0=%x w=%u h=%u 4e=%u 8e=%u 93=%u\n", o, (int16_t)lift_host_read(&host,o+0xe,2), (int16_t)lift_host_read(&host,o+0x16,2), (int16_t)lift_host_read(&host,o+0x1e,2), im ? lift_host_read(&host,im,4) : 0, im ? lift_host_read(&host,im+4,4) : 0, im ? lift_host_read(&host,im+8,4) : 0, lift_host_read(&host,o+0x4e,1), lift_host_read(&host,o+0x8e,1), lift_host_read(&host,o+0x93,1)); }
+              printf("draw obj %x: 13c=%x 110=%x bank=%x img=%x frame=%x vt=%x 120=%x 124=%x 128=%x 12c=%x 130=%x 138=%x 146=%x 148=%x\n", o, lift_host_read(&host,o+0x13c,4), lift_host_read(&host,o+0x110,1), lift_host_read(&host,o+0xb0,4), lift_host_read(&host,o+0xb4,4), lift_host_read(&host,o+0xb8,4), lift_host_read(&host,o+0x158,4), lift_host_read(&host,o+0x120,4), lift_host_read(&host,o+0x124,4), lift_host_read(&host,o+0x128,4), lift_host_read(&host,o+0x12c,4), lift_host_read(&host,o+0x130,4), lift_host_read(&host,o+0x138,4), lift_host_read(&host,o+0x146,4), lift_host_read(&host,o+0x148,2)); } }
           { uint32_t g[4] = {0x558c7c, 0x558c80, 0x558c84, 0x558c88}, gi;
             for (gi = 0; gi < 4; gi++) { uint32_t wr = lift_host_read(&host, g[gi], 4), px = lift_host_read(&host, wr, 4), ww = lift_host_read(&host, wr + 4, 4), wh = lift_host_read(&host, wr + 8, 4), q, nzw = 0;
               if (ww && wh && ww < 4096 && wh < 4096) for (q = 0; q < ww * wh; q++) if (lift_host_read(&host, px + 4 * q, 4)) nzw++;

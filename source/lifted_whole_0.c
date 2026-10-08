@@ -45806,7 +45806,7 @@ uint32_t lifted_object_compare_regions(const VertrixCalls *calls,
         uint32_t r = lift_shr(32, a, 0x2u, &fl);
         ecx = r;
     }
-    lift_string(&env, 0, 4, 0, &eax, &ecx, &esi, &edi, &fl);
+    lift_string(&env, 0, 4, 3, &eax, &ecx, &esi, &edi, &fl);
     ecx = (ecx & 0xffffff00u) | (((eax & 0xffu)) & 0xffu);
     {
         uint32_t r = lift_and(8, (ecx & 0xffu), 0x3u, &fl);
@@ -45833,7 +45833,7 @@ uint32_t lifted_object_compare_regions(const VertrixCalls *calls,
         uint32_t r = lift_shr(32, a, 0x2u, &fl);
         ecx = r;
     }
-    lift_string(&env, 0, 4, 0, &eax, &ecx, &esi, &edi, &fl);
+    lift_string(&env, 0, 4, 3, &eax, &ecx, &esi, &edi, &fl);
     ecx = (ecx & 0xffffff00u) | (((eax & 0xffu)) & 0xffu);
     {
         uint32_t r = lift_and(8, (ecx & 0xffu), 0x3u, &fl);

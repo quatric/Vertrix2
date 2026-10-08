@@ -591,7 +591,8 @@ static inline void lift_idiv1(unsigned bits, uint32_t a, uint32_t *eax, uint32_t
 }
 
 /* movs/stos/lods/scas/cmps (kind 0..4) with the optional rep prefix (0 none, 1 rep, 2 repe,
- * 3 repne); the direction flag is clear. */
+ * 3 repne); the direction flag is clear. Only scas/cmps test ZF: on movs/stos/lods an F2/F3
+ * prefix is a plain rep, as the Delphi runtime emits F2 A5/A4. */
 static inline void lift_string(LiftEnv *env, int kind, unsigned size, int repeat, uint32_t *eax,
                                uint32_t *ecx, uint32_t *esi, uint32_t *edi, LiftFlags *fl)
 {
@@ -636,7 +637,7 @@ static inline void lift_string(LiftEnv *env, int kind, unsigned size, int repeat
             return;
         }
         *ecx -= 1u;
-        if ((repeat == 2 && !fl->zf) || (repeat == 3 && fl->zf))
+        if (kind >= 3 && ((repeat == 2 && !fl->zf) || (repeat == 3 && fl->zf)))
         {
             return;
         }

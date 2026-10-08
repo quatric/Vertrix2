@@ -63,6 +63,9 @@ unsigned vertrix_lifted_depth(void);
 /* Print every dispatched routine's original address and call depth (debugging). */
 void vertrix_lifted_set_trace(int enabled);
 
+/* Called after every lifted routine returns, with its address and entry EAX (debugging). */
+extern void (*vertrix_lifted_after_hook)(uint32_t target, uint32_t eax);
+
 /* Also run the lifted routines that did not pass verification (off by default). */
 void vertrix_lifted_allow_unverified(int allowed);
 
@@ -120,6 +123,8 @@ typedef struct LiftedRoutine
     uint32_t stack;
     uint32_t arguments;
 } LiftedRoutine;
+
+void (*vertrix_lifted_after_hook)(uint32_t target, uint32_t eax);
 
 static const LiftedRoutine routines[] = {
 %s
@@ -218,6 +223,10 @@ int vertrix_lifted_dispatch(const VertrixCalls *calls, const VertrixFactoryServi
     depth++;
     *result = routine->function(calls, services, globals, &entry);
     depth--;
+    if (vertrix_lifted_after_hook != NULL)
+    {
+        vertrix_lifted_after_hook(site->target, site->eax);
+    }
     return 1;
 }
 

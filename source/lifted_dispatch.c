@@ -42,6 +42,8 @@ typedef struct LiftedRoutine
     uint32_t arguments;
 } LiftedRoutine;
 
+void (*vertrix_lifted_after_hook)(uint32_t target, uint32_t eax);
+
 static const LiftedRoutine routines[] = {
     {0x401010, lifted_mixer_output, 92, 0},
     {0x401054, lifted_mixer_output_401054, 92, 0},
@@ -3567,6 +3569,10 @@ int vertrix_lifted_dispatch(const VertrixCalls *calls, const VertrixFactoryServi
     depth++;
     *result = routine->function(calls, services, globals, &entry);
     depth--;
+    if (vertrix_lifted_after_hook != NULL)
+    {
+        vertrix_lifted_after_hook(site->target, site->eax);
+    }
     return 1;
 }
 
