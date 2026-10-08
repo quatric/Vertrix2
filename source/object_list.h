@@ -13,6 +13,21 @@ typedef struct
  * reserves capacity before registration. Retains order and duplicate handles.
  * Invalid/full storage rejects before mutation; growth is external. */
 int vertrix_object_list_append(VertrixObjectList *list, uint32_t object);
+/* A virtual method of one object, reached through the table at object +0x158. `slot` is the byte
+ * offset of the method in that table; `edx` and `ebx` are the two register arguments. */
+typedef void (*VertrixObjectCall)(uint32_t object, unsigned slot, uint32_t edx, uint32_t ebx,
+                                  void *context);
+/* Original 0x4b60c0 (slot 0xc, with EDX and EBX), 0x4b6120 (slot 0x10), 0x4b6170 (slot 0x14) and
+ * 0x4b61c0 (slot 0x18): call the same virtual method of every object in the list, in order.
+ * 0x4b6200 is the same loop on slot 0x4 (vertrix_object_list_update). The count is read once and
+ * each handle as it is reached, so a method may change later handles. Rejects null handles and
+ * invalid storage before calling anything.
+ * The scene's three global lists (0x54671c, 0x546744 and 0x546730) forward their register
+ * arguments to these through the wrappers 0x471a20, 0x471a40, 0x471a50, 0x471a60 and 0x471a70
+ * (first list; slots 0xc, 0x10, 0x14, 0x18 and 0x4), 0x471a80, 0x471ab0, 0x471ad0, 0x471ae0 and
+ * 0x471af0 (second list) and 0x471b00, 0x471b30, 0x471b50, 0x471b60 and 0x471b70 (third list). */
+int vertrix_object_list_broadcast(VertrixObjectList *list, unsigned slot, uint32_t edx,
+                                  uint32_t ebx, VertrixObjectCall call, void *context);
 /* destroy=0 updates virtual +4; destroy=2 invokes virtual destructor +0.
  * Callbacks must preserve list allocation/count. They may change object state
  * or later nonzero handles. The caller owns objects and list storage. */

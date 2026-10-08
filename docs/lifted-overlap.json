@@ -10818,40 +10818,60 @@
  },
  "0x471a20": {
   "lifted": "f471a20",
-  "hand_files": [],
-  "verification": []
+  "hand_files": [
+   "object_list.h"
+  ],
+  "verification": [
+   "object-broadcast-verification.json"
+  ]
  },
  "0x471a40": {
   "lifted": "f471a40",
-  "hand_files": [],
-  "verification": []
+  "hand_files": [
+   "object_list.h"
+  ],
+  "verification": [
+   "object-broadcast-verification.json"
+  ]
  },
  "0x471a50": {
   "lifted": "f471a50",
-  "hand_files": [],
-  "verification": []
+  "hand_files": [
+   "object_list.h"
+  ],
+  "verification": [
+   "object-broadcast-verification.json"
+  ]
  },
  "0x471a60": {
   "lifted": "f471a60",
-  "hand_files": [],
-  "verification": []
+  "hand_files": [
+   "object_list.h"
+  ],
+  "verification": [
+   "object-broadcast-verification.json"
+  ]
  },
  "0x471a70": {
   "lifted": "list_clear_call",
   "hand_files": [
-   "call_glue.h"
+   "call_glue.h",
+   "object_list.h"
   ],
   "verification": [
-   "call-glue-verification.json"
+   "call-glue-verification.json",
+   "object-broadcast-verification.json"
   ]
  },
  "0x471a80": {
   "lifted": "list_clear_call_471a80",
   "hand_files": [
-   "call_glue.h"
+   "call_glue.h",
+   "object_list.h"
   ],
   "verification": [
-   "call-glue-verification.json"
+   "call-glue-verification.json",
+   "object-broadcast-verification.json"
   ]
  },
  "0x471a90": {
@@ -10866,31 +10886,49 @@
  },
  "0x471ab0": {
   "lifted": "f471ab0",
-  "hand_files": [],
-  "verification": []
+  "hand_files": [
+   "object_list.h"
+  ],
+  "verification": [
+   "object-broadcast-verification.json"
+  ]
  },
  "0x471ad0": {
   "lifted": "f471ad0",
-  "hand_files": [],
-  "verification": []
+  "hand_files": [
+   "object_list.h"
+  ],
+  "verification": [
+   "object-broadcast-verification.json"
+  ]
  },
  "0x471ae0": {
   "lifted": "f471ae0",
-  "hand_files": [],
-  "verification": []
+  "hand_files": [
+   "object_list.h"
+  ],
+  "verification": [
+   "object-broadcast-verification.json"
+  ]
  },
  "0x471af0": {
   "lifted": "f471af0",
-  "hand_files": [],
-  "verification": []
+  "hand_files": [
+   "object_list.h"
+  ],
+  "verification": [
+   "object-broadcast-verification.json"
+  ]
  },
  "0x471b00": {
   "lifted": "list_clear_call_471b00",
   "hand_files": [
-   "call_glue.h"
+   "call_glue.h",
+   "object_list.h"
   ],
   "verification": [
-   "call-glue-verification.json"
+   "call-glue-verification.json",
+   "object-broadcast-verification.json"
   ]
  },
  "0x471b10": {
@@ -10905,23 +10943,39 @@
  },
  "0x471b30": {
   "lifted": "f471b30",
-  "hand_files": [],
-  "verification": []
+  "hand_files": [
+   "object_list.h"
+  ],
+  "verification": [
+   "object-broadcast-verification.json"
+  ]
  },
  "0x471b50": {
   "lifted": "f471b50",
-  "hand_files": [],
-  "verification": []
+  "hand_files": [
+   "object_list.h"
+  ],
+  "verification": [
+   "object-broadcast-verification.json"
+  ]
  },
  "0x471b60": {
   "lifted": "f471b60",
-  "hand_files": [],
-  "verification": []
+  "hand_files": [
+   "object_list.h"
+  ],
+  "verification": [
+   "object-broadcast-verification.json"
+  ]
  },
  "0x471b70": {
   "lifted": "f471b70",
-  "hand_files": [],
-  "verification": []
+  "hand_files": [
+   "object_list.h"
+  ],
+  "verification": [
+   "object-broadcast-verification.json"
+  ]
  },
  "0x471b80": {
   "lifted": "list_clear_call_471b80",
@@ -18827,23 +18881,39 @@
  },
  "0x4b60c0": {
   "lifted": "f4b60c0",
-  "hand_files": [],
-  "verification": []
+  "hand_files": [
+   "object_list.h"
+  ],
+  "verification": [
+   "object-broadcast-verification.json"
+  ]
  },
  "0x4b6120": {
   "lifted": "f4b6120",
-  "hand_files": [],
-  "verification": []
+  "hand_files": [
+   "object_list.h"
+  ],
+  "verification": [
+   "object-broadcast-verification.json"
+  ]
  },
  "0x4b6170": {
   "lifted": "f4b6170",
-  "hand_files": [],
-  "verification": []
+  "hand_files": [
+   "object_list.h"
+  ],
+  "verification": [
+   "object-broadcast-verification.json"
+  ]
  },
  "0x4b61c0": {
   "lifted": "f4b61c0",
-  "hand_files": [],
-  "verification": []
+  "hand_files": [
+   "object_list.h"
+  ],
+  "verification": [
+   "object-broadcast-verification.json"
+  ]
  },
  "0x4b6200": {
   "lifted": "object_list_update",
@@ -18853,6 +18923,7 @@
    "ui_scene_frame.h"
   ],
   "verification": [
+   "object-broadcast-verification.json",
    "object-list-verification.json"
   ]
  },

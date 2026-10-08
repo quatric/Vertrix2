@@ -69,6 +69,21 @@ int vertrix_object_list_update(VertrixObjectList *list, VertrixObjectVisit visit
     return 1;
 }
 
+int vertrix_object_list_broadcast(VertrixObjectList *list, unsigned slot, uint32_t edx,
+                                  uint32_t ebx, VertrixObjectCall call, void *context)
+{
+    if (!call || !list_valid(list))
+    {
+        return 0;
+    }
+    size_t count = list->count;
+    for (size_t index = 0; index < count; index++)
+    {
+        call(list->items[index], slot, edx, ebx, context);
+    }
+    return 1;
+}
+
 int vertrix_object_list_prune(VertrixObjectList *list, uint32_t matching_state,
                               VertrixObjectState state, VertrixObjectVisit visit, void *context)
 {

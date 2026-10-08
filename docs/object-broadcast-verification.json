@@ -1,0 +1,27 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4b60c0": 512,
+    "0x4b6120": 512,
+    "0x4b6170": 512,
+    "0x4b61c0": 512,
+    "0x4b6200": 512,
+    "0x471a20": 512,
+    "0x471a40": 512,
+    "0x471a50": 512,
+    "0x471a60": 512,
+    "0x471a70": 512,
+    "0x471a80": 512,
+    "0x471b00": 512,
+    "0x471ab0": 512,
+    "0x471ad0": 512,
+    "0x471ae0": 512,
+    "0x471af0": 512,
+    "0x471b30": 512,
+    "0x471b50": 512,
+    "0x471b60": 512,
+    "0x471b70": 512
+  },
+  "virtual_calls_compared": 163520,
+  "scope": "Complete original routines 0x4b60c0, 0x4b6120, 0x4b6170, 0x4b61c0, 0x4b6200 and the wrappers 0x471a20, 0x471a40, 0x471a50, 0x471a60, 0x471a70, 0x471a80, 0x471ab0, 0x471ad0, 0x471ae0, 0x471af0, 0x471b00, 0x471b30, 0x471b50, 0x471b60 and 0x471b70 run against lists of 0 to 32 objects, one third with a virtual method rewriting a later handle. The order, receiver and register arguments of every virtual call, the list storage, preserved ESI/EDI/EBP and stack cleanup match the native broadcast. Null handles, null lists and a null callback are rejected."
+}
