@@ -153,9 +153,21 @@ static int find_compare(const void *key, const void *item)
     return address < other ? -1 : address > other;
 }
 
+/* Debugging: routines the dispatcher must pretend not to have (zero terminated). */
+uint32_t vertrix_lifted_skip[8];
+
 static const LiftedRoutine *find(uint32_t target)
 {
-    const LiftedRoutine *found = bsearch(&target, routines, sizeof routines / sizeof routines[0],
+    unsigned skip;
+    const LiftedRoutine *found;
+    for (skip = 0; skip < 8 && vertrix_lifted_skip[skip] != 0; skip++)
+    {
+        if (vertrix_lifted_skip[skip] == target)
+        {
+            return NULL;
+        }
+    }
+    found = bsearch(&target, routines, sizeof routines / sizeof routines[0],
                                          sizeof routines[0], find_compare);
     if (found == NULL && unverified_allowed)
     {

@@ -106,6 +106,7 @@ int main(int argc, char **argv)
     host.archive = vertrix_vf_open(getenv("VF") ? getenv("VF") : "hardware-check/Vertrix2.vf");
     if (host.archive == NULL) { fprintf(stderr, "no archive\n"); return 2; }
     vertrix_lifted_allow_unverified(1);
+    if (getenv("VSKIP")) { extern uint32_t vertrix_lifted_skip[8]; char *sp = getenv("VSKIP"); unsigned si = 0; while (*sp && si < 7) { vertrix_lifted_skip[si++] = (uint32_t)strtoul(sp, &sp, 16); while (*sp == ',') sp++; } }
     if (getenv("THELP"))
     {
         FILE *in = fopen("/tmp/helpers.txt", "r");
@@ -229,7 +230,7 @@ int main(int argc, char **argv)
             if (getenv("KEY") && t >= (unsigned)atoi(getenv("KEYAT") ? getenv("KEYAT") : "100")) { unsigned ph = (t - (unsigned)atoi(getenv("KEYAT") ? getenv("KEYAT") : "100")) % 40, k = (unsigned)strtoul(getenv("KEY"), 0, 0); if (ph == 0) lift_host_key(&host, k, 1); if (ph == 6) lift_host_key(&host, k, 0); }
             { static uint32_t last, lw; uint32_t cur = lift_host_read(&host, 0x558c7c, 4); if (getenv("WATCH7C") && (cur != last || lift_host_read(&host, cur + 4, 4) != lw)) { lw = lift_host_read(&host, cur + 4, 4); { printf("tick %u: [558c7c] %x -> %x (w=%u h=%u)\n", t, last, cur, lift_host_read(&host, cur + 4, 4), lift_host_read(&host, cur + 8, 4)); last = cur; } } }
             if (getenv("WATCHADDR")) vertrix_debug_watch = ((t >= (unsigned)atoi(getenv("WATCHTICK")) && t < (unsigned)atoi(getenv("WATCHTICK")) + (getenv("WATCHLEN") ? (unsigned)atoi(getenv("WATCHLEN")) : 1)) ? (uint32_t)strtoul(getenv("WATCHADDR"), 0, 16) : 0);
-            if (getenv("DUMPOBJ") && (t == (unsigned)atoi(getenv("DUMPOBJ")) || t == (unsigned)atoi(getenv("DUMPOBJ")) + 5)) { uint32_t lbase = getenv("DUMPLIST") ? (uint32_t)strtoul(getenv("DUMPLIST"), 0, 16) : 0x54671c; uint32_t lst = lift_host_read(&host, lbase + 4, 4), cnt = lift_host_read(&host, lbase + 8, 4), q, k; printf("DUMP tick %u list n=%u\n", t, cnt); for (q = 0; q < cnt && q < 40; q++) { uint32_t ob = lift_host_read(&host, lst + 4 * q, 4); printf("  obj %x vt=%x x=%d y=%d fr=%u 124=%x 13c=%x 138=%x 110=%u:", ob, lift_host_read(&host, ob, 4), (int16_t)lift_host_read(&host, ob + 0xe, 2), (int16_t)lift_host_read(&host, ob + 0x16, 2), lift_host_read(&host, ob + 0xb8, 4), lift_host_read(&host, ob + 0x124, 4), lift_host_read(&host, ob + 0x13c, 4), lift_host_read(&host, ob + 0x138, 4), lift_host_read(&host, ob + 0x110, 1)); for (k = 0; k < 8; k++) printf(" %x", lift_host_read(&host, ob + 0x118 + 4 * k, 4)); printf("\n"); } }
+            if (getenv("DUMPOBJ") && (t == (unsigned)atoi(getenv("DUMPOBJ")) || t == (unsigned)atoi(getenv("DUMPOBJ")) + 5)) { uint32_t lbase = getenv("DUMPLIST") ? (uint32_t)strtoul(getenv("DUMPLIST"), 0, 16) : 0x54671c; uint32_t lst = lift_host_read(&host, lbase + 4, 4), cnt = lift_host_read(&host, lbase + 8, 4), q, k; printf("DUMP tick %u list n=%u\n", t, cnt); for (q = 0; q < cnt && q < 64; q++) { uint32_t ob = lift_host_read(&host, lst + 4 * q, 4); printf("  obj %x vt=%x x=%d y=%d fr=%u 124=%x 13c=%x 138=%x 110=%u:", ob, lift_host_read(&host, ob, 4), (int16_t)lift_host_read(&host, ob + 0xe, 2), (int16_t)lift_host_read(&host, ob + 0x16, 2), lift_host_read(&host, ob + 0xb8, 4), lift_host_read(&host, ob + 0x124, 4), lift_host_read(&host, ob + 0x13c, 4), lift_host_read(&host, ob + 0x138, 4), lift_host_read(&host, ob + 0x110, 1)); for (k = 0; k < 8; k++) printf(" %x", lift_host_read(&host, ob + 0x118 + 4 * k, 4)); printf("\n"); } }
             if (getenv("SHOW13C") && t >= 100) { uint32_t lb = 0x546730, lst = lift_host_read(&host, lb + 4, 4), cnt = lift_host_read(&host, lb + 8, 4), q; for (q = 0; q < cnt; q++) host_write_dword(&host, lift_host_read(&host, lst + 4 * q, 4) + 0x124, 0); }
             if (getenv("SHOW13C") && t >= 100) { uint32_t lb = 0x546744, lst = lift_host_read(&host, lb + 4, 4), cnt = lift_host_read(&host, lb + 8, 4), q; for (q = 0; q < cnt; q++) host_write_dword(&host, lift_host_read(&host, lst + 4 * q, 4) + 0x124, 0); }
             if (getenv("DUMPTAB") && t == (unsigned)atoi(getenv("DUMPTAB"))) { unsigned q; for (q = 0; q < 54; q++) { uint32_t sp = lift_host_read(&host, 0x5334a0 + 4 * q, 4), sp2 = lift_host_read(&host, 0x533578 + 4 * q, 4); char b[64] = {0}, c[64] = {0}; unsigned k; for (k = 0; sp && k < 60; k++) { b[k] = (char)lift_host_read(&host, sp + k, 1); if (!b[k]) break; } for (k = 0; sp2 && k < 60; k++) { c[k] = (char)lift_host_read(&host, sp2 + k, 1); if (!c[k]) break; } printf("tab %u: %x '%s' | %x '%s'\n", q, sp, b, sp2, c); } }
@@ -251,7 +252,7 @@ int main(int argc, char **argv)
             if (host.boundary_calls) report("tick", &host, 0);
         }
         { uint32_t w, h, pitch, bytes, base = lift_host_surface(&host, host.primary_surface, &w, &h, &pitch, &bytes), k, nz = 0;
-          FILE *o = fopen("/tmp/ticks.ppm", "wb");
+          FILE *o = fopen(getenv("PPM") ? getenv("PPM") : "/tmp/ticks.ppm", "wb");
           fprintf(o, "P6\n%u %u\n255\n", w, h);
           for (k = 0; k < w * h; k++) { uint32_t v = lift_host_read(&host, base + 4 * k, 4); if (v) nz++; fputc((v >> 16) & 255, o); fputc((v >> 8) & 255, o); fputc(v & 255, o); }
           fclose(o);
