@@ -980,6 +980,12 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
         {
             printf("image %s: %ux%u surface %x pixels %x first %x\n", text, (unsigned)width, (unsigned)height, (unsigned)surface, (unsigned)base, (unsigned)lift_host_read(host, base + 4 * (width * height / 2 + width / 2), 4));
         }
+        if (getenv("TRACE_IMAGES"))
+        {
+            unsigned long lit = 0; size_t q;
+            for (q = 0; q < (size_t)width * height; q++) lit += (pixels[4 * q] | pixels[4 * q + 1] | pixels[4 * q + 2]) != 0;
+            fprintf(stderr, "image %s: %ux%u surface %x base %x lit %lu\n", text, (unsigned)width, (unsigned)height, (unsigned)surface, (unsigned)base, lit);
+        }
         free(pixels);
         return surface;
     }
@@ -1007,9 +1013,10 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
         site->out_value = (uint32_t)(out.bits >> 32);
         return (uint32_t)out.bits;
     }
-    if (site->target == 0x4e04f4 || site->target == 0x4e0f8b)
+    if (site->target == 0x4e04f4 || site->target == 0x4e0f8b || site->target == 0x4cd8b0)
     {
-        return site->eax; /* a bare ret; 0x4e0f8b is the exception-state check, no exception is pending */
+        return site->eax; /* a bare ret; 0x4e0f8b is the exception-state check, 0x4cd8b0 the raise: the original's frames resume at the
+                           instruction after the raising call, so no unwinding is needed */
     }
     if (site->target == 0x4eb5e0)
     {

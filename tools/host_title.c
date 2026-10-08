@@ -64,6 +64,8 @@ static void report(const char *what, const LiftHost *host, uint32_t result)
     }
 }
 
+static void host_write_dword(LiftHost *h, uint32_t a, uint32_t v) { unsigned i; for (i = 0; i < 4; i++) { uint8_t b = (uint8_t)(v >> (8 * i)); if (a >= LIFT_HOST_HEAP_BASE) h->heap[a - LIFT_HOST_HEAP_BASE + i] = b; else h->image[a - LIFT_HOST_IMAGE_BASE + i] = b; } }
+
 int main(int argc, char **argv)
 {
     FILE *file;
@@ -204,6 +206,7 @@ int main(int argc, char **argv)
             int ran;
             host.boundary_calls = host.boundary_distinct = 0;
             host.clock_ms += getenv("CLOCKSTEP") ? (uint32_t)atoi(getenv("CLOCKSTEP")) : 14;
+            if (getenv("REQ") && t == (unsigned)atoi(getenv("REQAT") ? getenv("REQAT") : "100")) { uint32_t v = (uint32_t)strtoul(getenv("REQ"), 0, 0); host_write_dword(&host, 0x532a4c, v); }
             if (getenv("TRACEFROM") && t == (unsigned)atoi(getenv("TRACEFROM"))) vertrix_lifted_set_trace(1);
             { clock_t c0 = clock(); r = lift_host_run(&host, handler, g_form, 0, 0, 0, &ran); if (getenv("TICKTIME") && (double)(clock() - c0) / CLOCKS_PER_SEC > 0.2) printf("tick %u handler %x took %.2fs\n", t, handler, (double)(clock() - c0) / CLOCKS_PER_SEC); }
             if (getenv("TRACEFROM") && t == (unsigned)atoi(getenv("TRACEFROM"))) { vertrix_lifted_set_trace(0); return 0; }
@@ -233,6 +236,13 @@ int main(int argc, char **argv)
           { uint32_t o = lift_host_read(&host, 0x544070, 4), sf = lift_host_read(&host, o + 0x268, 4), px = lift_host_read(&host, sf, 4), ww = lift_host_read(&host, sf + 4, 4), wh = lift_host_read(&host, sf + 8, 4), q, nzw = 0;
             for (q = 0; q < ww * wh && ww < 4096; q++) if (lift_host_read(&host, px + 4 * q, 4)) nzw++;
             printf("bg obj %x surface %x: %ux%u lit %u; 558c84=%x 5b9c50+? ready\n", o, sf, ww, wh, nzw, lift_host_read(&host, 0x558c84, 4)); }
+          printf("state: req %x cur %x; table", lift_host_read(&host, 0x532a4c, 4), lift_host_read(&host, 0x532a98, 4));
+          { unsigned q; for (q = 0; q < 20; q++) printf(" %x", lift_host_read(&host, 0x4f7b44 + 4 * q, 4)); printf("\n"); }
+          { uint32_t o = lift_host_read(&host, 0x544070, 4); unsigned q; printf("bg fields"); for (q = 0x208; q < 0x22c; q += 2) printf(" %x:%x", q, (unsigned)lift_host_read(&host, o + q, 2)); printf("; disp %x %x\n", (unsigned)lift_host_read(&host, 0x5b9c8e, 2), (unsigned)lift_host_read(&host, 0x5b9c90, 2)); }
+          { uint32_t sv[2] = {host.primary_surface, host.back_surface}, gi;
+            for (gi = 0; gi < 2; gi++) { uint32_t w, h, pitch, bytes, base = lift_host_surface(&host, sv[gi], &w, &h, &pitch, &bytes), q, nzw = 0;
+              for (q = 0; q < w * h; q++) if (lift_host_read(&host, base + 4 * q, 4)) nzw++;
+              printf("dd surface %x: %ux%u base %x lit %u\n", sv[gi], w, h, base, nzw); } }
           printf("after %u ticks: %u lit pixels, frames presented %u, handler now %x\n", n, nz, host.frames_presented, lift_host_read(&host, g_form + 0xbc, 4)); }
         return 0;
     }
