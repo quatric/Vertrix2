@@ -54,8 +54,14 @@ uint32_t vertrix_calln(const VertrixCalls *calls, uint32_t target, uint32_t eax,
 uint32_t vertrix_call3(const VertrixCalls *calls, uint32_t target, uint32_t eax, uint32_t edx,
                        uint32_t ebx, uint32_t ecx, const uint32_t stack[3]);
 
+/* Store `size` (1, 2 or 4) bytes of `value` at an original static address through the boundary. */
+void vertrix_global_store(const VertrixCalls *calls, uint32_t address, unsigned size,
+                          uint32_t value);
+
 enum
 {
+    /* The boundary target that stores to an original static address (see lift_runtime.h). */
+    VERTRIX_GLOBAL_STORE = 0xf0000000u,
     VERTRIX_CALL_RESOURCE_TABLE = 0x513e60,
     VERTRIX_CALL_POINT_LIST = 0x54d640,
     VERTRIX_CALL_GRID_BASE = 0x544f90,

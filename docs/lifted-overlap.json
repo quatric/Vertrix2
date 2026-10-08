@@ -948,7 +948,8 @@
   ],
   "verification": [
    "global-scalars-verification.json",
-   "object-scalars-verification.json"
+   "object-scalars-verification.json",
+   "title-frame-verification.json"
   ]
  },
  "0x415550": {
@@ -957,7 +958,8 @@
    "session_registers.h"
   ],
   "verification": [
-   "session-registers-verification.json"
+   "session-registers-verification.json",
+   "title-frame-verification.json"
   ]
  },
  "0x415580": {
@@ -1591,7 +1593,9 @@
  "0x418130": {
   "lifted": "f418130",
   "hand_files": [],
-  "verification": []
+  "verification": [
+   "title-frame-verification.json"
+  ]
  },
  "0x418150": {
   "lifted": "compare_unsigned",
@@ -1686,11 +1690,13 @@
   "lifted": "object_set_counter_full",
   "hand_files": [
    "object_glue.h",
-   "object_scalars.h"
+   "object_scalars.h",
+   "title_frame.h"
   ],
   "verification": [
    "object-scalar-returns-verification.json",
-   "object-scalars-verification.json"
+   "object-scalars-verification.json",
+   "title-frame-verification.json"
   ]
  },
  "0x418850": {
@@ -1773,7 +1779,8 @@
    "call_glue.h"
   ],
   "verification": [
-   "call-glue-verification.json"
+   "call-glue-verification.json",
+   "title-frame-verification.json"
   ]
  },
  "0x4194b0": {
@@ -1782,7 +1789,8 @@
    "call_glue.h"
   ],
   "verification": [
-   "call-glue-verification.json"
+   "call-glue-verification.json",
+   "title-frame-verification.json"
   ]
  },
  "0x419ef0": {
@@ -1926,7 +1934,9 @@
  "0x41aaf0": {
   "lifted": "f41aaf0",
   "hand_files": [],
-  "verification": []
+  "verification": [
+   "title-frame-verification.json"
+  ]
  },
  "0x41ab00": {
   "lifted": "f41ab00",
@@ -1987,7 +1997,9 @@
  "0x41aca0": {
   "lifted": "f41aca0",
   "hand_files": [],
-  "verification": []
+  "verification": [
+   "title-frame-verification.json"
+  ]
  },
  "0x41acc0": {
   "lifted": "f41acc0",
@@ -2079,19 +2091,18 @@
   "hand_files": [],
   "verification": []
  },
- "0x41c7b0": {
-  "lifted": "f41c7b0",
-  "hand_files": [],
-  "verification": []
- },
  "0x41c9e0": {
   "lifted": "f41c9e0",
-  "hand_files": [],
+  "hand_files": [
+   "title_frame.h"
+  ],
   "verification": []
  },
  "0x41cbb0": {
   "lifted": "f41cbb0",
-  "hand_files": [],
+  "hand_files": [
+   "title_frame.h"
+  ],
   "verification": []
  },
  "0x41d410": {
@@ -2121,7 +2132,9 @@
  "0x41d640": {
   "lifted": "f41d640",
   "hand_files": [],
-  "verification": []
+  "verification": [
+   "title-frame-verification.json"
+  ]
  },
  "0x41d660": {
   "lifted": "global_increment_full",
@@ -2130,7 +2143,8 @@
   ],
   "verification": [
    "global-scalars-verification.json",
-   "object-scalars-verification.json"
+   "object-scalars-verification.json",
+   "title-frame-verification.json"
   ]
  },
  "0x41d670": {
@@ -2139,18 +2153,23 @@
    "frame_counter.h"
   ],
   "verification": [
-   "frame-counter-verification.json"
+   "frame-counter-verification.json",
+   "title-frame-verification.json"
   ]
  },
  "0x41d6d0": {
   "lifted": "f41d6d0",
   "hand_files": [],
-  "verification": []
+  "verification": [
+   "title-frame-verification.json"
+  ]
  },
  "0x41dd60": {
   "lifted": "f41dd60",
   "hand_files": [],
-  "verification": []
+  "verification": [
+   "title-frame-verification.json"
+  ]
  },
  "0x41ddf0": {
   "lifted": "f41ddf0",
@@ -2163,13 +2182,16 @@
    "object_tails.h"
   ],
   "verification": [
-   "object-tails-verification.json"
+   "object-tails-verification.json",
+   "title-frame-verification.json"
   ]
  },
  "0x41dec0": {
   "lifted": "f41dec0",
   "hand_files": [],
-  "verification": []
+  "verification": [
+   "title-frame-verification.json"
+  ]
  },
  "0x41df00": {
   "lifted": "f41df00",
@@ -10822,7 +10844,8 @@
    "object_list.h"
   ],
   "verification": [
-   "object-broadcast-verification.json"
+   "object-broadcast-verification.json",
+   "title-frame-verification.json"
   ]
  },
  "0x471a40": {
@@ -10831,7 +10854,8 @@
    "object_list.h"
   ],
   "verification": [
-   "object-broadcast-verification.json"
+   "object-broadcast-verification.json",
+   "title-frame-verification.json"
   ]
  },
  "0x471a50": {
@@ -10840,7 +10864,8 @@
    "object_list.h"
   ],
   "verification": [
-   "object-broadcast-verification.json"
+   "object-broadcast-verification.json",
+   "title-frame-verification.json"
   ]
  },
  "0x471a60": {
@@ -10849,7 +10874,8 @@
    "object_list.h"
   ],
   "verification": [
-   "object-broadcast-verification.json"
+   "object-broadcast-verification.json",
+   "title-frame-verification.json"
   ]
  },
  "0x471a70": {
@@ -10860,7 +10886,8 @@
   ],
   "verification": [
    "call-glue-verification.json",
-   "object-broadcast-verification.json"
+   "object-broadcast-verification.json",
+   "title-frame-verification.json"
   ]
  },
  "0x471a80": {
@@ -11318,13 +11345,16 @@
    "ui_panel_dispatch.h"
   ],
   "verification": [
+   "title-frame-verification.json",
    "ui-panel-dispatch-verification.json"
   ]
  },
  "0x472d90": {
   "lifted": "f472d90",
   "hand_files": [],
-  "verification": []
+  "verification": [
+   "title-frame-verification.json"
+  ]
  },
  "0x472db0": {
   "lifted": "f472db0",
@@ -13789,12 +13819,16 @@
  "0x4854a0": {
   "lifted": "f4854a0",
   "hand_files": [],
-  "verification": []
+  "verification": [
+   "title-frame-verification.json"
+  ]
  },
  "0x485520": {
   "lifted": "f485520",
   "hand_files": [],
-  "verification": []
+  "verification": [
+   "title-frame-verification.json"
+  ]
  },
  "0x485550": {
   "lifted": "f485550",
@@ -13818,12 +13852,16 @@
  "0x486d00": {
   "lifted": "f486d00",
   "hand_files": [],
-  "verification": []
+  "verification": [
+   "title-frame-verification.json"
+  ]
  },
  "0x486da0": {
   "lifted": "f486da0",
   "hand_files": [],
-  "verification": []
+  "verification": [
+   "title-frame-verification.json"
+  ]
  },
  "0x486e20": {
   "lifted": "f486e20",
@@ -13838,7 +13876,9 @@
  "0x487020": {
   "lifted": "f487020",
   "hand_files": [],
-  "verification": []
+  "verification": [
+   "title-frame-verification.json"
+  ]
  },
  "0x487060": {
   "lifted": "f487060",
@@ -17186,7 +17226,9 @@
  "0x4ac1c0": {
   "lifted": "f4ac1c0",
   "hand_files": [],
-  "verification": []
+  "verification": [
+   "title-frame-verification.json"
+  ]
  },
  "0x4ac1e0": {
   "lifted": "f4ac1e0",
@@ -19265,7 +19307,8 @@
    "timing.h"
   ],
   "verification": [
-   "time-frame-step-verification.json"
+   "time-frame-step-verification.json",
+   "title-frame-verification.json"
   ]
  },
  "0x4b7d70": {

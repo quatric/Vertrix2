@@ -19,6 +19,7 @@
 #include "lifted_whole_5.h"
 #include "lifted_whole_6.h"
 #include "lifted_whole_7.h"
+#include "native_dispatch.h"
 
 enum
 {
@@ -299,6 +300,7 @@ static const LiftedRoutine routines[] = {
     {0x41c400, lifted_f41c400, 68, 0},
     {0x41c6d0, lifted_f41c6d0, 120, 0},
     {0x41c740, lifted_f41c740, 120, 0},
+    {0x41c7b0, vertrix_native_title_frame, 0, 0},
     {0x41c9e0, lifted_f41c9e0, 176, 0},
     {0x41cbb0, lifted_f41cbb0, 136, 0},
     {0x41d410, lifted_f41d410, 108, 0},
@@ -2936,7 +2938,6 @@ static const LiftedRoutine unverified_routines[] = {
     {0x41b310, lifted_f41b310, 1060, 0},
     {0x41b820, lifted_f41b820, 480, 0},
     {0x41c410, lifted_f41c410, 572, 0},
-    {0x41c7b0, lifted_f41c7b0, 232, 0},
     {0x41d660, lifted_global_increment_full, 64, 0},
     {0x41d6d0, lifted_f41d6d0, 392, 0},
     {0x41de80, lifted_slot_toggle, 76, 0},

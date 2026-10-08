@@ -5,7 +5,7 @@ import json
 import subprocess
 from pathlib import Path
 
-from dispatch_boundaries import NATIVE_UNVERIFIED_BOUNDARIES
+from dispatch_boundaries import NATIVE_PORTS, NATIVE_UNVERIFIED_BOUNDARIES
 
 ROOT = Path(__file__).resolve().parents[1]
 entries = {}
@@ -30,10 +30,15 @@ for name, address in screens.items():
     entries[address] = (name, data)
 for address in [a for a in entries if a == 0]:
     del entries[address]
+for address in NATIVE_PORTS:
+    entries.pop(address, None)
+    unverified_entries.pop(address, None)
 headers = sorted(Path(p).name for p in glob.glob(str(ROOT / 'source' / 'lifted_*.h'))
                  if 'dispatch' not in p)
-rows = ['    {0x%x, lifted_%s, %d, %d},' % (a, entries[a][0], entries[a][1]['stack'],
-                                         entries[a][1]['arguments']) for a in sorted(entries)]
+row_text = {a: '    {0x%x, lifted_%s, %d, %d},' % (a, entries[a][0], entries[a][1]['stack'],
+                                                entries[a][1]['arguments']) for a in entries}
+row_text.update({a: '    {0x%x, %s, %d, %d},' % ((a,) + port) for a, port in NATIVE_PORTS.items()})
+rows = [row_text[a] for a in sorted(row_text)]
 unverified_rows = ['    {0x%x, lifted_%s, %d, %d},' % (a, unverified_entries[a][0], unverified_entries[a][1]['stack'],
                                                  unverified_entries[a][1]['arguments'])
                    for a in sorted(unverified_entries)
@@ -234,7 +239,7 @@ void vertrix_lifted_calls_init(VertrixLiftedCalls *adapter, const VertrixCalls *
     adapter->services = services;
     adapter->globals = globals;
 }
-''' % ('\n'.join('#include "%s"' % h for h in headers), maximum, '\n'.join(rows), '\n'.join(unverified_rows)))
+''' % ('\n'.join('#include "%s"' % h for h in headers + ['native_dispatch.h']), maximum, '\n'.join(rows), '\n'.join(unverified_rows)))
 subprocess.run(['clang-format', '-i', str(ROOT / 'source' / 'lifted_dispatch.c'),
                 str(ROOT / 'source' / 'lifted_dispatch.h')], check=True)
 print(len(rows), 'routines, max stack', maximum)

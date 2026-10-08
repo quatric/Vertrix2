@@ -73,6 +73,13 @@ uint32_t vertrix_resource_entry_call(const VertrixCalls *calls, uint32_t eax, ui
     return vertrix_call(calls, 0x4cea15, eax, index, VERTRIX_CALL_RESOURCE_TABLE, 0, 0);
 }
 
+void vertrix_global_store(const VertrixCalls *calls, uint32_t address, unsigned size,
+                          uint32_t value)
+{
+    const uint32_t width[1] = {size};
+    vertrix_calln(calls, VERTRIX_GLOBAL_STORE, address, value, 0, 0, width, 1, NULL);
+}
+
 uint32_t vertrix_point_list_add(const VertrixCalls *calls, uint32_t object, uint16_t value)
 {
     vertrix_call(calls, 0x476160, VERTRIX_CALL_POINT_LIST, object, value, object, 0);

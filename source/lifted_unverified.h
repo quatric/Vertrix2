@@ -17,7 +17,6 @@ enum
     LIFTED_F41B310_STACK = 1060,
     LIFTED_F41B820_STACK = 480,
     LIFTED_F41C410_STACK = 572,
-    LIFTED_F41C7B0_STACK = 232,
     LIFTED_GLOBAL_INCREMENT_FULL_STACK = 64,
     LIFTED_F41D6D0_STACK = 392,
     LIFTED_SLOT_TOGGLE_STACK = 76,
@@ -629,10 +628,6 @@ uint32_t lifted_f41b820(const VertrixCalls *calls, const VertrixFactoryServices 
 
 /* Original 0x41c410. */
 uint32_t lifted_f41c410(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x41c7b0. */
-uint32_t lifted_f41c7b0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x41d660. */

@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x41c7b0": 4096
+  },
+  "distinct_call_sequences": 179,
+  "scope": "The complete original 0x41c7b0 runs with every callee (the stage routines 0x41d640, 0x4b7d10, 0x41d670, 0x41dec0, 0x4ac1c0, 0x419490, 0x472d90, 0x471a70, 0x471a60, 0x4854a0, 0x471a20, 0x471a40, 0x485520, 0x41aaf0, 0x486d00, 0x471a50, 0x4194b0, 0x415530, 0x472d50, 0x415550, 0x41d6d0, 0x41dd60, 0x486da0, 0x487020, 0x41d660, 0x41de80, 0x41aca0, 0x418130 and 0x418840) replaced by a logging stub, over random flag states, screen slots and transition modes. The order of every call with the registers it reads (EAX, and EDX for 0x471a20 and 0x418840) and of every store to 0x540338, 0x54033c and 0x532a50 matches the native sequence; the final values, preserved ESI/EDI/EBP and the stack cleanup match too. Callees are assumed to read no register other than the ones compared."
+}
