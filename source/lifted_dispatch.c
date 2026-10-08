@@ -2959,6 +2959,7 @@ static const LiftedRoutine unverified_routines[] = {
     {0x474e00, lifted_render_color_bank_build, 184, 0},
     {0x476aa0, lifted_f476aa0, 380, 0},
     {0x477390, lifted_f477390, 224, 0},
+    {0x4774e0, lifted_f4774e0, 132, 0},
     {0x477b10, lifted_f477b10, 236, 0},
     {0x478ae0, lifted_f478ae0, 96, 0},
     {0x478f50, lifted_surface_fill, 96, 0},

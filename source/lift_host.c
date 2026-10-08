@@ -689,7 +689,7 @@ void lift_host_key(LiftHost *host, unsigned scan_code, int down)
     }
 }
 
-/* DirectInput: IDirectInput8 (3) creates devices; only the device the game polls for keys (GUID 6F1D2B60) has
+/* DirectInput: IDirectInput8 (3) creates devices; only the system keyboard (GUID 6F1D2B61) has
  * events, which GetDeviceData hands out as DIDEVICEOBJECTDATA { offset, data, time, sequence,
  * app data }. The mouse and joystick read as idle and EnumDevices finds nothing. */
 static uint32_t host_input(LiftHost *host, unsigned interface_id, unsigned index,
@@ -708,7 +708,7 @@ static uint32_t host_input(LiftHost *host, unsigned interface_id, unsigned index
             {
                 return 0x8007000eu;
             }
-            host_write(host, device + 24, 4, lift_host_read(host, site_argument(site, 1), 4) == 0x6f1d2b60u);
+            host_write(host, device + 24, 4, lift_host_read(host, site_argument(site, 1), 4) == 0x6f1d2b61u);
             host_write(host, site_argument(site, 2), 4, device);
         }
         return 0;
@@ -717,6 +717,7 @@ static uint32_t host_input(LiftHost *host, unsigned interface_id, unsigned index
     {
         uint32_t size = site_argument(site, 1), data = site_argument(site, 2), count = site_argument(site, 3);
         uint32_t room = lift_host_read(host, count, 4), n = 0;
+        if (getenv("TRACE_INPUT")) fprintf(stderr, "GetDeviceData this %x buffer %x\n", (unsigned)this_, (unsigned)data);
         while (n < room && host->key_head != host->key_tail && size >= 20)
         {
             uint32_t at = data + n * size;
