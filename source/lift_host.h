@@ -29,7 +29,7 @@ typedef struct LiftHost
     uint32_t heap_size;
     uint32_t heap_top;
     /* Native single arithmetic uses this explicit x87 control input (initialized to 0x037f).
-     * Software overflow requires a configured exception boundary; unsupported execution
+     * Software arithmetic errors require a configured exception boundary; unsupported execution
      * preserves inputs/caches and increments rtl_single_failures. x87 status/traps remain
      * outside the recovered host scope. */
     uint32_t rtl_single_control;

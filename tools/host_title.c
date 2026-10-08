@@ -201,7 +201,7 @@ int main(int argc, char **argv)
         host_store(&host, wrapper + 0, base);
         host_store(&host, wrapper + 4, w);
         host_store(&host, wrapper + 8, h);
-        host_store(&host, wrapper + 0xc, bytes | ((getenv("KIND") ? atoi(getenv("KIND")) : 0) << 8)); /* bytes per pixel; sub-format byte */
+        host_store(&host, wrapper + 0xc, bytes | ((getenv("KIND") ? atoi(getenv("KIND")) : 4) << 8)); /* bytes per pixel; sub-format byte */
         host_store(&host, wrapper + 0x10, 0);
         host_store(&host, wrapper + 0x14, pitch);
         host_store(&host, 0x5bc010, wrapper); /* the current render target */
@@ -233,8 +233,31 @@ int main(int argc, char **argv)
         report("update", &host, result);
         host.boundary_calls = host.boundary_distinct = 0;
         if (getenv("TRACE_DRAW")) vertrix_lifted_set_trace(1);
+        if (getenv("DUMP"))
+        {
+            FILE *o = fopen("/tmp/dump_image.bin", "wb"); fwrite(image, 1, sizeof image, o); fclose(o);
+            o = fopen("/tmp/dump_heap.bin", "wb"); fwrite(heap, 1, 0x2000000, o); fclose(o);
+            printf("dumped; wrapper %x\n", wrapper);
+        }
         printf("478eb0(w,3,2) = %x\n", lift_host_run(&host, 0x478eb0, wrapper, 3, 2, 0, &lifted));
         printf("pre-draw wrapper: base %x pitch %u bpp %u\n", lift_host_read(&host, wrapper, 4), lift_host_read(&host, wrapper + 0x14, 4), lift_host_read(&host, wrapper + 0xc, 4));
+        if (getenv("PERACTOR"))
+        {
+            uint32_t items = lift_host_read(&host, 0x54671c + 4, 4), n = lift_host_read(&host, 0x54671c + 8, 4), i, k, b = lift_host_read(&host, wrapper, 4);
+            printf("[");
+            for (i = 0; i < n; i++)
+            {
+                uint32_t nz = 0;
+                if (getenv("TRACEA") && i == (uint32_t)atoi(getenv("TRACEA"))) vertrix_lifted_set_trace(1);
+                lift_host_run(&host, 0x4b5550, lift_host_read(&host, items + 4 * i, 4), wrapper, 0, 0, &lifted);
+                vertrix_lifted_set_trace(0);
+                if (getenv("TRACEA") && i == (uint32_t)atoi(getenv("TRACEA"))) { printf("\n5bb72c=%x\n", lift_host_read(&host, 0x5bb72c, 4)); report("actor", &host, 0); }
+                for (k = 0; k < 640 * 480; k++) if (lift_host_read(&host, b + 4 * k, 4)) nz++;
+                printf("%u%s", nz, i + 1 < n ? ", " : "");
+            }
+            printf("]\n");
+            return 0;
+        }
         result = lift_host_run(&host, 0x4b6240, 0x54671c, wrapper, 0, 0, &lifted);
         vertrix_lifted_set_trace(0);
         report("draw", &host, result);

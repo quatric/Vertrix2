@@ -284,7 +284,7 @@ uint32_t lifted_f4eb57c(const VertrixCalls *calls, const VertrixFactoryServices 
 
 /* Original 0x4eb5b4. */
 uint32_t lifted_rtl_single_negate(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
+                                  const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4eb5c0. */
 uint32_t lifted_f4eb5c0(const VertrixCalls *calls, const VertrixFactoryServices *services,

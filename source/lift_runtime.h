@@ -60,7 +60,8 @@ enum
 };
 __attribute__((weak)) const LiftEnv *vertrix_lift_frames[LIFT_FRAME_LIMIT];
 __attribute__((weak)) unsigned vertrix_lift_frame_index;
-/* edx of the last RTL double helper (multiply, subtract); the host returns it in out_value. */
+/* EDX returned by lifted routines and native arithmetic helpers. lift_call seeds this slot
+ * with incoming EDX; native arithmetic exposes its output through out_value. */
 __attribute__((weak)) uint32_t vertrix_lift_edx;
 /* The flags a lifted routine leaves for its caller (RTL compare helpers answer in the flags). */
 __attribute__((weak)) LiftFlags vertrix_lift_fl;
@@ -195,8 +196,8 @@ static inline uint32_t lift_call(LiftEnv *env, uint32_t target, uint32_t eax, ui
     {
         lift_store(env, stack[4], 0, 4, out); /* CoCreateInstance stores the interface */
     }
-    if (target == 0x4db507 || target == 0x4eb652 || target == 0x4db350 ||
-        target == 0x4d809c || target == 0x4d80a6)
+    if (target == 0x4db507 || target == 0x4eb652 || target == 0x4db350 || target == 0x4d809c ||
+        target == 0x4d80a6 || target == 0x4d8177 || target == 0x4d81fe)
     {
         vertrix_lift_edx = out;
     }

@@ -6373,7 +6373,7 @@ L_4eb5b0:
 }
 
 uint32_t lifted_rtl_single_negate(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
+                                  const VertrixGlobals *globals, const LiftEntry *entry)
 {
     uint8_t stack[LIFTED_RTL_SINGLE_NEGATE_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;

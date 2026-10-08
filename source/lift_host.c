@@ -9,6 +9,8 @@
 
 #include "lift_runtime.h"
 #include "rtl_float.h"
+#include "rtl_single_multiply.h"
+#include "rtl_single_divide.h"
 
 static int in_image(uint32_t address, unsigned size)
 {
@@ -735,14 +737,40 @@ static void host_single_publish(HostSingleContext *context, const VertrixRtlFloa
     }
 }
 
+static void host_single_refresh(VertrixRtlFloatState *state, LiftHost *host)
+{
+    state->helper = lift_host_read(host, 0x503ea0, 4);
+    state->multiply = lift_host_read(host, 0x503ea4, 4);
+    state->divide = lift_host_read(host, 0x503ea8, 4);
+    state->hardware = lift_host_read(host, 0x5054a1, 1);
+    state->capability = lift_host_read(host, 0x508798, 1);
+    state->control = host->rtl_single_control;
+}
+
 static void host_single_exception(uint32_t target, VertrixRtlFloatState *state, void *opaque)
 {
     HostSingleContext *context = opaque;
     LiftHost *host = context->host;
-    /* Lazy initialization is observable before either exceptional callee executes. Publish
-     * once so subsequent writes by the exceptional boundary remain live. */
+    /* Publish lazy initialization before the first boundary. Refresh before each call so
+     * direct writes by the previous boundary remain live. Explicit state-field changes by
+     * the boundary commit to host globals; otherwise its direct host writes are retained. */
     host_single_publish(context, state);
+    host_single_refresh(state, host);
+    VertrixRtlFloatState before = *state;
     host->rtl_single_exception(target, state, host->rtl_single_exception_context);
+    if (state->helper != before.helper)
+        host_write(host, 0x503ea0, 4, state->helper);
+    if (state->multiply != before.multiply)
+        host_write(host, 0x503ea4, 4, state->multiply);
+    if (state->divide != before.divide)
+        host_write(host, 0x503ea8, 4, state->divide);
+    if (state->hardware != before.hardware)
+        host_write(host, 0x5054a1, 1, state->hardware);
+    if (state->capability != before.capability)
+        host_write(host, 0x508798, 1, state->capability);
+    if (state->control != before.control)
+        host->rtl_single_control = state->control;
+    host_single_refresh(state, host);
 }
 
 static uint32_t host_single(VertrixCallSite *site, LiftHost *host)
@@ -759,8 +787,22 @@ static uint32_t host_single(VertrixCallSite *site, LiftHost *host)
                                   host->rtl_single_control};
     HostSingleContext context = {host, 0};
     VertrixRtlFloatCall call = host->rtl_single_exception ? host_single_exception : NULL;
-    int ok = site->target == 0x4d809c ? vertrix_rtl_single_subtract_full(&state, call, &context)
-                                      : vertrix_rtl_single_add_full(&state, call, &context);
+    int ok;
+    switch (site->target)
+    {
+        case 0x4d809c:
+            ok = vertrix_rtl_single_subtract_full(&state, call, &context);
+            break;
+        case 0x4d80a6:
+            ok = vertrix_rtl_single_add_full(&state, call, &context);
+            break;
+        case 0x4d8177:
+            ok = vertrix_rtl_single_multiply_full(&state, call, &context);
+            break;
+        default:
+            ok = vertrix_rtl_single_divide_full(&state, call, &context);
+            break;
+    }
     if (!ok)
     {
         host->rtl_single_failures++;
@@ -815,29 +857,10 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
         site->out_value = (uint32_t)(out.bits >> 32);
         return (uint32_t)out.bits;
     }
-    if (site->target == 0x4d809c || site->target == 0x4d80a6)
+    if (site->target == 0x4d809c || site->target == 0x4d80a6 ||
+        site->target == 0x4d8177 || site->target == 0x4d81fe)
     {
         return host_single(site, host);
-    }
-    if (site->target == 0x4d8177) /* RTL single multiply: eax * edx, a zero operand gives zero */
-    {
-        union { uint32_t bits; float value; } left, right, out;
-        if (site->eax == 0 || site->edx == 0)
-        {
-            return 0;
-        }
-        left.bits = site->eax;
-        right.bits = site->edx;
-        out.value = left.value * right.value;
-        return out.bits == 0x80000000u ? 0u : out.bits;
-    }
-    if (site->target == 0x4d81fe) /* RTL single divide: eax / edx */
-    {
-        union { uint32_t bits; float value; } left, right, out;
-        left.bits = site->eax;
-        right.bits = site->edx;
-        out.value = left.value / right.value;
-        return out.bits == 0x80000000u ? 0u : out.bits;
     }
     if (site->target == 0x4eb652 || site->target == 0x4db350) /* RTL double divide / add: edx:eax op ecx:ebx */
     {
