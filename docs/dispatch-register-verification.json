@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "compiled_source_sha256": "0d3ad9b17241cdd7efeddb59b0b90c399a6932dbdb7d392da59b713b5d03d39d",
+  "entrypoints": 79,
+  "constant_entrypoints": 74,
+  "unchanged_return_entrypoints": 5,
+  "cases": 474,
+  "scope": "Actual original execution versus actual lifted dispatcher EAX and exported EDX for constant and unchanged-return leaf entries, six register-edge fixtures each. No nested callback, floating arithmetic, exceptional path or other routine is verified."
+}
