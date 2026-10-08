@@ -9,20 +9,25 @@
     "software_entry": {
       "software_cached": 4096,
       "software_lazy": 4096
+    },
+    "full": {
+      "software_cached": 4096,
+      "software_lazy": 4096
     }
   },
-  "register_cache_and_callback_comparisons": 16384,
+  "register_cache_and_callback_comparisons": 24576,
   "original_path_counts": {
-    "software_underflow_tail": 2208,
-    "software_overflow_tail": 2068,
-    "software_math": 16384,
-    "divide_zero": 144,
-    "lazy_initializer": 4096
+    "software_underflow_tail": 3264,
+    "software_overflow_tail": 3012,
+    "software_math": 24576,
+    "divide_zero": 216,
+    "lazy_initializer": 8192
   },
   "unsupported_or_missing_boundary_guards": 10,
+  "callback_register_cache_control_mutations": 6240,
   "error_boundary_calls": {
-    "0x4dae94": 2068,
-    "0x4e7280": 2212
+    "0x4dae94": 3012,
+    "0x4e7280": 3228
   },
-  "scope": "Full software helper 4d8227 and only software cached/lazy routes of 4d81fe. Raw EAX/EDX/EBX/ECX, cache writes, callback register inputs and arbitrary outputs, preserved ESI/EDI/EBP and stack compare against executable. Hardware routes 4d8204/4d8217, capability helper 4e223c and x87 remain unverified; 4d81fe annotation remains fragment."
+  "scope": "Full software helper 4d8227, legacy software-only entry and full entry software cached/lazy routes of 4d81fe. Raw EAX/EDX/EBX/ECX, cache writes, callback live register/cache/control inputs and arbitrary mutations, preserved ESI/EDI/EBP and stack compare against executable. Hardware routes and capability helper as used by single division are verified separately in rtl-single-divide-hardware-verification.json. Unmasked exceptions and extended x87 environment remain outside scope."
 }

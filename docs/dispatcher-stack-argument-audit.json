@@ -1,0 +1,23 @@
+{
+  "status": "repaired",
+  "scope": "Original reachable instruction and RET cleanup evidence for one stack argument; dispatcher and lifted frame setup consistency only, not complete behavior of these routines.",
+  "entries": {
+    "0x407830": {
+      "argument_count": 1,
+      "reads": {
+        "0x407869": "sub esi, dword ptr [ebp + 8]"
+      },
+      "returns": [
+        "0x40837f: ret 4",
+        "0x40838f: ret 4"
+      ]
+    },
+    "0x4088e0": {
+      "argument_count": 1,
+      "returns": [
+        "0x4095ca: ret 4"
+      ],
+      "note": "Argument must be transported and consumed even though traced body does not read EBP+8."
+    }
+  }
+}

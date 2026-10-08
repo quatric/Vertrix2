@@ -23,7 +23,7 @@ class State(c.Structure):
 
 Call = c.CFUNCTYPE(None, U, c.POINTER(State), c.c_void_p)
 REGISTERS = (UC_X86_REG_EAX, UC_X86_REG_EDX, UC_X86_REG_EBX, UC_X86_REG_ECX)
-ENTRIES = ((0x4d8227, 'software_full'), (0x4d81fe, 'software_entry'))
+ENTRIES = ((0x4d8227, 'software_full'), (0x4d81fe, 'software_entry'), (0x4d81fe, 'full'))
 MODES = [('software_cached', 0x4d80d5, 0, 0x37f), ('software_lazy', 0x4d82a5, 0, 0x37f)]
 EDGE = (0, 0x80000000, 1, 0x80000001, 0x7fffff, 0x800000, 0x3f800000, 0xbf800000,
         0x33800000, 0x33800001, 0x7f7fffff, 0xff7fffff, 0x7f800000, 0xff800000,
@@ -59,9 +59,16 @@ def main():
             return
         exception_targets[address] += 1
         registers = tuple(cpu.reg_read(reg) for reg in REGISTERS)
-        original_calls.append((address,) + registers)
+        live = tuple(int.from_bytes(cpu.mem_read(location, 4), 'little') for location in (0x503ea0, 0x503ea4, 0x503ea8)) + (int.from_bytes(cpu.mem_read(0x5054a1, 1), 'little'), int.from_bytes(cpu.mem_read(0x508798, 1), 'little'), cpu.reg_read(UC_X86_REG_FPCW))
+        original_calls.append((address,) + registers + live)
         output = tuple(rng.getrandbits(32) for _ in range(4))
+        output += tuple(rng.getrandbits(32) for _ in range(3)) + (rng.getrandbits(8), rng.getrandbits(8), 0x7f | (rng.choice((0, 2, 3)) << 8) | (rng.randrange(4) << 10))
         outputs.append(output)
+        for location, value in zip((0x503ea0, 0x503ea4, 0x503ea8), output[4:7]):
+            cpu.mem_write(location, struct.pack('<I', value))
+        cpu.mem_write(0x5054a1, bytes([output[7]]))
+        cpu.mem_write(0x508798, bytes([output[8]]))
+        cpu.reg_write(UC_X86_REG_FPCW, output[9])
         for reg, value in zip(REGISTERS, output):
             cpu.reg_write(reg, value)
         esp = cpu.reg_read(UC_X86_REG_ESP)
@@ -75,9 +82,10 @@ def main():
     @Call
     def call(target, state, context):
         s = state.contents
-        native_calls.append((target, s.eax, s.edx, s.ebx, s.ecx))
+        native_calls.append((target,) + tuple(getattr(s, field) for field in FIELDS))
         output = outputs[len(native_calls) - 1]
-        s.eax, s.edx, s.ebx, s.ecx = output
+        for field, value in zip(FIELDS, output):
+            setattr(s, field, value)
 
     totals = {name: {label: 0 for label, *_ in MODES} for _, name in ENTRIES}
     try:
@@ -149,8 +157,9 @@ def main():
               'complete_original_executions': totals, 'register_cache_and_callback_comparisons': executions,
               'original_path_counts': paths,
               'unsupported_or_missing_boundary_guards': guards,
+              'callback_register_cache_control_mutations': sum(exception_targets.values()),
               'error_boundary_calls': {hex(a): n for a, n in exception_targets.items()},
-              'scope': 'Full software helper 4d8227 and only software cached/lazy routes of 4d81fe. Raw EAX/EDX/EBX/ECX, cache writes, callback register inputs and arbitrary outputs, preserved ESI/EDI/EBP and stack compare against executable. Hardware routes 4d8204/4d8217, capability helper 4e223c and x87 remain unverified; 4d81fe annotation remains fragment.'}
+              'scope': 'Full software helper 4d8227, legacy software-only entry and full entry software cached/lazy routes of 4d81fe. Raw EAX/EDX/EBX/ECX, cache writes, callback live register/cache/control inputs and arbitrary mutations, preserved ESI/EDI/EBP and stack compare against executable. Hardware routes and capability helper as used by single division are verified separately in rtl-single-divide-hardware-verification.json. Unmasked exceptions and extended x87 environment remain outside scope.'}
     (args.build_dir / 'rtl-single-divide-verification.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))
 

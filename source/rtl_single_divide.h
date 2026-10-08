@@ -12,8 +12,20 @@ int vertrix_rtl_single_divide_software_full(VertrixRtlFloatState *state, Vertrix
                                             void *context);
 /* Original fragment 0x4d81fe: verified software dispatch, including lazy helper-cache selection
  * at divide sentinel 0x4d82bb. Supports cached 0x4d8227 or lazy software hardware-byte zero only.
- * Hardware helpers 0x4d8204/0x4d8217, capability helper 0x4e223c, x87 state/traps remain
- * unverified. Unsupported dispatch or a missing required boundary returns zero preserving state. */
+ * Hardware dispatch is outside this convenience helper; use divide_full for masked hardware routes.
+ * Unsupported dispatch or a missing required boundary returns zero preserving state. */
 int vertrix_rtl_single_divide_software_entry(VertrixRtlFloatState *state, VertrixRtlFloatCall call,
                                              void *context);
+/* Original 0x4d81fe: complete normal single divide dispatch with exact EAX/EDX/EBX/ECX
+ * outputs, lazy helper-cache selection and original software error boundaries.
+ * Hardware routes 0x4d8204/0x4d8217 model both x87 rounding stages with integer division.
+ * The capability helper 0x4e223c uses exact 15/16 operand scaling under masked precision64
+ * before restoring caller control; its result matches this model for single operands.
+ * Hardware requires masked x87 exceptions and precision 24/53/64. FPSW, x87 stack,
+ * pending exceptions and unmasked traps are outside this register/cache model.
+ * Arbitrary custom helper pointers and unsupported controls reject before committing state.
+ * Missing state or required software error boundary returns zero; success returns one with
+ * the original result in state EAX. The generic extended-input 0x4e223c ABI is not exposed. */
+int vertrix_rtl_single_divide_full(VertrixRtlFloatState *state, VertrixRtlFloatCall call,
+                                   void *context);
 #endif

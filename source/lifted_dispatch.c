@@ -2019,7 +2019,7 @@ static const LiftedRoutine routines[] = {
     {0x4d8082, lifted_rtl_sign_compare, 64, 0},
     {0x4d80d5, lifted_f4d80d5, 84, 0},
     {0x4d8198, lifted_f4d8198, 80, 0},
-    {0x4d8227, lifted_f4d8227, 88, 0},
+    {0x4d8227, lifted_rtl_single_divide_software_full, 88, 0},
     {0x4d8340, lifted_rtl_construct_chunk_list, 104, 0},
     {0x4d83c0, lifted_f4d83c0, 72, 0},
     {0x4d83f0, lifted_f4d83f0, 136, 0},

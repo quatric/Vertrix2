@@ -146,7 +146,7 @@ enum
     LIFTED_RTL_SIGN_COMPARE_STACK = 64,
     LIFTED_F4D80D5_STACK = 84,
     LIFTED_F4D8198_STACK = 80,
-    LIFTED_F4D8227_STACK = 88,
+    LIFTED_RTL_SINGLE_DIVIDE_SOFTWARE_FULL_STACK = 88,
     LIFTED_RTL_CONSTRUCT_CHUNK_LIST_STACK = 104,
     LIFTED_F4D83C0_STACK = 72,
     LIFTED_F4D83F0_STACK = 136,
@@ -1039,7 +1039,7 @@ uint32_t lifted_f4d8198(const VertrixCalls *calls, const VertrixFactoryServices 
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4d8227. */
-uint32_t lifted_f4d8227(const VertrixCalls *calls, const VertrixFactoryServices *services,
+uint32_t lifted_rtl_single_divide_software_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4d8340. */

@@ -1,9 +1,9 @@
 {
   "scope": "Current working-tree naming coverage and generated-source consistency only; the whole-chunk tier designation is not independent behavioral proof.",
-  "name_map_entries": 1441,
+  "name_map_entries": 1445,
   "verified_whole_chunk_entries": 2336,
-  "readable_whole_chunk_names": 916,
-  "anonymous_whole_chunk_names": 1420,
+  "readable_whole_chunk_names": 918,
+  "anonymous_whole_chunk_names": 1418,
   "anonymous_entries_with_unapplied_canonical_names": [],
   "optional_unverified_entries": 124,
   "optional_entries_kept_at_native_boundary": [
@@ -14,9 +14,9 @@
     "pending_files": 0
   },
   "source_lines": {
-    "lifters": 379985,
-    "other_source": 76944,
-    "total": 456929
+    "lifters": 382688,
+    "other_source": 77513,
+    "total": 460201
   },
   "line_count_convention": "All files under source, including comments and blank lines; lifters have filenames starting lifted_ or lift_; count LF bytes.",
   "full_native_recovery_reports": [
@@ -43,6 +43,11 @@
     "docs/title-letter-launch-verification.json",
     "docs/title-letter-verification.json",
     "docs/rtl-single-verification.json",
+    "docs/rtl-single-negate-verification.json",
+    "docs/host-rtl-single-verification.json",
+    "docs/rtl-single-multiply-verification.json",
+    "docs/rtl-single-divide-verification.json",
+    "docs/rtl-single-divide-hardware-verification.json",
     "docs/block-factory-full-verification.json"
   ],
   "dispatcher_report": "docs/dispatcher-integration-verification.json",

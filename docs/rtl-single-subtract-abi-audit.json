@@ -1,6 +1,6 @@
 {
   "address": "0x4d809c",
-  "status": "Historical confirmed ABI mismatch; exact host integration pending",
+  "status": "Historical confirmed ABI mismatch; exact supported host arithmetic recovered",
   "method": "Execute original routine and compile the actual current lift_host.c boundary branch in an isolated ABI harness. No game implementation replacement.",
   "original_operands": "single precision EAX minus EDX",
   "current_host_operands": "double precision EDX:EAX minus ECX:EBX",
@@ -59,5 +59,6 @@
   ],
   "observed_revision": "b26b01b",
   "recovery_report": "docs/rtl-single-verification.json",
-  "resolution_state": "Concurrent host work corrected operand widths; original software rounding, register outputs and helper-cache behavior still require the verified helper integration."
+  "resolution_state": "Host single add/sub uses verified integer helper for software and masked hardware execution, with original EDX outputs and caches. Unmasked x87/status, unavailable exceptional boundaries and complete game callers remain outstanding.",
+  "host_recovery_report": "docs/host-rtl-single-verification.json"
 }
