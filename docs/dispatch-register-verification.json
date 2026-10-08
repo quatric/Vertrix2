@@ -1,6 +1,6 @@
 {
   "status": "passed",
-  "compiled_source_sha256": "0d3ad9b17241cdd7efeddb59b0b90c399a6932dbdb7d392da59b713b5d03d39d",
+  "compiled_source_sha256": "06df59678faf6ccb32b52def8e2fd5d06d3feda82ba960760555adca70071017",
   "entrypoints": 79,
   "constant_entrypoints": 74,
   "unchanged_return_entrypoints": 5,

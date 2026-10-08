@@ -207,11 +207,15 @@ def main():
         cpu.reg_write(UC_X86_REG_EIP, ret)
 
     hooks = [cpu.hook_add(UC_HOOK_CODE, exception, begin=a, end=a) for a in exception_counts]
+    double_rounding = {}
     totals = {name: {label: 0 for label, *_ in MODES[name]} for _, name in ENTRIES}
     try:
         for case in range(args.cases):
             a = EDGE[case // len(EDGE)] if case < len(EDGE) ** 2 else rng.getrandbits(32)
             b = EDGE[case % len(EDGE)] if case < len(EDGE) ** 2 else rng.getrandbits(32)
+            if case in (len(EDGE) ** 2, len(EDGE) ** 2 + 1):
+                a = 0x00800001 | (0x80000000 if case == len(EDGE) ** 2 + 1 else 0)
+                b = 0x337fffff
             for target, name in ENTRIES:
                 for label, selected, hardware, control in MODES[name]:
                     capability = int(label[8]) if name == 'divide' and label.startswith('hardware') else (
@@ -226,6 +230,9 @@ def main():
                     log.clear(); outputs.clear()
                     original.call(target, eax=a, edx=b, ebx=ebx, ecx=ecx)
                     expected = tuple(cpu.reg_read(reg) for reg in REGISTERS)
+                    if case == len(EDGE) ** 2 and name == 'multiply' and label in (
+                            'hardware_pc0_rc0', 'hardware_pc2_rc0', 'hardware_pc3_rc0'):
+                        double_rounding[label] = expected[0]
                     cached = tuple(int.from_bytes(cpu.mem_read(location, 4), 'little') for location in (0x503ea0, 0x503ea4, 0x503ea8))
                     live = cached + (int.from_bytes(cpu.mem_read(0x5054a1, 1), 'little'),
                                      int.from_bytes(cpu.mem_read(0x508798, 1), 'little'), cpu.reg_read(UC_X86_REG_FPCW))
@@ -248,6 +255,8 @@ def main():
         assert exception_counts[0x4e7280] == sum(error_codes.values())
         assert exception_counts[0x4dae94] == error_codes[0x84]
         assert args.cases < len(EDGE) ** 2 or exception_counts[0x4dae94] > 0
+        if args.cases > len(EDGE) ** 2:
+            assert double_rounding == {'hardware_pc0_rc0': 0, 'hardware_pc2_rc0': 1, 'hardware_pc3_rc0': 1}
         guards = 0
         for target, name in ENTRIES:
             hardware_pointer = 0x4d8188 if name == 'multiply' else 0x4d8217 if name == 'divide' else 0x4d80b7
@@ -276,6 +285,7 @@ def main():
         'complete_original_executions': totals, 'original_math_executions': original_count,
         'actual_host_and_lift_call_comparisons': original_count * 4,
         'software_error_calls_per_original_target': {hex(a): count for a, count in exception_counts.items()},
+        'targeted_multiply_double_rounding': double_rounding,
         'software_error_codes': {hex(code): count for code, count in error_codes.items()},
         'unsupported_host_execution_guards': guards, 'initialized_host_control': '0x037f',
         'scope': 'Compile actual live source/lift_host.c and call public host.inner.calls, '
