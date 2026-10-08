@@ -85,17 +85,25 @@ enum
     LIFTED_F411280_STACK = 80,
     LIFTED_F4112D0_STACK = 468,
     LIFTED_F411C70_STACK = 164,
+    LIFTED_RECORD_TABLE_INIT_STACK = 72,
+    LIFTED_RECORD_TABLE_LOAD_STACK = 100,
     LIFTED_F412240_STACK = 136,
+    LIFTED_F4122F0_STACK = 404,
     LIFTED_F412390_STACK = 88,
     LIFTED_ACTOR_STORAGE_STYLE_STACK = 68,
     LIFTED_OBJECT_FLAG_FULL_STACK = 64,
+    LIFTED_F4138B0_STACK = 980,
+    LIFTED_F413A40_STACK = 980,
     LIFTED_ANCHOR_OFFSETS_UPDATE_STACK = 92,
     LIFTED_ANCHOR_OFFSETS_UPDATE_414B10_STACK = 92,
+    LIFTED_F414B90_STACK = 104,
     LIFTED_F415330_STACK = 80,
     LIFTED_F415350_STACK = 72,
+    LIFTED_TABLE_PAIR_SELECT_STACK = 68,
     LIFTED_F415470_STACK = 76,
     LIFTED_GLOBAL_RESET_PAIR_FULL_STACK = 68,
     LIFTED_SESSION_LATCH_RELEASE_STACK = 68,
+    LIFTED_F415580_STACK = 976,
     LIFTED_GLOBAL_CLEAR_TABLES_FULL_STACK = 68,
     LIFTED_GLOBAL_SET_FIRST_CELL_FULL_STACK = 64,
     LIFTED_GLOBAL_SET_SECOND_CELL_FULL_STACK = 64,
@@ -105,10 +113,13 @@ enum
     LIFTED_TABLE_ALL_FILLED_STACK = 72,
     LIFTED_TABLE_ALL_FILLED_415C30_STACK = 72,
     LIFTED_GLOBAL_READ_CURRENT_CELL_FULL_STACK = 64,
+    LIFTED_GLOBAL_SET_CURRENT_CELL_FULL_STACK = 64,
     LIFTED_F415DB0_STACK = 356,
     LIFTED_CLEAR_EACH_CALL_STACK = 76,
     LIFTED_TABLE_FIND_MATCHING_STACK = 88,
+    LIFTED_TABLE_FIND_EQUAL_STACK = 72,
     LIFTED_TABLE_VALUE_MATCHING_STACK = 72,
+    LIFTED_TABLE_VALUE_EQUAL_STACK = 72,
     LIFTED_F415EF0_STACK = 80,
     LIFTED_F415F10_STACK = 80,
     LIFTED_F415F30_STACK = 80,
@@ -119,7 +130,14 @@ enum
     LIFTED_F415FC0_STACK = 72,
     LIFTED_F415FD0_STACK = 72,
     LIFTED_F415FE0_STACK = 72,
+    LIFTED_NOTICE_CALL_FULL_STACK = 164,
+    LIFTED_F416140_STACK = 244,
+    LIFTED_F4163B0_STACK = 176,
+    LIFTED_F416500_STACK = 372,
+    LIFTED_F416900_STACK = 128,
     LIFTED_F416970_STACK = 72,
+    LIFTED_F416990_STACK = 180,
+    LIFTED_OBJECT_LOAD_SCRIPT_STACK = 148,
     LIFTED_F416B30_STACK = 80,
     LIFTED_F416B50_STACK = 80,
     LIFTED_F416B70_STACK = 80,
@@ -127,6 +145,8 @@ enum
     LIFTED_F416BB0_STACK = 80,
     LIFTED_F416BD0_STACK = 80,
     LIFTED_F416BF0_STACK = 80,
+    LIFTED_POINT_LIST_ADD_STACK = 76,
+    LIFTED_F416C30_STACK = 128,
     LIFTED_F417030_STACK = 80,
     LIFTED_F4170F0_STACK = 80,
     LIFTED_F417130_STACK = 80,
@@ -142,6 +162,10 @@ enum
     LIFTED_SFX_ALLOCATE_CHANNEL_P2_STACK = 84,
     LIFTED_F4175B0_STACK = 84,
     LIFTED_F417620_STACK = 84,
+    LIFTED_F417690_STACK = 364,
+    LIFTED_F417710_STACK = 364,
+    LIFTED_SCORE_TEXT_STACK = 80,
+    LIFTED_TABLE_LAST_CHANGE_STACK = 76,
     LIFTED_F417880_STACK = 72,
     LIFTED_F417890_STACK = 72,
     LIFTED_F4178A0_STACK = 72,
@@ -151,8 +175,14 @@ enum
     LIFTED_TABLE_BYTE_PAIR_STACK = 68,
     LIFTED_TABLE_PAIR_LINK_STACK = 72,
     LIFTED_F417C80_STACK = 84,
+    LIFTED_TABLE_GRID_VALUE_STACK = 68,
+    LIFTED_TABLE_GRID_VALUE_417D10_STACK = 68,
+    LIFTED_TABLE_GRID_VALUE_417D40_STACK = 68,
+    LIFTED_TABLE_GRID_VALUE_417D70_STACK = 68,
     LIFTED_TABLE_GROUPS_USED_STACK = 88,
     LIFTED_TABLE_ROW_USED_STACK = 76,
+    LIFTED_TABLE_RANDOM_EMPTY_STACK = 164,
+    LIFTED_TABLE_RANDOM_EMPTY_417ED0_STACK = 164,
     LIFTED_MATCHER_RESET_FULL_STACK = 68,
     LIFTED_TABLE_COLUMN_COUNT_STACK = 84,
     LIFTED_TABLE_COLUMN_NTH_STACK = 80,
@@ -161,6 +191,8 @@ enum
     LIFTED_F418100_STACK = 68,
     LIFTED_F418110_STACK = 84,
     LIFTED_F418130_STACK = 84,
+    LIFTED_COMPARE_UNSIGNED_STACK = 64,
+    LIFTED_CLOCK_TEXT_STACK = 212,
     LIFTED_F4182C0_STACK = 92,
     LIFTED_RESOURCE_ENTRY_CALL_STACK = 72,
     LIFTED_RESOURCE_ENTRY_CALL_418550_STACK = 72,
@@ -170,9 +202,13 @@ enum
     LIFTED_ACTOR_SYNC_CLOCK_PERIOD_STACK = 68,
     LIFTED_OBJECT_SET_COUNTER_FULL_STACK = 64,
     LIFTED_OBJECT_CLEAR_COUNTER_FULL_STACK = 64,
+    LIFTED_F418880_STACK = 252,
     LIFTED_F418970_STACK = 120,
     LIFTED_F418AE0_STACK = 76,
+    LIFTED_F418AF0_STACK = 488,
     LIFTED_F418CE0_STACK = 100,
+    LIFTED_F418D50_STACK = 896,
+    LIFTED_F4191B0_STACK = 404,
     LIFTED_F4192A0_STACK = 172,
     LIFTED_F4193B0_STACK = 168,
     LIFTED_GUARDED_CALL_STACK = 68,
@@ -180,14 +216,19 @@ enum
     LIFTED_F419EF0_STACK = 116,
     LIFTED_F419F60_STACK = 68,
     LIFTED_F41A010_STACK = 104,
+    LIFTED_F41A080_STACK = 300,
     LIFTED_F41A240_STACK = 104,
     LIFTED_F41A2B0_STACK = 92,
     LIFTED_SURFACE_BLIT_PROGRESS_STACK = 92,
+    LIFTED_F41A320_STACK = 692,
+    LIFTED_F41A440_STACK = 132,
     LIFTED_F41A4E0_STACK = 96,
     LIFTED_F41A520_STACK = 76,
+    LIFTED_F41A540_STACK = 680,
     LIFTED_F41A680_STACK = 96,
     LIFTED_F41A6C0_STACK = 96,
     LIFTED_F41A700_STACK = 128,
+    LIFTED_F41A780_STACK = 132,
     LIFTED_F41A800_STACK = 148,
     LIFTED_GLOBAL_CLEAR_FULL_STACK = 68,
     LIFTED_F41A940_STACK = 72,
@@ -207,6 +248,7 @@ enum
     LIFTED_SURFACE_CLEAR_SECOND_STACK = 72,
     LIFTED_F41AC80_STACK = 84,
     LIFTED_F41ACA0_STACK = 80,
+    LIFTED_F41ACC0_STACK = 1048,
     LIFTED_F41B5E0_STACK = 124,
     LIFTED_F41B680_STACK = 120,
     LIFTED_F41C020_STACK = 124,
@@ -233,19 +275,33 @@ enum
     LIFTED_F41DDF0_STACK = 120,
     LIFTED_F41DEC0_STACK = 96,
     LIFTED_F41DF00_STACK = 96,
+    LIFTED_F41DF30_STACK = 1088,
+    LIFTED_F41E280_STACK = 624,
+    LIFTED_F41E310_STACK = 808,
+    LIFTED_F41E5E0_STACK = 724,
     LIFTED_F41EDE0_STACK = 204,
     LIFTED_F41EFE0_STACK = 152,
+    LIFTED_F41F080_STACK = 484,
     LIFTED_F41F460_STACK = 156,
+    LIFTED_F41F500_STACK = 476,
     LIFTED_F41F910_STACK = 156,
     LIFTED_F41FC70_STACK = 156,
+    LIFTED_F41FD20_STACK = 180,
+    LIFTED_F420040_STACK = 516,
+    LIFTED_F420E10_STACK = 420,
+    LIFTED_F421AC0_STACK = 436,
+    LIFTED_F421BE0_STACK = 524,
     LIFTED_F421E80_STACK = 144,
     LIFTED_F423D70_STACK = 92,
+    LIFTED_F423DC0_STACK = 632,
+    LIFTED_F423EA0_STACK = 640,
     LIFTED_F424160_STACK = 68,
     LIFTED_F424180_STACK = 104,
     LIFTED_RETURN_CONSTANT_419F60_STACK = 64,
     LIFTED_RETURN_CONSTANT_419EA0_STACK = 64,
     LIFTED_RETURN_CONSTANT_424160_STACK = 64,
     LIFTED_RETURN_CONSTANT_419F80_STACK = 64,
+    LIFTED_F424230_STACK = 436,
     LIFTED_OBJECT_CENTER_TITLED_STACK = 84,
     LIFTED_F424790_STACK = 160,
     LIFTED_F424890_STACK = 160,
@@ -260,12 +316,17 @@ enum
     LIFTED_PLAYER_PIECE_INITIALIZE_STACK = 68,
     LIFTED_PIECE_INIT_FROM_KIND_STACK = 68,
     LIFTED_RETURN_UNCHANGED_425F40_STACK = 64,
+    LIFTED_OBJECT_COMPARE_REGIONS_STACK = 280,
+    LIFTED_AI_FEATURES_STACK = 76,
+    LIFTED_AI_COMPARE_BOARDS_STACK = 184,
+    LIFTED_AI_RECORD_SCORE_STACK = 136,
     LIFTED_AI_FIND_BEST_SLOT_STACK = 104,
     LIFTED_AI_CHOOSE_PIECE_ROTATION_STACK = 76,
     LIFTED_SETTINGS_DEFAULTS_STACK = 116,
     LIFTED_OBJECT_DESTROY_C_STACK = 136,
     LIFTED_SAVED_BLOCK_LOAD_STACK = 96,
     LIFTED_F429460_STACK = 148,
+    LIFTED_F429530_STACK = 412,
     LIFTED_F429600_STACK = 88,
     LIFTED_OBJECT_ADDRESS_PLUS_4_STACK = 64,
     LIFTED_MARKER_ACTOR_CONSTRUCT_FULL_STACK = 68,
@@ -274,6 +335,9 @@ enum
     LIFTED_CHOICE_GRID_APPLY_STACK = 100,
     LIFTED_CHOICE_GRID_LOAD_VALUES_STACK = 96,
     LIFTED_CHOICE_GRID_PICK_ROWS_STACK = 112,
+    LIFTED_CHOICE_GRID_PICK_CELL_STACK = 112,
+    LIFTED_CHOICE_GRID_PICK_COLUMN_STACK = 100,
+    LIFTED_CHOICE_GRID_MARK_STACK = 64,
     LIFTED_CHOICE_GRID_CELL_BYTES_STACK = 64,
     LIFTED_CHOICE_GRID_AVAILABLE_STACK = 64,
     LIFTED_CHOICE_GRID_ANY_MARKED_STACK = 84,
@@ -284,6 +348,7 @@ enum
     LIFTED_F42A8E0_STACK = 84,
     LIFTED_PIECE_CLEAR_OFFSET_X_FULL_STACK = 64,
     LIFTED_PIECE_CLEAR_OFFSET_Y_FULL_STACK = 64,
+    LIFTED_PIECE_CHILD_KINDS_STACK = 72,
     LIFTED_F42A9D0_STACK = 80,
     LIFTED_F42AA20_STACK = 80,
     LIFTED_PIECE_ACTOR_PARENT_CONSTRUCT_STACK = 76,
@@ -321,50 +386,7 @@ enum
     LIFTED_BOARD_COLLECTION_ALL_HANDLER_42ECC0_STACK = 72,
     LIFTED_BOARD_PIECE_ALL_HANDLER_STACK = 76,
     LIFTED_BOARD_PIECE_ALL_HANDLER_42ED70_STACK = 76,
-    LIFTED_BOARD_COLLECTION_SET_HANDLER_STACK = 72,
-    LIFTED_BOARD_READY_PREVIEWS_STACK = 92,
-    LIFTED_BOARD_RESTART_SLOTS_STACK = 100,
-    LIFTED_F42EEE0_STACK = 72,
-    LIFTED_F42EF00_STACK = 72,
-    LIFTED_F42EF10_STACK = 72,
-    LIFTED_F42EF20_STACK = 72,
-    LIFTED_F42EF30_STACK = 72,
-    LIFTED_F42EF40_STACK = 72,
-    LIFTED_F42EF50_STACK = 72,
-    LIFTED_PLAYER_FILL_BYTE_RANGE_STACK = 68,
-    LIFTED_PLAYER_FILL_BYTE_RANGE_42EF80_STACK = 68,
-    LIFTED_BOARD_MARK_COLUMNS_STACK = 96,
-    LIFTED_BOARD_PIECE_STORE_NEGATED_STACK = 76,
-    LIFTED_BOARD_FILL_CELLS_STACK = 84,
-    LIFTED_F42F310_STACK = 100,
-    LIFTED_F42F3D0_STACK = 76,
-    LIFTED_F42F410_STACK = 72,
-    LIFTED_BOARD_MARK_ROWS_FIRST_STACK = 100,
-    LIFTED_BOARD_MARK_ROWS_SECOND_STACK = 100,
-    LIFTED_BOARD_PIECE_STORE_TOUCH_STACK = 76,
-    LIFTED_BOARD_PIECE_STORE_TOUCH_42F550_STACK = 76,
-    LIFTED_F42F580_STACK = 96,
-    LIFTED_F42F620_STACK = 104,
-    LIFTED_BOARD_PIECE_SHIFT_STACK = 76,
-    LIFTED_BOARD_PIECE_SHIFT_42F720_STACK = 76,
-    LIFTED_BOARD_DROP_COLUMNS_STACK = 88,
-    LIFTED_PLAYER_FILL_BYTE_RANGE_42F7D0_STACK = 68,
-    LIFTED_PLAYER_FILL_BYTE_RANGE_42F7F0_STACK = 68,
-    LIFTED_PLAYER_FILL_BYTE_RANGE_42F810_STACK = 68,
-    LIFTED_PLAYER_FILL_BYTE_RANGE_42F830_STACK = 68,
-    LIFTED_F42F850_STACK = 72,
-    LIFTED_BOARD_CELL_VALUES_CLEAR_FULL_STACK = 72,
-    LIFTED_BOARD_PIECE_CLEAR_OFFSET_X_FULL_STACK = 72,
-    LIFTED_BOARD_PIECE_CLEAR_OFFSET_Y_FULL_STACK = 72,
-    LIFTED_BOARD_PIECE_SET_OFFSET_X_FULL_STACK = 64,
-    LIFTED_BOARD_PIECE_SET_OFFSET_Y_FULL_STACK = 64,
-    LIFTED_F42F8B0_STACK = 80,
-    LIFTED_BOARD_CELL_VALUES_FILL_FULL_STACK = 80,
-    LIFTED_BOARD_SET_ACTOR_CLIP_STACK = 76,
-    LIFTED_BOARD_CREATE_OVERLAY_STACK = 164,
-    LIFTED_BOARD_EXTRA_IS_IDLE_STACK = 68,
-    LIFTED_BOARD_PLACE_EXTRA_STACK = 76,
-    LIFTED_BOARD_PLACE_EXTRA_430100_STACK = 76
+    LIFTED_BOARD_COLLECTION_SET_HANDLER_STACK = 72
 };
 
 /* Original 0x401010. */
@@ -692,8 +714,20 @@ uint32_t lifted_f4112d0(const VertrixCalls *calls, const VertrixFactoryServices 
 uint32_t lifted_f411c70(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
+/* Original 0x4120a0. */
+uint32_t lifted_record_table_init(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                  const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x4121e0. */
+uint32_t lifted_record_table_load(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                  const VertrixGlobals *globals, const LiftEntry *entry);
+
 /* Original 0x412240. */
 uint32_t lifted_f412240(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x4122f0. */
+uint32_t lifted_f4122f0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x412390. */
@@ -709,6 +743,14 @@ uint32_t lifted_actor_storage_style(const VertrixCalls *calls,
 uint32_t lifted_object_flag_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                  const VertrixGlobals *globals, const LiftEntry *entry);
 
+/* Original 0x4138b0. */
+uint32_t lifted_f4138b0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x413a40. */
+uint32_t lifted_f413a40(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
 /* Original 0x414a90. */
 uint32_t lifted_anchor_offsets_update(const VertrixCalls *calls,
                                       const VertrixFactoryServices *services,
@@ -719,6 +761,10 @@ uint32_t lifted_anchor_offsets_update_414b10(const VertrixCalls *calls,
                                              const VertrixFactoryServices *services,
                                              const VertrixGlobals *globals, const LiftEntry *entry);
 
+/* Original 0x414b90. */
+uint32_t lifted_f414b90(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
 /* Original 0x415330. */
 uint32_t lifted_f415330(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
@@ -726,6 +772,10 @@ uint32_t lifted_f415330(const VertrixCalls *calls, const VertrixFactoryServices 
 /* Original 0x415350. */
 uint32_t lifted_f415350(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x4153e0. */
+uint32_t lifted_table_pair_select(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                  const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x415470. */
 uint32_t lifted_f415470(const VertrixCalls *calls, const VertrixFactoryServices *services,
@@ -740,6 +790,10 @@ uint32_t lifted_global_reset_pair_full(const VertrixCalls *calls,
 uint32_t lifted_session_latch_release(const VertrixCalls *calls,
                                       const VertrixFactoryServices *services,
                                       const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x415580. */
+uint32_t lifted_f415580(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x415b10. */
 uint32_t lifted_global_clear_tables_full(const VertrixCalls *calls,
@@ -787,6 +841,11 @@ uint32_t lifted_global_read_current_cell_full(const VertrixCalls *calls,
                                               const VertrixGlobals *globals,
                                               const LiftEntry *entry);
 
+/* Original 0x415d90. */
+uint32_t lifted_global_set_current_cell_full(const VertrixCalls *calls,
+                                             const VertrixFactoryServices *services,
+                                             const VertrixGlobals *globals, const LiftEntry *entry);
+
 /* Original 0x415db0. */
 uint32_t lifted_f415db0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
@@ -800,10 +859,18 @@ uint32_t lifted_table_find_matching(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services,
                                     const VertrixGlobals *globals, const LiftEntry *entry);
 
+/* Original 0x415e80. */
+uint32_t lifted_table_find_equal(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                 const VertrixGlobals *globals, const LiftEntry *entry);
+
 /* Original 0x415eb0. */
 uint32_t lifted_table_value_matching(const VertrixCalls *calls,
                                      const VertrixFactoryServices *services,
                                      const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x415ed0. */
+uint32_t lifted_table_value_equal(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                  const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x415ef0. */
 uint32_t lifted_f415ef0(const VertrixCalls *calls, const VertrixFactoryServices *services,
@@ -845,9 +912,38 @@ uint32_t lifted_f415fd0(const VertrixCalls *calls, const VertrixFactoryServices 
 uint32_t lifted_f415fe0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
+/* Original 0x416010. */
+uint32_t lifted_notice_call_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                 const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x416140. */
+uint32_t lifted_f416140(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x4163b0. */
+uint32_t lifted_f4163b0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x416500. */
+uint32_t lifted_f416500(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x416900. */
+uint32_t lifted_f416900(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
 /* Original 0x416970. */
 uint32_t lifted_f416970(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x416990. */
+uint32_t lifted_f416990(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x416a80. */
+uint32_t lifted_object_load_script(const VertrixCalls *calls,
+                                   const VertrixFactoryServices *services,
+                                   const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x416b30. */
 uint32_t lifted_f416b30(const VertrixCalls *calls, const VertrixFactoryServices *services,
@@ -875,6 +971,14 @@ uint32_t lifted_f416bd0(const VertrixCalls *calls, const VertrixFactoryServices 
 
 /* Original 0x416bf0. */
 uint32_t lifted_f416bf0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x416c10. */
+uint32_t lifted_point_list_add(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                               const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x416c30. */
+uint32_t lifted_f416c30(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x417030. */
@@ -939,6 +1043,22 @@ uint32_t lifted_f4175b0(const VertrixCalls *calls, const VertrixFactoryServices 
 uint32_t lifted_f417620(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
+/* Original 0x417690. */
+uint32_t lifted_f417690(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x417710. */
+uint32_t lifted_f417710(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x417790. */
+uint32_t lifted_score_text(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                           const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x417840. */
+uint32_t lifted_table_last_change(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                  const VertrixGlobals *globals, const LiftEntry *entry);
+
 /* Original 0x417880. */
 uint32_t lifted_f417880(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
@@ -975,6 +1095,25 @@ uint32_t lifted_table_pair_link(const VertrixCalls *calls, const VertrixFactoryS
 uint32_t lifted_f417c80(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
+/* Original 0x417cf0. */
+uint32_t lifted_table_grid_value(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                 const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x417d10. */
+uint32_t lifted_table_grid_value_417d10(const VertrixCalls *calls,
+                                        const VertrixFactoryServices *services,
+                                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x417d40. */
+uint32_t lifted_table_grid_value_417d40(const VertrixCalls *calls,
+                                        const VertrixFactoryServices *services,
+                                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x417d70. */
+uint32_t lifted_table_grid_value_417d70(const VertrixCalls *calls,
+                                        const VertrixFactoryServices *services,
+                                        const VertrixGlobals *globals, const LiftEntry *entry);
+
 /* Original 0x417da0. */
 uint32_t lifted_table_groups_used(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   const VertrixGlobals *globals, const LiftEntry *entry);
@@ -982,6 +1121,16 @@ uint32_t lifted_table_groups_used(const VertrixCalls *calls, const VertrixFactor
 /* Original 0x417df0. */
 uint32_t lifted_table_row_used(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x417e60. */
+uint32_t lifted_table_random_empty(const VertrixCalls *calls,
+                                   const VertrixFactoryServices *services,
+                                   const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x417ed0. */
+uint32_t lifted_table_random_empty_417ed0(const VertrixCalls *calls,
+                                          const VertrixFactoryServices *services,
+                                          const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x417f40. */
 uint32_t lifted_matcher_reset_full(const VertrixCalls *calls,
@@ -1017,6 +1166,14 @@ uint32_t lifted_f418110(const VertrixCalls *calls, const VertrixFactoryServices 
 /* Original 0x418130. */
 uint32_t lifted_f418130(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x418150. */
+uint32_t lifted_compare_unsigned(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                 const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x418170. */
+uint32_t lifted_clock_text(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                           const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4182c0. */
 uint32_t lifted_f4182c0(const VertrixCalls *calls, const VertrixFactoryServices *services,
@@ -1062,6 +1219,10 @@ uint32_t lifted_object_clear_counter_full(const VertrixCalls *calls,
                                           const VertrixFactoryServices *services,
                                           const VertrixGlobals *globals, const LiftEntry *entry);
 
+/* Original 0x418880. */
+uint32_t lifted_f418880(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
 /* Original 0x418970. */
 uint32_t lifted_f418970(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
@@ -1070,8 +1231,20 @@ uint32_t lifted_f418970(const VertrixCalls *calls, const VertrixFactoryServices 
 uint32_t lifted_f418ae0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
+/* Original 0x418af0. */
+uint32_t lifted_f418af0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
 /* Original 0x418ce0. */
 uint32_t lifted_f418ce0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x418d50. */
+uint32_t lifted_f418d50(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x4191b0. */
+uint32_t lifted_f4191b0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4192a0. */
@@ -1103,6 +1276,10 @@ uint32_t lifted_f419f60(const VertrixCalls *calls, const VertrixFactoryServices 
 uint32_t lifted_f41a010(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
+/* Original 0x41a080. */
+uint32_t lifted_f41a080(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
 /* Original 0x41a240. */
 uint32_t lifted_f41a240(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
@@ -1116,12 +1293,24 @@ uint32_t lifted_surface_blit_progress(const VertrixCalls *calls,
                                       const VertrixFactoryServices *services,
                                       const VertrixGlobals *globals, const LiftEntry *entry);
 
+/* Original 0x41a320. */
+uint32_t lifted_f41a320(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x41a440. */
+uint32_t lifted_f41a440(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
 /* Original 0x41a4e0. */
 uint32_t lifted_f41a4e0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x41a520. */
 uint32_t lifted_f41a520(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x41a540. */
+uint32_t lifted_f41a540(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x41a680. */
@@ -1134,6 +1323,10 @@ uint32_t lifted_f41a6c0(const VertrixCalls *calls, const VertrixFactoryServices 
 
 /* Original 0x41a700. */
 uint32_t lifted_f41a700(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x41a780. */
+uint32_t lifted_f41a780(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x41a800. */
@@ -1212,6 +1405,10 @@ uint32_t lifted_f41ac80(const VertrixCalls *calls, const VertrixFactoryServices 
 
 /* Original 0x41aca0. */
 uint32_t lifted_f41aca0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x41acc0. */
+uint32_t lifted_f41acc0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x41b5e0. */
@@ -1320,6 +1517,22 @@ uint32_t lifted_f41dec0(const VertrixCalls *calls, const VertrixFactoryServices 
 uint32_t lifted_f41df00(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
+/* Original 0x41df30. */
+uint32_t lifted_f41df30(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x41e280. */
+uint32_t lifted_f41e280(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x41e310. */
+uint32_t lifted_f41e310(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x41e5e0. */
+uint32_t lifted_f41e5e0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
 /* Original 0x41ede0. */
 uint32_t lifted_f41ede0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
@@ -1328,8 +1541,16 @@ uint32_t lifted_f41ede0(const VertrixCalls *calls, const VertrixFactoryServices 
 uint32_t lifted_f41efe0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
+/* Original 0x41f080. */
+uint32_t lifted_f41f080(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
 /* Original 0x41f460. */
 uint32_t lifted_f41f460(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x41f500. */
+uint32_t lifted_f41f500(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x41f910. */
@@ -1340,12 +1561,40 @@ uint32_t lifted_f41f910(const VertrixCalls *calls, const VertrixFactoryServices 
 uint32_t lifted_f41fc70(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
+/* Original 0x41fd20. */
+uint32_t lifted_f41fd20(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x420040. */
+uint32_t lifted_f420040(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x420e10. */
+uint32_t lifted_f420e10(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x421ac0. */
+uint32_t lifted_f421ac0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x421be0. */
+uint32_t lifted_f421be0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
 /* Original 0x421e80. */
 uint32_t lifted_f421e80(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x423d70. */
 uint32_t lifted_f423d70(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x423dc0. */
+uint32_t lifted_f423dc0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x423ea0. */
+uint32_t lifted_f423ea0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x424160. */
@@ -1375,6 +1624,10 @@ uint32_t lifted_return_constant_424160(const VertrixCalls *calls,
 uint32_t lifted_return_constant_419f80(const VertrixCalls *calls,
                                        const VertrixFactoryServices *services,
                                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x424230. */
+uint32_t lifted_f424230(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x424760. */
 uint32_t lifted_object_center_titled(const VertrixCalls *calls,
@@ -1437,6 +1690,23 @@ uint32_t lifted_return_unchanged_425f40(const VertrixCalls *calls,
                                         const VertrixFactoryServices *services,
                                         const VertrixGlobals *globals, const LiftEntry *entry);
 
+/* Original 0x427ae0. */
+uint32_t lifted_object_compare_regions(const VertrixCalls *calls,
+                                       const VertrixFactoryServices *services,
+                                       const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x427c10. */
+uint32_t lifted_ai_features(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                            const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x428110. */
+uint32_t lifted_ai_compare_boards(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                  const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x428610. */
+uint32_t lifted_ai_record_score(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                const VertrixGlobals *globals, const LiftEntry *entry);
+
 /* Original 0x429000. */
 uint32_t lifted_ai_find_best_slot(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   const VertrixGlobals *globals, const LiftEntry *entry);
@@ -1460,6 +1730,10 @@ uint32_t lifted_saved_block_load(const VertrixCalls *calls, const VertrixFactory
 
 /* Original 0x429460. */
 uint32_t lifted_f429460(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x429530. */
+uint32_t lifted_f429530(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x429600. */
@@ -1498,6 +1772,20 @@ uint32_t lifted_choice_grid_load_values(const VertrixCalls *calls,
 uint32_t lifted_choice_grid_pick_rows(const VertrixCalls *calls,
                                       const VertrixFactoryServices *services,
                                       const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x429fe0. */
+uint32_t lifted_choice_grid_pick_cell(const VertrixCalls *calls,
+                                      const VertrixFactoryServices *services,
+                                      const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x42a080. */
+uint32_t lifted_choice_grid_pick_column(const VertrixCalls *calls,
+                                        const VertrixFactoryServices *services,
+                                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x42a140. */
+uint32_t lifted_choice_grid_mark(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                 const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42a170. */
 uint32_t lifted_choice_grid_cell_bytes(const VertrixCalls *calls,
@@ -1545,6 +1833,10 @@ uint32_t lifted_piece_clear_offset_x_full(const VertrixCalls *calls,
 uint32_t lifted_piece_clear_offset_y_full(const VertrixCalls *calls,
                                           const VertrixFactoryServices *services,
                                           const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x42a980. */
+uint32_t lifted_piece_child_kinds(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                  const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42a9d0. */
 uint32_t lifted_f42a9d0(const VertrixCalls *calls, const VertrixFactoryServices *services,
@@ -1734,212 +2026,4 @@ uint32_t lifted_board_piece_all_handler_42ed70(const VertrixCalls *calls,
 uint32_t lifted_board_collection_set_handler(const VertrixCalls *calls,
                                              const VertrixFactoryServices *services,
                                              const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42ee20. */
-uint32_t lifted_board_ready_previews(const VertrixCalls *calls,
-                                     const VertrixFactoryServices *services,
-                                     const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42ee80. */
-uint32_t lifted_board_restart_slots(const VertrixCalls *calls,
-                                    const VertrixFactoryServices *services,
-                                    const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42eee0. */
-uint32_t lifted_f42eee0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42ef00. */
-uint32_t lifted_f42ef00(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42ef10. */
-uint32_t lifted_f42ef10(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42ef20. */
-uint32_t lifted_f42ef20(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42ef30. */
-uint32_t lifted_f42ef30(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42ef40. */
-uint32_t lifted_f42ef40(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42ef50. */
-uint32_t lifted_f42ef50(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42ef60. */
-uint32_t lifted_player_fill_byte_range(const VertrixCalls *calls,
-                                       const VertrixFactoryServices *services,
-                                       const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42ef80. */
-uint32_t lifted_player_fill_byte_range_42ef80(const VertrixCalls *calls,
-                                              const VertrixFactoryServices *services,
-                                              const VertrixGlobals *globals,
-                                              const LiftEntry *entry);
-
-/* Original 0x42f210. */
-uint32_t lifted_board_mark_columns(const VertrixCalls *calls,
-                                   const VertrixFactoryServices *services,
-                                   const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42f280. */
-uint32_t lifted_board_piece_store_negated(const VertrixCalls *calls,
-                                          const VertrixFactoryServices *services,
-                                          const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42f2e0. */
-uint32_t lifted_board_fill_cells(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                 const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42f310. */
-uint32_t lifted_f42f310(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42f3d0. */
-uint32_t lifted_f42f3d0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42f410. */
-uint32_t lifted_f42f410(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42f440. */
-uint32_t lifted_board_mark_rows_first(const VertrixCalls *calls,
-                                      const VertrixFactoryServices *services,
-                                      const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42f4b0. */
-uint32_t lifted_board_mark_rows_second(const VertrixCalls *calls,
-                                       const VertrixFactoryServices *services,
-                                       const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42f520. */
-uint32_t lifted_board_piece_store_touch(const VertrixCalls *calls,
-                                        const VertrixFactoryServices *services,
-                                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42f550. */
-uint32_t lifted_board_piece_store_touch_42f550(const VertrixCalls *calls,
-                                               const VertrixFactoryServices *services,
-                                               const VertrixGlobals *globals,
-                                               const LiftEntry *entry);
-
-/* Original 0x42f580. */
-uint32_t lifted_f42f580(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42f620. */
-uint32_t lifted_f42f620(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42f6e0. */
-uint32_t lifted_board_piece_shift(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                  const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42f720. */
-uint32_t lifted_board_piece_shift_42f720(const VertrixCalls *calls,
-                                         const VertrixFactoryServices *services,
-                                         const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42f760. */
-uint32_t lifted_board_drop_columns(const VertrixCalls *calls,
-                                   const VertrixFactoryServices *services,
-                                   const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42f7d0. */
-uint32_t lifted_player_fill_byte_range_42f7d0(const VertrixCalls *calls,
-                                              const VertrixFactoryServices *services,
-                                              const VertrixGlobals *globals,
-                                              const LiftEntry *entry);
-
-/* Original 0x42f7f0. */
-uint32_t lifted_player_fill_byte_range_42f7f0(const VertrixCalls *calls,
-                                              const VertrixFactoryServices *services,
-                                              const VertrixGlobals *globals,
-                                              const LiftEntry *entry);
-
-/* Original 0x42f810. */
-uint32_t lifted_player_fill_byte_range_42f810(const VertrixCalls *calls,
-                                              const VertrixFactoryServices *services,
-                                              const VertrixGlobals *globals,
-                                              const LiftEntry *entry);
-
-/* Original 0x42f830. */
-uint32_t lifted_player_fill_byte_range_42f830(const VertrixCalls *calls,
-                                              const VertrixFactoryServices *services,
-                                              const VertrixGlobals *globals,
-                                              const LiftEntry *entry);
-
-/* Original 0x42f850. */
-uint32_t lifted_f42f850(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42f860. */
-uint32_t lifted_board_cell_values_clear_full(const VertrixCalls *calls,
-                                             const VertrixFactoryServices *services,
-                                             const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42f870. */
-uint32_t lifted_board_piece_clear_offset_x_full(const VertrixCalls *calls,
-                                                const VertrixFactoryServices *services,
-                                                const VertrixGlobals *globals,
-                                                const LiftEntry *entry);
-
-/* Original 0x42f880. */
-uint32_t lifted_board_piece_clear_offset_y_full(const VertrixCalls *calls,
-                                                const VertrixFactoryServices *services,
-                                                const VertrixGlobals *globals,
-                                                const LiftEntry *entry);
-
-/* Original 0x42f890. */
-uint32_t lifted_board_piece_set_offset_x_full(const VertrixCalls *calls,
-                                              const VertrixFactoryServices *services,
-                                              const VertrixGlobals *globals,
-                                              const LiftEntry *entry);
-
-/* Original 0x42f8a0. */
-uint32_t lifted_board_piece_set_offset_y_full(const VertrixCalls *calls,
-                                              const VertrixFactoryServices *services,
-                                              const VertrixGlobals *globals,
-                                              const LiftEntry *entry);
-
-/* Original 0x42f8b0. */
-uint32_t lifted_f42f8b0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42f8e0. */
-uint32_t lifted_board_cell_values_fill_full(const VertrixCalls *calls,
-                                            const VertrixFactoryServices *services,
-                                            const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42ff10. */
-uint32_t lifted_board_set_actor_clip(const VertrixCalls *calls,
-                                     const VertrixFactoryServices *services,
-                                     const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42ff50. */
-uint32_t lifted_board_create_overlay(const VertrixCalls *calls,
-                                     const VertrixFactoryServices *services,
-                                     const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x430090. */
-uint32_t lifted_board_extra_is_idle(const VertrixCalls *calls,
-                                    const VertrixFactoryServices *services,
-                                    const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4300b0. */
-uint32_t lifted_board_place_extra(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                  const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x430100. */
-uint32_t lifted_board_place_extra_430100(const VertrixCalls *calls,
-                                         const VertrixFactoryServices *services,
-                                         const VertrixGlobals *globals, const LiftEntry *entry);
 #endif
