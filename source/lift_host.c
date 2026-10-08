@@ -940,7 +940,7 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
     }
     if (site->target == 0x475090)
         return host_palette_build(host);
-    if (site->target == 0x48ac50) /* load an image file: eax = path, the result is a surface object */
+    if (site->target == 0x48ac50 || site->target == 0x48ad00) /* load an image file: eax = path, the result is a surface object */
     {
         char text[260];
         unsigned k;
@@ -1007,9 +1007,9 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
         site->out_value = (uint32_t)(out.bits >> 32);
         return (uint32_t)out.bits;
     }
-    if (site->target == 0x4e04f4)
+    if (site->target == 0x4e04f4 || site->target == 0x4e0f8b)
     {
-        return site->eax; /* a bare ret */
+        return site->eax; /* a bare ret; 0x4e0f8b is the exception-state check, no exception is pending */
     }
     if (site->target == 0x4eb5e0)
     {

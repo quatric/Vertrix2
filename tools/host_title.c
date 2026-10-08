@@ -156,6 +156,8 @@ int main(int argc, char **argv)
         uint32_t display = lift_host_allocate(&host, 0x800);
         host_store(&host, 0x544070, display);
         if (getenv("TRACE")) vertrix_lifted_set_trace(1);
+        lift_host_run(&host, 0x4df307, 0, 0, 0, 0, &lifted); /* RTL thread-variable block */
+        printf("4df307: [5c5c54] = %x (lifted %d)\n", (unsigned)lift_host_read(&host, 0x5c5c54, 4), lifted);
         result = lift_host_run(&host, 0x41a080, form, 0, 0, 0, &lifted);
         report("startup 41a080", &host, result);
         host.boundary_calls = host.boundary_distinct = 0;
@@ -228,6 +230,9 @@ int main(int argc, char **argv)
           { uint32_t wr = 0x1706710, px = lift_host_read(&host, wr, 4), ww = lift_host_read(&host, wr + 4, 4), wh = lift_host_read(&host, wr + 8, 4), q, nzw = 0;
             for (q = 0; q < ww * wh && ww < 4096; q++) if (lift_host_read(&host, px + 4 * q, 4)) nzw++;
             printf("loading surface %x: %ux%u lit %u first %x mid %x\n", wr, ww, wh, nzw, lift_host_read(&host, px, 4), lift_host_read(&host, px + 4 * (ww * wh / 2 + ww / 2), 4)); }
+          { uint32_t o = lift_host_read(&host, 0x544070, 4), sf = lift_host_read(&host, o + 0x268, 4), px = lift_host_read(&host, sf, 4), ww = lift_host_read(&host, sf + 4, 4), wh = lift_host_read(&host, sf + 8, 4), q, nzw = 0;
+            for (q = 0; q < ww * wh && ww < 4096; q++) if (lift_host_read(&host, px + 4 * q, 4)) nzw++;
+            printf("bg obj %x surface %x: %ux%u lit %u; 558c84=%x 5b9c50+? ready\n", o, sf, ww, wh, nzw, lift_host_read(&host, 0x558c84, 4)); }
           printf("after %u ticks: %u lit pixels, frames presented %u, handler now %x\n", n, nz, host.frames_presented, lift_host_read(&host, g_form + 0xbc, 4)); }
         return 0;
     }
