@@ -42,6 +42,15 @@ uint32_t vertrix_input_repeat_tick(VertrixInputRepeat *repeat, uint32_t elapsed)
 int vertrix_input_repeat_tick_full(VertrixInputRepeat *repeat, uint32_t actor_handle,
                                    uint32_t elapsed, const VertrixCalls *calls, uint32_t *result);
 
+/* Original 0x475de0: clear the live repeat counter dword +0x44; EAX remains
+ * actor_handle. Invalid storage/result rejects without mutation. */
+int vertrix_input_repeat_counter_clear_full(void *actor, size_t size, uint32_t actor_handle,
+                                            uint32_t *result);
+/* Original 0x475e30: add incoming EDX to the live repeat counter +0x44 with
+ * 32-bit wrap; EAX remains actor_handle. Other fields/registers remain unchanged. */
+int vertrix_input_repeat_counter_advance_full(void *actor, size_t size, uint32_t actor_handle,
+                                              uint32_t elapsed, uint32_t *result);
+
 typedef struct
 {
     uint8_t state;

@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "cases_per_entry": 4096,
+  "complete_original_executions": {
+    "0x475de0": 4096,
+    "0x475e30": 4096,
+    "0x487860": 4096,
+    "0x48ac00": 4096
+  },
+  "whole_storage_and_register_comparisons": 16384,
+  "glyph_byte_codes": 256,
+  "incoming_eax_high_words": 32,
+  "invalid_storage_or_output_guards": 12,
+  "scope": "Unmodified original475de0 clear and475e30 wrapping advance of input repeat counter+44,487860 resource frame count+4,48ac00 glyph-index word+8+2*(EDX&255). Entire raw storage, exact EAX/EDX, preserved EBX/ECX/ESI/EDI/EBP and stack compare independently. Raw glyph lookup preserves incoming EAX highword, unlike signed index projections. Native invalid storage/output guards are adaptations, not original fault behavior."
+}

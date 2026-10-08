@@ -4861,10 +4861,10 @@ uint32_t lifted_progress_set_40(const VertrixCalls *calls, const VertrixFactoryS
     return env.failed ? 0u : eax;
 }
 
-uint32_t lifted_f475de0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+uint32_t lifted_input_repeat_counter_clear_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry)
 {
-    uint8_t stack[LIFTED_F475DE0_STACK + 4 + 4 * 0 + 4];
+    uint8_t stack[LIFTED_INPUT_REPEAT_COUNTER_CLEAR_FULL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
     LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
@@ -4884,7 +4884,7 @@ uint32_t lifted_f475de0(const VertrixCalls *calls, const VertrixFactoryServices 
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F475DE0_STACK, 0, entry);
+    lift_begin(&env, calls, services, globals, stack, LIFTED_INPUT_REPEAT_COUNTER_CLEAR_FULL_STACK, 0, entry);
     lift_store(&env, eax, 0x44u, 4, 0x0u);
     vertrix_lift_edx = edx;
     vertrix_lift_fl = fl;
@@ -4999,10 +4999,10 @@ L_475e1e:
     return env.failed ? 0u : eax;
 }
 
-uint32_t lifted_f475e30(const VertrixCalls *calls, const VertrixFactoryServices *services,
+uint32_t lifted_input_repeat_counter_advance_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry)
 {
-    uint8_t stack[LIFTED_F475E30_STACK + 4 + 4 * 0 + 4];
+    uint8_t stack[LIFTED_INPUT_REPEAT_COUNTER_ADVANCE_FULL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
     LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
@@ -5022,7 +5022,7 @@ uint32_t lifted_f475e30(const VertrixCalls *calls, const VertrixFactoryServices 
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F475E30_STACK, 0, entry);
+    lift_begin(&env, calls, services, globals, stack, LIFTED_INPUT_REPEAT_COUNTER_ADVANCE_FULL_STACK, 0, entry);
     {
         uint32_t r = lift_add(32, lift_load(&env, eax, 0x44u, 4), edx, &fl);
         lift_store(&env, eax, 0x44u, 4, r);
@@ -34068,10 +34068,10 @@ uint32_t lifted_f487850(const VertrixCalls *calls, const VertrixFactoryServices 
     return env.failed ? 0u : eax;
 }
 
-uint32_t lifted_f487860(const VertrixCalls *calls, const VertrixFactoryServices *services,
+uint32_t lifted_frame_resource_count_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry)
 {
-    uint8_t stack[LIFTED_F487860_STACK + 4 + 4 * 0 + 4];
+    uint8_t stack[LIFTED_FRAME_RESOURCE_COUNT_FULL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
     LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
@@ -34091,7 +34091,7 @@ uint32_t lifted_f487860(const VertrixCalls *calls, const VertrixFactoryServices 
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F487860_STACK, 0, entry);
+    lift_begin(&env, calls, services, globals, stack, LIFTED_FRAME_RESOURCE_COUNT_FULL_STACK, 0, entry);
     eax = lift_load(&env, eax, 0x4u, 4);
     vertrix_lift_edx = edx;
     vertrix_lift_fl = fl;
@@ -38796,10 +38796,10 @@ uint32_t lifted_object_set_indexed_word(const VertrixCalls *calls,
     return env.failed ? 0u : eax;
 }
 
-uint32_t lifted_f48ac00(const VertrixCalls *calls, const VertrixFactoryServices *services,
+uint32_t lifted_font_glyph_index_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry)
 {
-    uint8_t stack[LIFTED_F48AC00_STACK + 4 + 4 * 0 + 4];
+    uint8_t stack[LIFTED_FONT_GLYPH_INDEX_FULL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
     LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
@@ -38819,7 +38819,7 @@ uint32_t lifted_f48ac00(const VertrixCalls *calls, const VertrixFactoryServices 
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_F48AC00_STACK, 0, entry);
+    lift_begin(&env, calls, services, globals, stack, LIFTED_FONT_GLYPH_INDEX_FULL_STACK, 0, entry);
     {
         uint32_t r = lift_and(32, edx, 0xffu, &fl);
         edx = r;

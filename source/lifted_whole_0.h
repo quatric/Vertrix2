@@ -265,8 +265,8 @@ enum
     LIFTED_F42A8E0_STACK = 84,
     LIFTED_PIECE_CLEAR_OFFSET_X_FULL_STACK = 64,
     LIFTED_PIECE_CLEAR_OFFSET_Y_FULL_STACK = 64,
-    LIFTED_F42A960_STACK = 64,
-    LIFTED_F42A970_STACK = 64,
+    LIFTED_PIECE_SET_OFFSET_X_FULL_STACK = 64,
+    LIFTED_PIECE_SET_OFFSET_Y_FULL_STACK = 64,
     LIFTED_F42A9D0_STACK = 80,
     LIFTED_F42AA20_STACK = 80,
     LIFTED_PIECE_ACTOR_PARENT_CONSTRUCT_STACK = 76,
@@ -339,8 +339,8 @@ enum
     LIFTED_F42F860_STACK = 72,
     LIFTED_F42F870_STACK = 72,
     LIFTED_F42F880_STACK = 72,
-    LIFTED_F42F890_STACK = 64,
-    LIFTED_F42F8A0_STACK = 64,
+    LIFTED_BOARD_PIECE_SET_OFFSET_X_FULL_STACK = 64,
+    LIFTED_BOARD_PIECE_SET_OFFSET_Y_FULL_STACK = 64,
     LIFTED_F42F8B0_STACK = 80,
     LIFTED_F42F8E0_STACK = 80,
     LIFTED_BOARD_SET_ACTOR_CLIP_STACK = 76,
@@ -1440,11 +1440,11 @@ uint32_t lifted_piece_clear_offset_y_full(const VertrixCalls *calls,
                                           const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42a960. */
-uint32_t lifted_f42a960(const VertrixCalls *calls, const VertrixFactoryServices *services,
+uint32_t lifted_piece_set_offset_x_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42a970. */
-uint32_t lifted_f42a970(const VertrixCalls *calls, const VertrixFactoryServices *services,
+uint32_t lifted_piece_set_offset_y_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42a9d0. */
@@ -1795,11 +1795,11 @@ uint32_t lifted_f42f880(const VertrixCalls *calls, const VertrixFactoryServices 
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42f890. */
-uint32_t lifted_f42f890(const VertrixCalls *calls, const VertrixFactoryServices *services,
+uint32_t lifted_board_piece_set_offset_x_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42f8a0. */
-uint32_t lifted_f42f8a0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+uint32_t lifted_board_piece_set_offset_y_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42f8b0. */

@@ -89,6 +89,8 @@ def inventory(root):
             "docs/rtl-single-divide-verification.json",
             "docs/rtl-single-divide-hardware-verification.json",
             "docs/block-factory-full-verification.json",
+            "docs/scalar-wrappers-verification.json",
+            "docs/piece-offsets-verification.json",
         ],
         "dispatcher_report": "docs/dispatcher-integration-verification.json",
         "constant_dispatcher_report": "docs/constant-dispatch-verification.json",

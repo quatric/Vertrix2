@@ -7217,7 +7217,7 @@
   "virtual": [],
   "address": 4368720
  },
- "f42a960": {
+ "piece_set_offset_x_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -7229,7 +7229,7 @@
   "virtual": [],
   "address": 4368736
  },
- "f42a970": {
+ "piece_set_offset_y_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -8857,7 +8857,7 @@
   "virtual": [],
   "address": 4388992
  },
- "f42f890": {
+ "board_piece_set_offset_x_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -8869,7 +8869,7 @@
   "virtual": [],
   "address": 4389008
  },
- "f42f8a0": {
+ "board_piece_set_offset_y_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,

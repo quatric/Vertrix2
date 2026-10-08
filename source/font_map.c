@@ -85,3 +85,16 @@ int vertrix_font_glyph(const VertrixFontMap *map, uint8_t glyph, const uint32_t 
     *resource = index == -1 ? 0 : resources[index];
     return 1;
 }
+
+int vertrix_font_glyph_index_full(const void *storage, size_t size, uint32_t map_handle,
+                                  uint32_t edx, uint32_t *eax_result, uint32_t *edx_result)
+{
+    size_t offset = 8 + 2 * (edx & 255u);
+    if (!storage || size < offset + 2 || !eax_result || !edx_result)
+        return 0;
+    const uint8_t *bytes = storage;
+    uint32_t index = (uint32_t)bytes[offset] | ((uint32_t)bytes[offset + 1] << 8);
+    *eax_result = (map_handle & 0xffff0000u) | index;
+    *edx_result = edx & 255u;
+    return 1;
+}

@@ -56,10 +56,10 @@ enum
     LIFTED_INPUT_QUEUE_READY_FULL_STACK = 68,
     LIFTED_OBJECT_TRIPLE_STACK = 80,
     LIFTED_PROGRESS_SET_40_STACK = 64,
-    LIFTED_F475DE0_STACK = 64,
+    LIFTED_INPUT_REPEAT_COUNTER_CLEAR_FULL_STACK = 64,
     LIFTED_PROGRESS_DONE_STACK = 68,
     LIFTED_PROGRESS_QUOTIENT_STACK = 72,
-    LIFTED_F475E30_STACK = 64,
+    LIFTED_INPUT_REPEAT_COUNTER_ADVANCE_FULL_STACK = 64,
     LIFTED_PROGRESS_SET_3C_STACK = 64,
     LIFTED_INPUT_REPEAT_TICK_FULL_STACK = 100,
     LIFTED_OBJECT_CONSTRUCT_F_STACK = 140,
@@ -239,7 +239,7 @@ enum
     LIFTED_OBJECT_DWORD_4877E0_STACK = 64,
     LIFTED_FRAME_RESOURCE_GET_STACK = 76,
     LIFTED_F487850_STACK = 64,
-    LIFTED_F487860_STACK = 64,
+    LIFTED_FRAME_RESOURCE_COUNT_FULL_STACK = 64,
     LIFTED_TABLE_OBJECT_CONSTRUCT_STACK = 68,
     LIFTED_F487920_STACK = 68,
     LIFTED_LIST_EMPTY_STACK = 64,
@@ -287,7 +287,7 @@ enum
     LIFTED_STREAM_SKIP_STACK = 72,
     LIFTED_OBJECT_SET_PAIR_STACK = 64,
     LIFTED_OBJECT_SET_INDEXED_WORD_STACK = 64,
-    LIFTED_F48AC00_STACK = 64,
+    LIFTED_FONT_GLYPH_INDEX_FULL_STACK = 64,
     LIFTED_F48B550_STACK = 140,
     LIFTED_F48B770_STACK = 88,
     LIFTED_F48B7E0_STACK = 292,
@@ -565,7 +565,7 @@ uint32_t lifted_progress_set_40(const VertrixCalls *calls, const VertrixFactoryS
                                 const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x475de0. */
-uint32_t lifted_f475de0(const VertrixCalls *calls, const VertrixFactoryServices *services,
+uint32_t lifted_input_repeat_counter_clear_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x475df0. */
@@ -577,7 +577,7 @@ uint32_t lifted_progress_quotient(const VertrixCalls *calls, const VertrixFactor
                                   const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x475e30. */
-uint32_t lifted_f475e30(const VertrixCalls *calls, const VertrixFactoryServices *services,
+uint32_t lifted_input_repeat_counter_advance_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x475e40. */
@@ -1350,7 +1350,7 @@ uint32_t lifted_f487850(const VertrixCalls *calls, const VertrixFactoryServices 
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x487860. */
-uint32_t lifted_f487860(const VertrixCalls *calls, const VertrixFactoryServices *services,
+uint32_t lifted_frame_resource_count_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x487870. */
@@ -1556,7 +1556,7 @@ uint32_t lifted_object_set_indexed_word(const VertrixCalls *calls,
                                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x48ac00. */
-uint32_t lifted_f48ac00(const VertrixCalls *calls, const VertrixFactoryServices *services,
+uint32_t lifted_font_glyph_index_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x48b550. */

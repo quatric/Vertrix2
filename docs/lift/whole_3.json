@@ -1369,7 +1369,7 @@
   "virtual": [],
   "address": 4677072
  },
- "f475de0": {
+ "input_repeat_counter_clear_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -1405,7 +1405,7 @@
   "virtual": [],
   "address": 4677136
  },
- "f475e30": {
+ "input_repeat_counter_advance_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -5875,7 +5875,7 @@
   "virtual": [],
   "address": 4749392
  },
- "f487860": {
+ "frame_resource_count_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -7015,7 +7015,7 @@
   "virtual": [],
   "address": 4762608
  },
- "f48ac00": {
+ "font_glyph_index_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,

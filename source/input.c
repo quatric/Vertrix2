@@ -382,3 +382,22 @@ int vertrix_input_configure(VertrixInputAction actions[256], const uint16_t cont
     }
     return 1;
 }
+
+int vertrix_input_repeat_counter_clear_full(void *actor, size_t size, uint32_t actor_handle,
+                                            uint32_t *result)
+{
+    if (!result || !vertrix_actor_storage_write(actor, size, 0x44, 4, 0))
+        return 0;
+    *result = actor_handle;
+    return 1;
+}
+int vertrix_input_repeat_counter_advance_full(void *actor, size_t size, uint32_t actor_handle,
+                                              uint32_t elapsed, uint32_t *result)
+{
+    uint32_t counter;
+    if (!result || !vertrix_actor_storage_read(actor, size, 0x44, 4, &counter))
+        return 0;
+    vertrix_actor_storage_write(actor, size, 0x44, 4, counter + elapsed);
+    *result = actor_handle;
+    return 1;
+}

@@ -32,3 +32,13 @@ int vertrix_frame_resource_get(const VertrixFrameResource *resource, uint32_t in
     }
     return 0;
 }
+
+int vertrix_frame_resource_count_full(const void *storage, size_t size, uint32_t *result)
+{
+    if (!storage || size < 8 || !result)
+        return 0;
+    const uint8_t *bytes = storage;
+    *result = (uint32_t)bytes[4] | ((uint32_t)bytes[5] << 8) | ((uint32_t)bytes[6] << 16) |
+              ((uint32_t)bytes[7] << 24);
+    return 1;
+}

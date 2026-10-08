@@ -18,4 +18,7 @@ struct VertrixFrameResource
  * Output is unchanged on invalid storage, index or exhausted budget. */
 int vertrix_frame_resource_get(const VertrixFrameResource *resource, uint32_t index, size_t budget,
                                uint32_t *descriptor);
+/* Original 0x487860: read raw resource dword +4 (the frame count) into EAX.
+ * No mutation; other registers are preserved. Short/null storage/result rejects. */
+int vertrix_frame_resource_count_full(const void *storage, size_t size, uint32_t *result);
 #endif

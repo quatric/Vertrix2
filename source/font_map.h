@@ -18,4 +18,11 @@ int vertrix_font_maps_initialize(VertrixFontMap *maps, size_t count, uint32_t wi
  * preserve both outputs. Map initialization and VF resource loading are separate. */
 int vertrix_font_glyph(const VertrixFontMap *map, uint8_t glyph, const uint32_t *resources,
                        size_t resource_count, int16_t *selected_index, uint32_t *resource);
+/* Original 0x48ac00: mask EDX to its low byte, read the glyph index word at
+ * map +8+2*code into AX, preserving the high word of incoming map_handle EAX.
+ * Returns exact EAX and masked EDX through outputs; map storage is unchanged.
+ * This is the raw index lookup; resource resolution and global selected-index writes
+ * belong to 0x43f420. Short/null storage or outputs reject without mutation. */
+int vertrix_font_glyph_index_full(const void *storage, size_t size, uint32_t map_handle,
+                                  uint32_t edx, uint32_t *eax_result, uint32_t *edx_result);
 #endif
