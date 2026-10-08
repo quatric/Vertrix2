@@ -183,3 +183,22 @@ wii-sync: $(BUILD)/vertrix2.dol
 	cp $(BUILD)/vertrix2.dol "$(SYNC)/apps/vertrix2"/boot.dol
 	cp wii-game/meta.xml "$(SYNC)/apps/vertrix2"/meta.xml
 	cp hardware-check/Vertrix2.vf "$(SYNC)/apps/vertrix2"/Vertrix2.vf
+
+# The lifted original running on the Wii host (startup, loader, banks, frame loop; SD archive data).
+.PHONY: wii-lifted-game wii-sync-lifted
+wii-lifted-game: $(BUILD)/vertrix2-lifted.dol
+
+$(BUILD)/wii_lifted_game.o: tools/wii_lifted_game.c $(wildcard source/*.h) | $(BUILD)
+	$(PPC_CC) $(CFLAGS) -DGEKKO -DHW_RVL -D__wii__ -I$(LIBOGC)/include -Isource -c $< -o $@
+
+$(BUILD)/vertrix2-lifted.elf: $(BUILD)/wii_lifted_game.o $(BUILD)/image_bin.o $(BUILD)/libvertrix-wii-video.a $(BUILD)/libvertrix-wii-archive.a $(BUILD)/libvertrix-recovered.a
+	$(PPC_CC) -mrvl $(CFLAGS) $^ -L$(LIBOGC)/lib/wii -lfat -lwiiuse -lbte -logc -lm -o $@
+
+$(BUILD)/vertrix2-lifted.dol: $(BUILD)/vertrix2-lifted.elf
+	/opt/devkitpro/tools/bin/elf2dol $< $@
+
+wii-sync-lifted: $(BUILD)/vertrix2-lifted.dol
+	mkdir -p "$(SYNC)/apps/vertrix2"
+	cp $(BUILD)/vertrix2-lifted.dol "$(SYNC)/apps/vertrix2"/boot.dol
+	cp wii-game/meta.xml "$(SYNC)/apps/vertrix2"/meta.xml
+	cp hardware-check/Vertrix2.vf "$(SYNC)/apps/vertrix2"/Vertrix2.vf

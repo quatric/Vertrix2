@@ -66,6 +66,8 @@ __attribute__((weak)) uint32_t vertrix_lift_edx;
 /* The flags a lifted routine leaves for its caller (RTL compare helpers answer in the flags). */
 __attribute__((weak)) LiftFlags vertrix_lift_fl;
 
+static inline void lift_put(uint8_t *bytes, unsigned size, uint32_t value);
+
 static inline void lift_begin(LiftEnv *env, const VertrixCalls *calls,
                               const VertrixFactoryServices *services, const VertrixGlobals *globals,
                               uint8_t *stack, uint32_t below, unsigned argument_count,
@@ -88,7 +90,7 @@ static inline void lift_begin(LiftEnv *env, const VertrixCalls *calls,
     memset(stack + below, 0, 4 + 4 * argument_count + 4);
     for (i = 0; i < argument_count; i++)
     {
-        memcpy(stack + below + 4 + 4 * i, &entry->arguments[i], 4);
+        lift_put(stack + below + 4 + 4 * i, 4, entry->arguments[i]);
     }
 }
 

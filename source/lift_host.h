@@ -74,6 +74,7 @@ uint32_t lift_host_run(LiftHost *host, uint32_t target, uint32_t eax, uint32_t e
 
 /* Allocate zeroed heap memory; returns its address in the original's address space (0 when full).
  */
+extern int lift_host_trace_files;
 uint32_t lift_host_allocate(LiftHost *host, uint32_t size);
 
 uint32_t lift_host_read(const LiftHost *host, uint32_t address, unsigned size);

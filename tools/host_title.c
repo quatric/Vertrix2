@@ -1,4 +1,5 @@
 #include <string.h>
+#include <time.h>
 /* Host experiment: build the title screen with the lifted routines, then run the original's
  * frame (0x4b6200 updates, 0x4b6240 depth-sorted draws) over the scene list 0x54671c and print
  * the calls that reach the platform boundary. usage: host_title IMAGE.bin [frames] */
@@ -42,6 +43,7 @@ static void on_alarm(int signal)
 
 static void report(const char *what, const LiftHost *host, uint32_t result)
 {
+    { static clock_t last; clock_t now = clock(); if (getenv("TIMES")) printf("[%s took %.2fs]\n", what, (double)(now - last) / CLOCKS_PER_SEC); last = now; }
     unsigned i;
     printf("%s: result %x, %u boundary calls, heap %x\n", what, result, host->boundary_calls,
            host->heap_top);

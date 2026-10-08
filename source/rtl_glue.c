@@ -5,6 +5,20 @@
 
 #include "actor_storage.h"
 
+/* The original's objects are little-endian x86 memory whatever the host byte order. */
+static void store_dwords(uint8_t *storage, const uint32_t *fields, size_t count)
+{
+    size_t i;
+    unsigned b;
+    for (i = 0; i < count; i++)
+    {
+        for (b = 0; b < 4; b++)
+        {
+            storage[4 * i + b] = (uint8_t)(fields[i] >> (8 * b));
+        }
+    }
+}
+
 enum
 {
     DWORD_WIDTH = 4,
@@ -464,14 +478,14 @@ enum
 uint32_t vertrix_rtl_construct_list(uint32_t object, uint8_t *storage)
 {
     uint32_t fields[LIST_FIELDS] = {LIST_CLASS, 0, 0, 0};
-    memcpy(storage, fields, sizeof fields);
+    store_dwords(storage, fields, sizeof fields / sizeof fields[0]);
     return object;
 }
 
 uint32_t vertrix_rtl_construct_flag(uint32_t object, uint8_t *storage)
 {
     uint32_t fields[FLAG_FIELDS] = {FLAG_CLASS, 1};
-    memcpy(storage, fields, sizeof fields);
+    store_dwords(storage, fields, sizeof fields / sizeof fields[0]);
     return object;
 }
 
@@ -495,7 +509,7 @@ uint32_t vertrix_rtl_construct_chunk_list(uint32_t object, uint8_t *storage, uin
                                           uint32_t chunk_size)
 {
     uint32_t fields[CHUNK_FIELDS] = {class_pointer, 0, 0, 0, 0, 0, chunk_size};
-    memcpy(storage, fields, sizeof fields);
+    store_dwords(storage, fields, sizeof fields / sizeof fields[0]);
     return object;
 }
 
@@ -580,7 +594,7 @@ uint32_t vertrix_rtl_distribute_slack(uint32_t object, uint8_t *storage, size_t 
 uint32_t vertrix_rtl_construct_table(uint32_t object, uint8_t *storage, uint32_t chunk_size)
 {
     uint32_t fields[CHUNK_FIELDS] = {TABLE_CLASS, 0, TABLE_INITIAL, 0, 0, 0, chunk_size};
-    memcpy(storage, fields, sizeof fields);
+    store_dwords(storage, fields, sizeof fields / sizeof fields[0]);
     return object;
 }
 

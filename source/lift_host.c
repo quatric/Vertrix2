@@ -8,6 +8,10 @@
 #include "lift_imports.h"
 
 #include "lift_runtime.h"
+
+/* Set by the Wii driver to list the files the original opens. */
+int lift_host_trace_files;
+#include "palette_tables.h"
 #include "rtl_double_add.h"
 #include "rtl_double_multiply.h"
 #include "rtl_float.h"
@@ -196,7 +200,7 @@ static int host_find_file(LiftHost *host, uint32_t name, uint32_t *index)
     text[length] = 0;
     {
         int found = vertrix_vf_find(host->archive, start, index);
-        if (getenv("TRACE_FILES"))
+        if (lift_host_trace_files || getenv("TRACE_FILES"))
         {
             printf("file %s -> %d\n", text, found);
         }
@@ -825,6 +829,59 @@ static uint32_t host_rtl_arithmetic(VertrixCallSite *site, LiftHost *host)
     return state.eax;
 }
 
+/* Original 0x475090: the RGB lookup, hue and auxiliary tables and the pointer tables that index
+ * them. The lifted routine scans 101 channel values per colour for 262144 colours, which is too
+ * slow on the Wii, so the recovered builder (palette_tables.c, verified against the original)
+ * fills the same memory. */
+static uint32_t host_palette_build(LiftHost *host)
+{
+    VertrixPaletteTables tables = {0};
+    uint32_t lookup, hue, i;
+    if (!vertrix_palette_tables_build(&tables))
+    {
+        return 0;
+    }
+    lookup = host_allocate(0x100000, host);
+    hue = host_allocate(0x40000, host);
+    host_write(host, 0x54b800, 4, lookup);
+    host_write(host, 0x54b804, 4, hue);
+    for (i = 0; i < 262144; i++)
+    {
+        host_write(host, lookup + 4 * i, 4, tables.lookup[i]);
+        host_write(host, hue + i, 1, tables.hue[i]);
+    }
+    for (i = 0; i < sizeof tables.channels; i++)
+    {
+        host_write(host, 0x5468b0 + i, 1, tables.channels[i]);
+    }
+    for (i = 0; i < 255; i++)
+    {
+        host_write(host, 0x54c1d4 + 4 * i, 4, tables.auxiliary[i]);
+    }
+    for (i = 4; i <= 0x3fc; i += 4) /* 0x4753e4: the copy and the constant 100 column */
+    {
+        host_write(host, 0x54c9c8 + i, 4, 0x64);
+        host_write(host, 0x54c5cc + i, 4, (uint32_t)host_read(0x54c1d0 + i, host));
+    }
+    for (i = 4; i <= 0x320; i += 4)
+    {
+        host_write(host, 0x54b86c + i, 4, 0x5468b0);
+        host_write(host, 0x54beb0 + i, 4, 0x54b798);
+    }
+    for (i = 0; i < 0x324; i += 4)
+    {
+        host_write(host, 0x54bb90 + i, 4, 0x5468b0 + 0x65 * (i / 4));
+    }
+    host_write(host, 0x54d1d0, 4, 0x54c9cc);
+    for (i = 0; i < 255; i++)
+    {
+        host_write(host, 0x54d1d4 + 4 * i, 4, 0x54c1d4 + 4 * i);
+    }
+    host_write(host, 0x54cdc8, 4, 0x54bb90);
+    host_write(host, 0x54cdcc, 4, 0x54d1d0);
+    return 0;
+}
+
 static uint32_t host_boundary(VertrixCallSite *site, void *context)
 {
     LiftHost *host = context;
@@ -854,6 +911,8 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
         host_write(host, site->eax + 0x30, 4, 0x516b94);
         return site->eax;
     }
+    if (site->target == 0x475090)
+        return host_palette_build(host);
     if (site->target == 0x48ae00) /* JPEG decode: no bitmap until a native decoder exists */
         return 0;
     if (site->target == 0x4d809c || site->target == 0x4d80a6 || site->target == 0x4d8177 ||
@@ -894,7 +953,6 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
     }
     if (site->target == LIFT_GLOBAL_STORE)
     {
-        if (getenv("TRACE_G") && (site->eax >= 0x5bb770 && site->eax <= 0x5bb790))
         {
             static int shown;
             if (shown++ < 40)
