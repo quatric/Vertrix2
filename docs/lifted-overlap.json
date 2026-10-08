@@ -846,13 +846,14 @@
   ]
  },
  "0x4126f0": {
-  "lifted": "object_flag",
+  "lifted": "object_flag_full",
   "hand_files": [
    "hud_builder.h",
    "object_scalars.h"
   ],
   "verification": [
    "hud-builder-verification.json",
+   "object-scalar-returns-verification.json",
    "object-scalars-verification.json"
   ]
  },
@@ -916,11 +917,12 @@
   "verification": []
  },
  "0x415530": {
-  "lifted": "global_reset_pair",
+  "lifted": "global_reset_pair_full",
   "hand_files": [
    "object_scalars.h"
   ],
   "verification": [
+   "global-scalars-verification.json",
    "object-scalars-verification.json"
   ]
  },
@@ -939,29 +941,32 @@
   "verification": []
  },
  "0x415b10": {
-  "lifted": "global_clear_tables",
+  "lifted": "global_clear_tables_full",
   "hand_files": [
    "object_scalars.h"
   ],
   "verification": [
+   "global-scalars-verification.json",
    "object-scalars-verification.json"
   ]
  },
  "0x415b30": {
-  "lifted": "global_set_cell",
+  "lifted": "global_set_first_cell_full",
   "hand_files": [
    "object_scalars.h"
   ],
   "verification": [
+   "global-scalars-verification.json",
    "object-scalars-verification.json"
   ]
  },
  "0x415b40": {
-  "lifted": "global_set_cell_415b40",
+  "lifted": "global_set_second_cell_full",
   "hand_files": [
    "object_scalars.h"
   ],
   "verification": [
+   "global-scalars-verification.json",
    "object-scalars-verification.json"
   ]
  },
@@ -1011,20 +1016,22 @@
   ]
  },
  "0x415d60": {
-  "lifted": "global_cell",
+  "lifted": "global_read_current_cell_full",
   "hand_files": [
    "object_scalars.h"
   ],
   "verification": [
+   "global-scalars-verification.json",
    "object-scalars-verification.json"
   ]
  },
  "0x415d90": {
-  "lifted": "global_set_cell_415d90",
+  "lifted": "global_set_current_cell_full",
   "hand_files": [
    "object_scalars.h"
   ],
   "verification": [
+   "global-scalars-verification.json",
    "object-scalars-verification.json"
   ]
  },
@@ -1557,12 +1564,13 @@
   ]
  },
  "0x418820": {
-  "lifted": "object_set_period",
+  "lifted": "object_set_period_full",
   "hand_files": [
    "call_glue.h",
    "object_scalars.h"
   ],
   "verification": [
+   "object-scalar-returns-verification.json",
    "object-scalars-verification.json"
   ]
  },
@@ -1573,16 +1581,18 @@
    "object_scalars.h"
   ],
   "verification": [
+   "object-scalar-returns-verification.json",
    "object-scalars-verification.json"
   ]
  },
  "0x418840": {
-  "lifted": "object_set_counter",
+  "lifted": "object_set_counter_full",
   "hand_files": [
    "object_glue.h",
    "object_scalars.h"
   ],
   "verification": [
+   "object-scalar-returns-verification.json",
    "object-scalars-verification.json"
   ]
  },
@@ -1596,11 +1606,12 @@
   ]
  },
  "0x418870": {
-  "lifted": "object_clear_counter",
+  "lifted": "object_clear_counter_full",
   "hand_files": [
    "object_scalars.h"
   ],
   "verification": [
+   "object-scalar-returns-verification.json",
    "object-scalars-verification.json"
   ]
  },
@@ -1742,11 +1753,12 @@
   "verification": []
  },
  "0x41a930": {
-  "lifted": "global_clear",
+  "lifted": "global_clear_full",
   "hand_files": [
    "object_scalars.h"
   ],
   "verification": [
+   "global-scalars-verification.json",
    "object-scalars-verification.json"
   ]
  },
@@ -2468,20 +2480,22 @@
   "verification": []
  },
  "0x42a940": {
-  "lifted": "piece_clear_offset_x",
+  "lifted": "piece_clear_offset_x_full",
   "hand_files": [
    "object_scalars.h"
   ],
   "verification": [
+   "object-scalar-returns-verification.json",
    "object-scalars-verification.json"
   ]
  },
  "0x42a950": {
-  "lifted": "piece_clear_offset_y",
+  "lifted": "piece_clear_offset_y_full",
   "hand_files": [
    "object_scalars.h"
   ],
   "verification": [
+   "object-scalar-returns-verification.json",
    "object-scalars-verification.json"
   ]
  },
@@ -2658,11 +2672,12 @@
   ]
  },
  "0x42ba40": {
-  "lifted": "object_y_above_limit",
+  "lifted": "object_y_above_limit_full",
   "hand_files": [
    "object_scalars.h"
   ],
   "verification": [
+   "object-scalar-returns-verification.json",
    "object-scalars-verification.json"
   ]
  },
@@ -2677,20 +2692,22 @@
   "verification": []
  },
  "0x42bb00": {
-  "lifted": "block_construct",
+  "lifted": "block_construct_full",
   "hand_files": [
    "block_factory.h"
   ],
   "verification": [
+   "block-factory-full-verification.json",
    "block-factory-verification.json"
   ]
  },
  "0x42bbd0": {
-  "lifted": "block_create",
+  "lifted": "block_create_full",
   "hand_files": [
    "block_factory.h"
   ],
   "verification": [
+   "block-factory-full-verification.json",
    "block-factory-verification.json"
   ]
  },
@@ -3208,7 +3225,7 @@
   ]
  },
  "0x430800": {
-  "lifted": "block_spawn",
+  "lifted": "block_spawn_full",
   "hand_files": [
    "block_factory.h",
    "board_actions.h",
@@ -3216,6 +3233,7 @@
    "board_conversions.h"
   ],
   "verification": [
+   "block-factory-full-verification.json",
    "block-factory-verification.json"
   ]
  },
@@ -3905,12 +3923,13 @@
   ]
  },
  "0x43a080": {
-  "lifted": "block_construct_kind_one",
+  "lifted": "block_construct_kind_one_full",
   "hand_files": [
    "block_factory.h",
    "slot_objects.h"
   ],
   "verification": [
+   "block-factory-full-verification.json",
    "constructors-verification.json"
   ]
  },
@@ -4179,20 +4198,22 @@
   ]
  },
  "0x43b860": {
-  "lifted": "player_set_e0",
+  "lifted": "player_set_e0_full",
   "hand_files": [
    "object_scalars.h"
   ],
   "verification": [
+   "object-scalar-returns-verification.json",
    "object-scalars-verification.json"
   ]
  },
  "0x43b870": {
-  "lifted": "player_e0",
+  "lifted": "player_e0_full",
   "hand_files": [
    "object_scalars.h"
   ],
   "verification": [
+   "object-scalar-returns-verification.json",
    "object-scalars-verification.json"
   ]
  },
@@ -4213,6 +4234,7 @@
    "player_states.h"
   ],
   "verification": [
+   "object-scalar-returns-verification.json",
    "object-scalars-verification.json"
   ]
  },
@@ -4265,7 +4287,7 @@
   "verification": []
  },
  "0x43bad0": {
-  "lifted": "player_set_cd",
+  "lifted": "player_set_cd_full",
   "hand_files": [
    "bonus_effects.h",
    "object_scalars.h",
@@ -4273,12 +4295,13 @@
    "player_states.h"
   ],
   "verification": [
+   "object-scalar-returns-verification.json",
    "object-scalars-verification.json",
    "player-stores-verification.json"
   ]
  },
  "0x43bae0": {
-  "lifted": "player_set_cc",
+  "lifted": "player_set_cc_full",
   "hand_files": [
    "bonus_effects.h",
    "object_events.h",
@@ -4288,6 +4311,7 @@
   ],
   "verification": [
    "bonus-effects-verification.json",
+   "object-scalar-returns-verification.json",
    "object-scalars-verification.json",
    "player-stores-verification.json",
    "state-choice-take-verification.json"
@@ -4373,15 +4397,17 @@
    "object_scalars.h"
   ],
   "verification": [
+   "object-scalar-returns-verification.json",
    "object-scalars-verification.json"
   ]
  },
  "0x43bd60": {
-  "lifted": "player_partner_free",
+  "lifted": "player_partner_free_full",
   "hand_files": [
    "object_scalars.h"
   ],
   "verification": [
+   "object-scalar-returns-verification.json",
    "object-scalars-verification.json"
   ]
  },
@@ -4422,11 +4448,12 @@
   "verification": []
  },
  "0x43cc90": {
-  "lifted": "player_partner_not_cc_one",
+  "lifted": "player_partner_not_cc_one_full",
   "hand_files": [
    "object_scalars.h"
   ],
   "verification": [
+   "object-scalar-returns-verification.json",
    "object-scalars-verification.json"
   ]
  },
@@ -4480,12 +4507,13 @@
   ]
  },
  "0x43cde0": {
-  "lifted": "player_enter_state",
+  "lifted": "player_enter_state_full",
   "hand_files": [
    "object_scalars.h",
    "player_slots.h"
   ],
   "verification": [
+   "object-scalar-returns-verification.json",
    "object-scalars-verification.json"
   ]
  },
@@ -4717,12 +4745,13 @@
   ]
  },
  "0x43dea0": {
-  "lifted": "spawn_spread",
+  "lifted": "spawn_spread_full",
   "hand_files": [
    "object_glue.h",
    "particle_spawn.h"
   ],
   "verification": [
+   "particle-spawn-full-verification.json",
    "particle-spawn-verification.json"
   ]
  },
@@ -4736,7 +4765,7 @@
   ]
  },
  "0x43e100": {
-  "lifted": "board_particles_reset",
+  "lifted": "board_particles_reset_full",
   "hand_files": [
    "particle_init.h"
   ],
@@ -4763,7 +4792,7 @@
   ]
  },
  "0x43e740": {
-  "lifted": "particle_init_drift_full",
+  "lifted": "particle_init_burst_full",
   "hand_files": [
    "particle_init.h",
    "particle_spawn.h"
@@ -4785,11 +4814,12 @@
   ]
  },
  "0x43e920": {
-  "lifted": "spawn_place",
+  "lifted": "spawn_place_full",
   "hand_files": [
    "particle_spawn.h"
   ],
   "verification": [
+   "particle-spawn-full-verification.json",
    "particle-spawn-verification.json"
   ]
  },
@@ -8240,7 +8270,7 @@
   ]
  },
  "0x45a0c0": {
-  "lifted": "title_letter_launch",
+  "lifted": "title_letter_launch_call",
   "hand_files": [
    "title_letter_step.h"
   ],
@@ -9835,8 +9865,7 @@
    "particle_init.h"
   ],
   "verification": [
-   "icons-verification.json",
-   "piece-frames-verification.json"
+   "icons-verification.json"
   ]
  },
  "0x473490": {
@@ -13092,7 +13121,7 @@
   ]
  },
  "0x4ac380": {
-  "lifted": "actor_clear_cc",
+  "lifted": "actor_clear_cc_full",
   "hand_files": [
    "actor_fields.h",
    "board_cell_replace.h",
@@ -13147,7 +13176,7 @@
   ]
  },
  "0x4ac490": {
-  "lifted": "actor_set_d0",
+  "lifted": "actor_set_d0_full",
   "hand_files": [
    "actor_fields.h",
    "board_cell_replace.h",
@@ -13169,23 +13198,25 @@
   ]
  },
  "0x4ac4e0": {
-  "lifted": "actor_set_114",
+  "lifted": "actor_set_114_full",
   "hand_files": [
    "actor_fields.h",
    "label_actor.h"
   ],
   "verification": [
-   "actor-counters-verification.json"
+   "actor-counters-verification.json",
+   "actor-fields-verification.json"
   ]
  },
  "0x4ac4f0": {
-  "lifted": "actor_set_11c",
+  "lifted": "actor_set_11c_full",
   "hand_files": [
    "actor_fields.h",
    "label_actor.h"
   ],
   "verification": [
-   "actor-counters-verification.json"
+   "actor-counters-verification.json",
+   "actor-fields-verification.json"
   ]
  },
  "0x4ac500": {
@@ -13202,7 +13233,7 @@
   ]
  },
  "0x4ac510": {
-  "lifted": "actor_clear_counter",
+  "lifted": "actor_clear_counter_full",
   "hand_files": [
    "actor_fields.h",
    "bonus_effects.h",
@@ -13230,7 +13261,7 @@
   ]
  },
  "0x4ac540": {
-  "lifted": "actor_counter_quotient",
+  "lifted": "actor_counter_quotient_full",
   "hand_files": [
    "actor_fields.h",
    "bonus_effects.h",
@@ -13239,6 +13270,7 @@
   ],
   "verification": [
    "actor-counters-verification.json",
+   "actor-fields-verification.json",
    "title-letter-digit-verification.json",
    "title-letter-step-verification.json"
   ]
@@ -13295,13 +13327,14 @@
   "verification": []
  },
  "0x4ac640": {
-  "lifted": "actor_progress_quotient",
+  "lifted": "actor_progress_quotient_full",
   "hand_files": [
    "actor_fields.h",
    "actor_refresh.h"
   ],
   "verification": [
-   "actor-counters-verification.json"
+   "actor-counters-verification.json",
+   "actor-fields-verification.json"
   ]
  },
  "0x4ac6b0": {
@@ -13315,16 +13348,17 @@
   ]
  },
  "0x4ac700": {
-  "lifted": "actor_reset_frame_counter",
+  "lifted": "actor_reset_frame_counter_full",
   "hand_files": [
    "actor_fields.h"
   ],
   "verification": [
-   "actor-counters-verification.json"
+   "actor-counters-verification.json",
+   "actor-fields-verification.json"
   ]
  },
  "0x4ac710": {
-  "lifted": "actor_set_frame_index",
+  "lifted": "actor_set_frame_index_full",
   "hand_files": [
    "actor_fields.h",
    "actor_frame_switch.h",
@@ -13352,21 +13386,23 @@
   ]
  },
  "0x4ac740": {
-  "lifted": "actor_next_frame_counter",
+  "lifted": "actor_next_frame_counter_full",
   "hand_files": [
    "actor_fields.h"
   ],
   "verification": [
-   "actor-counters-verification.json"
+   "actor-counters-verification.json",
+   "actor-fields-verification.json"
   ]
  },
  "0x4ac750": {
-  "lifted": "actor_previous_frame_counter",
+  "lifted": "actor_previous_frame_counter_full",
   "hand_files": [
    "actor_fields.h"
   ],
   "verification": [
-   "actor-counters-verification.json"
+   "actor-counters-verification.json",
+   "actor-fields-verification.json"
   ]
  },
  "0x4ac760": {
@@ -13388,12 +13424,13 @@
   ]
  },
  "0x4ac7a0": {
-  "lifted": "actor_frame_counter_is_zero",
+  "lifted": "actor_frame_counter_is_zero_full",
   "hand_files": [
    "actor_fields.h"
   ],
   "verification": [
-   "actor-counters-verification.json"
+   "actor-counters-verification.json",
+   "actor-fields-verification.json"
   ]
  },
  "0x4ac7b0": {
@@ -13415,14 +13452,13 @@
    "slide_pair.h"
   ],
   "verification": [
-   "actor-fields-verification.json",
    "actor-match-burst-verification.json",
    "actor-match-effect-verification.json",
    "block-factory-verification.json"
   ]
  },
  "0x4ac7d0": {
-  "lifted": "actor_set_period",
+  "lifted": "actor_set_period_full",
   "hand_files": [
    "actor_fields.h",
    "actor_spawn.h",
@@ -13471,13 +13507,14 @@
   ]
  },
  "0x4ac860": {
-  "lifted": "actor_set_e0",
+  "lifted": "actor_set_e0_full",
   "hand_files": [
    "actor_fields.h",
    "actor_refresh.h"
   ],
   "verification": [
-   "actor-counters-verification.json"
+   "actor-counters-verification.json",
+   "actor-fields-verification.json"
   ]
  },
  "0x4ac8a0": {
@@ -13518,7 +13555,7 @@
   ]
  },
  "0x4ac8d0": {
-  "lifted": "actor_attach_resource",
+  "lifted": "actor_attach_resource_full",
   "hand_files": [
    "actor_frame_switch.h",
    "actor_spawn.h",
@@ -13534,13 +13571,14 @@
    "actor-frame-switch-verification.json",
    "actor-match-burst-verification.json",
    "actor-match-effect-verification.json",
+   "block-factory-full-verification.json",
    "block-factory-verification.json",
    "block-resource-verification.json",
    "piece-children-verification.json"
   ]
  },
  "0x4ac8f0": {
-  "lifted": "actor_set_handler",
+  "lifted": "actor_set_handler_full",
   "hand_files": [
    "actor_fields.h",
    "actor_spawn.h",
@@ -13564,16 +13602,17 @@
   ]
  },
  "0x4ac900": {
-  "lifted": "actor_get_handler",
+  "lifted": "actor_get_handler_full",
   "hand_files": [
    "actor_fields.h"
   ],
   "verification": [
+   "actor-fields-verification.json",
    "board-fields-verification.json"
   ]
  },
  "0x4ac910": {
-  "lifted": "actor_set_ec",
+  "lifted": "actor_set_ec_full",
   "hand_files": [
    "actor_fields.h",
    "actor_spawn.h",
@@ -13581,7 +13620,8 @@
    "object_construct.h"
   ],
   "verification": [
-   "actor-counters-verification.json"
+   "actor-counters-verification.json",
+   "actor-fields-verification.json"
   ]
  },
  "0x4ac920": {
@@ -13596,12 +13636,13 @@
   ]
  },
  "0x4ac930": {
-  "lifted": "actor_set_f0",
+  "lifted": "actor_set_f0_full",
   "hand_files": [
    "actor_fields.h"
   ],
   "verification": [
-   "actor-counters-verification.json"
+   "actor-counters-verification.json",
+   "actor-fields-verification.json"
   ]
  },
  "0x4ac940": {
@@ -13615,7 +13656,7 @@
   ]
  },
  "0x4ac950": {
-  "lifted": "actor_set_b4",
+  "lifted": "actor_set_b4_full",
   "hand_files": [
    "actor_fields.h",
    "letter_row.h",
@@ -13624,16 +13665,18 @@
    "title_letter_step.h"
   ],
   "verification": [
-   "actor-counters-verification.json"
+   "actor-counters-verification.json",
+   "actor-fields-verification.json"
   ]
  },
  "0x4ac960": {
-  "lifted": "actor_get_b4",
+  "lifted": "actor_get_b4_full",
   "hand_files": [
    "actor_fields.h"
   ],
   "verification": [
-   "actor-counters-verification.json"
+   "actor-counters-verification.json",
+   "actor-fields-verification.json"
   ]
  },
  "0x4ac980": {
@@ -13810,7 +13853,7 @@
   ]
  },
  "0x4ad510": {
-  "lifted": "actor_set_words_2a",
+  "lifted": "actor_set_words_2a_full",
   "hand_files": [
    "actor_fields.h",
    "letter_row.h",
@@ -13819,17 +13862,19 @@
   ],
   "verification": [
    "actor-counters-verification.json",
+   "actor-fields-verification.json",
    "actor-match-burst-verification.json",
    "title-letter-launch-verification.json"
   ]
  },
  "0x4ad520": {
-  "lifted": "actor_set_words_3a",
+  "lifted": "actor_set_words_3a_full",
   "hand_files": [
    "actor_fields.h"
   ],
   "verification": [
-   "actor-counters-verification.json"
+   "actor-counters-verification.json",
+   "actor-fields-verification.json"
   ]
  },
  "0x4ad530": {
@@ -13952,7 +13997,7 @@
   ]
  },
  "0x4adf20": {
-  "lifted": "actor_initialize",
+  "lifted": "actor_initialize_full",
   "hand_files": [
    "actor_spawn.h",
    "block_factory.h",
@@ -13974,6 +14019,7 @@
    "actor-match-effect-verification.json",
    "actor-spawn-verification.json",
    "banner-actor-verification.json",
+   "block-factory-full-verification.json",
    "block-factory-verification.json",
    "marker-actor-verification.json",
    "overlay-actor-verification.json",
@@ -14470,13 +14516,14 @@
   "verification": []
  },
  "0x4b5400": {
-  "lifted": "actor_construct_518174",
+  "lifted": "actor_construct_518174_full",
   "hand_files": [
    "block_factory.h",
    "label_actor.h",
    "scene_actors.h"
   ],
   "verification": [
+   "block-factory-full-verification.json",
    "constructors-verification.json"
   ]
  },
@@ -14490,7 +14537,7 @@
   ]
  },
  "0x4b54d0": {
-  "lifted": "actor_set_box",
+  "lifted": "actor_set_box_full",
   "hand_files": [
    "actor_fields.h",
    "label_actor.h",
@@ -14498,7 +14545,8 @@
    "scene_actors.h"
   ],
   "verification": [
-   "actor-counters-verification.json"
+   "actor-counters-verification.json",
+   "actor-fields-verification.json"
   ]
  },
  "0x4b5500": {
@@ -17949,7 +17997,9 @@
  "0x4d80d5": {
   "lifted": "f4d80d5",
   "hand_files": [],
-  "verification": []
+  "verification": [
+   "rtl-single-verification.json"
+  ]
  },
  "0x4d8198": {
   "lifted": "f4d8198",
@@ -19546,7 +19596,9 @@
  "0x4e7280": {
   "lifted": "f4e7280",
   "hand_files": [],
-  "verification": []
+  "verification": [
+   "rtl-single-verification.json"
+  ]
  },
  "0x4e7540": {
   "lifted": "f4e7540",

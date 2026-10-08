@@ -8,6 +8,7 @@
 #include "lift_imports.h"
 
 #include "lift_runtime.h"
+#include "rtl_float.h"
 
 static int in_image(uint32_t address, unsigned size)
 {
@@ -717,6 +718,63 @@ static uint32_t host_com(LiftHost *host, unsigned interface_id, unsigned index,
     return 0;
 }
 
+typedef struct
+{
+    LiftHost *host;
+    int cache_published;
+} HostSingleContext;
+
+static void host_single_publish(HostSingleContext *context, const VertrixRtlFloatState *state)
+{
+    if (!context->cache_published)
+    {
+        host_write(context->host, 0x503ea0, 4, state->helper);
+        host_write(context->host, 0x503ea4, 4, state->multiply);
+        host_write(context->host, 0x503ea8, 4, state->divide);
+        context->cache_published = 1;
+    }
+}
+
+static void host_single_exception(uint32_t target, VertrixRtlFloatState *state, void *opaque)
+{
+    HostSingleContext *context = opaque;
+    LiftHost *host = context->host;
+    /* Lazy initialization is observable before either exceptional callee executes. Publish
+     * once so subsequent writes by the exceptional boundary remain live. */
+    host_single_publish(context, state);
+    host->rtl_single_exception(target, state, host->rtl_single_exception_context);
+}
+
+static uint32_t host_single(VertrixCallSite *site, LiftHost *host)
+{
+    VertrixRtlFloatState state = {site->eax,
+                                  site->edx,
+                                  site->ebx,
+                                  site->ecx,
+                                  lift_host_read(host, 0x503ea0, 4),
+                                  lift_host_read(host, 0x503ea4, 4),
+                                  lift_host_read(host, 0x503ea8, 4),
+                                  lift_host_read(host, 0x5054a1, 1),
+                                  lift_host_read(host, 0x508798, 1),
+                                  host->rtl_single_control};
+    HostSingleContext context = {host, 0};
+    VertrixRtlFloatCall call = host->rtl_single_exception ? host_single_exception : NULL;
+    int ok = site->target == 0x4d809c ? vertrix_rtl_single_subtract_full(&state, call, &context)
+                                      : vertrix_rtl_single_add_full(&state, call, &context);
+    if (!ok)
+    {
+        host->rtl_single_failures++;
+        site->out_value = site->edx;
+        return site->eax;
+    }
+    host_single_publish(&context, &state);
+    site->edx = state.edx;
+    site->ebx = state.ebx;
+    site->ecx = state.ecx;
+    site->out_value = state.edx;
+    return state.eax;
+}
+
 static uint32_t host_boundary(VertrixCallSite *site, void *context)
 {
     LiftHost *host = context;
@@ -748,17 +806,49 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
     }
     if (site->target == 0x48ae00) /* JPEG decode: no bitmap until a native decoder exists */
         return 0;
-    if (site->target == 0x4db507 ||
-        site->target == 0x4d809c) /* RTL double multiply / subtract: edx:eax op ecx:ebx */
+    if (site->target == 0x4db507) /* RTL double multiply: edx:eax * ecx:ebx -> edx:eax */
     {
-        union
-        {
-            uint64_t bits;
-            double value;
-        } left, right, out;
+        union { uint64_t bits; double value; } left, right, out;
         left.bits = ((uint64_t)site->edx << 32) | site->eax;
         right.bits = ((uint64_t)site->ecx << 32) | site->ebx;
-        out.value = site->target == 0x4db507 ? left.value * right.value : left.value - right.value;
+        out.value = left.value * right.value;
+        site->out_value = (uint32_t)(out.bits >> 32);
+        return (uint32_t)out.bits;
+    }
+    if (site->target == 0x4d809c || site->target == 0x4d80a6)
+    {
+        return host_single(site, host);
+    }
+    if (site->target == 0x4d8177) /* RTL single multiply: eax * edx, a zero operand gives zero */
+    {
+        union { uint32_t bits; float value; } left, right, out;
+        if (site->eax == 0 || site->edx == 0)
+        {
+            return 0;
+        }
+        left.bits = site->eax;
+        right.bits = site->edx;
+        out.value = left.value * right.value;
+        return out.bits == 0x80000000u ? 0u : out.bits;
+    }
+    if (site->target == 0x4d81fe) /* RTL single divide: eax / edx */
+    {
+        union { uint32_t bits; float value; } left, right, out;
+        left.bits = site->eax;
+        right.bits = site->edx;
+        out.value = left.value / right.value;
+        return out.bits == 0x80000000u ? 0u : out.bits;
+    }
+    if (site->target == 0x4eb652 || site->target == 0x4db350) /* RTL double divide / add: edx:eax op ecx:ebx */
+    {
+        union { uint64_t bits; double value; } left, right, out;
+        left.bits = ((uint64_t)site->edx << 32) | site->eax;
+        right.bits = ((uint64_t)site->ecx << 32) | site->ebx;
+        out.value = site->target == 0x4eb652 ? left.value / right.value : left.value + right.value;
+        if ((uint32_t)(out.bits >> 32) == 0x80000000u)
+        {
+            out.bits = 0;
+        }
         site->out_value = (uint32_t)(out.bits >> 32);
         return (uint32_t)out.bits;
     }
@@ -778,6 +868,7 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
     }
     if (site->target == LIFT_GLOBAL_STORE)
     {
+        if (getenv("TRACE_G") && (site->eax >= 0x5bb770 && site->eax <= 0x5bb790)) { static int shown; if (shown++ < 40) fprintf(stderr, "gstore %x = %x (depth %u)\n", site->eax, site->edx, vertrix_lifted_depth()); }
         host_write(host, site->eax, site->stack, site->edx);
         return 0;
     }
@@ -810,6 +901,7 @@ void lift_host_init(LiftHost *host, uint8_t *image, const uint8_t *original, uin
     host->image = image;
     host->heap = heap;
     host->heap_size = heap_size;
+    host->rtl_single_control = 0x037f;
     host->inner.call = host_boundary;
     host->inner.context = host;
     host->globals.read = host_read;

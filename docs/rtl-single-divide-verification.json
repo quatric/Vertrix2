@@ -1,0 +1,28 @@
+{
+  "status": "passed",
+  "cases_per_entry_and_mode": 4096,
+  "complete_original_executions": {
+    "software_full": {
+      "software_cached": 4096,
+      "software_lazy": 4096
+    },
+    "software_entry": {
+      "software_cached": 4096,
+      "software_lazy": 4096
+    }
+  },
+  "register_cache_and_callback_comparisons": 16384,
+  "original_path_counts": {
+    "software_underflow_tail": 2208,
+    "software_overflow_tail": 2068,
+    "software_math": 16384,
+    "divide_zero": 144,
+    "lazy_initializer": 4096
+  },
+  "unsupported_or_missing_boundary_guards": 10,
+  "error_boundary_calls": {
+    "0x4dae94": 2068,
+    "0x4e7280": 2212
+  },
+  "scope": "Full software helper 4d8227 and only software cached/lazy routes of 4d81fe. Raw EAX/EDX/EBX/ECX, cache writes, callback register inputs and arbitrary outputs, preserved ESI/EDI/EBP and stack compare against executable. Hardware routes 4d8204/4d8217, capability helper 4e223c and x87 remain unverified; 4d81fe annotation remains fragment."
+}

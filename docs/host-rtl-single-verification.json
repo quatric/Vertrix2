@@ -1,0 +1,51 @@
+{
+  "status": "passed",
+  "cases_per_entry_and_mode": 4096,
+  "complete_original_executions": {
+    "subtract": {
+      "software_cached": 4096,
+      "software_lazy": 4096,
+      "hardware_pc0_rc0": 4096,
+      "hardware_pc0_rc1": 4096,
+      "hardware_pc0_rc2": 4096,
+      "hardware_pc0_rc3": 4096,
+      "hardware_pc2_rc0": 4096,
+      "hardware_pc2_rc1": 4096,
+      "hardware_pc2_rc2": 4096,
+      "hardware_pc2_rc3": 4096,
+      "hardware_pc3_rc0": 4096,
+      "hardware_pc3_rc1": 4096,
+      "hardware_pc3_rc2": 4096,
+      "hardware_pc3_rc3": 4096,
+      "hardware_lazy_cap0": 4096,
+      "hardware_lazy_cap1": 4096
+    },
+    "add": {
+      "software_cached": 4096,
+      "software_lazy": 4096,
+      "hardware_pc0_rc0": 4096,
+      "hardware_pc0_rc1": 4096,
+      "hardware_pc0_rc2": 4096,
+      "hardware_pc0_rc3": 4096,
+      "hardware_pc2_rc0": 4096,
+      "hardware_pc2_rc1": 4096,
+      "hardware_pc2_rc2": 4096,
+      "hardware_pc2_rc3": 4096,
+      "hardware_pc3_rc0": 4096,
+      "hardware_pc3_rc1": 4096,
+      "hardware_pc3_rc2": 4096,
+      "hardware_pc3_rc3": 4096,
+      "hardware_lazy_cap0": 4096,
+      "hardware_lazy_cap1": 4096
+    }
+  },
+  "original_math_executions": 131072,
+  "actual_host_and_lift_call_comparisons": 262144,
+  "software_overflow_calls_per_original_target": {
+    "0x4dae94": 154,
+    "0x4e7280": 154
+  },
+  "unsupported_host_execution_guards": 16,
+  "initialized_host_control": "0x037f",
+  "scope": "Compile the actual live source/lift_host.c boundary and call it through public host.inner.calls. A second route executes actual lift_call/call_glue and proves EAX/EDX caller transport. Neither copies the math boundary. Unrelated lifted dispatch is isolated by a fixture; complete game callers are not claimed. Original software/hardware arithmetic executes unchanged in all16 selected modes for each single add/subtract entry. Direct host EAX/EDX/EBX/ECX and caller EAX/EDX, lazy cache writes and overflow boundary registers/cache snapshots compare. Exceptional callbacks mutate cache globals after the first call; those mutations remain live through the second call and return. Actual error callee internals are delegated, not verified here. Unmasked x87 traps, FPSW/environment and pending exceptions remain outstanding. Host marks unavailable execution with rtl_single_failures while preserving inputs/caches. Double/multiply/divide boundaries and caller flags are outside this proof."
+}

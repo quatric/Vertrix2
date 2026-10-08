@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #include "lifted_dispatch.h"
+#include "rtl_float.h"
 #include "vf.h"
 
 /* The host side of the lifted routines: the original's mapped image (static data) and a heap
@@ -27,6 +28,14 @@ typedef struct LiftHost
     uint8_t *heap;
     uint32_t heap_size;
     uint32_t heap_top;
+    /* Native single arithmetic uses this explicit x87 control input (initialized to 0x037f).
+     * Software overflow requires a configured exception boundary; unsupported execution
+     * preserves inputs/caches and increments rtl_single_failures. x87 status/traps remain
+     * outside the recovered host scope. */
+    uint32_t rtl_single_control;
+    unsigned rtl_single_failures;
+    VertrixRtlFloatCall rtl_single_exception;
+    void *rtl_single_exception_context;
     VertrixCalls inner;
     VertrixGlobals globals;
     VertrixFactoryServices services;

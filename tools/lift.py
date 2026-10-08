@@ -171,7 +171,7 @@ class Lifter:
     @staticmethod
     def reads_flags(insn):
         m = insn.mnemonic
-        return (m in CONDITIONS or m in ('adc', 'sbb', 'rcl', 'rcr', 'cmc') or
+        return (m in CONDITIONS or m in ('adc', 'sbb', 'rcl', 'rcr', 'cmc', 'ret') or  # ret: the flags are the callee's answer
                 (m.startswith('set') and 'j' + m[3:] in CONDITIONS) or
                 (m.startswith('cmov') and 'j' + m[4:] in CONDITIONS) or
                 m in STRING_OPS or (len(m.split(' ')) == 2 and m.split(' ')[1] in STRING_OPS))
@@ -180,7 +180,7 @@ class Lifter:
     def kills_flags(insn):
         m = insn.mnemonic
         if m in ('add', 'sub', 'and', 'or', 'xor', 'cmp', 'test', 'neg', 'adc', 'sbb', 'call',
-                 'ret', 'mul', 'imul', 'div', 'idiv', 'bsr', 'bsf'):
+                 'mul', 'imul', 'div', 'idiv', 'bsr', 'bsf'):
             return True
         if m in ('shl', 'sal', 'shr', 'sar') and len(insn.operands) == 2 and \
                 insn.operands[1].type == X.X86_OP_IMM and insn.operands[1].imm & 31:
@@ -445,6 +445,8 @@ class Lifter:
             self.emit('if (%s) { %s }' % (CONDITIONS['j' + m[4:]],
                                           self.write(ops[0], self.read(ops[1]))))
         elif m == 'ret':
+            self.emit('vertrix_lift_edx = edx;')
+            self.emit('vertrix_lift_fl = fl;')
             self.emit('return env.failed ? 0u : eax;')
         else:
             raise NotImplementedError('%x %s %s' % (insn.address, m, insn.op_str))
@@ -554,9 +556,10 @@ class Lifter:
                 self.pending_pushes(insn)
             self.callees[('virtual', insn.address)] = (count, cdecl)
             pops = 0 if cdecl else count
+        self.emit('vertrix_lift_fl = fl;')
         self.emit('eax = lift_call(&env, %s, eax, edx, ebx, ecx, %d, esp);' % (target_expr, count))
-        if target_expr in ('0x4db507u', '0x4d809cu'):
-            self.emit('edx = vertrix_lift_edx;')
+        self.emit('edx = vertrix_lift_edx;')
+        self.emit('fl = vertrix_lift_fl;')
         if pops:
             self.emit('esp += %du;' % (4 * pops))
 
