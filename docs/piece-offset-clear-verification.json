@@ -1,0 +1,24 @@
+{
+  "status": "passed",
+  "cases_per_entry": 4096,
+  "complete_original_executions": {
+    "0x42f870": 4096,
+    "0x42f880": 4096,
+    "0x42f860": 4096,
+    "0x42f8e0": 4096
+  },
+  "original_exact_byte_write_counts": {
+    "0x42f870": 4096,
+    "0x42f880": 4096,
+    "0x42f860": 266240,
+    "0x42f8e0": 266240
+  },
+  "original_address_wrap_cases": 5460,
+  "native_guard_cases": 17,
+  "scope": "Four complete original wrappers and actual callees execute unstubbed. Pending active-piece X/Y clear writes exactly+a64/a65, preserving incoming EAX and EDX. Cell-value clear/fill writes65 consecutive bytes+19d..1dd; EAX returns token+65, and fill EDX does too while clear restores incomingEDX. All256 low input bytes, random upper registers, whole guarded storage, exact minimum backing, all preserved registers/ESP and original32bit address/result wrapping compare. Native invalid backing/output guards are adaptations, not original fault behavior.",
+  "naming_evidence": {
+    "pending_piece_x_y": "42fc60 sign-extends+a64 then calls piece X setter42a960;42fc70 sign-extends+a65 then calls piece Y setter42a970. Clear42f870 calls42f890 with zero;clear42f880 calls42f8a0 with zero.",
+    "cell_values": "Original42f2e0 fills the same65 bytes+19d..1dd from board value+58; source/board_piece.[ch] explicitly labels BOARD_CELLS/BOARD_VALUE.42f860 wraps complete42f8e0 with zero and EDX save/restore.",
+    "remaining_unidentified_plane": "42f850/42f8b0 clear/fill65 bytes+15c..19c; semantic field purpose remains unconfirmed and no name/recovery is claimed."
+  }
+}

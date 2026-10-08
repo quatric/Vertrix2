@@ -916,6 +916,11 @@
   ],
   "verification": []
  },
+ "0x4154b0": {
+  "lifted": "f4154b0",
+  "hand_files": [],
+  "verification": []
+ },
  "0x415530": {
   "lifted": "global_reset_pair_full",
   "hand_files": [
@@ -1034,6 +1039,11 @@
    "global-scalars-verification.json",
    "object-scalars-verification.json"
   ]
+ },
+ "0x415db0": {
+  "lifted": "f415db0",
+  "hand_files": [],
+  "verification": []
  },
  "0x415e10": {
   "lifted": "clear_each_call",
@@ -1635,8 +1645,23 @@
   "hand_files": [],
   "verification": []
  },
+ "0x418af0": {
+  "lifted": "f418af0",
+  "hand_files": [],
+  "verification": []
+ },
  "0x418ce0": {
   "lifted": "f418ce0",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x418d50": {
+  "lifted": "f418d50",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4191b0": {
+  "lifted": "f4191b0",
   "hand_files": [],
   "verification": []
  },
@@ -1717,6 +1742,11 @@
   "hand_files": [],
   "verification": []
  },
+ "0x41a440": {
+  "lifted": "f41a440",
+  "hand_files": [],
+  "verification": []
+ },
  "0x41a4e0": {
   "lifted": "f41a4e0",
   "hand_files": [],
@@ -1744,6 +1774,11 @@
  },
  "0x41a700": {
   "lifted": "f41a700",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x41a780": {
+  "lifted": "f41a780",
   "hand_files": [],
   "verification": []
  },
@@ -1776,6 +1811,15 @@
   "lifted": "f41a9a0",
   "hand_files": [],
   "verification": []
+ },
+ "0x41a9e0": {
+  "lifted": "record_release_global_full",
+  "hand_files": [
+   "resource_record.h"
+  ],
+  "verification": [
+   "resource-record-verification.json"
+  ]
  },
  "0x41aa20": {
   "lifted": "f41aa20",
@@ -1853,6 +1897,11 @@
   "hand_files": [],
   "verification": []
  },
+ "0x41b310": {
+  "lifted": "f41b310",
+  "hand_files": [],
+  "verification": []
+ },
  "0x41b5e0": {
   "lifted": "f41b5e0",
   "hand_files": [],
@@ -1860,6 +1909,11 @@
  },
  "0x41b680": {
   "lifted": "f41b680",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x41b820": {
+  "lifted": "f41b820",
   "hand_files": [],
   "verification": []
  },
@@ -1913,6 +1967,11 @@
   "hand_files": [],
   "verification": []
  },
+ "0x41c410": {
+  "lifted": "f41c410",
+  "hand_files": [],
+  "verification": []
+ },
  "0x41c6d0": {
   "lifted": "f41c6d0",
   "hand_files": [],
@@ -1920,6 +1979,11 @@
  },
  "0x41c740": {
   "lifted": "f41c740",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x41c7b0": {
+  "lifted": "f41c7b0",
   "hand_files": [],
   "verification": []
  },
@@ -1962,6 +2026,16 @@
   "hand_files": [],
   "verification": []
  },
+ "0x41d660": {
+  "lifted": "global_increment_full",
+  "hand_files": [
+   "object_scalars.h"
+  ],
+  "verification": [
+   "global-scalars-verification.json",
+   "object-scalars-verification.json"
+  ]
+ },
  "0x41d670": {
   "lifted": "frame_counter_update",
   "hand_files": [
@@ -1970,6 +2044,11 @@
   "verification": [
    "frame-counter-verification.json"
   ]
+ },
+ "0x41d6d0": {
+  "lifted": "f41d6d0",
+  "hand_files": [],
+  "verification": []
  },
  "0x41dd60": {
   "lifted": "f41dd60",
@@ -1981,6 +2060,15 @@
   "hand_files": [],
   "verification": []
  },
+ "0x41de80": {
+  "lifted": "slot_toggle",
+  "hand_files": [
+   "object_tails.h"
+  ],
+  "verification": [
+   "object-tails-verification.json"
+  ]
+ },
  "0x41dec0": {
   "lifted": "f41dec0",
   "hand_files": [],
@@ -1988,6 +2076,16 @@
  },
  "0x41df00": {
   "lifted": "f41df00",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x41e310": {
+  "lifted": "f41e310",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x41e5e0": {
+  "lifted": "f41e5e0",
   "hand_files": [],
   "verification": []
  },
@@ -2021,13 +2119,43 @@
   "hand_files": [],
   "verification": []
  },
+ "0x421f10": {
+  "lifted": "f421f10",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4237d0": {
+  "lifted": "f4237d0",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x423960": {
+  "lifted": "f423960",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x423bc0": {
+  "lifted": "f423bc0",
+  "hand_files": [],
+  "verification": []
+ },
  "0x423d70": {
   "lifted": "f423d70",
   "hand_files": [],
   "verification": []
  },
+ "0x423dc0": {
+  "lifted": "f423dc0",
+  "hand_files": [],
+  "verification": []
+ },
  "0x423ea0": {
   "lifted": "f423ea0",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x423fb0": {
+  "lifted": "f423fb0",
   "hand_files": [],
   "verification": []
  },
@@ -2311,6 +2439,11 @@
    "object-slots-verification.json"
   ]
  },
+ "0x429750": {
+  "lifted": "f429750",
+  "hand_files": [],
+  "verification": []
+ },
  "0x429880": {
   "lifted": "piece_actor_construct_slots",
   "hand_files": [
@@ -2463,7 +2596,8 @@
  "0x42a800": {
   "lifted": "piece_children_place",
   "hand_files": [
-   "piece_children.h"
+   "piece_children.h",
+   "piece_offsets.h"
   ],
   "verification": [
    "piece-children-verification.json"
@@ -2500,14 +2634,22 @@
   ]
  },
  "0x42a960": {
-  "lifted": "f42a960",
-  "hand_files": [],
-  "verification": []
+  "lifted": "piece_set_offset_x_full",
+  "hand_files": [
+   "piece_offsets.h"
+  ],
+  "verification": [
+   "piece-offsets-verification.json"
+  ]
  },
  "0x42a970": {
-  "lifted": "f42a970",
-  "hand_files": [],
-  "verification": []
+  "lifted": "piece_set_offset_y_full",
+  "hand_files": [
+   "piece_offsets.h"
+  ],
+  "verification": [
+   "piece-offsets-verification.json"
+  ]
  },
  "0x42a980": {
   "lifted": "piece_child_kinds",
@@ -3091,29 +3233,49 @@
   "verification": []
  },
  "0x42f860": {
-  "lifted": "f42f860",
-  "hand_files": [],
-  "verification": []
+  "lifted": "board_cell_values_clear_full",
+  "hand_files": [
+   "piece_offset_clear.h"
+  ],
+  "verification": [
+   "piece-offset-clear-verification.json"
+  ]
  },
  "0x42f870": {
-  "lifted": "f42f870",
-  "hand_files": [],
-  "verification": []
+  "lifted": "board_piece_clear_offset_x_full",
+  "hand_files": [
+   "piece_offset_clear.h"
+  ],
+  "verification": [
+   "piece-offset-clear-verification.json"
+  ]
  },
  "0x42f880": {
-  "lifted": "f42f880",
-  "hand_files": [],
-  "verification": []
+  "lifted": "board_piece_clear_offset_y_full",
+  "hand_files": [
+   "piece_offset_clear.h"
+  ],
+  "verification": [
+   "piece-offset-clear-verification.json"
+  ]
  },
  "0x42f890": {
-  "lifted": "f42f890",
-  "hand_files": [],
-  "verification": []
+  "lifted": "board_piece_set_offset_x_full",
+  "hand_files": [
+   "piece_offsets.h"
+  ],
+  "verification": [
+   "piece-offsets-verification.json"
+  ]
  },
  "0x42f8a0": {
-  "lifted": "f42f8a0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "board_piece_set_offset_y_full",
+  "hand_files": [
+   "piece_offsets.h"
+  ],
+  "verification": [
+   "piece-offsets-verification.json"
+  ]
  },
  "0x42f8b0": {
   "lifted": "f42f8b0",
@@ -3121,9 +3283,13 @@
   "verification": []
  },
  "0x42f8e0": {
-  "lifted": "f42f8e0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "board_cell_values_fill_full",
+  "hand_files": [
+   "piece_offset_clear.h"
+  ],
+  "verification": [
+   "piece-offset-clear-verification.json"
+  ]
  },
  "0x42ff10": {
   "lifted": "board_set_actor_clip",
@@ -3265,6 +3431,15 @@
   "lifted": "f4311a0",
   "hand_files": [],
   "verification": []
+ },
+ "0x431340": {
+  "lifted": "board_piece_column",
+  "hand_files": [
+   "board_piece.h"
+  ],
+  "verification": [
+   "board-piece-verification.json"
+  ]
  },
  "0x431380": {
   "lifted": "board_object_field",
@@ -3428,6 +3603,24 @@
    "board-fields-verification.json"
   ]
  },
+ "0x432040": {
+  "lifted": "board_piece_past_edge",
+  "hand_files": [
+   "board_piece.h"
+  ],
+  "verification": [
+   "board-piece-verification.json"
+  ]
+ },
+ "0x432080": {
+  "lifted": "board_piece_past_edge_432080",
+  "hand_files": [
+   "board_piece.h"
+  ],
+  "verification": [
+   "board-piece-verification.json"
+  ]
+ },
  "0x4320c0": {
   "lifted": "player_test_a60",
   "hand_files": [
@@ -3524,6 +3717,16 @@
   "lifted": "board_clear_mask",
   "hand_files": [
    "board_markers.h"
+  ],
+  "verification": [
+   "board-markers-verification.json"
+  ]
+ },
+ "0x4328a0": {
+  "lifted": "board_any_falling",
+  "hand_files": [
+   "board_markers.h",
+   "player_states.h"
   ],
   "verification": [
    "board-markers-verification.json"
@@ -4773,6 +4976,11 @@
    "particle-init-verification.json"
   ]
  },
+ "0x43e1a0": {
+  "lifted": "f43e1a0",
+  "hand_files": [],
+  "verification": []
+ },
  "0x43e260": {
   "lifted": "arena_release_all_full",
   "hand_files": [
@@ -4781,6 +4989,16 @@
   "verification": [
    "object-slots-verification.json"
   ]
+ },
+ "0x43e2a0": {
+  "lifted": "f43e2a0",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x43e320": {
+  "lifted": "f43e320",
+  "hand_files": [],
+  "verification": []
  },
  "0x43e4d0": {
   "lifted": "board_particles_setup",
@@ -4822,6 +5040,34 @@
    "particle-spawn-full-verification.json",
    "particle-spawn-verification.json"
   ]
+ },
+ "0x43eab0": {
+  "lifted": "f43eab0",
+  "hand_files": [
+   "font_bank.h",
+   "game_text.h"
+  ],
+  "verification": []
+ },
+ "0x43f110": {
+  "lifted": "f43f110",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x43f190": {
+  "lifted": "f43f190",
+  "hand_files": [],
+  "verification": [
+   "font-bank-verification.json"
+  ]
+ },
+ "0x43f200": {
+  "lifted": "f43f200",
+  "hand_files": [
+   "font_cell.h",
+   "image.h"
+  ],
+  "verification": []
  },
  "0x43f3f0": {
   "lifted": "release_table_a",
@@ -5030,6 +5276,11 @@
    "object-construct-verification.json"
   ]
  },
+ "0x441450": {
+  "lifted": "f441450",
+  "hand_files": [],
+  "verification": []
+ },
  "0x441530": {
   "lifted": "record_init",
   "hand_files": [
@@ -5038,6 +5289,11 @@
   "verification": [
    "resource-record-verification.json"
   ]
+ },
+ "0x441600": {
+  "lifted": "f441600",
+  "hand_files": [],
+  "verification": []
  },
  "0x441a80": {
   "lifted": "record_release_full",
@@ -5067,6 +5323,24 @@
   "lifted": "f441d60",
   "hand_files": [],
   "verification": []
+ },
+ "0x441e30": {
+  "lifted": "color_table_build_full",
+  "hand_files": [
+   "color_table.h"
+  ],
+  "verification": [
+   "color-table-verification.json"
+  ]
+ },
+ "0x441f20": {
+  "lifted": "pattern_tables",
+  "hand_files": [
+   "pattern_tables.h"
+  ],
+  "verification": [
+   "pattern-tables-verification.json"
+  ]
  },
  "0x442110": {
   "lifted": "release_table_b",
@@ -5201,6 +5475,11 @@
   "hand_files": [],
   "verification": []
  },
+ "0x445d80": {
+  "lifted": "f445d80",
+  "hand_files": [],
+  "verification": []
+ },
  "0x445e90": {
   "lifted": "f445e90",
   "hand_files": [],
@@ -5298,6 +5577,11 @@
  },
  "0x447aa0": {
   "lifted": "f447aa0",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x447af0": {
+  "lifted": "f447af0",
   "hand_files": [],
   "verification": []
  },
@@ -5408,6 +5692,16 @@
   "hand_files": [],
   "verification": []
  },
+ "0x449090": {
+  "lifted": "f449090",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x449180": {
+  "lifted": "f449180",
+  "hand_files": [],
+  "verification": []
+ },
  "0x4492f0": {
   "lifted": "f4492f0",
   "hand_files": [],
@@ -5446,8 +5740,23 @@
   "hand_files": [],
   "verification": []
  },
+ "0x449500": {
+  "lifted": "f449500",
+  "hand_files": [],
+  "verification": []
+ },
  "0x4495b0": {
   "lifted": "f4495b0",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x449660": {
+  "lifted": "f449660",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4497c0": {
+  "lifted": "f4497c0",
   "hand_files": [],
   "verification": []
  },
@@ -5473,6 +5782,21 @@
  },
  "0x449ff0": {
   "lifted": "f449ff0",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x44a040": {
+  "lifted": "f44a040",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x44a170": {
+  "lifted": "f44a170",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x44a2a0": {
+  "lifted": "f44a2a0",
   "hand_files": [],
   "verification": []
  },
@@ -5553,6 +5877,51 @@
  },
  "0x44ae80": {
   "lifted": "f44ae80",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x44aec0": {
+  "lifted": "f44aec0",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x44b050": {
+  "lifted": "f44b050",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x44b170": {
+  "lifted": "f44b170",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x44b340": {
+  "lifted": "f44b340",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x44b4a0": {
+  "lifted": "f44b4a0",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x44b5d0": {
+  "lifted": "f44b5d0",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x44b6f0": {
+  "lifted": "f44b6f0",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x44b810": {
+  "lifted": "f44b810",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x44b980": {
+  "lifted": "f44b980",
   "hand_files": [],
   "verification": []
  },
@@ -8081,6 +8450,17 @@
    "object-events-verification.json"
   ]
  },
+ "0x457890": {
+  "lifted": "ui_center_on_anchor",
+  "hand_files": [
+   "title_letter_step.h",
+   "ui_slide_setup.h"
+  ],
+  "verification": [
+   "title-letter-step-verification.json",
+   "ui-slide-setup-verification.json"
+  ]
+ },
  "0x4578f0": {
   "lifted": "f4578f0",
   "hand_files": [],
@@ -8539,6 +8919,11 @@
   ],
   "verification": []
  },
+ "0x45c2f0": {
+  "lifted": "f45c2f0",
+  "hand_files": [],
+  "verification": []
+ },
  "0x45c3c0": {
   "lifted": "f45c3c0",
   "hand_files": [],
@@ -8563,6 +8948,11 @@
  },
  "0x45c760": {
   "lifted": "f45c760",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x45c7b0": {
+  "lifted": "f45c7b0",
   "hand_files": [],
   "verification": []
  },
@@ -8635,6 +9025,15 @@
   "hand_files": [],
   "verification": []
  },
+ "0x45cff0": {
+  "lifted": "actor_refresh_45cff0",
+  "hand_files": [
+   "actor_refresh.h"
+  ],
+  "verification": [
+   "actor-refresh-verification.json"
+  ]
+ },
  "0x45d0c0": {
   "lifted": "f45d0c0",
   "hand_files": [],
@@ -8664,6 +9063,11 @@
  },
  "0x45d420": {
   "lifted": "f45d420",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x45d4d0": {
+  "lifted": "f45d4d0",
   "hand_files": [],
   "verification": []
  },
@@ -9085,6 +9489,15 @@
   "hand_files": [],
   "verification": []
  },
+ "0x45f9f0": {
+  "lifted": "ui_panels_destroy_full",
+  "hand_files": [
+   "ui_panel_dispatch.h"
+  ],
+  "verification": [
+   "ui-panel-dispatch-verification.json"
+  ]
+ },
  "0x45fa70": {
   "lifted": "ui_panels_slot1_full",
   "hand_files": [
@@ -9146,6 +9559,11 @@
   "hand_files": [],
   "verification": []
  },
+ "0x4602a0": {
+  "lifted": "f4602a0",
+  "hand_files": [],
+  "verification": []
+ },
  "0x460840": {
   "lifted": "f460840",
   "hand_files": [],
@@ -9193,6 +9611,16 @@
  },
  "0x461090": {
   "lifted": "f461090",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x461180": {
+  "lifted": "f461180",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x461360": {
+  "lifted": "f461360",
   "hand_files": [],
   "verification": []
  },
@@ -9859,6 +10287,11 @@
   "hand_files": [],
   "verification": []
  },
+ "0x472f80": {
+  "lifted": "f472f80",
+  "hand_files": [],
+  "verification": []
+ },
  "0x4731a0": {
   "lifted": "icons_build",
   "hand_files": [
@@ -9938,8 +10371,22 @@
    "call-glue-verification.json"
   ]
  },
+ "0x473cf0": {
+  "lifted": "bitmap_load",
+  "hand_files": [
+   "bitmap_load.h"
+  ],
+  "verification": [
+   "bitmap-load-verification.json"
+  ]
+ },
  "0x473e60": {
   "lifted": "f473e60",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x473f10": {
+  "lifted": "f473f10",
   "hand_files": [],
   "verification": []
  },
@@ -9968,6 +10415,15 @@
    "palette_color.h"
   ],
   "verification": []
+ },
+ "0x474e00": {
+  "lifted": "render_color_bank_build",
+  "hand_files": [
+   "render_color_bank.h"
+  ],
+  "verification": [
+   "render-color-bank-verification.json"
+  ]
  },
  "0x475090": {
   "lifted": "palette_tables_build",
@@ -10247,9 +10703,13 @@
   ]
  },
  "0x475de0": {
-  "lifted": "f475de0",
-  "hand_files": [],
-  "verification": []
+  "lifted": "input_repeat_counter_clear_full",
+  "hand_files": [
+   "input.h"
+  ],
+  "verification": [
+   "scalar-wrappers-verification.json"
+  ]
  },
  "0x475df0": {
   "lifted": "progress_done",
@@ -10270,9 +10730,13 @@
   ]
  },
  "0x475e30": {
-  "lifted": "f475e30",
-  "hand_files": [],
-  "verification": []
+  "lifted": "input_repeat_counter_advance_full",
+  "hand_files": [
+   "input.h"
+  ],
+  "verification": [
+   "scalar-wrappers-verification.json"
+  ]
  },
  "0x475e40": {
   "lifted": "progress_set_3c",
@@ -10527,6 +10991,15 @@
    "sound-object-verification.json"
   ]
  },
+ "0x476aa0": {
+  "lifted": "f476aa0",
+  "hand_files": [
+   "sound_object.h"
+  ],
+  "verification": [
+   "sound-object-verification.json"
+  ]
+ },
  "0x476c80": {
   "lifted": "sound_check_primary",
   "hand_files": [
@@ -10659,6 +11132,15 @@
    "sound-object-verification.json"
   ]
  },
+ "0x477390": {
+  "lifted": "f477390",
+  "hand_files": [
+   "sound_object.h"
+  ],
+  "verification": [
+   "sound-object-verification.json"
+  ]
+ },
  "0x477610": {
   "lifted": "f477610",
   "hand_files": [],
@@ -10728,6 +11210,15 @@
    "sound-object-verification.json"
   ]
  },
+ "0x477b10": {
+  "lifted": "f477b10",
+  "hand_files": [
+   "sound_object.h"
+  ],
+  "verification": [
+   "sound-object-verification.json"
+  ]
+ },
  "0x477c30": {
   "lifted": "cursor_capture",
   "hand_files": [
@@ -10735,6 +11226,15 @@
   ],
   "verification": [
    "cursor-capture-verification.json"
+  ]
+ },
+ "0x477c90": {
+  "lifted": "cursor_release",
+  "hand_files": [
+   "device_glue.h"
+  ],
+  "verification": [
+   "cursor-release-verification.json"
   ]
  },
  "0x477d10": {
@@ -10891,6 +11391,16 @@
   "hand_files": [],
   "verification": []
  },
+ "0x478910": {
+  "lifted": "f478910",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x478ae0": {
+  "lifted": "f478ae0",
+  "hand_files": [],
+  "verification": []
+ },
  "0x478b40": {
   "lifted": "flagged_call",
   "hand_files": [
@@ -10911,6 +11421,15 @@
  },
  "0x478bd0": {
   "lifted": "when_flag_call",
+  "hand_files": [
+   "call_glue.h"
+  ],
+  "verification": [
+   "call-glue-verification.json"
+  ]
+ },
+ "0x478bf0": {
+  "lifted": "offset_pair_call",
   "hand_files": [
    "call_glue.h"
   ],
@@ -11043,6 +11562,15 @@
    "mask-verification.json"
   ]
  },
+ "0x4798b0": {
+  "lifted": "f4798b0",
+  "hand_files": [
+   "image.h"
+  ],
+  "verification": [
+   "graded-mask-verification.json"
+  ]
+ },
  "0x4799f0": {
   "lifted": "image_color_key",
   "hand_files": [
@@ -11100,6 +11628,29 @@
    "call-glue-verification.json",
    "circle-points-verification.json"
   ]
+ },
+ "0x479e50": {
+  "lifted": "circle_points",
+  "hand_files": [
+   "circle_points.h"
+  ],
+  "verification": [
+   "circle-points-verification.json"
+  ]
+ },
+ "0x47a040": {
+  "lifted": "surface_fade",
+  "hand_files": [
+   "surface_blit.h"
+  ],
+  "verification": [
+   "surface-fade-verification.json"
+  ]
+ },
+ "0x47ab70": {
+  "lifted": "f47ab70",
+  "hand_files": [],
+  "verification": []
  },
  "0x47bd80": {
   "lifted": "f47bd80",
@@ -11193,6 +11744,11 @@
   "hand_files": [
    "call_glue.h"
   ],
+  "verification": []
+ },
+ "0x47e890": {
+  "lifted": "f47e890",
+  "hand_files": [],
   "verification": []
  },
  "0x47e990": {
@@ -11553,6 +12109,16 @@
    "color-conversion-verification.json"
   ]
  },
+ "0x480d60": {
+  "lifted": "f480d60",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x480ec0": {
+  "lifted": "f480ec0",
+  "hand_files": [],
+  "verification": []
+ },
  "0x481420": {
   "lifted": "rle_encoded_length",
   "hand_files": [
@@ -11694,6 +12260,20 @@
    "object-dwords-verification.json"
   ]
  },
+ "0x482550": {
+  "lifted": "f482550",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x482610": {
+  "lifted": "scratch_pair_call",
+  "hand_files": [
+   "call_glue.h"
+  ],
+  "verification": [
+   "call-glue-verification.json"
+  ]
+ },
  "0x4826c0": {
   "lifted": "f4826c0",
   "hand_files": [
@@ -11825,6 +12405,11 @@
    "title-letter-launch-verification.json"
   ]
  },
+ "0x482aa0": {
+  "lifted": "f482aa0",
+  "hand_files": [],
+  "verification": []
+ },
  "0x482b30": {
   "lifted": "call_unless_zero",
   "hand_files": [
@@ -11852,6 +12437,15 @@
  "0x482d00": {
   "lifted": "f482d00",
   "hand_files": [],
+  "verification": []
+ },
+ "0x482e10": {
+  "lifted": "event_frame_draw_direct",
+  "hand_files": [
+   "event_frame_draw.h",
+   "table_loops.h",
+   "table_release.h"
+  ],
   "verification": []
  },
  "0x483060": {
@@ -11892,6 +12486,25 @@
    "ui-artwork-verification.json"
   ]
  },
+ "0x483400": {
+  "lifted": "f483400",
+  "hand_files": [
+   "font_outline.h"
+  ],
+  "verification": [
+   "font-bank-verification.json"
+  ]
+ },
+ "0x483790": {
+  "lifted": "f483790",
+  "hand_files": [
+   "array_list.h"
+  ],
+  "verification": [
+   "array-list-verification.json",
+   "table-release-verification.json"
+  ]
+ },
  "0x483ce0": {
   "lifted": "f483ce0",
   "hand_files": [
@@ -11900,6 +12513,18 @@
   ],
   "verification": [
    "sprite-clone-verification.json"
+  ]
+ },
+ "0x483ed0": {
+  "lifted": "image_color_order",
+  "hand_files": [
+   "call_glue.h",
+   "image.h",
+   "table_loops.h",
+   "table_release.h"
+  ],
+  "verification": [
+   "color-order-verification.json"
   ]
  },
  "0x484410": {
@@ -11918,6 +12543,11 @@
  },
  "0x484500": {
   "lifted": "f484500",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x484520": {
+  "lifted": "f484520",
   "hand_files": [],
   "verification": []
  },
@@ -11940,6 +12570,28 @@
   ],
   "verification": [
    "fixed-point-verification.json"
+  ]
+ },
+ "0x484680": {
+  "lifted": "point_distance",
+  "hand_files": [
+   "fixed_point.h",
+   "title_letter_step.h"
+  ],
+  "verification": [
+   "fixed-point-verification.json",
+   "title-letter-launch-verification.json"
+  ]
+ },
+ "0x484700": {
+  "lifted": "point_heading",
+  "hand_files": [
+   "fixed_point.h",
+   "title_letter_step.h"
+  ],
+  "verification": [
+   "fixed-point-verification.json",
+   "title-letter-launch-verification.json"
   ]
  },
  "0x4848f0": {
@@ -12027,6 +12679,11 @@
  },
  "0x486e20": {
   "lifted": "f486e20",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x486ed0": {
+  "lifted": "f486ed0",
   "hand_files": [],
   "verification": []
  },
@@ -12207,17 +12864,20 @@
  "0x487850": {
   "lifted": "f487850",
   "hand_files": [
+   "frame_resource.h",
    "table_loops.h"
   ],
   "verification": []
  },
  "0x487860": {
-  "lifted": "f487860",
+  "lifted": "frame_resource_count_full",
   "hand_files": [
-   "actor_value_steps.h"
+   "actor_value_steps.h",
+   "frame_resource.h"
   ],
   "verification": [
-   "actor-value-steps-verification.json"
+   "actor-value-steps-verification.json",
+   "scalar-wrappers-verification.json"
   ]
  },
  "0x487870": {
@@ -12420,8 +13080,35 @@
   "hand_files": [],
   "verification": []
  },
+ "0x489470": {
+  "lifted": "rtl_write_text_call",
+  "hand_files": [
+   "rtl_glue.h"
+  ],
+  "verification": [
+   "rtl-glue-verification.json"
+  ]
+ },
+ "0x4895b0": {
+  "lifted": "find_attribute_flag",
+  "hand_files": [
+   "call_glue.h"
+  ],
+  "verification": [
+   "call-glue-verification.json"
+  ]
+ },
  "0x4895e0": {
   "lifted": "find_succeeded",
+  "hand_files": [
+   "call_glue.h"
+  ],
+  "verification": [
+   "call-glue-verification.json"
+  ]
+ },
+ "0x489610": {
+  "lifted": "find_size_field",
   "hand_files": [
    "call_glue.h"
   ],
@@ -12715,7 +13402,7 @@
   ]
  },
  "0x48ac00": {
-  "lifted": "f48ac00",
+  "lifted": "font_glyph_index_full",
   "hand_files": [
    "font_map.h"
   ],
@@ -12723,7 +13410,8 @@
    "font-binding-verification.json",
    "font-map-verification.json",
    "font-run-verification.json",
-   "font-scaled-run-verification.json"
+   "font-scaled-run-verification.json",
+   "scalar-wrappers-verification.json"
   ]
  },
  "0x48ac10": {
@@ -12876,6 +13564,16 @@
  },
  "0x48c680": {
   "lifted": "f48c680",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x48c6c0": {
+  "lifted": "f48c6c0",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x48c860": {
+  "lifted": "f48c860",
   "hand_files": [],
   "verification": []
  },
@@ -16243,6 +16941,11 @@
   "hand_files": [],
   "verification": []
  },
+ "0x4adf90": {
+  "lifted": "f4adf90",
+  "hand_files": [],
+  "verification": []
+ },
  "0x4adfa0": {
   "lifted": "f4adfa0",
   "hand_files": [],
@@ -16275,6 +16978,16 @@
   "verification": [
    "actor-draw-slot-verification.json"
   ]
+ },
+ "0x4ae0c0": {
+  "lifted": "f4ae0c0",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4ae0f0": {
+  "lifted": "f4ae0f0",
+  "hand_files": [],
+  "verification": []
  },
  "0x4ae110": {
   "lifted": "f4ae110",
@@ -16492,6 +17205,22 @@
   ],
   "verification": []
  },
+ "0x4b3140": {
+  "lifted": "f4b3140",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4b3210": {
+  "lifted": "object_place_label",
+  "hand_files": [
+   "label_actor.h",
+   "object_label.h",
+   "row_label.h"
+  ],
+  "verification": [
+   "object-label-verification.json"
+  ]
+ },
  "0x4b3340": {
   "lifted": "f4b3340",
   "hand_files": [],
@@ -16505,6 +17234,16 @@
   "verification": [
    "register-return-verification.json"
   ]
+ },
+ "0x4b3380": {
+  "lifted": "f4b3380",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4b3390": {
+  "lifted": "f4b3390",
+  "hand_files": [],
+  "verification": []
  },
  "0x4b34d0": {
   "lifted": "f4b34d0",
@@ -17261,6 +18000,15 @@
    "time-sample-verification.json"
   ]
  },
+ "0x4b7d10": {
+  "lifted": "time_frame_step",
+  "hand_files": [
+   "timing.h"
+  ],
+  "verification": [
+   "time-frame-step-verification.json"
+  ]
+ },
  "0x4b7d70": {
   "lifted": "f4b7d70",
   "hand_files": [],
@@ -17655,6 +18403,13 @@
  },
  "0x4c3e40": {
   "lifted": "f4c3e40",
+  "hand_files": [
+   "object_glue.h"
+  ],
+  "verification": []
+ },
+ "0x4c3e60": {
+  "lifted": "f4c3e60",
   "hand_files": [
    "object_glue.h"
   ],
@@ -18628,6 +19383,15 @@
    "rtl-glue-verification.json"
   ]
  },
+ "0x4cd544": {
+  "lifted": "rtl_vararg_call",
+  "hand_files": [
+   "rtl_glue.h"
+  ],
+  "verification": [
+   "rtl-glue-verification.json"
+  ]
+ },
  "0x4cd7dc": {
   "lifted": "f4cd7dc",
   "hand_files": [],
@@ -18654,12 +19418,31 @@
   ],
   "verification": []
  },
+ "0x4cd9f0": {
+  "lifted": "rtl_local_call",
+  "hand_files": [
+   "rtl_glue.h"
+  ],
+  "verification": [
+   "rtl-glue-verification.json"
+  ]
+ },
  "0x4cda10": {
   "lifted": "f4cda10",
   "hand_files": [
    "letter_row.h",
    "list_text.h",
    "options_screen.h",
+   "rtl_glue.h"
+  ],
+  "verification": [
+   "rtl-glue-verification.json"
+  ]
+ },
+ "0x4cda12": {
+  "lifted": "rtl_local_chain_call",
+  "hand_files": [
+   "list_text.h",
    "rtl_glue.h"
   ],
   "verification": [
@@ -18673,6 +19456,15 @@
  },
  "0x4cda90": {
   "lifted": "rtl_string_fill",
+  "hand_files": [
+   "rtl_glue.h"
+  ],
+  "verification": [
+   "rtl-glue-verification.json"
+  ]
+ },
+ "0x4cdad0": {
+  "lifted": "f4cdad0",
   "hand_files": [
    "rtl_glue.h"
   ],
@@ -18795,6 +19587,17 @@
    "rtl-glue-verification.json"
   ]
  },
+ "0x4cea15": {
+  "lifted": "f4cea15",
+  "hand_files": [
+   "call_glue.h",
+   "device_glue.h",
+   "rtl_glue.h"
+  ],
+  "verification": [
+   "resource-entry-verification.json"
+  ]
+ },
  "0x4cf320": {
   "lifted": "rtl_construct_buffer_stream",
   "hand_files": [
@@ -18862,6 +19665,11 @@
   "verification": [
    "rtl-glue-verification.json"
   ]
+ },
+ "0x4cf910": {
+  "lifted": "f4cf910",
+  "hand_files": [],
+  "verification": []
  },
  "0x4cf940": {
   "lifted": "f4cf940",
@@ -18942,8 +19750,29 @@
   ],
   "verification": []
  },
+ "0x4d0620": {
+  "lifted": "f4d0620",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": []
+ },
  "0x4d0650": {
   "lifted": "f4d0650",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": []
+ },
+ "0x4d0670": {
+  "lifted": "f4d0670",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": []
+ },
+ "0x4d06a0": {
+  "lifted": "f4d06a0",
   "hand_files": [
    "constant_getters.h"
   ],
@@ -19081,6 +19910,13 @@
    "rtl-glue-verification.json"
   ]
  },
+ "0x4d23f0": {
+  "lifted": "f4d23f0",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": []
+ },
  "0x4d2420": {
   "lifted": "f4d2420",
   "hand_files": [
@@ -19090,6 +19926,20 @@
  },
  "0x4d2440": {
   "lifted": "f4d2440",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": []
+ },
+ "0x4d2460": {
+  "lifted": "f4d2460",
+  "hand_files": [
+   "constant_getters.h"
+  ],
+  "verification": []
+ },
+ "0x4d24a0": {
+  "lifted": "f4d24a0",
   "hand_files": [
    "constant_getters.h"
   ],
@@ -20132,6 +20982,11 @@
   ],
   "verification": []
  },
+ "0x4d74d1": {
+  "lifted": "f4d74d1",
+  "hand_files": [],
+  "verification": []
+ },
  "0x4d7510": {
   "lifted": "f4d7510",
   "hand_files": [
@@ -20302,6 +21157,13 @@
   "hand_files": [],
   "verification": []
  },
+ "0x4d85c0": {
+  "lifted": "f4d85c0",
+  "hand_files": [
+   "rtl_glue.h"
+  ],
+  "verification": []
+ },
  "0x4d85f0": {
   "lifted": "f4d85f0",
   "hand_files": [
@@ -20443,6 +21305,15 @@
    "rtl-glue-verification.json"
   ]
  },
+ "0x4d9530": {
+  "lifted": "f4d9530",
+  "hand_files": [
+   "rtl_glue.h"
+  ],
+  "verification": [
+   "rtl-glue-verification.json"
+  ]
+ },
  "0x4d9930": {
   "lifted": "rtl_forward_pair",
   "hand_files": [
@@ -20516,6 +21387,15 @@
    "text-equal-verification.json"
   ]
  },
+ "0x4dabe0": {
+  "lifted": "rtl_stack_pair_call",
+  "hand_files": [
+   "rtl_glue.h"
+  ],
+  "verification": [
+   "rtl-glue-verification.json"
+  ]
+ },
  "0x4dac10": {
   "lifted": "f4dac10",
   "hand_files": [],
@@ -20530,6 +21410,22 @@
   "lifted": "f4daca0",
   "hand_files": [],
   "verification": []
+ },
+ "0x4dacd0": {
+  "lifted": "f4dacd0",
+  "hand_files": [
+   "rtl_glue.h"
+  ],
+  "verification": []
+ },
+ "0x4dacf8": {
+  "lifted": "f4dacf8",
+  "hand_files": [
+   "rtl_glue.h"
+  ],
+  "verification": [
+   "rtl-glue-verification.json"
+  ]
  },
  "0x4dad19": {
   "lifted": "rtl_sign_of",
@@ -20551,6 +21447,17 @@
   "verification": [
    "rtl-glue-verification.json",
    "sqrt-verification.json"
+  ]
+ },
+ "0x4dae1e": {
+  "lifted": "float_split",
+  "hand_files": [
+   "float_exp.h",
+   "float_power.h",
+   "float_split.h"
+  ],
+  "verification": [
+   "float-split-verification.json"
   ]
  },
  "0x4dae4a": {
@@ -20583,6 +21490,16 @@
   "lifted": "f4daeb8",
   "hand_files": [],
   "verification": []
+ },
+ "0x4db10a": {
+  "lifted": "rtl_scratch_triple_call",
+  "hand_files": [
+   "rtl_glue.h"
+  ],
+  "verification": [
+   "rtl-glue-verification.json",
+   "sqrt-verification.json"
+  ]
  },
  "0x4db131": {
   "lifted": "f4db131",
@@ -20618,6 +21535,15 @@
  },
  "0x4db6d9": {
   "lifted": "rtl_bracket_call",
+  "hand_files": [
+   "rtl_glue.h"
+  ],
+  "verification": [
+   "rtl-glue-verification.json"
+  ]
+ },
+ "0x4db866": {
+  "lifted": "rtl_flags_call",
   "hand_files": [
    "rtl_glue.h"
   ],
@@ -20747,6 +21673,11 @@
   "hand_files": [],
   "verification": []
  },
+ "0x4dce40": {
+  "lifted": "f4dce40",
+  "hand_files": [],
+  "verification": []
+ },
  "0x4dd0c0": {
   "lifted": "f4dd0c0",
   "hand_files": [],
@@ -20835,6 +21766,15 @@
   "lifted": "f4ddc90",
   "hand_files": [],
   "verification": []
+ },
+ "0x4dde50": {
+  "lifted": "f4dde50",
+  "hand_files": [
+   "rtl_glue.h"
+  ],
+  "verification": [
+   "rtl-glue-verification.json"
+  ]
  },
  "0x4de5c0": {
   "lifted": "f4de5c0",
@@ -20956,6 +21896,15 @@
   ],
   "verification": [
    "map-find-verification.json"
+  ]
+ },
+ "0x4df140": {
+  "lifted": "rtl_table_lookup_value",
+  "hand_files": [
+   "rtl_glue.h"
+  ],
+  "verification": [
+   "rtl-glue-verification.json"
   ]
  },
  "0x4df1c0": {
@@ -21114,6 +22063,13 @@
   "hand_files": [],
   "verification": []
  },
+ "0x4e0b7c": {
+  "lifted": "f4e0b7c",
+  "hand_files": [
+   "exception_chain.h"
+  ],
+  "verification": []
+ },
  "0x4e0b9e": {
   "lifted": "f4e0b9e",
   "hand_files": [
@@ -21199,6 +22155,11 @@
   "hand_files": [],
   "verification": []
  },
+ "0x4e1230": {
+  "lifted": "f4e1230",
+  "hand_files": [],
+  "verification": []
+ },
  "0x4e1260": {
   "lifted": "f4e1260",
   "hand_files": [],
@@ -21226,6 +22187,11 @@
   "hand_files": [
    "rtl_glue.h"
   ],
+  "verification": []
+ },
+ "0x4e14dc": {
+  "lifted": "f4e14dc",
+  "hand_files": [],
   "verification": []
  },
  "0x4e14f0": {
@@ -21392,6 +22358,11 @@
  },
  "0x4e3530": {
   "lifted": "f4e3530",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4e3660": {
+  "lifted": "f4e3660",
   "hand_files": [],
   "verification": []
  },
@@ -21610,6 +22581,11 @@
   ],
   "verification": []
  },
+ "0x4e55d0": {
+  "lifted": "f4e55d0",
+  "hand_files": [],
+  "verification": []
+ },
  "0x4e5678": {
   "lifted": "f4e5678",
   "hand_files": [],
@@ -21690,8 +22666,18 @@
   "hand_files": [],
   "verification": []
  },
+ "0x4e59d0": {
+  "lifted": "f4e59d0",
+  "hand_files": [],
+  "verification": []
+ },
  "0x4e59f4": {
   "lifted": "f4e59f4",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4e5b0c": {
+  "lifted": "f4e5b0c",
   "hand_files": [],
   "verification": []
  },
@@ -21710,9 +22696,23 @@
   "hand_files": [],
   "verification": []
  },
+ "0x4e6250": {
+  "lifted": "f4e6250",
+  "hand_files": [
+   "rtl_glue.h"
+  ],
+  "verification": []
+ },
  "0x4e628c": {
   "lifted": "f4e628c",
   "hand_files": [],
+  "verification": []
+ },
+ "0x4e62e0": {
+  "lifted": "f4e62e0",
+  "hand_files": [
+   "rtl_glue.h"
+  ],
   "verification": []
  },
  "0x4e6320": {
@@ -21742,6 +22742,11 @@
   "hand_files": [],
   "verification": []
  },
+ "0x4e6630": {
+  "lifted": "f4e6630",
+  "hand_files": [],
+  "verification": []
+ },
  "0x4e66a0": {
   "lifted": "f4e66a0",
   "hand_files": [],
@@ -21759,6 +22764,16 @@
  },
  "0x4e6b2c": {
   "lifted": "f4e6b2c",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4e6b50": {
+  "lifted": "f4e6b50",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4e6bac": {
+  "lifted": "f4e6bac",
   "hand_files": [],
   "verification": []
  },
@@ -21814,7 +22829,9 @@
  },
  "0x4e7280": {
   "lifted": "f4e7280",
-  "hand_files": [],
+  "hand_files": [
+   "rtl_double_multiply.h"
+  ],
   "verification": [
    "rtl-single-multiply-verification.json",
    "rtl-single-verification.json"
@@ -22318,6 +23335,11 @@
   "hand_files": [],
   "verification": []
  },
+ "0x4ebb34": {
+  "lifted": "f4ebb34",
+  "hand_files": [],
+  "verification": []
+ },
  "0x4ebb78": {
   "lifted": "f4ebb78",
   "hand_files": [],
@@ -22381,6 +23403,13 @@
    "pattern-tables-verification.json"
   ]
  },
+ "0x4ec1a0": {
+  "lifted": "f4ec1a0",
+  "hand_files": [
+   "call_glue.h"
+  ],
+  "verification": []
+ },
  "0x4ec1d0": {
   "lifted": "f4ec1d0",
   "hand_files": [],
@@ -22393,6 +23422,11 @@
    "object_glue.h",
    "slide_pair.h"
   ],
+  "verification": []
+ },
+ "0x4ec1f7": {
+  "lifted": "f4ec1f7",
+  "hand_files": [],
   "verification": []
  },
  "0x4ec2d0": {
@@ -22427,6 +23461,16 @@
  },
  "0x4ec640": {
   "lifted": "f4ec640",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4ec650": {
+  "lifted": "f4ec650",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4ec850": {
+  "lifted": "f4ec850",
   "hand_files": [],
   "verification": []
  },
@@ -22471,6 +23515,16 @@
  },
  "0x4ecb50": {
   "lifted": "f4ecb50",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4ecba9": {
+  "lifted": "f4ecba9",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4ecc03": {
+  "lifted": "f4ecc03",
   "hand_files": [],
   "verification": []
  },
@@ -22595,6 +23649,16 @@
  },
  "0x4eea90": {
   "lifted": "f4eea90",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4eeb00": {
+  "lifted": "f4eeb00",
+  "hand_files": [],
+  "verification": []
+ },
+ "0x4eeb20": {
+  "lifted": "f4eeb20",
   "hand_files": [],
   "verification": []
  }
