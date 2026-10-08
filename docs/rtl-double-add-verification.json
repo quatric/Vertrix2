@@ -1,0 +1,42 @@
+{
+  "status": "passed",
+  "cases_per_mode": 4096,
+  "complete_original_executions": {
+    "full": {
+      "software": 4096,
+      "hardware_pc0_rc0": 4096,
+      "hardware_pc0_rc1": 4096,
+      "hardware_pc0_rc2": 4096,
+      "hardware_pc0_rc3": 4096,
+      "hardware_pc2_rc0": 4096,
+      "hardware_pc2_rc1": 4096,
+      "hardware_pc2_rc2": 4096,
+      "hardware_pc2_rc3": 4096,
+      "hardware_pc3_rc0": 4096,
+      "hardware_pc3_rc1": 4096,
+      "hardware_pc3_rc2": 4096,
+      "hardware_pc3_rc3": 4096
+    }
+  },
+  "register_cache_control_callback_comparisons": 53248,
+  "original_path_counts": {
+    "software_math": 4020,
+    "hardware_math": 48240,
+    "software_overflow": 233,
+    "software_large_gap": 1772,
+    "software_opposite_sign": 1009,
+    "software_negative_sum": 980,
+    "software_normalize": 920,
+    "software_subnormal": 26,
+    "software_round": 926,
+    "software_round_carry": 4
+  },
+  "unconfigured_early_zero_original_executions": 8,
+  "unsupported_control_or_missing_boundary_guards": 4,
+  "live_callback_register_cache_control_mutations": 466,
+  "error_boundary_calls": {
+    "0x4dae94": 233,
+    "0x4e7280": 233
+  },
+  "scope": "Original4db350 double addition EDX:EAX plus ECX:EBX, software integer arithmetic and masked hardware precision24/53/64 at all rounding modes. Exact EAX/EDX/EBX/ECX, helper globals, hardware/capability/control, preserved registers/stack and arbitrary error-boundary register/global mutations compare independently. FPSW/x87 stack/pending exceptions and unmasked traps remain outside scope."
+}
