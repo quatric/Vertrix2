@@ -231,7 +231,7 @@ enum
     LIFTED_F459B00_STACK = 96,
     LIFTED_F459B60_STACK = 112,
     LIFTED_TITLE_LETTER_RESTART_CALL_STACK = 144,
-    LIFTED_TITLE_LETTER_LAUNCH_STACK = 124,
+    LIFTED_TITLE_LETTER_LAUNCH_CALL_STACK = 124,
     LIFTED_TITLE_LETTER_FIGHT_SETTLE_CALL_STACK = 104,
     LIFTED_TITLE_LETTER_FIGHT_RESTART_CALL_STACK = 124,
     LIFTED_TITLE_LETTER_WAVE_CALL_STACK = 132,
@@ -1399,7 +1399,7 @@ uint32_t lifted_title_letter_restart_call(const VertrixCalls *calls,
                                           const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x45a0c0. */
-uint32_t lifted_title_letter_launch(const VertrixCalls *calls,
+uint32_t lifted_title_letter_launch_call(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services,
                                     const VertrixGlobals *globals, const LiftEntry *entry);
 

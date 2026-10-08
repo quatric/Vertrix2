@@ -14,9 +14,9 @@
     "pending_files": 0
   },
   "source_lines": {
-    "lifters": 335939,
-    "other_source": 75874,
-    "total": 411813
+    "lifters": 335945,
+    "other_source": 76278,
+    "total": 412223
   },
   "line_count_convention": "All files under source, including comments and blank lines; lifters have filenames starting lifted_ or lift_; count LF bytes.",
   "full_native_recovery_reports": [
@@ -37,7 +37,10 @@
     "docs/particle-init-verification.json",
     "docs/actor-fields-verification.json",
     "docs/global-scalars-verification.json",
-    "docs/title-letter-digit-verification.json"
+    "docs/title-letter-digit-verification.json",
+    "docs/object-scalar-returns-verification.json",
+    "docs/particle-spawn-full-verification.json",
+    "docs/title-letter-launch-verification.json"
   ],
   "dispatcher_report": "docs/dispatcher-integration-verification.json",
   "constant_dispatcher_report": "docs/constant-dispatch-verification.json",

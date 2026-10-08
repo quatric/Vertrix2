@@ -2685,7 +2685,7 @@
   "virtual": [],
   "address": 4438032
  },
- "player_set_e0": {
+ "player_set_e0_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2697,7 +2697,7 @@
   "virtual": [],
   "address": 4438112
  },
- "player_e0": {
+ "player_e0_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2862,7 +2862,7 @@
   "virtual": [],
   "address": 4438672
  },
- "player_set_cd": {
+ "player_set_cd_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -2874,7 +2874,7 @@
   "virtual": [],
   "address": 4438736
  },
- "player_set_cc": {
+ "player_set_cc_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -3068,7 +3068,7 @@
   "virtual": [],
   "address": 4439360
  },
- "player_partner_free": {
+ "player_partner_free_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -3235,7 +3235,7 @@
   "virtual": [],
   "address": 4440384
  },
- "player_partner_not_cc_one": {
+ "player_partner_not_cc_one_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -3392,7 +3392,7 @@
   "virtual": [],
   "address": 4443552
  },
- "player_enter_state": {
+ "player_enter_state_full": {
   "callees": {},
   "stack": 64,
   "arguments": 0,
@@ -4034,7 +4034,7 @@
   "virtual": [],
   "address": 4447360
  },
- "spawn_spread": {
+ "spawn_spread_full": {
   "callees": {
    "0x4ac8d0": [
     0,
@@ -4301,7 +4301,7 @@
   "virtual": [],
   "address": 4450368
  },
- "spawn_place": {
+ "spawn_place_full": {
   "callees": {
    "0x4826c0": [
     0,

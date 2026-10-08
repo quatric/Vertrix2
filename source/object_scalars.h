@@ -6,48 +6,50 @@
  * storage is raw bytes; short or null storage returns zero and preserves everything. Handles of
  * other objects resolve through VertrixObjectStorage. */
 
-/* Original0x4126d0: flip the dword at +0x5cc + 4 * index between 1 and 0 (1 becomes 0, any other
- * value becomes 1). Original0x4126f0 reads it. */
+/* Original fragment 0x4126d0: flip the dword at +0x5cc + 4 * index between 1 and 0 (1 becomes 0,
+ * any other value becomes 1). Original fragment 0x4126f0 reads it. */
 int vertrix_object_toggle_flag(void *storage, size_t size, uint32_t index);
-/* Original 0x4126f0: Read the indexed flag at +0x5cc + 4 * index. */
+/* Original fragment 0x4126f0: Read the indexed flag at +0x5cc + 4 * index. */
 int vertrix_object_flag(const void *storage, size_t size, uint32_t index, uint32_t *value);
 
-/* Original0x418820 (+0xc0 = value), 0x418840 (+0xbc = value), 0x418830 (+0xbc = +0xc0) and
- * 0x418870 (+0xbc = 0): the timer period and counter of a library object. */
+/* Original fragment 0x418820 (+0xc0 = value), 0x418840 (+0xbc = value), 0x418830 (+0xbc = +0xc0)
+ * and 0x418870 (+0xbc = 0): the timer period and counter of a library object. */
 int vertrix_object_set_period(void *storage, size_t size, uint32_t value);
-/* Original 0x418840: Store the counter at +0xbc. */
+/* Original fragment 0x418840: Store the counter at +0xbc. */
 int vertrix_object_set_counter(void *storage, size_t size, uint32_t value);
-/* Original 0x418830: Copy the period +0xc0 to counter +0xbc. */
+/* Original fragment 0x418830: Copy the period +0xc0 to counter +0xbc. */
 int vertrix_object_counter_to_period(void *storage, size_t size);
-/* Original 0x418870: Clear counter +0xbc. */
+/* Original fragment 0x418870: Clear counter +0xbc. */
 int vertrix_object_clear_counter(void *storage, size_t size);
 
-/* Original0x42a940 and 0x42a950: clear the signed byte +0x16c / +0x16d of a piece. */
+/* Original fragment 0x42a940 and 0x42a950: clear the signed byte +0x16c / +0x16d of a piece. */
 int vertrix_piece_clear_offset_x(void *storage, size_t size);
-/* Original 0x42a950: Clear signed byte +0x16d. */
+/* Original fragment 0x42a950: Clear signed byte +0x16d. */
 int vertrix_piece_clear_offset_y(void *storage, size_t size);
 
-/* Original0x42ba40: 1 when the signed word +0x16 is greater than the signed word +0xae. */
+/* Original fragment 0x42ba40: 1 when the signed word +0x16 is greater than the signed word +0xae.
+ */
 int vertrix_object_y_above_limit(const void *storage, size_t size, uint32_t *above);
 
-/* Original0x43b860 / 0x43b870: set / get dword +0x4e0. Original0x43b970: dword +0x4e8 is
- * nonzero. Original0x43bad0 / 0x43bae0: set byte +0x4cd / +0x4cc. Original0x43bd40: byte +0x4c4
- * equals 1. Original0x43cde0: byte +0x4dc = 2 and dword +0x470 = 3. */
+/* Original fragment 0x43b860 / 0x43b870: set / get dword +0x4e0. Original fragment 0x43b970: dword
+ * +0x4e8 is nonzero. Original fragment 0x43bad0 / 0x43bae0: set byte +0x4cd / +0x4cc. Original
+ * fragment 0x43bd40: byte +0x4c4 equals 1. Original fragment 0x43cde0: byte +0x4dc = 2 and dword
+ * +0x470 = 3. */
 int vertrix_player_set_e0(void *storage, size_t size, uint32_t value);
-/* Original 0x43b870: Read dword +0x4e0. */
+/* Original fragment 0x43b870: Read dword +0x4e0. */
 int vertrix_player_e0(const void *storage, size_t size, uint32_t *value);
-/* Original 0x43b970: Dword +0x4e8 is nonzero. */
+/* Original fragment 0x43b970: Dword +0x4e8 is nonzero. */
 int vertrix_player_has_e8(const void *storage, size_t size, uint32_t *flag);
-/* Original 0x43bad0: Store byte +0x4cd. */
+/* Original fragment 0x43bad0: Store byte +0x4cd. */
 int vertrix_player_set_cd(void *storage, size_t size, uint8_t value);
-/* Original 0x43bae0: Store byte +0x4cc. */
+/* Original fragment 0x43bae0: Store byte +0x4cc. */
 int vertrix_player_set_cc(void *storage, size_t size, uint8_t value);
-/* Original 0x43bd40: Byte +0x4c4 equals one. */
+/* Original fragment 0x43bd40: Byte +0x4c4 equals one. */
 int vertrix_player_c4_is_one(const void *storage, size_t size, uint32_t *flag);
-/* Original 0x43cde0: Set byte +0x4dc to two and dword +0x470 to three. */
+/* Original fragment 0x43cde0: Set byte +0x4dc to two and dword +0x470 to three. */
 int vertrix_player_enter_state(void *storage, size_t size);
 
-/* Original0x43cc90: byte +0x4cc of the object whose handle is at +0x3b0 is not 1. */
+/* Original fragment 0x43cc90: byte +0x4cc of the object whose handle is at +0x3b0 is not 1. */
 int vertrix_player_partner_not_cc_one(const void *storage, size_t size,
                                       VertrixObjectStorage resolve, void *context, uint32_t *flag);
 
@@ -84,7 +86,8 @@ int32_t vertrix_compare_unsigned(uint32_t left, uint32_t right);
 /* Original0x425e00: number of the first seven dwords of the table that are not 0xffffffff. */
 uint32_t vertrix_table_used_count(const uint32_t table[7]);
 
-/* Original0x43bd60: 0 when byte +0x4cc of the object whose handle is at +0x3b0 is 1 or 4. */
+/* Original fragment 0x43bd60: 0 when byte +0x4cc of the object whose handle is at +0x3b0 is 1 or 4.
+ */
 int vertrix_player_partner_free(const void *storage, size_t size, VertrixObjectStorage resolve,
                                 void *context, uint32_t *flag);
 /* Full global APIs use 32-bit wrapping indexed addresses, with no native array bounds
@@ -129,4 +132,60 @@ int vertrix_global_next_index_full(uint32_t eax, VertrixMemoryRead read, Vertrix
 int vertrix_global_reset_pair_full(uint32_t eax, VertrixMemoryRead read, VertrixMemoryWrite write,
                                    void *context, uint32_t *result);
 
+/* Complete object APIs below preserve original normal-return values. Bounded storage APIs
+ * return zero for short/null storage without writes. */
+
+/* Original 0x418820: write dword to +0xc0; return the original object token. */
+uint32_t vertrix_object_set_period_full(void *storage, size_t size, uint32_t object,
+                                        uint32_t value);
+
+/* Original 0x418840: write dword to +0xbc; return the original object token. */
+uint32_t vertrix_object_set_counter_full(void *storage, size_t size, uint32_t object,
+                                         uint32_t value);
+
+/* Original 0x418870: clear +0xbc; return the original object token. */
+uint32_t vertrix_object_clear_counter_full(void *storage, size_t size, uint32_t object);
+
+/* Original 0x42a940: clear +0x16c; return the original object token. */
+uint32_t vertrix_piece_clear_offset_x_full(void *storage, size_t size, uint32_t object);
+
+/* Original 0x42a950: clear +0x16d; return the original object token. */
+uint32_t vertrix_piece_clear_offset_y_full(void *storage, size_t size, uint32_t object);
+
+/* Original 0x42ba40: return one when signed word +0x16 exceeds signed word +0xae, else zero. */
+uint32_t vertrix_object_y_above_limit_full(const void *storage, size_t size);
+
+/* Original 0x43b860: write dword to +0x4e0; return the original object token. */
+uint32_t vertrix_player_set_e0_full(void *storage, size_t size, uint32_t object, uint32_t value);
+
+/* Original 0x43b870: return dword +0x4e0. */
+uint32_t vertrix_player_e0_full(const void *storage, size_t size);
+
+/* Original 0x43bad0: write low byte to +0x4cd; return the original object token. */
+uint32_t vertrix_player_set_cd_full(void *storage, size_t size, uint32_t object, uint32_t value);
+
+/* Original 0x43bae0: write low byte to +0x4cc; return the original object token. */
+uint32_t vertrix_player_set_cc_full(void *storage, size_t size, uint32_t object, uint32_t value);
+
+/* Original 0x43cde0: write byte +0x4dc=2, then dword +0x470=3; return the original object token. */
+uint32_t vertrix_player_enter_state_full(void *storage, size_t size, uint32_t object);
+
+/* Full address-boundary APIs report availability separately from original eax in result.
+ * Required boundaries/result must exist before effects. Late boundary failure preserves
+ * earlier writes and leaves result untouched. All guest address arithmetic wraps in 32 bits. */
+/* Original 0x4126d0: read indexed +0x5cc, write zero if it was one, otherwise one;
+ * return object + index*4, excluding the +0x5cc field displacement. */
+int vertrix_object_toggle_flag_full(uint32_t object, uint32_t index, VertrixMemoryRead read,
+                                    VertrixMemoryWrite write, void *context, uint32_t *result);
+/* Original 0x4126f0: return the indexed dword at object + index*4 +0x5cc. */
+int vertrix_object_flag_full(uint32_t object, uint32_t index, VertrixMemoryRead read, void *context,
+                             uint32_t *result);
+/* Original 0x43cc90: read partner handle at object+0x3b0, then its byte +0x4cc;
+ * return one unless that byte equals one. */
+int vertrix_player_partner_not_cc_one_full(uint32_t object, VertrixMemoryRead read, void *context,
+                                           uint32_t *result);
+/* Original 0x43bd60: read partner handle at object+0x3b0, then its byte +0x4cc;
+ * return zero when that byte is one or four, otherwise one. */
+int vertrix_player_partner_free_full(uint32_t object, VertrixMemoryRead read, void *context,
+                                     uint32_t *result);
 #endif

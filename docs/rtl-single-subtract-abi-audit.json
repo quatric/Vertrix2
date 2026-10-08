@@ -1,0 +1,60 @@
+{
+  "address": "0x4d809c",
+  "status": "confirmed ABI mismatch; repair outstanding",
+  "method": "Execute original routine and compile the actual current lift_host.c boundary branch in an isolated ABI harness. No game implementation replacement.",
+  "original_operands": "single precision EAX minus EDX",
+  "current_host_operands": "double precision EDX:EAX minus ECX:EBX",
+  "original_mode_pointer_initial": "0x4d82a5",
+  "required_followup": [
+    "Recover software and hardware modes selected through 0x503ea0 and 0x5054a1, including zero fast paths and EDX effects.",
+    "Separate single subtraction from double multiplication; retain actual caller register output semantics.",
+    "Audit double multiplication independently; this comparison does not verify it."
+  ],
+  "cases": [
+    {
+      "left": 1.0,
+      "right": 0.5,
+      "original_eax": "3f000000",
+      "host_eax": "3f800000",
+      "original_edx": "40000000",
+      "host_edx_output": "3f000000",
+      "eax_matches": false
+    },
+    {
+      "left": 3.0,
+      "right": 2.0,
+      "original_eax": "3f800000",
+      "host_eax": "40400000",
+      "original_edx": "80000000",
+      "host_edx_output": "40000000",
+      "eax_matches": false
+    },
+    {
+      "left": 0.0,
+      "right": 1.0,
+      "original_eax": "bf800000",
+      "host_eax": "00000000",
+      "original_edx": "bf800000",
+      "host_edx_output": "3f800000",
+      "eax_matches": false
+    },
+    {
+      "left": -2.0,
+      "right": 1.0,
+      "original_eax": "c0400000",
+      "host_eax": "c0000000",
+      "original_edx": "40000000",
+      "host_edx_output": "3f800000",
+      "eax_matches": false
+    },
+    {
+      "left": 1.0,
+      "right": 0.0,
+      "original_eax": "3f800000",
+      "host_eax": "3f800000",
+      "original_edx": "00000000",
+      "host_edx_output": "00000000",
+      "eax_matches": true
+    }
+  ]
+}

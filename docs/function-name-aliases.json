@@ -23,18 +23,6 @@
     ],
     "reason": "Both recoveries compare unsigned dwords returning minus one, zero, or one."
   },
-  "0x418830": {
-    "name": "vertrix_actor_sync_clock_period",
-    "aliases": [
-      "vertrix_actor_sync_clock_period",
-      "vertrix_object_counter_to_period"
-    ],
-    "evidence": [
-      "source/object_accessors.h",
-      "tools/verify_object_accessors.py"
-    ],
-    "reason": "Complete normal entrypoint preserves exact 32-bit EAX and whole object state; older status and output-parameter helpers are fragments."
-  },
   "0x42ff10": {
     "name": "vertrix_board_set_actor_clip",
     "aliases": [
@@ -94,51 +82,31 @@
     ],
     "reason": "Player delay parameter zero is explicitly the AI reaction-time routine."
   },
-  "0x43b970": {
-    "name": "vertrix_player_test_4e8",
-    "aliases": [
-      "vertrix_player_has_e8",
-      "vertrix_player_test_4e8"
-    ],
-    "evidence": [
-      "source/object_accessors.h",
-      "tools/verify_object_accessors.py"
-    ],
-    "reason": "Complete normal entrypoint preserves exact 32-bit EAX and whole object state; older status and output-parameter helpers are fragments."
-  },
   "0x43bad0": {
-    "name": "vertrix_player_set_cd",
+    "name": "vertrix_player_set_cd_full",
     "aliases": [
       "vertrix_player_set_b14",
-      "vertrix_player_set_cd"
+      "vertrix_player_set_cd_full"
     ],
     "evidence": [
-      "source/object_scalars.h"
+      "source/object_scalars.h",
+      "tools/verify_object_scalar_returns.py",
+      "docs/object-scalar-returns-verification.json"
     ],
-    "reason": "Both recovered setters write the player byte at 0x4cd."
+    "reason": "Full setter preserves the incoming object token in EAX as well as the original player-byte write; the alternate setter exposes a projected status."
   },
   "0x43bae0": {
-    "name": "vertrix_player_set_cc",
+    "name": "vertrix_player_set_cc_full",
     "aliases": [
       "vertrix_player_set_b08",
-      "vertrix_player_set_cc"
+      "vertrix_player_set_cc_full"
     ],
     "evidence": [
-      "source/object_scalars.h"
+      "source/object_scalars.h",
+      "tools/verify_object_scalar_returns.py",
+      "docs/object-scalar-returns-verification.json"
     ],
-    "reason": "Both recovered setters write the player byte at 0x4cc."
-  },
-  "0x43bd40": {
-    "name": "vertrix_player_test_4c4",
-    "aliases": [
-      "vertrix_player_c4_is_one",
-      "vertrix_player_test_4c4"
-    ],
-    "evidence": [
-      "source/object_accessors.h",
-      "tools/verify_object_accessors.py"
-    ],
-    "reason": "Complete normal entrypoint preserves exact 32-bit EAX and whole object state; older status and output-parameter helpers are fragments."
+    "reason": "Full setter preserves the incoming object token in EAX as well as the original player-byte write; the alternate setter exposes a projected status."
   },
   "0x44ff90": {
     "name": "vertrix_ui_indicator_storage_update",

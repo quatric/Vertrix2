@@ -1,13 +1,46 @@
 {
+  "full_launch_abi": {
+    "complete_original_executions": {
+      "0x45a0c0": 4096
+    },
+    "exact_callback_register_state_comparisons": 16384,
+    "ordered_raw_global_reads": 24576,
+    "wrapping_negative_sound_entry_reads": 2075,
+    "native_missing_boundary_input_guards": 4,
+    "scope": "Complete normal launch with original distance/heading/sound runtime boundaries. Every call register and independent actor/math-scratch/sound-global state compares before and after callbacks. Callback mutations drive live position, sound index, volume/table rereads; full-width geometry returns verify word truncation and heading modulo. Exact original EAX actor handle compares. Faulting runtime geometry and register-clobbering callbacks remain outside normal boundary."
+  },
+  "full_fly_out_abi": {
+    "complete_original_executions": {
+      "0x45a1c0": 4096
+    },
+    "branch_fixtures": {
+      "not_due": 586,
+      "fading": 585,
+      "opaque": 585,
+      "full": 585,
+      "wrapped": 585,
+      "signed": 585,
+      "zero_rate": 585
+    },
+    "exact_measure_callback_register_state_comparisons": 2925,
+    "live_actor_mutation_cases": 2438,
+    "return_counts": {
+      "0": 1171,
+      "1": 2508,
+      "object": 417
+    },
+    "native_missing_boundary_input_guards": 4,
+    "scope": "Complete normal fly handlers execute real timer, rotation/orbit and signed transition helpers, with only 0x4b14c0 supplied. Exact measurement registers, full-width output dimensions, independent 0x160 actor/flag state before and after callbacks, late actor mutation reads and exact original EAX compare. Dword/radius transition returns and handler arrival compare. Arithmetic faults, callback register clobbers and exceptional execution remain outside the normal boundary."
+  },
   "status": "passed",
   "complete_original_executions": {
-    "launch": 2048,
-    "fly_out": 2048,
-    "fly_out_done": 778,
-    "fight_fly": 2048,
-    "fight_fly_done": 1211,
-    "wave_fly": 2048,
-    "wave_fly_done": 1204
+    "launch": 4096,
+    "fly_out": 4096,
+    "fly_out_done": 1577,
+    "fight_fly": 4096,
+    "fight_fly_done": 2411,
+    "wave_fly": 4096,
+    "wave_fly_done": 2416
   },
   "scope": "Complete original 0x45a0c0 (with the real 0x484680, 0x484700 and 0x4ad510; the sound player 0x482a60 observed and its table lookup checked) and handlers 0x45a1c0, 0x45a4f0 and 0x45a910 (with the real actor helpers, 0x4ad750, 0x4ad5e0, 0x4ad530 and 0x4b14c0) run in the oracle. The first 0x160 actor bytes, handler token included, and the flag 0x532a40 compare after every call."
 }

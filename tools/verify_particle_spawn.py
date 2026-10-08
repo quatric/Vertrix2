@@ -32,7 +32,7 @@ def main():
     parser.add_argument('--build-dir', type=Path, required=True)
     parser.add_argument('--cases', type=int, default=4096)
     args = parser.parse_args()
-    n = build(args.build_dir, 'particle-spawn', ['particle_spawn.c', 'actor_storage.c', 'actor_fields.c', 'actor_chain_visit.c'])
+    n = build(args.build_dir, 'particle-spawn', ['particle_spawn.c', 'actor_storage.c', 'actor_fields.c', 'actor_chain_visit.c', 'call_glue.c'])
     S = c.POINTER(Services)
     P = c.POINTER(Scratch)
     n.vertrix_spawn_spread.argtypes = [U, U, c.c_uint16, c.c_uint16, P, S]

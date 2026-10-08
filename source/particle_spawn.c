@@ -223,3 +223,114 @@ int vertrix_spawn_place(uint32_t child, const VertrixSpawnServices *services)
                field_write(services, child, FIELD_Y, 2, sparkle_y[index]);
     }
 }
+
+int vertrix_spawn_spread_full(uint32_t scene, uint32_t child, VertrixMemoryRead read,
+                              VertrixMemoryWrite write, void *context, const VertrixCalls *calls,
+                              uint32_t *result)
+{
+    if (!read || !write || !calls || !calls->call || !result)
+    {
+        return 0;
+    }
+    uint32_t width, height, half, range, value, mode;
+    if (!read(0x5b9c8e, 2, &width, context) || !write(0x540fd4, 2, width, context) ||
+        !read(0x5b9c90, 2, &height, context) || !read(0x5b9c8e, 2, &width, context) ||
+        !write(0x540fd6, 2, height, context) || !read(0x5b9c90, 2, &height, context) ||
+        !write(0x540fd8, 2, width / 2, context) || !write(0x540fda, 2, height / 2, context) ||
+        !write(child + 0xcc, 4, 0, context) || !write(child + 0xb8, 4, 0, context) ||
+        !write(child + 0xb0, 4, SPREAD_RESOURCE, context) || !write(child + 0xb8, 4, 15, context))
+    {
+        return 0;
+    }
+    vertrix_call(calls, 0x4ac8a0, child, 15, scene, child, 0);
+    if (!read(scene + 0x94c, 4, &mode, context) ||
+        !write(child + 0xc0, 4, mode == 1 ? 12 : 5, context) ||
+        !write(child + 0xe, 2, 0, context) || !read(0x540fd4, 2, &range, context) ||
+        !write(child + 0x16, 2, 0, context))
+    {
+        return 0;
+    }
+    value = vertrix_call(calls, 0x4826c0, 0x598d30, range, scene, child, 0);
+    if (!read(0x540fd8, 2, &half, context) || !read(0x540fd6, 2, &range, context) ||
+        !write(child + 8, 2, (uint16_t)(value - half) * 150u, context))
+    {
+        return 0;
+    }
+    value = vertrix_call(calls, 0x4826c0, 0x598d30, range, scene, child, 0);
+    if (!read(0x540fda, 2, &half, context) ||
+        !write(child + 0xa, 2, (uint16_t)(value - half) * 150u, context) ||
+        !read(scene + 0x94c, 4, &mode, context) || !write(child + 0x58, 4, 200, context) ||
+        !write(child + 0x5c, 4, 0, context))
+    {
+        return 0;
+    }
+    value = (vertrix_call(calls, 0x4826c0, 0x598d30, 2, scene, child, 0) & 0xffff) + 1;
+    if ((mode == 1 && !write(child + 0x28, 2, 1, context)) ||
+        !write(child + 0x60, 4, value, context))
+    {
+        return 0;
+    }
+    *result = value;
+    return 1;
+}
+
+int vertrix_spawn_place_full(uint32_t child, uint32_t ebx, VertrixMemoryRead read,
+                             VertrixMemoryWrite write, void *context, const VertrixCalls *calls,
+                             uint32_t *result)
+{
+    if (!read || !write || !calls || !calls->call || !result)
+    {
+        return 0;
+    }
+    uint32_t x[5], y[5], first_mode, mode, range, value;
+    for (unsigned i = 0; i < 5; ++i)
+    {
+        if (!read(0x4fb93c + 4 * i, 4, &x[i], context))
+        {
+            return 0;
+        }
+    }
+    for (unsigned i = 0; i < 5; ++i)
+    {
+        if (!read(0x4fb950 + 4 * i, 4, &y[i], context))
+        {
+            return 0;
+        }
+    }
+    if (!read(child + 0xb8, 4, &first_mode, context) || !read(child + 0xb8, 4, &mode, context) ||
+        !write(child + 0x95, 1, first_mode == 1 ? 5 : 4, context))
+    {
+        return 0;
+    }
+    if (mode != 2)
+    {
+        value = vertrix_call(calls, 0x4826c0, 0x598d30, 5, ebx, child, 0);
+        unsigned index = value & 0xffff;
+        if (index >= 5 || !write(child + 0xe, 2, x[index], context) ||
+            !write(child + 0x16, 2, y[index], context))
+        {
+            return 0;
+        }
+        value = (value & 0xffff0000u) | (y[index] & 0xffff);
+    }
+    else
+    {
+        if (!read(child + 8, 2, &range, context))
+        {
+            return 0;
+        }
+        value = vertrix_call(calls, 0x4826c0, 0x598d30, range, ebx, child, 0);
+        if (!write(child + 0xe, 2, value, context) || !read(child + 0xa, 2, &range, context))
+        {
+            return 0;
+        }
+        value = vertrix_call(calls, 0x4826c0, 0x598d30, (range - 0x136) & 0xffff, ebx, child, 0) +
+                0x136;
+        if (!write(child + 0x16, 2, value, context))
+        {
+            return 0;
+        }
+    }
+    *result = value;
+    return 1;
+}

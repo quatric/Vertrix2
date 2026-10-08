@@ -192,7 +192,7 @@ uint32_t vertrix_title_letter_wave_fly_call(const VertrixCalls *calls, uint8_t *
                                             uint32_t object, uint32_t frame, uint32_t elapsed,
                                             const VertrixAngleTables *tables);
 
-/* Original handler 0x45a1c0 (a title letter flying out): the angle step and position as in the
+/* Original fragment 0x45a1c0 (a title letter flying out): the angle step and position as in the
  * other handlers; the glyph is placed with its measured size, the step word +0x32 grows by the
  * quotient, the dwords +0x64 toward +0x68 by +0x6c (0x4ad750) and, when that is done, +0x64 = 0 and
  * the radius +0x2a moves to +0x30 by +0x32 (0x4ad5e0, one cycle). The handler becomes zero on
@@ -202,8 +202,8 @@ int vertrix_title_letter_fly_out(uint8_t *actor, size_t size, uint32_t elapsed,
                                  const VertrixResourceDimensions *descriptor,
                                  uint8_t screen_unscaled, uint8_t screen_mode);
 
-/* Original 0x45a0c0: launch a letter toward the screen centre (0x140, 0xf0): the radius is the
- * distance (0x484680), the origin words the centre, +0x24 the heading (0x484700) modulo 360,
+/* Original fragment 0x45a0c0: launch a letter toward the screen centre (0x140, 0xf0): the radius is
+ * the distance (0x484680), the origin words the centre, +0x24 the heading (0x484700) modulo 360,
  * the angle step 0, the limit +0x30 = 0x240, the step +0x32 = 1, the dwords +0x64, +0x68, +0x6c =
  * 0, 6, 1, the period 10 with the counter cleared, the sound entry played on channels 0 and 4
  * (0x482a60; play is called with the channel) and handler 0x45a1c0. Returns 0 for short storage
@@ -211,6 +211,25 @@ int vertrix_title_letter_fly_out(uint8_t *actor, size_t size, uint32_t elapsed,
 int vertrix_title_letter_launch(uint8_t *actor, size_t size,
                                 const uint16_t heading_table[VERTRIX_RATIO_TABLE_SIZE],
                                 void (*play)(void *context, uint32_t channel), void *context);
+/* Original 0x45a0c0: complete normal launch through mandatory runtime/read boundaries.
+ * The original distance/heading calls 0x484680/0x484700 own their arithmetic/scratch effects;
+ * each receives center coordinates and the actor's live signed position words. Heading is
+ * truncated to a word before modulo 360. Sound calls 0x482a60 on channels 0/4 read live index,
+ * volume and table-entry globals separately before each callback. Returns object after the
+ * final handler write. Missing boundaries/short storage reject before effects; late memory
+ * failure retains effects. Arithmetic faults and callback register clobbers are outside boundary.
+ */
+uint32_t vertrix_title_letter_launch_call(const VertrixCalls *calls, uint8_t *actor, size_t size,
+                                          uint32_t object, VertrixMemoryRead read, void *context);
+/* Original 0x45a1c0: full normal fly-out with mandatory 0x4b14c0 measurement callback.
+ * Width/height return in out_value/out_ebx, with EDX=frame-0x20 and EBX=frame-0x1c.
+ * Callback actor mutations remain live. No-due returns zero; unfinished transitions return one;
+ * arrival clears the handler and returns object. Missing inputs reject before effects; faults
+ * and callback register clobbers remain outside the normal boundary. */
+uint32_t vertrix_title_letter_fly_out_call(const VertrixCalls *calls, uint8_t *actor, size_t size,
+                                           uint32_t object, uint32_t frame, uint32_t elapsed,
+                                           const VertrixAngleTables *tables);
+
 /* Original fragments 0x45a620, 0x45a750 / 0x45a830 and 0x45a910, a third family of title letters.
  * 0x45a620 is the park step of 0x459be0 without a sound: level 16, effect 0, target 0x32, step 2,
  * handler 0x45a750. The two wave handlers (second = 0 for 0x45a750, 1 for 0x45a830) move the

@@ -18,6 +18,8 @@ def main():
     parser.add_argument('--build-dir', type=Path, required=True)
     parser.add_argument('--cases', type=int, default=4096)
     args = parser.parse_args()
+    if args.cases < 1:
+        parser.error('--cases must be positive')
     n = build(args.build_dir, 'object-scalars', ['object_scalars.c', 'actor_storage.c'])
     P, SZ, UP = c.c_void_p, c.c_size_t, c.POINTER(U)
     for name in ('toggle_flag',):
@@ -207,7 +209,16 @@ def main():
         count('0x425e00')
     assert not n.vertrix_object_toggle_flag(buf(), 0x5cf, 0)
     assert not n.vertrix_player_enter_state(buf(), 0x473)
-    report = {'status': 'passed', 'complete_original_executions': totals, 'scope': 'Complete one-field accessors 4126d0, 4126f0, 415b10, 415530, 415b30, 415b40, 415d40, 415d60, ' '415d90, 417f40, 418820, 418830, 418840, 418870, 41a930, 41d660, 42a940, ' '42a950, 42ba40, 43b860, 43b870, 43b970, 43bad0, 43bae0, 43bd40, 43cc90 ' '43bd60, 418150, 425e00 and 43cde0 execute in the original; whole objects, global cells and ' 'returned values compare.'}
+    assert len(totals) == 30 and all(value == args.cases for value in totals.values())
+    report = {
+        'status': 'passed', 'complete_original_executions': totals,
+        'scope': 'The 30 listed original entrypoints execute complete normal routines. Legacy '
+                 'object and global mutators compare storage, while predicates/getters compare '
+                 'projected out-parameters and existing direct scalar APIs compare their returns. '
+                 'Success status from legacy mutators is not an original EAX comparison. New '
+                 'complete object/piece/player EAX and live address-boundary proofs are reported '
+                 'separately in object-scalar-returns-verification.json; full globals retain their '
+                 'separate verifier. This report makes no full-ABI claim for projected helpers.'}
     (args.build_dir / 'object-scalars-verification.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))
 if __name__ == '__main__':

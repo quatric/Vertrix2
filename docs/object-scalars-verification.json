@@ -32,5 +32,5 @@
     "0x418150": 4096,
     "0x425e00": 4096
   },
-  "scope": "Complete one-field accessors 4126d0, 4126f0, 415b10, 415530, 415b30, 415b40, 415d40, 415d60, 415d90, 417f40, 418820, 418830, 418840, 418870, 41a930, 41d660, 42a940, 42a950, 42ba40, 43b860, 43b870, 43b970, 43bad0, 43bae0, 43bd40, 43cc90 43bd60, 418150, 425e00 and 43cde0 execute in the original; whole objects, global cells and returned values compare."
+  "scope": "The 30 listed original entrypoints execute complete normal routines. Legacy object and global mutators compare storage, while predicates/getters compare projected out-parameters and existing direct scalar APIs compare their returns. Success status from legacy mutators is not an original EAX comparison. New complete object/piece/player EAX and live address-boundary proofs are reported separately in object-scalar-returns-verification.json; full globals retain their separate verifier. This report makes no full-ABI claim for projected helpers."
 }

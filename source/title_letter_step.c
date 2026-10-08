@@ -1071,3 +1071,92 @@ uint32_t vertrix_title_letter_digit_call(const VertrixCalls *calls, uint8_t *act
     }
     return previous_exception;
 }
+
+uint32_t vertrix_title_letter_launch_call(const VertrixCalls *calls, uint8_t *actor, size_t size,
+                                          uint32_t object, VertrixMemoryRead read, void *context)
+{
+    if (!calls || !calls->call || !actor || size < VERTRIX_LETTER_STORAGE_SIZE || !read)
+    {
+        return 0;
+    }
+    uint32_t x = (uint32_t)(int32_t)(int16_t)get(actor, POSITION_X, 2);
+    uint32_t y = (uint32_t)(int32_t)(int16_t)get(actor, POSITION_Y, 2);
+    uint32_t distance = family_count_boundary(calls, 0x484680, 0x140, 0xf0, x, y);
+    put(actor, RADIUS, 2, distance);
+    put(actor, ORIGIN_X, 2, 0x140);
+    put(actor, ORIGIN_Y, 2, 0xf0);
+    x = (uint32_t)(int32_t)(int16_t)get(actor, POSITION_X, 2);
+    y = (uint32_t)(int32_t)(int16_t)get(actor, POSITION_Y, 2);
+    uint32_t heading = family_count_boundary(calls, 0x484700, 0x140, 0xf0, x, y);
+    put(actor, ANGLE_STEP, 2, 0);
+    put(actor, LIMIT, 2, 0x240);
+    put(actor, RADIUS_STEP, 2, 1);
+    put(actor, 0x64, 4, 0);
+    put(actor, 0x68, 4, 6);
+    put(actor, 0x6c, 4, 1);
+    put(actor, ANGLE, 2, (heading & 0xffffu) % 0x168);
+    put(actor, PERIOD, 4, 10);
+    put(actor, COUNTER, 4, 0);
+    for (uint32_t channel = 0; channel <= 4; channel += 4)
+    {
+        uint32_t index, volume, entry;
+        if (!read(0x4f81b0, 4, &index, context) || !read(0x532b9c, 4, &volume, context) ||
+            !read(0x533164u + 4u * index, 4, &entry, context))
+        {
+            return 0;
+        }
+        family_count_boundary(calls, 0x482a60, channel, entry, volume, 0x168);
+    }
+    put(actor, 0x154, 4, 0x45a1c0);
+    return object;
+}
+
+uint32_t vertrix_title_letter_fly_out_call(const VertrixCalls *calls, uint8_t *actor, size_t size,
+                                           uint32_t object, uint32_t frame, uint32_t elapsed,
+                                           const VertrixAngleTables *tables)
+{
+    if (!calls || !calls->call || !actor || size < VERTRIX_LETTER_STORAGE_SIZE || !tables)
+    {
+        return 0;
+    }
+    put(actor, COUNTER, 4, get(actor, COUNTER, 4) + elapsed);
+    if (get(actor, COUNTER, 4) < get(actor, PERIOD, 4))
+    {
+        return 0;
+    }
+    uint32_t quotient = 0;
+    vertrix_actor_counter_quotient(actor, size, &quotient);
+    vertrix_actor_counter_wrap(actor, size);
+    int16_t angle = (int16_t)get(actor, ANGLE, 2);
+    VertrixRotationTrace trace = {0};
+    vertrix_rotation_advance(&angle, (int16_t)get(actor, ANGLE_STEP, 2), quotient, &trace);
+    put(actor, ANGLE, 2, (uint16_t)angle);
+    uint16_t x = 0, y = 0;
+    if (!vertrix_actor_orbit_point(actor, size, tables, &x, &y))
+    {
+        return 0;
+    }
+    VertrixCallSite measure = {
+        .target = 0x4b14c0, .eax = object, .edx = frame - 0x20, .ebx = frame - 0x1c, .ecx = object};
+    calls->call(&measure, calls->context);
+    put(actor, 0xe, 2, (uint16_t)(x - (measure.out_value >> 1)));
+    put(actor, 0x16, 2, (uint16_t)(y - (measure.out_ebx >> 1)));
+    put(actor, RADIUS_STEP, 2, get(actor, RADIUS_STEP, 2) + quotient);
+    uint32_t unfinished = 0;
+    vertrix_actor_dword_transition(actor, size, 0x64, quotient, &unfinished);
+    if (unfinished)
+    {
+        return unfinished;
+    }
+    put(actor, 0x64, 4, 0);
+    int16_t radius = (int16_t)get(actor, RADIUS, 2);
+    uint32_t moving = vertrix_word_transition(&radius, (int16_t)get(actor, LIMIT, 2),
+                                              (int16_t)get(actor, RADIUS_STEP, 2), 1);
+    put(actor, RADIUS, 2, (uint16_t)radius);
+    if (moving)
+    {
+        return moving;
+    }
+    put(actor, 0x154, 4, 0);
+    return object;
+}

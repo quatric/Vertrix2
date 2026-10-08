@@ -391,3 +391,112 @@ int vertrix_global_reset_pair_full(uint32_t eax, VertrixMemoryRead read, Vertrix
     *result = eax;
     return 1;
 }
+
+uint32_t vertrix_object_set_period_full(void *storage, size_t size, uint32_t object, uint32_t value)
+{
+    return vertrix_object_set_period(storage, size, value) ? object : 0;
+}
+
+uint32_t vertrix_object_set_counter_full(void *storage, size_t size, uint32_t object,
+                                         uint32_t value)
+{
+    return vertrix_object_set_counter(storage, size, value) ? object : 0;
+}
+
+uint32_t vertrix_object_clear_counter_full(void *storage, size_t size, uint32_t object)
+{
+    return vertrix_object_clear_counter(storage, size) ? object : 0;
+}
+
+uint32_t vertrix_piece_clear_offset_x_full(void *storage, size_t size, uint32_t object)
+{
+    return vertrix_piece_clear_offset_x(storage, size) ? object : 0;
+}
+
+uint32_t vertrix_piece_clear_offset_y_full(void *storage, size_t size, uint32_t object)
+{
+    return vertrix_piece_clear_offset_y(storage, size) ? object : 0;
+}
+
+uint32_t vertrix_object_y_above_limit_full(const void *storage, size_t size)
+{
+    uint32_t value = 0;
+    return vertrix_object_y_above_limit(storage, size, &value) ? value : 0;
+}
+
+uint32_t vertrix_player_set_e0_full(void *storage, size_t size, uint32_t object, uint32_t value)
+{
+    return vertrix_player_set_e0(storage, size, value) ? object : 0;
+}
+
+uint32_t vertrix_player_e0_full(const void *storage, size_t size)
+{
+    uint32_t value = 0;
+    return vertrix_player_e0(storage, size, &value) ? value : 0;
+}
+
+uint32_t vertrix_player_set_cd_full(void *storage, size_t size, uint32_t object, uint32_t value)
+{
+    return vertrix_player_set_cd(storage, size, value) ? object : 0;
+}
+
+uint32_t vertrix_player_set_cc_full(void *storage, size_t size, uint32_t object, uint32_t value)
+{
+    return vertrix_player_set_cc(storage, size, value) ? object : 0;
+}
+
+uint32_t vertrix_player_enter_state_full(void *storage, size_t size, uint32_t object)
+{
+    return vertrix_player_enter_state(storage, size) ? object : 0;
+}
+
+int vertrix_object_toggle_flag_full(uint32_t object, uint32_t index, VertrixMemoryRead read,
+                                    VertrixMemoryWrite write, void *context, uint32_t *result)
+{
+    uint32_t value, indexed = object + index * 4u;
+    if (!read || !write || !result || !read(indexed + FLAG_TABLE, 4, &value, context) ||
+        !write(indexed + FLAG_TABLE, 4, value != 1, context))
+    {
+        return 0;
+    }
+    *result = indexed;
+    return 1;
+}
+
+int vertrix_object_flag_full(uint32_t object, uint32_t index, VertrixMemoryRead read, void *context,
+                             uint32_t *result)
+{
+    uint32_t value;
+    if (!read || !result || !read(object + index * 4u + FLAG_TABLE, 4, &value, context))
+    {
+        return 0;
+    }
+    *result = value;
+    return 1;
+}
+
+static int partner_flag_full(uint32_t object, VertrixMemoryRead read, void *context,
+                             uint32_t *result, int free)
+{
+    uint32_t partner, value;
+    if (!read || !result || !read(object + PLAYER_PARTNER, 4, &partner, context) ||
+        !read(partner + PLAYER_CC, 1, &value, context))
+    {
+        return 0;
+    }
+    value = (uint8_t)value;
+    *result = value != 1 && (!free || value != 4);
+    return 1;
+}
+
+int vertrix_player_partner_not_cc_one_full(uint32_t object, VertrixMemoryRead read, void *context,
+                                           uint32_t *result)
+{
+    return partner_flag_full(object, read, context, result, 0);
+}
+
+int vertrix_player_partner_free_full(uint32_t object, VertrixMemoryRead read, void *context,
+                                     uint32_t *result)
+{
+    return partner_flag_full(object, read, context, result, 1);
+}
