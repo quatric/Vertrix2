@@ -145,6 +145,15 @@ int main(void)
         {
             lift_host_run(&host, handler, form, 0, 0, 0, &lifted);
         }
+        {
+            static uint32_t last_handler, changes;
+            if (handler != last_handler && changes < 200)
+            {
+                last_handler = handler;
+                changes++;
+                printf("handler -> %x at %u ms\n", (unsigned)handler, (unsigned)(tick - start));
+            }
+        }
         if (!lifted)
         {
             printf("handler %x is not lifted\n", (unsigned)handler);
