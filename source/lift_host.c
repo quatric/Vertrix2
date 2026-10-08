@@ -66,6 +66,8 @@ uint32_t lift_host_read(const LiftHost *host, uint32_t address, unsigned size)
     return value;
 }
 
+uint32_t vertrix_debug_watch; /* debugging: report stores to this address */
+
 static uint32_t host_read(uint32_t address, void *context)
 {
     return lift_host_read(context, address, 4);
@@ -73,6 +75,8 @@ static uint32_t host_read(uint32_t address, void *context)
 
 static void host_write(LiftHost *host, uint32_t address, unsigned size, uint32_t value)
 {
+    if (vertrix_debug_watch != 0 && vertrix_debug_watch >= address && vertrix_debug_watch < address + size)
+        printf("WATCH host_write %x = %x\n", (unsigned)address, (unsigned)value);
     uint8_t *bytes = bytes_at(host, address, size);
     unsigned i;
     for (i = 0; bytes != NULL && i < size; i++)
@@ -98,12 +102,16 @@ static uint32_t host_allocate(uint32_t size, void *context)
     LiftHost *host = context;
     uint32_t address = LIFT_HOST_HEAP_BASE + host->heap_top;
     uint32_t rounded = (size + 15u) & ~15u;
-    if (rounded > host->heap_size - host->heap_top)
+    /* A slack after the large pixel buffers: the load screen's progress bar copies a row
+     * wider than the target once its step count passes the total, and the next block must
+     * not be the surface object that follows. */
+    uint32_t slack = size >= 0x10000u ? 0x4000u : 0u;
+    if (rounded + slack > host->heap_size - host->heap_top)
     {
         return 0;
     }
-    memset(host->heap + host->heap_top, 0, rounded);
-    host->heap_top += rounded;
+    memset(host->heap + host->heap_top, 0, rounded + slack);
+    host->heap_top += rounded + slack;
     return address;
 }
 
@@ -112,6 +120,8 @@ static void host_write(LiftHost *host, uint32_t address, unsigned size, uint32_t
 /* Move (0x4e1140): eax = destination, edx = source, ebx = byte count; overlap-safe. */
 static void host_move(LiftHost *host, uint32_t destination, uint32_t source, uint32_t count)
 {
+    if (vertrix_debug_watch != 0 && vertrix_debug_watch >= destination && vertrix_debug_watch < destination + count)
+        printf("WATCH move dst %x src %x count %u\n", (unsigned)destination, (unsigned)source, (unsigned)count);
     uint8_t *to = bytes_at(host, destination, count);
     uint8_t *from = bytes_at(host, source, count);
     if (to != NULL && from != NULL && count != 0)
@@ -234,7 +244,8 @@ static int host_import(LiftHost *host, const VertrixCallSite *site, const char *
     }
     else if (strcmp(name, "DirectInput8Create") == 0) /* (instance, version, iid, out, outer) */
     {
-        uint32_t input = host_com_object(host, COM_INPUT);
+        uint32_t input = getenv("NODI") ? 0 : host_com_object(host, COM_INPUT);
+        if (getenv("NODI")) { host_write(host, site_argument(site, 3), 4, 0); *result = 0x80004002u; return 1; }
         host_write(host, site_argument(site, 3), 4, input);
         *result = input == 0 ? 0x8007000eu : 0;
     }
@@ -678,23 +689,26 @@ void lift_host_key(LiftHost *host, unsigned scan_code, int down)
     }
 }
 
-/* DirectInput: IDirectInput8 (3) creates devices; only the system keyboard (GUID 6F1D2B61) has
+/* DirectInput: IDirectInput8 (3) creates devices; only the device the game polls for keys (GUID 6F1D2B60) has
  * events, which GetDeviceData hands out as DIDEVICEOBJECTDATA { offset, data, time, sequence,
  * app data }. The mouse and joystick read as idle and EnumDevices finds nothing. */
 static uint32_t host_input(LiftHost *host, unsigned interface_id, unsigned index,
                            const VertrixCallSite *site)
 {
     uint32_t this_ = site_argument(site, 0);
+    if (getenv("TRACE_INPUT"))
+        fprintf(stderr, "input %s[%u] kind %u this %x\n", interface_id == COM_INPUT ? "IDirectInput" : "Device", index, (unsigned)lift_host_read(host, this_ + 24, 4), (unsigned)this_);
     if (interface_id == COM_INPUT)
     {
         if (index == 3) /* CreateDevice(this, guid, out, outer) */
         {
             uint32_t device = host_com_object(host, COM_DEVICE);
+            if (getenv("TRACE_INPUT")) fprintf(stderr, "CreateDevice guid %x device %x\n", (unsigned)lift_host_read(host, site_argument(site, 1), 4), (unsigned)device);
             if (device == 0)
             {
                 return 0x8007000eu;
             }
-            host_write(host, device + 24, 4, lift_host_read(host, site_argument(site, 1), 4) == 0x6f1d2b61u);
+            host_write(host, device + 24, 4, lift_host_read(host, site_argument(site, 1), 4) == 0x6f1d2b60u);
             host_write(host, site_argument(site, 2), 4, device);
         }
         return 0;
@@ -714,6 +728,7 @@ static uint32_t host_input(LiftHost *host, unsigned interface_id, unsigned index
             host->key_head = (host->key_head + 1) % 64;
             n++;
         }
+        if (n != 0 && getenv("TRACE_INPUT")) fprintf(stderr, "delivered %u key events\n", (unsigned)n);
         host_write(host, count, 4, n);
         return 0;
     }

@@ -1,6 +1,7 @@
 #ifndef VERTRIX_LIFT_RUNTIME_H
 #define VERTRIX_LIFT_RUNTIME_H
 #include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 
 #include "actor_build.h"
@@ -148,10 +149,15 @@ static inline uint32_t lift_load(LiftEnv *env, uint32_t base, uint32_t offset, u
     return env->globals->read(address, env->globals->context) & lift_mask(size);
 }
 
+extern uint32_t vertrix_debug_watch;
 static inline void lift_store(LiftEnv *env, uint32_t base, uint32_t offset, unsigned size,
                               uint32_t value)
 {
     uint32_t address = base + offset;
+    if (vertrix_debug_watch != 0 && vertrix_debug_watch >= address && vertrix_debug_watch < address + size)
+    {
+        printf("WATCH store %x size %u = %x\n", (unsigned)address, size, (unsigned)value);
+    }
     if (lift_in_stack(env, address, size))
     {
         lift_put(env->stack + (address - env->low), size, value);

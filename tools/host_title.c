@@ -67,6 +67,7 @@ static void report(const char *what, const LiftHost *host, uint32_t result)
 static void host_write_dword(LiftHost *h, uint32_t a, uint32_t v) { unsigned i; for (i = 0; i < 4; i++) { uint8_t b = (uint8_t)(v >> (8 * i)); if (a >= LIFT_HOST_HEAP_BASE) h->heap[a - LIFT_HOST_HEAP_BASE + i] = b; else h->image[a - LIFT_HOST_IMAGE_BASE + i] = b; } }
 
 
+extern uint32_t vertrix_debug_watch;
 static LiftHost *g_hook_host;
 static unsigned g_hook_last, g_hook_on;
 static unsigned lit_target(void)
@@ -77,6 +78,7 @@ static unsigned lit_target(void)
 }
 static void after_hook(uint32_t target, uint32_t eax)
 {
+    if (g_hook_on && getenv("HOOKW")) { { static uint32_t ring[16], rn; ring[rn++ % 16] = target; if (g_hook_host && lift_host_read(g_hook_host, 0x15440b0 + 4, 4) != 640 && !getenv("RINGDONE")) { unsigned q; fprintf(stderr, "ring:"); for (q = 0; q < 16; q++) fprintf(stderr, " %x", ring[(rn + q) % 16]); fprintf(stderr, "\n"); setenv("RINGDONE", "1", 1); } } static uint32_t lw = 640; uint32_t w = lift_host_read(g_hook_host, 0x15440b0 + 4, 4); if (w != lw) { fprintf(stderr, "width %u -> %u after %x eax=%x\n", lw, w, target, eax); lw = w; } return; }
     if (g_hook_on && getenv("HOOK478")) { if (target == 0x478d10 || target == 0x47ce10 || target == 0x482f80 || target == 0x483ed0 || target == 0x48ac50) fprintf(stderr, "ret %x eax=%x\n", target, eax); return; }
     if (g_hook_on && getenv("HOOKV")) fprintf(stderr, "hook %x\n", target);
     if (!g_hook_on || (!getenv("HOOKALL") && target != 0x4ae0f0 && target != 0x4af560 && target != 0x4ae3e0 && target != 0x4ae140)) return;
@@ -225,6 +227,9 @@ int main(int argc, char **argv)
             host.clock_ms += getenv("CLOCKSTEP") ? (uint32_t)atoi(getenv("CLOCKSTEP")) : 14;
             if (getenv("SHOWALL") && t >= (unsigned)atoi(getenv("SHOWALL"))) { uint32_t lst = lift_host_read(&host, 0x54671c + 4, 4), cnt = lift_host_read(&host, 0x54671c + 8, 4), q; for (q = 0; q < cnt; q++) host_write_dword(&host, lift_host_read(&host, lst + 4 * q, 4) + 0x124, 0); }
             if (getenv("KEY") && t >= (unsigned)atoi(getenv("KEYAT") ? getenv("KEYAT") : "100") && (t - (unsigned)atoi(getenv("KEYAT") ? getenv("KEYAT") : "100")) % 20 == 0) { unsigned k = (unsigned)strtoul(getenv("KEY"), 0, 0); lift_host_key(&host, k, 1); lift_host_key(&host, k, 0); }
+            { static uint32_t last, lw; uint32_t cur = lift_host_read(&host, 0x558c7c, 4); if (getenv("WATCH7C") && (cur != last || lift_host_read(&host, cur + 4, 4) != lw)) { lw = lift_host_read(&host, cur + 4, 4); { printf("tick %u: [558c7c] %x -> %x (w=%u h=%u)\n", t, last, cur, lift_host_read(&host, cur + 4, 4), lift_host_read(&host, cur + 8, 4)); last = cur; } } }
+            if (getenv("WATCHADDR")) vertrix_debug_watch = (t == (unsigned)atoi(getenv("WATCHTICK")) ? (uint32_t)strtoul(getenv("WATCHADDR"), 0, 16) : 0);
+            if (getenv("ACTIVE") && t == 1) host_write_dword(&host, 0x5328bc, 1);
             if (getenv("UNHIDE") && t >= (unsigned)atoi(getenv("UNHIDE"))) host_write_dword(&host, 0x5bb710, 0);
             if (getenv("REQ") && t == (unsigned)atoi(getenv("REQAT") ? getenv("REQAT") : "100")) { uint32_t v = (uint32_t)strtoul(getenv("REQ"), 0, 0); host_write_dword(&host, 0x532a4c, v); }
             if (getenv("HOOKAT") && t == (unsigned)atoi(getenv("HOOKAT"))) { g_hook_host = &host; g_hook_last = lit_target(); g_hook_on = 1; vertrix_lifted_after_hook = after_hook; }
@@ -243,6 +248,9 @@ int main(int argc, char **argv)
           fprintf(o, "P6\n%u %u\n255\n", w, h);
           for (k = 0; k < w * h; k++) { uint32_t v = lift_host_read(&host, base + 4 * k, 4); if (v) nz++; fputc((v >> 16) & 255, o); fputc((v >> 8) & 255, o); fputc(v & 255, o); }
           fclose(o);
+          g_hook_host = &host; printf("front target lit %u\n", lit_target());
+          printf("flags 5328bc=%x 55608c=%x 5588f8=%x\n", lift_host_read(&host,0x5328bc,4), lift_host_read(&host,0x55608c,4), lift_host_read(&host,0x5588f8,4));
+          printf("screen cur %x req %x [5bb710]=%x [5328b4]=%x\n", lift_host_read(&host,0x532a4c,4), lift_host_read(&host,0x532a98,4), lift_host_read(&host,0x5bb710,4), lift_host_read(&host,0x5328b4,4));
           { uint32_t t = lift_host_read(&host, 0x558c7c, 4); printf("target %x: +0 %x +4 %u +8 %u +c %x +d %x +10 %x +14 %x\n", t, lift_host_read(&host,t,4), lift_host_read(&host,t+4,4), lift_host_read(&host,t+8,4), lift_host_read(&host,t+0xc,1), lift_host_read(&host,t+0xd,1), lift_host_read(&host,t+0x10,4), lift_host_read(&host,t+0x14,4)); }
           { uint32_t d = lift_host_read(&host, 0x544070, 4); printf("display %x: 208=%u 20c=%u 214=%u 216=%u 226=%u 268=%x 270=%x 274=%x\n", d, lift_host_read(&host,d+0x208,2), lift_host_read(&host,d+0x20c,2), lift_host_read(&host,d+0x214,2), lift_host_read(&host,d+0x216,2), lift_host_read(&host,d+0x226,2), lift_host_read(&host,d+0x268,4), lift_host_read(&host,d+0x270,4), lift_host_read(&host,d+0x274,4)); }
           { uint32_t list[] = {0x15440b0, 0x16705b0, 0x1670540, 0x16bb5d0, 0x2d3cb90, 0x259f450 - 0x30, 0x1706710, 0x27eaa90}, gi; for (gi = 0; gi < 8; gi++) { uint32_t t = list[gi]; printf("fmt surface %x: w=%u h=%u +c=%u +d=%u\n", t, lift_host_read(&host,t+4,4), lift_host_read(&host,t+8,4), lift_host_read(&host,t+0xc,1), lift_host_read(&host,t+0xd,1)); } }
