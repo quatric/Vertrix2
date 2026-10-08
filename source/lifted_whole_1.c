@@ -234,10 +234,10 @@ L_4307f1:
     goto L_4306ca;
 }
 
-uint32_t lifted_block_spawn(const VertrixCalls *calls, const VertrixFactoryServices *services,
+uint32_t lifted_block_spawn_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
                             const VertrixGlobals *globals, const LiftEntry *entry)
 {
-    uint8_t stack[LIFTED_BLOCK_SPAWN_STACK + 4 + 4 * 0 + 4];
+    uint8_t stack[LIFTED_BLOCK_SPAWN_FULL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
     LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
@@ -257,7 +257,7 @@ uint32_t lifted_block_spawn(const VertrixCalls *calls, const VertrixFactoryServi
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_BLOCK_SPAWN_STACK, 0, entry);
+    lift_begin(&env, calls, services, globals, stack, LIFTED_BLOCK_SPAWN_FULL_STACK, 0, entry);
     {
         uint32_t v = ebx;
         esp -= 4u;
@@ -9993,11 +9993,11 @@ L_439917:
     return env.failed ? 0u : eax;
 }
 
-uint32_t lifted_block_construct_kind_one(const VertrixCalls *calls,
+uint32_t lifted_block_construct_kind_one_full(const VertrixCalls *calls,
                                          const VertrixFactoryServices *services,
                                          const VertrixGlobals *globals, const LiftEntry *entry)
 {
-    uint8_t stack[LIFTED_BLOCK_CONSTRUCT_KIND_ONE_STACK + 4 + 4 * 0 + 4];
+    uint8_t stack[LIFTED_BLOCK_CONSTRUCT_KIND_ONE_FULL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
     LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
@@ -10017,7 +10017,7 @@ uint32_t lifted_block_construct_kind_one(const VertrixCalls *calls,
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_BLOCK_CONSTRUCT_KIND_ONE_STACK, 0,
+    lift_begin(&env, calls, services, globals, stack, LIFTED_BLOCK_CONSTRUCT_KIND_ONE_FULL_STACK, 0,
                entry);
     eax = lift_call(&env, 0x4abd70u, eax, edx, ebx, ecx, 0, esp);
     lift_store(&env, eax, 0x158u, 4, 0x514b14u);

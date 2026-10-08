@@ -213,7 +213,7 @@
   "virtual": [],
   "address": 4901024
  },
- "actor_attach_resource": {
+ "actor_attach_resource_full": {
   "callees": {
    "0x4ac380": [
     0,
@@ -762,7 +762,7 @@
   "virtual": [],
   "address": 4906592
  },
- "actor_initialize": {
+ "actor_initialize_full": {
   "callees": {},
   "stack": 64,
   "arguments": 5,
@@ -1818,7 +1818,7 @@
   "virtual": [],
   "address": 4936016
  },
- "actor_construct_518174": {
+ "actor_construct_518174_full": {
   "callees": {
    "0x4abd70": [
     0,

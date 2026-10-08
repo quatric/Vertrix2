@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4ac8d0": 2048,
+    "0x4adf20": 2048,
+    "0x42bb00": 2048,
+    "0x43a080": 2048,
+    "0x4b5400": 2048,
+    "0x42bbd0": 2051,
+    "0x430800": 2051
+  },
+  "callback_mutation_cases": {
+    "0x42bbd0": 3,
+    "0x430800": 3
+  },
+  "scalar_guard_failure_cases": 25,
+  "late_spawn_failure_cases": 3,
+  "scope": "Seven whole routines: exact EAX and guarded storage, allocation/draw registers/order/context, signed byte kinds and wrapping range indices. Independent callback mutations change ranges before first lookup, low after second draw, and board clip during allocation. Zero allocations execute the original null-token storage path with explicitly supplied backing."
+}

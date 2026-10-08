@@ -32690,10 +32690,10 @@ L_42bad3:
     return env.failed ? 0u : eax;
 }
 
-uint32_t lifted_block_construct(const VertrixCalls *calls, const VertrixFactoryServices *services,
+uint32_t lifted_block_construct_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                 const VertrixGlobals *globals, const LiftEntry *entry)
 {
-    uint8_t stack[LIFTED_BLOCK_CONSTRUCT_STACK + 4 + 4 * 0 + 4];
+    uint8_t stack[LIFTED_BLOCK_CONSTRUCT_FULL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
     LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
@@ -32713,7 +32713,7 @@ uint32_t lifted_block_construct(const VertrixCalls *calls, const VertrixFactoryS
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_BLOCK_CONSTRUCT_STACK, 0, entry);
+    lift_begin(&env, calls, services, globals, stack, LIFTED_BLOCK_CONSTRUCT_FULL_STACK, 0, entry);
     eax = lift_call(&env, 0x4abd70u, eax, edx, ebx, ecx, 0, esp);
     lift_store(&env, eax, 0x158u, 4, 0x514914u);
     lift_store(&env, eax, 0x15du, 1, 0x0u);
@@ -32721,10 +32721,10 @@ uint32_t lifted_block_construct(const VertrixCalls *calls, const VertrixFactoryS
     return env.failed ? 0u : eax;
 }
 
-uint32_t lifted_block_create(const VertrixCalls *calls, const VertrixFactoryServices *services,
+uint32_t lifted_block_create_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
                              const VertrixGlobals *globals, const LiftEntry *entry)
 {
-    uint8_t stack[LIFTED_BLOCK_CREATE_STACK + 4 + 4 * 0 + 4];
+    uint8_t stack[LIFTED_BLOCK_CREATE_FULL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
     LiftFlags fl = {0, 0, 0, 0, 0, 0};
     uint32_t eax = entry->eax;
@@ -32744,7 +32744,7 @@ uint32_t lifted_block_create(const VertrixCalls *calls, const VertrixFactoryServ
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_BLOCK_CREATE_STACK, 0, entry);
+    lift_begin(&env, calls, services, globals, stack, LIFTED_BLOCK_CREATE_FULL_STACK, 0, entry);
     {
         uint32_t v = ebp;
         esp -= 4u;

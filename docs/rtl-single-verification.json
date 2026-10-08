@@ -1,0 +1,57 @@
+{
+  "status": "passed",
+  "cases_per_entry_and_mode": 4096,
+  "complete_original_executions": {
+    "subtract": {
+      "software_cached": 4096,
+      "software_lazy": 4096,
+      "hardware_pc0_rc0": 4096,
+      "hardware_pc0_rc1": 4096,
+      "hardware_pc0_rc2": 4096,
+      "hardware_pc0_rc3": 4096,
+      "hardware_pc2_rc0": 4096,
+      "hardware_pc2_rc1": 4096,
+      "hardware_pc2_rc2": 4096,
+      "hardware_pc2_rc3": 4096,
+      "hardware_pc3_rc0": 4096,
+      "hardware_pc3_rc1": 4096,
+      "hardware_pc3_rc2": 4096,
+      "hardware_pc3_rc3": 4096,
+      "hardware_lazy_cap0": 4096,
+      "hardware_lazy_cap1": 4096
+    },
+    "add": {
+      "software_cached": 4096,
+      "software_lazy": 4096,
+      "hardware_pc0_rc0": 4096,
+      "hardware_pc0_rc1": 4096,
+      "hardware_pc0_rc2": 4096,
+      "hardware_pc0_rc3": 4096,
+      "hardware_pc2_rc0": 4096,
+      "hardware_pc2_rc1": 4096,
+      "hardware_pc2_rc2": 4096,
+      "hardware_pc2_rc3": 4096,
+      "hardware_pc3_rc0": 4096,
+      "hardware_pc3_rc1": 4096,
+      "hardware_pc3_rc2": 4096,
+      "hardware_pc3_rc3": 4096,
+      "hardware_lazy_cap0": 4096,
+      "hardware_lazy_cap1": 4096
+    }
+  },
+  "register_cache_and_callback_comparisons": 131072,
+  "original_path_counts": {
+    "software_underflow_tail": 16,
+    "software_overflow_tail": 154,
+    "software_math": 16210,
+    "hardware_math": 113470,
+    "lazy_initializer": 24315
+  },
+  "software_overflow_boundary_calls": {
+    "0x4dae94": 154,
+    "0x4e7280": 154
+  },
+  "unconfigured_early_zero_cases": 8,
+  "unsupported_or_missing_boundary_guards": 10,
+  "scope": "Original 4d809c subtraction and 4d80a6 addition execute their actual software 4d80d5 and hardware 4d80b7 arithmetic. EAX/EDX/EBX/ECX, lazy helper cache writes, preserved ESI/EDI/EBP and stack cleanup compare exactly. Software overflow 4dae94/4e7280 callees are explicit boundaries with matching input registers and arbitrary returned register mutations; their callee internals are outside this proof. Software underflow tail 4e236e executes unchanged. Hardware proves masked x87 rounding with precision 24/53/64 and all four rounding controls, including signed zero, subnormals, NaNs and infinities. Early-zero paths execute before cache initialization. Unmasked x87 exceptions, FPSW/environment, pending x87 exceptions and arbitrary custom helper pointers remain unsupported and unverified; native rejects unsupported execution without changing supplied state."
+}

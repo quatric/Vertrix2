@@ -21,7 +21,7 @@ def main():
     parser.add_argument('--cases', type=int, default=4096)
     args = parser.parse_args()
     n = build(args.build_dir, 'ui-actor-place',
-              ['ui_actor_storage.c', 'actor_storage.c', 'actor_fields.c', 'block_factory.c',
+              ['ui_actor_storage.c', 'actor_storage.c', 'actor_fields.c', 'block_factory.c', 'call_glue.c',
                'ui_display_layout.c', 'board_cells.c'])
     n.vertrix_ui_actor_place.argtypes = [c.c_void_p, c.c_size_t, c.c_int16, c.c_int16, U]
     original = Original(args.executable)

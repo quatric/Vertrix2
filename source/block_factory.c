@@ -133,3 +133,120 @@ int vertrix_block_spawn(const void *board, size_t board_size, uint32_t index,
     *handle = block;
     return 1;
 }
+
+int vertrix_actor_attach_resource_full(void *actor, size_t size, uint32_t token, uint32_t resource,
+                                       uint32_t *result)
+{
+    if (!result || !vertrix_actor_attach_resource(actor, size, resource))
+    {
+        return 0;
+    }
+    *result = token;
+    return 1;
+}
+
+int vertrix_actor_initialize_full(void *actor, size_t size, uint32_t token, uint16_t x, uint16_t y,
+                                  uint16_t z, uint32_t bank, uint32_t frame, uint32_t image,
+                                  uint32_t handler, uint32_t *result)
+{
+    if (!result || !vertrix_actor_initialize(actor, size, x, y, z, bank, frame, image, handler))
+    {
+        return 0;
+    }
+    *result = token;
+    return 1;
+}
+
+int vertrix_block_construct_full(void *storage, size_t size, uint32_t token, uint32_t *result)
+{
+    if (!result || !vertrix_block_construct(storage, size))
+    {
+        return 0;
+    }
+    *result = token;
+    return 1;
+}
+
+int vertrix_block_construct_kind_one_full(void *storage, size_t size, uint32_t token,
+                                          uint32_t *result)
+{
+    if (!result || !vertrix_block_construct_kind_one(storage, size))
+    {
+        return 0;
+    }
+    *result = token;
+    return 1;
+}
+
+int vertrix_actor_construct_518174_full(void *storage, size_t size, uint32_t token,
+                                        uint32_t *result)
+{
+    if (!result || !vertrix_actor_construct_518174(storage, size))
+    {
+        return 0;
+    }
+    *result = token;
+    return 1;
+}
+
+int vertrix_block_create_full(uint32_t kind, uint32_t d0, uint32_t steps, uint32_t handler,
+                              VertrixObjectStorage resolve, void *resolve_context,
+                              const VertrixCalls *calls, uint32_t *result)
+{
+    if (!resolve || !calls || !calls->call || !result)
+    {
+        return 0;
+    }
+    uint32_t block = vertrix_call(calls, 0x4ca000, BLOCK_SIZE, d0, steps, handler, 0);
+    void *storage;
+    size_t size;
+    if (!resolve(block, &storage, &size, resolve_context) ||
+        (block && !vertrix_block_construct(storage, size)) ||
+        !vertrix_actor_initialize(storage, size, 0, 0, 0, 0, 0, 0, handler) ||
+        !vertrix_actor_set_d0(storage, size, d0) ||
+        !vertrix_actor_set_period_steps(storage, size, steps) ||
+        !vertrix_actor_attach_resource(
+            storage, size, RESOURCE_BASE + (uint32_t)((int32_t)(int8_t)kind * RESOURCE_STRIDE)) ||
+        !vertrix_actor_storage_write(storage, size, BLOCK_KIND, 1, kind))
+    {
+        return 0;
+    }
+    *result = block;
+    return 1;
+}
+
+int vertrix_block_spawn_full(uint32_t board, uint32_t index, uint32_t ebx, VertrixMemoryRead read,
+                             VertrixMemoryWrite write, void *context, VertrixObjectStorage resolve,
+                             void *resolve_context, const VertrixCalls *calls, uint32_t *result)
+{
+    if (!read || !write || !resolve || !calls || !calls->call || !result)
+    {
+        return 0;
+    }
+    uint32_t steps = (vertrix_call(calls, 0x4826c0, 0x598d30, 10, ebx, index, 0) & 0xffff) + 1;
+    uint32_t offset = index * 8u, lo, hi;
+    if (!read(0x53bcd4u + offset, 4, &hi, context) || !read(0x53bcd0u + offset, 4, &lo, context))
+    {
+        return 0;
+    }
+    uint32_t delay =
+        vertrix_call(calls, 0x4826c0, 0x598d30, (hi - lo + 1u) & 0xffff, steps, offset, 0) & 0xffff;
+    if (!read(0x53bcd0u + offset, 4, &lo, context))
+    {
+        return 0;
+    }
+    delay += lo;
+    uint32_t block, x, y;
+    if (!vertrix_block_create_full((uint32_t)(int32_t)(int8_t)index, delay, steps, 0, resolve,
+                                   resolve_context, calls, &block) ||
+        !read(board + 0xc, 4, &x, context) || !read(board + 0x14, 4, &y, context) ||
+        !write(block + 0x8e, 1, 3, context) || !write(block + 0xa8, 2, x >> 16, context) ||
+        !write(block + 0xaa, 2, (x >> 16) + 119, context) ||
+        !write(block + 0xac, 2, y >> 16, context) ||
+        !write(block + 0xae, 2, (y >> 16) + 311, context))
+    {
+        return 0;
+    }
+    *result = block;
+    return 1;
+}

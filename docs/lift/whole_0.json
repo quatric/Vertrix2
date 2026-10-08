@@ -439,7 +439,7 @@
    ]
   },
   "stack": 392,
-  "arguments": 0,
+  "arguments": 1,
   "pointer_callees": [],
   "pointer_fields": [
    4,
@@ -531,7 +531,7 @@
    ]
   },
   "stack": 1176,
-  "arguments": 0,
+  "arguments": 1,
   "pointer_callees": [],
   "pointer_fields": [],
   "pointer_globals": [],
@@ -7748,7 +7748,7 @@
   "virtual": [],
   "address": 4373168
  },
- "block_construct": {
+ "block_construct_full": {
   "callees": {
    "0x4abd70": [
     0,
@@ -7767,7 +7767,7 @@
   "virtual": [],
   "address": 4373248
  },
- "block_create": {
+ "block_create_full": {
   "callees": {
    "0x4ca000": [
     0,

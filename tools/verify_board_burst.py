@@ -34,7 +34,7 @@ def main():
     parser.add_argument('--cases', type=int, default=2048)
     args = parser.parse_args()
     n = build(args.build_dir, 'board-burst',
-              ['board_burst.c', 'block_factory.c', 'board_cells.c', 'board_markers.c',
+              ['board_burst.c', 'block_factory.c', 'call_glue.c', 'board_cells.c', 'board_markers.c',
                'actor_storage.c', 'actor_fields.c', 'board.c', 'fixed_point.c',
                'board_actions.c', 'random.c'])
     for name in ('burst', 'rings'):

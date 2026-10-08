@@ -19,7 +19,7 @@ def main():
     args.build_dir.mkdir(parents=True, exist_ok=True)
     source = Path(__file__).resolve().parents[1] / 'source'
     library = args.build_dir.resolve() / 'ui-layout.dylib'
-    subprocess.run(['cc', '-shared', '-fPIC', '-Wall', '-Wextra', '-Werror', * [str(source / name) for name in ['ui_display_layout.c', 'ui_actor_storage.c', 'actor_storage.c', 'block_factory.c', 'actor_fields.c', 'board_cells.c']], '-o', str(library)], check=True)
+    subprocess.run(['cc', '-shared', '-fPIC', '-Wall', '-Wextra', '-Werror', * [str(source / name) for name in ['ui_display_layout.c', 'ui_actor_storage.c', 'actor_storage.c', 'block_factory.c', 'call_glue.c', 'actor_fields.c', 'board_cells.c']], '-o', str(library)], check=True)
     native = c.CDLL(str(library))
     native.vertrix_ui_display_position.argtypes = [c.c_size_t, c.c_uint, c.c_int16, c.c_int16, c.POINTER(c.c_int16), c.POINTER(c.c_int16)]
     native.vertrix_ui_actor_storage_construct.argtypes = [c.c_void_p, c.c_size_t, c.c_size_t, c.c_uint, c.c_int16, c.c_int16, c.c_uint32]

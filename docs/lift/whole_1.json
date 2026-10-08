@@ -69,7 +69,7 @@
   "virtual": [],
   "address": 4392544
  },
- "block_spawn": {
+ "block_spawn_full": {
   "callees": {
    "0x4826c0": [
     0,
@@ -1920,7 +1920,7 @@
   ],
   "address": 4430016
  },
- "block_construct_kind_one": {
+ "block_construct_kind_one_full": {
   "callees": {
    "0x4abd70": [
     0,

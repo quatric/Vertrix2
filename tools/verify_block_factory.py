@@ -28,7 +28,7 @@ def main():
     parser.add_argument('--cases', type=int, default=4096)
     args = parser.parse_args()
     n = build(args.build_dir, 'block-factory',
-              ['block_factory.c', 'actor_storage.c', 'actor_fields.c', 'board_cells.c'])
+              ['block_factory.c', 'call_glue.c', 'actor_storage.c', 'actor_fields.c', 'board_cells.c'])
     S = c.POINTER(Services)
     P, SZ, UP = c.c_void_p, c.c_size_t, c.POINTER(U)
     n.vertrix_actor_attach_resource.argtypes = [P, SZ, U]

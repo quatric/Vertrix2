@@ -39,7 +39,7 @@ def main():
     parser.add_argument('--cases', type=int, default=2048)
     args = parser.parse_args()
     n = build(args.build_dir, 'board-rows',
-              ['board_conversions.c', 'block_factory.c', 'board_markers.c', 'board.c',
+              ['board_conversions.c', 'block_factory.c', 'call_glue.c', 'board_markers.c', 'board.c',
                'board_cells.c', 'actor_storage.c', 'actor_fields.c', 'fixed_point.c',
                'board_actions.c', 'random.c'])
     for name in ('first', 'second'):

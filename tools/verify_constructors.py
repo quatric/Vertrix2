@@ -23,7 +23,7 @@ def main():
               ['player_piece.c', 'piece_actor_construct.c', 'piece_actor_layout.c',
                'piece_child_update.c', 'actor_storage.c', 'timer.c', 'timing.c',
                'dword_transition.c', 'frame_resource.c', 'piece_actor_update.c',
-               'block_factory.c', 'actor_fields.c', 'board_cells.c', 'piece_children.c'])
+               'block_factory.c', 'call_glue.c', 'actor_fields.c', 'board_cells.c', 'piece_children.c'])
     n.vertrix_piece_actor_construct_empty.argtypes = [c.c_void_p, c.c_size_t]
     n.vertrix_block_construct_kind_one.argtypes = [c.c_void_p, c.c_size_t]
     n.vertrix_actor_construct_518174.argtypes = [c.c_void_p, c.c_size_t]

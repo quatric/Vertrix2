@@ -406,16 +406,16 @@
     "reason": "Complete sampling traversal; surface implementation is specialized direct copy."
   },
   "0x4ac8d0": {
-    "name": "vertrix_actor_attach_resource",
+    "name": "vertrix_actor_attach_resource_full",
     "aliases": [
-      "vertrix_actor_attach_resource",
+      "vertrix_actor_attach_resource_full",
       "vertrix_block_resource_attach"
     ],
     "evidence": [
       "source/block_factory.h",
       "tools/verify_block_factory.py"
     ],
-    "reason": "Complete actor resource attachment; block variant is a wrapper."
+    "reason": "Full attachment exposes the original object-token return separately from bounded-storage success; block variant is a projected wrapper."
   },
   "0x4ad1c0": {
     "name": "vertrix_actor_polar_offset",
@@ -464,5 +464,18 @@
       "tools/verify_text_seek.py"
     ],
     "reason": "Clamps cursor to text length; native recoveries have different boundary APIs."
+  },
+  "0x4d80a6": {
+    "name": "vertrix_rtl_single_add_full",
+    "aliases": [
+      "vertrix_float_add",
+      "vertrix_rtl_single_add_full"
+    ],
+    "evidence": [
+      "source/rtl_float.h",
+      "tools/verify_rtl_single.py",
+      "docs/rtl-single-verification.json"
+    ],
+    "reason": "Exact single arithmetic with original EAX/EDX outputs and lazy helper cache, including software and masked hardware modes; float_add delegates the arithmetic to an external helper."
   }
 }

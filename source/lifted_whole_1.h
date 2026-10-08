@@ -7,7 +7,7 @@
 enum
 {
     LIFTED_BOARD_BURST_STACK = 180,
-    LIFTED_BLOCK_SPAWN_STACK = 96,
+    LIFTED_BLOCK_SPAWN_FULL_STACK = 96,
     LIFTED_F430850_STACK = 148,
     LIFTED_F431100_STACK = 80,
     LIFTED_F431140_STACK = 80,
@@ -67,7 +67,7 @@ enum
     LIFTED_BOARD_DESTROY_MARKED_STACK = 120,
     LIFTED_F439510_STACK = 180,
     LIFTED_BOARD_CLEAR_MARKED_EXTRA_STACK = 112,
-    LIFTED_BLOCK_CONSTRUCT_KIND_ONE_STACK = 68,
+    LIFTED_BLOCK_CONSTRUCT_KIND_ONE_FULL_STACK = 68,
     LIFTED_PIECE_CHILD_SLOTS_INIT_STACK = 80,
     LIFTED_PIECE_FRAMES_BUILD_STACK = 148,
     LIFTED_PIECE_CHILDREN_SETUP_STACK = 112,
@@ -404,7 +404,7 @@ uint32_t lifted_board_burst(const VertrixCalls *calls, const VertrixFactoryServi
                             const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x430800. */
-uint32_t lifted_block_spawn(const VertrixCalls *calls, const VertrixFactoryServices *services,
+uint32_t lifted_block_spawn_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
                             const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x430850. */
@@ -667,7 +667,7 @@ uint32_t lifted_board_clear_marked_extra(const VertrixCalls *calls,
                                          const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x43a080. */
-uint32_t lifted_block_construct_kind_one(const VertrixCalls *calls,
+uint32_t lifted_block_construct_kind_one_full(const VertrixCalls *calls,
                                          const VertrixFactoryServices *services,
                                          const VertrixGlobals *globals, const LiftEntry *entry);
 

@@ -288,8 +288,8 @@ enum
     LIFTED_OBJECT_Y_ABOVE_LIMIT_FULL_STACK = 68,
     LIFTED_F42BA70_STACK = 72,
     LIFTED_F42BAB0_STACK = 64,
-    LIFTED_BLOCK_CONSTRUCT_STACK = 68,
-    LIFTED_BLOCK_CREATE_STACK = 128,
+    LIFTED_BLOCK_CONSTRUCT_FULL_STACK = 68,
+    LIFTED_BLOCK_CREATE_FULL_STACK = 128,
     LIFTED_BOARD_CONSTRUCT_STACK = 200,
     LIFTED_BOARD_RELEASE_ACTIVE_STACK = 80,
     LIFTED_BOARD_RELEASE_PIECE_CHILDREN_FULL_STACK = 72,
@@ -1545,11 +1545,11 @@ uint32_t lifted_f42bab0(const VertrixCalls *calls, const VertrixFactoryServices 
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42bb00. */
-uint32_t lifted_block_construct(const VertrixCalls *calls, const VertrixFactoryServices *services,
+uint32_t lifted_block_construct_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                 const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42bbd0. */
-uint32_t lifted_block_create(const VertrixCalls *calls, const VertrixFactoryServices *services,
+uint32_t lifted_block_create_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
                              const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42e870. */
