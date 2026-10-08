@@ -1400,8 +1400,8 @@ uint32_t lifted_title_letter_restart_call(const VertrixCalls *calls,
 
 /* Original 0x45a0c0. */
 uint32_t lifted_title_letter_launch_call(const VertrixCalls *calls,
-                                    const VertrixFactoryServices *services,
-                                    const VertrixGlobals *globals, const LiftEntry *entry);
+                                         const VertrixFactoryServices *services,
+                                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x45a3e0. */
 uint32_t lifted_title_letter_fight_settle_call(const VertrixCalls *calls,

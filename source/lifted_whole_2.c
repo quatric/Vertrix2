@@ -26652,8 +26652,8 @@ L_459e5f:
 }
 
 uint32_t lifted_title_letter_launch_call(const VertrixCalls *calls,
-                                    const VertrixFactoryServices *services,
-                                    const VertrixGlobals *globals, const LiftEntry *entry)
+                                         const VertrixFactoryServices *services,
+                                         const VertrixGlobals *globals, const LiftEntry *entry)
 {
     uint8_t stack[LIFTED_TITLE_LETTER_LAUNCH_CALL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
@@ -26675,7 +26675,8 @@ uint32_t lifted_title_letter_launch_call(const VertrixCalls *calls,
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_TITLE_LETTER_LAUNCH_CALL_STACK, 0, entry);
+    lift_begin(&env, calls, services, globals, stack, LIFTED_TITLE_LETTER_LAUNCH_CALL_STACK, 0,
+               entry);
     {
         uint32_t v = ebp;
         esp -= 4u;
