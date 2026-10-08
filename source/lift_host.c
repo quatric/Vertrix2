@@ -9,8 +9,8 @@
 
 #include "lift_runtime.h"
 #include "rtl_float.h"
-#include "rtl_single_multiply.h"
 #include "rtl_single_divide.h"
+#include "rtl_single_multiply.h"
 
 static int in_image(uint32_t address, unsigned size)
 {
@@ -850,21 +850,30 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
         return 0;
     if (site->target == 0x4db507) /* RTL double multiply: edx:eax * ecx:ebx -> edx:eax */
     {
-        union { uint64_t bits; double value; } left, right, out;
+        union
+        {
+            uint64_t bits;
+            double value;
+        } left, right, out;
         left.bits = ((uint64_t)site->edx << 32) | site->eax;
         right.bits = ((uint64_t)site->ecx << 32) | site->ebx;
         out.value = left.value * right.value;
         site->out_value = (uint32_t)(out.bits >> 32);
         return (uint32_t)out.bits;
     }
-    if (site->target == 0x4d809c || site->target == 0x4d80a6 ||
-        site->target == 0x4d8177 || site->target == 0x4d81fe)
+    if (site->target == 0x4d809c || site->target == 0x4d80a6 || site->target == 0x4d8177 ||
+        site->target == 0x4d81fe)
     {
         return host_single(site, host);
     }
-    if (site->target == 0x4eb652 || site->target == 0x4db350) /* RTL double divide / add: edx:eax op ecx:ebx */
+    if (site->target == 0x4eb652 ||
+        site->target == 0x4db350) /* RTL double divide / add: edx:eax op ecx:ebx */
     {
-        union { uint64_t bits; double value; } left, right, out;
+        union
+        {
+            uint64_t bits;
+            double value;
+        } left, right, out;
         left.bits = ((uint64_t)site->edx << 32) | site->eax;
         right.bits = ((uint64_t)site->ecx << 32) | site->ebx;
         out.value = site->target == 0x4eb652 ? left.value / right.value : left.value + right.value;
@@ -891,7 +900,13 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
     }
     if (site->target == LIFT_GLOBAL_STORE)
     {
-        if (getenv("TRACE_G") && (site->eax >= 0x5bb770 && site->eax <= 0x5bb790)) { static int shown; if (shown++ < 40) fprintf(stderr, "gstore %x = %x (depth %u)\n", site->eax, site->edx, vertrix_lifted_depth()); }
+        if (getenv("TRACE_G") && (site->eax >= 0x5bb770 && site->eax <= 0x5bb790))
+        {
+            static int shown;
+            if (shown++ < 40)
+                fprintf(stderr, "gstore %x = %x (depth %u)\n", site->eax, site->edx,
+                        vertrix_lifted_depth());
+        }
         host_write(host, site->eax, site->stack, site->edx);
         return 0;
     }
