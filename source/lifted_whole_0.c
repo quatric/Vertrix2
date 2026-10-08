@@ -35662,8 +35662,9 @@ uint32_t lifted_piece_clear_offset_y_full(const VertrixCalls *calls,
     return env.failed ? 0u : eax;
 }
 
-uint32_t lifted_piece_set_offset_x_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
+uint32_t lifted_piece_set_offset_x_full(const VertrixCalls *calls,
+                                        const VertrixFactoryServices *services,
+                                        const VertrixGlobals *globals, const LiftEntry *entry)
 {
     uint8_t stack[LIFTED_PIECE_SET_OFFSET_X_FULL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
@@ -35685,15 +35686,17 @@ uint32_t lifted_piece_set_offset_x_full(const VertrixCalls *calls, const Vertrix
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_PIECE_SET_OFFSET_X_FULL_STACK, 0, entry);
+    lift_begin(&env, calls, services, globals, stack, LIFTED_PIECE_SET_OFFSET_X_FULL_STACK, 0,
+               entry);
     lift_store(&env, eax, 0x16cu, 1, (edx & 0xffu));
     vertrix_lift_edx = edx;
     vertrix_lift_fl = fl;
     return env.failed ? 0u : eax;
 }
 
-uint32_t lifted_piece_set_offset_y_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
+uint32_t lifted_piece_set_offset_y_full(const VertrixCalls *calls,
+                                        const VertrixFactoryServices *services,
+                                        const VertrixGlobals *globals, const LiftEntry *entry)
 {
     uint8_t stack[LIFTED_PIECE_SET_OFFSET_Y_FULL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
@@ -35715,7 +35718,8 @@ uint32_t lifted_piece_set_offset_y_full(const VertrixCalls *calls, const Vertrix
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_PIECE_SET_OFFSET_Y_FULL_STACK, 0, entry);
+    lift_begin(&env, calls, services, globals, stack, LIFTED_PIECE_SET_OFFSET_Y_FULL_STACK, 0,
+               entry);
     lift_store(&env, eax, 0x16du, 1, (edx & 0xffu));
     vertrix_lift_edx = edx;
     vertrix_lift_fl = fl;
@@ -42105,8 +42109,9 @@ uint32_t lifted_f42f880(const VertrixCalls *calls, const VertrixFactoryServices 
     return env.failed ? 0u : eax;
 }
 
-uint32_t lifted_board_piece_set_offset_x_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
+uint32_t lifted_board_piece_set_offset_x_full(const VertrixCalls *calls,
+                                              const VertrixFactoryServices *services,
+                                              const VertrixGlobals *globals, const LiftEntry *entry)
 {
     uint8_t stack[LIFTED_BOARD_PIECE_SET_OFFSET_X_FULL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
@@ -42128,15 +42133,17 @@ uint32_t lifted_board_piece_set_offset_x_full(const VertrixCalls *calls, const V
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_BOARD_PIECE_SET_OFFSET_X_FULL_STACK, 0, entry);
+    lift_begin(&env, calls, services, globals, stack, LIFTED_BOARD_PIECE_SET_OFFSET_X_FULL_STACK, 0,
+               entry);
     lift_store(&env, eax, 0xa64u, 1, (edx & 0xffu));
     vertrix_lift_edx = edx;
     vertrix_lift_fl = fl;
     return env.failed ? 0u : eax;
 }
 
-uint32_t lifted_board_piece_set_offset_y_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
+uint32_t lifted_board_piece_set_offset_y_full(const VertrixCalls *calls,
+                                              const VertrixFactoryServices *services,
+                                              const VertrixGlobals *globals, const LiftEntry *entry)
 {
     uint8_t stack[LIFTED_BOARD_PIECE_SET_OFFSET_Y_FULL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
@@ -42158,7 +42165,8 @@ uint32_t lifted_board_piece_set_offset_y_full(const VertrixCalls *calls, const V
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_BOARD_PIECE_SET_OFFSET_Y_FULL_STACK, 0, entry);
+    lift_begin(&env, calls, services, globals, stack, LIFTED_BOARD_PIECE_SET_OFFSET_Y_FULL_STACK, 0,
+               entry);
     lift_store(&env, eax, 0xa65u, 1, (edx & 0xffu));
     vertrix_lift_edx = edx;
     vertrix_lift_fl = fl;
