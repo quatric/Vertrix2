@@ -177,6 +177,7 @@ static inline uint32_t lift_call(LiftEnv *env, uint32_t target, uint32_t eax, ui
 {
     uint32_t stack[32] = {0};
     uint32_t out = 0;
+    uint32_t before = (target == 0x4ca280 || target == 0x4ca370) ? lift_load(env, eax, 0, 4) : 0;
     uint32_t result;
     unsigned i;
     vertrix_lift_edx = edx; /* a callee that returns a pair leaves its edx here */
@@ -190,7 +191,9 @@ static inline uint32_t lift_call(LiftEnv *env, uint32_t target, uint32_t eax, ui
         stack[i] = lift_load(env, esp, 4 * i, 4);
     }
     result = vertrix_calln(env->calls, target, eax, edx, ebx, ecx, stack, count, &out);
-    if (target == 0x4ca280 || target == 0x4ca370)
+    /* a lifted callee has already stored through eax; only the native ones report it in out */
+    if ((target == 0x4ca280 || target == 0x4ca370) &&
+        !(out == 0 && lift_load(env, eax, 0, 4) != before))
     {
         lift_store(env, eax, 0, 4, out);
     }
@@ -198,8 +201,8 @@ static inline uint32_t lift_call(LiftEnv *env, uint32_t target, uint32_t eax, ui
     {
         lift_store(env, stack[4], 0, 4, out); /* CoCreateInstance stores the interface */
     }
-    if (target == 0x4db507 || target == 0x4eb652 || target == 0x4db350 || target == 0x4d809c ||
-        target == 0x4d80a6 || target == 0x4d8177 || target == 0x4d81fe)
+    if ((target == 0x4db507 || target == 0x4eb652 || target == 0x4db350 || target == 0x4d809c ||
+        target == 0x4d80a6 || target == 0x4d8177 || target == 0x4d81fe))
     {
         vertrix_lift_edx = out;
     }

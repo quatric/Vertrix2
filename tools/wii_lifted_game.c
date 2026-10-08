@@ -85,7 +85,8 @@ int main(void)
     static LiftHost host;
     uint8_t *heap;
     int lifted;
-    uint32_t form, display, wrapper, base, width, height, pitch, bytes, items;
+    uint32_t form, display, base, width, height, pitch, bytes, start;
+    unsigned shown = 0;
     if (!vertrix_wii_video_init(&video))
     {
         return 1;
@@ -116,60 +117,48 @@ int main(void)
     printf("done loader at %u ms\n", (unsigned)ticks_to_millisecs(gettime()));
     lift_host_run(&host, 0x45dca0, 0, 0, 0, 0, &lifted); /* sprite banks */
     printf("done sprite banks at %u ms\n", (unsigned)ticks_to_millisecs(gettime()));
-    lift_host_run(&host, 0x465af0, 0, 0xffffffffu, 0, 0, &lifted); /* title scene */
-    printf("done title scene at %u ms\n", (unsigned)ticks_to_millisecs(gettime()));
-    base = lift_host_surface(&host, host.back_surface, &width, &height, &pitch, &bytes);
-    wrapper = lift_host_allocate(&host, 0x40);
-    host_store(&host, wrapper + 0, base);
-    host_store(&host, wrapper + 4, width);
-    host_store(&host, wrapper + 8, height);
-    host_store(&host, wrapper + 0xc, bytes | (4u << 8)); /* bytes per pixel, sub-format 4 */
-    host_store(&host, wrapper + 0x10, 0);
-    host_store(&host, wrapper + 0x14, pitch);
-    host_store(&host, 0x5bc010, wrapper);
-    {
-        uint32_t view = lift_host_read(&host, 0x544070, 4);
-        host_store(&host, view + 0x208, WIDTH);
-        host_store(&host, view + 0x20c, HEIGHT);
-    }
-    items = lift_host_read(&host, 0x54671c + 8, 4);
+    lift_host_run(&host, 0x45dca0, 0, 0, 0, 0, &lifted);    /* sprite banks */
+    printf("done sprite banks at %u ms\n", (unsigned)ticks_to_millisecs(gettime()));
+    base = lift_host_surface(&host, host.primary_surface, &width, &height, &pitch, &bytes);
     gather(&host, base);
     if (!vertrix_wii_frame_texture_init(&frame, masks, GX_NEAR, &texture))
     {
         fail("Could not upload the display frame.");
     }
-    printf("heap top %x, back buffer %x\n", (unsigned)host.heap_top, (unsigned)base);
-    printf("lifted game running: %u actors\n", (unsigned)items);
+    printf("lifted game running\n");
+    start = ticks_to_millisecs(gettime());
     for (;;)
     {
-        static unsigned shown;
-        uint32_t start = ticks_to_millisecs(gettime());
+        /* The original's idle handler chain: the form's current handler runs one step per tick
+         * and installs the next one (0x418840 stores it at +0xbc). */
+        uint32_t handler = lift_host_read(&host, form + 0xbc, 4), before = host.frames_presented;
+        uint32_t tick = ticks_to_millisecs(gettime());
         WPAD_ScanPads();
         if (WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME)
         {
             break;
         }
-        lift_host_run(&host, 0x4b6200, 0x54671c, 0, 0, 0, &lifted);       /* update */
-        lift_host_run(&host, 0x4b6240, 0x54671c, wrapper, 0, 0, &lifted); /* draw */
-        gather(&host, base);
-        if (shown < 6)
+        host.clock_ms = tick - start;
+        lift_host_run(&host, handler, form, 0, 0, 0, &lifted);
+        if (!lifted)
         {
-            unsigned k, nz = 0;
-            for (k = 0; k < WIDTH * HEIGHT; k++)
+            printf("handler %x is not lifted\n", (unsigned)handler);
+            fail("The original asked for a routine that is not lifted yet.");
+        }
+        if (host.frames_presented != before)
+        {
+            base = lift_host_surface(&host, host.primary_surface, &width, &height, &pitch, &bytes);
+            gather(&host, base);
+            if (shown < 5)
             {
-                nz += (pixels[4 * k] | pixels[4 * k + 1] | pixels[4 * k + 2]) != 0;
+                printf("frame %u: handler %x, %u ms\n", shown++, (unsigned)handler,
+                       (unsigned)(ticks_to_millisecs(gettime()) - tick));
             }
-            printf("frame %u: %u ms, %u lit pixels\n", shown++,
-                   (unsigned)(ticks_to_millisecs(gettime()) - start), nz);
-        }
-        if (!vertrix_wii_frame_texture_update(&frame, masks, &texture) ||
-            !vertrix_wii_frame_present(&video.presenter, &texture))
-        {
-            break;
-        }
-        while (ticks_to_millisecs(gettime()) - start < FRAME_MS)
-        {
-            VIDEO_WaitVSync();
+            if (!vertrix_wii_frame_texture_update(&frame, masks, &texture) ||
+                !vertrix_wii_frame_present(&video.presenter, &texture))
+            {
+                break;
+            }
         }
     }
     vertrix_wii_texture_free(&texture);

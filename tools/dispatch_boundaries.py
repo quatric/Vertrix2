@@ -2,4 +2,4 @@
 
 # 0x48ae00: the host JPEG boundary currently returns no bitmap; it is not a verified decoder.
 # 0x475090: the palette table builder, done by the recovered palette_tables.c (too slow lifted).
-NATIVE_UNVERIFIED_BOUNDARIES = frozenset({0x48ae00, 0x475090})
+NATIVE_UNVERIFIED_BOUNDARIES = frozenset({0x48ae00, 0x475090, 0x48ac50})

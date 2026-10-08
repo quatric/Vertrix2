@@ -218,7 +218,34 @@ static int host_import(LiftHost *host, const VertrixCallSite *site, const char *
     {
         printf("import %s(%x, %x, %x)\n", name, (unsigned)a0, (unsigned)a1, (unsigned)a2);
     }
-    if (strcmp(name, "lstrlenA") == 0)
+    if (strcmp(name, "timeSetEvent") == 0) /* (delay, resolution, proc, user, flags) */
+    {
+        host->timer_period = a0;
+        host->timer_proc = a2;
+        host->timer_user = site_argument(site, 3);
+        *result = 1;
+    }
+    else if (strcmp(name, "CoCreateInstance") == 0) /* (clsid, outer, context, iid, out): no COM classes */
+    {
+        host_write(host, site_argument(site, 4), 4, 0);
+        *result = 0x80040154u; /* REGDB_E_CLASSNOTREG */
+    }
+    else if (strcmp(name, "DirectInput8Create") == 0) /* (instance, version, iid, out, outer) */
+    {
+        host_write(host, site_argument(site, 3), 4, 0);
+        *result = 0x80004002u; /* E_NOINTERFACE: no input device layer yet */
+    }
+    else if (strcmp(name, "CoInitialize") == 0 || strcmp(name, "CoUninitialize") == 0 ||
+             strcmp(name, "CoInitializeEx") == 0)
+    {
+        *result = 0;
+    }
+    else if (strcmp(name, "timeGetTime") == 0 || strcmp(name, "GetTickCount") == 0)
+    {
+        *result = host->clock_ms;
+        host->clock_ms += 1; /* a routine that waits on the clock sees it move */
+    }
+    else if (strcmp(name, "lstrlenA") == 0)
     {
         *result = host_string_length(host, a0);
     }
@@ -913,6 +940,49 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
     }
     if (site->target == 0x475090)
         return host_palette_build(host);
+    if (site->target == 0x48ac50) /* load an image file: eax = path, the result is a surface object */
+    {
+        char text[260];
+        unsigned k;
+        uint8_t *pixels = NULL;
+        uint32_t width = 0, height = 0, surface, base, pitch, x, y;
+        VertrixCallSite create;
+        for (k = 0; k < sizeof text - 1 && (text[k] = (char)lift_host_read(host, site->eax + k, 1)) != 0; k++)
+        {
+        }
+        text[k] = 0;
+        if (host->decode_jpeg == NULL || !host->decode_jpeg(host->archive, text, &pixels, &width, &height))
+        {
+            if (lift_host_trace_files)
+            {
+                printf("image %s: not decoded\n", text);
+            }
+            return 0;
+        }
+        memset(&create, 0, sizeof create);
+        create.target = 0x478d10; /* a width by height surface of 4 bytes per pixel */
+        create.eax = width;
+        create.edx = height;
+        create.ebx = 4;
+        surface = host->calls.calls.call(&create, host->calls.calls.context);
+        base = lift_host_read(host, surface, 4);
+        pitch = lift_host_read(host, surface + 0x14, 4);
+        for (y = 0; surface != 0 && y < height; y++)
+        {
+            for (x = 0; x < width; x++)
+            {
+                const uint8_t *p = pixels + 4 * ((size_t)y * width + x);
+                host_write(host, base + y * pitch + 4 * x, 4,
+                           (uint32_t)p[0] | (uint32_t)p[1] << 8 | (uint32_t)p[2] << 16);
+            }
+        }
+        if (lift_host_trace_files)
+        {
+            printf("image %s: %ux%u surface %x pixels %x first %x\n", text, (unsigned)width, (unsigned)height, (unsigned)surface, (unsigned)base, (unsigned)lift_host_read(host, base + 4 * (width * height / 2 + width / 2), 4));
+        }
+        free(pixels);
+        return surface;
+    }
     if (site->target == 0x48ae00) /* JPEG decode: no bitmap until a native decoder exists */
         return 0;
     if (site->target == 0x4d809c || site->target == 0x4d80a6 || site->target == 0x4d8177 ||

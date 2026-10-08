@@ -45,6 +45,13 @@ typedef struct LiftHost
     unsigned boundary_counts[LIFT_HOST_TARGETS];
     unsigned boundary_distinct;
     /* DirectDraw emulation: the primary surface the original draws to, and the display mode */
+    /* The multimedia timer the original starts (timeSetEvent): its callback runs a game tick. */
+    /* Decodes the named archive JPEG into malloc'ed 32-bit pixels (bytes blue, green, red, 0);
+     * supplied by the driver, which links the platform JPEG library. Returns 0 on failure. */
+    int (*decode_jpeg)(VertrixVf *archive, const char *name, uint8_t **pixels, uint32_t *width,
+                       uint32_t *height);
+    uint32_t clock_ms; /* what timeGetTime and GetTickCount return; the driver advances it */
+    uint32_t timer_proc, timer_user, timer_period;
     uint32_t primary_surface;
     uint32_t display_bits, display_width, display_height;
     uint32_t back_surface;
