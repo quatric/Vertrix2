@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "address": "0x4eb5b4",
+  "cases": 8204,
+  "scope": "Complete original control flow versus native EAX for arbitrary single bit patterns, with zero, subnormal, infinity and NaN edges. Original EDX preservation checked independently. Native API exposes EAX only; caller flags and other lifted routines are not verified."
+}

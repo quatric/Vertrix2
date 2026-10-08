@@ -1,6 +1,6 @@
 {
   "address": "0x4d809c",
-  "status": "confirmed ABI mismatch; repair outstanding",
+  "status": "Historical confirmed ABI mismatch; exact host integration pending",
   "method": "Execute original routine and compile the actual current lift_host.c boundary branch in an isolated ABI harness. No game implementation replacement.",
   "original_operands": "single precision EAX minus EDX",
   "current_host_operands": "double precision EDX:EAX minus ECX:EBX",
@@ -56,5 +56,8 @@
       "host_edx_output": "00000000",
       "eax_matches": true
     }
-  ]
+  ],
+  "observed_revision": "b26b01b",
+  "recovery_report": "docs/rtl-single-verification.json",
+  "resolution_state": "Concurrent host work corrected operand widths; original software rounding, register outputs and helper-cache behavior still require the verified helper integration."
 }

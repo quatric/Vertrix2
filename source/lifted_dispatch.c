@@ -2324,7 +2324,7 @@ static const LiftedRoutine routines[] = {
     {0x4eb4d4, lifted_f4eb4d4, 84, 0},
     {0x4eb526, lifted_f4eb526, 68, 0},
     {0x4eb57c, lifted_f4eb57c, 68, 0},
-    {0x4eb5b4, lifted_f4eb5b4, 64, 0},
+    {0x4eb5b4, lifted_rtl_single_negate, 64, 0},
     {0x4eb5c0, lifted_f4eb5c0, 76, 0},
     {0x4eb606, lifted_f4eb606, 68, 0},
     {0x4eb860, lifted_f4eb860, 72, 0},

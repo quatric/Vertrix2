@@ -1134,7 +1134,7 @@
   "virtual": [],
   "address": 5158268
  },
- "f4eb5b4": {
+ "rtl_single_negate": {
   "callees": {},
   "stack": 64,
   "arguments": 0,

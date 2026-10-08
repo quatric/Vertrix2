@@ -1436,6 +1436,7 @@
  "0x4dfa7c": "vertrix_rtl_distribute_slack",
  "0x4e3697": "vertrix_return_unchanged",
  "0x4e9d00": "vertrix_return_zero",
+ "0x4eb5b4": "vertrix_rtl_single_negate",
  "0x4ec8c0": "vertrix_return_unchanged",
  "0x4ee7f0": "vertrix_return_constant_4ee730",
  "0x4ee800": "vertrix_return_constant_4ee750",
