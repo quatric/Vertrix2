@@ -9,6 +9,7 @@
 #include <string.h>
 #include <wiiuse/wpad.h>
 
+#include "jpeg_decode.h"
 #include "lift_host.h"
 #include "wii_archive.h"
 #include "wii_frame_texture.h"
@@ -104,9 +105,9 @@ int main(void)
     }
     SYS_SetArena2Lo(heap + HEAP_SIZE);
     printf("starting\n");
-    lift_host_trace_files = 1;
     lift_host_init(&host, image, image_bin, heap, HEAP_SIZE);
     host.archive = archive.archive;
+    host.decode_jpeg = jpeg_decode;
     vertrix_lifted_allow_unverified(1);
     form = lift_host_allocate(&host, 0x1000);
     display = lift_host_allocate(&host, 0x800);
@@ -139,7 +140,11 @@ int main(void)
             break;
         }
         host.clock_ms = tick - start;
-        lift_host_run(&host, handler, form, 0, 0, 0, &lifted);
+        lifted = 1;
+        if (handler != 0)
+        {
+            lift_host_run(&host, handler, form, 0, 0, 0, &lifted);
+        }
         if (!lifted)
         {
             printf("handler %x is not lifted\n", (unsigned)handler);

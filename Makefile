@@ -189,10 +189,10 @@ wii-sync: $(BUILD)/vertrix2.dol
 wii-lifted-game: $(BUILD)/vertrix2-lifted.dol
 
 $(BUILD)/wii_lifted_game.o: tools/wii_lifted_game.c $(wildcard source/*.h) | $(BUILD)
-	$(PPC_CC) $(CFLAGS) -DGEKKO -DHW_RVL -D__wii__ -I$(LIBOGC)/include -Isource -c $< -o $@
+	$(PPC_CC) $(CFLAGS) -DGEKKO -DHW_RVL -D__wii__ -I$(LIBOGC)/include -I/opt/devkitpro/portlibs/ppc/include -Isource -Itools -c $< -o $@
 
 $(BUILD)/vertrix2-lifted.elf: $(BUILD)/wii_lifted_game.o $(BUILD)/image_bin.o $(BUILD)/libvertrix-wii-video.a $(BUILD)/libvertrix-wii-archive.a $(BUILD)/libvertrix-recovered.a
-	$(PPC_CC) -mrvl $(CFLAGS) $^ -L$(LIBOGC)/lib/wii -lfat -lwiiuse -lbte -logc -lm -o $@
+	$(PPC_CC) -mrvl $(CFLAGS) $^ -L$(LIBOGC)/lib/wii -L/opt/devkitpro/portlibs/ppc/lib -ljpeg -lfat -lwiiuse -lbte -logc -lm -o $@
 
 $(BUILD)/vertrix2-lifted.dol: $(BUILD)/vertrix2-lifted.elf
 	/opt/devkitpro/tools/bin/elf2dol $< $@
