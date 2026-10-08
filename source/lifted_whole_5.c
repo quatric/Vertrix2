@@ -11421,8 +11421,10 @@ L_4e23b5:
     return env.failed ? 0u : eax;
 }
 
-uint32_t lifted_rtl_single_divide_software_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry)
+uint32_t lifted_rtl_single_divide_software_full(const VertrixCalls *calls,
+                                                const VertrixFactoryServices *services,
+                                                const VertrixGlobals *globals,
+                                                const LiftEntry *entry)
 {
     uint8_t stack[LIFTED_RTL_SINGLE_DIVIDE_SOFTWARE_FULL_STACK + 4 + 4 * 0 + 4];
     LiftEnv env;
@@ -11444,7 +11446,8 @@ uint32_t lifted_rtl_single_divide_software_full(const VertrixCalls *calls, const
     (void)edi;
     (void)ebp;
     (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_RTL_SINGLE_DIVIDE_SOFTWARE_FULL_STACK, 0, entry);
+    lift_begin(&env, calls, services, globals, stack, LIFTED_RTL_SINGLE_DIVIDE_SOFTWARE_FULL_STACK,
+               0, entry);
     {
         uint32_t r = lift_add(32, edx, edx, &fl);
         edx = r;

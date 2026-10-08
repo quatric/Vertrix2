@@ -1039,8 +1039,10 @@ uint32_t lifted_f4d8198(const VertrixCalls *calls, const VertrixFactoryServices 
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4d8227. */
-uint32_t lifted_rtl_single_divide_software_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
+uint32_t lifted_rtl_single_divide_software_full(const VertrixCalls *calls,
+                                                const VertrixFactoryServices *services,
+                                                const VertrixGlobals *globals,
+                                                const LiftEntry *entry);
 
 /* Original 0x4d8340. */
 uint32_t lifted_rtl_construct_chunk_list(const VertrixCalls *calls,
