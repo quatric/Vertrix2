@@ -52,6 +52,8 @@ typedef struct LiftHost
                        uint32_t *height);
     uint32_t key_queue[64][2]; /* pending keyboard events: DIK scan code, 0x80 down / 0 up */
     unsigned key_head, key_tail;
+    uint32_t mouse_queue[64][2]; /* pending mouse events: DIMOFS offset (0 x, 4 y, 12.. buttons), data */
+    unsigned mouse_head, mouse_tail;
     uint32_t clock_ms; /* what timeGetTime and GetTickCount return; the driver advances it */
     uint32_t timer_proc, timer_user, timer_period;
     uint32_t primary_surface;
@@ -71,6 +73,9 @@ typedef struct LiftHost
 /* The pixel memory (original address), width, height and byte pitch of a surface object, or 0. */
 /* Queue a keyboard event the original's buffered DirectInput keyboard reads (scan code, down). */
 void lift_host_key(LiftHost *host, unsigned scan_code, int down);
+/* Queue a mouse event for the buffered mouse: offset 0 / 4 are relative x / y motion, 12 + n a
+ * button (data 0x80 down, 0 up). */
+void lift_host_mouse(LiftHost *host, unsigned offset, int32_t data);
 
 uint32_t lift_host_surface(const LiftHost *host, uint32_t surface, uint32_t *width,
                            uint32_t *height, uint32_t *pitch, uint32_t *bytes_per_pixel);

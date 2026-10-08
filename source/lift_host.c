@@ -689,6 +689,17 @@ void lift_host_key(LiftHost *host, unsigned scan_code, int down)
     }
 }
 
+void lift_host_mouse(LiftHost *host, unsigned offset, int32_t data)
+{
+    unsigned next = (host->mouse_tail + 1) % 64;
+    if (next != host->mouse_head)
+    {
+        host->mouse_queue[host->mouse_tail][0] = offset;
+        host->mouse_queue[host->mouse_tail][1] = (uint32_t)data;
+        host->mouse_tail = next;
+    }
+}
+
 /* DirectInput: IDirectInput8 (3) creates devices; only the system keyboard (GUID 6F1D2B61) has
  * events, which GetDeviceData hands out as DIDEVICEOBJECTDATA { offset, data, time, sequence,
  * app data }. The mouse and joystick read as idle and EnumDevices finds nothing. */
@@ -708,28 +719,34 @@ static uint32_t host_input(LiftHost *host, unsigned interface_id, unsigned index
             {
                 return 0x8007000eu;
             }
-            host_write(host, device + 24, 4, lift_host_read(host, site_argument(site, 1), 4) == 0x6f1d2b61u);
+            {
+                uint32_t guid = lift_host_read(host, site_argument(site, 1), 4);
+                host_write(host, device + 24, 4, guid == 0x6f1d2b61u ? 1 : guid == 0x6f1d2b60u ? 2 : 0);
+            }
             host_write(host, site_argument(site, 2), 4, device);
         }
         return 0;
     }
     if (index == 10 && lift_host_read(host, this_ + 24, 4) != 0) /* GetDeviceData(this, size, data, count, flags) */
     {
+        uint32_t kind = lift_host_read(host, this_ + 24, 4);
         uint32_t size = site_argument(site, 1), data = site_argument(site, 2), count = site_argument(site, 3);
         uint32_t room = lift_host_read(host, count, 4), n = 0;
-        if (getenv("TRACE_INPUT")) fprintf(stderr, "GetDeviceData this %x buffer %x\n", (unsigned)this_, (unsigned)data);
-        while (n < room && host->key_head != host->key_tail && size >= 20)
+        unsigned *head = kind == 1 ? &host->key_head : &host->mouse_head;
+        unsigned tail = kind == 1 ? host->key_tail : host->mouse_tail;
+        uint32_t (*queue)[2] = kind == 1 ? host->key_queue : host->mouse_queue;
+        while (n < room && *head != tail && size >= 20)
         {
             uint32_t at = data + n * size;
-            host_write(host, at, 4, host->key_queue[host->key_head][0]);
-            host_write(host, at + 4, 4, host->key_queue[host->key_head][1]);
+            host_write(host, at, 4, queue[*head][0]);
+            host_write(host, at + 4, 4, queue[*head][1]);
             host_write(host, at + 8, 4, host->clock_ms);
             host_write(host, at + 12, 4, n);
             host_write(host, at + 16, 4, 0);
-            host->key_head = (host->key_head + 1) % 64;
+            *head = (*head + 1) % 64;
             n++;
         }
-        if (n != 0 && getenv("TRACE_INPUT")) fprintf(stderr, "delivered %u key events\n", (unsigned)n);
+        if (n != 0 && getenv("TRACE_INPUT")) fprintf(stderr, "delivered %u events to kind %u\n", (unsigned)n, (unsigned)kind);
         host_write(host, count, 4, n);
         return 0;
     }

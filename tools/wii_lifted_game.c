@@ -139,6 +139,29 @@ int main(void)
         {
             break;
         }
+        {
+            /* The remote becomes the original's DirectInput keyboard: held sideways, the D-pad is
+             * the arrow keys, A Enter, B Space, 1 and 2 Z and X, minus Escape. */
+            static const struct { uint32_t button; unsigned scan_code; } keys[] = {
+                {WPAD_BUTTON_UP, 0xc8}, {WPAD_BUTTON_DOWN, 0xd0}, {WPAD_BUTTON_LEFT, 0xcb},
+                {WPAD_BUTTON_RIGHT, 0xcd}, {WPAD_BUTTON_A, 0x1c}, {WPAD_BUTTON_B, 0x39},
+                {WPAD_BUTTON_1, 0x2c}, {WPAD_BUTTON_2, 0x2d}, {WPAD_BUTTON_MINUS, 0x01}};
+            uint32_t down = WPAD_ButtonsDown(0), up = WPAD_ButtonsUp(0);
+            unsigned k;
+            for (k = 0; k < sizeof keys / sizeof keys[0]; k++)
+            {
+                if (down & keys[k].button)
+                {
+                    lift_host_key(&host, keys[k].scan_code, 1);
+                }
+                if (up & keys[k].button)
+                {
+                    lift_host_key(&host, keys[k].scan_code, 0);
+                }
+            }
+            host_store(&host, 0x5328bc, 1); /* the form is active: the device poll may run */
+            lift_host_run(&host, 0x4b7b80, 0, 0, 0, 0, &lifted); /* the 14 ms timer: polls the devices */
+        }
         host.clock_ms = tick - start;
         lifted = 1;
         if (handler != 0)
