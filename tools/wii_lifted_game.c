@@ -312,6 +312,34 @@ int main(void)
                 printf("frame %u: handler %x, %u ms\n", shown++, (unsigned)handler,
                        (unsigned)(ticks_to_millisecs(gettime()) - tick));
             }
+#ifdef VERTRIX_AUTOPLAY
+            if (handler == 0x424990)
+            {
+                static unsigned gameplay_frames;
+                if (++gameplay_frames == 600)
+                {
+                    FILE *shot = fopen("sd:/apps/vertrix2/shot.ppm", "wb");
+                    if (shot != NULL)
+                    {
+                        unsigned i;
+                        fprintf(shot, "P6\n%d %d\n255\n", WIDTH, HEIGHT);
+                        for (i = 0; i < WIDTH * HEIGHT; i++)
+                        {
+                            fputc(pixels[4 * i + 2], shot);
+                            fputc(pixels[4 * i + 1], shot);
+                            fputc(pixels[4 * i + 0], shot);
+                        }
+                        fclose(shot);
+                        printf("screenshot written\n");
+                        exit(0);
+                    }
+                    else
+                    {
+                        printf("screenshot file could not be opened\n");
+                    }
+                }
+            }
+#endif
             if (!vertrix_wii_frame_texture_update(&frame, masks, &texture) ||
                 !vertrix_wii_frame_present(&video.presenter, &texture))
             {
