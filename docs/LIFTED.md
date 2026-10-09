@@ -84,6 +84,25 @@ out of the table:
 The host title run (`tools/host_title.c`, 200 frames) renders the same 4,704 back-buffer pixels
 with no boundary calls. 237 routines still fail.
 
+A second pass changed only the oracle:
+
+- **Case drawing.** In tolerant mode, `tools/oracle_screen.py` now draws up to 16 times the
+  requested number of inputs, stopping once that many complete original executions are reached.
+  Routines whose random inputs mostly fault used to stop short. The pass condition is unchanged.
+- **Pool differences.** `Pool.diff` (`tools/oracle_kit.py`) reports the handle, offset and both
+  bytes for each differing object.
+- **AnsiString store stubs.** `tools/verify_one.py` gives the stubs for `0x4ca280` and `0x4ca370`
+  the original's effect: the drawn value is stored through eax and also returned.
+
+The 40-routine regression sample still passes (40/40). Of the 237, **87 now pass** (second entry
+under `reverifications`). 86 are in `source/lifted_whole_9.[ch]` (`docs/lift/whole_9.json`), and
+the dispatcher now has 3,166 entries; the maximum lifted frame is still 3,240 bytes. `0x4dce90`
+passes but stays out of the table for now, because its 4,352-byte frame exceeds every frame in the
+table and the Wii stack budget has not been checked. The host title run output is byte-identical
+to the run before the chunk was added. 150 routines still fail: 71 have too few complete original
+executions, 18 time out, 6 overflow a byte string, and the rest are comparison or unmapped-access
+failures.
+
 ## Open after the completed batch
 
 - 844 attempted routines did not pass verification. The saved failure details distinguish
