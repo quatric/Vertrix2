@@ -12,6 +12,8 @@ import verify_lifted  # noqa: E402
 
 import struct  # noqa: E402
 
+from unicorn.x86_const import UC_X86_REG_EDX  # noqa: E402
+
 VTABLE = 0x900000
 LEAF = 0x700404
 virtual = meta.get('virtual', [])
@@ -106,10 +108,31 @@ def string_store(cpu, rng, eax, edx, ebx, ecx, stack):
     return value
 
 
+# The callees lift_call treats as returning a pair: their edx comes back in the call's out value.
+PAIRS = (0x4db507, 0x4eb652, 0x4db350, 0x4d809c, 0x4d80a6, 0x4d8177, 0x4d81fe)
+
+
+def edx_pair(cpu, rng, eax, edx, ebx, ecx, stack):
+    """The stub leaves a drawn edx in the original, and the native call reports the same value."""
+    value = rng.choice([0, 1, 2, 0xffffffff, rng.randrange(0, 64), rng.getrandbits(32)])
+    cpu.reg_write(UC_X86_REG_EDX, value)
+    return value
+
+
 com = {0x4f175c: co_create} if 0x4f175c in imports else {}
 com.update({t: string_store for t in (0x4ca280, 0x4ca370) if '0x%x' % t in meta['callees']})
+com.update({t: edx_pair for t in PAIRS if '0x%x' % t in meta['callees']})
 com = com or None
-spec = dict(effects=com, fixed_returns={0x4f175c: 0} if com else None, address=meta['address'], arguments=meta['arguments'], small=True, keep=tuple(slots) + tuple(pointer_globals) + tuple(imports), mixed=True, handles=True, automap=True, tolerate=True, smallregs=SMALL,
+# Callees whose flags the lifted caller reads right after the call (compare helpers).
+flag_targets = tuple(sorted({int(m.group(1), 16) for m in re.finditer(
+    r'lift_call\(&env, 0x([0-9a-f]+)u[^;]*;\n\s*edx = vertrix_lift_edx;\n\s*fl = vertrix_lift_fl;'
+    r'\n\s*if \(fl\.', source_text)}))
+# The routine's own instructions: a callee among them is entered by jumps or by falling through
+# as well as by calls.
+import lift  # noqa: E402
+
+internal = tuple(lift.trace(meta['address']))
+spec = dict(internal=internal, flag_targets=flag_targets, effects=com, fixed_returns={0x4f175c: 0} if com else None, address=meta['address'], arguments=meta['arguments'], small=True, keep=tuple(slots) + tuple(pointer_globals) + tuple(imports), mixed=True, handles=True, automap=True, tolerate=True, smallregs=SMALL,
             pool_size=0x1000, patch=vtable_patch,
             setup_case=lambda rng, pool, cpu, kwargs: vtable_setup(cpu),
             setup=vtable_setup if virtual or slots or pointer_globals or imports else None)

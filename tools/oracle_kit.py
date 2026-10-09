@@ -4,7 +4,7 @@ import struct
 import subprocess
 from pathlib import Path
 
-from unicorn import UC_HOOK_CODE
+from unicorn import UC_HOOK_CODE, UcError
 from unicorn.x86_const import (UC_X86_REG_EAX, UC_X86_REG_EBX, UC_X86_REG_ECX, UC_X86_REG_EDX,
                                UC_X86_REG_EIP, UC_X86_REG_ESP)
 
@@ -39,6 +39,9 @@ class Stubs:
         self.arguments = {}
         self.cdecl = set()
         self.extras = {}
+        # Callees that are also code of the routine under test (0x4e5710 jumps into the body at
+        # 0x4e57ac, which it also calls): their stub runs only when a direct call entered them.
+        self.internal = set()
 
     def add(self, address, stack_args=0, cdecl=False):
         self.arguments[address] = stack_args
@@ -47,6 +50,8 @@ class Stubs:
         self.cpu.hook_add(UC_HOOK_CODE, self._hit, begin=address, end=address)
 
     def _hit(self, cpu, address, size, context):
+        if address in self.internal and not self._called(cpu, address):
+            return
         regs = [cpu.reg_read(r) for r in (UC_X86_REG_EAX, UC_X86_REG_EDX, UC_X86_REG_EBX,
                                           UC_X86_REG_ECX)]
         esp = cpu.reg_read(UC_X86_REG_ESP)
@@ -60,6 +65,16 @@ class Stubs:
             cpu.reg_write(UC_X86_REG_EAX, result & 0xffffffff)
         cpu.reg_write(UC_X86_REG_ESP, esp + 4 + (0 if address in self.cdecl else 4 * count))
         cpu.reg_write(UC_X86_REG_EIP, stack[0])
+
+
+    @staticmethod
+    def _called(cpu, address):
+        back = struct.unpack('<I', bytes(cpu.mem_read(cpu.reg_read(UC_X86_REG_ESP), 4)))[0]
+        try:
+            code = bytes(cpu.mem_read((back - 5) & 0xffffffff, 5))
+        except UcError:
+            return False
+        return code[0] == 0xe8 and (back + struct.unpack('<i', code[1:])[0]) & 0xffffffff == address
 
 
 class Pool:

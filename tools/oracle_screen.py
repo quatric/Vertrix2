@@ -1,6 +1,7 @@
 """Shared pieces of the screen builder oracles: call sites, services, supplied static data reads."""
 from unicorn import (UC_HOOK_MEM_READ_UNMAPPED, UC_HOOK_MEM_WRITE, UC_HOOK_MEM_WRITE_UNMAPPED,
                      UcError)
+from unicorn.x86_const import UC_X86_REG_EFLAGS, UC_X86_REG_EIP
 import ctypes as c
 import json
 import struct
@@ -22,6 +23,10 @@ class Calls(c.Structure):
     _fields_ = [('call', Call), ('context', c.c_void_p)]
 
 
+class LiftFlags(c.Structure):
+    _fields_ = [(name, U) for name in ('zf', 'sf', 'cf', 'of', 'pf', 'df')]
+
+
 class Globals(c.Structure):
     _fields_ = [('read', GlobalRead), ('context', c.c_void_p)]
 
@@ -36,6 +41,16 @@ def site_log(s, count):
     return (s.target, s.eax, s.edx, s.ebx, s.ecx) + (
         s.stack, s.stack_next, s.stack_third, s.rest0, s.rest1, s.rest2, s.rest3, s.rest4,
         s.rest5, s.rest6, s.rest7, s.rest8, s.rest9, s.rest10, s.rest11, s.rest12, s.rest13)[:count]
+
+
+def first_difference(native, original):
+    """The index of the first differing call with both entries, both lengths, and the calls
+    that led there."""
+    index = next((i for i, (a, b) in enumerate(zip(native, original)) if a != b),
+                 min(len(native), len(original)))
+    return (index, native[index] if index < len(native) else None,
+            original[index] if index < len(original) else None, len(native), len(original),
+            original[max(0, index - 3):index])
 
 
 def global_reader(cpu, before=None, shadow=None):
@@ -83,7 +98,7 @@ def write_report(build_dir, name, report):
 def run_screen(name, address, sources, function, argtypes, restype, callees, generate, scope,
                *, wrappers=(), allocator=0x4ca000, globals_ranges=(), patch=None, compare=True,
                result_mask=0xffffffff, description='', table_targets=(), lookups=(), pool_size=0x200, effects=None, fixed_returns=None, handle_returns=(), choices=None,
-               setup=None, automap_enabled=False, tolerate_faults=False, small_returns=False, extras=None, native_extras_arg=None, post=None, mixed_returns=(),
+               setup=None, automap_enabled=False, tolerate_faults=False, small_returns=False, extras=None, native_extras_arg=None, post=None, mixed_returns=(), flag_targets=(), internal_targets=(),
                leading=('calls', 'services', 'globals')):
     """Run `function` against the original routine at `address`.
 
@@ -115,9 +130,21 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
     rng = random.Random(address)
     pool = Pool(cpu, 4, pool_size)
     returns, native_log, replay, replay_out, native_stores = [], [], [], [], []
+    flag_draws, flag_replay = [], []
+    lift_fl = LiftFlags.in_dll(native, 'vertrix_lift_fl') if flag_targets else None
     native_extras = native_extras_arg or {}
 
     def handler(target, eax, edx, ebx, ecx, stack):
+        if target in flag_targets:
+            # A callee whose flags the caller branches on (a compare helper such as 0x4eb57c):
+            # the stub leaves drawn flags, and the native call hands the same ones back in
+            # vertrix_lift_fl, as a lifted callee does.
+            flags = [rng.getrandbits(1) for _ in range(5)]
+            eflags = cpu.reg_read(UC_X86_REG_EFLAGS) & ~0x8c5
+            for bit, value in zip((6, 7, 0, 11, 2), flags):
+                eflags |= value << bit
+            cpu.reg_write(UC_X86_REG_EFLAGS, eflags)
+            flag_draws.append(flags)
         if target in effects:
             outs.append(effects[target](cpu, rng, eax, edx, ebx, ecx, stack))
         if target in fixed_returns:
@@ -157,6 +184,7 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
     for target, count in callees.items():
         stubs.add(target, count, cdecl=target in cdecl_targets)
     stubs.extras.update(extras or {})
+    stubs.internal.update(t for t in internal_targets if t in callees)
 
     @Call
     def call(site, context):
@@ -166,6 +194,8 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
             for i in range(s.stack):
                 native_shadow[s.eax + i] = (s.edx >> (8 * i)) & 0xff
             return 0
+        if s.target in flag_targets:
+            lift_fl.zf, lift_fl.sf, lift_fl.cf, lift_fl.of, lift_fl.pf = flag_replay.pop(0)
         native_log.append(site_log(s, callees[s.target]) + tuple(
             native_extras[s.target](s) if s.target in native_extras else ()))
         if s.target in effects:
@@ -192,6 +222,7 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
     reader = global_reader(cpu, before, native_shadow)
     globals_ = Globals(reader, None)
     completed = skipped_cases = 0
+    fault_reasons = {}
     # With tolerated faults, inputs on which the original itself faults do not count: keep drawing
     # inputs (at most 16 times the case budget) until the budget of complete executions is reached.
     # The pass condition below is unchanged.
@@ -213,23 +244,29 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
         native_stores.clear()
         native_shadow.clear()
         before.clear()
+        flag_draws.clear()
         try:
             result = original.call(address, args=tuple(stack_args), **kwargs) & 0xffffffff
-        except (UcError, RuntimeError):
+        except (UcError, RuntimeError) as error:
             if not tolerate_faults:
                 raise
             skipped_cases += 1  # the original itself faults or never returns on this input
+            reason = '%s at %#x' % (type(error).__name__ if isinstance(error, RuntimeError) else
+                                    error, cpu.reg_read(UC_X86_REG_EIP))
+            fault_reasons[reason] = fault_reasons.get(reason, 0) + 1
             continue
         completed += 1
         replay[:] = list(returns)
         replay_out[:] = list(outs)
+        flag_replay[:] = list(flag_draws)
         objects = {'calls': calls, 'services': services, 'globals': globals_}
         got = fn(*[c.byref(objects[name_]) for name_ in leading], *native_args)
+        # The call log first: a diverging path explains a differing result.
+        assert native_log == stubs.log, (case, first_difference(native_log, stubs.log))
         if compare:
             assert got == result & result_mask, (case, hex(got), hex(result))
         else:
             assert got == 1, (case, got)
-        assert native_log == stubs.log, (case, native_log, stubs.log)
         shadow = {}
         for store_address, value, width in native_stores:
             for i in range(width):
@@ -239,9 +276,11 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
             assert held == byte, (case, hex(byte_address), held, byte)
         if post:
             post(cpu, native_args)
-        assert not replay and not replay_out and pool.same(), (case, pool.diff())
+        assert not replay and not replay_out and not flag_replay and pool.same(), \
+            (case, pool.diff())
     assert completed >= (max(4, args.cases // 4) if tolerate_faults else args.cases), \
-        ('too few complete original executions', completed, skipped_cases)
+        ('too few complete original executions', completed, skipped_cases,
+         sorted(fault_reasons.items(), key=lambda item: -item[1])[:3])
     write_report(args.build_dir, name, {
         'status': 'passed', 'complete_original_executions': {hex(address): completed},
         'scope': scope})
