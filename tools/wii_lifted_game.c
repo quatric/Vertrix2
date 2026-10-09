@@ -210,7 +210,12 @@ int main(void)
                 /* the host tool steps the clock 120 ms per tick and its menu first runs at tick 89 */
                 n = started ? 89 + (tick - menu_ms) / 120 : 89;
                 ph = n >= 150 ? (n - 150) % 40 : 0;
-                for (m = 0; m < sizeof moves / sizeof moves[0]; m++)
+                if (handler == 0x41c7b0 || handler == 0x41d0e0)
+                {
+                    /* players selection: the GO preview; ready to fight: YES */
+                    host_store(&host, 0x5588f8 + 0x48, handler == 0x41c7b0 ? (330u | (130u << 16)) : (415u | (445u << 16)));
+                }
+                for (m = 0; m < sizeof moves / sizeof moves[0] && handler == 0x41b820; m++)
                 {
                     if (moves[m].at <= n && moves[m].at > last_n)
                     {
