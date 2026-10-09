@@ -103,6 +103,31 @@ to the run before the chunk was added. 150 routines still fail: 71 have too few 
 executions, 18 time out, 6 overflow a byte string, and the rest are comparison or unmapped-access
 failures.
 
+## Stack argument counts (lifter fixes)
+
+Two defects in `tools/lift.py` gave calls the wrong argument count. Because the oracle stubs take
+their counts from the same lift metadata, the original and the lifted copy agreed, and some wrong
+lifts passed verification:
+
+- **cdecl after a stdcall callee.** A call followed by `add esp, N` was always taken as cdecl,
+  with N/4 arguments and no pop. When the `add esp` belongs to the caller's epilogue, that is
+  wrong (0x4cfd20 calls SetWindowLongA right before `add esp, 8`). A direct callee that ends in
+  `ret N`, or an import with a known stdcall count, now pops its own arguments, whatever follows
+  the call.
+- **Arguments counted as saves.** The prologue scan treated every leading `push` as a register
+  save, so a `push 0` argument straight after the saves (0x486da0) was not counted. Only
+  register pushes are saves now.
+
+The lifter also follows a loaded register up to its spill instead of looking only three
+instructions ahead (`pointer_maybe`; 0x452960 spills `[eax + 0x15c]` four instructions later),
+so the oracle gives such fields object pointers.
+
+All 3,168 verified routines were re-lifted with the fixed lifter and compared with the old lift.
+Six changed C: 0x4cf560, 0x4dbd20, 0x4dcc70, 0x4dd040, 0x4e2b60 and 0x4e34e0. Each had lost an
+import's or a `ret N` callee's own pop. All six pass `tools/verify_one.py` again with the
+corrected counts. `tools/replace_lifted.py` put them back into their chunks (whole_6, whole_8,
+whole_9). After the swap the host title run output is byte-identical.
+
 ## Open after the completed batch
 
 - 844 attempted routines did not pass verification. The saved failure details distinguish
