@@ -192,7 +192,13 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
     reader = global_reader(cpu, before, native_shadow)
     globals_ = Globals(reader, None)
     completed = skipped_cases = 0
-    for case in range(args.cases):
+    # With tolerated faults, inputs on which the original itself faults do not count: keep drawing
+    # inputs (at most 16 times the case budget) until the budget of complete executions is reached.
+    # The pass condition below is unchanged.
+    attempts = args.cases * 16 if tolerate_faults else args.cases
+    for case in range(attempts):
+        if completed >= args.cases:
+            break
         if patch:
             pool.fill(rng, lambda handle, data: patch(rng, handle, data))
         else:

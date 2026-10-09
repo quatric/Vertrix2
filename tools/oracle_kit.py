@@ -93,5 +93,12 @@ class Pool:
                    for h in self.handles)
 
     def diff(self):
-        return [hex(h) for h in self.handles
-                if self.buffers[h].raw != bytes(self.cpu.mem_read(h, self.size))]
+        """The objects that differ, each with its first differing offset and the native and
+        original bytes there."""
+        result = []
+        for h in self.handles:
+            native, original = self.buffers[h].raw, bytes(self.cpu.mem_read(h, self.size))
+            if native != original:
+                at = next(i for i in range(self.size) if native[i] != original[i])
+                result.append((hex(h), hex(at), native[at], original[at]))
+        return result

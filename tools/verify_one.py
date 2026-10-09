@@ -94,7 +94,21 @@ def co_create(cpu, rng, eax, edx, ebx, ecx, stack):
     return OBJECT
 
 
-com = {0x4f175c: co_create} if 0x4f175c in imports else None
+def string_store(cpu, rng, eax, edx, ebx, ecx, stack):
+    """0x4ca280 and 0x4ca370 store a new string pointer through eax (lift_call stores the value the
+    callee reports there): the stub stores the same drawn value in the original."""
+    value = rng.choice([0, 0x806000, rng.getrandbits(32)])
+    try:
+        cpu.mem_write(eax, struct.pack('<I', value))
+    except Exception:  # noqa: BLE001 - map the page of a garbage pointer
+        cpu.mem_map(eax & ~0xfff, 0x2000)
+        cpu.mem_write(eax, struct.pack('<I', value))
+    return value
+
+
+com = {0x4f175c: co_create} if 0x4f175c in imports else {}
+com.update({t: string_store for t in (0x4ca280, 0x4ca370) if '0x%x' % t in meta['callees']})
+com = com or None
 spec = dict(effects=com, fixed_returns={0x4f175c: 0} if com else None, address=meta['address'], arguments=meta['arguments'], small=True, keep=tuple(slots) + tuple(pointer_globals) + tuple(imports), mixed=True, handles=True, automap=True, tolerate=True, smallregs=SMALL,
             pool_size=0x1000, patch=vtable_patch,
             setup_case=lambda rng, pool, cpu, kwargs: vtable_setup(cpu),
