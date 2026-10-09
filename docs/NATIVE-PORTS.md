@@ -5,6 +5,9 @@ Routines whose batch lift did not pass verification
 lifted callers that reach them fall through to the platform. A hand
 recovery can take their place in the dispatch table:
 
+`tools/port_oracle.py` is the shared oracle harness for these ports (mirrored regions, object
+and global modes).
+
 1. Write it over the original's address space with
    `source/native_memory.[ch]`. An address the services resolve is used in
    place. Any other address is read through `VertrixGlobals` and stored
@@ -21,6 +24,7 @@ recovery can take their place in the dispatch table:
 | `0x410270` | S3M pattern converter (`docs/S3M-PATTERN.md`) | `source/s3m_pattern.c` | `tools/verify_s3m_pattern.py`, `docs/s3m-pattern-verification.json` |
 | `0x4327e0` | Slot kind snapshot (28 lifted call sites) | `source/native_ports.c` | `tools/verify_kind_snapshot.py`, `docs/kind-snapshot-verification.json` |
 | `0x4046e0` | Coded-stream bit read (24 lifted call sites) | `source/native_ports.c` | `tools/verify_bit_read.py`, `docs/bit-read-verification.json` |
+| `0x4346b0` | Line-matching pass (6 lifted call sites) | `source/native_ports.c` | `tools/verify_line_pass_port.py`, `docs/line-pass-port-verification.json` |
 
 ## 0x4327e0 slot kind snapshot
 
@@ -56,3 +60,25 @@ a native reader. Verification: 4,096 complete original executions cover
 indexes below 8, wide and negative indexes, and the byte served from an
 object or from globals. The result, the order of the three global stores
 and both memory regions compare.
+
+## 0x4346b0 line pass
+
+The same algorithm as `vertrix_line_pass` (`source/match.c`): the board is
+copied, then the six directions are scanned, and runs longer than the
+threshold byte set their mask dwords to 1. Widening the oracle's domain
+beyond the earlier `tools/verify_line_pass.py` (masks 0/1, rewards below
+0x10000, game palettes) exposed two details that matter over the raw
+address space:
+
+- A cell counts as already marked only when its mask dword is exactly 1
+  (`cmp dword ptr [ecx], 1` at `0x434b70`). The native model's `!= 0`
+  agrees only for 0/1 masks.
+- The reward is a 16-bit word (`mov dx, word ptr [eax]` / `inc` / store at
+  `0x434b93`), so it wraps at 0x10000 and leaves the upper half alone.
+
+Both are harmless for `match_board`, which clears the mask and counts from
+zero, but the port follows the original. Verification: 8,192 complete
+original executions over any board byte, arbitrary mask dwords, wrapping
+rewards and any threshold byte (with garbage above `bl`). A third of the
+cases take the globals path. The full eax and the board, mask and reward
+regions compare.

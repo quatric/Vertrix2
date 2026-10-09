@@ -50,3 +50,10 @@ uint32_t vertrix_native_bit_read(const VertrixCalls *calls, const VertrixFactory
     (void)entry;
     return vertrix_port_bit_read(&memory);
 }
+
+uint32_t vertrix_native_line_pass(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                  const VertrixGlobals *globals, const LiftEntry *entry)
+{
+    VertrixNativeMemory memory = {calls, services, globals, 1};
+    return vertrix_port_line_pass(&memory, entry->eax, entry->edx, entry->ebx, entry->ecx);
+}

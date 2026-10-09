@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4346b0": {
+      "globals, found": 1071,
+      "objects, none": 3452,
+      "globals, none": 1660,
+      "objects, found": 2009
+    }
+  },
+  "scope": "Complete original 0x4346b0 executions against the address-space port over any board byte (game palettes and arbitrary values, with and without gravity), arbitrary mask dwords, reward words including 16 bit wrap-around and any threshold byte (with garbage in the upper ebx bits); a third of the cases go through the globals reader and the store pseudo call. The full eax and the board, mask and reward regions compare."
+}

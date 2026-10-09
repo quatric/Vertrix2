@@ -529,6 +529,7 @@ static const LiftedRoutine routines[] = {
     {0x433840, lifted_f433840, 272, 0},
     {0x433e20, lifted_f433e20, 216, 0},
     {0x4342f0, lifted_board_bump_counter, 64, 0},
+    {0x4346b0, vertrix_native_line_pass, 0, 0},
     {0x435e80, lifted_f435e80, 100, 0},
     {0x435f30, lifted_f435f30, 100, 0},
     {0x435fe0, lifted_board_marker_nth_by_column, 84, 0},

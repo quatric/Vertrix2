@@ -32,4 +32,8 @@ uint32_t vertrix_native_kind_snapshot(const VertrixCalls *calls,
 uint32_t vertrix_native_bit_read(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                  const VertrixGlobals *globals, const LiftEntry *entry);
 
+/* Original 0x4346b0, see native_ports.h (eax board, edx mask, bl threshold, ecx reward). */
+uint32_t vertrix_native_line_pass(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                  const VertrixGlobals *globals, const LiftEntry *entry);
+
 #endif

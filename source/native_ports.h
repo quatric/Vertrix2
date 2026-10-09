@@ -25,4 +25,13 @@ uint32_t vertrix_port_kind_snapshot(VertrixNativeMemory *memory, uint32_t slots,
  * that order. vertrix_bit_reader_next in bit_reader.h is the same on a native reader. */
 uint32_t vertrix_port_bit_read(VertrixNativeMemory *memory);
 
+/* Original 0x4346b0 (eax = 65 board bytes, five columns of 13; edx = 65 mask dwords; bl = the
+ * run threshold; ecx = the reward word): the line pass of vertrix_line_pass (game.h) over the
+ * address space. The board is copied first; runs longer than the threshold in the six directions
+ * set their mask dwords to 1. A run none of whose mask dwords was exactly 1 (cmp dword [ecx], 1 at
+ * 0x434b70; other non-zero values count as unmarked) adds one to the reward word (16 bits,
+ * wrapping, at 0x434b93) and makes the answer 1. Returns the answer (0 or 1). */
+uint32_t vertrix_port_line_pass(VertrixNativeMemory *memory, uint32_t board, uint32_t mask,
+                                uint32_t threshold, uint32_t reward);
+
 #endif
