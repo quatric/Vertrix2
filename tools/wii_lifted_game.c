@@ -93,6 +93,8 @@ int main(void)
         return 1;
     }
     WPAD_Init();
+    WPAD_SetDataFormat(WPAD_CHAN_0, WPAD_FMT_BTNS_ACC_IR);
+    WPAD_SetVRes(WPAD_CHAN_0, 640, 480);
     SYS_STDIO_Report(true);
     if (vertrix_wii_archive_open(&archive) != VERTRIX_WII_ARCHIVE_OK)
     {
@@ -158,6 +160,26 @@ int main(void)
                 if (up & keys[k].button)
                 {
                     lift_host_key(&host, keys[k].scan_code, 0);
+                }
+            }
+            {
+                /* The pointer is the original's DirectInput mouse: its position goes straight into
+                 * the mouse object (x, y words at +0x48) and A also presses mouse button 0. */
+                ir_t ir;
+                WPAD_IR(0, &ir);
+                if (ir.valid)
+                {
+                    int px = (int)ir.x < 0 ? 0 : (int)ir.x > 639 ? 639 : (int)ir.x;
+                    int py = (int)ir.y < 0 ? 0 : (int)ir.y > 479 ? 479 : (int)ir.y;
+                    host_store(&host, 0x5588f8 + 0x48, (uint32_t)px | ((uint32_t)py << 16));
+                }
+                if (down & WPAD_BUTTON_A)
+                {
+                    lift_host_mouse(&host, 12, 0x80);
+                }
+                if (up & WPAD_BUTTON_A)
+                {
+                    lift_host_mouse(&host, 12, 0);
                 }
             }
             host_store(&host, 0x5328bc, 1); /* the form is active: the device poll may run */
