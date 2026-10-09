@@ -28,4 +28,8 @@ uint32_t vertrix_native_kind_snapshot(const VertrixCalls *calls,
                                       const VertrixFactoryServices *services,
                                       const VertrixGlobals *globals, const LiftEntry *entry);
 
+/* Original 0x4046e0, see native_ports.h (no register arguments). */
+uint32_t vertrix_native_bit_read(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                 const VertrixGlobals *globals, const LiftEntry *entry);
+
 #endif

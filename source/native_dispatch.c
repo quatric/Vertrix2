@@ -42,3 +42,11 @@ uint32_t vertrix_native_kind_snapshot(const VertrixCalls *calls,
     VertrixNativeMemory memory = {calls, services, globals, 1};
     return vertrix_port_kind_snapshot(&memory, entry->eax, entry->edx, entry->ebx);
 }
+
+uint32_t vertrix_native_bit_read(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                 const VertrixGlobals *globals, const LiftEntry *entry)
+{
+    VertrixNativeMemory memory = {calls, services, globals, 1};
+    (void)entry;
+    return vertrix_port_bit_read(&memory);
+}

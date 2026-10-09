@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4046e0": {
+      "object byte, index large": 1981,
+      "global byte, index large": 836,
+      "object byte, index below 8": 893,
+      "global byte, index below 8": 386
+    }
+  },
+  "scope": "Complete original 0x4046e0 executions against the address-space port: bit indexes below 8, shift counts of 8 to 31 and wider (the eight bit shift leaves zero), negative and huge indexes moving the pointer back or forward; the byte is read from an object or from globals. The result, the order of the three global stores and both memory regions compare."
+}

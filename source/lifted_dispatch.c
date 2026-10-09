@@ -50,6 +50,7 @@ static const LiftedRoutine routines[] = {
     {0x404480, lifted_mpeg_header_decode, 80, 0},
     {0x404610, lifted_bit_reader_bits24, 76, 0},
     {0x404680, lifted_bit_reader_bits16, 76, 0},
+    {0x4046e0, vertrix_native_bit_read, 0, 0},
     {0x405e00, lifted_queue_push, 100, 0},
     {0x405ea0, lifted_queue_pop, 88, 0},
     {0x405ee0, lifted_f405ee0, 80, 0},

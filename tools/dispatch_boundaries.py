@@ -10,4 +10,5 @@ NATIVE_UNVERIFIED_BOUNDARIES = frozenset({0x48ae00, 0x475090, 0x48ac50, 0x48ad00
 NATIVE_PORTS = {0x41c7b0: ('vertrix_native_title_frame', 0, 0),
                 0x41b820: ('vertrix_native_game_frame', 0, 0),
                 0x410270: ('vertrix_native_s3m_pattern', 0, 0),
-                0x4327e0: ('vertrix_native_kind_snapshot', 0, 0)}
+                0x4327e0: ('vertrix_native_kind_snapshot', 0, 0),
+                0x4046e0: ('vertrix_native_bit_read', 0, 0)}

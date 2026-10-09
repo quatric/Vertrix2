@@ -17,4 +17,12 @@
 uint32_t vertrix_port_kind_snapshot(VertrixNativeMemory *memory, uint32_t slots, uint32_t kinds,
                                     uint32_t count);
 
+/* Original 0x4046e0: read the next bit of the coded stream, most significant first. The byte at
+ * the stream pointer (global 0x51f014) is shifted left by the low five bits of the bit index
+ * (global 0x51f018) as an eight bit value (an index of 8 or more leaves zero) and its top bit is
+ * the result. The index plus one is stored, the pointer advances by that sum shifted right
+ * arithmetically by three, and the index keeps its low three bits; the three stores happen in
+ * that order. vertrix_bit_reader_next in bit_reader.h is the same on a native reader. */
+uint32_t vertrix_port_bit_read(VertrixNativeMemory *memory);
+
 #endif

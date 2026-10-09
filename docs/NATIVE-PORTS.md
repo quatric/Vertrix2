@@ -20,6 +20,7 @@ recovery can take their place in the dispatch table:
 |---|---|---|---|
 | `0x410270` | S3M pattern converter (`docs/S3M-PATTERN.md`) | `source/s3m_pattern.c` | `tools/verify_s3m_pattern.py`, `docs/s3m-pattern-verification.json` |
 | `0x4327e0` | Slot kind snapshot (28 lifted call sites) | `source/native_ports.c` | `tools/verify_kind_snapshot.py`, `docs/kind-snapshot-verification.json` |
+| `0x4046e0` | Coded-stream bit read (24 lifted call sites) | `source/native_ports.c` | `tools/verify_bit_read.py`, `docs/bit-read-verification.json` |
 
 ## 0x4327e0 slot kind snapshot
 
@@ -42,3 +43,16 @@ pointer overwritten by an overlapping store faults as on Windows. Such
 cases, where the original itself faults, are skipped and counted. The
 batch lift had failed because of this oracle artifact and the generic
 oracle's pointer draws; the routine has no exception frame.
+
+## 0x4046e0 bit read
+
+The byte at the stream pointer (global `0x51f014`) is shifted left by the
+low five bits of the bit index (global `0x51f018`) as an eight bit operand
+(`shl bl, cl`), so an index of 8 to 31 leaves zero. The top bit is the
+result. The routine then stores index plus one, advances the pointer by
+`(index + 1) >> 3` (arithmetic) and stores the index's low three bits, in
+that order. `vertrix_bit_reader_next` (`source/bit_reader.c`) is the same on
+a native reader. Verification: 4,096 complete original executions cover
+indexes below 8, wide and negative indexes, and the byte served from an
+object or from globals. The result, the order of the three global stores
+and both memory regions compare.
