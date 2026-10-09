@@ -17,7 +17,10 @@ enum
     LIFT_HOST_IMAGE_BASE = 0x400000,
     LIFT_HOST_IMAGE_SIZE = 0x200000,
     LIFT_HOST_HEAP_BASE = 0x1000000,
+    LIFT_HOST_HEAP2_BASE = 0x20000000, /* a second block of memory (the Wii's MEM1) for the large buffers */
     LIFT_HOST_ALLOCATOR = 0x4ca000,
+    LIFT_HOST_FREEMEM = 0x4ca050, /* FreeMem (0x4ca040 jumps to it); the lifted RTL one only knows its own arenas */
+    LIFT_HOST_FREEMEM_ALIAS = 0x4ca040, /* the RTL free: eax = the block */
     LIFT_HOST_GETMEM = 0x4e7c90, /* the RTL heap allocator: eax = size, returns the block */
     LIFT_HOST_TARGETS = 64
 };
@@ -28,6 +31,11 @@ typedef struct LiftHost
     uint8_t *heap;
     uint32_t heap_size;
     uint32_t heap_top;
+    uint8_t *heap2;
+    uint32_t heap2_size;
+    uint32_t heap2_top;
+    uint32_t big_free[64];    /* freed blocks over 16 KB (addresses; the size is in the header) */
+    uint32_t free_bins[1025]; /* freed heap blocks by size / 16 (up to 16 KB), linked through the blocks */
     /* Recovered single and double arithmetic use this x87 control input (initialized to 0x037f).
      * Software arithmetic errors require a configured exception boundary; unsupported execution
      * preserves inputs/caches and increments rtl_single_failures. x87 status/traps remain
@@ -81,6 +89,9 @@ uint32_t lift_host_surface(const LiftHost *host, uint32_t surface, uint32_t *wid
                            uint32_t *height, uint32_t *pitch, uint32_t *bytes_per_pixel);
 
 /* `image` is copied into the writable image; the heap arena is supplied by the caller. */
+/* Gives the large buffers a second block of memory at LIFT_HOST_HEAP2_BASE. */
+void lift_host_set_heap2(LiftHost *host, uint8_t *memory, uint32_t size);
+void lift_host_write32(LiftHost *host, uint32_t address, uint32_t value);
 void lift_host_init(LiftHost *host, uint8_t *image, const uint8_t *original, uint8_t *heap,
                     uint32_t heap_size);
 

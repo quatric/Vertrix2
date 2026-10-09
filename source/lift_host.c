@@ -30,8 +30,18 @@ static int in_heap(const LiftHost *host, uint32_t address, unsigned size)
            (uint64_t)address + size <= (uint64_t)LIFT_HOST_HEAP_BASE + host->heap_top;
 }
 
+static int in_heap2(const LiftHost *host, uint32_t address, unsigned size)
+{
+    return host->heap2 != NULL && address >= LIFT_HOST_HEAP2_BASE &&
+           (uint64_t)address + size <= (uint64_t)LIFT_HOST_HEAP2_BASE + host->heap2_top;
+}
+
 static uint8_t *bytes_at(const LiftHost *host, uint32_t address, unsigned size)
 {
+    if (in_heap2(host, address, size))
+    {
+        return host->heap2 + (address - LIFT_HOST_HEAP2_BASE);
+    }
     if (in_image(address, size))
     {
         return host->image + (address - LIFT_HOST_IMAGE_BASE);
@@ -88,6 +98,12 @@ static void host_write(LiftHost *host, uint32_t address, unsigned size, uint32_t
 static int host_resolve(uint32_t handle, void **storage, size_t *size, void *context)
 {
     LiftHost *host = context;
+    if (in_heap2(host, handle, 1))
+    {
+        *storage = host->heap2 + (handle - LIFT_HOST_HEAP2_BASE);
+        *size = host->heap2_top - (handle - LIFT_HOST_HEAP2_BASE);
+        return 1;
+    }
     if (!in_heap(host, handle, 1))
     {
         return 0;
@@ -97,22 +113,123 @@ static int host_resolve(uint32_t handle, void **storage, size_t *size, void *con
     return 1;
 }
 
+extern uint32_t vertrix_lifted_skip[8];
+
+static uint32_t heap_get32(const LiftHost *host, uint32_t offset)
+{
+    const uint8_t *p = host->heap + offset;
+    return (uint32_t)p[0] | (uint32_t)p[1] << 8 | (uint32_t)p[2] << 16 | (uint32_t)p[3] << 24;
+}
+
+static void heap_put32(LiftHost *host, uint32_t offset, uint32_t value)
+{
+    uint8_t *p = host->heap + offset;
+    p[0] = (uint8_t)value;
+    p[1] = (uint8_t)(value >> 8);
+    p[2] = (uint8_t)(value >> 16);
+    p[3] = (uint8_t)(value >> 24);
+}
+
+/* Every block carries a 16-byte header (rounded size, freed flag). A freed block of up to 16 KB
+ * goes to the bin of its size and the next request of that size takes it again, so the many small
+ * objects the original creates and destroys do not use up the Wii's memory. */
 static uint32_t host_allocate(uint32_t size, void *context)
 {
     LiftHost *host = context;
-    uint32_t address = LIFT_HOST_HEAP_BASE + host->heap_top;
     uint32_t rounded = (size + 15u) & ~15u;
     /* A slack after the large pixel buffers: the load screen's progress bar copies a row
      * wider than the target once its step count passes the total, and the next block must
      * not be the surface object that follows. */
     uint32_t slack = size >= 0x10000u ? 0x4000u : 0u;
-    if (rounded + slack > host->heap_size - host->heap_top)
+    uint32_t bin = rounded / 16u, offset;
+    if (size >= 0x100000u && host->heap2 != NULL && 16u + rounded + slack <= host->heap2_size - host->heap2_top)
+    {
+        uint32_t base = host->heap2_top;
+        memset(host->heap2 + base, 0, 16u + rounded + slack);
+        host->heap2_top += 16u + rounded + slack;
+        return LIFT_HOST_HEAP2_BASE + base + 16u;
+    }
+    if (getenv("TRACE_ALLOC") && size >= 0x20000u)
+        fprintf(stderr, "alloc %u at top %x\n", (unsigned)size, (unsigned)host->heap_top);
+    if (slack == 0 && bin < 1025u && host->free_bins[bin] != 0)
+    {
+        offset = host->free_bins[bin] - LIFT_HOST_HEAP_BASE;
+        host->free_bins[bin] = heap_get32(host, offset);
+        memset(host->heap + offset, 0, rounded);
+        heap_put32(host, offset - 12, 0);
+        return LIFT_HOST_HEAP_BASE + offset;
+    }
+    if (rounded > 1024u * 16u)
+    {
+        unsigned i, best = 64;
+        uint32_t best_size = 0;
+        for (i = 0; i < 64; i++)
+        {
+            uint32_t block = host->big_free[i], have;
+            if (block == 0)
+            {
+                continue;
+            }
+            have = heap_get32(host, block - LIFT_HOST_HEAP_BASE - 8u);
+            if (have >= rounded + slack && have <= rounded + slack + rounded / 4u && (best == 64 || have < best_size))
+            {
+                best = i;
+                best_size = have;
+            }
+        }
+        if (best != 64)
+        {
+            offset = host->big_free[best] - LIFT_HOST_HEAP_BASE;
+            host->big_free[best] = 0;
+            memset(host->heap + offset, 0, best_size);
+            (void)best_size;
+            heap_put32(host, offset - 12, 0);
+            return LIFT_HOST_HEAP_BASE + offset;
+        }
+    }
+    if (16u + rounded + slack > host->heap_size - host->heap_top)
     {
         return 0;
     }
-    memset(host->heap + host->heap_top, 0, rounded + slack);
-    host->heap_top += rounded + slack;
-    return address;
+    offset = host->heap_top + 16u;
+    memset(host->heap + host->heap_top, 0, 16u + rounded + slack);
+    heap_put32(host, host->heap_top, rounded);
+    heap_put32(host, host->heap_top + 8u, rounded + slack);
+    host->heap_top += 16u + rounded + slack;
+    return LIFT_HOST_HEAP_BASE + offset;
+}
+
+static void host_release(LiftHost *host, uint32_t address)
+{
+    uint32_t offset, rounded;
+    if (address < LIFT_HOST_HEAP_BASE + 16u || address - LIFT_HOST_HEAP_BASE >= host->heap_top)
+    {
+        return;
+    }
+    offset = address - LIFT_HOST_HEAP_BASE;
+    rounded = heap_get32(host, offset - 16u);
+    if (rounded == 0 || (rounded & 15u) != 0 || heap_get32(host, offset - 12u) != 0)
+    {
+        return;
+    }
+    if (rounded > 1024u * 16u)
+    {
+        unsigned i;
+        for (i = 0; i < 64; i++)
+        {
+            if (host->big_free[i] == 0)
+            {
+                heap_put32(host, offset - 12u, 1);
+                host->big_free[i] = address;
+                return;
+            }
+        }
+        return;
+    }
+    if (getenv("TRACE_FREE")) fprintf(stderr, "free %x size %u\n", (unsigned)address, (unsigned)rounded);
+    heap_put32(host, offset - 12u, 1);
+    heap_put32(host, offset, host->free_bins[rounded / 16u]);
+    host->free_bins[rounded / 16u] = address;
 }
 
 static void host_write(LiftHost *host, uint32_t address, unsigned size, uint32_t value);
@@ -1155,6 +1272,11 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
         host_write(host, site->eax, site->stack, site->edx);
         return 0;
     }
+    if (site->target == LIFT_HOST_FREEMEM || site->target == LIFT_HOST_FREEMEM_ALIAS)
+    {
+        host_release(host, site->eax);
+        return 0;
+    }
     if (site->target == LIFT_HOST_ALLOCATOR || site->target == LIFT_HOST_GETMEM)
     {
         return host_allocate(site->eax, host);
@@ -1176,10 +1298,32 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
     return 0;
 }
 
+void lift_host_set_heap2(LiftHost *host, uint8_t *memory, uint32_t size)
+{
+    host->heap2 = memory;
+    host->heap2_size = size;
+    host->heap2_top = 0;
+}
+
+void lift_host_write32(LiftHost *host, uint32_t address, uint32_t value)
+{
+    unsigned i;
+    for (i = 0; i < 4; i++)
+    {
+        uint8_t *byte = bytes_at(host, address + i, 1);
+        if (byte != NULL)
+        {
+            *byte = (uint8_t)(value >> (8 * i));
+        }
+    }
+}
+
 void lift_host_init(LiftHost *host, uint8_t *image, const uint8_t *original, uint8_t *heap,
                     uint32_t heap_size)
 {
     memset(host, 0, sizeof *host);
+    vertrix_lifted_skip[0] = LIFT_HOST_FREEMEM_ALIAS; /* the host frees heap blocks itself */
+    vertrix_lifted_skip[1] = LIFT_HOST_FREEMEM;
     memcpy(image, original, LIFT_HOST_IMAGE_SIZE);
     host->image = image;
     host->heap = heap;
