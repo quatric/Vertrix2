@@ -120,6 +120,7 @@ static const LiftedRoutine routines[] = {
     {0x40f910, lifted_object_attach_item, 100, 0},
     {0x40f9e0, lifted_f40f9e0, 308, 0},
     {0x410150, lifted_pitch_curve, 72, 0},
+    {0x410270, vertrix_native_s3m_pattern, 0, 0},
     {0x4108a0, lifted_f4108a0, 416, 0},
     {0x411280, lifted_f411280, 80, 0},
     {0x4112d0, lifted_f4112d0, 468, 0},

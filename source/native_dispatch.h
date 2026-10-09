@@ -17,4 +17,10 @@ uint32_t vertrix_native_game_frame(const VertrixCalls *calls,
                                    const VertrixFactoryServices *services,
                                    const VertrixGlobals *globals, const LiftEntry *entry);
 
+/* Original 0x410270, see s3m_pattern.h (eax channels, edx data, ebx length, ecx map, one stack
+ * argument: the pattern record). */
+uint32_t vertrix_native_s3m_pattern(const VertrixCalls *calls,
+                                    const VertrixFactoryServices *services,
+                                    const VertrixGlobals *globals, const LiftEntry *entry);
+
 #endif
