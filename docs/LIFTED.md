@@ -53,6 +53,37 @@ the host against the original's static data and a heap arena and prints every ca
 the platform boundary. The four lifted screens (0x465af0, 0x466d60, 0x46c9d0, 0x46b810) run to
 completion this way; their remaining boundary targets are listed by the probe.
 
+## Oracle and lifter fixes (re-verification of the failures)
+
+Two defects made correct lifts fail, and one made a lift wrong:
+
+- **Oracle, global reads.** The original runs first, and the lifted copy used to read globals
+  (and any memory outside the pool, such as page zero, which small register values reach) from
+  the memory the original *left behind*. A routine that reads its own outputs (the line pass
+  `0x4346b0` reads the mask it marks; the figure pass `0x434ee0` likewise) then saw every cell
+  already marked and answered 0. `tools/oracle_screen.py` now records the bytes the original
+  overwrites (a write hook) and forwards the native stores. A global read returns the native
+  code's own store, else the byte from before the original ran, else memory. A random sample of
+  40 previously passing routines still passes.
+- **Lifter, entry order.** Code is emitted in address order, so a routine that jumps to a shared
+  tail *below* its entry (`0x47f410` jumps to `xor eax, eax; ret` at `0x47ed00`) started executing
+  at that tail. `tools/lift.py` now begins with a jump to the entry label in that case.
+
+With both fixes all 463 failures were re-lifted and re-verified (64 cases in each oracle mode):
+**226 now pass**, recorded under `reverifications` in `docs/lifted-batch-verification.json`
+(`tools/merge_batch_results.py`). 225 are in `source/lifted_whole_8.[ch]`
+(`docs/lift/whole_8.json`) and the dispatcher, which now has 3,080 entries. The verified copies
+were dropped from the unverified tier (`tools/drop_unverified.py`). Two passing routines stay
+out of the table:
+
+- `0x48b2f0` reserves a 0x6788 byte frame (`sub esp, 0x6788`). Its lifted copy would put
+  26 KB on the native stack, and the Wii thread stack budget has not been checked.
+- `0x4d88a0` (TList insert) remains the host's `host_list_insert`, listed in
+  `NATIVE_UNVERIFIED_BOUNDARIES`.
+
+The host title run (`tools/host_title.c`, 200 frames) renders the same 4,704 back-buffer pixels
+with no boundary calls. 237 routines still fail.
+
 ## Open after the completed batch
 
 - 844 attempted routines did not pass verification. The saved failure details distinguish

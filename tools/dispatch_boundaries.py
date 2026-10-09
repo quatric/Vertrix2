@@ -3,7 +3,10 @@ exists (verified or not)."""
 
 # 0x48ae00: the host JPEG boundary currently returns no bitmap; it is not a verified decoder.
 # 0x475090: the palette table builder, done by the recovered palette_tables.c (too slow lifted).
-NATIVE_UNVERIFIED_BOUNDARIES = frozenset({0x48ae00, 0x475090, 0x48ac50, 0x48ad00, 0x4e0f8b, 0x4cd8b0})
+# 0x4d88a0: the TList insert, served by host_list_insert in lift_host.c (its lift verifies since
+# the oracle forwards global reads, but the host keeps its own list growth).
+NATIVE_UNVERIFIED_BOUNDARIES = frozenset({0x48ae00, 0x475090, 0x48ac50, 0x48ad00, 0x4e0f8b, 0x4cd8b0,
+                                          0x4d88a0})
 
 # Hand-recovered routines the dispatcher runs instead of a lifted copy: address -> (entry point in
 # source/native_dispatch.c, stack bytes, stack arguments).
