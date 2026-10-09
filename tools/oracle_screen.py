@@ -1,5 +1,6 @@
 """Shared pieces of the screen builder oracles: call sites, services, supplied static data reads."""
-from unicorn import UC_HOOK_MEM_READ_UNMAPPED, UC_HOOK_MEM_WRITE_UNMAPPED, UcError
+from unicorn import (UC_HOOK_MEM_READ_UNMAPPED, UC_HOOK_MEM_WRITE, UC_HOOK_MEM_WRITE_UNMAPPED,
+                     UcError)
 import ctypes as c
 import json
 import struct
@@ -37,13 +38,24 @@ def site_log(s, count):
         s.rest5, s.rest6, s.rest7, s.rest8, s.rest9, s.rest10, s.rest11, s.rest12, s.rest13)[:count]
 
 
-def global_reader(cpu):
+def global_reader(cpu, before=None, shadow=None):
+    """Read a global as the native code should see it. The original has already run, so with
+    `before` (the bytes it overwrote, as they were before it ran) and `shadow` (the native code's
+    own stores so far) a byte comes from the native stores, else from before the original ran, else
+    from the oracle's memory; without them the oracle's memory is read as is."""
     @GlobalRead
     def read(address, context):
         try:
-            return struct.unpack('<I', bytes(cpu.mem_read(address, 4)))[0]
+            raw = bytearray(cpu.mem_read(address, 4))
         except UcError:
             return 0
+        if before is not None:
+            for i in range(4):
+                if address + i in shadow:
+                    raw[i] = shadow[address + i]
+                elif address + i in before:
+                    raw[i] = before[address + i]
+        return struct.unpack('<I', bytes(raw))[0]
     return read
 
 
@@ -151,6 +163,8 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
         s = site.contents
         if s.target == 0xf0000000:
             native_stores.append((s.eax, s.edx, s.stack))
+            for i in range(s.stack):
+                native_shadow[s.eax + i] = (s.edx >> (8 * i)) & 0xff
             return 0
         native_log.append(site_log(s, callees[s.target]) + tuple(
             native_extras[s.target](s) if s.target in native_extras else ()))
@@ -164,7 +178,18 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
 
     calls = Calls(call, None)
     services = Services(pool.resolve, None, None, None, None)
-    reader = global_reader(cpu)
+    # The original's overwritten bytes, recorded as it runs, and the native code's global stores:
+    # the native code reads globals through them (store-to-load forwarding), not the memory the
+    # original left behind.
+    before, native_shadow = {}, {}
+
+    def record_write(uc, access, address, size, value, user):
+        old = bytes(uc.mem_read(address, size))
+        for i in range(size):
+            before.setdefault(address + i, old[i])
+
+    cpu.hook_add(UC_HOOK_MEM_WRITE, record_write)
+    reader = global_reader(cpu, before, native_shadow)
     globals_ = Globals(reader, None)
     completed = skipped_cases = 0
     for case in range(args.cases):
@@ -180,6 +205,8 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
         outs.clear()
         native_log.clear()
         native_stores.clear()
+        native_shadow.clear()
+        before.clear()
         try:
             result = original.call(address, args=tuple(stack_args), **kwargs) & 0xffffffff
         except (UcError, RuntimeError):

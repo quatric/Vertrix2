@@ -704,6 +704,11 @@ class Lifter:
 
     def lift(self):
         order = self.order
+        # Code is emitted in address order. A routine that jumps to code below its entry (a
+        # shared `xor eax, eax; ret` tail, as 0x47f410 uses) must start with a jump to the entry.
+        if order and order[0] != self.start:
+            self.targets.add(self.start)
+            self.emit('goto L_%x;' % self.start)
         for index, address in enumerate(order):
             insn = self.insns[address]
             next_insn = self.insns.get(address + insn.size)
