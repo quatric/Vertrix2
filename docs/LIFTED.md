@@ -38,6 +38,8 @@ The four reserved screen builders each passed 4,096 complete original executions
 
 ## Dispatcher
 
+Hand recoveries can replace failing lifts in the table; see `docs/NATIVE-PORTS.md`.
+
 `tools/gen_dispatch.py` writes `source/lifted_dispatch.[ch]`: a table of every verified lifted
 routine by original address (2,617) and `VertrixLiftedCalls`, a `VertrixCalls` adapter that runs the
 lifted routine for a target when one exists and forwards everything else to the platform's call

@@ -1,5 +1,6 @@
 #include "native_dispatch.h"
 #include "game_frame.h"
+#include "native_ports.h"
 #include "s3m_pattern.h"
 #include "title_frame.h"
 
@@ -32,4 +33,12 @@ uint32_t vertrix_native_s3m_pattern(const VertrixCalls *calls,
         return 8;
     }
     return result;
+}
+
+uint32_t vertrix_native_kind_snapshot(const VertrixCalls *calls,
+                                      const VertrixFactoryServices *services,
+                                      const VertrixGlobals *globals, const LiftEntry *entry)
+{
+    VertrixNativeMemory memory = {calls, services, globals, 1};
+    return vertrix_port_kind_snapshot(&memory, entry->eax, entry->edx, entry->ebx);
 }

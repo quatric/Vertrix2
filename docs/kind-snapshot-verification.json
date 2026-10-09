@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "complete_original_executions": {
+    "0x4327e0": {
+      "globals, wrap": 753,
+      "objects, count": 753,
+      "globals, count": 1429,
+      "objects, wrap": 381,
+      "globals, overlap": 274,
+      "globals, zero": 278,
+      "objects, zero": 127,
+      "objects, overlap": 101
+    }
+  },
+  "skipped_original_faults": 637,
+  "scope": "Complete original 0x4327e0 executions against the address-space port: zero, ordinary, wrapping and huge counts, unaligned and overlapping slot and kind arrays, empty and occupied slots; two thirds of the cases serve the kinds, the slots or the objects as globals (read through the globals reader, stored through the 0xf0000000 pseudo call). The returned eax and the whole 0x20000 byte memory compare. Cases where the original itself faults on an overwritten slot pointer are skipped and counted."
+}

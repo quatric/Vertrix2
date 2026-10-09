@@ -23,4 +23,9 @@ uint32_t vertrix_native_s3m_pattern(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services,
                                     const VertrixGlobals *globals, const LiftEntry *entry);
 
+/* Original 0x4327e0, see native_ports.h (eax slots, edx kinds, ebx count). */
+uint32_t vertrix_native_kind_snapshot(const VertrixCalls *calls,
+                                      const VertrixFactoryServices *services,
+                                      const VertrixGlobals *globals, const LiftEntry *entry);
+
 #endif

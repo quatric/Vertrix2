@@ -77,7 +77,7 @@ def main():
     parser.add_argument('--build-dir', type=Path, required=True)
     parser.add_argument('--cases', type=int, default=4096)
     args = parser.parse_args()
-    n = build(args.build_dir, 's3m-pattern', ['s3m_pattern.c', 'call_glue.c', 'actor_storage.c'])
+    n = build(args.build_dir, 's3m-pattern', ['s3m_pattern.c', 'native_memory.c', 'call_glue.c', 'actor_storage.c'])
     n.vertrix_s3m_pattern.argtypes = [c.POINTER(Calls), c.POINTER(Services), c.POINTER(Globals),
                                       U, U, U, U, U, c.POINTER(U)]
     n.vertrix_s3m_pattern.restype = c.c_int

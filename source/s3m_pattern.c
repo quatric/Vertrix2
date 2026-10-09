@@ -1,6 +1,6 @@
 #include "s3m_pattern.h"
 
-#include "actor_storage.h"
+#include "native_memory.h"
 
 enum
 {
@@ -45,59 +45,22 @@ enum
     BYTE_MASK = 0xff
 };
 
-/* The pseudo call the lifted routines store an absolute address through (LIFT_GLOBAL_STORE in
- * lift_runtime.h): eax the address, edx the value, one stack argument the width. */
-static const uint32_t GLOBAL_STORE = 0xf0000000u;
-
 /* 0x50c80c: the commands whose zero parameter repeats the channel's last one. */
 static const char MEMORY_LETTERS[] = "DEFGKLQ";
 
 /* 0x410244: the S3M stereo control SAx as an XM panning parameter (8xx). */
 static const uint8_t PANNING[8] = {0, 0xff, 0, 0xff, 0x40, 0xc0, 0x80, 0x80};
 
-typedef struct Convert
-{
-    const VertrixCalls *calls;
-    const VertrixFactoryServices *services;
-    const VertrixGlobals *globals;
-    int ok;
-} Convert;
+typedef VertrixNativeMemory Convert;
 
 static uint32_t get(Convert *v, uint32_t handle, size_t offset, unsigned width)
 {
-    void *storage;
-    size_t size;
-    uint32_t value = 0;
-    if (!v->services->resolve(handle, &storage, &size, v->services->context) ||
-        !vertrix_actor_storage_read(storage, size, offset, width, &value))
-    {
-        if (v->globals == NULL)
-        {
-            v->ok = 0;
-            return 0;
-        }
-        value = v->globals->read(handle + (uint32_t)offset, v->globals->context);
-        value &= width == DWORD_WIDTH ? 0xffffffffu : (1u << (8 * width)) - 1;
-    }
-    return value;
+    return vertrix_native_get(v, handle, offset, width);
 }
 
 static void put(Convert *v, uint32_t handle, size_t offset, unsigned width, uint32_t value)
 {
-    void *storage;
-    size_t size;
-    if (!v->services->resolve(handle, &storage, &size, v->services->context) ||
-        !vertrix_actor_storage_write(storage, size, offset, width, value))
-    {
-        uint32_t stack[1] = {width};
-        if (v->globals == NULL)
-        {
-            v->ok = 0;
-            return;
-        }
-        vertrix_calln(v->calls, GLOBAL_STORE, handle + (uint32_t)offset, value, 0, 0, stack, 1,
-                      NULL);
-    }
+    vertrix_native_put(v, handle, offset, width, value);
 }
 
 /* 0x4ec1d0 against 0x50c80c (only the low byte of the letter is compared). */
