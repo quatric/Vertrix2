@@ -3140,6 +3140,60 @@
   "virtual": [],
   "address": 4673680
  },
+ "f475660": {
+  "callees": {
+   "0x475ec0": [
+    0,
+    false
+   ],
+   "0x4ec1f7": [
+    0,
+    false
+   ],
+   "0x475840": [
+    0,
+    false
+   ]
+  },
+  "stack": 120,
+  "arguments": 0,
+  "pointer_callees": [],
+  "pointer_fields": [],
+  "pointer_globals": [],
+  "pointer_maybe": [],
+  "constants": [
+   19,
+   20,
+   21
+  ],
+  "virtual": [],
+  "address": 4675168
+ },
+ "slot_table_switch": {
+  "callees": {
+   "0x4759e0": [
+    0,
+    false
+   ],
+   "0x475a80": [
+    0,
+    false
+   ]
+  },
+  "stack": 76,
+  "arguments": 0,
+  "pointer_callees": [],
+  "pointer_fields": [],
+  "pointer_globals": [],
+  "pointer_maybe": [],
+  "constants": [
+   255,
+   256,
+   257
+  ],
+  "virtual": [],
+  "address": 4679344
+ },
  "f476aa0": {
   "callees": {
    "0x4ce740": [
@@ -15175,6 +15229,25 @@
   "constants": [],
   "virtual": [],
   "address": 5117148
+ },
+ "f4e23e0": {
+  "callees": {
+   "0x4c9ff0": [
+    0,
+    false
+   ]
+  },
+  "stack": 68,
+  "arguments": 3,
+  "pointer_callees": [
+   "0x4c9ff0"
+  ],
+  "pointer_fields": [],
+  "pointer_globals": [],
+  "pointer_maybe": [],
+  "constants": [],
+  "virtual": [],
+  "address": 5120992
  },
  "f4e3698": {
   "callees": {},

@@ -112,6 +112,7 @@ int main(void)
     form = lift_host_allocate(&host, 0x1000);
     display = lift_host_allocate(&host, 0x800);
     host_store(&host, 0x544070, display);
+    lift_host_run(&host, 0x475660, 0, 0, 0, 0, &lifted); /* input unit initialization */
     lift_host_run(&host, 0x41a080, form, 0, 0, 0, &lifted); /* master startup */
     printf("done master startup at %u ms\n", (unsigned)ticks_to_millisecs(gettime()));
     lift_host_run(&host, 0x41a540, form, 0, 0, 0, &lifted); /* loader */

@@ -67,6 +67,8 @@ enum
     LIFTED_PALETTE_COLOR_STACK = 256,
     LIFTED_RENDER_COLOR_BANK_BUILD_STACK = 184,
     LIFTED_PALETTE_TABLES_BUILD_STACK = 540,
+    LIFTED_F475660_STACK = 120,
+    LIFTED_SLOT_TABLE_SWITCH_STACK = 76,
     LIFTED_F476AA0_STACK = 380,
     LIFTED_F477390_STACK = 224,
     LIFTED_F4774E0_STACK = 132,
@@ -583,6 +585,7 @@ enum
     LIFTED_F4E0B7C_STACK = 104,
     LIFTED_F4E0C0C_STACK = 88,
     LIFTED_F4E14DC_STACK = 72,
+    LIFTED_F4E23E0_STACK = 68,
     LIFTED_F4E3698_STACK = 68,
     LIFTED_F4E55D0_STACK = 64,
     LIFTED_F4E59D0_STACK = 80,
@@ -847,6 +850,14 @@ uint32_t lifted_render_color_bank_build(const VertrixCalls *calls,
 uint32_t lifted_palette_tables_build(const VertrixCalls *calls,
                                      const VertrixFactoryServices *services,
                                      const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x475660. */
+uint32_t lifted_f475660(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x4766b0. */
+uint32_t lifted_slot_table_switch(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                  const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x476aa0. */
 uint32_t lifted_f476aa0(const VertrixCalls *calls, const VertrixFactoryServices *services,
@@ -2932,6 +2943,10 @@ uint32_t lifted_f4e0c0c(const VertrixCalls *calls, const VertrixFactoryServices 
 
 /* Original 0x4e14dc. */
 uint32_t lifted_f4e14dc(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                        const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* Original 0x4e23e0. */
+uint32_t lifted_f4e23e0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4e3698. */
