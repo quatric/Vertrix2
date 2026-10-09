@@ -103,6 +103,25 @@ to the run before the chunk was added. 150 routines still fail: 71 have too few 
 executions, 18 time out, 6 overflow a byte string, and the rest are comparison or unmapped-access
 failures.
 
+### Wii stack measurements (for the held-back frames)
+
+These are measured with `powerpc-eabi-gcc -O2 -fstack-usage` (the library's flags):
+
+- **Main thread stack.** It is libogc's `s_mainStack`, 0x20000 bytes (128 KB). That is the
+  distance to `s_excptStack` in `build/vertrix2-lifted.elf`.
+- **Lifted frames.** The largest of the 4,071 functions in the lifted chunks is 3,672 bytes
+  (`lifted_f4633b0`). All are static; none is dynamic. The lift of `0x4dce90` would take 4,688.
+- **Per nesting level.** One level of lifted nesting adds `vertrix_calln` (160 bytes),
+  `lifted_call` (32) and `vertrix_lifted_dispatch` (160). The dispatcher stops nesting at
+  `LIFTED_MAX_DEPTH` (16) and gives each level 0x4000 bytes of the emulated x86 stack. A frame
+  above 0x4000, such as `0x48b2f0`'s 0x6788, cannot fit that arena at all.
+- **Native frames.** The largest are `host_palette_build` (21,400 bytes),
+  `vertrix_palette_tables_build` (21,392) and `vertrix_font_bank_load` (11,160).
+
+Sixteen levels of the largest lifted frame come to about 64 KB, or 81 KB with `0x4dce90`. Native
+frames on the same path add to that, and no call graph yet bounds which ones can stack up. So
+`0x4dce90` stays out until the stack depth is measured on hardware or bounded from a call graph.
+
 ## Stack argument counts (lifter fixes)
 
 Two defects in `tools/lift.py` gave calls the wrong argument count. Because the oracle stubs take
