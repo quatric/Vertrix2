@@ -497,7 +497,10 @@ class Lifter:
         address = self.start
         while True:
             insn = self.insns.get(address)
-            if insn is None or not (insn.mnemonic == 'push' or
+            # Only register pushes are saves: 0x486da0 pushes an immediate argument (`push 0`)
+            # straight after its saves.
+            if insn is None or not ((insn.mnemonic == 'push' and
+                                     insn.operands[0].type == X.X86_OP_REG) or
                                     (insn.mnemonic == 'mov' and insn.op_str == 'ebp, esp') or
                                     (insn.mnemonic == 'sub' and insn.op_str.startswith('esp,'))):
                 return address
@@ -529,6 +532,9 @@ class Lifter:
             count = callee_args(target)
             if count is None:
                 raise ValueError('callee %x' % target)
+            # A callee that removes its own arguments (ret N) is not cdecl: an `add esp` after the
+            # call then belongs to the caller's epilogue.
+            cdecl = cdecl and count == 0
             if cdecl:
                 count = int(next_insn.op_str.split(',')[1], 0) // 4
             self.callees[target] = (count, cdecl)
@@ -537,6 +543,9 @@ class Lifter:
                 op.mem.segment != X.X86_REG_FS and 0x4f1000 <= op.mem.disp < 0x4f4000:
             # an import: the slot address is the target (stdcall)
             target_expr = '0x%xu' % op.mem.disp
+            # A stdcall import with arguments pops them itself: an `add esp` after the call is the
+            # caller's epilogue (0x4cfd20 calls SetWindowLongA just before `add esp, 8`).
+            cdecl = cdecl and not BY_SLOT.get(op.mem.disp)
             if cdecl:
                 count = int(next_insn.op_str.split(',')[1], 0) // 4
             else:
@@ -663,13 +672,21 @@ class Lifter:
             if ops[1].size != 4 or not mem.base or mem.index or \
                     mem.base in (X.X86_REG_EBP, X.X86_REG_ESP) or mem.segment == X.X86_REG_FS:
                 continue
-            for follower in self.order[index + 1:index + 4]:
+            # Follow the loaded register until it is overwritten (0x452960 spills [eax + 0x15c]
+            # four instructions later, after unrelated register setup).
+            for follower in self.order[index + 1:index + 12]:
                 nxt = self.insns[follower]
+                if nxt.mnemonic in ('call', 'ret', 'jmp') or nxt.mnemonic in CONDITIONS:
+                    break
                 if nxt.mnemonic == 'mov' and nxt.operands[0].type == X.X86_OP_MEM and \
                         nxt.operands[0].mem.base == X.X86_REG_EBP and \
                         nxt.operands[1].type == X.X86_OP_REG and \
                         nxt.operands[1].reg == ops[0].reg:
                     found.add(mem.disp)
+                    break
+                if nxt.operands and nxt.operands[0].type == X.X86_OP_REG and \
+                        nxt.operands[0].reg == ops[0].reg and nxt.mnemonic not in ('cmp', 'test'):
+                    break
         return found
 
     def virtual_calls(self):

@@ -17986,9 +17986,10 @@ L_4cf5a2:
         lift_store(&env, esp, 0u, 4, v);
     }
     vertrix_lift_fl = fl;
-    eax = lift_call(&env, 0x4f1a94u, eax, edx, ebx, ecx, 2, esp);
+    eax = lift_call(&env, 0x4f1a94u, eax, edx, ebx, ecx, 4, esp);
     edx = vertrix_lift_edx;
     fl = vertrix_lift_fl;
+    esp += 16u;
 L_4cf5bc:
     {
         uint32_t r = lift_add(32, esp, 0x8u, &fl);
@@ -19137,9 +19138,10 @@ uint32_t lifted_f4e34e0(const VertrixCalls *calls, const VertrixFactoryServices 
         lift_store(&env, esp, 0u, 4, v);
     }
     vertrix_lift_fl = fl;
-    eax = lift_call(&env, 0x4e3530u, eax, edx, ebx, ecx, 64, esp);
+    eax = lift_call(&env, 0x4e3530u, eax, edx, ebx, ecx, 4, esp);
     edx = vertrix_lift_edx;
     fl = vertrix_lift_fl;
+    esp += 16u;
 L_4e351f:
     {
         uint32_t r = lift_add(32, esp, 0x100u, &fl);

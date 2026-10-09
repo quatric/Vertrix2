@@ -56700,6 +56700,7 @@ L_4dbe4c:
     eax = lift_call(&env, 0x4f1c40u, eax, edx, ebx, ecx, 1, esp);
     edx = vertrix_lift_edx;
     fl = vertrix_lift_fl;
+    esp += 4u;
 L_4dbe5c:
     {
         uint32_t r = lift_add(32, esp, 0x4u, &fl);
