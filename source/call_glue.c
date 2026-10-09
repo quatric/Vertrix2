@@ -1,6 +1,10 @@
 #include "call_glue.h"
 #include "actor_storage.h"
 
+/* Debugging: an address whose stores lift_store (lift_runtime.h) and the lifted host report.
+ * Defined here so that every build of lifted routines, which always links the call glue, has it. */
+uint32_t vertrix_debug_watch;
+
 enum
 {
     STEP_COUNT = 7,

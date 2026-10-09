@@ -76,8 +76,6 @@ uint32_t lift_host_read(const LiftHost *host, uint32_t address, unsigned size)
     return value;
 }
 
-uint32_t vertrix_debug_watch; /* debugging: report stores to this address */
-
 static uint32_t host_read(uint32_t address, void *context)
 {
     return lift_host_read(context, address, 4);
