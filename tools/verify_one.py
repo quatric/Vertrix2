@@ -136,6 +136,17 @@ flag_targets = tuple(sorted({int(m.group(1), 16) for m in re.finditer(
 import lift  # noqa: E402
 
 internal = tuple(lift.trace(meta['address']))
+# Calls through a static table of routines (0x40dc50 calls [edx*4+0x4f7444]): the original reaches
+# the routines the table names, so each entry is stubbed like the call that reads it.
+for _match in re.finditer(r'lift_call\(&env, lift_load\(&env, 0u, \(\w+ \* 4u\) \+ 0x([0-9a-f]+)u, '
+                          r'4\), eax, edx, ebx, ecx, (\d+), esp\);\n\s*edx = vertrix_lift_edx;\n'
+                          r'\s*fl = vertrix_lift_fl;\n(\s*esp \+= )?', source_text):
+    _table, _count = int(_match.group(1), 16), int(_match.group(2))
+    for _index in range(256):
+        _entry = int.from_bytes(lift.pe.get_data(_table + 4 * _index - lift.BASE, 4), 'little')
+        if not 0x401000 <= _entry < 0x4f1000:
+            break
+        meta['callees'].setdefault('0x%x' % _entry, [_count, _count > 0 and not _match.group(3)])
 spec = dict(internal=internal, flag_targets=flag_targets, effects=com, fixed_returns={0x4f175c: 0} if com else None, address=meta['address'], arguments=meta['arguments'], small=True, keep=tuple(slots) + tuple(pointer_globals) + tuple(imports), mixed=True, handles=True, automap=True, tolerate=True, smallregs=SMALL,
             pool_size=0x1000, patch=vtable_patch,
             setup_case=lambda rng, pool, cpu, kwargs: vtable_setup(cpu),
