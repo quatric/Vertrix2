@@ -1,6 +1,6 @@
 """Shared pieces of the screen builder oracles: call sites, services, supplied static data reads."""
-from unicorn import (UC_HOOK_MEM_READ_UNMAPPED, UC_HOOK_MEM_WRITE, UC_HOOK_MEM_WRITE_UNMAPPED,
-                     UcError)
+from unicorn import (UC_HOOK_MEM_READ, UC_HOOK_MEM_READ_UNMAPPED, UC_HOOK_MEM_WRITE,
+                     UC_HOOK_MEM_WRITE_UNMAPPED, UC_MEM_WRITE, UcError)
 from unicorn.x86_const import UC_X86_REG_EFLAGS, UC_X86_REG_EIP
 import ctypes as c
 import json
@@ -236,6 +236,22 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
 
     cpu.hook_add(UC_HOOK_MEM_WRITE, record_write)
     _host_before[0] = before
+    # With the oracle's FS base of 0, address 0..3 is also the fs:[0] exception chain. Once the
+    # original has stored its own chain there, an access without the fs prefix (a null pointer,
+    # which faults on Windows) sees the chain, while the native code keeps the chain in env.chain.
+    # With tolerated faults such a case is skipped like any other original fault.
+    null_access = [False]
+    chain_written = [False]
+
+    def chain_access(uc, access, address, size, value, user):
+        eip = uc.reg_read(UC_X86_REG_EIP)
+        if 0x64 in bytes(uc.mem_read(eip, 4)):
+            chain_written[0] = chain_written[0] or access == UC_MEM_WRITE
+        elif chain_written[0]:
+            null_access[0] = True
+
+    if tolerate_faults:
+        cpu.hook_add(UC_HOOK_MEM_READ | UC_HOOK_MEM_WRITE, chain_access, begin=0, end=3)
     reader = global_reader(cpu, before, native_shadow)
     globals_ = Globals(reader, None)
     completed = skipped_cases = 0
@@ -262,8 +278,11 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
         native_shadow.clear()
         before.clear()
         flag_draws.clear()
+        null_access[0] = chain_written[0] = False
         try:
             result = original.call(address, args=tuple(stack_args), **kwargs) & 0xffffffff
+            if null_access[0]:
+                raise RuntimeError('null pointer access')
         except (UcError, RuntimeError) as error:
             if not tolerate_faults:
                 raise
