@@ -43,6 +43,22 @@ def site_log(s, count):
         s.rest5, s.rest6, s.rest7, s.rest8, s.rest9, s.rest10, s.rest11, s.rest12, s.rest13)[:count]
 
 
+# The bytes a stub effect is about to overwrite, recorded like the write hook records the original's
+# own stores (the hook does not see writes made from Python).
+_host_before = [None]
+
+
+def host_write(cpu, address, data):
+    """Write from a stub effect into the original's memory, keeping the bytes it replaces for the
+    native code's global reads."""
+    before = _host_before[0]
+    if before is not None:
+        old = bytes(cpu.mem_read(address, len(data)))
+        for i in range(len(data)):
+            before.setdefault(address + i, old[i])
+    cpu.mem_write(address, data)
+
+
 def first_difference(native, original):
     """The index of the first differing call with both entries, both lengths, and the calls
     that led there."""
@@ -219,6 +235,7 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
             before.setdefault(address + i, old[i])
 
     cpu.hook_add(UC_HOOK_MEM_WRITE, record_write)
+    _host_before[0] = before
     reader = global_reader(cpu, before, native_shadow)
     globals_ = Globals(reader, None)
     completed = skipped_cases = 0
@@ -272,6 +289,10 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
             for i in range(width):
                 shadow[store_address + i] = (value >> (8 * i)) & 0xff
         for byte_address, byte in shadow.items():
+            if byte_address < 4:
+                # fs:[0]: with the oracle's FS base of 0 the original keeps its exception chain
+                # here, the native code in env.chain; no Windows store reaches address 0..3.
+                continue
             held = bytes(cpu.mem_read(byte_address, 1))[0]
             assert held == byte, (case, hex(byte_address), held, byte)
         if post:

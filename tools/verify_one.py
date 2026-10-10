@@ -12,6 +12,8 @@ import verify_lifted  # noqa: E402
 
 import struct  # noqa: E402
 
+from oracle_screen import host_write  # noqa: E402
+
 from unicorn.x86_const import UC_X86_REG_EDX  # noqa: E402
 
 VTABLE = 0x900000
@@ -87,12 +89,12 @@ OBJECT = 0x900800
 
 
 def co_create(cpu, rng, eax, edx, ebx, ecx, stack):
-    cpu.mem_write(OBJECT, struct.pack('<I', VTABLE))
+    host_write(cpu, OBJECT, struct.pack('<I', VTABLE))
     try:
-        cpu.mem_write(stack[4], struct.pack('<I', OBJECT))
+        host_write(cpu, stack[4], struct.pack('<I', OBJECT))
     except Exception:  # noqa: BLE001 - map the page of a garbage pointer
         cpu.mem_map(stack[4] & ~0xfff, 0x2000)
-        cpu.mem_write(stack[4], struct.pack('<I', OBJECT))
+        host_write(cpu, stack[4], struct.pack('<I', OBJECT))
     return OBJECT
 
 
@@ -101,10 +103,10 @@ def string_store(cpu, rng, eax, edx, ebx, ecx, stack):
     callee reports there): the stub stores the same drawn value in the original."""
     value = rng.choice([0, 0x806000, rng.getrandbits(32)])
     try:
-        cpu.mem_write(eax, struct.pack('<I', value))
+        host_write(cpu, eax, struct.pack('<I', value))
     except Exception:  # noqa: BLE001 - map the page of a garbage pointer
         cpu.mem_map(eax & ~0xfff, 0x2000)
-        cpu.mem_write(eax, struct.pack('<I', value))
+        host_write(cpu, eax, struct.pack('<I', value))
     return value
 
 
