@@ -117,15 +117,15 @@ int main(void)
     form = lift_host_allocate(&host, 0x1000);
     display = lift_host_allocate(&host, 0x800);
     host_store(&host, 0x544070, display);
-    lift_host_run(&host, 0x4df307, 0, 0, 0, 0, &lifted); /* RTL thread-variable block */
-    lift_host_run(&host, 0x475660, 0, 0, 0, 0, &lifted); /* input unit initialization */
+    lift_host_run(&host, 0x4df307, 0, 0, 0, 0, &lifted);    /* RTL thread-variable block */
+    lift_host_run(&host, 0x475660, 0, 0, 0, 0, &lifted);    /* input unit initialization */
     lift_host_run(&host, 0x41a080, form, 0, 0, 0, &lifted); /* master startup */
     printf("done master startup at %u ms\n", (unsigned)ticks_to_millisecs(gettime()));
     lift_host_run(&host, 0x41a540, form, 0, 0, 0, &lifted); /* loader */
     printf("done loader at %u ms\n", (unsigned)ticks_to_millisecs(gettime()));
     lift_host_run(&host, 0x45dca0, 0, 0, 0, 0, &lifted); /* sprite banks */
     printf("done sprite banks at %u ms\n", (unsigned)ticks_to_millisecs(gettime()));
-    lift_host_run(&host, 0x45dca0, 0, 0, 0, 0, &lifted);    /* sprite banks */
+    lift_host_run(&host, 0x45dca0, 0, 0, 0, 0, &lifted); /* sprite banks */
     printf("done sprite banks at %u ms\n", (unsigned)ticks_to_millisecs(gettime()));
     base = lift_host_surface(&host, host.primary_surface, &width, &height, &pitch, &bytes);
     gather(&host, base);
@@ -149,10 +149,14 @@ int main(void)
         {
             /* The remote becomes the original's DirectInput keyboard: held sideways, the D-pad is
              * the arrow keys, A Enter, B Space, 1 and 2 Z and X, minus Escape. */
-            static const struct { uint32_t button; unsigned scan_code; } keys[] = {
-                {WPAD_BUTTON_UP, 0xc8}, {WPAD_BUTTON_DOWN, 0xd0}, {WPAD_BUTTON_LEFT, 0xcb},
-                {WPAD_BUTTON_RIGHT, 0xcd}, {WPAD_BUTTON_A, 0x1c}, {WPAD_BUTTON_B, 0x39},
-                {WPAD_BUTTON_1, 0x2c}, {WPAD_BUTTON_2, 0x2d}, {WPAD_BUTTON_MINUS, 0x01}};
+            static const struct
+            {
+                uint32_t button;
+                unsigned scan_code;
+            } keys[] = {
+                {WPAD_BUTTON_UP, 0xc8},    {WPAD_BUTTON_DOWN, 0xd0}, {WPAD_BUTTON_LEFT, 0xcb},
+                {WPAD_BUTTON_RIGHT, 0xcd}, {WPAD_BUTTON_A, 0x1c},    {WPAD_BUTTON_B, 0x39},
+                {WPAD_BUTTON_1, 0x2c},     {WPAD_BUTTON_2, 0x2d},    {WPAD_BUTTON_MINUS, 0x01}};
             uint32_t down = WPAD_ButtonsDown(0), up = WPAD_ButtonsUp(0);
             unsigned k;
             for (k = 0; k < sizeof keys / sizeof keys[0]; k++)
@@ -176,7 +180,8 @@ int main(void)
                     int px = (int)ir.x < 0 ? 0 : (int)ir.x > 639 ? 639 : (int)ir.x;
                     int py = (int)ir.y < 0 ? 0 : (int)ir.y > 479 ? 479 : (int)ir.y;
                     host_store(&host, 0x5588f8 + 0x48, (uint32_t)px | ((uint32_t)py << 16));
-                    lift_host_mouse(&host, 0, 0); /* a motion event makes the poll publish the position */
+                    lift_host_mouse(&host, 0,
+                                    0); /* a motion event makes the poll publish the position */
                 }
                 if (down & WPAD_BUTTON_A)
                 {
@@ -194,9 +199,12 @@ int main(void)
                 static unsigned n;
                 static int started;
                 static unsigned last_n;
-                static const struct { unsigned at; int x, y; } moves[] = {
-                    {150, 320, 350}, {190, 320, 402}, {230, 320, 402}, {320, 330, 130},
-                    {360, 330, 130}, {400, 415, 445}, {440, 415, 445}, {480, 415, 445}};
+                static const struct
+                {
+                    unsigned at;
+                    int x, y;
+                } moves[] = {{150, 320, 350}, {190, 320, 402}, {230, 320, 402}, {320, 330, 130},
+                             {360, 330, 130}, {400, 415, 445}, {440, 415, 445}, {480, 415, 445}};
                 unsigned m, ph;
                 if (handler == 0x41b820)
                 {
@@ -207,19 +215,22 @@ int main(void)
                 {
                     menu_ms = tick;
                 }
-                /* the host tool steps the clock 120 ms per tick and its menu first runs at tick 89 */
+                /* the host tool steps the clock 120 ms per tick and its menu first runs at tick 89
+                 */
                 n = started ? 89 + (tick - menu_ms) / 120 : 89;
                 ph = n >= 150 ? (n - 150) % 40 : 0;
                 if (handler == 0x41c7b0 || handler == 0x41d0e0)
                 {
                     /* players selection: the GO preview; ready to fight: YES */
-                    host_store(&host, 0x5588f8 + 0x48, handler == 0x41c7b0 ? (330u | (130u << 16)) : (415u | (445u << 16)));
+                    host_store(&host, 0x5588f8 + 0x48,
+                               handler == 0x41c7b0 ? (330u | (130u << 16)) : (415u | (445u << 16)));
                 }
                 for (m = 0; m < sizeof moves / sizeof moves[0] && handler == 0x41b820; m++)
                 {
                     if (moves[m].at <= n && moves[m].at > last_n)
                     {
-                        host_store(&host, 0x5588f8 + 0x48, (uint32_t)moves[m].x | ((uint32_t)moves[m].y << 16));
+                        host_store(&host, 0x5588f8 + 0x48,
+                                   (uint32_t)moves[m].x | ((uint32_t)moves[m].y << 16));
                         printf("autoplay move %d %d at n %u\n", moves[m].x, moves[m].y, n);
                     }
                 }
@@ -229,8 +240,13 @@ int main(void)
                     {
                         lift_host_mouse(&host, 12, 0x80);
                         pressed = 1;
-                        printf("autoplay press at n %u, screen %u\n", n, (unsigned)lift_host_read(&host, 0x532a4c, 4));
-                        printf("  mouse pos %u,%u raw %x flag553648 %x\n", (unsigned)lift_host_read(&host, 0x5588f8 + 0x48, 2), (unsigned)lift_host_read(&host, 0x5588f8 + 0x4a, 2), (unsigned)lift_host_read(&host, 0x558944, 4), (unsigned)lift_host_read(&host, 0x553648, 4));
+                        printf("autoplay press at n %u, screen %u\n", n,
+                               (unsigned)lift_host_read(&host, 0x532a4c, 4));
+                        printf("  mouse pos %u,%u raw %x flag553648 %x\n",
+                               (unsigned)lift_host_read(&host, 0x5588f8 + 0x48, 2),
+                               (unsigned)lift_host_read(&host, 0x5588f8 + 0x4a, 2),
+                               (unsigned)lift_host_read(&host, 0x558944, 4),
+                               (unsigned)lift_host_read(&host, 0x553648, 4));
                     }
                     if (n >= 150 && (ph >= 25 || ph < 2) && pressed)
                     {
@@ -240,7 +256,12 @@ int main(void)
                 }
                 if (n >= 150 && n <= 160 && n != last_n)
                 {
-                    printf("  slot state %x list %x,%x,%x pending %u/%u\n", (unsigned)lift_host_read(&host, 0x5501c4, 1), (unsigned)lift_host_read(&host, 0x5501e4, 4), (unsigned)lift_host_read(&host, 0x5501e8, 4), (unsigned)lift_host_read(&host, 0x5501ec, 4), host.mouse_head, host.mouse_tail);
+                    printf("  slot state %x list %x,%x,%x pending %u/%u\n",
+                           (unsigned)lift_host_read(&host, 0x5501c4, 1),
+                           (unsigned)lift_host_read(&host, 0x5501e4, 4),
+                           (unsigned)lift_host_read(&host, 0x5501e8, 4),
+                           (unsigned)lift_host_read(&host, 0x5501ec, 4), host.mouse_head,
+                           host.mouse_tail);
                 }
                 if (started)
                 {
@@ -248,12 +269,17 @@ int main(void)
                 }
                 if (started && n != last_n && (n == 156 || n == 170 || n == 200))
                 {
-                    uint32_t cnt = lift_host_read(&host, 0x546724, 4), arr = lift_host_read(&host, 0x546720, 4), q;
-                    printf("  actors %u mouse %u,%u hover %x:", (unsigned)cnt, (unsigned)lift_host_read(&host, 0x5588f8 + 0x48, 2), (unsigned)lift_host_read(&host, 0x5588f8 + 0x4a, 2), (unsigned)lift_host_read(&host, 0x558944, 4));
+                    uint32_t cnt = lift_host_read(&host, 0x546724, 4),
+                             arr = lift_host_read(&host, 0x546720, 4), q;
+                    printf("  actors %u mouse %u,%u hover %x:", (unsigned)cnt,
+                           (unsigned)lift_host_read(&host, 0x5588f8 + 0x48, 2),
+                           (unsigned)lift_host_read(&host, 0x5588f8 + 0x4a, 2),
+                           (unsigned)lift_host_read(&host, 0x558944, 4));
                     for (q = 0; q < cnt && q < 12; q++)
                     {
                         uint32_t a = lift_host_read(&host, arr + 4 * q, 4);
-                        printf(" [t%x h%x]", (unsigned)lift_host_read(&host, a + 0x14c, 4), (unsigned)lift_host_read(&host, a + 0x154, 4));
+                        printf(" [t%x h%x]", (unsigned)lift_host_read(&host, a + 0x14c, 4),
+                               (unsigned)lift_host_read(&host, a + 0x154, 4));
                     }
                     printf("\n");
                     {
@@ -274,13 +300,15 @@ int main(void)
             }
 #endif
             host_store(&host, 0x5328bc, 1); /* the form is active: the device poll may run */
-            lift_host_run(&host, 0x4b7b80, 0, 0, 0, 0, &lifted); /* the 14 ms timer: polls the devices */
+            lift_host_run(&host, 0x4b7b80, 0, 0, 0, 0,
+                          &lifted); /* the 14 ms timer: polls the devices */
         }
         {
             static unsigned loops;
             if (++loops % 5000 == 0)
             {
-                printf("loop %u at %u ms, handler %x\n", loops, (unsigned)(tick - start), (unsigned)handler);
+                printf("loop %u at %u ms, handler %x\n", loops, (unsigned)(tick - start),
+                       (unsigned)handler);
             }
         }
         host.clock_ms = tick - start;
