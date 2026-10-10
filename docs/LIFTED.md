@@ -243,6 +243,24 @@ are already recovered natively and stay with the host code: 0x40dc50 (`source/se
 and 0x482550 and 0x482640 (`source/random.c`). 0x479450 (`source/surface_pixel_ops.h`) times out.
 102 routines still fail. With `ALARM=300`, the host title output is identical.
 
+### The fs:[0] chain apart from page zero
+
+The oracle's Unicorn CPU had an FS base of 0, so the original kept its exception chain at address
+0..3, where null-pointer accesses also land. The two page-zero rules above worked around that.
+Their EIP test is unreliable, because Unicorn reports a stale EIP inside memory hooks. 0x415860
+ends with `mov fs:[0], eax` right after a call, and every case of it was skipped as a null
+access. Since 32-bit Unicorn has no FS base register, `oracle_screen.separate_fs` loads a GDT
+instead. In it, FS points at a thread block at 0x7ffdf000, and flat 32-bit segments serve
+CS/SS/DS/ES. Without the flat segments, loading the GDT turns the stack 16-bit, and pushes wrap
+at 64 KB. With fs:[0] away from page zero, both rules are gone. `verify_lifted.py` now gives the
+native code the chain from the thread block.
+
+350 verified routines use `env.chain`. They were lifted again, and every one is identical to the
+checked-in code. Each was then verified under the new layout: **348 pass**. The other two show no
+mismatch, but they complete too few original executions. 0x4e0c56 completes 4 of the 16 it needs,
+because its heap free-list merge at 0x4e0cef loops forever on some drawn lists. 0x4b3140
+completes 6. The regression sample still passes.
+
 0x4d7110 is not a real entry point. It makes three pushes and two pops before its `ret`, so
 its failures are expected.
 
