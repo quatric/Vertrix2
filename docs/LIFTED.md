@@ -147,6 +147,38 @@ import's or a `ret N` callee's own pop. All six pass `tools/verify_one.py` again
 corrected counts. `tools/replace_lifted.py` put them back into their chunks (whole_6, whole_8,
 whole_9). After the swap the host title run output is byte-identical.
 
+## Third re-verification (oracle modelling of helper results)
+
+The oracle (`tools/oracle_screen.py`, `tools/oracle_kit.py`, `tools/verify_one.py`) now models
+three more ways a stubbed callee hands back results:
+
+- **Pair results.** `lift_call` takes edx from the call's out value for the RTL arithmetic
+  helpers (0x4d809c, 0x4d80a6, 0x4d8177, 0x4d81fe, 0x4db350, 0x4db507, 0x4eb652). The stub
+  leaves a drawn edx in the original, and the native call reports the same value (0x405720
+  passes edx from 0x4d809c on to 0x4eb526).
+- **Flag results.** Some callees answer in the flags, such as the double compare 0x4eb57c that
+  0x405720 follows with `jle`. For these, the stub sets drawn flags in the original, and the
+  native call writes them to `vertrix_lift_fl`, as a lifted callee does. A callee counts as a
+  flag callee when the lifted caller tests `fl` right after the call.
+- **Callees inside the routine.** 0x4e5710 and its neighbours jump or fall into the body at
+  0x4e57ac, which they also call recursively. A stub on an address among the routine's own
+  instructions now runs only when a direct `call` entered it.
+
+A failing case now reports the first differing call, with the calls that led to it, ahead of the
+returned value. A run with too few complete executions reports the commonest reasons the
+original failed (fault kind and EIP). The 40-routine regression sample still passes.
+
+The 150 failures were re-lifted with the fixed lifter and verified again: **30 pass**. All 30 are
+in `source/lifted_whole_10.[ch]` (`docs/lift/whole_10.json`), and the dispatcher has 3,196
+entries; nine of the 30 left the unverified tier. 120 routines still fail. Most of those never
+complete in the oracle: heavy loops past the instruction limit (0x475090), image routines
+needing consistent dimensions, two interfaces sharing a vtable slot with different argument
+counts (0x47e890, 0x4d71d0), and the oracle's FS base of 0 overlapping page zero (0x4b7080).
+
+The host title run now takes about 23 seconds of wall time, over `tools/host_title.c`'s default
+20 second alarm. With `ALARM=300` its output is byte-identical to the run before the chunk.
+`TRACE_LIFTED=1` prints the dispatcher's call trace.
+
 ## Open after the completed batch
 
 - 844 attempted routines did not pass verification. The saved failure details distinguish

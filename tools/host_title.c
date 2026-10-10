@@ -108,6 +108,10 @@ int main(int argc, char **argv)
     host.archive = vertrix_vf_open(getenv("VF") ? getenv("VF") : "hardware-check/Vertrix2.vf");
     if (host.archive == NULL) { fprintf(stderr, "no archive\n"); return 2; }
     vertrix_lifted_allow_unverified(1);
+    if (getenv("TRACE_LIFTED"))
+    {
+        vertrix_lifted_set_trace(1);
+    }
     if (getenv("VSKIP")) { extern uint32_t vertrix_lifted_skip[8]; char *sp = getenv("VSKIP"); unsigned si = 0; while (*sp && si < 7) { vertrix_lifted_skip[si++] = (uint32_t)strtoul(sp, &sp, 16); while (*sp == ',') sp++; } }
     if (getenv("THELP"))
     {
