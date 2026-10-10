@@ -16,7 +16,9 @@ from oracle_screen import host_write  # noqa: E402
 
 from unicorn.x86_const import UC_X86_REG_EDX  # noqa: E402
 
-VTABLE = 0x900000
+# The stub vtable sits inside the mapped page 0x900000..0x910000 with room below it: Delphi
+# reaches class data through negative slots (down to -864 in 0x4bf940).
+VTABLE = 0x904000
 LEAF = 0x700404
 virtual = meta.get('virtual', [])
 meta['callees']['0x%x' % LEAF] = [0, False]
@@ -44,7 +46,7 @@ constants = meta.get('constants', [])
 
 def vtable_patch(rng, handle, data):
     for offset in meta.get('pointer_maybe', []):
-        if offset + 4 <= len(data) and rng.random() < 0.6:
+        if 0 <= offset and offset + 4 <= len(data) and rng.random() < 0.6:
             data[offset:offset + 4] = rng.choice(
                 [0x806000 + 0x1000 * i for i in range(4)]).to_bytes(4, 'little')
     for offset, size in scalar_reads:

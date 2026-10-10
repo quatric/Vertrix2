@@ -72,7 +72,9 @@ def run(name, spec=None, meta=None, source=None):
 
     def patch(rng, handle, data):
         for offset in fields:
-            if offset + 4 <= len(data):
+            # A negative offset (a field below the object, such as a string's length at -4) is
+            # in the previous pool object; a slice assignment there would insert bytes.
+            if 0 <= offset and offset + 4 <= len(data):
                 data[offset:offset + 4] = rng.choice(
                     [0x806000 + spec.get('pool_size', 0x200) * i for i in range(4)]).to_bytes(4, 'little')
         if user_patch:

@@ -306,7 +306,8 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
         shadow = {}
         for store_address, value, width in native_stores:
             for i in range(width):
-                shadow[store_address + i] = (value >> (8 * i)) & 0xff
+                # A store at the top of memory wraps to address 0 as in the original.
+                shadow[(store_address + i) & 0xffffffff] = (value >> (8 * i)) & 0xff
         for byte_address, byte in shadow.items():
             if byte_address < 4:
                 # fs:[0]: with the oracle's FS base of 0 the original keeps its exception chain
