@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/iosupport.h>
 #include <wiiuse/wpad.h>
 
 #include "jpeg_decode.h"
@@ -34,6 +35,35 @@ static uint8_t pixels[WIDTH * HEIGHT * 4];
 static void host_store(LiftHost *host, uint32_t address, uint32_t value)
 {
     lift_host_write32(host, address, value);
+}
+
+/* Console output is also written to sd:/apps/vertrix2/log.txt, so the last lines before an exit
+ * to the menu can be read afterwards. */
+static FILE *log_file;
+static const devoptab_t *console_out;
+static devoptab_t tee_out;
+
+static ssize_t tee_write(struct _reent *r, void *fd, const char *data, size_t length)
+{
+    if (log_file != NULL)
+    {
+        fwrite(data, 1, length, log_file);
+        fflush(log_file);
+    }
+    return console_out->write_r(r, fd, data, length);
+}
+
+static void log_to_sd(void)
+{
+    log_file = fopen("sd:/apps/vertrix2/log.txt", "w");
+    if (log_file == NULL)
+    {
+        return;
+    }
+    console_out = devoptab_list[STD_OUT];
+    tee_out = *console_out;
+    tee_out.write_r = tee_write;
+    devoptab_list[STD_OUT] = &tee_out;
 }
 
 static void fail(const char *message)
@@ -89,6 +119,7 @@ int main(void)
     {
         fail("Could not read sd:/apps/vertrix2/Vertrix2.vf.");
     }
+    log_to_sd();
     heap = (uint8_t *)SYS_GetArena2Lo();
     heap_size = (uint32_t)SYS_GetArena2Hi() - (uint32_t)heap;
     if (heap_size < 48u * 1024 * 1024 + HEAP_RESERVE)
@@ -144,6 +175,7 @@ int main(void)
         WPAD_ScanPads();
         if (WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME)
         {
+            printf("HOME pressed at %u ms\n", (unsigned)(tick - start));
             break;
         }
         {
@@ -368,10 +400,13 @@ int main(void)
                 }
             }
 #endif
-            if (!vertrix_wii_frame_texture_update(&frame, masks, &texture) ||
-                !vertrix_wii_frame_present(&video.presenter, &texture))
+            if (!vertrix_wii_frame_texture_update(&frame, masks, &texture))
             {
-                break;
+                fail("Could not update the frame texture.");
+            }
+            if (!vertrix_wii_frame_present(&video.presenter, &texture))
+            {
+                fail("Could not present the frame.");
             }
         }
     }
