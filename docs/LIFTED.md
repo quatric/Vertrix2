@@ -217,6 +217,35 @@ The 120 failures were verified again with this rule and the stub-write record: *
 routines still fail. With `ALARM=300`, the host title run's output is identical to the run before
 the chunk.
 
+## Fifth re-verification (oracle addressing fixes)
+
+Five oracle defects made correct lifts fail:
+
+- **Fields below an object.** A pointer field at a negative offset (a string length at -4) made
+  the pool patch assign to the empty slice `data[-4:0]`. That inserted four bytes, so the object
+  grew past its buffer. Negative offsets are now skipped (0x4bb4a0, 0x4c3a30, 0x4ec970).
+- **Negative class slots.** Delphi reaches class data through negative VMT offsets, down to -864
+  in 0x4bf940. The stub vtable moved from 0x900000 to 0x904000, inside the same mapped page range,
+  so these slots are mapped (0x4b9f70, 0x4ba470, 0x4ba7b0, 0x4bf940).
+- **Stores at the top of memory.** A native store at 0xffffffff that crosses into the next byte
+  wraps to address 0, as the original's does.
+- **Reads at the top of memory.** The native code's global reader fetched a dword in one read.
+  At 0xffffffff, or at the end of an unmapped page, that read failed as a whole and returned 0.
+  It now reads the bytes one at a time, with wrapped addresses.
+- **Static call tables.** 0x40dc50 calls `[edx*4+0x4f7444]`, a table of routines in the image.
+  The original reaches the routines the table names, so each entry is now stubbed with the same
+  argument count as the call that reads it.
+
+The regression sample still passes. The 114 failures were verified again: 12 pass. Nine of
+them are in `source/lifted_whole_12.[ch]`: 0x4bb4a0, 0x4c3a30, 0x4ec970, 0x4b9f70, 0x4ba470,
+0x4ba7b0, 0x4bf940, 0x4cae30 and 0x4cd819. The dispatcher now has 3,210 entries. The other three
+are already recovered natively and stay with the host code: 0x40dc50 (`source/sequencer.h`),
+and 0x482550 and 0x482640 (`source/random.c`). 0x479450 (`source/surface_pixel_ops.h`) times out.
+102 routines still fail. With `ALARM=300`, the host title output is identical.
+
+0x4d7110 is not a real entry point. It makes three pushes and two pops before its `ret`, so
+its failures are expected.
+
 ## Open after the completed batch
 
 - 844 attempted routines did not pass verification. The saved failure details distinguish

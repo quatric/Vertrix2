@@ -15,6 +15,7 @@
 #include "lifted_whole_1.h"
 #include "lifted_whole_10.h"
 #include "lifted_whole_11.h"
+#include "lifted_whole_12.h"
 #include "lifted_whole_2.h"
 #include "lifted_whole_3.h"
 #include "lifted_whole_4.h"
@@ -2287,14 +2288,18 @@ static const LiftedRoutine routines[] = {
     {0x4b9d70, lifted_f4b9d70, 76, 0},
     {0x4b9dd0, lifted_f4b9dd0, 68, 0},
     {0x4b9de0, lifted_f4b9de0, 116, 0},
+    {0x4b9f70, lifted_f4b9f70, 184, 0},
     {0x4ba210, lifted_return_zero, 64, 0},
     {0x4ba220, lifted_f4ba220, 184, 0},
+    {0x4ba470, lifted_f4ba470, 152, 0},
+    {0x4ba7b0, lifted_f4ba7b0, 484, 0},
     {0x4bb040, lifted_f4bb040, 128, 0},
     {0x4bb170, lifted_f4bb170, 112, 0},
     {0x4bb260, lifted_return_unchanged_4bb260, 64, 0},
     {0x4bb270, lifted_f4bb270, 132, 1},
     {0x4bb3d0, lifted_f4bb3d0, 100, 1},
     {0x4bb470, lifted_f4bb470, 88, 1},
+    {0x4bb4a0, lifted_f4bb4a0, 88, 1},
     {0x4bb510, lifted_f4bb510, 136, 1},
     {0x4bb6c0, lifted_f4bb6c0, 104, 0},
     {0x4bb870, lifted_f4bb870, 116, 0},
@@ -2319,6 +2324,7 @@ static const LiftedRoutine routines[] = {
     {0x4bf190, lifted_f4bf190, 84, 0},
     {0x4bf270, lifted_f4bf270, 144, 0},
     {0x4bf6a0, lifted_f4bf6a0, 112, 0},
+    {0x4bf940, lifted_f4bf940, 696, 0},
     {0x4c07d0, lifted_f4c07d0, 88, 0},
     {0x4c0860, lifted_f4c0860, 112, 0},
     {0x4c0990, lifted_object_release_links, 68, 0},
@@ -2352,6 +2358,7 @@ static const LiftedRoutine routines[] = {
     {0x4c3850, lifted_f4c3850, 80, 0},
     {0x4c38b0, lifted_f4c38b0, 104, 0},
     {0x4c3950, lifted_f4c3950, 92, 0},
+    {0x4c3a30, lifted_f4c3a30, 136, 0},
     {0x4c3be0, lifted_f4c3be0, 140, 0},
     {0x4c3e40, lifted_f4c3e40, 84, 0},
     {0x4c3e60, lifted_f4c3e60, 296, 0},
@@ -2452,6 +2459,7 @@ static const LiftedRoutine routines[] = {
     {0x4ca730, lifted_f4ca730, 108, 0},
     {0x4ca770, lifted_f4ca770, 100, 0},
     {0x4ca970, lifted_f4ca970, 128, 0},
+    {0x4cae30, lifted_f4cae30, 200, 0},
     {0x4cafd0, lifted_f4cafd0, 92, 0},
     {0x4cb080, lifted_f4cb080, 100, 1},
     {0x4cb390, lifted_return_constant_4cc7a0, 64, 0},
@@ -2508,6 +2516,7 @@ static const LiftedRoutine routines[] = {
     {0x4cd544, lifted_rtl_vararg_call, 84, 0},
     {0x4cd56c, lifted_f4cd56c, 244, 0},
     {0x4cd7dc, lifted_f4cd7dc, 84, 0},
+    {0x4cd819, lifted_f4cd819, 72, 0},
     {0x4cd836, lifted_f4cd836, 76, 0},
     {0x4cd847, lifted_f4cd847, 84, 0},
     {0x4cd9f0, lifted_rtl_local_call, 92, 0},
@@ -3208,6 +3217,7 @@ static const LiftedRoutine routines[] = {
     {0x4ec8f0, lifted_f4ec8f0, 84, 4},
     {0x4ec910, lifted_f4ec910, 72, 2},
     {0x4ec940, lifted_f4ec940, 88, 0},
+    {0x4ec970, lifted_f4ec970, 152, 0},
     {0x4eca85, lifted_f4eca85, 72, 0},
     {0x4ecaa0, lifted_f4ecaa0, 80, 0},
     {0x4ecad0, lifted_f4ecad0, 124, 4},
