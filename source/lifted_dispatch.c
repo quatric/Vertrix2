@@ -14,6 +14,7 @@
 #include "lifted_whole_0.h"
 #include "lifted_whole_1.h"
 #include "lifted_whole_10.h"
+#include "lifted_whole_11.h"
 #include "lifted_whole_2.h"
 #include "lifted_whole_3.h"
 #include "lifted_whole_4.h"
@@ -373,6 +374,7 @@ static const LiftedRoutine routines[] = {
     {0x41fc70, lifted_f41fc70, 156, 0},
     {0x41fd20, lifted_f41fd20, 180, 0},
     {0x420040, lifted_f420040, 516, 0},
+    {0x4202a0, lifted_f4202a0, 696, 0},
     {0x420e10, lifted_f420e10, 420, 0},
     {0x420f10, lifted_f420f10, 844, 0},
     {0x421ac0, lifted_f421ac0, 436, 0},
@@ -1343,6 +1345,7 @@ static const LiftedRoutine routines[] = {
     {0x459b60, lifted_f459b60, 112, 0},
     {0x459be0, lifted_title_letter_count_call, 168, 0},
     {0x459e00, lifted_title_letter_restart_call, 144, 0},
+    {0x459ec0, lifted_title_letter_digit_call, 216, 0},
     {0x45a0c0, lifted_title_letter_launch_call, 124, 0},
     {0x45a1c0, lifted_title_letter_fly_out_call, 140, 0},
     {0x45a290, lifted_title_letter_fight_count_call, 144, 0},
@@ -1595,6 +1598,7 @@ static const LiftedRoutine routines[] = {
     {0x474560, lifted_palette_rgb, 292, 2},
     {0x474910, lifted_palette_color, 256, 2},
     {0x474cd0, lifted_palette_channels, 152, 0},
+    {0x474e00, lifted_render_color_bank_build, 184, 0},
     {0x4754e0, lifted_palette_tables_cycle, 72, 0},
     {0x475510, lifted_release_pair, 112, 0},
     {0x4756d0, lifted_sound_simple_clear, 64, 0},
@@ -2239,6 +2243,7 @@ static const LiftedRoutine routines[] = {
     {0x4b7600, lifted_f4b7600, 68, 0},
     {0x4b76d0, lifted_list_resize_call, 92, 0},
     {0x4b7710, lifted_list_text_indexed, 112, 0},
+    {0x4b7830, lifted_list_release_entries, 140, 0},
     {0x4b78d0, lifted_object_table_new_4b78d0, 68, 0},
     {0x4b78e0, lifted_f4b78e0, 172, 0},
     {0x4b79a0, lifted_object_release_call_4b79a0, 80, 0},
@@ -3054,6 +3059,7 @@ static const LiftedRoutine routines[] = {
     {0x4e66dc, lifted_f4e66dc, 76, 0},
     {0x4e6734, lifted_f4e6734, 384, 1},
     {0x4e6918, lifted_f4e6918, 116, 0},
+    {0x4e6ae0, lifted_f4e6ae0, 96, 0},
     {0x4e6b2c, lifted_f4e6b2c, 76, 0},
     {0x4e6bff, lifted_f4e6bff, 72, 0},
     {0x4e6c1d, lifted_f4e6c1d, 72, 0},
@@ -3290,7 +3296,6 @@ static const LiftedRoutine unverified_routines[] = {
     {0x41e780, lifted_f41e780, 548, 0},
     {0x41f9b0, lifted_f41f9b0, 476, 0},
     {0x41fe10, lifted_f41fe10, 496, 0},
-    {0x4202a0, lifted_f4202a0, 696, 0},
     {0x4212a0, lifted_f4212a0, 508, 0},
     {0x423960, lifted_f423960, 308, 0},
     {0x424360, lifted_f424360, 668, 0},
@@ -3326,7 +3331,6 @@ static const LiftedRoutine unverified_routines[] = {
     {0x450f80, lifted_object_start_hold, 84, 0},
     {0x452520, lifted_f452520, 192, 0},
     {0x453050, lifted_state_pair_453050, 144, 0},
-    {0x459ec0, lifted_title_letter_digit_call, 216, 0},
     {0x45d4d0, lifted_f45d4d0, 160, 0},
     {0x45e720, lifted_resource_one_frame_45e720, 72, 0},
     {0x45e750, lifted_table_fill_slot, 136, 0},
@@ -3365,7 +3369,6 @@ static const LiftedRoutine unverified_routines[] = {
     {0x4737d0, lifted_pair_flags, 144, 0},
     {0x473960, lifted_pair_flags_473960, 144, 0},
     {0x473af0, lifted_pair_scan, 144, 0},
-    {0x474e00, lifted_render_color_bank_build, 184, 0},
     {0x475660, lifted_f475660, 120, 0},
     {0x475a80, lifted_list_reset_calls, 96, 0},
     {0x475ab0, lifted_list_push_call, 80, 1},
@@ -3843,7 +3846,6 @@ static const LiftedRoutine unverified_routines[] = {
     {0x4b69f0, lifted_object_glyph_layout, 76, 0},
     {0x4b6fa0, lifted_list_item_4b6fa0, 68, 0},
     {0x4b7610, lifted_f4b7610, 172, 0},
-    {0x4b7830, lifted_list_release_entries, 140, 0},
     {0x4c0b51, lifted_object_is_idle, 96, 0},
     {0x4c5bd0, lifted_edx_to_eax_call_4c5bd0, 68, 0},
     {0x4c5d60, lifted_scaled_round, 64, 0},

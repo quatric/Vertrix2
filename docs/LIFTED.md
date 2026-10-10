@@ -201,6 +201,22 @@ Each of the 125 was verified again. **All pass**: 122 within the batch's 600 sec
 
 The 40-routine regression sample still passes.
 
+## Fourth re-verification (null pointers into the fs:[0] chain)
+
+With FS based at 0, an original that writes its exception chain through `fs:[0]` and later reads
+or writes address 0..3 through a null pointer touches its own chain record. On Windows, that
+access faults. In tolerant mode the oracle now notes an fs-prefixed write to 0..3. After that,
+a plain access to the same bytes skips the case (`null pointer access`) instead of comparing it.
+Before the chain is written, accesses to page zero still count, since 0x4db250 writes through
+page-zero pointer arguments.
+
+The 120 failures were verified again with this rule and the stub-write record: **6 pass**.
+0x4202a0, 0x459ec0, 0x474e00, 0x4b7830 and 0x4e6ae0 are in `source/lifted_whole_11.[ch]`
+(`docs/lift/whole_11.json`). Four of them left the unverified tier, and the dispatcher has
+3,201 entries. 0x4b7080 also passes, but it stays with the recovered `source/list_text.c`. 114
+routines still fail. With `ALARM=300`, the host title run's output is identical to the run before
+the chunk.
+
 ## Open after the completed batch
 
 - 844 attempted routines did not pass verification. The saved failure details distinguish
