@@ -79,13 +79,20 @@ def global_reader(cpu, before=None, shadow=None):
         try:
             raw = bytearray(cpu.mem_read(address, 4))
         except UcError:
-            return 0
+            # The dword wraps past 0xffffffff or ends in an unmapped page: read its bytes alone.
+            raw = bytearray(4)
+            for i in range(4):
+                try:
+                    raw[i] = cpu.mem_read((address + i) & 0xffffffff, 1)[0]
+                except UcError:
+                    pass
         if before is not None:
             for i in range(4):
-                if address + i in shadow:
-                    raw[i] = shadow[address + i]
-                elif address + i in before:
-                    raw[i] = before[address + i]
+                byte_address = (address + i) & 0xffffffff
+                if byte_address in shadow:
+                    raw[i] = shadow[byte_address]
+                elif byte_address in before:
+                    raw[i] = before[byte_address]
         return struct.unpack('<I', bytes(raw))[0]
     return read
 
@@ -230,9 +237,13 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
     before, native_shadow = {}, {}
 
     def record_write(uc, access, address, size, value, user):
-        old = bytes(uc.mem_read(address, size))
         for i in range(size):
-            before.setdefault(address + i, old[i])
+            byte_address = (address + i) & 0xffffffff
+            if byte_address not in before:
+                try:
+                    before[byte_address] = uc.mem_read(byte_address, 1)[0]
+                except UcError:
+                    pass
 
     cpu.hook_add(UC_HOOK_MEM_WRITE, record_write)
     _host_before[0] = before
