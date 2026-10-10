@@ -179,6 +179,28 @@ The host title run now takes about 23 seconds of wall time, over `tools/host_tit
 20 second alarm. With `ALARM=300` its output is byte-identical to the run before the chunk.
 `TRACE_LIFTED=1` prints the dispatcher's call trace.
 
+### Earlier verifications under the stronger oracle
+
+The pair, flag and internal-callee modelling, and the string-store stub effects, change what the
+oracle checks. A routine verified before them could be a wrong lift that the weaker oracle let
+through, so the affected routines were run again.
+
+All 3,168 verified routines were re-lifted with the current lifter. 125 of them call a pair
+helper (13) or a string-store stub (112); none has a flag callee or a callee inside its own code.
+Each of the 125 was verified again. **All pass**: 122 within the batch's 600 second limit,
+0x408800 in about 12 minutes, and 0x45c9a0 and 0x48a4a0 after two oracle corrections:
+
+- **Stub writes.** A stub effect writes from Python, which the write hook does not see. Its
+  overwritten bytes are now recorded too (`oracle_screen.host_write`), so the native code's
+  global reads see memory as it was before the original ran. 0x45c9a0 reads page zero at
+  0x15c, which a later string-store stub overwrites.
+- **The fs:[0] chain slot.** With the oracle's FS base of 0, the original keeps its exception
+  chain at address 0..3, while the native code keeps it in `env.chain`. Native stores to those
+  four bytes (0x48a4a0 stores a string through a null pointer) are no longer compared against the
+  chain. On Windows, nothing is stored at address 0..3.
+
+The 40-routine regression sample still passes.
+
 ## Open after the completed batch
 
 - 844 attempted routines did not pass verification. The saved failure details distinguish
