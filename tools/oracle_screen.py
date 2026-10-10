@@ -1,7 +1,8 @@
 """Shared pieces of the screen builder oracles: call sites, services, supplied static data reads."""
-from unicorn import (UC_HOOK_MEM_READ, UC_HOOK_MEM_READ_UNMAPPED, UC_HOOK_MEM_WRITE,
-                     UC_HOOK_MEM_WRITE_UNMAPPED, UC_MEM_WRITE, UcError)
-from unicorn.x86_const import UC_X86_REG_EFLAGS, UC_X86_REG_EIP
+from unicorn import (UC_HOOK_MEM_READ_UNMAPPED, UC_HOOK_MEM_WRITE, UC_HOOK_MEM_WRITE_UNMAPPED,
+                     UcError)
+from unicorn.x86_const import (UC_X86_REG_CS, UC_X86_REG_DS, UC_X86_REG_EFLAGS, UC_X86_REG_EIP,
+                               UC_X86_REG_ES, UC_X86_REG_FS, UC_X86_REG_GDTR, UC_X86_REG_SS)
 import ctypes as c
 import json
 import struct
@@ -97,6 +98,32 @@ def global_reader(cpu, before=None, shadow=None):
     return read
 
 
+# The original's thread block. fs:[0], the exception chain, lives here rather than at address 0, as
+# on Windows: with an FS base of 0 the chain shared page zero with null pointer accesses.
+GDT = 0x7ffde000
+TEB = 0x7ffdf000
+
+
+def descriptor(base, limit, access, flags):
+    """An x86 segment descriptor."""
+    return struct.pack('<Q', (limit & 0xffff) | ((base & 0xffffff) << 16) | (access << 40) |
+                       (((limit >> 16) & 0xf) << 48) | (flags << 52) | ((base >> 24) << 56))
+
+
+def separate_fs(cpu):
+    """Point FS at TEB through a GDT. Loading a GDT makes Unicorn rebuild every segment from it, so
+    the GDT also holds flat 32-bit code and data segments for CS, SS, DS and ES (without them the
+    stack is 16-bit and pushes wrap at 64 KB)."""
+    cpu.mem_map(GDT, 0x2000)
+    cpu.mem_write(GDT + 8, descriptor(TEB, 0xfff, 0x93, 0x4) +
+                  descriptor(0, 0xfffff, 0x93, 0xc) + descriptor(0, 0xfffff, 0x9b, 0xc))
+    cpu.reg_write(UC_X86_REG_GDTR, (0, GDT, 0x1f, 0))
+    cpu.reg_write(UC_X86_REG_CS, 0x18)
+    for register in (UC_X86_REG_SS, UC_X86_REG_DS, UC_X86_REG_ES):
+        cpu.reg_write(register, 0x10)
+    cpu.reg_write(UC_X86_REG_FS, 8)
+
+
 def automap(cpu):
     """Map a zero page for any access to unmapped memory so garbage pointers run on."""
     def fault(uc, access, address, size, value, user):
@@ -150,6 +177,7 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
     fn.restype = restype
     original = Original(args.executable)
     cpu = original.cpu
+    separate_fs(cpu)
     rng = random.Random(address)
     pool = Pool(cpu, 4, pool_size)
     returns, native_log, replay, replay_out, native_stores = [], [], [], [], []
@@ -247,22 +275,6 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
 
     cpu.hook_add(UC_HOOK_MEM_WRITE, record_write)
     _host_before[0] = before
-    # With the oracle's FS base of 0, address 0..3 is also the fs:[0] exception chain. Once the
-    # original has stored its own chain there, an access without the fs prefix (a null pointer,
-    # which faults on Windows) sees the chain, while the native code keeps the chain in env.chain.
-    # With tolerated faults such a case is skipped like any other original fault.
-    null_access = [False]
-    chain_written = [False]
-
-    def chain_access(uc, access, address, size, value, user):
-        eip = uc.reg_read(UC_X86_REG_EIP)
-        if 0x64 in bytes(uc.mem_read(eip, 4)):
-            chain_written[0] = chain_written[0] or access == UC_MEM_WRITE
-        elif chain_written[0]:
-            null_access[0] = True
-
-    if tolerate_faults:
-        cpu.hook_add(UC_HOOK_MEM_READ | UC_HOOK_MEM_WRITE, chain_access, begin=0, end=3)
     reader = global_reader(cpu, before, native_shadow)
     globals_ = Globals(reader, None)
     completed = skipped_cases = 0
@@ -289,17 +301,14 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
         native_shadow.clear()
         before.clear()
         flag_draws.clear()
-        null_access[0] = chain_written[0] = False
         try:
             result = original.call(address, args=tuple(stack_args), **kwargs) & 0xffffffff
-            if null_access[0]:
-                raise RuntimeError('null pointer access')
         except (UcError, RuntimeError) as error:
             if not tolerate_faults:
                 raise
             skipped_cases += 1  # the original itself faults or never returns on this input
-            reason = '%s at %#x' % (type(error).__name__ if isinstance(error, RuntimeError) else
-                                    error, cpu.reg_read(UC_X86_REG_EIP))
+            reason = '%s at %#x' % ('RuntimeError (%s)' % error if isinstance(error, RuntimeError)
+                                    else error, cpu.reg_read(UC_X86_REG_EIP))
             fault_reasons[reason] = fault_reasons.get(reason, 0) + 1
             continue
         completed += 1
@@ -320,10 +329,6 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
                 # A store at the top of memory wraps to address 0 as in the original.
                 shadow[(store_address + i) & 0xffffffff] = (value >> (8 * i)) & 0xff
         for byte_address, byte in shadow.items():
-            if byte_address < 4:
-                # fs:[0]: with the oracle's FS base of 0 the original keeps its exception chain
-                # here, the native code in env.chain; no Windows store reaches address 0..3.
-                continue
             held = bytes(cpu.mem_read(byte_address, 1))[0]
             assert held == byte, (case, hex(byte_address), held, byte)
         if post:

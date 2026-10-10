@@ -11,7 +11,7 @@ from pathlib import Path
 from unicorn.x86_const import (UC_X86_REG_EBP, UC_X86_REG_EDI, UC_X86_REG_ESI)
 
 from original import STACK
-from oracle_screen import run_screen
+from oracle_screen import TEB, run_screen
 
 U = c.c_uint32
 
@@ -103,7 +103,7 @@ def run(name, spec=None, meta=None, source=None):
             stack_args = tuple(rng.randrange(0, 64) if rng.random() < 0.85 else a
                                for a in stack_args)
         garbage = bytes(cpu.mem_read(FRAME - locals_size, locals_size))
-        chain = struct.unpack('<I', bytes(cpu.mem_read(0, 4)))[0]
+        chain = struct.unpack('<I', bytes(cpu.mem_read(TEB, 4)))[0]
         arguments = (U * max(count, 1))(*stack_args)
         buffer = (c.c_uint8 * locals_size).from_buffer_copy(garbage)
         entry = LiftEntry(kwargs['eax'], kwargs['edx'], kwargs['ebx'], kwargs['ecx'],
