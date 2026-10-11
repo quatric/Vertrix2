@@ -345,6 +345,32 @@ with the slide transition, the head pair, the taunts, LOSER & WINNER and CONTINU
 column of most entries is `.pcx`, meaning no mask, and the original checks for that file in the
 same way.
 
+## The unverified tier verified
+
+The drivers run with `vertrix_lifted_allow_unverified(1)`, so the unverified tier is game code too.
+It had 627 entries:
+
+- 470 had never been verified. They included the game handlers 0x41c410, 0x41cc30, 0x41e780 and
+  0x424360.
+- 128 had passed but had never been combined.
+- 16 had failed.
+- 13 had hand ports. The 140 entries of `docs/lifted-removed.json` were all among the 627, because
+  those hand ports are not served by the dispatcher.
+
+All 627 were lifted again (`work/relift_unv`) and verified: **594 pass**. They are in
+`source/lifted_whole_21.[ch]`. `lift_batch.py combine --include-removed` takes the removed entries
+too, and `docs/lifted-removed.json` is now empty. The dispatcher has 3,897 verified entries. 33
+routines remain in the unverified tier.
+
+With `ALARM=300`, the host title output is identical, and `tools/test_dispatch.c` passes. In the
+scripted host game run, the frames are identical up to players selection. After that, play
+differs, and the round ends at tick 5279 instead of 5855. Replacing unverified lifts with verified
+ones changed the outcome, so at least one of the old lifts had departed from the original.
+
+The scores are kept: near the end of the round, the players' `+0x174` hold 30 and 210. The
+accumulator 0x43ba90 ran 7 times. The HUD still shows 00000000, and the menu labels are still
+missing.
+
 ## Open after the completed batch
 
 - 844 attempted routines did not pass verification. The saved failure details distinguish

@@ -2,7 +2,7 @@
 
 usage: lift_batch.py lift SCRATCH ADDRESS...
        lift_batch.py verify SCRATCH [--jobs N] [--cases N]
-       lift_batch.py combine SCRATCH NAME OUT_DIR
+       lift_batch.py combine SCRATCH NAME OUT_DIR [--only=f...,f...] [--include-removed]
 """
 import json
 import subprocess
@@ -73,7 +73,8 @@ def readable_names():
     return read_routine_names(ROOT / 'docs' / 'names.json')
 
 
-def combine(scratch, name, out_dir, first=0, count=None, unverified=False, only=None):
+def combine(scratch, name, out_dir, first=0, count=None, unverified=False, only=None,
+            include_removed=False):
     results = json.loads((scratch / 'results.json').read_text())
     passed = sorted(n for n, r in results.items() if r['ok'] != unverified and (only is None or n in only))[first:first + count if count else None]
     body = ['/* Routines lifted from the original by tools/lift.py (see docs/LIFTED.md), each verified\n'
@@ -86,7 +87,7 @@ def combine(scratch, name, out_dir, first=0, count=None, unverified=False, only=
     for n in passed:
         text = (scratch / (n + '.c')).read_text()
         meta = json.loads((scratch / (n + '.json')).read_text())
-        if meta['address'] in removed and not unverified:
+        if meta['address'] in removed and not unverified and not include_removed:
             continue
         pretty = readable.get(meta['address'], n)
         function = text[text.index('uint32_t lifted_'):]
@@ -126,6 +127,10 @@ if __name__ == '__main__':
     elif command == 'combine':
         unverified = '--unverified' in sys.argv
         only = next((a[7:].split(',') for a in sys.argv if a.startswith('--only=')), None)
-        rest = [a for a in sys.argv[5:] if a != '--unverified' and not a.startswith('--only=')]
+        # --include-removed: also combine routines listed in docs/lifted-removed.json (a hand port
+        # exists but is not served by the dispatcher, so the lift is what the game reaches).
+        include_removed = '--include-removed' in sys.argv
+        rest = [a for a in sys.argv[5:] if a not in ('--unverified', '--include-removed') and
+                not a.startswith('--only=')]
         combine(scratch, sys.argv[3], sys.argv[4], *map(int, rest[:2]), unverified=unverified,
-                only=only)
+                only=only, include_removed=include_removed)

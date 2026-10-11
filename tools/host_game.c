@@ -163,6 +163,23 @@ int main(int argc, char **argv)
         {
             autoplay(&host, handler, host.clock_ms);
         }
+        if (getenv("GAMEKEYS") != NULL && handler == 0x424990)
+        {
+            /* Player 1 during play: one key of the Wii mapping every 20 ticks, held 6 ticks
+             * (left, left, up, right, down, Z, X; Enter and Space pause). */
+            static const unsigned keys[] = {0xcb, 0xcb, 0xc8, 0xcd, 0xd0, 0x2c, 0x2d};
+            static unsigned played;
+            unsigned key = keys[(played / 20) % (sizeof keys / sizeof keys[0])];
+            if (played % 20 == 0)
+            {
+                lift_host_key(&host, key, 1);
+            }
+            if (played % 20 == 6)
+            {
+                lift_host_key(&host, key, 0);
+            }
+            played++;
+        }
         lift_host_write32(&host, 0x5328bc, 1); /* the form is active: the device poll may run */
         lift_host_run(&host, 0x4b7b80, 0, 0, 0, 0, &lifted); /* the 14 ms timer */
         if (handler != last_handler)
