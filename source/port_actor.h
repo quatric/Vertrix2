@@ -105,4 +105,18 @@ uint32_t vertrix_port_actor_reset(PORT_SIGNATURE);
  * the last call's after. */
 uint32_t vertrix_port_actor_value_idle_call(PORT_SIGNATURE);
 
+/* Original 0x4af560 (eax = actor): paint the actor. Unless its +0x134 is 0, the draw scale
+ * (0x5bb738) is 0, or nothing would change (opacity 0x5bc00e 0, blending 0x5bb739 on, no clip
+ * 0x5bc002, the image format 0x5bc000 the target's 0x5bb730): the flags (0x4af370), rule
+ * (0x4af2a0), traversal (0x4af530), direction (0x4af2e0) and mirror index (0x4af340) choose from
+ * the tables at 0x4ff024 (the pixel operation, kept at 0x5bb72c), 0x4ff6c4 (the source, as ebx),
+ * 0x4ff684 (the draw routine) and, for a plain copy, 0x4ff5e4 or the helper routines 0x4ff604
+ * (actor +0x150 set). Otherwise 0x4ae250 prepares the state and the draw routine runs (eax the
+ * source). With +0x140 1, 0x4ab200 marks the spot. With +0x110 1 the outline follows: 0x47c520
+ * (eax [0x5bc010], edx 0x5b9c60, 7 stack arguments) draws the clip box 1 and 2 pixels in (colours
+ * +0x118 and +0x114), or the box itself in +0x118 when 0x5bbffe is 2. The table row is the depth
+ * 0x5bb733 (4, 2, 1, 0 as 0 to 3; ecx otherwise). Returns the last call's or test's eax; edx is
+ * unchanged. */
+uint32_t vertrix_port_actor_paint(PORT_SIGNATURE);
+
 #endif

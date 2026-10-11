@@ -877,13 +877,16 @@ The synthesis (0x405720, 491 instructions) is three windowed sums, written as lo
 single helpers. The port keeps the ebx and ecx its helpers see, which carry the loop counters and
 the last clamp's limit.
 
-118 routines run as clean ports. Counted by calls, they handle 94% of the calls to lifted
+119 routines run as clean ports. Counted by calls, they handle 94% of the calls to lifted
 routines in the gameplay profile.
 
-Some ports run long loops, and even their lifted copies time out with wide registers. These were
-checked with small registers only, at a reduced number of cases:
-- 0x48a930 (the exact stream read): 64 cases, the batch's own count.
-- 0x4db6a4 (the polynomial): 256 cases.
+Some ports were checked in one register mode only, at a reduced number of cases, because their
+lifted copies fail or time out in the other mode:
+- 0x48a930 (the exact stream read): small registers, 64 cases, the batch's own count.
+- 0x4db6a4 (the polynomial): small registers, 256 cases.
+- 0x4af560 (the actor paint): wide registers, 256 cases. With small registers the lifted copy
+  itself returns 2 where the original returns 0 (case 85), and the port does the same. The
+  lifted copy's difference there is still open.
 
 0x47c3b0 (the surface fill) is written but not in `PORTS`. Its lifted copy fails the same cases
 (pool-page overruns), so it cannot be checked yet.

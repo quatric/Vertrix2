@@ -56,7 +56,47 @@ enum
     DRAW_SPOT = 0x47ce10,
     SCREEN = 0x544070,
     SCREEN_SURFACE = 0x274,
-    SCREEN_SURFACE_ARGUMENT = 0x278
+    SCREEN_SURFACE_ARGUMENT = 0x278,
+    ACTOR_DRAW_ON = 0x134,
+    ACTOR_OUTLINE = 0x110,
+    ACTOR_OUTLINE_INNER = 0x114,
+    ACTOR_OUTLINE_OUTER = 0x118,
+    ACTOR_HELPER = 0x150,
+    DRAW_SCALE_SET = 0x5bb738,
+    DRAW_OPACITY = 0x5bc00e,
+    DRAW_BLEND = 0x5bb739,
+    DRAW_CLIP = 0x5bc002,
+    DRAW_FORMAT = 0x5bc000,
+    DRAW_TARGET_FORMAT = 0x5bb730,
+    DRAW_DEPTH = 0x5bb733,
+    DRAW_OPERATION = 0x5bb72c,
+    DRAW_TARGET = 0x5bc010,
+    OUTLINE_MODE = 0x5bbffe,
+    OUTLINE_PLAIN = 2,
+    OUTLINE_LEFT = 0x5bbff4,
+    OUTLINE_TOP = 0x5bbff6,
+    OUTLINE_RIGHT = 0x5bbff8,
+    OUTLINE_BOTTOM = 0x5bbffa,
+    CLIP_LEFT = 0x5bb746,
+    CLIP_TOP = 0x5bb748,
+    CLIP_RIGHT = 0x5bb79e,
+    CLIP_BOTTOM = 0x5bb7a0,
+    OUTLINE_BOX = 0x5b9c60,
+    DRAW_OUTLINE = 0x47c520,
+    RENDER_FLAGS = 0x4af370,
+    RENDER_RULE = 0x4af2a0,
+    RENDER_TRAVERSAL = 0x4af530,
+    RENDER_DIRECTION = 0x4af2e0,
+    RENDER_MIRROR = 0x4af340,
+    RENDER_PREPARE = 0x4ae250,
+    SPOT_MARK = 0x4ab200,
+    RULE_COUNT = 0x5c,
+    RULE_OPERATIONS = 0x4ff024,
+    RULE_OPERATIONS_STRIDE = 0x170,
+    DIRECTION_SOURCES = 0x4ff6c4,
+    MIRROR_ROUTINES = 0x4ff684,
+    PLAIN_ROUTINES = 0x4ff5e4,
+    HELPER_ROUTINES = 0x4ff604
 };
 
 uint32_t vertrix_port_actor_advance_elapsed(PORT_SIGNATURE)
@@ -454,4 +494,153 @@ uint32_t vertrix_port_actor_value_idle_call(PORT_SIGNATURE)
     value = port_call(&port, port_u32(&port, record, IDLE_ROUTINE), actor, vertrix_lift_edx, record,
                       actor);
     return port_return(&port, value, vertrix_lift_edx);
+}
+
+/* The high word of a dword global, sign-extended (a 16.16 coordinate's integer part). */
+static uint32_t global_high(Port *port, uint32_t address)
+{
+    return (uint32_t)((int32_t)port_u32(port, 0, address) >> 16);
+}
+
+/* The depth (0x5bb733) as the row of the drawing tables: 4 is 0, 2 is 1, 1 is 2, 0 is 3; any
+ * other keeps the caller's ecx. */
+static uint32_t depth_row(uint32_t depth, uint32_t ecx)
+{
+    switch (depth)
+    {
+        case 4:
+            return 0;
+        case 2:
+            return 1;
+        case 1:
+            return 2;
+        case 0:
+            return 3;
+        default:
+            return ecx;
+    }
+}
+
+/* The actor's drawing through the rule tables; returns the last eax. */
+static uint32_t paint_body(Port *port, uint32_t actor, uint32_t ebx, uint32_t ecx)
+{
+    uint32_t eax;
+    uint32_t rule;
+    uint32_t traversal;
+    uint32_t direction;
+    uint32_t mirror;
+    uint32_t routine;
+    ebx = (ebx & 0xffff00ffu) | (port_u8(port, 0, DRAW_DEPTH) << 8);
+    ecx = depth_row(port_u8(port, 0, DRAW_DEPTH), ecx);
+    eax = port_call(port, RENDER_FLAGS, actor, 0, ebx, ecx);
+    rule = port_call(port, RENDER_RULE, actor, eax, ebx, ecx);
+    port_set32(port, 0, DRAW_OPERATION,
+               rule < RULE_COUNT
+                   ? port_u32(port, RULE_OPERATIONS, ecx * RULE_OPERATIONS_STRIDE + rule * 4)
+                   : 0);
+    traversal = port_call(port, RENDER_TRAVERSAL, actor, rule, ebx, ecx);
+    direction = port_call(port, RENDER_DIRECTION, actor, traversal, ebx, ecx);
+    ebx = direction < 8 ? port_u32(port, DIRECTION_SOURCES, ecx * 32 + direction * 4) : 0;
+    mirror = port_call(port, RENDER_MIRROR, actor, traversal & 0xc, ebx, ecx);
+    if (mirror >= 4)
+    {
+        return mirror;
+    }
+    routine = port_u32(port, MIRROR_ROUTINES, ecx * 16 + mirror * 4);
+    if (routine == 0 || ebx == 0 || port_u32(port, 0, DRAW_OPERATION) == 0)
+    {
+        return mirror;
+    }
+    if (port_u32(port, actor, ACTOR_HELPER) != 0)
+    {
+        /* A plain straight copy may use the helper routine of its row instead. */
+        if (rule == 0 && mirror < 2 && direction < 8)
+        {
+            uint32_t helper = port_u32(port, HELPER_ROUTINES, ecx * 32 + direction * 4);
+            ecx <<= 5;
+            if (helper != 0)
+            {
+                eax = port_call(port, helper, helper, routine, ebx, ecx);
+                goto mark;
+            }
+        }
+    }
+    else if (rule == 0 && mirror == 0 && direction < 2)
+    {
+        eax = port_call(port, port_u32(port, PLAIN_ROUTINES, ecx * 8 + direction * 4),
+                        direction * 4, routine, ebx, ecx);
+        goto mark;
+    }
+    port_call(port, RENDER_PREPARE, actor, routine, ebx, ecx);
+    eax = port_call(port, vertrix_lift_edx, ebx, vertrix_lift_edx, ebx, ecx);
+mark:
+    if (port_u32(port, actor, ACTOR_SPOT_MIRROR) != 1)
+    {
+        return eax;
+    }
+    return port_call(port, SPOT_MARK,
+                     (uint32_t)((int32_t)port_u32(port, actor, ACTOR_SPOT_X) >> 16),
+                     (uint32_t)((int32_t)port_u32(port, actor, ACTOR_SPOT_Y) >> 16),
+                     (uint32_t)((int32_t)port_u32(port, actor, 0x12a) >> 16),
+                     (uint32_t)((int32_t)port_u32(port, actor, 0x12e) >> 16));
+}
+
+/* One outline box, `inset` pixels inside the clip, in the colour at `colour_field`. */
+static uint32_t outline_box(Port *port, uint32_t actor, uint32_t inset, uint32_t colour_field)
+{
+    uint32_t stack[7];
+    stack[0] = global_high(port, CLIP_LEFT) + inset;
+    stack[1] = global_high(port, CLIP_TOP) + inset;
+    stack[2] = global_high(port, OUTLINE_LEFT);
+    stack[3] = global_high(port, OUTLINE_RIGHT);
+    stack[4] = global_high(port, OUTLINE_TOP);
+    stack[5] = global_high(port, OUTLINE_BOTTOM);
+    stack[6] = port_u32(port, actor, colour_field);
+    return port_call_stack(port, DRAW_OUTLINE, port_u32(port, 0, DRAW_TARGET), OUTLINE_BOX,
+                           global_high(port, CLIP_RIGHT) - inset,
+                           global_high(port, CLIP_BOTTOM) - inset, stack, 7);
+}
+
+uint32_t vertrix_port_actor_paint(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t actor = entry->eax;
+    uint32_t eax = actor;
+    uint32_t draw;
+    port_open(&port, calls, services, globals, entry);
+    draw = port_u32(&port, actor, ACTOR_DRAW_ON);
+    if (draw != 0 && port_u8(&port, 0, DRAW_SCALE_SET) != 0)
+    {
+        /* Nothing to draw at full opacity, blended, unclipped and in the target's format. */
+        int unchanged = port_u8(&port, 0, DRAW_OPACITY) == 0 &&
+                        port_u8(&port, 0, DRAW_BLEND) == 1 && port_u16(&port, 0, DRAW_CLIP) == 0;
+        if (unchanged)
+        {
+            eax = (eax & 0xffffff00u) | port_u8(&port, 0, DRAW_FORMAT);
+            unchanged = port_u8(&port, 0, DRAW_FORMAT) == port_u8(&port, 0, DRAW_TARGET_FORMAT);
+        }
+        if (!unchanged)
+        {
+            eax = paint_body(&port, actor, draw, entry->ecx);
+        }
+    }
+    if (port_u8(&port, actor, ACTOR_OUTLINE) != 1)
+    {
+        return port_return(&port, eax, entry->edx);
+    }
+    if (port_u8(&port, 0, OUTLINE_MODE) == OUTLINE_PLAIN)
+    {
+        uint32_t left = global_high(&port, CLIP_LEFT);
+        uint32_t top = global_high(&port, CLIP_TOP);
+        uint32_t right = global_high(&port, CLIP_RIGHT);
+        uint32_t bottom = global_high(&port, CLIP_BOTTOM);
+        uint32_t stack[7] = {
+            left, top, right, bottom, left, top, port_u32(&port, actor, ACTOR_OUTLINE_OUTER)};
+        eax = port_call_stack(&port, DRAW_OUTLINE, port_u32(&port, 0, DRAW_TARGET), OUTLINE_BOX,
+                              right, bottom, stack, 7);
+        return port_return(&port, eax, entry->edx);
+    }
+    outline_box(&port, actor, 1, ACTOR_OUTLINE_OUTER);
+    eax = outline_box(&port, actor, 2, ACTOR_OUTLINE_INNER);
+    return port_return(&port, eax, entry->edx);
 }
