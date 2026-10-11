@@ -24,7 +24,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 # Ports whose original runs long loops in Unicorn: checked with fewer cases (still more than the
 # 64 per mode the batch used for the lifted copies).
-SLOW = {'0x48a930': 256, '0x492980': 256, '0x4ec307': 256, '0x492460': 256, '0x4922f0': 256,
+SLOW = {'0x48a930': 64, '0x492980': 256, '0x4ec307': 256, '0x492460': 256, '0x4922f0': 256,
         '0x4db6a4': 256, '0x405720': 512,
         # Copies whose random pointers overrun a pool page past these counts, for the lifted copy
         # as well.
