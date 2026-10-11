@@ -118,24 +118,122 @@ static int host_resolve(uint32_t handle, void **storage, size_t *size, void *con
 
 extern uint32_t vertrix_lifted_skip[8];
 
-static uint32_t heap_get32(const LiftHost *host, uint32_t offset)
+static uint8_t *region_bytes(const LiftHost *host, unsigned region, uint32_t offset)
 {
-    const uint8_t *p = host->heap + offset;
+    return (region ? host->heap2 : host->heap) + offset;
+}
+
+static uint32_t region_get32(const LiftHost *host, unsigned region, uint32_t offset)
+{
+    const uint8_t *p = region_bytes(host, region, offset);
     return (uint32_t)p[0] | (uint32_t)p[1] << 8 | (uint32_t)p[2] << 16 | (uint32_t)p[3] << 24;
 }
 
-static void heap_put32(LiftHost *host, uint32_t offset, uint32_t value)
+static void region_put32(LiftHost *host, unsigned region, uint32_t offset, uint32_t value)
 {
-    uint8_t *p = host->heap + offset;
+    uint8_t *p = region_bytes(host, region, offset);
     p[0] = (uint8_t)value;
     p[1] = (uint8_t)(value >> 8);
     p[2] = (uint8_t)(value >> 16);
     p[3] = (uint8_t)(value >> 24);
 }
 
-/* Every block carries a 16-byte header (rounded size, freed flag). A freed block of up to 16 KB
- * goes to the bin of its size and the next request of that size takes it again, so the many small
- * objects the original creates and destroys do not use up the Wii's memory. */
+static uint32_t heap_get32(const LiftHost *host, uint32_t offset)
+{
+    return region_get32(host, 0, offset);
+}
+
+static void heap_put32(LiftHost *host, uint32_t offset, uint32_t value)
+{
+    region_put32(host, 0, offset, value);
+}
+
+enum
+{
+    BIG_BLOCK = 1024u * 16u,  /* larger blocks go to the extents, smaller ones to the bins */
+    SPLIT_REST = 64u * 1024u, /* an extent is split when at least this much is left over */
+    HEAP2_SIZE = 0x100000u    /* requests of this size or more use the second heap first */
+};
+
+/* Writes the 16-byte header of a block at `start` (rounded size, freed flag, capacity) and clears
+ * its payload; returns the block's address. */
+static uint32_t block_open(LiftHost *host, unsigned region, uint32_t start, uint32_t rounded,
+                           uint32_t capacity)
+{
+    memset(region_bytes(host, region, start), 0, 16u + capacity);
+    region_put32(host, region, start, rounded);
+    region_put32(host, region, start + 8u, capacity);
+    return (region ? LIFT_HOST_HEAP2_BASE : LIFT_HOST_HEAP_BASE) + start + 16u;
+}
+
+/* The smallest free extent of `region` holding `need` bytes (header included), split when the rest
+ * is large; returns the block address, or 0. */
+static uint32_t extent_take(LiftHost *host, unsigned region, uint32_t rounded, uint32_t need)
+{
+    unsigned i, best = LIFT_HOST_EXTENTS;
+    uint32_t start, length;
+    for (i = 0; i < host->extents[region]; i++)
+    {
+        if (host->extent_length[region][i] >= need &&
+            (best == LIFT_HOST_EXTENTS ||
+             host->extent_length[region][i] < host->extent_length[region][best]))
+        {
+            best = i;
+        }
+    }
+    if (best == LIFT_HOST_EXTENTS)
+    {
+        return 0;
+    }
+    start = host->extent_at[region][best];
+    length = host->extent_length[region][best];
+    if (length - need >= SPLIT_REST)
+    {
+        host->extent_at[region][best] += need;
+        host->extent_length[region][best] -= need;
+        length = need;
+    }
+    else
+    {
+        host->extents[region]--;
+        host->extent_at[region][best] = host->extent_at[region][host->extents[region]];
+        host->extent_length[region][best] = host->extent_length[region][host->extents[region]];
+    }
+    return block_open(host, region, start, rounded, length - 16u);
+}
+
+/* Returns the block at header offset `start` (`length` bytes with the header) to the extents of
+ * `region`, merged with the free extents next to it. */
+static void extent_give(LiftHost *host, unsigned region, uint32_t start, uint32_t length)
+{
+    unsigned i = 0;
+    while (i < host->extents[region])
+    {
+        uint32_t at = host->extent_at[region][i], size = host->extent_length[region][i];
+        if (at + size == start || start + length == at)
+        {
+            start = at < start ? at : start;
+            length += size;
+            host->extents[region]--;
+            host->extent_at[region][i] = host->extent_at[region][host->extents[region]];
+            host->extent_length[region][i] = host->extent_length[region][host->extents[region]];
+            i = 0;
+            continue;
+        }
+        i++;
+    }
+    if (host->extents[region] < LIFT_HOST_EXTENTS)
+    {
+        host->extent_at[region][host->extents[region]] = start;
+        host->extent_length[region][host->extents[region]] = length;
+        host->extents[region]++;
+    }
+}
+
+/* Every block carries a 16-byte header (rounded size, freed flag, capacity). A freed block of up to
+ * 16 KB goes to the bin of its size and the next request of that size takes it again; larger ones
+ * return to the free extents of their heap, so the screens' image buffers, allocated again for
+ * every screen, do not use up the Wii's memory. */
 static uint32_t host_allocate(uint32_t size, void *context)
 {
     LiftHost *host = context;
@@ -144,14 +242,20 @@ static uint32_t host_allocate(uint32_t size, void *context)
      * wider than the target once its step count passes the total, and the next block must
      * not be the surface object that follows. */
     uint32_t slack = size >= 0x10000u ? 0x4000u : 0u;
-    uint32_t bin = rounded / 16u, offset;
-    if (size >= 0x100000u && host->heap2 != NULL &&
-        16u + rounded + slack <= host->heap2_size - host->heap2_top)
+    uint32_t bin = rounded / 16u, offset, block;
+    if (size >= HEAP2_SIZE && host->heap2 != NULL)
     {
-        uint32_t base = host->heap2_top;
-        memset(host->heap2 + base, 0, 16u + rounded + slack);
-        host->heap2_top += 16u + rounded + slack;
-        return LIFT_HOST_HEAP2_BASE + base + 16u;
+        block = extent_take(host, 1, rounded, 16u + rounded + slack);
+        if (block != 0)
+        {
+            return block;
+        }
+        if (16u + rounded + slack <= host->heap2_size - host->heap2_top)
+        {
+            offset = host->heap2_top;
+            host->heap2_top += 16u + rounded + slack;
+            return block_open(host, 1, offset, rounded, rounded + slack);
+        }
     }
     if (getenv("TRACE_ALLOC") && size >= 0x20000u)
         fprintf(stderr, "alloc %u at top %x\n", (unsigned)size, (unsigned)host->heap_top);
@@ -163,77 +267,66 @@ static uint32_t host_allocate(uint32_t size, void *context)
         heap_put32(host, offset - 12, 0);
         return LIFT_HOST_HEAP_BASE + offset;
     }
-    if (rounded > 1024u * 16u)
+    if (rounded > BIG_BLOCK)
     {
-        unsigned i, best = 64;
-        uint32_t best_size = 0;
-        for (i = 0; i < 64; i++)
+        block = extent_take(host, 0, rounded, 16u + rounded + slack);
+        if (block != 0)
         {
-            uint32_t block = host->big_free[i], have;
-            if (block == 0)
-            {
-                continue;
-            }
-            have = heap_get32(host, block - LIFT_HOST_HEAP_BASE - 8u);
-            if (have >= rounded + slack && have <= rounded + slack + rounded / 4u &&
-                (best == 64 || have < best_size))
-            {
-                best = i;
-                best_size = have;
-            }
-        }
-        if (best != 64)
-        {
-            offset = host->big_free[best] - LIFT_HOST_HEAP_BASE;
-            host->big_free[best] = 0;
-            memset(host->heap + offset, 0, best_size);
-            (void)best_size;
-            heap_put32(host, offset - 12, 0);
-            return LIFT_HOST_HEAP_BASE + offset;
+            return block;
         }
     }
     if (16u + rounded + slack > host->heap_size - host->heap_top)
     {
+        static int reported;
+        if (!reported++)
+        {
+            fprintf(stderr, "heap full: request %u, top %x of %x, second %x of %x, extents %u/%u\n",
+                    (unsigned)size, (unsigned)host->heap_top, (unsigned)host->heap_size,
+                    (unsigned)host->heap2_top, (unsigned)host->heap2_size, host->extents[0],
+                    host->extents[1]);
+        }
         return 0;
     }
-    offset = host->heap_top + 16u;
-    memset(host->heap + host->heap_top, 0, 16u + rounded + slack);
-    heap_put32(host, host->heap_top, rounded);
-    heap_put32(host, host->heap_top + 8u, rounded + slack);
+    offset = host->heap_top;
     host->heap_top += 16u + rounded + slack;
-    return LIFT_HOST_HEAP_BASE + offset;
+    return block_open(host, 0, offset, rounded, rounded + slack);
 }
 
 static void host_release(LiftHost *host, uint32_t address)
 {
-    uint32_t offset, rounded;
-    if (address < LIFT_HOST_HEAP_BASE + 16u || address - LIFT_HOST_HEAP_BASE >= host->heap_top)
+    unsigned region;
+    uint32_t offset, rounded, top;
+    if (host->heap2 != NULL && address >= LIFT_HOST_HEAP2_BASE + 16u &&
+        address - LIFT_HOST_HEAP2_BASE < host->heap2_top)
+    {
+        region = 1;
+        offset = address - LIFT_HOST_HEAP2_BASE;
+    }
+    else if (address >= LIFT_HOST_HEAP_BASE + 16u && address - LIFT_HOST_HEAP_BASE < host->heap_top)
+    {
+        region = 0;
+        offset = address - LIFT_HOST_HEAP_BASE;
+    }
+    else
     {
         return;
     }
-    offset = address - LIFT_HOST_HEAP_BASE;
-    rounded = heap_get32(host, offset - 16u);
-    if (rounded == 0 || (rounded & 15u) != 0 || heap_get32(host, offset - 12u) != 0)
+    rounded = region_get32(host, region, offset - 16u);
+    top = region ? host->heap2_top : host->heap_top;
+    if (rounded == 0 || (rounded & 15u) != 0 || region_get32(host, region, offset - 12u) != 0 ||
+        region_get32(host, region, offset - 8u) < rounded ||
+        offset + region_get32(host, region, offset - 8u) > top)
     {
-        return;
+        return; /* not the start of a live block */
     }
-    if (rounded > 1024u * 16u)
+    region_put32(host, region, offset - 12u, 1);
+    if (region == 1 || rounded > BIG_BLOCK)
     {
-        unsigned i;
-        for (i = 0; i < 64; i++)
-        {
-            if (host->big_free[i] == 0)
-            {
-                heap_put32(host, offset - 12u, 1);
-                host->big_free[i] = address;
-                return;
-            }
-        }
+        extent_give(host, region, offset - 16u, 16u + region_get32(host, region, offset - 8u));
         return;
     }
     if (getenv("TRACE_FREE"))
         fprintf(stderr, "free %x size %u\n", (unsigned)address, (unsigned)rounded);
-    heap_put32(host, offset - 12u, 1);
     heap_put32(host, offset, host->free_bins[rounded / 16u]);
     host->free_bins[rounded / 16u] = address;
 }
@@ -744,8 +837,12 @@ static int host_import(LiftHost *host, const VertrixCallSite *site, const char *
     {
         *result = 0x0a280005u; /* Windows XP style: major 5, minor 1 packs as 0x0a280105 */
     }
-    else if (strcmp(name, "GlobalFree") == 0 || strcmp(name, "LocalFree") == 0 ||
-             strcmp(name, "GlobalUnlock") == 0 || strcmp(name, "InitializeCriticalSection") == 0 ||
+    else if (strcmp(name, "GlobalFree") == 0 || strcmp(name, "LocalFree") == 0)
+    {
+        host_release(host, a0); /* the handle is the GlobalAlloc block itself */
+        *result = 0;
+    }
+    else if (strcmp(name, "GlobalUnlock") == 0 || strcmp(name, "InitializeCriticalSection") == 0 ||
              strcmp(name, "DeleteCriticalSection") == 0 ||
              strcmp(name, "EnterCriticalSection") == 0 ||
              strcmp(name, "LeaveCriticalSection") == 0 || strcmp(name, "SetLastError") == 0 ||
@@ -1383,7 +1480,8 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
         host_write(host, site->eax, site->stack, site->edx);
         return 0;
     }
-    if (site->target == LIFT_HOST_FREEMEM || site->target == LIFT_HOST_FREEMEM_ALIAS)
+    if (site->target == LIFT_HOST_FREEMEM || site->target == LIFT_HOST_FREEMEM_ALIAS ||
+        site->target == LIFT_HOST_FREE)
     {
         host_release(host, site->eax);
         return 0;

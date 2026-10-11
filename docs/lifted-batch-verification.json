@@ -1,8 +1,8 @@
 {
  "status": "completed",
  "attempted_routines": 4009,
- "passed_routines": 3938,
- "failed_routines": 71,
+ "passed_routines": 3940,
+ "failed_routines": 69,
  "cases_per_mode": 64,
  "oracle_modes": [
   "wide",
@@ -751,6 +751,8 @@
   "0x43e100",
   "0x43e1a0",
   "0x43e260",
+  "0x43e2a0",
+  "0x43e320",
   "0x43e4d0",
   "0x43e740",
   "0x43e840",
@@ -3626,8 +3628,6 @@
   "f4ee6a0": "AssertionError: ('too few complete original executions', 0, 1024, [('RuntimeError (Original routine 0x4ee6a0 did not reach its return boundary) at 0x7', 647), ('Invalid memory fetch (UC_ERR_FETCH_UNMA",
   "f4ee910": "timeout",
   "f41fe10": "subprocess.CalledProcessError: Command '['cc', '-std=c11', '-shared', '-fPIC', '-O2', '-Wall', '-Wextra', '-Werror', '-I', '/Volumes/SSD/larsen/Documents/Codex/2026-10-03/goal-ok-i-have-a-big/outputs/",
-  "f43e2a0": "timeout",
-  "f43e320": "timeout",
   "f491050": "AssertionError: (38, '0x0', '0x606060')",
   "f4928f0": "AssertionError: ('too few complete original executions', 0, 1024, [('RuntimeError (Original routine 0x4928f0 did not reach its return boundary) at 0x4928f1', 758), ('Unhandled CPU exception (UC_ERR_EX",
   "f492a70": "AssertionError: ('too few complete original executions', 0, 1024, [('RuntimeError (Original routine 0x492a70 did not reach its return boundary) at 0x2bc4', 516), ('RuntimeError (Original routine 0x492",
@@ -4856,6 +4856,20 @@
    "attempted": 1,
    "newly_passed": [
     "0x480730"
+   ]
+  },
+  {
+   "note": "0x43e320 (relift_main) with --timeout 2400: the 600 s limit had cut it off",
+   "attempted": 1,
+   "newly_passed": [
+    "0x43e320"
+   ]
+  },
+  {
+   "note": "0x43e2a0 (relift_arr): its meta declares the 450 object pointers at +0x15c..+0x860 and +0x870; random values there made almost every case fault",
+   "attempted": 1,
+   "newly_passed": [
+    "0x43e2a0"
    ]
   }
  ]

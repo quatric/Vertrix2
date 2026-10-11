@@ -1,0 +1,61 @@
+{
+ "f43e320": {
+  "callees": {
+   "0x4b23c0": [
+    0,
+    false
+   ],
+   "0x4ac500": [
+    0,
+    false
+   ],
+   "0x4ac560": [
+    0,
+    false
+   ],
+   "0x4eb526": [
+    0,
+    false
+   ],
+   "0x4eb57c": [
+    0,
+    false
+   ],
+   "0x4ac510": [
+    0,
+    false
+   ],
+   "0x4ad720": [
+    0,
+    false
+   ],
+   "0x43e740": [
+    0,
+    false
+   ],
+   "0x4ac710": [
+    0,
+    false
+   ],
+   "0x4ac8a0": [
+    0,
+    false
+   ]
+  },
+  "stack": 128,
+  "arguments": 0,
+  "pointer_callees": [],
+  "pointer_fields": [],
+  "pointer_globals": [
+   5509092
+  ],
+  "pointer_maybe": [],
+  "constants": [
+   449,
+   450,
+   451
+  ],
+  "virtual": [],
+  "address": 4449056
+ }
+}

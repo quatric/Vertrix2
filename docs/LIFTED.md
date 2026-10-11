@@ -507,6 +507,50 @@ Three more passed after further changes:
 
 0x47e890 and 0x488c50 are `lifted_whole_27`. The dispatcher has 3,912 verified routines.
 
+Then three more:
+
+- 0x43e320 passes as lifted (`lifted_whole_29`).
+- 0x43e2a0 faulted in the lifted run: it walks a table of object pointers at 0x15c..0x860 (step 4)
+  and 0x870 through locals, so the lifter did not give the fields pool objects. Its meta declares
+  them as `pointer_fields` (`lifted_whole_30`).
+- 0x4875a0's byte difference was the runtime's. A store with base 0 and the object's address in
+  the offset (`mov [eax*1 + 0x806000]` style) went to the global store, while the original wrote
+  pool memory. `lift_load` and `lift_store` in `source/lift_runtime.h` now resolve such an
+  address first and use the global path only when that fails. In small mode 0x4875a0 now passes.
+  Its full run and 0x423960's (with `VERTRIX_ORACLE_LIMIT=20000000`) are in `work/relift_h`.
+
+## Heap in long sessions
+
+A session that continued after each round hung at the second round's end (tick 11706, 0x422c50).
+The allocation failed, and the new-handler loop (0x4ca021 → 0x4ce780) never returned. The heap
+grew with every screen and reached 0x3fffdf0 of 64 MB. The second heap was full too, with no free
+extents.
+
+The host serves every allocation (0x4e7c90, 0x4ca000), but the frees went to lifted copies of
+the runtime's free:
+
+- 0x4ca040 jumps to 0x4ca050, which jumps to 0x4ea190;
+- 0x4ea190 is also called directly from 95 sites.
+
+The lifted free only knows the runtime's own arenas (0x5c8ad0), so it never released a host
+block. All three are now `NATIVE_UNVERIFIED_BOUNDARIES` (`tools/dispatch_boundaries.py`) and go
+to `host_release`. `GlobalFree` and `LocalFree` also release their block.
+
+The host's large blocks (over 16 KB, and every block of the second heap) now return to free
+extents per heap. `extent_take` takes the best fit and splits it, and `extent_give` merges a block
+with its neighbours. Blocks up to 16 KB keep their size bins.
+
+Results:
+
+- With `CONTINUE=yes`, the session plays 24,000 ticks: four round ends and continues, still
+  playing round 5, with 0 boundary calls.
+- The heap stays near 24 MB (0x183fe10) with 33 free extents; the second heap stays at 11 MB.
+- `host_game` prints the heap tops with each screen change, and the host prints the request
+  once if the heap is full.
+- The title run is the same except for heap addresses, because freed blocks are reused. The new
+  baseline is `work/tnew/base31.txt`.
+- The dispatcher has 3,911 verified routines.
+
 ## Open after the completed batch
 
 - 844 attempted routines did not pass verification. The saved failure details distinguish

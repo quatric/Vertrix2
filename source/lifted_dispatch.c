@@ -33,7 +33,9 @@
 #include "lifted_whole_26.h"
 #include "lifted_whole_27.h"
 #include "lifted_whole_28.h"
+#include "lifted_whole_29.h"
 #include "lifted_whole_3.h"
+#include "lifted_whole_30.h"
 #include "lifted_whole_4.h"
 #include "lifted_whole_5.h"
 #include "lifted_whole_6.h"
@@ -882,6 +884,8 @@ static const LiftedRoutine routines[] = {
     {0x43e100, lifted_board_particles_reset_full, 140, 0},
     {0x43e1a0, lifted_f43e1a0, 160, 0},
     {0x43e260, lifted_arena_release_all_full, 84, 0},
+    {0x43e2a0, lifted_f43e2a0, 100, 0},
+    {0x43e320, lifted_f43e320, 128, 0},
     {0x43e4d0, lifted_board_particles_setup, 264, 0},
     {0x43e740, lifted_particle_init_burst_full, 96, 0},
     {0x43e840, lifted_particle_init_fall_full, 100, 0},
@@ -3080,8 +3084,6 @@ static const LiftedRoutine routines[] = {
     {0x4c9fe0, lifted_f4c9fe0, 76, 0},
     {0x4c9ff0, lifted_f4c9ff0, 92, 0},
     {0x4ca000, lifted_f4ca000, 92, 0},
-    {0x4ca040, lifted_f4ca040, 92, 0},
-    {0x4ca050, lifted_f4ca050, 92, 0},
     {0x4ca060, lifted_return_constant_50081c, 64, 0},
     {0x4ca070, lifted_f4ca070, 80, 0},
     {0x4ca090, lifted_f4ca090, 92, 0},
@@ -3873,7 +3875,6 @@ static const LiftedRoutine routines[] = {
     {0x4ea0d0, lifted_f4ea0d0, 108, 0},
     {0x4ea13c, lifted_f4ea13c, 68, 0},
     {0x4ea144, lifted_f4ea144, 68, 0},
-    {0x4ea190, lifted_f4ea190, 92, 0},
     {0x4ea2a8, lifted_f4ea2a8, 72, 0},
     {0x4ea310, lifted_f4ea310, 64, 0},
     {0x4ea350, lifted_f4ea350, 108, 0},
@@ -3986,8 +3987,6 @@ static const LiftedRoutine unverified_routines[] = {
     {0, NULL, 0, 0},
     {0x41fe10, lifted_f41fe10, 496, 0},
     {0x423960, lifted_f423960, 308, 0},
-    {0x43e2a0, lifted_f43e2a0, 100, 0},
-    {0x43e320, lifted_f43e320, 128, 0},
     {0x452520, lifted_f452520, 192, 0},
     {0x453050, lifted_state_pair_453050, 144, 0},
     {0x480ca0, lifted_palette_cube, 112, 0},

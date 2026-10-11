@@ -23,8 +23,14 @@ enum
     LIFT_HOST_FREEMEM =
         0x4ca050, /* FreeMem (0x4ca040 jumps to it); the lifted RTL one only knows its own arenas */
     LIFT_HOST_FREEMEM_ALIAS = 0x4ca040, /* the RTL free: eax = the block */
+    LIFT_HOST_FREE = 0x4ea190,          /* the heap free 0x4ca050 jumps to; called directly too */
     LIFT_HOST_GETMEM = 0x4e7c90,        /* the RTL heap allocator: eax = size, returns the block */
     LIFT_HOST_TARGETS = 64
+};
+
+enum
+{
+    LIFT_HOST_EXTENTS = 256
 };
 
 typedef struct LiftHost
@@ -36,7 +42,11 @@ typedef struct LiftHost
     uint8_t *heap2;
     uint32_t heap2_size;
     uint32_t heap2_top;
-    uint32_t big_free[64];    /* freed blocks over 16 KB (addresses; the size is in the header) */
+    /* Free extents of blocks over 16 KB, per heap (0: heap, 1: heap2): header offset and length.
+     * Neighbours merge, and a request takes the smallest extent that holds it. */
+    uint32_t extent_at[2][LIFT_HOST_EXTENTS];
+    uint32_t extent_length[2][LIFT_HOST_EXTENTS];
+    unsigned extents[2];
     uint32_t free_bins[1025]; /* freed heap blocks by size / 16 (up to 16 KB), linked through the
                                  blocks */
     /* Recovered single and double arithmetic use this x87 control input (initialized to 0x037f).

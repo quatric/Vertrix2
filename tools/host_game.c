@@ -241,8 +241,9 @@ int main(int argc, char **argv)
         lift_host_run(&host, 0x4b7b80, 0, 0, 0, 0, &lifted); /* the 14 ms timer */
         if (handler != last_handler)
         {
-            printf("tick %u (%u ms): handler -> %x, frames %u\n", tick, (unsigned)host.clock_ms,
-                   (unsigned)handler, host.frames_presented);
+            printf("tick %u (%u ms): handler -> %x, frames %u, heap %x/%x\n", tick,
+                   (unsigned)host.clock_ms, (unsigned)handler, host.frames_presented,
+                   (unsigned)host.heap_top, (unsigned)host.heap2_top);
         }
         lifted = 1;
         if (handler != 0)
@@ -267,6 +268,9 @@ int main(int argc, char **argv)
         last_handler = handler;
     }
     write_frame(&host, argv[3], shots, last_handler);
+    printf("heap: top %x of %x, second %x of %x, free extents %u and %u\n", (unsigned)host.heap_top,
+           (unsigned)host.heap_size, (unsigned)host.heap2_top, (unsigned)host.heap2_size,
+           host.extents[0], host.extents[1]);
     printf("end: tick %u, frames presented %u, handler %x, boundary calls %u (%u distinct)\n", tick,
            host.frames_presented, (unsigned)last_handler, host.boundary_calls,
            host.boundary_distinct);
