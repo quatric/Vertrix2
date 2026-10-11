@@ -1,8 +1,8 @@
 {
  "status": "completed",
  "attempted_routines": 4000,
- "passed_routines": 3922,
- "failed_routines": 78,
+ "passed_routines": 3923,
+ "failed_routines": 77,
  "cases_per_mode": 64,
  "oracle_modes": [
   "wide",
@@ -3188,6 +3188,7 @@
   "0x4df320",
   "0x4df6c8",
   "0x4df81c",
+  "0x4df884",
   "0x4df8a8",
   "0x4df914",
   "0x4df978",
@@ -3596,7 +3597,6 @@
   "f4daae8": "AssertionError: (1, (0, (5089968, 37, 0, 0, 255, 0, 0, 0), (5089968, 37, 0, 0, 255, 4056217823, 37, 0), 3, 3, []))",
   "f4dae80": "AssertionError: ('too few complete original executions', 0, 1024, [('RuntimeError (Original routine 0x4dae80 did not reach its return boundary) at 0x0', 1019), ('Invalid memory fetch (UC_ERR_FETCH_UNM",
   "f4dae94": "AssertionError: ('too few complete original executions', 0, 1024, [('Invalid memory fetch (UC_ERR_FETCH_UNMAPPED) at 0xf30', 973), ('Invalid memory fetch (UC_ERR_FETCH_UNMAPPED) at 0xfbc', 37), ('Inva",
-  "f4df884": "AssertionError: (113, '0x1', '0x0')",
   "f4e1140": "AssertionError: (45, [('0x806000', '0xffe', 105, 0), ('0x807000', '0x1', 0, 125)])",
   "f4e3766": "AssertionError: ('too few complete original executions', 0, 1024, [('Unhandled CPU exception (UC_ERR_EXCEPTION) at 0x4e3768', 505), ('Invalid memory fetch (UC_ERR_FETCH_UNMAPPED) at 0xfd4', 136), ('In",
   "f4e3f20": "AssertionError: ('too few complete original executions', 0, 1024, [('Invalid memory fetch (UC_ERR_FETCH_UNMAPPED) at 0xfae', 995), ('Invalid memory fetch (UC_ERR_FETCH_UNMAPPED) at 0xfa8', 7), ('Inval",
@@ -4788,6 +4788,13 @@
     "0x4e5b0c",
     "0x4e9d00",
     "0x4ec8c0"
+   ]
+  },
+  {
+   "note": "0x4df884 (strnlen through es) with the flat data selector in the register it loads into es: passes in both modes",
+   "attempted": 1,
+   "newly_passed": [
+    "0x4df884"
    ]
   }
  ]

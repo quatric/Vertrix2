@@ -135,7 +135,34 @@ flag_targets = tuple(sorted({int(m.group(1), 16) for m in re.finditer(
 # as well as by calls.
 import lift  # noqa: E402
 
-internal = tuple(lift.trace(meta['address']))
+_routine = lift.trace(meta['address'])
+internal = tuple(_routine)
+
+
+def selector_registers(routine):
+    """The entry registers a routine loads into ES or DS (Watcom far-pointer RTL code such as
+    0x4df884 does `mov es, edx`). On flat Win32 every caller hands over the data selector there;
+    the lift ignores segment loads, so the cases use the flat data selector (0x10 in the oracle's
+    GDT) in those registers. Plain register moves before the load are followed back to entry."""
+    names = ('eax', 'edx', 'ebx', 'ecx', 'esi', 'edi')
+    source = {n: n for n in names}
+    found = set()
+    for address in sorted(routine):
+        insn = routine[address]
+        ops = insn.op_str.replace(' ', '').split(',')
+        if insn.mnemonic == 'mov' and len(ops) == 2 and ops[0] in ('es', 'ds') and ops[1] in names:
+            if source.get(ops[1]) in names[:4]:
+                found.add(source[ops[1]])
+        elif insn.mnemonic == 'mov' and len(ops) == 2 and ops[0] in names:
+            source[ops[0]] = source.get(ops[1]) if ops[1] in names else None
+        elif insn.mnemonic in ('jmp', 'ret', 'call') or insn.mnemonic.startswith('j'):
+            break
+        elif ops and ops[0] in names:
+            source[ops[0]] = None
+    return sorted(found)
+
+
+SELECTORS = selector_registers(_routine)
 # Calls through a static table of routines (0x40dc50 calls [edx*4+0x4f7444]): the original reaches
 # the routines the table names, so each entry is stubbed like the call that reads it.
 for _match in re.finditer(r'lift_call\(&env, lift_load\(&env, 0u, \(\w+ \* 4u\) \+ 0x([0-9a-f]+)u, '
@@ -149,6 +176,7 @@ for _match in re.finditer(r'lift_call\(&env, lift_load\(&env, 0u, \(\w+ \* 4u\) 
         meta['callees'].setdefault('0x%x' % _entry, [_count, _count > 0 and not _match.group(3)])
 spec = dict(internal=internal, flag_targets=flag_targets, effects=com, fixed_returns={0x4f175c: 0} if com else None, address=meta['address'], arguments=meta['arguments'], small=True, keep=tuple(slots) + tuple(pointer_globals) + tuple(imports), mixed=True, handles=True, automap=True, tolerate=True, smallregs=SMALL,
             pool_size=0x1000, patch=vtable_patch,
-            setup_case=lambda rng, pool, cpu, kwargs: vtable_setup(cpu),
+            setup_case=lambda rng, pool, cpu, kwargs: (vtable_setup(cpu),
+                                                       kwargs.update({r: 0x10 for r in SELECTORS})),
             setup=vtable_setup if virtual or slots or pointer_globals or imports else None)
 verify_lifted.run(name, spec, meta, scratch / (name + '.c'))

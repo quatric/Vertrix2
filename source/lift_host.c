@@ -59,6 +59,10 @@ static uint8_t *bytes_at(const LiftHost *host, uint32_t address, unsigned size)
             {
                 return env->stack + (address - env->low);
             }
+            if (env != NULL && lift_in_passed(env, address, size))
+            {
+                return ((LiftEnv *)env)->passed + (address - env->passed_low);
+            }
         }
     }
     return NULL;

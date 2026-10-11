@@ -371,6 +371,27 @@ The scores are kept: near the end of the round, the players' `+0x174` hold 30 an
 accumulator 0x43ba90 ran 7 times. The HUD still shows 00000000, and the menu labels are still
 missing.
 
+## Variable argument lists
+
+`lift_begin` mapped only a routine's declared arguments into its frame. The trailing slot was
+zeroed. `sprintf` 0x4cdfb0 is cdecl and declares 0, so the buffer, the format and the values its
+callers push never reached it. Every lifted `sprintf` call wrote nowhere, and the HUD kept its
+initial 00000000. `LiftEntry.passed` now gives the number of argument dwords the caller supplied
+(the dispatcher sets 17). The ones beyond the declared count are mapped right above the frame
+(`LiftEnv.passed`, little-endian). `lift_load` and `lift_store` reach them there, and so does the
+host when it follows a pointer into another frame, as `vsprintf` 0x4cdbe0 does with its argument
+pointer. In the verifier, `passed` is 0, so verified behaviour is unchanged. With `ALARM=300`,
+the host title output is identical, and `tools/test_dispatch.c` passes.
+
+The formatting then reached the RTL `strnlen` 0x4df884. It had failed because it loads its
+selector argument into ES (`mov ecx, edx; mov es, ecx`), and random selectors fault in Unicorn.
+On flat Win32 every caller passes the data selector, and the lift ignores segment loads.
+`verify_one.py` now follows plain moves from a `mov es/ds, reg` back to the entry register and
+gives it the oracle's flat data selector 0x10 in every case. 0x4df884 passes in both modes
+(`source/lifted_whole_22.[ch]`, 3,898 entries), and 0x4df8a8, 0x4df914 and 0x429ba0 still
+pass. The HUD now shows the scores (30 and 180 at the end of the scripted round), the level and
+speed digits, and the score pop-ups.
+
 ## Open after the completed batch
 
 - 844 attempted routines did not pass verification. The saved failure details distinguish

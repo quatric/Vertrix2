@@ -225,6 +225,7 @@ int vertrix_lifted_dispatch(const VertrixCalls *calls, const VertrixFactoryServi
     entry.ecx = site->ecx;
     entry.esp = LIFTED_ARENA_TOP - depth * LIFTED_ARENA_STEP;
     entry.arguments = arguments;
+    entry.passed = LIFTED_MAX_ARGUMENTS;
     entry.garbage = zero;
     if (trace_enabled)
     {

@@ -19,7 +19,8 @@ U = c.c_uint32
 class LiftEntry(c.Structure):
     _fields_ = [('eax', U), ('edx', U), ('ebx', U), ('ecx', U), ('esi', U), ('edi', U),
                 ('ebp', U), ('esp', U), ('arguments', c.POINTER(U)),
-                ('garbage', c.POINTER(c.c_uint8)), ('chain', U)]
+                ('garbage', c.POINTER(c.c_uint8)), ('chain', U),
+                ('passed', c.c_uint)]
 
 
 FRAME = STACK

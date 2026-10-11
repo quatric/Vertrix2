@@ -26,6 +26,7 @@
 #include "lifted_whole_2.h"
 #include "lifted_whole_20.h"
 #include "lifted_whole_21.h"
+#include "lifted_whole_22.h"
 #include "lifted_whole_3.h"
 #include "lifted_whole_4.h"
 #include "lifted_whole_5.h"
@@ -3558,6 +3559,7 @@ static const LiftedRoutine routines[] = {
     {0x4df320, lifted_f4df320, 248, 0},
     {0x4df6c8, lifted_format_spec, 80, 0},
     {0x4df81c, lifted_rtl_parse_format_flags, 72, 0},
+    {0x4df884, lifted_rtl_length_limit, 80, 0},
     {0x4df978, lifted_f4df978, 88, 0},
     {0x4dfa74, lifted_f4dfa74, 68, 0},
     {0x4dfa7c, lifted_rtl_distribute_slack, 88, 0},
@@ -4085,6 +4087,7 @@ int vertrix_lifted_dispatch(const VertrixCalls *calls, const VertrixFactoryServi
     entry.ecx = site->ecx;
     entry.esp = LIFTED_ARENA_TOP - depth * LIFTED_ARENA_STEP;
     entry.arguments = arguments;
+    entry.passed = LIFTED_MAX_ARGUMENTS;
     entry.garbage = zero;
     if (trace_enabled)
     {

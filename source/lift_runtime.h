@@ -12,7 +12,9 @@
 
 enum
 {
-    LIFT_GLOBAL_STORE = 0xf0000000u
+    LIFT_GLOBAL_STORE = 0xf0000000u,
+    /* The most argument dwords a caller hands over (the dispatcher's LIFTED_MAX_ARGUMENTS). */
+    LIFT_PASSED_LIMIT = 17
 };
 
 typedef struct LiftFlags
@@ -38,6 +40,10 @@ typedef struct LiftEntry
     const uint32_t *arguments; /* the dwords above the return slot */
     const uint8_t *garbage;    /* the stack bytes below esp (stack size of them) */
     uint32_t chain;
+    /* The argument dwords the caller supplied in `arguments`, or 0 when only the routine's own
+     * count is available. A cdecl routine with a variable list (sprintf 0x4cdfb0) declares fewer
+     * arguments than its callers push; the rest are mapped above the declared ones. */
+    unsigned passed;
 } LiftEntry;
 
 typedef struct LiftEnv
@@ -50,6 +56,11 @@ typedef struct LiftEnv
     uint32_t high;
     uint32_t chain;
     int failed;
+    /* The supplied arguments beyond the declared ones and the slot after them, little-endian, at
+     * passed_low..passed_high (directly above the frame). */
+    uint32_t passed_low;
+    uint32_t passed_high;
+    uint8_t passed[4 * LIFT_PASSED_LIMIT];
 } LiftEnv;
 
 /* The stack frames of the lifted routines now executing, outermost first, so the host side of
@@ -93,6 +104,18 @@ static inline void lift_begin(LiftEnv *env, const VertrixCalls *calls,
     {
         lift_put(stack + below + 4 + 4 * i, 4, entry->arguments[i]);
     }
+    env->passed_low = env->high;
+    env->passed_high = env->high;
+    if (entry->passed > argument_count && entry->passed <= LIFT_PASSED_LIMIT)
+    {
+        /* The slot after the declared arguments is in the frame; the rest go above it. */
+        lift_put(stack + below + 4 + 4 * argument_count, 4, entry->arguments[argument_count]);
+        for (i = argument_count + 1; i < entry->passed; i++)
+        {
+            lift_put(env->passed + 4 * (i - argument_count - 1), 4, entry->arguments[i]);
+        }
+        env->passed_high = env->high + 4 * (entry->passed - argument_count - 1);
+    }
 }
 
 static inline uint32_t lift_mask(unsigned size)
@@ -125,6 +148,11 @@ static inline int lift_in_stack(const LiftEnv *env, uint32_t address, unsigned s
     return address >= env->low && (uint64_t)address + size <= env->high;
 }
 
+static inline int lift_in_passed(const LiftEnv *env, uint32_t address, unsigned size)
+{
+    return address >= env->passed_low && (uint64_t)address + size <= env->passed_high;
+}
+
 static inline uint32_t lift_load(LiftEnv *env, uint32_t base, uint32_t offset, unsigned size)
 {
     uint32_t address = base + offset;
@@ -134,6 +162,10 @@ static inline uint32_t lift_load(LiftEnv *env, uint32_t base, uint32_t offset, u
     if (lift_in_stack(env, address, size))
     {
         return lift_get(env->stack + (address - env->low), size);
+    }
+    if (lift_in_passed(env, address, size))
+    {
+        return lift_get(env->passed + (address - env->passed_low), size);
     }
     if (base != 0 && env->services->resolve(base, &storage, &length, env->services->context) &&
         vertrix_actor_storage_read(storage, length, offset, size, &value))
@@ -162,6 +194,10 @@ static inline void lift_store(LiftEnv *env, uint32_t base, uint32_t offset, unsi
     if (lift_in_stack(env, address, size))
     {
         lift_put(env->stack + (address - env->low), size, value);
+    }
+    else if (lift_in_passed(env, address, size))
+    {
+        lift_put(env->passed + (address - env->passed_low), size, value);
     }
     else if (base == 0)
     {
