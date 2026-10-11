@@ -154,7 +154,8 @@ static inline void lift_store(LiftEnv *env, uint32_t base, uint32_t offset, unsi
                               uint32_t value)
 {
     uint32_t address = base + offset;
-    if (vertrix_debug_watch != 0 && vertrix_debug_watch >= address && vertrix_debug_watch < address + size)
+    if (vertrix_debug_watch != 0 && vertrix_debug_watch >= address &&
+        vertrix_debug_watch < address + size)
     {
         printf("WATCH store %x size %u = %x\n", (unsigned)address, size, (unsigned)value);
     }
@@ -208,7 +209,7 @@ static inline uint32_t lift_call(LiftEnv *env, uint32_t target, uint32_t eax, ui
         lift_store(env, stack[4], 0, 4, out); /* CoCreateInstance stores the interface */
     }
     if ((target == 0x4db507 || target == 0x4eb652 || target == 0x4db350 || target == 0x4d809c ||
-        target == 0x4d80a6 || target == 0x4d8177 || target == 0x4d81fe))
+         target == 0x4d80a6 || target == 0x4d8177 || target == 0x4d81fe))
     {
         vertrix_lift_edx = out;
     }

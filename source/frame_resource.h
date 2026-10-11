@@ -30,6 +30,6 @@ int vertrix_frame_resource_count_full(const void *storage, size_t size, uint32_t
  * calls. Boundary failure leaves result unchanged and retains completed callback
  * effects; these failures adapt original memory faults rather than model them. */
 int vertrix_frame_resource_set_full(uint32_t resource, uint32_t index, uint32_t descriptor,
-                                     VertrixMemoryRead read, VertrixMemoryWrite write,
-                                     void *context, uint32_t *result);
+                                    VertrixMemoryRead read, VertrixMemoryWrite write, void *context,
+                                    uint32_t *result);
 #endif

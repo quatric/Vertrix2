@@ -44,13 +44,16 @@ int vertrix_frame_resource_count_full(const void *storage, size_t size, uint32_t
 }
 
 int vertrix_frame_resource_set_full(uint32_t resource, uint32_t index, uint32_t descriptor,
-                                     VertrixMemoryRead read, VertrixMemoryWrite write,
-                                     void *context, uint32_t *result)
+                                    VertrixMemoryRead read, VertrixMemoryWrite write, void *context,
+                                    uint32_t *result)
 {
     uint32_t table;
-    if (!read || !write || !result) return 0;
-    if (!read(resource, 4, &table, context)) return 0;
-    if (!write(table + index * 4u, 4, descriptor, context)) return 0;
+    if (!read || !write || !result)
+        return 0;
+    if (!read(resource, 4, &table, context))
+        return 0;
+    if (!write(table + index * 4u, 4, descriptor, context))
+        return 0;
     *result = table;
     return 1;
 }

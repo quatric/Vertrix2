@@ -83,7 +83,8 @@ static uint32_t host_read(uint32_t address, void *context)
 
 static void host_write(LiftHost *host, uint32_t address, unsigned size, uint32_t value)
 {
-    if (vertrix_debug_watch != 0 && vertrix_debug_watch >= address && vertrix_debug_watch < address + size)
+    if (vertrix_debug_watch != 0 && vertrix_debug_watch >= address &&
+        vertrix_debug_watch < address + size)
         printf("WATCH host_write %x = %x\n", (unsigned)address, (unsigned)value);
     uint8_t *bytes = bytes_at(host, address, size);
     unsigned i;
@@ -140,7 +141,8 @@ static uint32_t host_allocate(uint32_t size, void *context)
      * not be the surface object that follows. */
     uint32_t slack = size >= 0x10000u ? 0x4000u : 0u;
     uint32_t bin = rounded / 16u, offset;
-    if (size >= 0x100000u && host->heap2 != NULL && 16u + rounded + slack <= host->heap2_size - host->heap2_top)
+    if (size >= 0x100000u && host->heap2 != NULL &&
+        16u + rounded + slack <= host->heap2_size - host->heap2_top)
     {
         uint32_t base = host->heap2_top;
         memset(host->heap2 + base, 0, 16u + rounded + slack);
@@ -169,7 +171,8 @@ static uint32_t host_allocate(uint32_t size, void *context)
                 continue;
             }
             have = heap_get32(host, block - LIFT_HOST_HEAP_BASE - 8u);
-            if (have >= rounded + slack && have <= rounded + slack + rounded / 4u && (best == 64 || have < best_size))
+            if (have >= rounded + slack && have <= rounded + slack + rounded / 4u &&
+                (best == 64 || have < best_size))
             {
                 best = i;
                 best_size = have;
@@ -224,7 +227,8 @@ static void host_release(LiftHost *host, uint32_t address)
         }
         return;
     }
-    if (getenv("TRACE_FREE")) fprintf(stderr, "free %x size %u\n", (unsigned)address, (unsigned)rounded);
+    if (getenv("TRACE_FREE"))
+        fprintf(stderr, "free %x size %u\n", (unsigned)address, (unsigned)rounded);
     heap_put32(host, offset - 12u, 1);
     heap_put32(host, offset, host->free_bins[rounded / 16u]);
     host->free_bins[rounded / 16u] = address;
@@ -235,8 +239,10 @@ static void host_write(LiftHost *host, uint32_t address, unsigned size, uint32_t
 /* Move (0x4e1140): eax = destination, edx = source, ebx = byte count; overlap-safe. */
 static void host_move(LiftHost *host, uint32_t destination, uint32_t source, uint32_t count)
 {
-    if (vertrix_debug_watch != 0 && vertrix_debug_watch >= destination && vertrix_debug_watch < destination + count)
-        printf("WATCH move dst %x src %x count %u\n", (unsigned)destination, (unsigned)source, (unsigned)count);
+    if (vertrix_debug_watch != 0 && vertrix_debug_watch >= destination &&
+        vertrix_debug_watch < destination + count)
+        printf("WATCH move dst %x src %x count %u\n", (unsigned)destination, (unsigned)source,
+               (unsigned)count);
     uint8_t *to = bytes_at(host, destination, count);
     uint8_t *from = bytes_at(host, source, count);
     if (to != NULL && from != NULL && count != 0)
@@ -352,7 +358,8 @@ static int host_import(LiftHost *host, const VertrixCallSite *site, const char *
         host->timer_user = site_argument(site, 3);
         *result = 1;
     }
-    else if (strcmp(name, "CoCreateInstance") == 0) /* (clsid, outer, context, iid, out): no COM classes */
+    else if (strcmp(name, "CoCreateInstance") ==
+             0) /* (clsid, outer, context, iid, out): no COM classes */
     {
         host_write(host, site_argument(site, 4), 4, 0);
         *result = 0x80040154u; /* REGDB_E_CLASSNOTREG */
@@ -360,7 +367,12 @@ static int host_import(LiftHost *host, const VertrixCallSite *site, const char *
     else if (strcmp(name, "DirectInput8Create") == 0) /* (instance, version, iid, out, outer) */
     {
         uint32_t input = getenv("NODI") ? 0 : host_com_object(host, COM_INPUT);
-        if (getenv("NODI")) { host_write(host, site_argument(site, 3), 4, 0); *result = 0x80004002u; return 1; }
+        if (getenv("NODI"))
+        {
+            host_write(host, site_argument(site, 3), 4, 0);
+            *result = 0x80004002u;
+            return 1;
+        }
         host_write(host, site_argument(site, 3), 4, input);
         *result = input == 0 ? 0x8007000eu : 0;
     }
@@ -823,29 +835,39 @@ static uint32_t host_input(LiftHost *host, unsigned interface_id, unsigned index
 {
     uint32_t this_ = site_argument(site, 0);
     if (getenv("TRACE_INPUT"))
-        fprintf(stderr, "input %s[%u] kind %u this %x\n", interface_id == COM_INPUT ? "IDirectInput" : "Device", index, (unsigned)lift_host_read(host, this_ + 24, 4), (unsigned)this_);
+        fprintf(stderr, "input %s[%u] kind %u this %x\n",
+                interface_id == COM_INPUT ? "IDirectInput" : "Device", index,
+                (unsigned)lift_host_read(host, this_ + 24, 4), (unsigned)this_);
     if (interface_id == COM_INPUT)
     {
         if (index == 3) /* CreateDevice(this, guid, out, outer) */
         {
             uint32_t device = host_com_object(host, COM_DEVICE);
-            if (getenv("TRACE_INPUT")) fprintf(stderr, "CreateDevice guid %x device %x\n", (unsigned)lift_host_read(host, site_argument(site, 1), 4), (unsigned)device);
+            if (getenv("TRACE_INPUT"))
+                fprintf(stderr, "CreateDevice guid %x device %x\n",
+                        (unsigned)lift_host_read(host, site_argument(site, 1), 4),
+                        (unsigned)device);
             if (device == 0)
             {
                 return 0x8007000eu;
             }
             {
                 uint32_t guid = lift_host_read(host, site_argument(site, 1), 4);
-                host_write(host, device + 24, 4, guid == 0x6f1d2b61u ? 1 : guid == 0x6f1d2b60u ? 2 : 0);
+                host_write(host, device + 24, 4,
+                           guid == 0x6f1d2b61u   ? 1
+                           : guid == 0x6f1d2b60u ? 2
+                                                 : 0);
             }
             host_write(host, site_argument(site, 2), 4, device);
         }
         return 0;
     }
-    if (index == 10 && lift_host_read(host, this_ + 24, 4) != 0) /* GetDeviceData(this, size, data, count, flags) */
+    if (index == 10 && lift_host_read(host, this_ + 24, 4) !=
+                           0) /* GetDeviceData(this, size, data, count, flags) */
     {
         uint32_t kind = lift_host_read(host, this_ + 24, 4);
-        uint32_t size = site_argument(site, 1), data = site_argument(site, 2), count = site_argument(site, 3);
+        uint32_t size = site_argument(site, 1), data = site_argument(site, 2),
+                 count = site_argument(site, 3);
         uint32_t room = lift_host_read(host, count, 4), n = 0;
         unsigned *head = kind == 1 ? &host->key_head : &host->mouse_head;
         unsigned tail = kind == 1 ? host->key_tail : host->mouse_tail;
@@ -861,7 +883,8 @@ static uint32_t host_input(LiftHost *host, unsigned interface_id, unsigned index
             *head = (*head + 1) % 64;
             n++;
         }
-        if (n != 0 && getenv("TRACE_INPUT")) fprintf(stderr, "delivered %u events to kind %u\n", (unsigned)n, (unsigned)kind);
+        if (n != 0 && getenv("TRACE_INPUT"))
+            fprintf(stderr, "delivered %u events to kind %u\n", (unsigned)n, (unsigned)kind);
         host_write(host, count, 4, n);
         return 0;
     }
@@ -934,7 +957,8 @@ static uint32_t host_com(LiftHost *host, unsigned interface_id, unsigned index,
         {
             uint32_t target_rect = site_argument(site, 1);
             if (getenv("TRACE_BLT"))
-                fprintf(stderr, "Blt dst %x src %x rect %x\n", (unsigned)this_, (unsigned)site_argument(site, 2), (unsigned)target_rect);
+                fprintf(stderr, "Blt dst %x src %x rect %x\n", (unsigned)this_,
+                        (unsigned)site_argument(site, 2), (unsigned)target_rect);
             host_surface_copy(host, this_,
                               target_rect != 0 ? lift_host_read(host, target_rect, 4) : 0,
                               target_rect != 0 ? lift_host_read(host, target_rect + 4, 4) : 0,
@@ -944,7 +968,9 @@ static uint32_t host_com(LiftHost *host, unsigned interface_id, unsigned index,
         if (index == 7) /* BltFast(this, x, y, source, source rect, flags) */
         {
             if (getenv("TRACE_BLT"))
-                fprintf(stderr, "BltFast dst %x src %x x %u y %u\n", (unsigned)this_, (unsigned)site_argument(site, 3), (unsigned)site_argument(site, 1), (unsigned)site_argument(site, 2));
+                fprintf(stderr, "BltFast dst %x src %x x %u y %u\n", (unsigned)this_,
+                        (unsigned)site_argument(site, 3), (unsigned)site_argument(site, 1),
+                        (unsigned)site_argument(site, 2));
             host_surface_copy(host, this_, site_argument(site, 1), site_argument(site, 2),
                               site_argument(site, 3), site_argument(site, 4));
             return 0;
@@ -968,7 +994,8 @@ static uint32_t host_com(LiftHost *host, unsigned interface_id, unsigned index,
             host_write(host, desc + 36, 4, pixels);
             host_write(host, desc + 84, 4, 8 * lift_host_read(host, this_ + 20, 4));
             /* The DDPIXELFORMAT the original reads to pick its renderer: the channel masks of the
-             * host's pixel layout (red in bits 16-23, as the JPEG loader packs it and the Wii display reads it). An 8-bit surface keeps zero masks. */
+             * host's pixel layout (red in bits 16-23, as the JPEG loader packs it and the Wii
+             * display reads it). An 8-bit surface keeps zero masks. */
             host_write(host, desc + 72, 4, 32);
             if (lift_host_read(host, this_ + 20, 4) == 4)
             {
@@ -1171,18 +1198,23 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
     }
     if (site->target == 0x475090)
         return host_palette_build(host);
-    if (site->target == 0x48ac50 || site->target == 0x48ad00) /* load an image file: eax = path, the result is a surface object */
+    if (site->target == 0x48ac50 ||
+        site->target ==
+            0x48ad00) /* load an image file: eax = path, the result is a surface object */
     {
         char text[260];
         unsigned k;
         uint8_t *pixels = NULL;
         uint32_t width = 0, height = 0, surface, base, pitch, x, y;
         VertrixCallSite create;
-        for (k = 0; k < sizeof text - 1 && (text[k] = (char)lift_host_read(host, site->eax + k, 1)) != 0; k++)
+        for (k = 0;
+             k < sizeof text - 1 && (text[k] = (char)lift_host_read(host, site->eax + k, 1)) != 0;
+             k++)
         {
         }
         text[k] = 0;
-        if (host->decode_jpeg == NULL || !host->decode_jpeg(host->archive, text, &pixels, &width, &height))
+        if (host->decode_jpeg == NULL ||
+            !host->decode_jpeg(host->archive, text, &pixels, &width, &height))
         {
             if (lift_host_trace_files || getenv("TRACE_FILES"))
             {
@@ -1204,18 +1236,24 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
             {
                 const uint8_t *p = pixels + 4 * ((size_t)y * width + x);
                 host_write(host, base + y * pitch + 4 * x, 4,
-                           (uint32_t)p[0] | (uint32_t)p[1] << 8 | (uint32_t)p[2] << 16); /* the decoder gives B, G, R */
+                           (uint32_t)p[0] | (uint32_t)p[1] << 8 |
+                               (uint32_t)p[2] << 16); /* the decoder gives B, G, R */
             }
         }
         if (lift_host_trace_files)
         {
-            printf("image %s: %ux%u surface %x pixels %x first %x\n", text, (unsigned)width, (unsigned)height, (unsigned)surface, (unsigned)base, (unsigned)lift_host_read(host, base + 4 * (width * height / 2 + width / 2), 4));
+            printf("image %s: %ux%u surface %x pixels %x first %x\n", text, (unsigned)width,
+                   (unsigned)height, (unsigned)surface, (unsigned)base,
+                   (unsigned)lift_host_read(host, base + 4 * (width * height / 2 + width / 2), 4));
         }
         if (getenv("TRACE_IMAGES"))
         {
-            unsigned long lit = 0; size_t q;
-            for (q = 0; q < (size_t)width * height; q++) lit += (pixels[4 * q] | pixels[4 * q + 1] | pixels[4 * q + 2]) != 0;
-            fprintf(stderr, "image %s: %ux%u surface %x base %x lit %lu\n", text, (unsigned)width, (unsigned)height, (unsigned)surface, (unsigned)base, lit);
+            unsigned long lit = 0;
+            size_t q;
+            for (q = 0; q < (size_t)width * height; q++)
+                lit += (pixels[4 * q] | pixels[4 * q + 1] | pixels[4 * q + 2]) != 0;
+            fprintf(stderr, "image %s: %ux%u surface %x base %x lit %lu\n", text, (unsigned)width,
+                    (unsigned)height, (unsigned)surface, (unsigned)base, lit);
         }
         free(pixels);
         return surface;
@@ -1246,8 +1284,9 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
     }
     if (site->target == 0x4e04f4 || site->target == 0x4e0f8b || site->target == 0x4cd8b0)
     {
-        return site->eax; /* a bare ret; 0x4e0f8b is the exception-state check, 0x4cd8b0 the raise: the original's frames resume at the
-                           instruction after the raising call, so no unwinding is needed */
+        return site->eax; /* a bare ret; 0x4e0f8b is the exception-state check, 0x4cd8b0 the raise:
+                           the original's frames resume at the instruction after the raising call,
+                           so no unwinding is needed */
     }
     if (site->target == 0x4eb5e0)
     {
