@@ -392,6 +392,21 @@ gives it the oracle's flat data selector 0x10 in every case. 0x4df884 passes in 
 pass. The HUD now shows the scores (30 and 180 at the end of the scripted round), the level and
 speed digits, and the score pop-ups.
 
+## Menu labels
+
+The title menu buttons had no text. 0x45fc80 builds each button's label 0x4b6350 and sets its text
+with 0x4b65d0. 0x4b3210 then sets the same text again from a copy. Each call assigns the text with
+the string assignment 0x4ca370. `lift_call` stored the callee's reported string through eax after
+0x4ca280 and 0x4ca370 unless the pointer had changed. A lifted callee reports nothing (0). The
+second assignment fit the existing buffer, so the pointer stayed the same, and 0 was written over
+it. The text builder 0x4408e0 then got an empty string. The store now happens only when a native
+callee reports a string. The four labels (1PLAYER, 2PLAYERS, OPTIONS, EXIT) render.
+
+The host title output differs from `base13.txt` only in heap addresses. 0x50 fewer bytes are
+allocated, because the cleared strings no longer have to be allocated again. All results are
+unchanged. The new baseline is `work/tnew/base23.txt`. `tools/host_game.c` gains `DUMPSCENE`, which
+lists the actors of the three scene lists.
+
 ## Open after the completed batch
 
 - 844 attempted routines did not pass verification. The saved failure details distinguish

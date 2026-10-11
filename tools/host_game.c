@@ -228,6 +228,32 @@ int main(int argc, char **argv)
             }
         }
     }
+    if (getenv("DUMPSCENE") != NULL)
+    {
+        /* The three scene lists of the game frame (0x54671c, 0x546744, 0x546730; TList: items at
+         * +4, count at +8) with each actor's position (+0xe, +0x16), image (+0xb4), state
+         * (+0x13c), token (+0x144) and class (+0x158). */
+        static const uint32_t lists[] = {0x54671c, 0x546744, 0x546730};
+        unsigned l;
+        for (l = 0; l < 3; l++)
+        {
+            uint32_t items = lift_host_read(&host, lists[l] + 4, 4);
+            uint32_t count = lift_host_read(&host, lists[l] + 8, 4);
+            unsigned i;
+            printf("  list %x: %u actors\n", (unsigned)lists[l], (unsigned)count);
+            for (i = 0; i < count && i < 400; i++)
+            {
+                uint32_t a = lift_host_read(&host, items + 4 * i, 4);
+                printf("    [%u] %x x %d y %d image %x state %x token %x class %x\n", i,
+                       (unsigned)a, (int)(int16_t)lift_host_read(&host, a + 0xe, 2),
+                       (int)(int16_t)lift_host_read(&host, a + 0x16, 2),
+                       (unsigned)lift_host_read(&host, a + 0xb4, 4),
+                       (unsigned)lift_host_read(&host, a + 0x13c, 4),
+                       (unsigned)lift_host_read(&host, a + 0x144, 4),
+                       (unsigned)lift_host_read(&host, a + 0x158, 4));
+            }
+        }
+    }
     if (getenv("PEEKSTR") != NULL)
     {
         /* PEEKSTR=table,count: the strings a table of `count` string pointers names. */

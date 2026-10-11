@@ -220,7 +220,6 @@ static inline uint32_t lift_call(LiftEnv *env, uint32_t target, uint32_t eax, ui
 {
     uint32_t stack[32] = {0};
     uint32_t out = 0;
-    uint32_t before = (target == 0x4ca280 || target == 0x4ca370) ? lift_load(env, eax, 0, 4) : 0;
     uint32_t result;
     unsigned i;
     vertrix_lift_edx = edx; /* a callee that returns a pair leaves its edx here */
@@ -234,9 +233,10 @@ static inline uint32_t lift_call(LiftEnv *env, uint32_t target, uint32_t eax, ui
         stack[i] = lift_load(env, esp, 4 * i, 4);
     }
     result = vertrix_calln(env->calls, target, eax, edx, ebx, ecx, stack, count, &out);
-    /* a lifted callee has already stored through eax; only the native ones report it in out */
-    if ((target == 0x4ca280 || target == 0x4ca370) &&
-        !(out == 0 && lift_load(env, eax, 0, 4) != before))
+    /* A lifted callee has already stored through eax and leaves out 0; only the native ones
+     * report the string in out. (Storing out when a lifted assignment kept its buffer wrote 0
+     * over the string: 0x4b65d0 called from 0x4b3210 lost the menu labels.) */
+    if ((target == 0x4ca280 || target == 0x4ca370) && out != 0)
     {
         lift_store(env, eax, 0, 4, out);
     }
