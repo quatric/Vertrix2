@@ -452,6 +452,16 @@ the boundary:
 All eight pass verification (`lifted_whole_24`, `lifted_whole_25`). The three submenus now run
 without unserved calls. The dispatcher has 3,907 verified routines.
 
+## EXIT and two players
+
+EXIT (MENU=428) runs 0x41c0c0, 0x41c390 and then 0x41c400 → 0x41a010. 0x41a010 posts WM_CLOSE (0x10)
+to the form with PostMessageA (slot 0x4f1a60). The host now serves PostMessageA (it returns TRUE)
+and sets `close_requested` on WM_CLOSE. `tools/wii_lifted_game.c` then leaves its loop and returns
+to the loader, and `tools/host_game.c` stops.
+
+2PLAYERS (MENU=378, GAMEKEYS) plays a full round through 0x424990 to the CONTINUE question
+0x41eab0, with no unserved calls.
+
 ## Open after the completed batch
 
 - 844 attempted routines did not pass verification. The saved failure details distinguish

@@ -701,6 +701,15 @@ static int host_import(LiftHost *host, const VertrixCallSite *site, const char *
     {
         *result = 0x7e000000u + host->events_created++; /* a distinct nonzero handle */
     }
+    else if (strcmp(name, "PostMessageA") == 0) /* (window, message, wparam, lparam) */
+    {
+        /* EXIT posts WM_CLOSE to the form (0x41a010); the driver ends the game on it. */
+        if (a1 == 0x10)
+        {
+            host->close_requested = 1;
+        }
+        *result = 1;
+    }
     else if (strcmp(name, "GetCurrentThreadId") == 0)
     {
         *result = 1; /* the one thread the lifted code runs on */

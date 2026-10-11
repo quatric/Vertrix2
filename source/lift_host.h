@@ -73,6 +73,7 @@ typedef struct LiftHost
     uint32_t back_surface;
     unsigned frames_presented;
     unsigned events_created; /* CreateEventA handles handed out */
+    int close_requested;     /* the original posted WM_CLOSE to its window (EXIT) */
     /* The files the original opens are entries of this archive (names like .\\SPRITE\\x.spr). */
     uint32_t tls[64], tls_count;
     VertrixVf *archive;

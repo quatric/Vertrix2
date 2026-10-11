@@ -244,6 +244,11 @@ int main(int argc, char **argv)
             printf("tick %u: handler %x is not lifted\n", tick, (unsigned)handler);
             break;
         }
+        if (host.close_requested)
+        {
+            printf("tick %u: the original closed its window (EXIT)\n", tick);
+            break;
+        }
         if (host.frames_presented != before &&
             (handler != last_handler || host.frames_presented % every == 0))
         {

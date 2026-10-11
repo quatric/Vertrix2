@@ -367,6 +367,11 @@ int main(void)
             printf("handler %x is not lifted\n", (unsigned)handler);
             fail("The original asked for a routine that is not lifted yet.");
         }
+        if (host.close_requested)
+        {
+            printf("EXIT: the original closed its window\n");
+            break; /* return to the loader */
+        }
         if (host.frames_presented != before)
         {
             base = lift_host_surface(&host, host.primary_surface, &width, &height, &pitch, &bytes);
