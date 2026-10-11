@@ -335,6 +335,16 @@ unlifted delete 0x4b5ee0, so the count never fell. 0x4b5ee0 passes and is in
 it is first reached. Gameplay now lasts until tick 5855. Four targets are still unserved: 0x42b600,
 0x42abf0, 0x42ac40 and 0x42ab10.
 
+Round 20 (`source/lifted_whole_20.[ch]`, 0x42ab10, 0x42abf0, 0x42ac40 and 0x42b600, all passing)
+leaves the scripted run with no unserved routine, only Win32 imports. The dispatcher has 3,303
+entries. The run goes from the menu through players selection to play, where the CPU opponent
+places pieces across its board and uses its bonuses. After the round it reaches the end screen,
+with the slide transition, the head pair, the taunts, LOSER & WINNER and CONTINUE? YES NO
+(0x41eab0). Both scores stay 00000000, and the title menu buttons show no labels. The empty
+`.\IMAGE\SYSTEME\.pcx` lookups are not the cause. In `TEXTE\PictureFileName.ini` the mask
+column of most entries is `.pcx`, meaning no mask, and the original checks for that file in the
+same way.
+
 ## Open after the completed batch
 
 - 844 attempted routines did not pass verification. The saved failure details distinguish

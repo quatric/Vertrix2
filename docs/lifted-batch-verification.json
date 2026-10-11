@@ -1,7 +1,7 @@
 {
  "status": "completed",
- "attempted_routines": 3513,
- "passed_routines": 3452,
+ "attempted_routines": 3517,
+ "passed_routines": 3456,
  "failed_routines": 61,
  "cases_per_mode": 64,
  "oracle_modes": [
@@ -435,6 +435,9 @@
   "0x42a9d0",
   "0x42aa20",
   "0x42aab0",
+  "0x42ab10",
+  "0x42abf0",
+  "0x42ac40",
   "0x42acf0",
   "0x42af30",
   "0x42af80",
@@ -452,6 +455,7 @@
   "0x42b310",
   "0x42b370",
   "0x42b5c0",
+  "0x42b600",
   "0x42b6b0",
   "0x42b8d0",
   "0x42b920",
@@ -3691,6 +3695,16 @@
    "attempted": 1,
    "newly_passed": [
     "0x4b5ee0"
+   ]
+  },
+  {
+   "note": "Host game run (relift_r20): routines reached through the boundary without a lift",
+   "attempted": 4,
+   "newly_passed": [
+    "0x42ab10",
+    "0x42abf0",
+    "0x42ac40",
+    "0x42b600"
    ]
   }
  ]

@@ -24,6 +24,7 @@
 #include "lifted_whole_18.h"
 #include "lifted_whole_19.h"
 #include "lifted_whole_2.h"
+#include "lifted_whole_20.h"
 #include "lifted_whole_3.h"
 #include "lifted_whole_4.h"
 #include "lifted_whole_5.h"
@@ -485,6 +486,9 @@ static const LiftedRoutine routines[] = {
     {0x42a9d0, lifted_f42a9d0, 80, 0},
     {0x42aa20, lifted_f42aa20, 80, 0},
     {0x42aab0, lifted_piece_actor_parent_construct, 76, 0},
+    {0x42ab10, lifted_piece_actor_destroy_full, 164, 0},
+    {0x42abf0, lifted_piece_actor_forward_slot2, 84, 0},
+    {0x42ac40, lifted_piece_actor_update, 108, 0},
     {0x42acf0, lifted_piece_actor_construct_placed, 180, 0},
     {0x42af30, lifted_piece_actor_layout, 80, 0},
     {0x42af80, lifted_piece_actor_cycle, 88, 0},
@@ -500,6 +504,7 @@ static const LiftedRoutine routines[] = {
     {0x42b310, lifted_f42b310, 92, 0},
     {0x42b370, lifted_ui_player_previews_construct, 232, 0},
     {0x42b5c0, lifted_piece_actor_construct_empty, 68, 0},
+    {0x42b600, lifted_f42b600, 156, 0},
     {0x42b6b0, lifted_f42b6b0, 176, 0},
     {0x42b8d0, lifted_f42b8d0, 96, 0},
     {0x42b920, lifted_piece_set_variant, 72, 0},
