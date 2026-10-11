@@ -252,25 +252,16 @@ static inline void lift_store(LiftEnv *env, uint32_t base, uint32_t offset, unsi
     }
 }
 
-/* A call of an unrecovered routine; the `count` dwords at esp are its stack arguments. The
- * callees that store a dword through the pointer in eax (AnsiString locals) also do so here. */
-static inline uint32_t lift_call(LiftEnv *env, uint32_t target, uint32_t eax, uint32_t edx,
-                                 uint32_t ebx, uint32_t ecx, unsigned count, uint32_t esp)
+/* A call of an unrecovered routine with `count` stack arguments, the nearest to the stack pointer
+ * first. The callees that store a dword through the pointer in eax (AnsiString locals) also do so
+ * here. */
+static inline uint32_t lift_call_arguments(LiftEnv *env, uint32_t target, uint32_t eax,
+                                           uint32_t edx, uint32_t ebx, uint32_t ecx,
+                                           const uint32_t *stack, unsigned count)
 {
-    uint32_t stack[32] = {0};
     uint32_t out = 0;
     uint32_t result;
-    unsigned i;
     vertrix_lift_edx = edx; /* a callee that returns a pair leaves its edx here */
-    if (count > 32)
-    {
-        env->failed = 1;
-        count = 32;
-    }
-    for (i = 0; i < count; i++)
-    {
-        stack[i] = lift_load(env, esp, 4 * i, 4);
-    }
     result = vertrix_calln(env->calls, target, eax, edx, ebx, ecx, stack, count, &out);
     /* A lifted callee has already stored through eax and leaves out 0; only the native ones
      * report the string in out. (Storing out when a lifted assignment kept its buffer wrote 0
@@ -289,6 +280,24 @@ static inline uint32_t lift_call(LiftEnv *env, uint32_t target, uint32_t eax, ui
         vertrix_lift_edx = out;
     }
     return result;
+}
+
+/* The same with the `count` dwords at esp as the stack arguments. */
+static inline uint32_t lift_call(LiftEnv *env, uint32_t target, uint32_t eax, uint32_t edx,
+                                 uint32_t ebx, uint32_t ecx, unsigned count, uint32_t esp)
+{
+    uint32_t stack[32] = {0};
+    unsigned i;
+    if (count > 32)
+    {
+        env->failed = 1;
+        count = 32;
+    }
+    for (i = 0; i < count; i++)
+    {
+        stack[i] = lift_load(env, esp, 4 * i, 4);
+    }
+    return lift_call_arguments(env, target, eax, edx, ebx, ecx, stack, count);
 }
 
 static inline uint32_t lift_call_with(LiftEnv *env, uint32_t target, uint32_t eax, uint32_t edx,

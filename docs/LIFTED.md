@@ -788,6 +788,109 @@ went through the import-slot lookup and a chain of target tests. `host_surface_c
 resolves each row once and copies it forward, where it used to look up every byte. A 1,500-tick
 run on the Mac went from 24.8 s to 15.5 s, with identical frames.
 
+The global stores no longer go through the boundary at all. `lift_global_store` in
+`lift_runtime.h` calls `vertrix_lift_store_hook`, which the host sets to its own store. Without
+the hook (the oracle harnesses), the store is still the 0xf0000000 call. 1,500 ticks then took
+14.6 s.
+
+## Clean ports
+
+The lifted chunks are instruction-level C. A clean port rewrites one original routine as ordinary
+C: named fields and globals, structured loops, and calls by name. The dispatcher runs the port in
+place of the lifted copy: `PORTS` in `tools/dispatch_boundaries.py`, entry points in
+`source/port_*.c`.
+
+### How a port is written
+
+`source/port.h` gives a port the lifted runtime's own memory accessors (`port_u8`/`u16`/`u32`
+and `port_set8`/`16`/`32`, over `lift_load` and `lift_store`). An object, an interior pointer or a
+static global therefore resolves exactly as it does for lifted code. Each access keeps the base
+and displacement of the original instruction.
+
+Calls go through the same boundary as lifted calls:
+- `port_call` passes registers only;
+- `port_call_stack` adds stack arguments;
+- `port_call_with` also hands over esi, edi and ebp (0x4e509c passes the exponent to 0x4e5177 in
+  edi).
+
+They share `lift_call_arguments`, so the string stores and the paired-edx helpers behave the same.
+
+A call through an import slot (`call [slot]`, 0x4f1000 to 0x4f4000) targets the slot address
+itself, as the lifter emits it: the host serves the import by its slot. Only a call through any
+other pointer (the pixel operation at 0x5bb72c, the thread-data routine at 0x507c9c) loads its
+target. The oracle cannot tell the two apart, because its slots hold their own addresses. The
+first string ports loaded the slots and called whatever the game image held there. Startup then
+hung in 0x48a100 until a host trace diff found the stray call.
+
+A routine that hands its own locals to a callee by address (0x4dae1e, 0x4ca630) opens an emulated
+frame with `port_open_frame`, up to 64 bytes inside the port. A larger frame uses
+`port_open_stack` with the port's own buffer: 0x405680 keeps 0x10c bytes, 0x4056c0 0x98 bytes.
+Either kind is registered like a lifted frame, so the callee reaches it.
+
+A frame deeper than the dispatcher's 0x100-byte gap is listed in `PORT_FRAMES`, so a callee's frame
+is placed below it. The frame starts as the bytes the caller left there (`LiftEntry.garbage`). The
+verifier hands a port the lifted copy's whole stack, so `vertrix_port_garbage_size` aligns the
+frame to its top.
+
+`port_return` sets the edx the original leaves for its caller. A port whose callers branch on its
+flags (only 0x4eb57c, the double compare) sets `vertrix_lift_fl` the way the original's last
+instructions do.
+
+Ports keep the original's order of stores and of reads that follow stores. They also keep its
+register quirks where a caller or callee can see them, for example:
+- 0x4ade20 tests the first actor's hook for every actor in the chain;
+- 0x4e5271 tests cx after its overflow call;
+- a row loop hands its pixel operation whatever ebx and ecx the loop left.
+
+Each such quirk is stated in the port's header comment.
+
+### How a port is checked
+
+`tools/verify_port.py ADDRESS FUNCTION` (or `--all`):
+1. Lifts the routine again from the original.
+2. Compiles the port into the same harness as the batch verifier, with the cases drawn from the
+   lifted text's hints.
+3. Compares against the original in Unicorn: every call with its registers and stack arguments,
+   the returned eax, every stored global and pool object, and now also the returned edx.
+4. When a lifted caller reads the flags right after the call, compares the flags too.
+
+The port must pass every mode (wide registers, small registers) that its lifted copy passes, and
+at least one. Each run has a time limit; a mode where the lifted copy itself fails or times out
+does not count. Breaking a port on purpose (one address off for one y, or the wrong edx) fails
+the check.
+
+The oracle's new edx and flags comparisons are optional (`VERTRIX_VERIFY_EDX`,
+`VERTRIX_VERIFY_FLAGS`), so the batch verification is unchanged.
+
+`PROFILE=1` makes `host_game` print how often each lifted routine ran. The ports so far follow
+that count from the top:
+- the surface and pixel routines;
+- the blend, row and blit loops;
+- the software float helpers;
+- the actor and render-rule routines;
+- the input repeat and the streams;
+- the memory fills;
+- the string records;
+- the audio decoder's polyphase synthesis.
+
+The synthesis (0x405720, 491 instructions) is three windowed sums, written as loops over the
+single helpers. The port keeps the ebx and ecx its helpers see, which carry the loop counters and
+the last clamp's limit.
+
+105 routines run as clean ports. 0x48a930 (the exact stream read) and 0x4db6a4 (the polynomial)
+are written but not yet in `PORTS`: at 256 cases even their lifted copies time out in the oracle.
+
+With the ports in, the host run matches the recorded baselines: the 1,500-tick frames (9 of 9
+identical) and the 3,000-tick audio (WAV byte-identical). Boundary calls fell from 62,764 to 3; the
+difference was the slot-loading string release.
+
+Some ports were checked with fewer cases than the default 4,096. Their originals run long loops,
+or their random pointers overrun a pool page for the lifted copy too: the blits 0x4ab310 (64
+cases) and 0x4ab2a0 (128). These counts are listed as `SLOW` in `tools/verify_port.py`.
+
+`tools/drop_ported.py` removes a ported routine's lifted copy from its chunk and records the
+replacement in `docs/ports.json`.
+
 ## Open after the completed batch
 
 - 844 attempted routines did not pass verification. The saved failure details distinguish

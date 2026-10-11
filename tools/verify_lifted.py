@@ -65,7 +65,7 @@ def small_values(source_text, spec):
     return patch_globals
 
 
-def run(name, spec=None, meta=None, source=None):
+def run(name, spec=None, meta=None, source=None, hints=None):
     spec = spec or LIFTED[name]
     source = source or (Path(__file__).resolve().parents[1] / 'source' / ('lifted_%s.c' % name))
     callees, locals_size, pointers, fields = callees_for(name, meta)
@@ -82,7 +82,7 @@ def run(name, spec=None, meta=None, source=None):
             user_patch(rng, handle, data)
     callees.update(spec.get('extra_callees', {}))
     count = spec['arguments']
-    small = small_values(Path(source).read_text(), spec) if spec.get('small') else None
+    small = small_values(Path(hints or source).read_text(), spec) if spec.get('small') else None
 
     def generate(rng, pool, cpu):
         kwargs, stack_args = {}, ()
@@ -134,7 +134,8 @@ def run(name, spec=None, meta=None, source=None):
                pool_size=spec.get('pool_size', 0x200), patch=patch if fields or user_patch else None,
                setup=spec.get('setup'), automap_enabled=spec.get('automap', False), tolerate_faults=spec.get('tolerate', False), small_returns=spec.get('smallregs', False), fixed_returns=spec.get('fixed_returns'),
                post=spec.get('post'), flag_targets=spec.get('flag_targets', ()),
-               internal_targets=spec.get('internal', ()))
+               internal_targets=spec.get('internal', ()), compare_edx=spec.get('compare_edx', False),
+               compare_flags=spec.get('compare_flags', False))
 
 
 def hud_case(rng, pool, cpu, kwargs):

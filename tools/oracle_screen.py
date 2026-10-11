@@ -1,8 +1,9 @@
 """Shared pieces of the screen builder oracles: call sites, services, supplied static data reads."""
 from unicorn import (UC_HOOK_MEM_READ_UNMAPPED, UC_HOOK_MEM_WRITE, UC_HOOK_MEM_WRITE_UNMAPPED,
                      UcError)
-from unicorn.x86_const import (UC_X86_REG_CS, UC_X86_REG_DS, UC_X86_REG_EFLAGS, UC_X86_REG_EIP,
-                               UC_X86_REG_ES, UC_X86_REG_FS, UC_X86_REG_GDTR, UC_X86_REG_SS)
+from unicorn.x86_const import (UC_X86_REG_CS, UC_X86_REG_DS, UC_X86_REG_EDX, UC_X86_REG_EFLAGS,
+                               UC_X86_REG_EIP, UC_X86_REG_ES, UC_X86_REG_FS, UC_X86_REG_GDTR,
+                               UC_X86_REG_SS)
 import ctypes as c
 import json
 import struct
@@ -149,7 +150,8 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
                *, wrappers=(), allocator=0x4ca000, globals_ranges=(), patch=None, compare=True,
                result_mask=0xffffffff, description='', table_targets=(), lookups=(), pool_size=0x200, effects=None, fixed_returns=None, handle_returns=(), choices=None,
                setup=None, automap_enabled=False, tolerate_faults=False, small_returns=False, extras=None, native_extras_arg=None, post=None, mixed_returns=(), flag_targets=(), internal_targets=(),
-               leading=('calls', 'services', 'globals')):
+               leading=('calls', 'services', 'globals'), compare_edx=False,
+               compare_flags=False):
     """Run `function` against the original routine at `address`.
 
     generate(rng, pool, cpu) returns (original keyword arguments, original stack arguments, native
@@ -303,6 +305,8 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
         flag_draws.clear()
         try:
             result = original.call(address, args=tuple(stack_args), **kwargs) & 0xffffffff
+            result_edx = cpu.reg_read(UC_X86_REG_EDX)
+            result_flags = cpu.reg_read(UC_X86_REG_EFLAGS)
         except (UcError, RuntimeError) as error:
             if not tolerate_faults:
                 raise
@@ -323,6 +327,17 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
             assert got == result & result_mask, (case, hex(got), hex(result))
         else:
             assert got == 1, (case, got)
+        if compare_edx:
+            # The edx the routine leaves (vertrix_lift_edx), which a caller may read as a result.
+            got_edx = c.c_uint32.in_dll(native, 'vertrix_lift_edx').value
+            assert got_edx == result_edx, (case, 'edx', hex(got_edx), hex(result_edx))
+        if compare_flags:
+            # The flags the routine leaves (vertrix_lift_fl: zf, sf, cf, of, pf), which callers
+            # that branch right after the call read.
+            fl = (c.c_uint32 * 6).in_dll(native, 'vertrix_lift_fl')
+            want = tuple((result_flags >> bit) & 1 for bit in (6, 7, 0, 11, 2))
+            assert tuple(int(fl[i] != 0) for i in range(5)) == want, \
+                (case, 'flags zf sf cf of pf', tuple(fl[:5]), want)
         shadow = {}
         for store_address, value, width in native_stores:
             for i in range(width):

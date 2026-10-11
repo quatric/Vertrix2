@@ -20,6 +20,30 @@ enum
 
 extern uint32_t vertrix_debug_watch;
 
+/* PROFILE=1: how often each lifted routine ran, for choosing what to port to clean code. */
+enum
+{
+    PROFILE_SLOTS = 8192
+};
+
+static struct
+{
+    uint32_t target;
+    uint32_t count;
+} profile[PROFILE_SLOTS];
+
+static void profile_count(uint32_t target, uint32_t eax)
+{
+    uint32_t slot = (target * 2654435761u) % PROFILE_SLOTS;
+    (void)eax;
+    while (profile[slot].target != 0 && profile[slot].target != target)
+    {
+        slot = (slot + 1) % PROFILE_SLOTS;
+    }
+    profile[slot].target = target;
+    profile[slot].count++;
+}
+
 static uint8_t original[LIFT_HOST_IMAGE_SIZE];
 static uint8_t image[LIFT_HOST_IMAGE_SIZE];
 static uint8_t heap[0x4000000];
@@ -227,6 +251,10 @@ int main(int argc, char **argv)
     }
     vertrix_lifted_allow_unverified(getenv("VERIFIED_ONLY") == NULL);
     vertrix_lifted_set_trace(getenv("TRACE_LIFTED") != NULL);
+    if (getenv("PROFILE") != NULL)
+    {
+        vertrix_lifted_after_hook = profile_count;
+    }
     form = lift_host_allocate(&host, 0x1000);
     display = lift_host_allocate(&host, 0x800);
     lift_host_write32(&host, 0x544070, display);
@@ -363,6 +391,13 @@ int main(int argc, char **argv)
     printf("end: tick %u, frames presented %u, handler %x, boundary calls %u (%u distinct)\n", tick,
            host.frames_presented, (unsigned)last_handler, host.boundary_calls,
            host.boundary_distinct);
+    for (unsigned i = 0; i < PROFILE_SLOTS; i++)
+    {
+        if (profile[i].target != 0)
+        {
+            printf("profile %x %u\n", (unsigned)profile[i].target, (unsigned)profile[i].count);
+        }
+    }
     if (getenv("PEEK") != NULL)
     {
         /* PEEK=address[,address...]: eight dwords at each address, for inspecting state. */

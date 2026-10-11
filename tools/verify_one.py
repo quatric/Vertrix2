@@ -41,7 +41,10 @@ from oracle_kit import Stubs  # noqa: E402
 Stubs.site_arguments = {int(k[8:], 16): v[0] for k, v in meta['callees'].items()
                         if k.startswith('virtual_')}
 
-source_text = (scratch / (name + '.c')).read_text()
+# A clean port (tools/verify_port.py) is checked with the cases of its lifted copy: the hints the
+# cases draw on (scalar fields, flag readers, call tables) come from the lifted text beside it.
+_hints = scratch / (name + '.lifted.c')
+source_text = (_hints if _hints.exists() else scratch / (name + '.c')).read_text()
 pointer_offsets = set(meta.get('pointer_fields', [])) | set(meta.get('pointer_maybe', [])) | {f for f, _, _ in virtual if f >= 0}
 scalar_reads = sorted({(int(m.group(1), 16), int(m.group(2))) for m in re.finditer(
     r'lift_load\(&env, e\w\w, 0x([0-9a-f]+)u, (\d)\)', source_text)
@@ -198,4 +201,9 @@ spec = dict(internal=internal, flag_targets=flag_targets, effects=com, fixed_ret
             setup_case=lambda rng, pool, cpu, kwargs: (vtable_setup(cpu),
                                                        kwargs.update({r: 0x10 for r in SELECTORS})),
             setup=vtable_setup if virtual or slots or pointer_globals or imports else None)
-verify_lifted.run(name, spec, meta, scratch / (name + '.c'))
+import os  # noqa: E402
+
+spec['compare_edx'] = os.environ.get('VERTRIX_VERIFY_EDX') == '1'
+spec['compare_flags'] = os.environ.get('VERTRIX_VERIFY_FLAGS') == '1'
+verify_lifted.run(name, spec, meta, scratch / (name + '.c'),
+                  _hints if _hints.exists() else None)

@@ -5,7 +5,7 @@ import json
 import subprocess
 from pathlib import Path
 
-from dispatch_boundaries import NATIVE_PORTS, NATIVE_UNVERIFIED_BOUNDARIES
+from dispatch_boundaries import NATIVE_PORTS, NATIVE_UNVERIFIED_BOUNDARIES, PORT_FRAMES, PORTS
 
 ROOT = Path(__file__).resolve().parents[1]
 entries = {}
@@ -30,6 +30,7 @@ for name, address in screens.items():
     entries[address] = (name, data)
 for address in [a for a in entries if a == 0]:
     del entries[address]
+NATIVE_PORTS = {**NATIVE_PORTS, **{a: (f, PORT_FRAMES.get(a, 0), 0) for a, f in PORTS.items()}}
 for address in NATIVE_PORTS:
     entries.pop(address, None)
     unverified_entries.pop(address, None)
@@ -39,6 +40,7 @@ for address in NATIVE_UNVERIFIED_BOUNDARIES:
     entries.pop(address, None)
 headers = sorted(Path(p).name for p in glob.glob(str(ROOT / 'source' / 'lifted_*.h'))
                  if 'dispatch' not in p)
+headers += sorted(Path(p).name for p in glob.glob(str(ROOT / 'source' / 'port_*.h')))
 row_text = {a: '    {0x%x, lifted_%s, %d, %d},' % (a, entries[a][0], entries[a][1]['stack'],
                                                 entries[a][1]['arguments']) for a in entries}
 row_text.update({a: '    {0x%x, %s, %d, %d},' % ((a,) + port) for a, port in NATIVE_PORTS.items()})
