@@ -1,8 +1,8 @@
 {
  "status": "completed",
- "attempted_routines": 3503,
- "passed_routines": 3441,
- "failed_routines": 62,
+ "attempted_routines": 3513,
+ "passed_routines": 3452,
+ "failed_routines": 61,
  "cases_per_mode": 64,
  "oracle_modes": [
   "wide",
@@ -371,15 +371,18 @@
   "0x425a50",
   "0x425ae0",
   "0x425d30",
+  "0x425d50",
   "0x425de0",
   "0x425e00",
   "0x425e20",
+  "0x425e40",
   "0x425ef0",
   "0x425f40",
   "0x425f60",
   "0x4261b0",
   "0x4270a0",
   "0x427380",
+  "0x427850",
   "0x427c10",
   "0x427e10",
   "0x428110",
@@ -402,6 +405,7 @@
   "0x429af0",
   "0x429b10",
   "0x429b60",
+  "0x429ba0",
   "0x429d50",
   "0x429df0",
   "0x429e80",
@@ -449,6 +453,7 @@
   "0x42b370",
   "0x42b5c0",
   "0x42b6b0",
+  "0x42b8d0",
   "0x42b920",
   "0x42b950",
   "0x42b990",
@@ -459,7 +464,9 @@
   "0x42bb00",
   "0x42bb20",
   "0x42bbd0",
+  "0x42bca0",
   "0x42e870",
+  "0x42ea00",
   "0x42eb60",
   "0x42eba0",
   "0x42ebc0",
@@ -624,6 +631,7 @@
   "0x439690",
   "0x4398c0",
   "0x43a080",
+  "0x43a0b0",
   "0x43a160",
   "0x43a1a0",
   "0x43a280",
@@ -1709,6 +1717,7 @@
   "0x482050",
   "0x482060",
   "0x482110",
+  "0x482320",
   "0x4823b0",
   "0x482480",
   "0x482540",
@@ -1782,6 +1791,7 @@
   "0x487870",
   "0x487890",
   "0x487920",
+  "0x487930",
   "0x4879e0",
   "0x4879f0",
   "0x487a10",
@@ -2064,6 +2074,7 @@
   "0x4b5dc0",
   "0x4b5e70",
   "0x4b5eb0",
+  "0x4b5ee0",
   "0x4b5f50",
   "0x4b5fc0",
   "0x4b6020",
@@ -3133,8 +3144,7 @@
   "f4eb500": "AssertionError: (120, '0x2', '0x0')",
   "f4eda70": "timeout",
   "f4ee6a0": "AssertionError: ('too few complete original executions', 0, 1024, [('RuntimeError (Original routine 0x4ee6a0 did not reach its return boundary) at 0x7', 647), ('Invalid memory fetch (UC_ERR_FETCH_UNMA",
-  "f4ee910": "timeout",
-  "f429ba0": "AssertionError: (29, (0, (4907344, 8413184, 0, 0, 96), (4907344, 8413310, 0, 0, 96), 1, 1, []))"
+  "f4ee910": "timeout"
  },
  "reverifications": [
   {
@@ -3652,6 +3662,35 @@
     "0x43d400",
     "0x4713d0",
     "0x487aa0"
+   ]
+  },
+  {
+   "note": "Host game run (relift_r17): routines reached through the boundary without a lift",
+   "attempted": 9,
+   "newly_passed": [
+    "0x425d50",
+    "0x425e40",
+    "0x427850",
+    "0x42b8d0",
+    "0x42bca0",
+    "0x42ea00",
+    "0x43a0b0",
+    "0x482320",
+    "0x487930"
+   ]
+  },
+  {
+   "note": "0x429ba0 with its object pointer array (+0x15c..+0x1c8, 7 x 4) declared as pointer fields: the original completes 64 cases in both modes and the lift matches",
+   "attempted": 1,
+   "newly_passed": [
+    "0x429ba0"
+   ]
+  },
+  {
+   "note": "Host game run (relift_r19): the list delete 0x4b5ee0 that the prune 0x4b5f50 waits on",
+   "attempted": 1,
+   "newly_passed": [
+    "0x4b5ee0"
    ]
   }
  ]

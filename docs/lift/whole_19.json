@@ -1,0 +1,33 @@
+{
+ "f4b5ee0": {
+  "callees": {
+   "virtual_4b5f1f": [
+    0,
+    false
+   ],
+   "0x4d8950": [
+    0,
+    false
+   ]
+  },
+  "stack": 100,
+  "arguments": 0,
+  "pointer_callees": [],
+  "pointer_fields": [],
+  "pointer_globals": [],
+  "pointer_maybe": [],
+  "constants": [
+   11,
+   12,
+   13
+  ],
+  "virtual": [
+   [
+    344,
+    0,
+    0
+   ]
+  ],
+  "address": 4939488
+ }
+}

@@ -211,6 +211,30 @@ int main(int argc, char **argv)
             }
         }
     }
+    if (getenv("PEEKSTR") != NULL)
+    {
+        /* PEEKSTR=table,count: the strings a table of `count` string pointers names. */
+        char *cursor = getenv("PEEKSTR");
+        uint32_t table = (uint32_t)strtoul(cursor, &cursor, 16);
+        unsigned count = *cursor == ',' ? (unsigned)strtoul(cursor + 1, NULL, 0) : 1;
+        unsigned i;
+        for (i = 0; i < count; i++)
+        {
+            uint32_t text = lift_host_read(&host, table + 4 * i, 4);
+            unsigned k;
+            printf("  [%u] %08x '", i, (unsigned)text);
+            for (k = 0; text != 0 && k < 80; k++)
+            {
+                uint32_t c = lift_host_read(&host, text + k, 1);
+                if (c == 0)
+                {
+                    break;
+                }
+                putchar((int)c);
+            }
+            printf("'\n");
+        }
+    }
     {
         /* The routines the original asked for that are neither lifted nor served by the host. */
         unsigned i;

@@ -324,6 +324,17 @@ come in every kind. With them, gameplay lasts until about tick 5019, then goes t
 of round screens (0x425810, 0x41e780, 0x422c50, 0x41eab0). 10 targets are still unserved,
 including 0x429ba0.
 
+`source/lifted_whole_17.[ch]` holds 9 more routines the game reached. 0x429ba0 failed only
+because the lifter recorded no pointer fields for it. It walks a 7 x 4 array of object pointers
+at +0x15c..+0x1c8 and calls each object's slot 4. With that array declared as pointer fields, the
+original completes 64 cases in both modes and the lift matches (`source/lifted_whole_18.[ch]`).
+After that, play stalled in the prune 0x4b5f50, which is in the unverified tier. It deletes the
+matching entries through the list's own slot 0x14 without advancing its index. That slot was the
+unlifted delete 0x4b5ee0, so the count never fell. 0x4b5ee0 passes and is in
+`source/lifted_whole_19.[ch]` (3,299 entries). `TRACE_UNSERVED=1` prints each unserved target when
+it is first reached. Gameplay now lasts until tick 5855. Four targets are still unserved: 0x42b600,
+0x42abf0, 0x42ac40 and 0x42ab10.
+
 ## Open after the completed batch
 
 - 844 attempted routines did not pass verification. The saved failure details distinguish

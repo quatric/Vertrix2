@@ -1393,6 +1393,11 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
         host->boundary_targets[host->boundary_distinct] = site->target;
         host->boundary_counts[host->boundary_distinct++] = 1;
     }
+    if (getenv("TRACE_UNSERVED"))
+    {
+        printf("unserved %x (eax %x, depth %u)\n", (unsigned)site->target, (unsigned)site->eax,
+               vertrix_lifted_depth());
+    }
     return 0;
 }
 

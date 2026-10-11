@@ -20,6 +20,9 @@
 #include "lifted_whole_14.h"
 #include "lifted_whole_15.h"
 #include "lifted_whole_16.h"
+#include "lifted_whole_17.h"
+#include "lifted_whole_18.h"
+#include "lifted_whole_19.h"
 #include "lifted_whole_2.h"
 #include "lifted_whole_3.h"
 #include "lifted_whole_4.h"
@@ -423,13 +426,16 @@ static const LiftedRoutine routines[] = {
     {0x425a50, lifted_f425a50, 144, 0},
     {0x425ae0, lifted_f425ae0, 196, 0},
     {0x425d30, lifted_object_set_table, 72, 0},
+    {0x425d50, lifted_f425d50, 136, 0},
     {0x425de0, lifted_object_reset_slots, 68, 0},
     {0x425e00, lifted_table_used_count, 72, 0},
     {0x425e20, lifted_player_piece_initialize, 68, 0},
+    {0x425e40, lifted_f425e40, 156, 0},
     {0x425ef0, lifted_piece_init_from_kind, 68, 0},
     {0x425f40, lifted_return_unchanged_425f40, 64, 0},
     {0x425f60, lifted_f425f60, 252, 1},
     {0x4270a0, lifted_ai_search, 516, 6},
+    {0x427850, lifted_f427850, 468, 0},
     {0x427ae0, lifted_object_compare_regions, 280, 0},
     {0x427c10, lifted_ai_features, 76, 5},
     {0x428110, lifted_ai_compare_boards, 184, 0},
@@ -453,6 +459,7 @@ static const LiftedRoutine routines[] = {
     {0x429af0, lifted_f429af0, 100, 0},
     {0x429b10, lifted_f429b10, 64, 0},
     {0x429b60, lifted_f429b60, 88, 0},
+    {0x429ba0, lifted_f429ba0, 92, 0},
     {0x429bf0, lifted_slot_objects_make, 168, 0},
     {0x429d50, lifted_choice_grid_apply, 100, 0},
     {0x429df0, lifted_choice_grid_load_values, 96, 0},
@@ -494,6 +501,7 @@ static const LiftedRoutine routines[] = {
     {0x42b370, lifted_ui_player_previews_construct, 232, 0},
     {0x42b5c0, lifted_piece_actor_construct_empty, 68, 0},
     {0x42b6b0, lifted_f42b6b0, 176, 0},
+    {0x42b8d0, lifted_f42b8d0, 96, 0},
     {0x42b920, lifted_piece_set_variant, 72, 0},
     {0x42b950, lifted_piece_snap_to_left, 80, 0},
     {0x42b990, lifted_piece_snap_to_origin, 84, 0},
@@ -504,7 +512,9 @@ static const LiftedRoutine routines[] = {
     {0x42bb00, lifted_block_construct_full, 68, 0},
     {0x42bb20, lifted_f42bb20, 156, 0},
     {0x42bbd0, lifted_block_create_full, 128, 0},
+    {0x42bca0, lifted_f42bca0, 188, 0},
     {0x42e870, lifted_board_construct, 200, 0},
+    {0x42ea00, lifted_f42ea00, 208, 0},
     {0x42eb60, lifted_board_release_active, 80, 0},
     {0x42eba0, lifted_board_release_piece_children_full, 72, 0},
     {0x42ebc0, lifted_board_clear_collection, 72, 0},
@@ -690,6 +700,7 @@ static const LiftedRoutine routines[] = {
     {0x439690, lifted_f439690, 220, 0},
     {0x4398c0, lifted_board_clear_marked_extra, 112, 0},
     {0x43a080, lifted_block_construct_kind_one_full, 68, 0},
+    {0x43a0b0, lifted_f43a0b0, 156, 0},
     {0x43a160, lifted_piece_child_slots_init, 80, 0},
     {0x43a1a0, lifted_f43a1a0, 164, 0},
     {0x43a280, lifted_f43a280, 84, 0},
@@ -1872,6 +1883,7 @@ static const LiftedRoutine routines[] = {
     {0x482050, lifted_object_clear_208, 64, 0},
     {0x482060, lifted_event_stack_push, 72, 11},
     {0x482110, lifted_event_stack_pop, 76, 11},
+    {0x482320, lifted_f482320, 136, 0},
     {0x4823b0, lifted_f4823b0, 104, 0},
     {0x482480, lifted_random_object_construct, 64, 0},
     {0x482540, lifted_object_restart_range, 68, 0},
@@ -1955,6 +1967,7 @@ static const LiftedRoutine routines[] = {
     {0x487870, lifted_table_object_construct, 68, 0},
     {0x487890, lifted_f487890, 136, 0},
     {0x487920, lifted_f487920, 68, 0},
+    {0x487930, lifted_f487930, 168, 0},
     {0x4879e0, lifted_list_empty, 64, 0},
     {0x4879f0, lifted_object_release_call, 80, 0},
     {0x487a10, lifted_forward_registers_487a10, 72, 0},
@@ -2255,6 +2268,7 @@ static const LiftedRoutine routines[] = {
     {0x4b5dc0, lifted_object_destroy_a, 168, 0},
     {0x4b5e70, lifted_owned_object_list_append, 80, 0},
     {0x4b5eb0, lifted_object_list_find, 72, 0},
+    {0x4b5ee0, lifted_f4b5ee0, 100, 0},
     {0x4b5fc0, lifted_f4b5fc0, 100, 0},
     {0x4b6020, lifted_object_release_items, 88, 0},
     {0x4b6070, lifted_f4b6070, 96, 0},
