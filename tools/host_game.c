@@ -79,6 +79,13 @@ static void autoplay(LiftHost *host, uint32_t handler, uint32_t tick)
         lift_host_write32(host, 0x5588f8 + 0x48,
                           handler == 0x41c7b0 ? (330u | (130u << 16)) : (415u | (445u << 16)));
     }
+    if (handler == 0x41eab0 && getenv("CONTINUE") != NULL)
+    {
+        /* CONTINUE=yes|no: the pointer on YES or NO of the end-of-round question. */
+        lift_host_write32(host, 0x5588f8 + 0x48,
+                          getenv("CONTINUE")[0] == 'y' ? (465u | (440u << 16))
+                                                       : (570u | (440u << 16)));
+    }
     for (m = 0; m < sizeof moves / sizeof moves[0] && handler == 0x41b820; m++)
     {
         if (moves[m].at <= n && moves[m].at > last_n)
