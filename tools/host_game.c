@@ -100,7 +100,7 @@ static void autoplay(LiftHost *host, uint32_t handler, uint32_t tick)
     if (handler == 0x41b820 && getenv("MENU") != NULL && n >= 150)
     {
         /* MENU=y[,y...]: the pointer at (320, y) of the title menus, the next y after each click
-         * (title bars at y 353 + 25 * i; the options bars GAME..RETURN at y 328 + 25 * i). */
+         * there (title bars at y 353 + 25 * i; options bars GAME..RETURN at y 328 + 25 * i). */
         const char *cursor = getenv("MENU");
         unsigned y = (unsigned)strtoul(cursor, NULL, 10);
         unsigned k;
@@ -125,7 +125,7 @@ static void autoplay(LiftHost *host, uint32_t handler, uint32_t tick)
     {
         lift_host_mouse(host, 12, 0);
         pressed = 0;
-        clicks++;
+        clicks += handler == 0x41b820;
     }
     if (started)
     {
@@ -193,6 +193,16 @@ int main(int argc, char **argv)
         if (getenv("NO_AUTOPLAY") == NULL)
         {
             autoplay(&host, handler, host.clock_ms);
+        }
+        if (getenv("SCORE") != NULL && handler == 0x425810 && last_handler != handler)
+        {
+            /* SCORE=n: player 1's score (+0x174 of the player at 0x540f8c, slot 1 of the table
+             * 0x540f88) when the round ends, to reach the high-score entry. */
+            uint32_t player = lift_host_read(&host, 0x540f8c, 4);
+            if (player != 0)
+            {
+                lift_host_write32(&host, player + 0x174, (uint32_t)strtoul(getenv("SCORE"), 0, 0));
+            }
         }
         if (getenv("GAMEKEYS") != NULL && handler == 0x424990)
         {

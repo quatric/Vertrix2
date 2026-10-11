@@ -1,7 +1,7 @@
 """Lift many routines, verify each against the original and combine the verified ones.
 
 usage: lift_batch.py lift SCRATCH ADDRESS...
-       lift_batch.py verify SCRATCH [--jobs N] [--cases N]
+       lift_batch.py verify SCRATCH [--jobs N] [--cases N] [--timeout SECONDS]
        lift_batch.py combine SCRATCH NAME OUT_DIR [--only=f...,f...] [--include-removed]
 """
 import json
@@ -34,13 +34,13 @@ def lift_all(scratch, addresses):
     print('lifted', len(addresses) - len(skipped), 'skipped', len(skipped))
 
 
-def verify_one(scratch, name, cases):
+def verify_one(scratch, name, cases, timeout=600):
     last = ''
     for mode in ('wide', 'small'):
         command = [sys.executable, str(Path(__file__).with_name('verify_one.py')), str(scratch),
                    name, str(cases), mode]
         try:
-            done = subprocess.run(command, capture_output=True, text=True, timeout=600,
+            done = subprocess.run(command, capture_output=True, text=True, timeout=timeout,
                                   cwd=ROOT / 'tools')
         except subprocess.TimeoutExpired:
             last = 'timeout'
@@ -51,11 +51,11 @@ def verify_one(scratch, name, cases):
     return name, False, last
 
 
-def verify_all(scratch, jobs, cases):
+def verify_all(scratch, jobs, cases, timeout=600):
     names = sorted(p.stem for p in scratch.glob('f*.c'))
     results = {}
     with ThreadPoolExecutor(jobs) as pool:
-        for name, ok, detail in pool.map(lambda n: verify_one(scratch, n, cases), names):
+        for name, ok, detail in pool.map(lambda n: verify_one(scratch, n, cases, timeout), names):
             results[name] = {'ok': ok, 'detail': detail}
     (scratch / 'results.json').write_text(json.dumps(results, indent=1))
     passed = [n for n, r in results.items() if r['ok']]
@@ -123,7 +123,8 @@ if __name__ == '__main__':
     elif command == 'verify':
         jobs = int(sys.argv[sys.argv.index('--jobs') + 1]) if '--jobs' in sys.argv else 8
         cases = int(sys.argv[sys.argv.index('--cases') + 1]) if '--cases' in sys.argv else 256
-        verify_all(scratch, jobs, cases)
+        timeout = int(sys.argv[sys.argv.index('--timeout') + 1]) if '--timeout' in sys.argv else 600
+        verify_all(scratch, jobs, cases, timeout)
     elif command == 'combine':
         unverified = '--unverified' in sys.argv
         only = next((a[7:].split(',') for a in sys.argv if a.startswith('--only=')), None)
