@@ -5,6 +5,7 @@
  * the run stops after `ticks` loop iterations, or when a handler is not lifted. */
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "jpeg_decode.h"
 #include "lift_host.h"
@@ -64,6 +65,7 @@ static void autoplay(LiftHost *host, uint32_t handler, uint32_t tick)
                  {360, 330, 130}, {400, 415, 445}, {440, 415, 445}, {480, 415, 445}};
     static int started;
     static int pressed;
+    static unsigned clicks;
     static uint32_t menu_ms;
     static unsigned last_n;
     unsigned n;
@@ -97,9 +99,22 @@ static void autoplay(LiftHost *host, uint32_t handler, uint32_t tick)
     }
     if (handler == 0x41b820 && getenv("MENU") != NULL && n >= 150)
     {
-        /* MENU=0..3: the pointer on one bar of the title menu (bars at x 236, y 341 + 25 * i). */
-        lift_host_write32(host, 0x5588f8 + 0x48,
-                          320u | ((353u + 25u * (unsigned)atoi(getenv("MENU"))) << 16));
+        /* MENU=y[,y...]: the pointer at (320, y) of the title menus, the next y after each click
+         * (title bars at y 353 + 25 * i; the options bars GAME..RETURN at y 328 + 25 * i). */
+        const char *cursor = getenv("MENU");
+        unsigned y = (unsigned)strtoul(cursor, NULL, 10);
+        unsigned k;
+        for (k = 0; k < clicks; k++)
+        {
+            const char *comma = strchr(cursor, ',');
+            if (comma == NULL)
+            {
+                break;
+            }
+            cursor = comma + 1;
+            y = (unsigned)strtoul(cursor, NULL, 10);
+        }
+        lift_host_write32(host, 0x5588f8 + 0x48, 320u | (y << 16));
     }
     if (n >= 150 && phase >= 2 && phase < 25 && !pressed)
     {
@@ -110,6 +125,7 @@ static void autoplay(LiftHost *host, uint32_t handler, uint32_t tick)
     {
         lift_host_mouse(host, 12, 0);
         pressed = 0;
+        clicks++;
     }
     if (started)
     {

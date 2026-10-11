@@ -28,6 +28,8 @@
 #include "lifted_whole_21.h"
 #include "lifted_whole_22.h"
 #include "lifted_whole_23.h"
+#include "lifted_whole_24.h"
+#include "lifted_whole_25.h"
 #include "lifted_whole_3.h"
 #include "lifted_whole_4.h"
 #include "lifted_whole_5.h"
@@ -2786,7 +2788,15 @@ static const LiftedRoutine routines[] = {
     {0x4b3c40, lifted_object_label_format_alternate, 140, 0},
     {0x4b3ce0, lifted_f4b3ce0, 112, 0},
     {0x4b3d60, lifted_f4b3d60, 112, 0},
+    {0x4b3de0, lifted_f4b3de0, 136, 0},
+    {0x4b3f10, lifted_f4b3f10, 64, 0},
+    {0x4b3f20, lifted_f4b3f20, 72, 0},
+    {0x4b3f30, lifted_f4b3f30, 92, 0},
     {0x4b3fb0, lifted_f4b3fb0, 68, 0},
+    {0x4b4100, lifted_f4b4100, 96, 0},
+    {0x4b4150, lifted_f4b4150, 92, 0},
+    {0x4b41a0, lifted_f4b41a0, 88, 0},
+    {0x4b41f0, lifted_f4b41f0, 92, 0},
     {0x4b4270, lifted_object_contains_point, 80, 0},
     {0x4b42e0, lifted_f4b42e0, 184, 0},
     {0x4b4500, lifted_object_dword_4b4500, 64, 0},

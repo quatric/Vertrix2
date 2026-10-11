@@ -438,6 +438,20 @@ only a non-zero report, and a string pointer is never 0 (the empty string is the
 - `WATCHPIXEL=x,y WATCHTICK=t [WATCHLEN=n]`, which traces the lifted calls of those ticks and
   reports the writes to one back-surface pixel.
 
+## Options submenus
+
+`MENU` in `tools/host_game.c` is now a list of pointer y positions, and each click moves to the next
+one. The title bars are at y 353 + 25 * i, and the options bars GAME..RETURN at y 328 + 25 * i.
+The GAME, SOUND and KEYS submenus (MENU=403,328 / 403,353 / 403,378) reached eight routines through
+the boundary:
+
+- the slider parts 0x4b3f10, 0x4b3f20, 0x4b4100, 0x4b4150, 0x4b41a0 and 0x4b41f0
+  (`work/relift_r24`);
+- the slider layout 0x4b3f30 and draw 0x4b3de0 (`work/relift_r25`).
+
+All eight pass verification (`lifted_whole_24`, `lifted_whole_25`). The three submenus now run
+without unserved calls. The dispatcher has 3,907 verified routines.
+
 ## Open after the completed batch
 
 - 844 attempted routines did not pass verification. The saved failure details distinguish

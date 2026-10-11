@@ -1,7 +1,7 @@
 {
  "status": "completed",
- "attempted_routines": 4001,
- "passed_routines": 3925,
+ "attempted_routines": 4009,
+ "passed_routines": 3933,
  "failed_routines": 76,
  "cases_per_mode": 64,
  "oracle_modes": [
@@ -2488,7 +2488,15 @@
   "0x4b3c30",
   "0x4b3ce0",
   "0x4b3d60",
+  "0x4b3de0",
+  "0x4b3f10",
+  "0x4b3f20",
+  "0x4b3f30",
   "0x4b3fb0",
+  "0x4b4100",
+  "0x4b4150",
+  "0x4b41a0",
+  "0x4b41f0",
   "0x4b4270",
   "0x4b42e0",
   "0x4b4500",
@@ -4805,6 +4813,26 @@
     "0x44b810",
     "0x459ec0",
     "0x4651b0"
+   ]
+  },
+  {
+   "note": "Host game run (relift_r24): the options submenus GAME, SOUND and KEYS reach these routines through the boundary",
+   "attempted": 6,
+   "newly_passed": [
+    "0x4b3f10",
+    "0x4b3f20",
+    "0x4b4100",
+    "0x4b4150",
+    "0x4b41a0",
+    "0x4b41f0"
+   ]
+  },
+  {
+   "note": "Host game run (relift_r25): the SOUND options submenu",
+   "attempted": 2,
+   "newly_passed": [
+    "0x4b3de0",
+    "0x4b3f30"
    ]
   }
  ]
