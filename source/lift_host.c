@@ -1219,18 +1219,41 @@ static void host_surface_copy(LiftHost *host, uint32_t target, uint32_t tx, uint
         {
             continue;
         }
-        for (x = left; x < right; x++)
         {
-            int32_t dx = (int32_t)tx + (x - left);
-            uint32_t i;
-            if (x < 0 || x >= (int32_t)sw || dx < 0 || dx >= (int32_t)tw)
+            /* The columns inside both surfaces: x in [from, to). */
+            int32_t from = left, to = right, shift = (int32_t)tx - left;
+            uint32_t length, i;
+            const uint8_t *in;
+            uint8_t *out;
+            from = from < 0 ? 0 : from;
+            from = from < -shift ? -shift : from;
+            to = to > (int32_t)sw ? (int32_t)sw : to;
+            to = to > (int32_t)tw - shift ? (int32_t)tw - shift : to;
+            if (from >= to)
             {
                 continue;
             }
-            for (i = 0; i < sb; i++)
+            length = (uint32_t)(to - from) * sb;
+            in = bytes_at(host, spixels + y * sp + (uint32_t)from * sb, length);
+            out = bytes_at(host, tpixels + dy * tp + (uint32_t)(from + shift) * tb, length);
+            if (in != NULL && out != NULL)
             {
-                host_write(host, tpixels + dy * tp + dx * tb + i, 1,
-                           lift_host_read(host, spixels + y * sp + x * sb + i, 1));
+                /* Forward, a byte at a time, as before: a copy within one surface overlaps the
+                 * same way. */
+                for (i = 0; i < length; i++)
+                {
+                    out[i] = in[i];
+                }
+                continue;
+            }
+            for (x = from; x < to; x++)
+            {
+                int32_t dx = x + shift;
+                for (i = 0; i < sb; i++)
+                {
+                    host_write(host, tpixels + dy * tp + dx * tb + i, 1,
+                               lift_host_read(host, spixels + y * sp + x * sb + i, 1));
+                }
             }
         }
     }
@@ -1598,11 +1621,51 @@ static uint32_t host_palette_build(LiftHost *host)
     return 0;
 }
 
+/* The decoder's destination for an image file: a width by height surface of 4 bytes per pixel
+ * (0x478d10), written in place through its pixel memory. */
+typedef struct
+{
+    LiftHost *host;
+    uint32_t surface, base, pitch, width, height;
+} ImageTarget;
+
+static uint8_t *image_target(void *context, uint32_t width, uint32_t height, uint32_t *pitch)
+{
+    ImageTarget *image = context;
+    LiftHost *host = image->host;
+    VertrixCallSite create;
+    uint8_t *pixels;
+    memset(&create, 0, sizeof create);
+    create.target = 0x478d10;
+    create.eax = width;
+    create.edx = height;
+    create.ebx = 4;
+    image->surface = host->calls.calls.call(&create, host->calls.calls.context);
+    if (image->surface == 0 || width == 0 || height == 0)
+    {
+        return NULL;
+    }
+    image->base = lift_host_read(host, image->surface, 4);
+    image->pitch = lift_host_read(host, image->surface + 0x14, 4);
+    image->width = width;
+    image->height = height;
+    pixels = bytes_at(host, image->base, image->pitch * (height - 1) + 4 * width);
+    *pitch = image->pitch;
+    return pixels;
+}
+
 static uint32_t host_boundary(VertrixCallSite *site, void *context)
 {
     LiftHost *host = context;
     unsigned i;
-    /* The runtime's float helpers first: the MP3 decoder calls them for every sample. */
+    /* The stores to globals come first: the lifted code makes most of its boundary calls with
+     * them (eax the address, edx the value, the stack dword the width). */
+    if (site->target == LIFT_GLOBAL_STORE)
+    {
+        host_write(host, site->eax, site->stack, site->edx);
+        return 0;
+    }
+    /* The runtime's float helpers next: the MP3 decoder calls them for every sample. */
     if (site->target == 0x4d809c || site->target == 0x4d80a6 || site->target == 0x4d8177 ||
         site->target == 0x4d81fe || site->target == 0x4db350 || site->target == 0x4db507)
     {
@@ -1641,9 +1704,7 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
     {
         char text[260];
         unsigned k;
-        uint8_t *pixels = NULL;
-        uint32_t width = 0, height = 0, surface, base, pitch, x, y;
-        VertrixCallSite create;
+        ImageTarget image = {host, 0, 0, 0, 0, 0};
         for (k = 0;
              k < sizeof text - 1 && (text[k] = (char)lift_host_read(host, site->eax + k, 1)) != 0;
              k++)
@@ -1651,7 +1712,7 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
         }
         text[k] = 0;
         if (host->decode_jpeg == NULL ||
-            !host->decode_jpeg(host->archive, text, &pixels, &width, &height))
+            !host->decode_jpeg(host->archive, text, image_target, &image))
         {
             if (lift_host_trace_files || getenv("TRACE_FILES"))
             {
@@ -1659,41 +1720,27 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
             }
             return 0;
         }
-        memset(&create, 0, sizeof create);
-        create.target = 0x478d10; /* a width by height surface of 4 bytes per pixel */
-        create.eax = width;
-        create.edx = height;
-        create.ebx = 4;
-        surface = host->calls.calls.call(&create, host->calls.calls.context);
-        base = lift_host_read(host, surface, 4);
-        pitch = lift_host_read(host, surface + 0x14, 4);
-        for (y = 0; surface != 0 && y < height; y++)
-        {
-            for (x = 0; x < width; x++)
-            {
-                const uint8_t *p = pixels + 4 * ((size_t)y * width + x);
-                host_write(host, base + y * pitch + 4 * x, 4,
-                           (uint32_t)p[0] | (uint32_t)p[1] << 8 |
-                               (uint32_t)p[2] << 16); /* the decoder gives B, G, R */
-            }
-        }
         if (lift_host_trace_files)
         {
-            printf("image %s: %ux%u surface %x pixels %x first %x\n", text, (unsigned)width,
-                   (unsigned)height, (unsigned)surface, (unsigned)base,
-                   (unsigned)lift_host_read(host, base + 4 * (width * height / 2 + width / 2), 4));
+            printf("image %s: %ux%u surface %x pixels %x first %x\n", text, (unsigned)image.width,
+                   (unsigned)image.height, (unsigned)image.surface, (unsigned)image.base,
+                   (unsigned)lift_host_read(
+                       host, image.base + image.pitch * (image.height / 2) + 4 * (image.width / 2),
+                       4));
         }
         if (getenv("TRACE_IMAGES"))
         {
             unsigned long lit = 0;
-            size_t q;
-            for (q = 0; q < (size_t)width * height; q++)
-                lit += (pixels[4 * q] | pixels[4 * q + 1] | pixels[4 * q + 2]) != 0;
-            fprintf(stderr, "image %s: %ux%u surface %x base %x lit %lu\n", text, (unsigned)width,
-                    (unsigned)height, (unsigned)surface, (unsigned)base, lit);
+            uint32_t x, y;
+            for (y = 0; y < image.height; y++)
+                for (x = 0; x < image.width; x++)
+                    lit += (lift_host_read(host, image.base + y * image.pitch + 4 * x, 4) &
+                            0xffffffu) != 0;
+            fprintf(stderr, "image %s: %ux%u surface %x base %x lit %lu\n", text,
+                    (unsigned)image.width, (unsigned)image.height, (unsigned)image.surface,
+                    (unsigned)image.base, lit);
         }
-        free(pixels);
-        return surface;
+        return image.surface;
     }
     if (site->target == 0x48ae00) /* JPEG decode: no bitmap until a native decoder exists */
         return 0;
@@ -1729,17 +1776,6 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
     {
         host_move(host, site->eax, site->edx, site->ebx);
         return site->eax;
-    }
-    if (site->target == LIFT_GLOBAL_STORE)
-    {
-        {
-            static int shown;
-            if (shown++ < 40)
-                fprintf(stderr, "gstore %x = %x (depth %u)\n", site->eax, site->edx,
-                        vertrix_lifted_depth());
-        }
-        host_write(host, site->eax, site->stack, site->edx);
-        return 0;
     }
     if (site->target == LIFT_HOST_FREEMEM || site->target == LIFT_HOST_FREEMEM_ALIAS ||
         site->target == LIFT_HOST_FREE)

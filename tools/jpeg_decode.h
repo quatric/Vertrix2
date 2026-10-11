@@ -2,6 +2,8 @@
 #include <setjmp.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+/* jpeglib.h uses size_t and FILE without including their headers. */
 #include <jpeglib.h>
 
 #include "vf.h"
@@ -17,11 +19,16 @@ static void jpeg_decode_failed(j_common_ptr info)
     longjmp(((JpegDecodeErrors *)info->err)->escape, 1);
 }
 
-static int jpeg_decode(VertrixVf *archive, const char *name, uint8_t **pixels, uint32_t *width,
-                       uint32_t *height)
+static int jpeg_decode(VertrixVf *archive, const char *name,
+                       uint8_t *(*target)(void *context, uint32_t width, uint32_t height,
+                                          uint32_t *pitch),
+                       void *context)
 {
     uint32_t index, size;
-    unsigned char *data = NULL, *out = NULL, *line = NULL;
+    unsigned char *data = NULL;
+    unsigned char *volatile line = NULL; /* assigned after setjmp */
+    unsigned char *out;
+    uint32_t pitch = 0;
     struct jpeg_decompress_struct info;
     JpegDecodeErrors errors;
     if (!vertrix_vf_find(archive, name, &index) || !vertrix_vf_size(archive, index, &size) || !size)
@@ -31,6 +38,7 @@ static int jpeg_decode(VertrixVf *archive, const char *name, uint8_t **pixels, u
     data = malloc(size);
     if (!data || !vertrix_vf_read(archive, index, 0, data, size))
     {
+        fprintf(stderr, "jpeg %s: %s\n", name, data ? "unreadable" : "out of memory for the file");
         free(data);
         return 0;
     }
@@ -38,9 +46,11 @@ static int jpeg_decode(VertrixVf *archive, const char *name, uint8_t **pixels, u
     errors.manager.error_exit = jpeg_decode_failed;
     if (setjmp(errors.escape))
     {
+        char message[JMSG_LENGTH_MAX];
+        errors.manager.format_message((j_common_ptr)&info, message);
+        fprintf(stderr, "jpeg %s: %s\n", name, message);
         jpeg_destroy_decompress(&info);
         free(line);
-        free(out);
         free(data);
         return 0;
     }
@@ -49,15 +59,19 @@ static int jpeg_decode(VertrixVf *archive, const char *name, uint8_t **pixels, u
     jpeg_read_header(&info, TRUE);
     info.out_color_space = JCS_RGB;
     jpeg_start_decompress(&info);
-    out = malloc((size_t)info.output_width * info.output_height * 4);
     line = malloc((size_t)info.output_width * 3);
-    if (!out || !line)
+    out = line != NULL ? target(context, info.output_width, info.output_height, &pitch) : NULL;
+    if (out == NULL)
     {
-        longjmp(errors.escape, 1);
+        fprintf(stderr, "jpeg %s: %s\n", name, line ? "no surface" : "out of memory");
+        jpeg_destroy_decompress(&info);
+        free(line);
+        free(data);
+        return 0;
     }
     while (info.output_scanline < info.output_height)
     {
-        unsigned char *row = out + (size_t)info.output_scanline * info.output_width * 4;
+        unsigned char *row = out + (size_t)info.output_scanline * pitch;
         JSAMPROW rows[1] = {line};
         uint32_t x;
         jpeg_read_scanlines(&info, rows, 1);
@@ -70,9 +84,6 @@ static int jpeg_decode(VertrixVf *archive, const char *name, uint8_t **pixels, u
         }
     }
     jpeg_finish_decompress(&info);
-    *width = info.output_width;
-    *height = info.output_height;
-    *pixels = out;
     jpeg_destroy_decompress(&info);
     free(line);
     free(data);

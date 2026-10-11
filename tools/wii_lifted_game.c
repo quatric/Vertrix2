@@ -437,12 +437,14 @@ static void *game_main(void *unused)
     return NULL;
 }
 
-static uint8_t game_stack[GAME_STACK] __attribute__((aligned(32)));
-
 int main(void)
 {
+    /* The game's stack comes from MEM2, ahead of the original's heap: MEM1 is kept for the large
+     * surfaces (the second heap). */
+    uint8_t *stack = (uint8_t *)(((uint32_t)SYS_GetArena2Lo() + 31u) & ~31u);
     lwp_t thread;
-    if (LWP_CreateThread(&thread, game_main, NULL, game_stack, sizeof game_stack, 64) != 0)
+    SYS_SetArena2Lo(stack + GAME_STACK);
+    if (LWP_CreateThread(&thread, game_main, NULL, stack, GAME_STACK, 64) != 0)
     {
         return 1;
     }

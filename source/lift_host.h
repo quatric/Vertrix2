@@ -68,10 +68,13 @@ typedef struct LiftHost
     unsigned boundary_distinct;
     /* DirectDraw emulation: the primary surface the original draws to, and the display mode */
     /* The multimedia timer the original starts (timeSetEvent): its callback runs a game tick. */
-    /* Decodes the named archive JPEG into malloc'ed 32-bit pixels (bytes blue, green, red, 0);
-     * supplied by the driver, which links the platform JPEG library. Returns 0 on failure. */
-    int (*decode_jpeg)(VertrixVf *archive, const char *name, uint8_t **pixels, uint32_t *width,
-                       uint32_t *height);
+    /* Decodes the named archive JPEG; supplied by the driver, which links the platform JPEG
+     * library. Once the size is known, `target` returns where the rows go (`*pitch` bytes apart,
+     * 4 bytes per pixel: blue, green, red, 0), or NULL to give up. Returns 0 on failure. */
+    int (*decode_jpeg)(VertrixVf *archive, const char *name,
+                       uint8_t *(*target)(void *context, uint32_t width, uint32_t height,
+                                          uint32_t *pitch),
+                       void *context);
     uint32_t key_queue[64][2]; /* pending keyboard events: DIK scan code, 0x80 down / 0 up */
     unsigned key_head, key_tail;
     uint32_t

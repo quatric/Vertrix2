@@ -188,7 +188,7 @@ wii-sync: $(BUILD)/vertrix2.dol
 .PHONY: wii-lifted-game wii-sync-lifted
 wii-lifted-game: $(BUILD)/vertrix2-lifted.dol
 
-$(BUILD)/wii_lifted_game.o: tools/wii_lifted_game.c $(wildcard source/*.h) | $(BUILD)
+$(BUILD)/wii_lifted_game.o: tools/wii_lifted_game.c tools/jpeg_decode.h $(wildcard source/*.h) | $(BUILD)
 	$(PPC_CC) $(CFLAGS) -DGEKKO -DHW_RVL -D__wii__ -I$(LIBOGC)/include -I/opt/devkitpro/portlibs/ppc/include -Isource -Itools -c $< -o $@
 
 $(BUILD)/vertrix2-lifted.elf: $(BUILD)/wii_lifted_game.o $(BUILD)/image_bin.o $(BUILD)/libvertrix-wii-audio.a $(BUILD)/libvertrix-wii-video.a $(BUILD)/libvertrix-wii-archive.a $(BUILD)/libvertrix-recovered.a
@@ -210,5 +210,5 @@ HOST_JPEG ?= /opt/homebrew
 .PHONY: host-game
 host-game: $(BUILD)/host_game
 
-$(BUILD)/host_game: tools/host_game.c $(filter-out source/wii_%.c,$(wildcard source/*.c)) $(wildcard source/*.h) | $(BUILD)
+$(BUILD)/host_game: tools/host_game.c tools/jpeg_decode.h $(filter-out source/wii_%.c,$(wildcard source/*.c)) $(wildcard source/*.h) | $(BUILD)
 	$(HOST_CC) -std=gnu11 -O2 -w -Isource -Itools -I$(HOST_JPEG)/include tools/host_game.c $(filter-out source/wii_%.c,$(wildcard source/*.c)) -L$(HOST_JPEG)/lib -ljpeg -lm -o $@

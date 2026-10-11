@@ -755,7 +755,38 @@ routine without a frame and finds 0x48b2f0's own.
 Lifted frames are C locals of up to 0x4000 bytes, nested up to 16 deep, with the native ports
 between them. That can exceed the Wii main thread's 128 KB stack (`s_mainStack`), and an
 overflow there is silent. `wii_lifted_game` therefore runs the game on an LWP thread with a 2 MB
-stack.
+stack. The stack is taken from MEM2, ahead of the original's heap, because MEM1 holds the second
+heap for the large surfaces. A static 2 MB stack left no room for that heap.
+
+### The title backdrop on the Wii
+
+The title backdrop is `IMAGE\BACKGROUND\logo2.jpg`. On the Wii it was never decoded, so the
+menu was drawn over the intro picture. The decoder had allocated a 1.2 MB 32-bit copy of each
+image with `malloc`, and by the fourth 640x480 image the small MEM1 pool had no block that size.
+
+The JPEG hook now takes a destination. Once libjpeg knows the size, `image_target` creates the
+game's surface (0x478d10) and returns its pixel memory. The rows (blue, green, red, 0) are
+written there directly, with no copy. The Mac frames are unchanged, and in Dolphin the title
+shows the backdrop.
+
+A decode failure now names its cause in the log (the libjpeg message, or which allocation
+failed).
+
+### Boundary costs
+
+A 1,500-tick count of boundary calls (title and menus, with sound):
+
+| Target | Calls |
+|---|---|
+| 0xf0000000 (stores to globals) | 275 million |
+| 0x4d8177, 0x4d809c, 0x4d80a6 (float helpers) | 84 million |
+| 0x4db507, 0x4db350 | 17.6 million |
+| 0x4eb652 (double divide) | 1.65 million |
+
+`host_boundary` now tests the global store first, then the float helpers. Before, each store
+went through the import-slot lookup and a chain of target tests. `host_surface_copy` now
+resolves each row once and copies it forward, where it used to look up every byte. A 1,500-tick
+run on the Mac went from 24.8 s to 15.5 s, with identical frames.
 
 ## Open after the completed batch
 
