@@ -1,4 +1,4 @@
-/* Host check: link all source/lifted_*.c with actor_storage.c and call_glue.c. */
+/* Host check: link every non-Wii source/*.c (the dispatcher reaches the native ports). */
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
@@ -47,9 +47,10 @@ int main(void)
 {
     static const uint32_t values[] = {0, 1, 0x7fffffffu, 0x80000000u, 0xfffffffeu, 0xffffffffu};
     static const uint32_t targets[] = {0x401010, 0x478da0};
-    static const uint32_t removed[] = {0x418150, 0x45f1e0, 0x471e10, 0x4725f0};
+    /* Routines whose lift still fails verification (docs/lifted-batch-verification.json). */
+    static const uint32_t unlifted[] = {0x415c60, 0x432c00, 0x475090, 0x479450};
     static const uint32_t screens[] = {0x465af0, 0x466d60, 0x46b810, 0x46c9d0};
-    static const uint32_t optional[] = {0x42a200, 0x4ccf3b};
+    static const uint32_t optional[] = {0x423960, 0x44b810};
     static const uint32_t leaves[] = {0x4b9ce0, 0x4bb260, 0x4c5c20, 0x4c6a80, 0x4c93c0};
     Boundary boundary = {0};
     VertrixCalls inner = {boundary_call, &boundary};
@@ -70,9 +71,9 @@ int main(void)
     {
         assert(vertrix_lifted_has(targets[i]));
     }
-    for (i = 0; i < sizeof removed / sizeof removed[0]; ++i)
+    for (i = 0; i < sizeof unlifted / sizeof unlifted[0]; ++i)
     {
-        assert(!vertrix_lifted_has(removed[i]));
+        assert(!vertrix_lifted_has(unlifted[i]));
     }
     for (i = 0; i < sizeof screens / sizeof screens[0]; ++i)
     {
@@ -140,13 +141,13 @@ int main(void)
             uint32_t result = 0xabcdef01;
             site.eax = values[i];
             site.edx = values[j];
-            assert(!vertrix_lifted_dispatch(&adapter.calls, &services, &globals, &site, &result));
-            assert(result == 0xabcdef01);
+            assert(vertrix_lifted_dispatch(&adapter.calls, &services, &globals, &site, &result));
+            assert(result == expected);
             assert(adapter.calls.call(&site, adapter.calls.context) == expected);
             assert(boundary.calls == 0);
         }
     }
-    assert(boundary.comparator_calls == 36);
+    assert(boundary.comparator_calls == 0); /* the verified lift of 0x418150 serves all 36 */
     site.target = 0x401000;
     site.eax = 0x12345678;
     site.edx = 0x87654321;
