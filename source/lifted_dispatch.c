@@ -27,6 +27,7 @@
 #include "lifted_whole_20.h"
 #include "lifted_whole_21.h"
 #include "lifted_whole_22.h"
+#include "lifted_whole_23.h"
 #include "lifted_whole_3.h"
 #include "lifted_whole_4.h"
 #include "lifted_whole_5.h"
@@ -1074,6 +1075,7 @@ static const LiftedRoutine routines[] = {
     {0x44b4a0, lifted_f44b4a0, 180, 0},
     {0x44b5d0, lifted_f44b5d0, 176, 0},
     {0x44b6f0, lifted_f44b6f0, 200, 0},
+    {0x44b810, lifted_f44b810, 224, 0},
     {0x44b980, lifted_f44b980, 200, 0},
     {0x44bac0, lifted_f44bac0, 92, 0},
     {0x44bb30, lifted_f44bb30, 92, 0},
@@ -3968,7 +3970,6 @@ static const LiftedRoutine unverified_routines[] = {
     {0x423960, lifted_f423960, 308, 0},
     {0x43e2a0, lifted_f43e2a0, 100, 0},
     {0x43e320, lifted_f43e320, 128, 0},
-    {0x44b810, lifted_f44b810, 224, 0},
     {0x452520, lifted_f452520, 192, 0},
     {0x453050, lifted_state_pair_453050, 144, 0},
     {0x476aa0, lifted_f476aa0, 380, 0},

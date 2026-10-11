@@ -407,6 +407,37 @@ allocated, because the cleared strings no longer have to be allocated again. All
 unchanged. The new baseline is `work/tnew/base23.txt`. `tools/host_game.c` gains `DUMPSCENE`, which
 lists the actors of the three scene lists.
 
+## Deferred cdecl cleanup
+
+On the HIGHS screen (OPTIONS, then HIGHS), the rank column was empty in row 1. Rows 2 to 5 drew the
+previous row's score at x = -58, y = 0, so "00000" appeared in the top-left corner of the screen.
+The table builder 0x4651b0 formats each rank into a shared string with sprintf 0x4cdfb0 (format
+"%d", at 0x465383). After the call it loads eax and then runs `add esp, 0xc`. `tools/lift.py`
+treated a call as cdecl only when `add esp` came immediately after it. So the lift passed sprintf no
+stack arguments, and the string kept its old text.
+
+The lifter now finds a deferred `add esp, n` (`Lifter.deferred_cleanup`). It looks at most 8
+instructions ahead. The instructions in between must not touch esp, be branch targets, or be calls,
+jumps or pushes. n / 4 may not exceed the pushes directly before the call. A scan of all 3,925
+dispatched routines finds three calls like this, all to sprintf:
+
+- 0x44b810, at 0x44b895;
+- 0x459ec0, at 0x45a05d;
+- 0x4651b0, at 0x465383.
+
+All three were lifted again (`work/relift_cdecl`) and pass verification.
+`tools/replace_lifted.py` replaced 0x4651b0 (whole_3) and 0x459ec0 (whole_11) in place. 0x44b810
+leaves the unverified tier as `lifted_whole_23`. The table now shows ranks 1, 1, 3, 4, 5: the first
+two scores tie, as 0x417840 ranks them. The stray digits are gone.
+
+`tools/verify_one.py`'s string-store stub (0x4ca280, 0x4ca370) no longer draws 0. `lift_call` stores
+only a non-zero report, and a string pointer is never 0 (the empty string is the shared rep at
+0x500818). `tools/host_game.c` gains:
+
+- `MENU=0..3`, which points at one title menu bar;
+- `WATCHPIXEL=x,y WATCHTICK=t [WATCHLEN=n]`, which traces the lifted calls of those ticks and
+  reports the writes to one back-surface pixel.
+
 ## Open after the completed batch
 
 - 844 attempted routines did not pass verification. The saved failure details distinguish

@@ -1,8 +1,8 @@
 {
  "status": "completed",
- "attempted_routines": 4000,
- "passed_routines": 3923,
- "failed_routines": 77,
+ "attempted_routines": 4001,
+ "passed_routines": 3925,
+ "failed_routines": 76,
  "cases_per_mode": 64,
  "oracle_modes": [
   "wide",
@@ -905,6 +905,7 @@
   "0x44b4a0",
   "0x44b5d0",
   "0x44b6f0",
+  "0x44b810",
   "0x44b980",
   "0x44bac0",
   "0x44bb30",
@@ -1411,6 +1412,7 @@
   "0x461610",
   "0x461790",
   "0x461fc0",
+  "0x4651b0",
   "0x4657f0",
   "0x465a70",
   "0x466d60",
@@ -3559,7 +3561,6 @@
   "f423960": "timeout",
   "f4327e0": "timeout",
   "f432c00": "AssertionError: (1, [('0x806000', '0x221', 0, 144)])",
-  "f44b810": "AssertionError: (0, (4, (5038000, 7372772, 37095544, 8417280, 8417280, 0, 0, 0, 0), (5038000, 7372772, 37095544, 8417280, 8417280, 7372772, 5300675, 5300672, 19), 10, 10, [(4900128, 8417280, 5161452, ",
   "f452520": "AssertionError: ('too few complete original executions', 5, 1019, [('Invalid memory fetch (UC_ERR_FETCH_UNMAPPED) at 0xfa6', 511), ('RuntimeError (Original routine 0x452520 did not reach its return bo",
   "f453050": "AssertionError: ('too few complete original executions', 0, 1024, [('Invalid memory fetch (UC_ERR_FETCH_UNMAPPED) at 0x4aa8', 965), ('Invalid memory fetch (UC_ERR_FETCH_UNMAPPED) at 0xf22', 21), ('Inv",
   "f465af0": "timeout",
@@ -4795,6 +4796,15 @@
    "attempted": 1,
    "newly_passed": [
     "0x4df884"
+   ]
+  },
+  {
+   "note": "Deferred cdecl cleanup (relift_cdecl): a call to sprintf 0x4cdfb0 whose add esp follows a register load passed no stack arguments; 0x4651b0 and 0x459ec0 replaced in place, 0x44b810 joins as whole_23",
+   "attempted": 3,
+   "newly_passed": [
+    "0x44b810",
+    "0x459ec0",
+    "0x4651b0"
    ]
   }
  ]

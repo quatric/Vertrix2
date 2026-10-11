@@ -102,8 +102,10 @@ def co_create(cpu, rng, eax, edx, ebx, ecx, stack):
 
 def string_store(cpu, rng, eax, edx, ebx, ecx, stack):
     """0x4ca280 and 0x4ca370 store a new string pointer through eax (lift_call stores the value the
-    callee reports there): the stub stores the same drawn value in the original."""
-    value = rng.choice([0, 0x806000, rng.getrandbits(32)])
+    callee reports there): the stub stores the same drawn value in the original. A string pointer
+    is never 0 (the empty string is the shared rep 0x500818), and lift_call stores only a non-zero
+    report, because a lifted callee reports 0."""
+    value = rng.choice([0x806000, rng.getrandbits(32) | 0x1000])
     try:
         host_write(cpu, eax, struct.pack('<I', value))
     except Exception:  # noqa: BLE001 - map the page of a garbage pointer

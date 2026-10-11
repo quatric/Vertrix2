@@ -522,10 +522,34 @@ class Lifter:
                 break
         return count
 
+    def deferred_cleanup(self, insn):
+        """The `add esp, n` of a cdecl call that is not the next instruction: the caller may do
+        register work first (0x465383 calls sprintf 0x4cdfb0, loads eax, then `add esp, 0xc`).
+        The instructions between must not touch esp or be branch targets, and the cleanup must not
+        remove more than the pushes directly before the call."""
+        address = insn.address + insn.size
+        for _ in range(8):
+            nxt = self.insns.get(address)
+            if nxt is None or address in self.targets:
+                return None
+            if nxt.mnemonic == 'add' and nxt.op_str.startswith('esp,'):
+                count = int(nxt.op_str.split(',')[1], 0) // 4
+                return nxt if 0 < count <= self.pending_pushes(insn) else None
+            if nxt.mnemonic in ('call', 'ret', 'jmp', 'push', 'pop', 'leave', 'pushfd', 'popfd',
+                                'pushal', 'popal') or nxt.mnemonic in CONDITIONS or \
+                    'esp' in nxt.op_str:
+                return None
+            address += nxt.size
+        return None
+
     def call(self, insn, next_insn):
         op = insn.operands[0]
         cdecl = (next_insn is not None and next_insn.mnemonic == 'add' and
                  next_insn.op_str.startswith('esp,'))
+        if not cdecl and op.type == X.X86_OP_IMM:
+            deferred = self.deferred_cleanup(insn)
+            if deferred is not None:
+                cdecl, next_insn = True, deferred
         if op.type == X.X86_OP_IMM:
             target = op.imm
             target_expr = '0x%xu' % target

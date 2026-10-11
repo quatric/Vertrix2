@@ -50,7 +50,7 @@ int main(void)
     /* Routines whose lift still fails verification (docs/lifted-batch-verification.json). */
     static const uint32_t unlifted[] = {0x415c60, 0x432c00, 0x475090, 0x479450};
     static const uint32_t screens[] = {0x465af0, 0x466d60, 0x46b810, 0x46c9d0};
-    static const uint32_t optional[] = {0x423960, 0x44b810};
+    static const uint32_t optional[] = {0x423960};
     static const uint32_t leaves[] = {0x4b9ce0, 0x4bb260, 0x4c5c20, 0x4c6a80, 0x4c93c0};
     Boundary boundary = {0};
     VertrixCalls inner = {boundary_call, &boundary};

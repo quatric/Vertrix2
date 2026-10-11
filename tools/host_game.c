@@ -16,6 +16,8 @@ enum
     HEIGHT = 480
 };
 
+extern uint32_t vertrix_debug_watch;
+
 static uint8_t original[LIFT_HOST_IMAGE_SIZE];
 static uint8_t image[LIFT_HOST_IMAGE_SIZE];
 static uint8_t heap[0x4000000];
@@ -92,6 +94,12 @@ static void autoplay(LiftHost *host, uint32_t handler, uint32_t tick)
         {
             lift_host_write32(host, 0x5588f8 + 0x48, moves[m].x | (moves[m].y << 16));
         }
+    }
+    if (handler == 0x41b820 && getenv("MENU") != NULL && n >= 150)
+    {
+        /* MENU=0..3: the pointer on one bar of the title menu (bars at x 236, y 341 + 25 * i). */
+        lift_host_write32(host, 0x5588f8 + 0x48,
+                          320u | ((353u + 25u * (unsigned)atoi(getenv("MENU"))) << 16));
     }
     if (n >= 150 && phase >= 2 && phase < 25 && !pressed)
     {
@@ -186,6 +194,22 @@ int main(int argc, char **argv)
                 lift_host_key(&host, key, 0);
             }
             played++;
+        }
+        if (getenv("WATCHPIXEL") != NULL && getenv("WATCHTICK") != NULL)
+        {
+            /* WATCHPIXEL=x,y WATCHTICK=t [WATCHLEN=n]: for ticks t..t+n-1, trace the lifted calls
+             * and report the writes to that pixel of the back surface. */
+            unsigned from = (unsigned)atoi(getenv("WATCHTICK"));
+            unsigned length = getenv("WATCHLEN") != NULL ? (unsigned)atoi(getenv("WATCHLEN")) : 1;
+            int inside = tick >= from && tick < from + length;
+            uint32_t width, height, pitch, bytes;
+            uint32_t base =
+                lift_host_surface(&host, host.back_surface, &width, &height, &pitch, &bytes);
+            char *cursor = getenv("WATCHPIXEL");
+            unsigned x = (unsigned)strtoul(cursor, &cursor, 10);
+            unsigned y = *cursor == ',' ? (unsigned)strtoul(cursor + 1, NULL, 10) : 0;
+            vertrix_debug_watch = inside && base != 0 ? base + y * pitch + bytes * x : 0;
+            vertrix_lifted_set_trace(inside || getenv("TRACE_LIFTED") != NULL);
         }
         lift_host_write32(&host, 0x5328bc, 1); /* the form is active: the device poll may run */
         lift_host_run(&host, 0x4b7b80, 0, 0, 0, 0, &lifted); /* the 14 ms timer */

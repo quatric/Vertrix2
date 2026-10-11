@@ -28739,7 +28739,7 @@ L_46534b:
     }
     edi = lift_load(&env, ebp, 0xffffff94u, 4);
     vertrix_lift_fl = fl;
-    eax = lift_call(&env, 0x4cdfb0u, eax, edx, ebx, ecx, 0, esp);
+    eax = lift_call(&env, 0x4cdfb0u, eax, edx, ebx, ecx, 3, esp);
     edx = vertrix_lift_edx;
     fl = vertrix_lift_fl;
     eax = lift_load(&env, ebp, 0xffffffdeu, 4);
