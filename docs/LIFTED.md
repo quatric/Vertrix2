@@ -264,6 +264,27 @@ completes 6. The regression sample still passes.
 0x4d7110 is not a real entry point. It makes three pushes and two pops before its `ret`, so
 its failures are expected.
 
+## Sixth re-verification (the fs:[0] chain in a thread block)
+
+The 102 failures were lifted again (`work/relift11`, none skipped) and verified under the
+thread-block layout: **41 pass**. 35 of them are in `source/lifted_whole_13.[ch]`
+(`docs/lift/whole_13.json`), and the dispatcher now has 3,245 entries. Nine of the 35 (0x418a10,
+0x4212a0, 0x4ccf3b, 0x4dac40, 0x4dbf80, 0x4dfac0, 0x4dfb24, 0x4e6b50, 0x4e6bac) left the
+unverified tier. 0x415860, which ends with `mov fs:[0], eax`, now passes as expected.
+
+Six of the routines that pass stay out of the chunk:
+
+- 0x4713d0 and 0x4715a0 are recovered natively in `source/title_letter.h`.
+- 0x4df8a8 and 0x4df914 are recovered natively in `source/rtl_glue.h`.
+- 0x4eb5e0 is the RTL move. The host boundary serves it as a copy, and a dispatcher entry would
+  come first.
+- 0x4d7110 passes, but its pushes and pops are unbalanced (see above), so it is not added as an
+  entry.
+
+61 routines still fail. 34 complete too few original executions, 15 time out and 12 show a
+mismatch. With `ALARM=300`, the host title output is identical to the run before the chunk. The
+Wii library, `build/vertrix2.dol` and `build/vertrix2-lifted.dol` build.
+
 ## Open after the completed batch
 
 - 844 attempted routines did not pass verification. The saved failure details distinguish
