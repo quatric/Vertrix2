@@ -285,6 +285,29 @@ Six of the routines that pass stay out of the chunk:
 mismatch. With `ALARM=300`, the host title output is identical to the run before the chunk. The
 Wii library, `build/vertrix2.dol` and `build/vertrix2-lifted.dol` build.
 
+## The host game run
+
+`tools/host_game.c` (`make host-game`) runs the Wii driver's sequence on the build machine. That
+sequence is the startup, the loader, the sprite banks, the idle handler chain at `form + 0xbc`,
+and the 14 ms device poll 0x4b7b80. It uses the same scripted pointer walk as the
+`VERTRIX_AUTOPLAY` Wii build, with a simulated clock. It writes presented frames as PPM and lists
+every routine the original asked for that is neither lifted nor served by the host:
+
+    build/host_game build/image.bin hardware-check/Vertrix2.vf OUT_DIR [ticks] [step_ms] [shot_every]
+
+With 14 ms steps, the run goes through the intro screens (0x41a520, 0x423fb0), the title menu
+(0x41b820, tick 675), players selection (0x41c7b0), ready to fight (0x41d0e0) and the countdown.
+It enters gameplay (0x424990) at tick 2866. The first run showed only the background there. 35
+unserved targets had no lift, because the batch had never attempted them. Seven were Win32
+imports the host did not emulate: `timeBeginPeriod`, `timeGetDevCaps`, `GetSystemMetrics`,
+`ShowCursor`, `ShowWindow`, `CreateEventA`, and `GetLocalTime` (read by `localtime` at
+0x4ec850). They now have host implementations in `source/lift_host.c`. `GetLocalTime` reports the
+fixed date that `FileTimeToSystemTime` already uses, advanced by the driver clock. The other 28
+were lifted (`work/relift12`). 27 pass and are in `source/lifted_whole_14.[ch]`, so the dispatcher
+has 3,272 entries. 0x429ba0 shows a mismatch. After that, the game screen draws the boards, the
+score and level panels, the gauges and the bonus columns. Five targets are still unserved: 0x429ba0,
+0x42f910, 0x42fb60, 0x487890 and 0x425f60. With `ALARM=300`, the host title output is identical.
+
 ## Open after the completed batch
 
 - 844 attempted routines did not pass verification. The saved failure details distinguish

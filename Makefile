@@ -202,3 +202,13 @@ wii-sync-lifted: $(BUILD)/vertrix2-lifted.dol
 	cp $(BUILD)/vertrix2-lifted.dol "$(SYNC)/apps/vertrix2"/boot.dol
 	cp wii-game/meta.xml "$(SYNC)/apps/vertrix2"/meta.xml
 	cp hardware-check/Vertrix2.vf "$(SYNC)/apps/vertrix2"/Vertrix2.vf
+
+# The Wii lifted game's startup and frame loop on the build machine, writing frames as PPM:
+# build/host_game build/image.bin hardware-check/Vertrix2.vf OUT_DIR [ticks] [step_ms] [shot_every]
+HOST_CC ?= cc
+HOST_JPEG ?= /opt/homebrew
+.PHONY: host-game
+host-game: $(BUILD)/host_game
+
+$(BUILD)/host_game: tools/host_game.c $(filter-out source/wii_%.c,$(wildcard source/*.c)) $(wildcard source/*.h) | $(BUILD)
+	$(HOST_CC) -std=gnu11 -O2 -w -Isource -Itools -I$(HOST_JPEG)/include tools/host_game.c $(filter-out source/wii_%.c,$(wildcard source/*.c)) -L$(HOST_JPEG)/lib -ljpeg -lm -o $@

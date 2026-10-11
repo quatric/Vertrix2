@@ -666,6 +666,47 @@ static int host_import(LiftHost *host, const VertrixCallSite *site, const char *
         }
         *result = 1;
     }
+    else if (strcmp(name, "GetLocalTime") == 0) /* (out SYSTEMTIME): read by localtime 0x4ec850 */
+    {
+        /* The same fixed date FileTimeToSystemTime reports (1 January 2004), advanced by the
+         * driver's clock, so a run is reproducible. */
+        uint32_t seconds = host->clock_ms / 1000;
+        host_write(host, a0, 2, 2004);                    /* wYear */
+        host_write(host, a0 + 2, 2, 1);                   /* wMonth */
+        host_write(host, a0 + 4, 2, 4);                   /* wDayOfWeek: a Thursday */
+        host_write(host, a0 + 6, 2, 1 + seconds / 86400); /* wDay */
+        host_write(host, a0 + 8, 2, seconds / 3600 % 24);
+        host_write(host, a0 + 10, 2, seconds / 60 % 60);
+        host_write(host, a0 + 12, 2, seconds % 60);
+        host_write(host, a0 + 14, 2, host->clock_ms % 1000);
+        *result = 0;
+    }
+    else if (strcmp(name, "GetSystemMetrics") == 0) /* the 640x480 full-screen display mode */
+    {
+        *result = a0 == 0 ? 640 : a0 == 1 ? 480 : 0; /* SM_CXSCREEN, SM_CYSCREEN */
+    }
+    else if (strcmp(name, "ShowCursor") == 0) /* the display counter after the change */
+    {
+        *result = a0 != 0 ? 0 : 0xffffffffu;
+    }
+    else if (strcmp(name, "ShowWindow") == 0)
+    {
+        *result = 0; /* the window was not visible before */
+    }
+    else if (strcmp(name, "CreateEventA") == 0)
+    {
+        *result = 0x7e000000u + host->events_created++; /* a distinct nonzero handle */
+    }
+    else if (strcmp(name, "timeBeginPeriod") == 0)
+    {
+        *result = 0; /* TIMERR_NOERROR */
+    }
+    else if (strcmp(name, "timeGetDevCaps") == 0) /* (out TIMECAPS, size) */
+    {
+        host_write(host, a0, 4, 1);           /* wPeriodMin */
+        host_write(host, a0 + 4, 4, 1000000); /* wPeriodMax */
+        *result = 0;
+    }
     else if (strcmp(name, "GetVersion") == 0)
     {
         *result = 0x0a280005u; /* Windows XP style: major 5, minor 1 packs as 0x0a280105 */
