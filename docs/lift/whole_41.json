@@ -1,0 +1,54 @@
+{
+ "mixer_pcm8_stereo": {
+  "callees": {},
+  "stack": 116,
+  "arguments": 0,
+  "pointer_callees": [],
+  "pointer_fields": [
+   0
+  ],
+  "pointer_globals": [],
+  "pointer_maybe": [],
+  "constants": [
+   15,
+   16,
+   17,
+   119,
+   120,
+   121,
+   135,
+   136,
+   137,
+   239,
+   240,
+   241
+  ],
+  "virtual": [],
+  "address": 4199208
+ },
+ "mixer_pcm16_stereo": {
+  "callees": {},
+  "stack": 116,
+  "arguments": 0,
+  "pointer_callees": [],
+  "pointer_fields": [],
+  "pointer_globals": [],
+  "pointer_maybe": [],
+  "constants": [
+   15,
+   16,
+   17,
+   119,
+   120,
+   121,
+   135,
+   136,
+   137,
+   239,
+   240,
+   241
+  ],
+  "virtual": [],
+  "address": 4205592
+ }
+}

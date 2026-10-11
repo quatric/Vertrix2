@@ -1,7 +1,7 @@
 {
  "status": "completed",
- "attempted_routines": 4102,
- "passed_routines": 4034,
+ "attempted_routines": 4114,
+ "passed_routines": 4046,
  "failed_routines": 68,
  "cases_per_mode": 64,
  "oracle_modes": [
@@ -13,12 +13,16 @@
  "passed_addresses": [
   "0x401010",
   "0x401054",
+  "0x401328",
+  "0x402c18",
   "0x404480",
   "0x404580",
   "0x404610",
   "0x404680",
   "0x4046e0",
   "0x404730",
+  "0x405680",
+  "0x4056c0",
   "0x405720",
   "0x405d60",
   "0x405e00",
@@ -37,6 +41,7 @@
   "0x408800",
   "0x4088e0",
   "0x4095d0",
+  "0x409f00",
   "0x40a190",
   "0x40a590",
   "0x40a800",
@@ -112,10 +117,13 @@
   "0x40c6b0",
   "0x40c7d0",
   "0x40c8d0",
+  "0x40c910",
   "0x40c950",
+  "0x40c970",
   "0x40c990",
   "0x40c9d0",
   "0x40ca70",
+  "0x40caa0",
   "0x40cb10",
   "0x40cb70",
   "0x40cbb0",
@@ -128,6 +136,9 @@
   "0x40cff0",
   "0x40d090",
   "0x40d250",
+  "0x40d490",
+  "0x40d540",
+  "0x40d880",
   "0x40dc50",
   "0x40dc80",
   "0x40df20",
@@ -2814,6 +2825,7 @@
   "0x4c98d0",
   "0x4c98f0",
   "0x4c9921",
+  "0x4c9b10",
   "0x4c9daf",
   "0x4c9dd6",
   "0x4c9e00",
@@ -5112,6 +5124,43 @@
    "attempted": 1,
    "newly_passed": [
     "0x4ea130"
+   ]
+  },
+  {
+   "note": "Sound mixer and MP3 decoder routines reached with the wave device",
+   "attempted": 4,
+   "newly_passed": [
+    "0x4056c0",
+    "0x409f00",
+    "0x40dc50",
+    "0x4c9b10"
+   ]
+  },
+  {
+   "note": "Sound mixer and MP3 decoder routines reached with the wave device",
+   "attempted": 2,
+   "newly_passed": [
+    "0x401328",
+    "0x402c18"
+   ]
+  },
+  {
+   "note": "Sound mixer routine reached with the wave device",
+   "attempted": 1,
+   "newly_passed": [
+    "0x405680"
+   ]
+  },
+  {
+   "note": "Host game run with the wave device (relift_r43): sound routines reached once audio output exists",
+   "attempted": 6,
+   "newly_passed": [
+    "0x40c910",
+    "0x40c970",
+    "0x40caa0",
+    "0x40d490",
+    "0x40d540",
+    "0x40d880"
    ]
   }
  ]

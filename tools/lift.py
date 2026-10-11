@@ -91,7 +91,8 @@ TABLES = {}
 
 
 def jump_table(seen, insn):
-    """The targets of `jmp [index*4 + table]`; the bound comes from the cmp before it."""
+    """The targets of `jmp [index*4 + table]`; the bound comes from the cmp before it, or from an
+    `and` mask on the index."""
     mem = insn.operands[0].mem
     if insn.operands[0].type != X.X86_OP_MEM or mem.base or not mem.index or mem.scale != 4:
         raise NotImplementedError('%x indirect jmp' % insn.address)
@@ -100,6 +101,15 @@ def jump_table(seen, insn):
         prior = seen[address]
         if prior.mnemonic == 'cmp' and prior.operands[1].type == X.X86_OP_IMM:
             count = prior.operands[1].imm + 1
+            break
+        writes_index = (len(prior.operands) > 0 and prior.operands[0].type == X.X86_OP_REG and
+                        prior.operands[0].reg == mem.index and
+                        prior.mnemonic not in ('cmp', 'test', 'push'))
+        if writes_index:
+            # A mask bounds the index (0x402cc7: `and eax, 0xf` before `jmp [eax*4 + table]`).
+            if prior.mnemonic == 'and' and prior.operands[1].type == X.X86_OP_IMM and \
+                    (prior.operands[1].imm & (prior.operands[1].imm + 1)) == 0:
+                count = prior.operands[1].imm + 1
             break
     if count is None or not 0 < count <= 512:
         raise NotImplementedError('%x indirect jmp without a bound' % insn.address)

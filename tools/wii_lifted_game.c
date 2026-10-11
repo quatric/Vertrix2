@@ -2,6 +2,7 @@
  * through the dispatcher on the platform host (lift_host.c), the data comes from the original
  * archive on the SD card, and the DirectDraw back buffer is presented as the display frame.
  * The original's mapped image is linked in (build/image.bin, from tools/dump_image.py). */
+#include <asndlib.h>
 #include <gccore.h>
 #include <ogc/lwp_watchdog.h>
 #include <stdio.h>
@@ -13,6 +14,7 @@
 #include "jpeg_decode.h"
 #include "lift_host.h"
 #include "wii_archive.h"
+#include "wii_audio.h"
 #include "wii_frame_texture.h"
 #include "wii_video.h"
 
@@ -23,6 +25,9 @@ enum
     WIDTH = 640,
     HEIGHT = 480,
     HEAP_RESERVE = 1024 * 1024, /* left in MEM2 for the libraries */
+    /* Lifted frames are C locals (up to 0x4000 bytes, 16 deep) and the native ports nest between
+     * them; the main thread's 128 KB stack overflowed once the MP3 setup ran. */
+    GAME_STACK = 2 * 1024 * 1024,
     FRAME_MS = 33
 };
 
@@ -51,6 +56,14 @@ static ssize_t tee_write(struct _reent *r, void *fd, const char *data, size_t le
         fflush(log_file);
     }
     return console_out->write_r(r, fd, data, length);
+}
+
+/* The original's wave-out blocks go to ASND voice 0 as they are written. */
+static void wave_output(void *context, const uint8_t *samples, uint32_t bytes, uint32_t rate,
+                        uint32_t channels, uint32_t bits)
+{
+    (void)context;
+    vertrix_wii_stream_write(0, samples, bytes, rate, channels, bits);
 }
 
 static void log_to_sd(void)
@@ -97,7 +110,7 @@ static void gather(const LiftHost *host, uint32_t base)
     }
 }
 
-int main(void)
+static void *game_main(void *unused)
 {
     const uint32_t masks[3] = {0x00ff0000, 0x0000ff00, 0x000000ff};
     VertrixSurface frame = {pixels, sizeof pixels, WIDTH, HEIGHT, WIDTH * 4, 4};
@@ -107,9 +120,10 @@ int main(void)
     int lifted;
     uint32_t form, display, base, width, height, pitch, bytes, start;
     unsigned shown = 0;
+    (void)unused;
     if (!vertrix_wii_video_init(&video))
     {
-        return 1;
+        return NULL;
     }
     WPAD_Init();
     WPAD_SetDataFormat(WPAD_CHAN_0, WPAD_FMT_BTNS_ACC_IR);
@@ -144,6 +158,9 @@ int main(void)
     }
     host.archive = archive.archive;
     host.decode_jpeg = jpeg_decode;
+    ASND_Init();
+    ASND_Pause(0);
+    host.wave_output = wave_output;
     vertrix_lifted_allow_unverified(1);
     form = lift_host_allocate(&host, 0x1000);
     display = lift_host_allocate(&host, 0x800);
@@ -417,5 +434,18 @@ int main(void)
     }
     vertrix_wii_texture_free(&texture);
     vertrix_wii_archive_close(&archive);
+    return NULL;
+}
+
+static uint8_t game_stack[GAME_STACK] __attribute__((aligned(32)));
+
+int main(void)
+{
+    lwp_t thread;
+    if (LWP_CreateThread(&thread, game_main, NULL, game_stack, sizeof game_stack, 64) != 0)
+    {
+        return 1;
+    }
+    LWP_JoinThread(thread, NULL);
     return 0;
 }

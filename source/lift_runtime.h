@@ -78,6 +78,10 @@ __attribute__((weak)) unsigned vertrix_lift_frame_index;
 __attribute__((weak)) uint32_t vertrix_lift_edx;
 /* The flags a lifted routine leaves for its caller (RTL compare helpers answer in the flags). */
 __attribute__((weak)) LiftFlags vertrix_lift_fl;
+/* esi, edi and ebp at a call, for a lifted callee: on x86 the callee starts with the caller's
+ * registers, and some take arguments in them (0x4e509c passes the exponent to 0x4e5177 in edi).
+ * lift_call sets them; the dispatcher hands them to the callee's entry and clears them. */
+__attribute__((weak)) uint32_t vertrix_lift_in_esi, vertrix_lift_in_edi, vertrix_lift_in_ebp;
 
 static inline void lift_put(uint8_t *bytes, unsigned size, uint32_t value);
 
@@ -270,6 +274,24 @@ static inline uint32_t lift_call(LiftEnv *env, uint32_t target, uint32_t eax, ui
     }
     return result;
 }
+
+static inline uint32_t lift_call_with(LiftEnv *env, uint32_t target, uint32_t eax, uint32_t edx,
+                                      uint32_t ebx, uint32_t ecx, uint32_t esi, uint32_t edi,
+                                      uint32_t ebp, unsigned count, uint32_t esp)
+{
+    vertrix_lift_in_esi = esi;
+    vertrix_lift_in_edi = edi;
+    vertrix_lift_in_ebp = ebp;
+    {
+        uint32_t result = lift_call(env, target, eax, edx, ebx, ecx, count, esp);
+        vertrix_lift_in_esi = vertrix_lift_in_edi = vertrix_lift_in_ebp = 0;
+        return result;
+    }
+}
+
+/* Every lifted routine has esi, edi and ebp as locals: its calls pass them on. */
+#define lift_call(env, target, eax, edx, ebx, ecx, count, esp)                                     \
+    lift_call_with(env, target, eax, edx, ebx, ecx, esi, edi, ebp, count, esp)
 
 static inline uint32_t lift_flags_value(unsigned bits, uint64_t result, LiftFlags *fl)
 {

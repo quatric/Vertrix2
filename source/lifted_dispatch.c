@@ -46,6 +46,10 @@
 #include "lifted_whole_38.h"
 #include "lifted_whole_39.h"
 #include "lifted_whole_4.h"
+#include "lifted_whole_40.h"
+#include "lifted_whole_41.h"
+#include "lifted_whole_42.h"
+#include "lifted_whole_43.h"
 #include "lifted_whole_5.h"
 #include "lifted_whole_6.h"
 #include "lifted_whole_7.h"
@@ -80,12 +84,16 @@ void (*vertrix_lifted_after_hook)(uint32_t target, uint32_t eax);
 static const LiftedRoutine routines[] = {
     {0x401010, lifted_mixer_output, 92, 0},
     {0x401054, lifted_mixer_output_401054, 92, 0},
+    {0x401328, lifted_mixer_pcm8_stereo, 116, 0},
+    {0x402c18, lifted_mixer_pcm16_stereo, 116, 0},
     {0x404480, lifted_mpeg_header_decode, 80, 0},
     {0x404580, lifted_return_unchanged, 64, 0},
     {0x404610, lifted_bit_reader_bits24, 76, 0},
     {0x404680, lifted_bit_reader_bits16, 76, 0},
     {0x4046e0, vertrix_native_bit_read, 0, 0},
     {0x404730, lifted_f404730, 1244, 1},
+    {0x405680, lifted_f405680, 336, 0},
+    {0x4056c0, lifted_f4056c0, 220, 0},
     {0x405720, lifted_f405720, 516, 0},
     {0x405d60, lifted_f405d60, 88, 0},
     {0x405e00, lifted_queue_push, 100, 0},
@@ -104,6 +112,7 @@ static const LiftedRoutine routines[] = {
     {0x408800, lifted_f408800, 124, 0},
     {0x4088e0, lifted_f4088e0, 1176, 1},
     {0x4095d0, lifted_f4095d0, 744, 1},
+    {0x409f00, lifted_f409f00, 216, 0},
     {0x40a190, lifted_f40a190, 832, 0},
     {0x40a590, lifted_window_tables, 208, 0},
     {0x40a800, lifted_f40a800, 88, 0},
@@ -179,10 +188,13 @@ static const LiftedRoutine routines[] = {
     {0x40c6b0, lifted_f40c6b0, 92, 0},
     {0x40c7d0, lifted_f40c7d0, 88, 0},
     {0x40c8d0, lifted_f40c8d0, 72, 0},
+    {0x40c910, lifted_f40c910, 76, 0},
     {0x40c950, lifted_f40c950, 68, 0},
+    {0x40c970, lifted_f40c970, 64, 0},
     {0x40c990, lifted_audio_sample_guard, 64, 0},
     {0x40c9d0, lifted_mixer_attach, 72, 0},
     {0x40ca70, lifted_f40ca70, 68, 0},
+    {0x40caa0, lifted_f40caa0, 68, 0},
     {0x40cb10, lifted_mixer_step, 72, 0},
     {0x40cb70, lifted_f40cb70, 68, 0},
     {0x40cbb0, lifted_f40cbb0, 68, 0},
@@ -195,6 +207,10 @@ static const LiftedRoutine routines[] = {
     {0x40cff0, lifted_mixer_portamento, 88, 0},
     {0x40d090, lifted_mixer_vibrato, 80, 0},
     {0x40d250, lifted_mixer_volume_slide, 76, 0},
+    {0x40d490, lifted_mixer_set_effect_40d490, 68, 0},
+    {0x40d540, lifted_sequence_extended_effect, 92, 0},
+    {0x40d880, lifted_mixer_global_effect, 68, 0},
+    {0x40dc50, lifted_mixer_effect_select, 76, 0},
     {0x40dc80, lifted_mixer_volume_column, 92, 0},
     {0x40df20, lifted_mixer_trigger_reset, 76, 0},
     {0x40e030, lifted_mixer_playback_tick, 88, 0},
@@ -3143,6 +3159,7 @@ static const LiftedRoutine routines[] = {
     {0x4c98d0, lifted_rtl_copy_blocks, 80, 0},
     {0x4c98f0, lifted_rtl_zero_call, 72, 0},
     {0x4c9921, lifted_float_power, 168, 0},
+    {0x4c9b10, lifted_rtl_square_root, 96, 0},
     {0x4c9b6a, lifted_f4c9b6a, 216, 0},
     {0x4c9daf, lifted_rtl_flagged_call, 76, 0},
     {0x4c9dd6, lifted_f4c9dd6, 76, 0},
@@ -4136,9 +4153,18 @@ static int find_compare(const void *key, const void *item)
 /* Debugging: routines the dispatcher must pretend not to have (zero terminated). */
 uint32_t vertrix_lifted_skip[8];
 
+/* The lookups repeat for the same targets (the float helpers run for every sample the MP3
+ * decoder produces): a direct-mapped cache of each target's routine (or of its absence) keeps
+ * them off bsearch. vertrix_lifted_allow_unverified clears it. */
+static struct
+{
+    uint32_t target;
+    const LiftedRoutine *routine;
+} find_cache[4096];
+
 static const LiftedRoutine *find(uint32_t target)
 {
-    unsigned skip;
+    unsigned skip, slot = (target ^ (target >> 12)) & 4095u;
     const LiftedRoutine *found;
     for (skip = 0; skip < 8 && vertrix_lifted_skip[skip] != 0; skip++)
     {
@@ -4146,6 +4172,10 @@ static const LiftedRoutine *find(uint32_t target)
         {
             return NULL;
         }
+    }
+    if (find_cache[slot].target == target && target != 0)
+    {
+        return find_cache[slot].routine;
     }
     found = bsearch(&target, routines, sizeof routines / sizeof routines[0], sizeof routines[0],
                     find_compare);
@@ -4155,12 +4185,15 @@ static const LiftedRoutine *find(uint32_t target)
                         sizeof unverified_routines / sizeof unverified_routines[0] - 1,
                         sizeof unverified_routines[0], find_compare);
     }
+    find_cache[slot].target = target;
+    find_cache[slot].routine = found;
     return found;
 }
 
 void vertrix_lifted_allow_unverified(int allowed)
 {
     unverified_allowed = allowed;
+    memset(find_cache, 0, sizeof find_cache);
 }
 
 void vertrix_lifted_set_trace(int enabled)
@@ -4204,6 +4237,10 @@ int vertrix_lifted_dispatch(const VertrixCalls *calls, const VertrixFactoryServi
     entry.edx = site->edx;
     entry.ebx = site->ebx;
     entry.ecx = site->ecx;
+    entry.esi = vertrix_lift_in_esi;
+    entry.edi = vertrix_lift_in_edi;
+    entry.ebp = vertrix_lift_in_ebp;
+    vertrix_lift_in_esi = vertrix_lift_in_edi = vertrix_lift_in_ebp = 0;
     /* Each frame's emulated stack lies just below its caller's (the arena descends from
      * LIFTED_ARENA_TOP); a frame larger than the old fixed 0x4000 step fits as well. */
     entry.esp = arena[depth];
@@ -4216,10 +4253,20 @@ int vertrix_lifted_dispatch(const VertrixCalls *calls, const VertrixFactoryServi
         printf("%*s%x eax=%x edx=%x ebx=%x ecx=%x\n", (int)depth * 2, "", (unsigned)site->target,
                (unsigned)site->eax, (unsigned)site->edx, (unsigned)site->ebx, (unsigned)site->ecx);
     }
+    /* A lifted routine registers its frame in lift_begin. The native ports have none, so the slot
+     * is cleared first: the host must not read through a frame that has returned. */
     vertrix_lift_frame_index = depth;
+    if (depth < LIFT_FRAME_LIMIT)
+    {
+        vertrix_lift_frames[depth] = NULL;
+    }
     depth++;
     *result = routine->function(calls, services, globals, &entry);
     depth--;
+    if (depth < LIFT_FRAME_LIMIT)
+    {
+        vertrix_lift_frames[depth] = NULL;
+    }
     if (vertrix_lifted_after_hook != NULL)
     {
         vertrix_lifted_after_hook(site->target, site->eax);

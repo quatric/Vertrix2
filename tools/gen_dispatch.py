@@ -158,9 +158,18 @@ static int find_compare(const void *key, const void *item)
 /* Debugging: routines the dispatcher must pretend not to have (zero terminated). */
 uint32_t vertrix_lifted_skip[8];
 
+/* The lookups repeat for the same targets (the float helpers run for every sample the MP3
+ * decoder produces): a direct-mapped cache of each target's routine (or of its absence) keeps
+ * them off bsearch. vertrix_lifted_allow_unverified clears it. */
+static struct
+{
+    uint32_t target;
+    const LiftedRoutine *routine;
+} find_cache[4096];
+
 static const LiftedRoutine *find(uint32_t target)
 {
-    unsigned skip;
+    unsigned skip, slot = (target ^ (target >> 12)) & 4095u;
     const LiftedRoutine *found;
     for (skip = 0; skip < 8 && vertrix_lifted_skip[skip] != 0; skip++)
     {
@@ -169,20 +178,27 @@ static const LiftedRoutine *find(uint32_t target)
             return NULL;
         }
     }
-    found = bsearch(&target, routines, sizeof routines / sizeof routines[0],
-                                         sizeof routines[0], find_compare);
+    if (find_cache[slot].target == target && target != 0)
+    {
+        return find_cache[slot].routine;
+    }
+    found = bsearch(&target, routines, sizeof routines / sizeof routines[0], sizeof routines[0],
+                    find_compare);
     if (found == NULL && unverified_allowed)
     {
         found = bsearch(&target, unverified_routines + 1,
                         sizeof unverified_routines / sizeof unverified_routines[0] - 1,
                         sizeof unverified_routines[0], find_compare);
     }
+    find_cache[slot].target = target;
+    find_cache[slot].routine = found;
     return found;
 }
 
 void vertrix_lifted_allow_unverified(int allowed)
 {
     unverified_allowed = allowed;
+    memset(find_cache, 0, sizeof find_cache);
 }
 
 void vertrix_lifted_set_trace(int enabled)
@@ -226,6 +242,10 @@ int vertrix_lifted_dispatch(const VertrixCalls *calls, const VertrixFactoryServi
     entry.edx = site->edx;
     entry.ebx = site->ebx;
     entry.ecx = site->ecx;
+    entry.esi = vertrix_lift_in_esi;
+    entry.edi = vertrix_lift_in_edi;
+    entry.ebp = vertrix_lift_in_ebp;
+    vertrix_lift_in_esi = vertrix_lift_in_edi = vertrix_lift_in_ebp = 0;
     /* Each frame's emulated stack lies just below its caller's (the arena descends from
      * LIFTED_ARENA_TOP); a frame larger than the old fixed 0x4000 step fits as well. */
     entry.esp = arena[depth];
@@ -238,10 +258,20 @@ int vertrix_lifted_dispatch(const VertrixCalls *calls, const VertrixFactoryServi
         printf("%%*s%%x eax=%%x edx=%%x ebx=%%x ecx=%%x\\n", (int)depth * 2, "", (unsigned)site->target,
                (unsigned)site->eax, (unsigned)site->edx, (unsigned)site->ebx, (unsigned)site->ecx);
     }
+    /* A lifted routine registers its frame in lift_begin. The native ports have none, so the slot
+     * is cleared first: the host must not read through a frame that has returned. */
     vertrix_lift_frame_index = depth;
+    if (depth < LIFT_FRAME_LIMIT)
+    {
+        vertrix_lift_frames[depth] = NULL;
+    }
     depth++;
     *result = routine->function(calls, services, globals, &entry);
     depth--;
+    if (depth < LIFT_FRAME_LIMIT)
+    {
+        vertrix_lift_frames[depth] = NULL;
+    }
     if (vertrix_lifted_after_hook != NULL)
     {
         vertrix_lifted_after_hook(site->target, site->eax);

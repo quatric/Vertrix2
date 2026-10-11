@@ -471,6 +471,33 @@ static int host_find_file(LiftHost *host, uint32_t name, uint32_t *index)
 
 /* The Win32 imports the original's runtime reaches, served on the host. Returns 1 and the result
  * in *result when the import is implemented. Arguments are the stdcall stack dwords. */
+/* Mark the queued wave headers whose play time has passed as done (WHDR_DONE, out of the queue);
+ * with `all`, the head one regardless of the clock. */
+static void wave_advance(LiftHost *host, int all)
+{
+    uint64_t now = (uint64_t)host->clock_ms * 1000u;
+    while (host->wave_count > 0 && (all || now >= host->wave_head_end_us))
+    {
+        uint32_t header = host->wave_queue[0];
+        unsigned i;
+        host_write(host, header + 16, 4, (lift_host_read(host, header + 16, 4) & ~0x10u) | 1u);
+        for (i = 1; i < host->wave_count; i++)
+        {
+            host->wave_queue[i - 1] = host->wave_queue[i];
+        }
+        host->wave_count--;
+        if (host->wave_count > 0)
+        {
+            uint32_t length = lift_host_read(host, host->wave_queue[0] + 4, 4);
+            host->wave_head_end_us += (uint64_t)length * 1000000u / host->wave_bytes_per_second;
+        }
+        if (all)
+        {
+            return;
+        }
+    }
+}
+
 static int host_import(LiftHost *host, const VertrixCallSite *site, const char *name,
                        uint32_t *result)
 {
@@ -931,8 +958,92 @@ static int host_import(LiftHost *host, const VertrixCallSite *site, const char *
     }
     else if (strcmp(name, "waveOutGetNumDevs") == 0)
     {
-        /* No wave device yet: the host does not stream waveOut buffers, so the original runs
-         * its own path for a machine without one (its mixer thread then writes nothing). */
+        *result = 1; /* the Wii's audio output */
+    }
+    else if (strcmp(name, "waveOutGetDevCapsA") == 0) /* (device, WAVEOUTCAPSA *, size) */
+    {
+        static const char device_name[] = "Wii audio";
+        unsigned i;
+        for (i = 0; i < a2 && i < 0x34; i++)
+        {
+            host_write(host, a1 + i, 1, 0);
+        }
+        for (i = 0; i < sizeof device_name; i++)
+        {
+            host_write(host, a1 + 8 + i, 1, (uint8_t)device_name[i]); /* szPname */
+        }
+        host_write(host, a1 + 0x28, 4, 0xfff); /* dwFormats: every 11/22/44 kHz format */
+        host_write(host, a1 + 0x2c, 2, 2);     /* wChannels */
+        *result = 0;
+    }
+    else if (strcmp(name, "waveOutOpen") == 0) /* (HWAVEOUT *, device, WAVEFORMATEX *, ...) */
+    {
+        host->wave_open = 1;
+        host->wave_channels = lift_host_read(host, a2 + 2, 2);
+        host->wave_rate = lift_host_read(host, a2 + 4, 4);
+        host->wave_bytes_per_second = lift_host_read(host, a2 + 8, 4);
+        host->wave_bits = lift_host_read(host, a2 + 14, 2);
+        host->wave_count = 0;
+        host->wave_end_us = (uint64_t)host->clock_ms * 1000u;
+        host_write(host, a0, 4, 0x600); /* the device handle */
+        *result = 0;
+    }
+    else if (strcmp(name, "waveOutPrepareHeader") == 0) /* (device, WAVEHDR *, size) */
+    {
+        host_write(host, a1 + 16, 4, lift_host_read(host, a1 + 16, 4) | 2u); /* WHDR_PREPARED */
+        *result = 0;
+    }
+    else if (strcmp(name, "waveOutUnprepareHeader") == 0)
+    {
+        uint32_t flags = lift_host_read(host, a1 + 16, 4);
+        *result = flags & 0x10u ? 33u : 0u; /* WAVERR_STILLPLAYING while queued */
+        if (*result == 0)
+        {
+            host_write(host, a1 + 16, 4, flags & ~2u);
+        }
+    }
+    else if (strcmp(name, "waveOutWrite") == 0) /* (device, WAVEHDR *, size) */
+    {
+        uint32_t data = lift_host_read(host, a1, 4), length = lift_host_read(host, a1 + 4, 4);
+        uint64_t now = (uint64_t)host->clock_ms * 1000u, start;
+        *result = 0;
+        if (!host->wave_open || host->wave_bytes_per_second == 0 ||
+            host->wave_count == sizeof host->wave_queue / sizeof host->wave_queue[0])
+        {
+            *result = 11; /* MMSYSERR_INVALPARAM */
+        }
+        else
+        {
+            const uint8_t *samples = bytes_at(host, data, length);
+            start = host->wave_end_us > now ? host->wave_end_us : now;
+            host->wave_end_us = start + (uint64_t)length * 1000000u / host->wave_bytes_per_second;
+            if (host->wave_count == 0)
+            {
+                host->wave_head_end_us = host->wave_end_us;
+            }
+            host->wave_queue[host->wave_count++] = a1;
+            /* WHDR_INQUEUE set, WHDR_DONE cleared */
+            host_write(host, a1 + 16, 4, (lift_host_read(host, a1 + 16, 4) & ~1u) | 0x10u);
+            if (host->wave_output != NULL && samples != NULL)
+            {
+                host->wave_output(host->wave_context, samples, length, host->wave_rate,
+                                  host->wave_channels, host->wave_bits);
+            }
+        }
+    }
+    else if (strcmp(name, "waveOutReset") == 0)
+    {
+        while (host->wave_count > 0)
+        {
+            host->wave_head_end_us = (uint64_t)host->clock_ms * 1000u;
+            wave_advance(host, 1);
+        }
+        host->wave_end_us = (uint64_t)host->clock_ms * 1000u;
+        *result = 0;
+    }
+    else if (strcmp(name, "waveOutClose") == 0)
+    {
+        host->wave_open = 0;
         *result = 0;
     }
     else if (strcmp(name, "GetCurrentThread") == 0)
@@ -1491,6 +1602,12 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
 {
     LiftHost *host = context;
     unsigned i;
+    /* The runtime's float helpers first: the MP3 decoder calls them for every sample. */
+    if (site->target == 0x4d809c || site->target == 0x4d80a6 || site->target == 0x4d8177 ||
+        site->target == 0x4d81fe || site->target == 0x4db350 || site->target == 0x4db507)
+    {
+        return host_rtl_arithmetic(site, host);
+    }
     if (site->target >= LIFT_COM_BASE && site->target < LIFT_COM_BASE + 0x500)
     {
         return host_com(host, (site->target - LIFT_COM_BASE) >> 8,
@@ -1580,11 +1697,6 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
     }
     if (site->target == 0x48ae00) /* JPEG decode: no bitmap until a native decoder exists */
         return 0;
-    if (site->target == 0x4d809c || site->target == 0x4d80a6 || site->target == 0x4d8177 ||
-        site->target == 0x4d81fe || site->target == 0x4db350 || site->target == 0x4db507)
-    {
-        return host_rtl_arithmetic(site, host);
-    }
     if (site->target == 0x4eb652) /* RTL double divide: edx:eax / ecx:ebx */
     {
         union
@@ -1734,16 +1846,22 @@ uint32_t lift_host_run(LiftHost *host, uint32_t target, uint32_t eax, uint32_t e
  * after advancing the clock, and the calls the thread would have made by then happen here. */
 void lift_host_thread_step(LiftHost *host, int *lifted)
 {
+    uint32_t now = host->clock_ms;
+    wave_advance(host, 0);
     if (host->thread_start != 0x40aed0)
     {
         return;
     }
-    while ((int32_t)(host->clock_ms - host->thread_due) >= 0 &&
-           lift_host_read(host, 0x52f14c, 4) == 0)
+    while ((int32_t)(now - host->thread_due) >= 0 && lift_host_read(host, 0x52f14c, 4) == 0)
     {
+        /* Each call sees the time the thread would have made it at. */
+        host->clock_ms = host->thread_due;
+        wave_advance(host, 0);
         lift_host_run(host, 0x40ab10, 0, 0, 0, 0, lifted);
         host->thread_due += 10u;
     }
+    host->clock_ms = now;
+    wave_advance(host, 0);
 }
 
 void lift_host_run_initializers(LiftHost *host, unsigned limit, int *lifted)

@@ -88,6 +88,19 @@ typedef struct LiftHost
     /* The one thread the original creates (CreateThread): its procedure and parameter. The host
      * runs no second thread; the driver performs the procedure's work (see host_game.c). */
     uint32_t thread_start, thread_parameter, thread_due;
+    /* The wave output device (waveOut*): the open format, and the headers written and not yet
+     * played, in order. A header is played back to back after the previous one at the format's
+     * byte rate on the host clock; when its time is up it is marked done (WHDR_DONE). */
+    int wave_open;
+    uint32_t wave_rate, wave_channels, wave_bits, wave_bytes_per_second;
+    uint32_t wave_queue[8];
+    unsigned wave_count;
+    uint64_t wave_end_us; /* when the last queued header finishes playing */
+    uint64_t wave_head_end_us;
+    /* Receives each written buffer's samples as the device starts playing them. */
+    void (*wave_output)(void *context, const uint8_t *samples, uint32_t bytes, uint32_t rate,
+                        uint32_t channels, uint32_t bits);
+    void *wave_context;
     /* The files the original opens are entries of this archive (names like .\\SPRITE\\x.spr). */
     uint32_t tls[64], tls_count;
     VertrixVf *archive;

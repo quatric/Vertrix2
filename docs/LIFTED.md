@@ -663,9 +663,99 @@ Re-lifting the four verified routines with nonzero slot counts changed only 0x4c
 
 - With the initializers, the menu, GAME (now NORMAL, 5, NO, YES, 32), KEYS, SOUND, 1P with
   continue no, 2P and EXIT paths all complete.
-- The only boundary calls left are 0x4e5f00 and 0x47fbb0. Sound output is still open (see the
-  wave device above).
-- The dispatcher has 4,006 verified routines.
+- The only boundary calls left are 0x4e5f00 and 0x47fbb0. Sound output followed (next section).
+- The dispatcher had 4,006 verified routines at this point.
+
+## Sound output
+
+### The wave-out device
+
+The game opens WAVE_MAPPER with CALLBACK_NULL and keeps three 32-byte WAVEHDRs at 0x532510.
+0x4111c0 polls each header for WHDR_DONE, refills it through [0x532574], then prepares and
+writes it again. `source/lift_host.c` serves the device:
+
+- waveOutGetNumDevs reports one device; waveOutGetDevCapsA names it and lists every format.
+- waveOutOpen reads the WAVEFORMATEX and returns handle 0x600.
+- waveOutPrepareHeader and waveOutUnprepareHeader set and clear WHDR_PREPARED (2). Unprepare
+  answers WAVERR_STILLPLAYING (33) while the header is queued.
+- waveOutWrite queues the header (WHDR_INQUEUE 0x10, WHDR_DONE 1 cleared). Queued headers play
+  back to back on the host clock. The samples go to `LiftHost.wave_output` as they are written.
+- `wave_advance` marks the head header done when its play time has passed. waveOutReset
+  finishes them all; waveOutClose closes the device.
+
+`lift_host_thread_step` sets the host clock to each timer-thread call's due time around
+0x40ab10, so the mixer sees the time the thread would have seen.
+
+`host_game` writes the samples to a WAV file with `WAVOUT=path`. A 3,000-tick 1P run gives
+7,427,712 bytes of 44.1 kHz 16-bit stereo, which is 42.1 s for 42 s of game time. The load is
+silent, then the music plays.
+
+The Wii driver hands the samples to `vertrix_wii_stream_write` (`source/wii_audio.c`). This keeps
+one ASND voice playing 4,096-byte blocks of 16-bit stereo from a 48-block queue. The voice
+callback queues the next written block, or silence when none is ready.
+
+### Routines the sound path reaches
+
+With a device present, the game decodes its MP3 music and mixes effects. Each routine below
+passed `verify_one.py`:
+
+- `lifted_whole_40`: 0x4056c0, 0x409f00, 0x40dc50 and 0x4c9b10.
+- `lifted_whole_41`: 0x402c18 and 0x401328.
+- `lifted_whole_42`: 0x405680.
+- `lifted_whole_43`: the effect routines 0x40c910, 0x40c970, 0x40caa0, 0x40d490, 0x40d540 and
+  0x40d880.
+
+### Caller registers
+
+On x86 a callee starts with its caller's esi, edi and ebp. `lift_call` passed only eax, edx,
+ebx and ecx, so a lifted callee started with the other three at zero.
+
+0x4e509c passes the exponent to 0x4e5177 in edi, so composed floating point broke: pow and exp
+returned infinity, and the MP3 setup's exp loop never ended. The original gives
+0x40a6a09e667f3beb (2896.3) for the probe; the lifted 0x4dae1e had returned edx 0xffc00000
+instead of 0x3fe00000.
+
+`lift_call_with` now sets `vertrix_lift_in_esi/edi/ebp`, and the dispatcher passes them to the
+callee's entry and clears them. The probes match the original.
+
+### Lifter: masked jump tables
+
+`jmp [reg*4+table]` after `and reg, 2^n-1` now reads 2^n entries (0x402cc7 in 0x402c18 and
+0x4013d0 in 0x401328). Before, the table had no bound.
+
+### Speed
+
+The software floating point runs for every decoded sample, so the dispatcher's lookups
+dominated the time. Two changes cut the 230-tick load with sound on the Mac from 139 s to
+50.7 s:
+
+- `find` has a 4,096-entry direct-mapped cache in front of `bsearch`.
+- `host_boundary` tests the float helpers first.
+
+Without sound the load takes 7.5 s.
+
+### Frame records and the native ports
+
+The host reads a lifted routine's locals through `vertrix_lift_frames`: `lift_begin` registers
+each frame at the dispatcher's depth. The six native ports in the dispatcher table never call
+`lift_begin`, so while one ran, its slot still held the record of the last lifted routine at
+that depth, a frame that had returned.
+
+On the Mac the dead memory still held the old values, so a read through it returned stale data
+without failing. On the Wii the memory had been reused. With the MP3 setup, 0x4046e0
+(`vertrix_native_bit_read`) ran at depth 9 under 0x48b2f0 (depth 5) and read 0x7e98fa in
+0x48b2f0's frame. The stale slot 9 claimed that address, and Dolphin reported an invalid read at
+0x007e98f4 in `host_read`.
+
+The dispatcher now clears the slot before each call and after it returns, so the walk skips a
+routine without a frame and finds 0x48b2f0's own.
+
+### The Wii thread stack
+
+Lifted frames are C locals of up to 0x4000 bytes, nested up to 16 deep, with the native ports
+between them. That can exceed the Wii main thread's 128 KB stack (`s_mainStack`), and an
+overflow there is silent. `wii_lifted_game` therefore runs the game on an LWP thread with a 2 MB
+stack.
 
 ## Open after the completed batch
 

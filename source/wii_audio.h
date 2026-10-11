@@ -23,4 +23,11 @@ int vertrix_wii_pcm8_play(VertrixWiiPcm8 *audio, int voice, unsigned left, unsig
 void vertrix_wii_pcm8_stop(VertrixWiiPcm8 *audio);
 /* Stops the owned voice before releasing sample storage. */
 void vertrix_wii_pcm8_free(VertrixWiiPcm8 *audio);
+/* One continuous ASND voice fed with the wave-out device's PCM in the order it was written.
+ * Accepts 8-bit unsigned or 16-bit little-endian PCM, mono or stereo, at any rate up to
+ * MAX_PITCH; it plays as 16-bit stereo. Requires initialized/unpaused ASND and exclusive
+ * ownership of the voice slot. Blocks that arrive while the queue is full are dropped. */
+void vertrix_wii_stream_write(int voice, const uint8_t *samples, uint32_t bytes, uint32_t rate,
+                              uint32_t channels, uint32_t bits);
+void vertrix_wii_stream_stop(void);
 #endif
