@@ -63,6 +63,7 @@
 #include "port_font.h"
 #include "port_frame_resource.h"
 #include "port_input.h"
+#include "port_layout.h"
 #include "port_memory.h"
 #include "port_memory_fill.h"
 #include "port_pixel_format.h"
@@ -2833,7 +2834,7 @@ static const LiftedRoutine routines[] = {
     {0x4ad750, lifted_object_step_dword, 76, 0},
     {0x4ad790, lifted_actor_dword_transition_4ad790, 76, 0},
     {0x4ad810, lifted_f4ad810, 88, 0},
-    {0x4ad870, lifted_f4ad870, 92, 0},
+    {0x4ad870, vertrix_port_actor_layout, 0, 0},
     {0x4ade20, vertrix_port_actor_chain_update, 0, 0},
     {0x4ade60, vertrix_port_actor_chain_walk, 0, 0},
     {0x4adf20, vertrix_port_actor_initialize, 0, 0},
