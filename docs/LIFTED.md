@@ -493,8 +493,19 @@ The selection transition handler 0x423960 is also unverified, and the run stops 
 - 0x4875a0 still differs: a byte at its array (0x806000) ends as 0 in the lifted run and as 1 in
   the original, in case 4.
 
-0x476aa0 and 0x4daae8 are `lifted_whole_26`. `lift_batch.py verify` takes `--timeout`. The
-dispatcher has 3,909 verified routines.
+0x476aa0 and 0x4daae8 are `lifted_whole_26`. `lift_batch.py verify` takes `--timeout`.
+
+Three more passed after further changes:
+
+- 0x480730 runs with the higher limit (`lifted_whole_28`).
+- 0x47e890 had diverged after CoCreateInstance. The fake object's vtable was written only while
+  the original ran, but the lifted run reads memory as it was before the original's run.
+  `verify_one.py` now writes the object's vtable before both runs. The routine also calls slot
+  0xc with 4 and with 5 arguments, which the per-site counts handle.
+- 0x488c50 reads its vtable through a local (`0x488cdf mov eax, [esi]`), so the lifter could not
+  name the field. Its meta declares the field as 0 (`virtual [[0, 40, 0]]`).
+
+0x47e890 and 0x488c50 are `lifted_whole_27`. The dispatcher has 3,912 verified routines.
 
 ## Open after the completed batch
 

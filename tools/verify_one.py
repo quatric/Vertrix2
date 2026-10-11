@@ -90,6 +90,10 @@ def vtable_setup(cpu):
         cpu.mem_write(address, struct.pack('<I', 0x806000))
     for index, slot in enumerate(slots):
         cpu.mem_write(slot, struct.pack('<I', 0x700800 + 16 * index))
+    if 0x4f175c in imports:
+        # The object CoCreateInstance hands out exists before the call: the lifted run reads memory
+        # as it was before the original ran, so its vtable must not appear only during the run.
+        cpu.mem_write(OBJECT, struct.pack('<I', VTABLE))
     widest = {}
     for field, slot, count in virtual:
         widest[slot] = max(count, widest.get(slot, 0))

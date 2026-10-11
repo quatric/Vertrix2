@@ -1,8 +1,8 @@
 {
  "status": "completed",
  "attempted_routines": 4009,
- "passed_routines": 3935,
- "failed_routines": 74,
+ "passed_routines": 3938,
+ "failed_routines": 71,
  "cases_per_mode": 64,
  "oracle_modes": [
   "wide",
@@ -1676,6 +1676,7 @@
   "0x47e4f0",
   "0x47e780",
   "0x47e7d0",
+  "0x47e890",
   "0x47e990",
   "0x47e9a0",
   "0x47e9b0",
@@ -1728,6 +1729,7 @@
   "0x480030",
   "0x480070",
   "0x480080",
+  "0x480730",
   "0x480890",
   "0x4808f0",
   "0x480940",
@@ -1848,6 +1850,7 @@
   "0x4889a0",
   "0x488a20",
   "0x488b90",
+  "0x488c50",
   "0x488d80",
   "0x489610",
   "0x489640",
@@ -3576,19 +3579,16 @@
   "f465af0": "timeout",
   "f475090": "AssertionError: ('too few complete original executions', 0, 1024, [('RuntimeError (Original routine 0x475090 did not reach its return boundary) at 0x4751d3', 212), ('RuntimeError (Original routine 0x4",
   "f479450": "timeout",
-  "f47e890": "AssertionError: ('too few complete original executions', 0, 1024, [('Invalid memory fetch (UC_ERR_FETCH_UNMAPPED) at 0x4ef6', 862), ('Invalid memory fetch (UC_ERR_FETCH_UNMAPPED) at 0xfc8', 12), ('Inv",
   "f47eba0": "AssertionError: ('too few complete original executions', 0, 1024, [('Invalid memory fetch (UC_ERR_FETCH_UNMAPPED) at 0xfa4', 521), ('Invalid memory fetch (UC_ERR_FETCH_UNMAPPED) at 0xfa6', 503)])",
   "f47f430": "AssertionError: ('too few complete original executions', 0, 1024, [('Invalid memory fetch (UC_ERR_FETCH_UNMAPPED) at 0x734a', 498), ('Invalid memory fetch (UC_ERR_FETCH_UNMAPPED) at 0x1f74', 474), ('R",
   "f47f900": "AssertionError: ('too few complete original executions', 0, 1024, [('Invalid memory fetch (UC_ERR_FETCH_UNMAPPED) at 0xfa6', 526), ('Invalid memory fetch (UC_ERR_FETCH_UNMAPPED) at 0xfa4', 498)])",
   "f47fbb0": "AssertionError: ('too few complete original executions', 1, 1023, [('Invalid memory fetch (UC_ERR_FETCH_UNMAPPED) at 0xfa4', 1023)])",
   "f47fd70": "AssertionError: ('too few complete original executions', 0, 1024, [('Invalid memory fetch (UC_ERR_FETCH_UNMAPPED) at 0xfa6', 539), ('Invalid memory fetch (UC_ERR_FETCH_UNMAPPED) at 0xfa4', 485)])",
-  "f480730": "AssertionError: ('too few complete original executions', 0, 1024, [('RuntimeError (Original routine 0x480730 did not reach its return boundary) at 0x48082a', 1024)])",
   "f480ca0": "subprocess.CalledProcessError: Command '['cc', '-std=c11', '-shared', '-fPIC', '-O2', '-Wall', '-Wextra', '-Werror', '-I', '/Volumes/SSD/larsen/Documents/Codex/2026-10-03/goal-ok-i-have-a-big/outputs/",
   "f484520": "AssertionError: ('too few complete original executions', 0, 1024, [('Invalid memory fetch (UC_ERR_FETCH_UNMAPPED) at 0x1b000000', 889), ('Invalid instruction (UC_ERR_INSN_INVALID) at 0x118', 64), ('Un",
   "f486e20": "AssertionError: ('too few complete original executions', 0, 1024, [('RuntimeError (Original routine 0x486e20 did not reach its return boundary) at 0x0', 385), ('RuntimeError (Original routine 0x486e20",
   "f4875a0": "AssertionError: (4, '0x806000', 1, 0)",
   "f487d30": "timeout",
-  "f488c50": "AssertionError: ('too few complete original executions', 0, 1024, [('Unhandled CPU exception (UC_ERR_EXCEPTION) at 0x3', 125), ('RuntimeError (Original routine 0x488c50 did not reach its return bounda",
   "f489040": "AssertionError: ('too few complete original executions', 0, 1024, [('Invalid memory fetch (UC_ERR_FETCH_UNMAPPED) at 0xe60000', 258), ('RuntimeError (Original routine 0x489040 did not reach its return",
   "f48ac10": "AssertionError: ('too few complete original executions', 0, 1024, [('RuntimeError (Original routine 0x48ac10 did not reach its return boundary) at 0x0', 317), ('RuntimeError (Original routine 0x48ac10",
   "f4bddc0": "AssertionError: ('too few complete original executions', 0, 1024, [('Invalid memory fetch (UC_ERR_FETCH_UNMAPPED) at 0x70ff6b', 915), ('Unhandled CPU exception (UC_ERR_EXCEPTION) at 0x3', 41), ('Runti",
@@ -4841,6 +4841,21 @@
    "newly_passed": [
     "0x476aa0",
     "0x4daae8"
+   ]
+  },
+  {
+   "note": "COM routines (relift_vt): the fake CoCreateInstance object exists before both runs; 0x488c50's vtable is field 0 of its argument (declared in its meta)",
+   "attempted": 2,
+   "newly_passed": [
+    "0x47e890",
+    "0x488c50"
+   ]
+  },
+  {
+   "note": "0x480730 (relift_long) with VERTRIX_ORACLE_LIMIT=50000000 and 16 cases: a 256-entry table exceeds the default instruction limit",
+   "attempted": 1,
+   "newly_passed": [
+    "0x480730"
    ]
   }
  ]

@@ -1,0 +1,108 @@
+{
+ "f47e890": {
+  "callees": {
+   "0x4f175c": [
+    5,
+    false
+   ],
+   "virtual_47e8eb": [
+    1,
+    false
+   ],
+   "virtual_47e90d": [
+    4,
+    false
+   ],
+   "virtual_47e94d": [
+    5,
+    false
+   ],
+   "virtual_47e976": [
+    1,
+    false
+   ]
+  },
+  "stack": 188,
+  "arguments": 0,
+  "pointer_callees": [],
+  "pointer_fields": [
+   0,
+   444
+  ],
+  "pointer_globals": [],
+  "pointer_maybe": [],
+  "constants": [
+   0,
+   1,
+   4294967295
+  ],
+  "virtual": [
+   [
+    0,
+    8,
+    1
+   ],
+   [
+    0,
+    12,
+    4
+   ],
+   [
+    0,
+    12,
+    5
+   ]
+  ],
+  "address": 4712592
+ },
+ "f488c50": {
+  "callees": {
+   "0x4d9280": [
+    0,
+    false
+   ],
+   "0x4ca070": [
+    0,
+    false
+   ],
+   "0x4ca370": [
+    0,
+    false
+   ],
+   "virtual_488cf3": [
+    0,
+    false
+   ],
+   "0x4ca210": [
+    0,
+    false
+   ],
+   "0x488d80": [
+    0,
+    false
+   ]
+  },
+  "stack": 192,
+  "arguments": 0,
+  "pointer_callees": [],
+  "pointer_fields": [],
+  "pointer_globals": [],
+  "pointer_maybe": [
+   0
+  ],
+  "constants": [
+   75,
+   76,
+   77
+  ],
+  "virtual": [
+   [
+    0,
+    40,
+    0
+   ]
+  ],
+  "address": 4754512,
+  "note": "virtual slot 0x28 is read through the vtable of field 0 of the argument object (0x488cdf mov eax, [esi]; kept in a local)"
+ }
+}

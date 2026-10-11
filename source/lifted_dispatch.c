@@ -31,6 +31,8 @@
 #include "lifted_whole_24.h"
 #include "lifted_whole_25.h"
 #include "lifted_whole_26.h"
+#include "lifted_whole_27.h"
+#include "lifted_whole_28.h"
 #include "lifted_whole_3.h"
 #include "lifted_whole_4.h"
 #include "lifted_whole_5.h"
@@ -1932,6 +1934,7 @@ static const LiftedRoutine routines[] = {
     {0x47e680, lifted_f47e680, 188, 0},
     {0x47e780, lifted_f47e780, 92, 0},
     {0x47e7d0, lifted_f47e7d0, 160, 0},
+    {0x47e890, lifted_f47e890, 188, 0},
     {0x47e990, lifted_dword_set, 64, 0},
     {0x47e9a0, lifted_object_dword, 64, 0},
     {0x47e9b0, lifted_f47e9b0, 132, 0},
@@ -1986,6 +1989,7 @@ static const LiftedRoutine routines[] = {
     {0x480030, lifted_f480030, 104, 0},
     {0x480070, lifted_object_dword_480070, 64, 0},
     {0x480080, lifted_f480080, 84, 0},
+    {0x480730, lifted_render_weights_build, 124, 0},
     {0x480890, lifted_palette_expand_vga, 80, 0},
     {0x4808f0, lifted_f4808f0, 104, 0},
     {0x480940, lifted_f480940, 92, 0},
@@ -2128,6 +2132,7 @@ static const LiftedRoutine routines[] = {
     {0x488a20, lifted_f488a20, 96, 0},
     {0x488b10, lifted_object_construct_e, 152, 0},
     {0x488b90, lifted_object_destroy_e, 160, 0},
+    {0x488c50, lifted_f488c50, 192, 0},
     {0x488d80, lifted_object_kind_text, 172, 0},
     {0x489170, lifted_f489170, 204, 0},
     {0x489230, lifted_f489230, 208, 0},
@@ -3985,13 +3990,10 @@ static const LiftedRoutine unverified_routines[] = {
     {0x43e320, lifted_f43e320, 128, 0},
     {0x452520, lifted_f452520, 192, 0},
     {0x453050, lifted_state_pair_453050, 144, 0},
-    {0x47e890, lifted_f47e890, 188, 0},
-    {0x480730, lifted_render_weights_build, 124, 0},
     {0x480ca0, lifted_palette_cube, 112, 0},
     {0x484520, lifted_f484520, 68, 0},
     {0x486e20, lifted_f486e20, 140, 0},
     {0x4875a0, lifted_array_list_build, 128, 10},
-    {0x488c50, lifted_f488c50, 192, 0},
     {0x48ac10, lifted_f48ac10, 288, 0},
     {0x491050, lifted_f491050, 80, 0},
     {0x4928f0, lifted_render_sample32, 88, 0},

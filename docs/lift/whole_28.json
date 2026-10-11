@@ -1,0 +1,24 @@
+{
+ "render_weights_build": {
+  "callees": {},
+  "stack": 124,
+  "arguments": 0,
+  "pointer_callees": [],
+  "pointer_fields": [],
+  "pointer_globals": [],
+  "pointer_maybe": [],
+  "constants": [
+   35,
+   36,
+   37,
+   100,
+   101,
+   102,
+   255,
+   256,
+   257
+  ],
+  "virtual": [],
+  "address": 4720432
+ }
+}

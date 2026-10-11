@@ -13,13 +13,10 @@ enum
     LIFTED_F452520_STACK = 192,
     LIFTED_STATE_PAIR_453050_STACK = 144,
     LIFTED_PALETTE_TABLES_BUILD_STACK = 540,
-    LIFTED_F47E890_STACK = 188,
-    LIFTED_RENDER_WEIGHTS_BUILD_STACK = 124,
     LIFTED_PALETTE_CUBE_STACK = 112,
     LIFTED_F484520_STACK = 68,
     LIFTED_F486E20_STACK = 140,
     LIFTED_ARRAY_LIST_BUILD_STACK = 128,
-    LIFTED_F488C50_STACK = 192,
     LIFTED_F48AC10_STACK = 288,
     LIFTED_F491050_STACK = 80,
     LIFTED_RENDER_SAMPLE32_STACK = 88,
@@ -69,15 +66,6 @@ uint32_t lifted_palette_tables_build(const VertrixCalls *calls,
                                      const VertrixFactoryServices *services,
                                      const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x47e890. */
-uint32_t lifted_f47e890(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x480730. */
-uint32_t lifted_render_weights_build(const VertrixCalls *calls,
-                                     const VertrixFactoryServices *services,
-                                     const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x480ca0. */
 uint32_t lifted_palette_cube(const VertrixCalls *calls, const VertrixFactoryServices *services,
                              const VertrixGlobals *globals, const LiftEntry *entry);
@@ -93,10 +81,6 @@ uint32_t lifted_f486e20(const VertrixCalls *calls, const VertrixFactoryServices 
 /* Original 0x4875a0. */
 uint32_t lifted_array_list_build(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                  const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x488c50. */
-uint32_t lifted_f488c50(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x48ac10. */
 uint32_t lifted_f48ac10(const VertrixCalls *calls, const VertrixFactoryServices *services,
