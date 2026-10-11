@@ -697,6 +697,26 @@ static int host_import(LiftHost *host, const VertrixCallSite *site, const char *
     {
         *result = 0x7e000000u + host->events_created++; /* a distinct nonzero handle */
     }
+    else if (strcmp(name, "GetCurrentThreadId") == 0)
+    {
+        *result = 1; /* the one thread the lifted code runs on */
+    }
+    else if (strcmp(name, "VirtualQuery") == 0) /* (address, out MEMORY_BASIC_INFORMATION, size) */
+    {
+        /* 0x4e6630 asks about its own stack for the thread's stack bounds. The lifted frames
+         * descend from 0x7f0000 (lifted_dispatch.c); report the committed region from the page
+         * of the address up to that top, allocated from 0x700000. */
+        uint32_t page = a0 & ~0xfffu;
+        uint32_t top = page < 0x7f0000u ? 0x7f0000u : page + 0x1000;
+        host_write(host, a1, 4, page);            /* BaseAddress */
+        host_write(host, a1 + 4, 4, 0x700000);    /* AllocationBase */
+        host_write(host, a1 + 8, 4, 4);           /* AllocationProtect: PAGE_READWRITE */
+        host_write(host, a1 + 12, 4, top - page); /* RegionSize */
+        host_write(host, a1 + 16, 4, 0x1000);     /* State: MEM_COMMIT */
+        host_write(host, a1 + 20, 4, 4);          /* Protect: PAGE_READWRITE */
+        host_write(host, a1 + 24, 4, 0x20000);    /* Type: MEM_PRIVATE */
+        *result = 28;
+    }
     else if (strcmp(name, "timeBeginPeriod") == 0)
     {
         *result = 0; /* TIMERR_NOERROR */

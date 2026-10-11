@@ -308,6 +308,22 @@ has 3,272 entries. 0x429ba0 shows a mismatch. After that, the game screen draws 
 score and level panels, the gauges and the bonus columns. Five targets are still unserved: 0x429ba0,
 0x42f910, 0x42fb60, 0x487890 and 0x425f60. With `ALARM=300`, the host title output is identical.
 
+The next two rounds added `source/lifted_whole_15.[ch]` (0x425f60, 0x42f910, 0x42fb60 and
+0x487890, all passing) and `source/lifted_whole_16.[ch]` (12 routines, all passing). 0x4713d0 is
+among them. Its native recovery in `source/title_letter.h` is not wired into the dispatcher, so the
+game had reached it as unserved. The dispatcher now has 3,288 entries.
+
+Every piece was a mango because the sample table of the game's random object at 0x598d30 stayed
+zero. Its fill 0x482550 seeds `srand` 0x4d8620 from `time` and draws from `rand` 0x4d85fc. Both
+keep the seed in the C runtime's thread data, at `[0x5c7b9c] + 0xc`, which they reach through
+0x4e04ec. The runtime startup 0x4e0508 creates that block at 0x4e0517 (`[0x5c7b9c] =
+0x4e587c(0)`). The drivers start at the unit initializers, so the block did not exist and `rand`
+returned 0. Both drivers now perform that step first, before the thread-variable block 0x4df307.
+0x4e587c reaches `GetCurrentThreadId` and `VirtualQuery`, which the host now serves. Pieces now
+come in every kind. With them, gameplay lasts until about tick 5019, then goes through the end
+of round screens (0x425810, 0x41e780, 0x422c50, 0x41eab0). 10 targets are still unserved,
+including 0x429ba0.
+
 ## Open after the completed batch
 
 - 844 attempted routines did not pass verification. The saved failure details distinguish

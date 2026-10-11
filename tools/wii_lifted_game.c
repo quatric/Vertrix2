@@ -148,6 +148,10 @@ int main(void)
     form = lift_host_allocate(&host, 0x1000);
     display = lift_host_allocate(&host, 0x800);
     host_store(&host, 0x544070, display);
+    /* The C runtime startup 0x4e0508 (from the entry 0x4eb454) creates the thread data first
+     * (0x4e0517: [0x5c7b9c] = 0x4e587c(0)); rand 0x4d85fc and srand 0x4d8620 keep their seed
+     * in it, and return 0 without it. */
+    lift_host_write32(&host, 0x5c7b9c, lift_host_run(&host, 0x4e587c, 0, 0, 0, 0, &lifted));
     lift_host_run(&host, 0x4df307, 0, 0, 0, 0, &lifted);    /* RTL thread-variable block */
     lift_host_run(&host, 0x475660, 0, 0, 0, 0, &lifted);    /* input unit initialization */
     lift_host_run(&host, 0x41a080, form, 0, 0, 0, &lifted); /* master startup */
