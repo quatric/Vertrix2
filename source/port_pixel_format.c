@@ -6,7 +6,12 @@ enum
     DOWN = 0x19,
     UP = 0x1d,
     PACKED = 0x21,
-    CHANNELS = 4
+    CHANNELS = 4,
+    SURFACE_KIND = 0x0d,
+    LAST_KIND = 0x558a50,
+    KIND_332 = 0,
+    KIND_555 = 1,
+    KIND_565 = 2
 };
 
 uint32_t vertrix_port_pixel_convert(PORT_SIGNATURE)
@@ -60,4 +65,30 @@ uint32_t vertrix_port_pixel_repack(PORT_SIGNATURE)
     blue = port_shl(port_shr(packed & 0xff, up[2]), down[2]);
     alpha = port_shl(port_shr(scaled[3], up[3]), down[3]);
     return port_return(&port, alpha | red | green | blue, green);
+}
+
+uint32_t vertrix_port_pixel_pack(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t colour = entry->edx;
+    uint32_t kind;
+    port_open(&port, calls, services, globals, entry);
+    kind = port_u8(&port, entry->eax, SURFACE_KIND);
+    switch (kind)
+    {
+        case KIND_332:
+            colour =
+                (((colour & 0xe00000) >> 10) | ((colour & 0xe000) >> 5) | (colour & 0xc0)) >> 6;
+            break;
+        case KIND_555:
+            colour = (((colour & 0xf80000) >> 6) | ((colour & 0xf800) >> 3) | (colour & 0xf8)) >> 3;
+            break;
+        case KIND_565:
+            colour = (((colour & 0xf80000) >> 5) | ((colour & 0xfc00) >> 2) | (colour & 0xf8)) >> 3;
+            break;
+        default:
+            break;
+    }
+    port_set8(&port, 0, LAST_KIND, kind);
+    return port_return(&port, colour, colour);
 }

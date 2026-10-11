@@ -107,3 +107,42 @@ uint32_t vertrix_port_byte_get(PORT_SIGNATURE)
     return port_return(&port, (entry->eax & 0xffffff00u) | port_u8(&port, entry->eax, 0),
                        entry->edx);
 }
+
+uint32_t vertrix_port_input_drain(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t input = entry->eax;
+    uint32_t target = input + INPUT_TARGET;
+    uint32_t eax;
+    uint32_t edx;
+    uint32_t state;
+    port_open(&port, calls, services, globals, entry);
+    eax = port_call(&port, REPEAT_TICK, input, entry->edx, entry->ebx, input);
+    edx = vertrix_lift_edx;
+    state = port_u8(&port, input, INPUT_STATE);
+    eax = (eax & 0xffff00ffu) | (state << 8);
+    if (state == 0)
+    {
+        if (port_u32(&port, target, TARGET_HANDLER) == 0)
+        {
+            return port_return(&port, eax, edx);
+        }
+        eax = port_call(&port, HANDLER_CALL, input, edx, target, input);
+        return port_return(&port, eax, vertrix_lift_edx);
+    }
+    if (state != 1)
+    {
+        return port_return(&port, eax, edx);
+    }
+    /* Held: the handler runs until the key record answers 1 or the target has no handler. */
+    for (;;)
+    {
+        eax = port_call(&port, KEY_HELD, input + INPUT_KEY, input + INPUT_KEY, target, input);
+        edx = vertrix_lift_edx;
+        if ((eax & 0xff) == 1 || port_u32(&port, target, TARGET_HANDLER) == 0)
+        {
+            return port_return(&port, eax, edx);
+        }
+        port_call(&port, HANDLER_CALL, input, edx, target, input);
+    }
+}

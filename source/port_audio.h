@@ -27,4 +27,21 @@ uint32_t vertrix_port_synth_samples(PORT_SIGNATURE);
  * sample's address). */
 uint32_t vertrix_port_synth_filter(PORT_SIGNATURE);
 
+/* Original 0x404680 (eax = count): the next `count` bits (at most 16) of the stream at the byte
+ * [0x51f014] and the bit [0x51f018]: the two bytes there, big-endian, shifted left by the bit
+ * offset (modulo 32) and kept to 16 bits, then right by 16 - count. The bit offset grows by the
+ * count; its whole bytes (signed) move the position and it keeps the rest. edx is unchanged. */
+uint32_t vertrix_port_bits_get(PORT_SIGNATURE);
+
+/* Original 0x40c460 (eax = buffer, edx = samples, ebx = channel): mix the channel into the
+ * buffer (halving the samples for stereo, bit 1 of 0x52fc1d). A channel keeps its position at
+ * +4, its step at +8, its loop at +0xc to +0x10 and its state byte at +0x16 (1 stopped, 2 ramped,
+ * 4 looping, 8 ping-pong, 0x10 playing backward). Past the loop bound in its direction it turns
+ * (ping-pong), wraps (looping) or stops; otherwise the samples up to the bound (signed division,
+ * leaving the registers as they were when it would fault) are rendered by the routine at
+ * [0x52fc38] (ramped, ecx the buffer) or [0x52fc34] (edx the buffer), cdecl (buffer, samples,
+ * channel), with the step negated around the call for a backward channel. Returns the eax and edx
+ * the original leaves. */
+uint32_t vertrix_port_mixer_channel(PORT_SIGNATURE);
+
 #endif

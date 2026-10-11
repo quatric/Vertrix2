@@ -25,4 +25,11 @@ uint32_t vertrix_port_input_poll(PORT_SIGNATURE);
  * unchanged. */
 uint32_t vertrix_port_byte_get(PORT_SIGNATURE);
 
+/* Original 0x475d20 (eax = input): 0x475cd0 without the suspension check, with ebx the target
+ * record for the handler calls, and with state 1 repeating 0x475800 (eax and edx the key record)
+ * and the handler until the key answers 1 in al or the target has no handler. Returns the last
+ * call's eax and edx; when no further call is made the tick's eax has the state in its second
+ * byte and edx is the tick's. */
+uint32_t vertrix_port_input_drain(PORT_SIGNATURE);
+
 #endif

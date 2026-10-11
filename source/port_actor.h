@@ -95,4 +95,14 @@ uint32_t vertrix_port_actor_base_destroy(PORT_SIGNATURE);
  * eax, with edx entry ebx before 0x4adfb0 and the last call's after. */
 uint32_t vertrix_port_actor_spot_draw(PORT_SIGNATURE);
 
+/* Original 0x4abd70 (eax = actor): reset the actor's fields to their initial values (the table
+ * in port_actor.c, stored in the original's order). eax and edx are unchanged. */
+uint32_t vertrix_port_actor_reset(PORT_SIGNATURE);
+
+/* Original 0x4ae0c0 (eax = actor): when +0x124 and the actor's value (0x4adfb0, ecx the actor)
+ * are both 1, the routine at +0x08 of the record at +0x158 (ebx that record, ecx the actor).
+ * Returns the last value compared or the routine's eax, with edx unchanged before 0x4adfb0 and
+ * the last call's after. */
+uint32_t vertrix_port_actor_value_idle_call(PORT_SIGNATURE);
+
 #endif

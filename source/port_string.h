@@ -65,4 +65,11 @@ uint32_t vertrix_port_string_clear(PORT_SIGNATURE);
  * unchanged. */
 uint32_t vertrix_port_char_end(PORT_SIGNATURE);
 
+/* Original 0x4ca3f0 (eax = address of a string, edx and ebx = count and bytes of the first part,
+ * ecx = count of the second, one stack argument: its bytes, popped by the routine): the string
+ * becomes a new one (0x4ca0d0, edx the total) holding both parts, each copied by 0x4eb5e0 (ebx the
+ * count, ecx the second count). Returns the last copy's eax and edx; with no bytes at all, the
+ * address and 0. */
+uint32_t vertrix_port_string_concat(PORT_SIGNATURE);
+
 #endif

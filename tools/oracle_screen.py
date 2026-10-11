@@ -158,6 +158,7 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
     arguments). Callees are stubbed and logged; `wrappers` return their eax (class constructors).
     """
     import argparse
+    import os
     import random
     from pathlib import Path
 
@@ -169,8 +170,11 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
     parser.add_argument('--build-dir', type=Path, required=True)
     parser.add_argument('--cases', type=int, default=4096)
     args = parser.parse_args()
+    # VERTRIX_VERIFY_SOURCES (space separated): more sources for the routine under test, such as
+    # the recovered native code a clean port calls (tools/verify_port.py).
     sources = list(sources) + ['call_glue.c', 'actor_storage.c', 'block_factory.c',
-                               'actor_fields.c', 'board_cells.c']
+                               'actor_fields.c', 'board_cells.c'] + \
+        os.environ.get('VERTRIX_VERIFY_SOURCES', '').split()
     native = build(args.build_dir, name, sources)
     fn = getattr(native, function)
     kinds = {'calls': c.POINTER(Calls), 'services': c.POINTER(Services),

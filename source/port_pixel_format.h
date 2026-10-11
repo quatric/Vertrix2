@@ -20,4 +20,9 @@ uint32_t vertrix_port_pixel_convert(PORT_SIGNATURE);
  * green part. */
 uint32_t vertrix_port_pixel_repack(PORT_SIGNATURE);
 
+/* Original 0x479a40 (eax = surface, edx = colour 0xRRGGBB): the colour in the surface's pixel
+ * format, by its kind byte +0x0d: 0 is 3-3-2, 1 is 5-5-5, 2 is 5-6-5 and any other keeps the
+ * colour. The kind is kept at 0x558a50. Returns the pixel in eax and edx. */
+uint32_t vertrix_port_pixel_pack(PORT_SIGNATURE);
+
 #endif

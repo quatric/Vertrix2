@@ -13,7 +13,15 @@ enum
     READ_ADDRESS = 0x5589f0,
     READ_SIZE = 0x5589ec,
     SURFACE_OFFSET = 0x478eb0,
-    SURFACE_COPY_PIXEL = 0x479d70
+    SURFACE_COPY_PIXEL = 0x479d70,
+    PIXEL_PACK = 0x479a40,
+    FILL_SIZE = 0x558b70,
+    FILL_START = 0x558b80,
+    FILL_SKIP = 0x558b68,
+    FILL_WORD_AT = 0x558b78,
+    FILL_DWORD_AT = 0x558b7c,
+    FILL_BYTE_AT = 0x558b74,
+    FILL_LEFT = 0x558b64
 };
 
 uint32_t vertrix_port_surface_offset(PORT_SIGNATURE)
@@ -111,4 +119,82 @@ uint32_t vertrix_port_surface_read(PORT_SIGNATURE)
         pixel = port_u16(&port, at, 0);
     }
     return port_return(&port, pixel, edx);
+}
+
+uint32_t vertrix_port_surface_fill(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t surface = entry->eax;
+    uint32_t width = entry->ecx;
+    uint32_t rows = entry->arguments[0];
+    uint32_t colour = entry->arguments[1];
+    uint32_t pixel;
+    uint32_t start;
+    uint32_t size;
+    uint32_t at;
+    uint32_t left;
+    uint32_t eax;
+    uint32_t edx;
+    port_open(&port, calls, services, globals, entry);
+    /* The byte cursor and the count left (esi and edi of the original), written back at the end. */
+    left = port_u32(&port, 0, FILL_LEFT);
+    at = port_u32(&port, 0, FILL_BYTE_AT);
+    port_set8(&port, 0, FILL_SIZE, port_u8(&port, surface, SURFACE_BYTES_PER_PIXEL));
+    pixel = port_call(&port, PIXEL_PACK, surface, colour, entry->ebx, colour);
+    start = port_call(&port, SURFACE_OFFSET, surface, entry->edx, entry->ebx, pixel);
+    edx = vertrix_lift_edx;
+    port_set32(&port, 0, FILL_START, start);
+    size = port_u8(&port, 0, FILL_SIZE);
+    edx = (edx & 0xffffff00u) | size;
+    eax = start;
+    if (size == 1)
+    {
+        at = start;
+        edx = width;
+        eax = port_u32(&port, surface, SURFACE_PITCH) - width;
+        port_set32(&port, 0, FILL_SKIP, eax);
+        left = port_u32(&port, 0, FILL_LEFT);
+        for (; rows != 0; rows--)
+        {
+            for (left = width; left != 0; left--)
+            {
+                at++;
+                port_set8(&port, at, -1u, pixel);
+            }
+            at += port_u32(&port, 0, FILL_SKIP);
+            eax = rows - 1;
+        }
+    }
+    else
+    {
+        at = port_u32(&port, 0, FILL_BYTE_AT);
+        left = port_u32(&port, 0, FILL_LEFT);
+        if (size == 2 || size == 4)
+        {
+            uint32_t cursor = size == 2 ? FILL_WORD_AT : FILL_DWORD_AT;
+            port_set32(&port, 0, cursor, start);
+            edx = width * size;
+            eax = port_u32(&port, surface, SURFACE_PITCH) - edx;
+            port_set32(&port, 0, FILL_SKIP, eax);
+            if (size == 4)
+            {
+                edx = rows;
+            }
+            for (; rows != 0; rows--)
+            {
+                for (left = width; left != 0; left--)
+                {
+                    uint32_t next = port_u32(&port, 0, cursor) + size;
+                    lift_store(&port.env, next, -size, size, pixel);
+                    port_set32(&port, 0, cursor, next);
+                }
+                edx = port_u32(&port, 0, FILL_SKIP);
+                port_set32(&port, 0, cursor, port_u32(&port, 0, cursor) + edx);
+                eax = rows - 1;
+            }
+        }
+    }
+    port_set32(&port, 0, FILL_BYTE_AT, at);
+    port_set32(&port, 0, FILL_LEFT, left);
+    return port_return(&port, eax, edx);
 }

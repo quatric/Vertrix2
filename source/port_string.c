@@ -18,7 +18,8 @@ enum
     APPEND_TEXT = 0x4ca5a0,
     RELEASE_RECORD = 0x4ca150,
     GROW_APPEND = 0x4ca3f0,
-    MOVE_BYTES = 0x4eb5e0
+    MOVE_BYTES = 0x4eb5e0,
+    STRING_NEW = 0x4ca0d0
 };
 
 static int lead_byte(Port *port, uint32_t text)
@@ -233,4 +234,26 @@ uint32_t vertrix_port_char_end(PORT_SIGNATURE)
         return port_return(&port, 2, entry->edx);
     }
     return port_return(&port, 0, entry->edx);
+}
+
+uint32_t vertrix_port_string_concat(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t string = entry->eax;
+    uint32_t first_count = entry->edx;
+    uint32_t first = entry->ebx;
+    uint32_t second_count = entry->ecx;
+    uint32_t second = entry->arguments[0];
+    uint32_t total = first_count + second_count;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    if (total == 0)
+    {
+        return port_return(&port, string, total);
+    }
+    port_call(&port, STRING_NEW, string, total, first, second_count);
+    port_call(&port, MOVE_BYTES, port_u32(&port, string, 0), first, first_count, second_count);
+    result = port_call(&port, MOVE_BYTES, port_u32(&port, string, 0) + first_count, second,
+                       second_count, second_count);
+    return port_return(&port, result, vertrix_lift_edx);
 }

@@ -30,7 +30,24 @@ enum
     SAMPLE_MAX_HIGH = 0x40dfffc0,
     SAMPLE_MIN_HIGH = 0xc0e00000,
     SAMPLE_MAX = 0x7fff,
-    SAMPLE_MIN = 0x8000
+    SAMPLE_MIN = 0x8000,
+    BIT_POSITION = 0x51f014,
+    BIT_OFFSET = 0x51f018,
+    BITS_WINDOW = 16,
+    MIXER_FLAGS = 0x52fc1d,
+    MIXER_STEREO = 1,
+    MIXER_RENDER = 0x52fc34,
+    MIXER_RENDER_RAMP = 0x52fc38,
+    CHANNEL_POSITION = 4,
+    CHANNEL_STEP = 8,
+    CHANNEL_LOOP_START = 0xc,
+    CHANNEL_LOOP_END = 0x10,
+    CHANNEL_STATE = 0x16,
+    CHANNEL_STOPPED = 1,
+    CHANNEL_RAMP = 2,
+    CHANNEL_LOOP = 4,
+    CHANNEL_PING_PONG = 8,
+    CHANNEL_BACKWARD = 0x10
 };
 
 uint32_t vertrix_port_synth_window(PORT_SIGNATURE)
@@ -253,4 +270,192 @@ uint32_t vertrix_port_synth_filter(PORT_SIGNATURE)
     port_set32(&synth.port, offset_address, 0,
                port_u32(&synth.port, offset_address, 0) + OUTPUT_ADVANCE);
     return port_return(&synth.port, synth.clipped, synth.edx);
+}
+
+uint32_t vertrix_port_bits_get(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t count = entry->eax;
+    uint32_t position;
+    uint32_t value;
+    uint32_t offset;
+    port_open(&port, calls, services, globals, entry);
+    position = port_u32(&port, 0, BIT_POSITION);
+    value = (port_u8(&port, position, 0) << 8) | port_u8(&port, position, 1);
+    value = port_shl(value, port_u8(&port, 0, BIT_OFFSET)) & 0xffff;
+    offset = port_u32(&port, 0, BIT_OFFSET) + count;
+    port_set32(&port, 0, BIT_OFFSET, offset);
+    value = port_shr(value, BITS_WINDOW - count);
+    offset = port_u32(&port, 0, BIT_OFFSET);
+    port_set32(&port, 0, BIT_POSITION, position + (uint32_t)((int32_t)offset >> 3));
+    port_set32(&port, 0, BIT_OFFSET, port_u32(&port, 0, BIT_OFFSET) & 7);
+    return port_return(&port, value, entry->edx);
+}
+
+static uint32_t channel_state(Port *port, uint32_t channel)
+{
+    return port_u8(port, channel, CHANNEL_STATE);
+}
+
+static void negate_step(Port *port, uint32_t channel)
+{
+    port_set32(port, channel, CHANNEL_STEP, -port_u32(port, channel, CHANNEL_STEP));
+}
+
+uint32_t vertrix_port_mixer_channel(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t channel = entry->ebx;
+    uint32_t buffer = entry->eax;
+    uint32_t left = entry->edx;
+    /* eax, edx and ecx as the original leaves them: its result, and what the render receives. */
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ecx = entry->ecx;
+    LiftFlags flags = {0, 0, 0, 0, 0, 0};
+    port_open(&port, calls, services, globals, entry);
+    if (port_u8(&port, 0, MIXER_FLAGS) & MIXER_STEREO)
+    {
+        left >>= 1;
+    }
+    while (left != 0)
+    {
+        uint32_t state = channel_state(&port, channel);
+        uint32_t run;
+        edx = (edx & 0xffffff00u) | state;
+        if (state & CHANNEL_STOPPED)
+        {
+            break;
+        }
+        if (state & CHANNEL_BACKWARD)
+        {
+            eax = port_u32(&port, channel, CHANNEL_POSITION);
+            edx = port_u32(&port, channel, CHANNEL_LOOP_START);
+            if ((int32_t)eax < (int32_t)edx)
+            {
+                /* Before the loop start: turn, wrap or stop. */
+                state = channel_state(&port, channel);
+                eax = (eax & 0xffff00ffu) | (state << 8);
+                if (state & CHANNEL_PING_PONG)
+                {
+                    eax = edx - port_u32(&port, channel, CHANNEL_POSITION);
+                    edx += eax;
+                    port_set32(&port, channel, CHANNEL_POSITION, edx);
+                    port_set8(&port, channel, CHANNEL_STATE,
+                              channel_state(&port, channel) ^ CHANNEL_BACKWARD);
+                    continue;
+                }
+                if (state & CHANNEL_LOOP)
+                {
+                    eax = edx - port_u32(&port, channel, CHANNEL_POSITION);
+                    edx = port_u32(&port, channel, CHANNEL_LOOP_END) - eax;
+                    port_set32(&port, channel, CHANNEL_POSITION, edx);
+                    continue;
+                }
+                edx = (edx & 0xffff00ffu) | ((state | CHANNEL_STOPPED) << 8);
+                port_set8(&port, channel, CHANNEL_STATE, state | CHANNEL_STOPPED);
+                break;
+            }
+        }
+        else
+        {
+            eax = port_u32(&port, channel, CHANNEL_POSITION);
+            edx = port_u32(&port, channel, CHANNEL_LOOP_END);
+            if ((int32_t)eax > (int32_t)edx)
+            {
+                /* Past the loop end. */
+                state = channel_state(&port, channel);
+                ecx = (ecx & 0xffffff00u) | state;
+                if (state & CHANNEL_PING_PONG)
+                {
+                    eax -= edx;
+                    edx -= eax;
+                    port_set32(&port, channel, CHANNEL_POSITION, edx);
+                    port_set8(&port, channel, CHANNEL_STATE,
+                              channel_state(&port, channel) ^ CHANNEL_BACKWARD);
+                    continue;
+                }
+                if (state & CHANNEL_LOOP)
+                {
+                    eax -= edx;
+                    edx = port_u32(&port, channel, CHANNEL_LOOP_START) + eax;
+                    port_set32(&port, channel, CHANNEL_POSITION, edx);
+                    continue;
+                }
+                eax = (eax & 0xffffff00u) | (state | CHANNEL_STOPPED);
+                port_set8(&port, channel, CHANNEL_STATE, state | CHANNEL_STOPPED);
+                break;
+            }
+        }
+        /* The samples to render: all that are left, or as many as reach the loop bound (rounded
+         * up by the step, when the step passes it). */
+        run = left;
+        if (channel_state(&port, channel) & CHANNEL_BACKWARD)
+        {
+            edx = port_u32(&port, channel, CHANNEL_POSITION) -
+                  port_u32(&port, channel, CHANNEL_LOOP_START);
+            eax = port_u32(&port, channel, CHANNEL_STEP) * left;
+            if (eax > edx)
+            {
+                ecx = port_u32(&port, channel, CHANNEL_STEP);
+                edx += ecx;
+                eax = edx;
+                edx = (uint32_t)((int32_t)edx >> 31);
+                lift_idiv1(32, ecx, &eax, &edx, &flags);
+                run = eax;
+            }
+        }
+        else
+        {
+            edx = port_u32(&port, channel, CHANNEL_LOOP_END) -
+                  port_u32(&port, channel, CHANNEL_POSITION);
+            eax = port_u32(&port, channel, CHANNEL_STEP) * left;
+            if (eax > edx)
+            {
+                uint32_t step = port_u32(&port, channel, CHANNEL_STEP);
+                edx += step;
+                eax = edx;
+                edx = (uint32_t)((int32_t)edx >> 31);
+                lift_idiv1(32, step, &eax, &edx, &flags);
+                run = eax;
+            }
+        }
+        /* The render routines take (buffer, samples, channel) and step forward only: a backward
+         * channel's step is negated around the call. */
+        if (channel_state(&port, channel) & CHANNEL_BACKWARD)
+        {
+            negate_step(&port, channel);
+        }
+        {
+            uint32_t stack[3] = {buffer, run, channel};
+            if (channel_state(&port, channel) & CHANNEL_RAMP)
+            {
+                ecx = buffer;
+                eax = port_call_stack(&port, port_u32(&port, 0, MIXER_RENDER_RAMP), eax, edx,
+                                      channel, ecx, stack, 3);
+            }
+            else
+            {
+                edx = buffer;
+                eax = port_call_stack(&port, port_u32(&port, 0, MIXER_RENDER), eax, edx, channel,
+                                      ecx, stack, 3);
+            }
+            edx = vertrix_lift_edx;
+        }
+        if (channel_state(&port, channel) & CHANNEL_BACKWARD)
+        {
+            negate_step(&port, channel);
+        }
+        /* Four bytes a sample, both channels' samples for stereo. */
+        edx = run * 4;
+        ecx = buffer + edx;
+        buffer = ecx;
+        if (port_u8(&port, 0, MIXER_FLAGS) & MIXER_STEREO)
+        {
+            eax = ecx + edx;
+            buffer = eax;
+        }
+        left -= run;
+    }
+    return port_return(&port, eax, edx);
 }

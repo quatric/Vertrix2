@@ -29,6 +29,8 @@ SLOW = {'0x48a930': 256, '0x492980': 256, '0x4ec307': 256, '0x492460': 256, '0x4
         # Copies whose random pointers overrun a pool page past these counts, for the lifted copy
         # as well.
         '0x4ab310': 64, '0x4ab2a0': 128}
+# The native sources the batch harness links with every routine (verify_one.py).
+HARNESS = {'call_glue', 'actor_storage', 'block_factory', 'actor_fields', 'board_cells'}
 sys.path.insert(0, str(ROOT / 'tools'))
 
 import lift  # noqa: E402
@@ -64,8 +66,9 @@ def flag_readers(address):
     return readers
 
 
-def run_mode(directory, name, cases, mode, flags, timeout):
-    environment = dict(os.environ, VERTRIX_VERIFY_EDX='1', VERTRIX_VERIFY_FLAGS='1' if flags else '0')
+def run_mode(directory, name, cases, mode, flags, timeout, natives=()):
+    environment = dict(os.environ, VERTRIX_VERIFY_EDX='1', VERTRIX_VERIFY_FLAGS='1' if flags else '0',
+                       VERTRIX_VERIFY_SOURCES=' '.join(natives))
     try:
         done = subprocess.run([sys.executable, str(ROOT / 'tools' / 'verify_one.py'),
                                str(directory), name, str(cases), mode], capture_output=True,
@@ -98,6 +101,12 @@ def verify(address, function, cases, timeout=600):
         (directory / (name + '.json')).write_text(json.dumps(meta))
     (scratch / (name + '.lifted.c')).write_text(text)
     (lifted / (name + '.c')).write_text(text)
+    # Recovered native code a port calls (an included header with its own source), linked in
+    # with it; the harness links the call glue and the object storage itself.
+    natives = [header + '.c' for header in
+               re.findall(r'^#include "(\w+)\.h"', sources[0].read_text(), re.M)
+               if (ROOT / 'source' / (header + '.c')).exists() and header not in HARNESS
+               and not header.startswith(('port', 'lift'))]
     # The oracle hands the port the lifted copy's stack below esp (LiftEntry.garbage).
     (scratch / (name + '.c')).write_text(
         '#include "%s"\n#include "lifted_%s.h"\n\nuint32_t lifted_%s(PORT_SIGNATURE);\n'
@@ -110,7 +119,8 @@ def verify(address, function, cases, timeout=600):
     passed = 0
     modes = {}
     for mode in ('wide', 'small'):
-        port_ok, port_detail = run_mode(scratch, name, cases, mode, bool(readers), timeout)
+        port_ok, port_detail = run_mode(scratch, name, cases, mode, bool(readers), timeout,
+                                        natives)
         if port_ok:
             print('%s %s: port passes %d cases' % (name, mode, cases))
             modes[mode] = 'passed'

@@ -877,8 +877,15 @@ The synthesis (0x405720, 491 instructions) is three windowed sums, written as lo
 single helpers. The port keeps the ebx and ecx its helpers see, which carry the loop counters and
 the last clamp's limit.
 
-105 routines run as clean ports. 0x48a930 (the exact stream read) and 0x4db6a4 (the polynomial)
-are written but not yet in `PORTS`: at 256 cases even their lifted copies time out in the oracle.
+116 routines run as clean ports. Counted by calls, they handle 91% of the calls to lifted
+routines in the gameplay profile.
+
+Three ports are written but not yet in `PORTS`, because even their lifted copies time out in the
+oracle at higher case counts: 0x48a930 (the exact stream read), 0x4db6a4 (the polynomial) and
+0x47c3b0 (the surface fill). They are being checked with fewer cases.
+
+Two recovered natives were tried as ports and dropped: 0x4daed8 (exp) and 0x4c9921 (power). They
+compute the right values but do not hand their helpers the original's incidental registers.
 
 With the ports in, the host run matches the recorded baselines: the 1,500-tick frames (9 of 9
 identical) and the 3,000-tick audio (WAV byte-identical). Boundary calls fell from 62,764 to 3; the

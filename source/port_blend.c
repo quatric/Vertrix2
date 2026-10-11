@@ -635,3 +635,43 @@ uint32_t vertrix_port_blit_keyed(PORT_SIGNATURE)
     }
     return port_return(&port, source, entry->edx);
 }
+
+/* levels_mix of a colour already in hand (the remapped one at 0x5bc018) over the target pixel. */
+static uint32_t levels_mix_colour(Port *port, uint32_t colour, uint32_t target)
+{
+    uint32_t source_levels = port_u32(port, 0, SOURCE_LEVELS);
+    uint32_t target_levels = port_u32(port, 0, TARGET_LEVELS);
+    uint32_t red = port_u8(port, target_levels, (port_u32(port, target, 0) >> 16) & 0xff) +
+                   port_u8(port, source_levels, (colour >> 16) & 0xff);
+    uint32_t green = port_u8(port, target_levels, port_u16(port, target, 0) >> 8) +
+                     port_u8(port, source_levels, (colour & 0xffff) >> 8);
+    uint32_t blue = port_u8(port, target_levels, port_u8(port, target, 0)) +
+                    port_u8(port, source_levels, colour & 0xff);
+    return (red << 16) | (green << 8) | blue;
+}
+
+uint32_t vertrix_port_blend_remap_levels(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t colour;
+    uint32_t target;
+    port_open(&port, calls, services, globals, entry);
+    colour = remap(&port, source_colour(&port));
+    target = port_u32(&port, 0, TARGET_PIXEL);
+    port_set32(&port, 0, REMAPPED, colour);
+    port_set32(&port, target, 0, levels_mix_colour(&port, port_u32(&port, 0, REMAPPED), target));
+    return port_return(&port, target, entry->edx);
+}
+
+uint32_t vertrix_port_blend_tint_levels(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t colour;
+    uint32_t target;
+    port_open(&port, calls, services, globals, entry);
+    colour = remap_tint(&port, source_colour(&port));
+    target = port_u32(&port, 0, TARGET_PIXEL);
+    port_set32(&port, 0, REMAPPED, colour);
+    port_set32(&port, target, 0, levels_mix_colour(&port, port_u32(&port, 0, REMAPPED), target));
+    return port_return(&port, target, entry->edx);
+}

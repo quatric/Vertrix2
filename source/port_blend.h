@@ -140,4 +140,13 @@ uint32_t vertrix_port_blit_copy(PORT_SIGNATURE);
  * source pointer after the last run; edx is unchanged. */
 uint32_t vertrix_port_blit_keyed(PORT_SIGNATURE);
 
+/* Original 0x4906a0: the source remapped as 0x48d740 does, kept at 0x5bc018, then mixed into the
+ * target with the two level tables as 0x4902a0 does. Returns the target pointer; edx is
+ * unchanged. */
+uint32_t vertrix_port_blend_remap_levels(PORT_SIGNATURE);
+
+/* Original 0x490b30: 0x4906a0 with the source tinted (the channel map of its entry's low byte
+ * applied to the tint at 0x54d5dc) instead of remapped. */
+uint32_t vertrix_port_blend_tint_levels(PORT_SIGNATURE);
+
 #endif

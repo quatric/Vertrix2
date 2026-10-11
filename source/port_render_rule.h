@@ -34,4 +34,25 @@ uint32_t vertrix_port_render_mirror_index(PORT_SIGNATURE);
  * otherwise. edx is unchanged. */
 uint32_t vertrix_port_render_direction_index(PORT_SIGNATURE);
 
+/* Original 0x4b14c0 (eax = actor, edx and ebx = where the drawn width and height go): the size
+ * to draw. The source size is the image's (+4 and +8 of the actor's +0xb4, whose byte +0x27 goes to
+ * 0x5bb731) or else the actor's own (+0xf4, +0xf8); the image goes to 0x5bb734. The scale in
+ * sixteenths is the actor's byte +0x44, or with its byte +0x91 set the screen's (+0x221 of
+ * [0x544070], 16 when its +0x220 is set); below or above 16 each size is scaled (the remainder
+ * rounded by the table at 0x5c1b00). The drawn sizes (sign-extended from 16 bits) are stored at
+ * edx and ebx and in 0x5bb74c and 0x5bb74e; the source sizes in 0x5bb7b4 and 0x5bb7b6 and the
+ * scale in 0x5bb738. Returns 1, with edx the source height under the image pointer's high half. */
+uint32_t vertrix_port_render_source_size(PORT_SIGNATURE);
+
+/* Original 0x4ae250: prepare the drawing state. When the image's format byte (0x5bc000) is not
+ * the target's (0x5bb730), its colour entry (0x54b808) is split into the tint words at 0x54d5dc
+ * and its colour (0x54b83c, kept at 0x5bc008) into the bytes at 0x54d5e8, the halved colour at
+ * 0x54d5ec and the select byte (0x54b804 by the colour's entry index) at 0x54d5f0. With blending
+ * on (0x5bb739), the level tables (0x55f1f0, 0x55f1f4) and shade tables (0x5785f8, 0x5785fc) are
+ * the rows of the opacity (0x5bc00e, in percent) and of 100 less it. The channel maps
+ * (0x54cdc8) are the rows at 0x54bb90 from the high half of 0x5bc000 (signed); mirrored drawing
+ * (0x5bb73a) then calls 0x4754e0 on the byte 0x5bb7b8, plain drawing sets 0x54cdcc to 0x54d1d0.
+ * Returns 0x4754e0's eax, or the last value the original computed in eax; edx is unchanged. */
+uint32_t vertrix_port_render_prepare(PORT_SIGNATURE);
+
 #endif

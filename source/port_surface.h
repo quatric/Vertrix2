@@ -28,4 +28,15 @@ uint32_t vertrix_port_neighbour_calls(PORT_SIGNATURE);
  * bytes per pixel. */
 uint32_t vertrix_port_surface_read(PORT_SIGNATURE);
 
+/* Original 0x47c3b0 (eax = surface, edx = x, ebx = y, ecx = width; stack arguments, popped by
+ * the routine: rows and colour): fill `rows` rows of `width` pixels from (x, y) with the colour in
+ * the surface's format (0x479a40; its address from 0x478eb0, ecx the pixel, kept at 0x558b80).
+ * Pixels of 1, 2 or 4 bytes (the surface's +0x0c, kept at the byte 0x558b70) are written; the
+ * cursor of 2- and 4-byte pixels lives in 0x558b78 or 0x558b7c, stepped per pixel, and each row
+ * skips the pitch less the row (kept at 0x558b68). 0x558b74 and 0x558b64 end as the byte cursor
+ * and the pixels left of the last row (the cursor only moves for 1-byte pixels). Returns 0 and
+ * the skip (the row width for 1-byte pixels) after rows, the skip and the row bytes (0 for 4-byte
+ * pixels) for no rows, and the address with the size in edx's low byte for other sizes. */
+uint32_t vertrix_port_surface_fill(PORT_SIGNATURE);
+
 #endif
