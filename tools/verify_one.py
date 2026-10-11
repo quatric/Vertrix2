@@ -34,6 +34,13 @@ for _field, _slot, _count in virtual:
 
 import re  # noqa: E402
 
+from oracle_kit import Stubs  # noqa: E402
+
+# One vtable serves every fake object: a slot called with different counts gets the widest stub,
+# and each call site pops (and compares) only its own arguments.
+Stubs.site_arguments = {int(k[8:], 16): v[0] for k, v in meta['callees'].items()
+                        if k.startswith('virtual_')}
+
 source_text = (scratch / (name + '.c')).read_text()
 pointer_offsets = set(meta.get('pointer_fields', [])) | set(meta.get('pointer_maybe', [])) | {f for f, _, _ in virtual if f >= 0}
 scalar_reads = sorted({(int(m.group(1), 16), int(m.group(2))) for m in re.finditer(
@@ -83,7 +90,10 @@ def vtable_setup(cpu):
         cpu.mem_write(address, struct.pack('<I', 0x806000))
     for index, slot in enumerate(slots):
         cpu.mem_write(slot, struct.pack('<I', 0x700800 + 16 * index))
+    widest = {}
     for field, slot, count in virtual:
+        widest[slot] = max(count, widest.get(slot, 0))
+    for slot, count in widest.items():
         cpu.mem_write(VTABLE + slot, struct.pack('<I', leaf(count)))
 
 

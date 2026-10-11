@@ -30,6 +30,7 @@
 #include "lifted_whole_23.h"
 #include "lifted_whole_24.h"
 #include "lifted_whole_25.h"
+#include "lifted_whole_26.h"
 #include "lifted_whole_3.h"
 #include "lifted_whole_4.h"
 #include "lifted_whole_5.h"
@@ -1835,6 +1836,7 @@ static const LiftedRoutine routines[] = {
     {0x476810, lifted_resource_entry_256, 108, 0},
     {0x4768e0, lifted_sound_bank_clear, 72, 0},
     {0x476a00, lifted_sound_open_keys, 72, 0},
+    {0x476aa0, lifted_f476aa0, 380, 0},
     {0x476c80, lifted_sound_check_primary, 84, 0},
     {0x476cc0, lifted_sound_release_primary, 104, 0},
     {0x476d20, lifted_sound_bank_clear_tail, 68, 0},
@@ -3470,6 +3472,7 @@ static const LiftedRoutine routines[] = {
     {0x4da6b6, lifted_exception_chain_step, 128, 0},
     {0x4da71b, lifted_f4da71b, 100, 0},
     {0x4daab0, lifted_rtl_copy_terminated, 84, 0},
+    {0x4daae8, lifted_f4daae8, 108, 1},
     {0x4dabb0, lifted_f4dabb0, 64, 0},
     {0x4dabbe, lifted_f4dabbe, 376, 0},
     {0x4dabd0, lifted_f4dabd0, 116, 0},
@@ -3982,7 +3985,6 @@ static const LiftedRoutine unverified_routines[] = {
     {0x43e320, lifted_f43e320, 128, 0},
     {0x452520, lifted_f452520, 192, 0},
     {0x453050, lifted_state_pair_453050, 144, 0},
-    {0x476aa0, lifted_f476aa0, 380, 0},
     {0x47e890, lifted_f47e890, 188, 0},
     {0x480730, lifted_render_weights_build, 124, 0},
     {0x480ca0, lifted_palette_cube, 112, 0},
@@ -4005,7 +4007,6 @@ static const LiftedRoutine unverified_routines[] = {
     {0x4b6240, lifted_f4b6240, 84, 0},
     {0x4ce780, lifted_f4ce780, 108, 0},
     {0x4d9f06, lifted_rtl_jump_capture, 72, 0},
-    {0x4daae8, lifted_f4daae8, 108, 1},
     {0x4e6250, lifted_f4e6250, 156, 0},
     {0x4e6d16, lifted_f4e6d16, 216, 0},
 };

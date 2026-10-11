@@ -462,6 +462,40 @@ to the loader, and `tools/host_game.c` stops.
 2PLAYERS (MENU=378, GAMEKEYS) plays a full round through 0x424990 to the CONTINUE question
 0x41eab0, with no unserved calls.
 
+## Main path without the unverified tier
+
+With `VERIFIED_ONLY=1`, the game path reaches the boundary at nine routines that only the
+unverified tier serves:
+
+- 0x43e2a0 and 0x43e320 (1132 calls each);
+- 0x4d9f06 (266);
+- 0x488c50 (32);
+- 0x4875a0 (27);
+- 0x4daae8 (3);
+- 0x476aa0 (2);
+- 0x480730 and 0x47e890 (1 each).
+
+The selection transition handler 0x423960 is also unverified, and the run stops there.
+`work/relift_main` lifts all ten again.
+
+- The oracle stubs now take each call site's argument count. Every fake object shares one
+  vtable, and 0x476aa0 calls slot 0xc with 4 arguments (0x476b1f) and with 2 (0x476c5a). The
+  shared stub read 2 slots of the caller's stack as arguments. Now `Stubs.site_arguments` (from the
+  `virtual_<site>` callees) pops and compares only the site's own arguments. Each slot gets the
+  stub for its widest call. 0x476aa0 passes.
+- `tools/lift.py` no longer treats an immediate `add esp` as cdecl cleanup when no push precedes
+  the call. 0x4daae8 releases its own `sub esp, 0xc` right after calling 0x4daab0, so the lift had
+  passed 3 stray arguments. 0x4daae8 passes.
+- 0x480730 builds a 256-entry table and exceeds the oracle's default limit of 1,000,000
+  instructions. With `VERTRIX_ORACLE_LIMIT=50000000` it passes 16 cases in both modes.
+- 0x4d9f06 is the runtime's setjmp. It stores esp and the segment registers, which cannot match
+  between the lifted frames and Unicorn, so it stays unverified.
+- 0x4875a0 still differs: a byte at its array (0x806000) ends as 0 in the lifted run and as 1 in
+  the original, in case 4.
+
+0x476aa0 and 0x4daae8 are `lifted_whole_26`. `lift_batch.py verify` takes `--timeout`. The
+dispatcher has 3,909 verified routines.
+
 ## Open after the completed batch
 
 - 844 attempted routines did not pass verification. The saved failure details distinguish

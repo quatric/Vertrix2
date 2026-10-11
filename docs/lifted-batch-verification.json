@@ -1,8 +1,8 @@
 {
  "status": "completed",
  "attempted_routines": 4009,
- "passed_routines": 3933,
- "failed_routines": 76,
+ "passed_routines": 3935,
+ "failed_routines": 74,
  "cases_per_mode": 64,
  "oracle_modes": [
   "wide",
@@ -1590,6 +1590,7 @@
   "0x476810",
   "0x4768e0",
   "0x476a00",
+  "0x476aa0",
   "0x476c80",
   "0x476cc0",
   "0x476d20",
@@ -3111,6 +3112,7 @@
   "0x4da66e",
   "0x4da71b",
   "0x4daab0",
+  "0x4daae8",
   "0x4dabb0",
   "0x4dabbe",
   "0x4dabd0",
@@ -3603,7 +3605,6 @@
   "f4d57c0": "AssertionError: ('too few complete original executions', 0, 1024, [('RuntimeError (Original routine 0x4d57c0 did not reach its return boundary) at 0x1', 1011), ('Invalid memory fetch (UC_ERR_FETCH_UNM",
   "f4d71d0": "AssertionError: ('too few complete original executions', 0, 1024, [('Unhandled CPU exception (UC_ERR_EXCEPTION) at 0x1', 318), ('Invalid memory fetch (UC_ERR_FETCH_UNMAPPED) at 0x70ffbe', 281), ('Inva",
   "f4d9fca": "timeout",
-  "f4daae8": "AssertionError: (1, (0, (5089968, 37, 0, 0, 255, 0, 0, 0), (5089968, 37, 0, 0, 255, 4056217823, 37, 0), 3, 3, []))",
   "f4dae80": "AssertionError: ('too few complete original executions', 0, 1024, [('RuntimeError (Original routine 0x4dae80 did not reach its return boundary) at 0x0', 1019), ('Invalid memory fetch (UC_ERR_FETCH_UNM",
   "f4dae94": "AssertionError: ('too few complete original executions', 0, 1024, [('Invalid memory fetch (UC_ERR_FETCH_UNMAPPED) at 0xf30', 973), ('Invalid memory fetch (UC_ERR_FETCH_UNMAPPED) at 0xfbc', 37), ('Inva",
   "f4e1140": "AssertionError: (45, [('0x806000', '0xffe', 105, 0), ('0x807000', '0x1', 0, 125)])",
@@ -3627,7 +3628,6 @@
   "f41fe10": "subprocess.CalledProcessError: Command '['cc', '-std=c11', '-shared', '-fPIC', '-O2', '-Wall', '-Wextra', '-Werror', '-I', '/Volumes/SSD/larsen/Documents/Codex/2026-10-03/goal-ok-i-have-a-big/outputs/",
   "f43e2a0": "timeout",
   "f43e320": "timeout",
-  "f476aa0": "AssertionError: (42, (12, (7341124, 8417280, 9453568, 7372676, 9453568, 8417280, 7372676, 0, 0), (7341124, 8417280, 9453568, 7372676, 9453568, 8417280, 7372676, 5, 44), 13, 13, [(7341108, 8417280, 737",
   "f491050": "AssertionError: (38, '0x0', '0x606060')",
   "f4928f0": "AssertionError: ('too few complete original executions', 0, 1024, [('RuntimeError (Original routine 0x4928f0 did not reach its return boundary) at 0x4928f1', 758), ('Unhandled CPU exception (UC_ERR_EX",
   "f492a70": "AssertionError: ('too few complete original executions', 0, 1024, [('RuntimeError (Original routine 0x492a70 did not reach its return boundary) at 0x2bc4', 516), ('RuntimeError (Original routine 0x492",
@@ -4833,6 +4833,14 @@
    "newly_passed": [
     "0x4b3de0",
     "0x4b3f30"
+   ]
+  },
+  {
+   "note": "Main-path unverified routines (relift_pass): per-call-site stub argument counts (0x476aa0 calls vtable slot 0xc with 2 and 4 arguments) and no cdecl cleanup without a push (0x4daae8 releases its own locals after calling 0x4daab0)",
+   "attempted": 3,
+   "newly_passed": [
+    "0x476aa0",
+    "0x4daae8"
    ]
   }
  ]

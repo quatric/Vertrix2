@@ -32,6 +32,10 @@ class Stubs:
     The hooked callee is skipped: its return address is popped together with stack_bytes.
     """
 
+    # Call site address -> stack argument count, for stubs shared by calls with different counts
+    # (every fake object shares one vtable, so slot 0xc serves IDirectSound and its buffers).
+    site_arguments = {}
+
     def __init__(self, cpu, handler):
         self.cpu = cpu
         self.handler = handler
@@ -57,15 +61,30 @@ class Stubs:
         esp = cpu.reg_read(UC_X86_REG_ESP)
         count = self.arguments[address]
         stack = struct.unpack('<' + 'I' * (1 + count), bytes(cpu.mem_read(esp, 4 * (1 + count))))
-        args = stack[1:]
+        popped = self._site_count(cpu, stack[0], count)
+        # Slots past the call site's own arguments are the caller's stack, not arguments: the
+        # lifted call passes zeros there.
+        args = stack[1:1 + popped] + (0,) * (count - popped)
         extra = self.extras[address](cpu, regs, args) if address in self.extras else ()
         self.log.append((address, *regs, *args, *extra))
         result = self.handler(address, *regs, args)
         if result is not None:
             cpu.reg_write(UC_X86_REG_EAX, result & 0xffffffff)
-        cpu.reg_write(UC_X86_REG_ESP, esp + 4 + (0 if address in self.cdecl else 4 * count))
+        cpu.reg_write(UC_X86_REG_ESP, esp + 4 + (0 if address in self.cdecl else 4 * popped))
         cpu.reg_write(UC_X86_REG_EIP, stack[0])
 
+
+    def _site_count(self, cpu, back, count):
+        """The argument count of the indirect call returning to `back`, if it is a known site."""
+        for length in (2, 3, 6, 7):
+            site = (back - length) & 0xffffffff
+            if site in self.site_arguments:
+                try:
+                    if bytes(cpu.mem_read(site, 1))[0] == 0xff:
+                        return min(self.site_arguments[site], count)
+                except UcError:
+                    pass
+        return count
 
     @staticmethod
     def _called(cpu, address):

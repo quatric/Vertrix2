@@ -546,6 +546,10 @@ class Lifter:
         op = insn.operands[0]
         cdecl = (next_insn is not None and next_insn.mnemonic == 'add' and
                  next_insn.op_str.startswith('esp,'))
+        # With no push before the call, an `add esp` right after it releases the caller's own
+        # locals (0x4daae8: `sub esp, 0xc` at entry, `call 0x4daab0; add esp, 0xc` at the end).
+        if cdecl and op.type == X.X86_OP_IMM and self.pending_pushes(insn) == 0:
+            cdecl = False
         if not cdecl and op.type == X.X86_OP_IMM:
             deferred = self.deferred_cleanup(insn)
             if deferred is not None:
