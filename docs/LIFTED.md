@@ -551,6 +551,122 @@ Results:
   baseline is `work/tnew/base31.txt`.
 - The dispatcher has 3,911 verified routines.
 
+## Static initializers
+
+The GAME submenu showed empty selectors. Its labels (EASY/NORMAL/HARD, 0..9, NO/YES, 8/16/32)
+come from string tables at 0x532ab8..0x532b08. The static initializer 0x412700 builds them, but
+no driver ran it. The C runtime keeps its initializers in a table of 6-byte records (state,
+priority, routine):
+
+- 0x51c308..0x51c440 holds 37 startup initializers. 0x4e6b5c walks them.
+- 0x51c440..0x51c46a holds 7 exit procedures. 0x4e6bac runs them at exit.
+
+Each pass of 0x4e6b5c takes the pending record with the lowest priority, up to a limit. Among
+equal priorities it takes the last one. It marks each record done (state 2). The startup makes
+three passes:
+
+- limit 1, from 0x4ec209;
+- limit 0x21, from 0x4e076b, after the thread data is created (0x4e0508);
+- limit 0xff, from 0x4e077b, after calling [0x507cdc] = 0x4e04f4.
+
+Before this, the drivers called only 0x4df307 and 0x475660. 0x4df307 was not even lifted, so
+`lift_host_run` skipped it silently. `lift_host_startup` (`source/lift_host.c`) now performs
+the same three passes. `lift_host_run_initializers` reproduces the walker and marks the records
+in place. All three drivers use it: `host_game`, `wii_lifted_game`, and `host_title` with
+`MASTER`. An initializer that is not lifted is reported.
+
+Lifting followed the newly reached code. Every chunk below passed `verify_one.py`:
+
+- `lifted_whole_31`: the 15 game-unit initializers.
+- `lifted_whole_38`: 35 runtime initializers.
+- `lifted_whole_39`: 0x4ea130.
+- `lifted_whole_33`, `_34` and `_35`: the routines they reach. These include the sound loading
+  and the timer service (0x40a190, 0x40b490, 0x40b980, 0x405d60 and others).
+- `lifted_whole_36` and `_37`: 0x4dae94 and 0x4db34a (see below).
+- `lifted_whole_32`: 0x4875a0, from `work/relift_h`.
+
+0x4e5f00 still times out in the oracle. 0x47fbb0 remains a known failure: the original faults
+(fetch at 0xfa4).
+
+### What the initializers bring up
+
+- **The global object 0x5327f0** (0x411bf0 → 0x411c70) now exists. Its base constructor 0x4ca970
+  calls GetCursorPos and LocalReAlloc.
+  - LocalReAlloc and GlobalReAlloc now reallocate: a block that grows becomes a new block with
+    the old contents, and the old one is released. Before, GlobalReAlloc returned the same block
+    whatever the size.
+  - GetCursorPos reports (0, 0), since the Wii has no desktop cursor.
+- **The timer thread.** 0x40af30 creates a thread at 0x40aed0 (time-critical priority). The
+  thread calls 0x40ab10 every 10 ms of timeGetTime until [0x52f14c] is set. 0x40ab10 runs the
+  callback at [0x52f020] while a timer slot is registered ([0x4f6418] != 0xffff).
+  - The host has no second thread. CreateThread records the procedure.
+  - `lift_host_thread_step` makes the calls the thread would have made by the current clock,
+    and both drivers call it each time they advance the clock.
+- **The sound loading.** The sound object now exists, so the loader decodes the MP3 effects and
+  voices (0x48b240 → 0x48b2f0, 63 files) at startup, as the original does.
+- **The windowing framework's startup queries** are served as a 640x480, 32-bit Windows display
+  would answer them. None of these reach the DirectDraw screen:
+  - code pages (GetACP 1252, GetOEMCP 850, GetCPInfo single-byte);
+  - GetProcessVersion (4.0);
+  - GetDC, GetDeviceCaps, ReleaseDC;
+  - GetSysColor (the Windows Standard scheme);
+  - brush, pen and cursor handles;
+  - registered window messages from 0xc000.
+- **waveOutGetNumDevs** reports 0 devices, so the original takes its own path for a machine
+  without a wave device. With one device, it opens wave out and streams buffers through
+  waveOutPrepareHeader and waveOutWrite. Serving that (buffer completion on the game clock, fed
+  to ASND on the Wii) is the open audio work.
+
+### Large frames
+
+0x48b2f0 reserves 0x6788 bytes. Two changes let it run:
+
+- **Static storage.** `tools/lift.py` gives a frame above 0x4000 bytes (`STATIC_FRAME`) static
+  storage with a re-entry guard (`lift_reentered`). It stays off the Wii's 128 KB main stack.
+- **Variable arena.** The dispatcher now places each level's emulated stack just below its
+  caller's frame (`arena[]`, `LIFTED_ARENA_GAP`) instead of at a fixed 0x4000 step. A level is
+  refused only below 0x7b0000.
+
+### No coprocessor
+
+0x4e536c, a runtime initializer, detects an x87 with fninit/fnstcw and sets [0x5054a0] and
+[0x5054a1]. On a PC it finds one, and the runtime's float routines then use x87 code. The port
+has no x87:
+
+- The host serves 0x4e536c as a machine without one: both flags 0 (`LIFT_HOST_FPU_DETECT`,
+  listed in `NATIVE_UNVERIFIED_BOUNDARIES`).
+- The runtime's own software floating point therefore runs. It is a path of the original binary
+  for such machines.
+- `tools/lift.py` translates x87 instructions to `lift_x87`, which fails the routine if it is
+  ever reached, rather than refusing the whole routine.
+- The oracle pins both flags to 0 (`fixed_globals` in `verify_one.py`, written after the drawn
+  globals in `verify_lifted.py`).
+
+With that, the software path's entries 0x4db34a (double add) and 0x4dae94 (errno = 14) verify.
+Without them, the MPEG setup's power computation in 0x406170 had hung the load screen at tick
+218.
+
+### Lifter: saves before a pointer call
+
+0x4dae94 is `mov eax, 0xe; push edx; mov edx, eax; call [0x507c9c]; mov [eax + 4], edx; pop edx;
+ret`. Its push came after a non-save instruction, so the lifter counted it as an argument of the
+pointer call. For global-slot calls, `tail_balanced` now subtracts the pushes that the
+straight-line tail pops again before `ret`.
+
+Re-lifting the four verified routines with nonzero slot counts changed only 0x4cd56c:
+
+- The change came from the earlier push-less guard. Its `add esp, 0x20` after `call 0x4e0884`
+  releases its own `sub esp, 0x20`, so the callee takes no arguments rather than 8 cdecl ones.
+- It passes again and was replaced in `lifted_whole_5`.
+
+### Results
+
+- With the initializers, the menu, GAME (now NORMAL, 5, NO, YES, 32), KEYS, SOUND, 1P with
+  continue no, 2P and EXIT paths all complete.
+- The only boundary calls left are 0x4e5f00 and 0x47fbb0. Sound output is still open (see the
+  wave device above).
+- The dispatcher has 4,006 verified routines.
+
 ## Open after the completed batch
 
 - 844 attempted routines did not pass verification. The saved failure details distinguish

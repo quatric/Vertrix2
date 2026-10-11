@@ -140,6 +140,10 @@ def trace(start):
     return seen
 
 
+# Frames larger than this are static (see the function text below).
+STATIC_FRAME = 0x4000
+
+
 class Lifter:
     def __init__(self, start, name):
         self.start = start
@@ -451,6 +455,11 @@ class Lifter:
             self.emit('vertrix_lift_edx = edx;')
             self.emit('vertrix_lift_fl = fl;')
             self.emit('return env.failed ? 0u : eax;')
+        elif insn.group(X.X86_GRP_FPU) or m in ('wait', 'fwait'):
+            # The coprocessor paths of the C runtime run only when 0x4e536c finds an x87
+            # ([0x5054a1] != 0); the port has none, so the flag stays 0 and the runtime's software
+            # floating point runs instead. Reaching an x87 instruction fails the routine.
+            self.emit('lift_x87(&env, 0x%x);' % insn.address)
         else:
             raise NotImplementedError('%x %s %s' % (insn.address, m, insn.op_str))
 
@@ -522,6 +531,34 @@ class Lifter:
                 break
         return count
 
+    def tail_balanced(self, insn, count):
+        """`count` pushes before a call, less those the straight-line tail after it pops again
+        before `ret`: the stack is balanced at `ret`, so those pushes were saves, not arguments
+        (0x4dae94: `mov eax, 0xe; push edx; mov edx, eax; call [0x507c9c]; ...; pop edx; ret`)."""
+        address = insn.address + insn.size
+        pops = 0
+        for _ in range(16):
+            nxt = self.insns.get(address)
+            if nxt is None or address in self.targets:
+                return count
+            if nxt.mnemonic == 'pop':
+                pops += 1
+            elif nxt.mnemonic == 'ret':
+                if nxt.op_str or address == insn.address + insn.size:
+                    return count
+                saves = 0
+                at = self.start
+                while at < self.prologue_end():
+                    if self.insns[at].mnemonic == 'push':
+                        saves += 1
+                    at += self.insns[at].size
+                return max(0, min(count, saves + count - pops))
+            elif nxt.mnemonic in ('call', 'jmp', 'push', 'leave', 'pushfd', 'popfd', 'pushal',
+                                  'popal') or nxt.mnemonic in CONDITIONS or 'esp' in nxt.op_str:
+                return count
+            address += nxt.size
+        return count
+
     def deferred_cleanup(self, insn):
         """The `add esp, n` of a cdecl call that is not the next instruction: the caller may do
         register work first (0x465383 calls sprintf 0x4cdfb0, loads eax, then `add esp, 0xc`).
@@ -587,7 +624,7 @@ class Lifter:
             # a function pointer held in a global slot
             target_expr = self.read(op)
             count = int(next_insn.op_str.split(',')[1], 0) // 4 if cdecl else \
-                self.pending_pushes(insn)
+                self.tail_balanced(insn, self.pending_pushes(insn))
             self.callees[('slot', op.mem.disp)] = (count, cdecl)
             pops = 0 if cdecl else count
         else:
@@ -806,6 +843,15 @@ def render(start, name, argument_count=None, include_prelude=True):
     (void)esp;
     lift_begin(&env, calls, services, globals, stack, LIFTED_%s_STACK, %d, entry);
 ''' % (name, upper, argument_count, upper, argument_count)
+    if stack_size > STATIC_FRAME:
+        # A frame above the dispatcher's 0x4000 step (0x48b2f0 reserves 0x6788 bytes) lives in
+        # static storage, off the Wii's 128 KB main stack; the routine must not be re-entered.
+        function = function.replace(
+            '    uint8_t stack[', '    static uint8_t stack[', 1).replace(
+            '    lift_begin(', '    static int active;\n    if (active)\n    {\n'
+            '        lift_reentered(0x%x);\n    }\n    active = 1;\n    lift_begin(' % start, 1)
+        body = [line.replace('return env.failed ? 0u : eax;',
+                             'active = 0;\n    return env.failed ? 0u : eax;') for line in body]
     text = (prelude if include_prelude else '') + function + '\n'.join(body) + '\n}\n'
     header = '''#ifndef VERTRIX_LIFTED_%s_H
 #define VERTRIX_LIFTED_%s_H

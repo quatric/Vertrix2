@@ -302,10 +302,8 @@ int main(int argc, char **argv)
         host_store(&host, 0x544070, display);
         if (getenv("TRACE"))
             vertrix_lifted_set_trace(1);
-        lift_host_run(&host, 0x4df307, 0, 0, 0, 0, &lifted); /* RTL thread-variable block */
-        lift_host_run(&host, 0x475660, 0, 0, 0, 0, &lifted); /* input unit initialization */
-        printf("4df307: [5c5c54] = %x (lifted %d)\n", (unsigned)lift_host_read(&host, 0x5c5c54, 4),
-               lifted);
+        lift_host_startup(&host, &lifted);
+        printf("startup: [5c5c54] = %x\n", (unsigned)lift_host_read(&host, 0x5c5c54, 4));
         result = lift_host_run(&host, 0x41a080, form, 0, 0, 0, &lifted);
         report("startup 41a080", &host, result);
         host.boundary_calls = host.boundary_distinct = 0;

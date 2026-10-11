@@ -600,33 +600,6 @@
   ],
   "address": 4746784
  },
- "array_list_build": {
-  "callees": {
-   "0x4ec160": [
-    0,
-    false
-   ],
-   "0x483060": [
-    8,
-    false
-   ]
-  },
-  "stack": 128,
-  "arguments": 10,
-  "pointer_callees": [],
-  "pointer_fields": [
-   0
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   11,
-   12,
-   13
-  ],
-  "virtual": [],
-  "address": 4748704
- },
  "f48ac10": {
   "callees": {
    "virtual_48ac26": [

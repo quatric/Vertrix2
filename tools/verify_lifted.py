@@ -99,6 +99,9 @@ def run(name, spec=None, meta=None, source=None):
             spec['setup_case'](rng, pool, cpu, kwargs)
         if small is not None:
             small(rng, cpu)
+        # Platform facts the drawn globals must not change (written after the draws).
+        for fixed_address, fixed_bytes in spec.get('fixed_globals', {}).items():
+            cpu.mem_write(fixed_address, fixed_bytes)
         stack_args = tuple(rng.getrandbits(32) for _ in range(count))
         if spec.get('smallregs'):
             stack_args = tuple(rng.randrange(0, 64) if rng.random() < 0.85 else a

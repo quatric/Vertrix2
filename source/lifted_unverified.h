@@ -14,7 +14,6 @@ enum
     LIFTED_PALETTE_CUBE_STACK = 112,
     LIFTED_F484520_STACK = 68,
     LIFTED_F486E20_STACK = 140,
-    LIFTED_ARRAY_LIST_BUILD_STACK = 128,
     LIFTED_F48AC10_STACK = 288,
     LIFTED_F491050_STACK = 80,
     LIFTED_RENDER_SAMPLE32_STACK = 88,
@@ -67,10 +66,6 @@ uint32_t lifted_f484520(const VertrixCalls *calls, const VertrixFactoryServices 
 /* Original 0x486e20. */
 uint32_t lifted_f486e20(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4875a0. */
-uint32_t lifted_array_list_build(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                 const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x48ac10. */
 uint32_t lifted_f48ac10(const VertrixCalls *calls, const VertrixFactoryServices *services,

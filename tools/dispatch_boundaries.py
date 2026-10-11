@@ -10,8 +10,11 @@ exists (verified or not)."""
 # 0x4ca000), so only the host can release them; the lifted RTL free knows only its own arenas, and
 # with it the image buffers of every screen stayed allocated until the heap ran out (the second
 # round's end in a long session).
+# 0x4e536c: the x87 detection; the host reports no coprocessor (both flags 0), as the original's
+# fninit/fnstcw would find on a machine without one.
 NATIVE_UNVERIFIED_BOUNDARIES = frozenset({0x48ae00, 0x475090, 0x48ac50, 0x48ad00, 0x4e0f8b, 0x4cd8b0,
-                                          0x4d88a0, 0x4ca040, 0x4ca050, 0x4ea190})
+                                          0x4d88a0, 0x4ca040, 0x4ca050, 0x4ea190,
+                                          0x4e536c})
 
 # Hand-recovered routines the dispatcher runs instead of a lifted copy: address -> (entry point in
 # source/native_dispatch.c, stack bytes, stack arguments).

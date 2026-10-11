@@ -192,6 +192,9 @@ for _match in re.finditer(r'lift_call\(&env, lift_load\(&env, 0u, \(\w+ \* 4u\) 
         meta['callees'].setdefault('0x%x' % _entry, [_count, _count > 0 and not _match.group(3)])
 spec = dict(internal=internal, flag_targets=flag_targets, effects=com, fixed_returns={0x4f175c: 0} if com else None, address=meta['address'], arguments=meta['arguments'], small=True, keep=tuple(slots) + tuple(pointer_globals) + tuple(imports), mixed=True, handles=True, automap=True, tolerate=True, smallregs=SMALL,
             pool_size=0x1000, patch=vtable_patch,
+            # The port has no x87: the coprocessor flags 0x4e536c sets stay 0 (no coprocessor),
+            # so the runtime's software floating point runs, in the original here as in the port.
+            fixed_globals={0x5054a0: b'\0\0'},
             setup_case=lambda rng, pool, cpu, kwargs: (vtable_setup(cpu),
                                                        kwargs.update({r: 0x10 for r in SELECTORS})),
             setup=vtable_setup if virtual or slots or pointer_globals or imports else None)

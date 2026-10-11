@@ -292,6 +292,37 @@ static uint32_t host_allocate(uint32_t size, void *context)
     return block_open(host, 0, offset, rounded, rounded + slack);
 }
 
+/* The usable size of a live host block, or 0 when `address` is not the start of one. */
+static uint32_t host_block_size(LiftHost *host, uint32_t address)
+{
+    unsigned region;
+    uint32_t offset, rounded, top;
+    if (host->heap2 != NULL && address >= LIFT_HOST_HEAP2_BASE + 16u &&
+        address - LIFT_HOST_HEAP2_BASE < host->heap2_top)
+    {
+        region = 1;
+        offset = address - LIFT_HOST_HEAP2_BASE;
+    }
+    else if (address >= LIFT_HOST_HEAP_BASE + 16u && address - LIFT_HOST_HEAP_BASE < host->heap_top)
+    {
+        region = 0;
+        offset = address - LIFT_HOST_HEAP_BASE;
+    }
+    else
+    {
+        return 0;
+    }
+    rounded = region_get32(host, region, offset - 16u);
+    top = region ? host->heap2_top : host->heap_top;
+    if (rounded == 0 || (rounded & 15u) != 0 || region_get32(host, region, offset - 12u) != 0 ||
+        region_get32(host, region, offset - 8u) < rounded ||
+        offset + region_get32(host, region, offset - 8u) > top)
+    {
+        return 0;
+    }
+    return rounded;
+}
+
 static void host_release(LiftHost *host, uint32_t address)
 {
     unsigned region;
@@ -520,10 +551,39 @@ static int host_import(LiftHost *host, const VertrixCallSite *site, const char *
     {
         *result = host_allocate(a1, host);
     }
-    else if (strcmp(name, "GlobalLock") == 0 || strcmp(name, "GlobalHandle") == 0 ||
-             strcmp(name, "GlobalReAlloc") == 0)
+    else if (strcmp(name, "GlobalLock") == 0 || strcmp(name, "GlobalHandle") == 0)
     {
         *result = a0;
+    }
+    else if (strcmp(name, "GlobalReAlloc") == 0 || strcmp(name, "LocalReAlloc") == 0)
+    {
+        /* (block, bytes, flags): the handles are the blocks themselves, which stay in place
+         * when they shrink; a larger block is a new one holding the old contents (new blocks
+         * are zeroed, as LMEM_ZEROINIT asks). */
+        uint32_t size = host_block_size(host, a0);
+        *result = 0;
+        if (size != 0 && a1 <= size)
+        {
+            *result = a0;
+        }
+        else if (size != 0)
+        {
+            uint32_t block = host_allocate(a1, host);
+            uint8_t *to = block != 0 ? bytes_at(host, block, size) : NULL;
+            const uint8_t *from = bytes_at(host, a0, size);
+            if (to != NULL && from != NULL)
+            {
+                memcpy(to, from, size);
+                host_release(host, a0);
+                *result = block;
+            }
+        }
+    }
+    else if (strcmp(name, "GetCursorPos") == 0) /* (POINT *): no desktop cursor on the Wii */
+    {
+        host_write(host, a0, 4, 0);
+        host_write(host, a0 + 4, 4, 0);
+        *result = 1;
     }
     else if (strcmp(name, "DirectDrawCreateEx") == 0) /* (guid, out, iid, outer) */
     {
@@ -782,6 +842,68 @@ static int host_import(LiftHost *host, const VertrixCallSite *site, const char *
     {
         *result = a0 == 0 ? 640 : a0 == 1 ? 480 : 0; /* SM_CXSCREEN, SM_CYSCREEN */
     }
+    else if (strcmp(name, "GetACP") == 0)
+    {
+        *result = 1252; /* Windows Latin 1 */
+    }
+    else if (strcmp(name, "GetOEMCP") == 0)
+    {
+        *result = 850; /* the Western European OEM code page that goes with 1252 */
+    }
+    else if (strcmp(name, "GetCPInfo") == 0) /* (code page, CPINFO *): a single-byte code page */
+    {
+        unsigned i;
+        host_write(host, a1, 4, 1); /* MaxCharSize */
+        host_write(host, a1 + 4, 2, '?');
+        for (i = 0; i < 12; i++)
+        {
+            host_write(host, a1 + 6 + i, 1, 0); /* no lead byte ranges */
+        }
+        *result = 1;
+    }
+    else if (strcmp(name, "GetProcessVersion") == 0)
+    {
+        *result = 0x40000; /* the 4.0 subsystem version of a Windows 95/98 executable */
+    }
+    else if (strcmp(name, "GetDC") == 0)
+    {
+        *result = 0x300; /* the screen's device context */
+    }
+    else if (strcmp(name, "ReleaseDC") == 0)
+    {
+        *result = 1;
+    }
+    else if (strcmp(name, "GetDeviceCaps") == 0) /* (dc, index) of the 640x480 32-bit display */
+    {
+        *result = a1 == 8                ? 640
+                  : a1 == 10             ? 480
+                  : a1 == 12             ? 32
+                  : a1 == 14             ? 1
+                  : a1 == 88 || a1 == 90 ? 96
+                                         : 0; /* HORZRES, VERTRES, BITSPIXEL, PLANES, LOGPIXELS */
+    }
+    else if (strcmp(name, "GetSysColor") == 0)
+    {
+        /* The "Windows Standard" scheme; the window's GDI colours never reach the DirectDraw
+         * screen. */
+        static const uint32_t colors[] = {0xc0c0c0, 0x808000, 0x800000, 0x808080, 0xc0c0c0,
+                                          0xffffff, 0x000000, 0x000000, 0x000000, 0xffffff,
+                                          0xc0c0c0, 0xc0c0c0, 0x808080, 0x800000, 0xffffff,
+                                          0xc0c0c0, 0x808080, 0x808080, 0x000000, 0xc0c0c0,
+                                          0xffffff, 0x000000, 0xdfdfdf, 0x000000, 0xe1ffff};
+        *result = a0 < sizeof colors / sizeof colors[0] ? colors[a0] : 0;
+    }
+    else if (strcmp(name, "CreateSolidBrush") == 0 || strcmp(name, "CreatePen") == 0 ||
+             strcmp(name, "LoadCursorA") == 0)
+    {
+        static uint32_t next = 0x400;
+        *result = next++; /* a distinct GDI or cursor handle */
+    }
+    else if (strcmp(name, "RegisterWindowMessageA") == 0)
+    {
+        static uint32_t message = 0xc000;
+        *result = message++; /* the registered message range starts at 0xc000 */
+    }
     else if (strcmp(name, "ShowCursor") == 0) /* the display counter after the change */
     {
         *result = a0 != 0 ? 0 : 0xffffffffu;
@@ -806,6 +928,33 @@ static int host_import(LiftHost *host, const VertrixCallSite *site, const char *
     else if (strcmp(name, "GetCurrentThreadId") == 0)
     {
         *result = 1; /* the one thread the lifted code runs on */
+    }
+    else if (strcmp(name, "waveOutGetNumDevs") == 0)
+    {
+        /* No wave device yet: the host does not stream waveOut buffers, so the original runs
+         * its own path for a machine without one (its mixer thread then writes nothing). */
+        *result = 0;
+    }
+    else if (strcmp(name, "GetCurrentThread") == 0)
+    {
+        *result = 0xfffffffeu; /* the pseudo handle Windows returns */
+    }
+    else if (strcmp(name, "CreateThread") ==
+             0) /* (attributes, stack, start, parameter, flags, id*) */
+    {
+        uint32_t id = site_argument(site, 5);
+        host->thread_start = a2;
+        host->thread_parameter = site_argument(site, 3);
+        host->thread_due = host->clock_ms;
+        if (id != 0)
+        {
+            host_write(host, id, 4, 2);
+        }
+        *result = 0x200; /* its handle */
+    }
+    else if (strcmp(name, "SetPriorityClass") == 0 || strcmp(name, "SetThreadPriority") == 0)
+    {
+        *result = 1;
     }
     else if (strcmp(name, "VirtualQuery") == 0) /* (address, out MEMORY_BASIC_INFORMATION, size) */
     {
@@ -1486,6 +1635,15 @@ static uint32_t host_boundary(VertrixCallSite *site, void *context)
         host_release(host, site->eax);
         return 0;
     }
+    if (site->target == LIFT_HOST_FPU_DETECT)
+    {
+        /* 0x4e536c runs fninit and fnstcw; without a coprocessor the control word stays 0, so it
+         * stores 0 in both flags ([0x5054a0], [0x5054a1]) and the runtime's software floating
+         * point serves every float operation. */
+        host_write(host, 0x5054a0, 1, 0);
+        host_write(host, 0x5054a1, 1, 0);
+        return site->eax;
+    }
     if (site->target == LIFT_HOST_ALLOCATOR || site->target == LIFT_HOST_GETMEM)
     {
         return host_allocate(site->eax, host);
@@ -1569,4 +1727,70 @@ uint32_t lift_host_run(LiftHost *host, uint32_t target, uint32_t eax, uint32_t e
     site.ebx = ebx;
     site.ecx = ecx;
     return host->calls.calls.call(&site, host->calls.calls.context);
+}
+
+/* 0x40aed0 reads timeGetTime, then calls 0x40ab10 and waits until 10 ms after the previous
+ * call, until 0x40af90 sets [0x52f14c]. The host has no second thread: the driver calls this
+ * after advancing the clock, and the calls the thread would have made by then happen here. */
+void lift_host_thread_step(LiftHost *host, int *lifted)
+{
+    if (host->thread_start != 0x40aed0)
+    {
+        return;
+    }
+    while ((int32_t)(host->clock_ms - host->thread_due) >= 0 &&
+           lift_host_read(host, 0x52f14c, 4) == 0)
+    {
+        lift_host_run(host, 0x40ab10, 0, 0, 0, 0, lifted);
+        host->thread_due += 10u;
+    }
+}
+
+void lift_host_run_initializers(LiftHost *host, unsigned limit, int *lifted)
+{
+    for (;;)
+    {
+        uint32_t at, pick = 0x51c440;
+        unsigned best = limit;
+        for (at = 0x51c308; at < 0x51c440; at += 6)
+        {
+            if (lift_host_read(host, at, 1) != 2 && lift_host_read(host, at + 1, 1) <= best)
+            {
+                pick = at;
+                best = lift_host_read(host, at + 1, 1);
+            }
+        }
+        if (pick == 0x51c440)
+        {
+            return;
+        }
+        {
+            uint32_t routine = lift_host_read(host, pick + 2, 4);
+            if (routine != 0)
+            {
+                /* Through the whole call path: a lifted routine, else the host's boundary. */
+                VertrixCallSite site;
+                memset(&site, 0, sizeof site);
+                site.target = routine;
+                *lifted = vertrix_lifted_has(routine);
+                if (!*lifted && routine != LIFT_HOST_FPU_DETECT)
+                {
+                    fprintf(stderr, "initializer %x is not lifted\n", (unsigned)routine);
+                }
+                host->calls.calls.call(&site, host->calls.calls.context);
+            }
+        }
+        host_write(host, pick, 1, 2);
+    }
+}
+
+void lift_host_startup(LiftHost *host, int *lifted)
+{
+    lift_host_run_initializers(host, 1, lifted); /* 0x4ec209 */
+    /* 0x4e0508 creates the thread data (0x4e0517: [0x5c7b9c] = 0x4e587c(0)); rand 0x4d85fc
+     * and srand 0x4d8620 keep their seed in it, and return 0 without it. */
+    lift_host_write32(host, 0x5c7b9c, lift_host_run(host, 0x4e587c, 0, 0, 0, 0, lifted));
+    lift_host_run_initializers(host, 0x21, lifted);    /* 0x4e076b */
+    lift_host_run(host, 0x4e04f4, 0, 0, 0, 0, lifted); /* 0x4e0775: call [0x507cdc] */
+    lift_host_run_initializers(host, 0xff, lifted);    /* 0x4e077b */
 }

@@ -2,6 +2,7 @@
 #define VERTRIX_LIFT_RUNTIME_H
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "actor_build.h"
@@ -79,6 +80,20 @@ __attribute__((weak)) uint32_t vertrix_lift_edx;
 __attribute__((weak)) LiftFlags vertrix_lift_fl;
 
 static inline void lift_put(uint8_t *bytes, unsigned size, uint32_t value);
+
+/* An x87 instruction: the port has no coprocessor, so the runtime's x87 paths must not run. */
+static inline void lift_x87(LiftEnv *env, uint32_t address)
+{
+    fprintf(stderr, "lifted x87 instruction at 0x%x reached\n", (unsigned)address);
+    env->failed = 1;
+}
+
+/* A routine with a static frame (tools/lift.py, STATIC_FRAME) was entered while it ran. */
+static inline void lift_reentered(uint32_t address)
+{
+    fprintf(stderr, "lifted 0x%x entered again; its frame is static\n", (unsigned)address);
+    abort();
+}
 
 static inline void lift_begin(LiftEnv *env, const VertrixCalls *calls,
                               const VertrixFactoryServices *services, const VertrixGlobals *globals,

@@ -24,6 +24,7 @@ enum
         0x4ca050, /* FreeMem (0x4ca040 jumps to it); the lifted RTL one only knows its own arenas */
     LIFT_HOST_FREEMEM_ALIAS = 0x4ca040, /* the RTL free: eax = the block */
     LIFT_HOST_FREE = 0x4ea190,          /* the heap free 0x4ca050 jumps to; called directly too */
+    LIFT_HOST_FPU_DETECT = 0x4e536c,    /* the x87 detection (initializer): no coprocessor here */
     LIFT_HOST_GETMEM = 0x4e7c90,        /* the RTL heap allocator: eax = size, returns the block */
     LIFT_HOST_TARGETS = 64
 };
@@ -84,6 +85,9 @@ typedef struct LiftHost
     unsigned frames_presented;
     unsigned events_created; /* CreateEventA handles handed out */
     int close_requested;     /* the original posted WM_CLOSE to its window (EXIT) */
+    /* The one thread the original creates (CreateThread): its procedure and parameter. The host
+     * runs no second thread; the driver performs the procedure's work (see host_game.c). */
+    uint32_t thread_start, thread_parameter, thread_due;
     /* The files the original opens are entries of this archive (names like .\\SPRITE\\x.spr). */
     uint32_t tls[64], tls_count;
     VertrixVf *archive;
@@ -100,6 +104,17 @@ void lift_host_key(LiftHost *host, unsigned scan_code, int down);
 /* Queue a mouse event for the buffered mouse: offset 0 / 4 are relative x / y motion, 12 + n a
  * button (data 0x80 down, 0 up). */
 void lift_host_mouse(LiftHost *host, unsigned offset, int32_t data);
+/* The C runtime's static initializers up to priority `limit`, as 0x4e6b5c runs them: the table
+ * 0x51c308..0x51c440 holds 6-byte records (state, priority, routine); each pass takes the pending
+ * record of lowest priority (the last of equal ones) and marks it done (state 2). The startup
+ * passes 1 (0x4ec209), 0x21 (0x4e076b) and 0xff (0x4e077b). 0x51c440..0x51c46a are the exit
+ * procedures, which 0x4e6bac runs at exit. */
+void lift_host_run_initializers(LiftHost *host, unsigned limit, int *lifted);
+/* The C runtime startup before WinMain (0x4ec200, 0x4e0738): the initializers in its three passes,
+ * with the thread data created between the first two. */
+void lift_host_startup(LiftHost *host, int *lifted);
+/* The work of the original's timer thread (0x40aed0, created by 0x40af30) up to the host clock. */
+void lift_host_thread_step(LiftHost *host, int *lifted);
 
 uint32_t lift_host_surface(const LiftHost *host, uint32_t surface, uint32_t *width,
                            uint32_t *height, uint32_t *pitch, uint32_t *bytes_per_pixel);

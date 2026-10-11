@@ -106,7 +106,8 @@ void vertrix_lifted_calls_init(VertrixLiftedCalls *adapter, const VertrixCalls *
 enum
 {
     LIFTED_ARENA_TOP = 0x7f0000,
-    LIFTED_ARENA_STEP = 0x4000,
+    LIFTED_ARENA_BOTTOM = 0x7b0000,
+    LIFTED_ARENA_GAP = 0x100, /* above a frame: its return slot and the arguments passed on */
     LIFTED_MAX_DEPTH = 16,
     LIFTED_MAX_STACK = %d,
     LIFTED_MAX_ARGUMENTS = 17
@@ -138,6 +139,7 @@ static const LiftedRoutine unverified_routines[] = {
 };
 
 static unsigned depth;
+static uint32_t arena[LIFTED_MAX_DEPTH + 1] = {LIFTED_ARENA_TOP};
 static int unverified_allowed;
 static int trace_enabled;
 
@@ -207,7 +209,8 @@ int vertrix_lifted_dispatch(const VertrixCalls *calls, const VertrixFactoryServi
     uint32_t arguments[LIFTED_MAX_ARGUMENTS] = {0};
     LiftEntry entry;
     unsigned i;
-    if (routine == NULL || depth >= LIFTED_MAX_DEPTH)
+    if (routine == NULL || depth >= LIFTED_MAX_DEPTH ||
+        arena[depth] - routine->stack - LIFTED_ARENA_GAP < LIFTED_ARENA_BOTTOM)
     {
         return 0;
     }
@@ -223,7 +226,10 @@ int vertrix_lifted_dispatch(const VertrixCalls *calls, const VertrixFactoryServi
     entry.edx = site->edx;
     entry.ebx = site->ebx;
     entry.ecx = site->ecx;
-    entry.esp = LIFTED_ARENA_TOP - depth * LIFTED_ARENA_STEP;
+    /* Each frame's emulated stack lies just below its caller's (the arena descends from
+     * LIFTED_ARENA_TOP); a frame larger than the old fixed 0x4000 step fits as well. */
+    entry.esp = arena[depth];
+    arena[depth + 1] = (entry.esp - routine->stack - LIFTED_ARENA_GAP) & ~15u;
     entry.arguments = arguments;
     entry.passed = LIFTED_MAX_ARGUMENTS;
     entry.garbage = zero;

@@ -32451,7 +32451,7 @@ L_4cd6f2:
     if (!fl.zf)
         goto L_4cd703;
     vertrix_lift_fl = fl;
-    eax = lift_call(&env, 0x4e0884u, eax, edx, ebx, ecx, 8, esp);
+    eax = lift_call(&env, 0x4e0884u, eax, edx, ebx, ecx, 0, esp);
     edx = vertrix_lift_edx;
     fl = vertrix_lift_fl;
     {
