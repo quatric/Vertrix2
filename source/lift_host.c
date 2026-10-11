@@ -98,6 +98,12 @@ static void host_write(LiftHost *host, uint32_t address, unsigned size, uint32_t
     }
 }
 
+/* vertrix_lift_store_hook: the lifted stores to globals, without the LIFT_GLOBAL_STORE call. */
+static void host_store_hook(void *context, uint32_t address, unsigned size, uint32_t value)
+{
+    host_write(context, address, size, value);
+}
+
 static int host_resolve(uint32_t handle, void **storage, size_t *size, void *context)
 {
     LiftHost *host = context;
@@ -1852,6 +1858,8 @@ void lift_host_init(LiftHost *host, uint8_t *image, const uint8_t *original, uin
     host->inner.call = host_boundary;
     host->inner.context = host;
     host->globals.read = host_read;
+    vertrix_lift_store_hook = host_store_hook;
+    vertrix_lift_store_context = host;
     host->globals.context = host;
     host->services.resolve = host_resolve;
     host->services.allocate = host_allocate;

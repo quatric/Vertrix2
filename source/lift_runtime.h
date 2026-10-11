@@ -82,6 +82,11 @@ __attribute__((weak)) LiftFlags vertrix_lift_fl;
  * registers, and some take arguments in them (0x4e509c passes the exponent to 0x4e5177 in edi).
  * lift_call sets them; the dispatcher hands them to the callee's entry and clears them. */
 __attribute__((weak)) uint32_t vertrix_lift_in_esi, vertrix_lift_in_edi, vertrix_lift_in_ebp;
+/* A store to a global the host can take directly. Without it (the oracle harnesses) the store is
+ * the LIFT_GLOBAL_STORE call, which the host serves the same way at far greater cost. */
+__attribute__((weak)) void (*vertrix_lift_store_hook)(void *context, uint32_t address,
+                                                      unsigned size, uint32_t value);
+__attribute__((weak)) void *vertrix_lift_store_context;
 
 static inline void lift_put(uint8_t *bytes, unsigned size, uint32_t value);
 
@@ -202,6 +207,19 @@ static inline uint32_t lift_load(LiftEnv *env, uint32_t base, uint32_t offset, u
 }
 
 extern uint32_t vertrix_debug_watch;
+static inline void lift_global_store(LiftEnv *env, uint32_t address, unsigned size, uint32_t value)
+{
+    if (vertrix_lift_store_hook != NULL)
+    {
+        vertrix_lift_store_hook(vertrix_lift_store_context, address, size, value);
+    }
+    else
+    {
+        uint32_t stack[1] = {size};
+        vertrix_calln(env->calls, LIFT_GLOBAL_STORE, address, value, 0, 0, stack, 1, NULL);
+    }
+}
+
 static inline void lift_store(LiftEnv *env, uint32_t base, uint32_t offset, unsigned size,
                               uint32_t value)
 {
@@ -221,18 +239,16 @@ static inline void lift_store(LiftEnv *env, uint32_t base, uint32_t offset, unsi
     }
     else if (base == 0)
     {
-        uint32_t stack[1] = {size};
         if (offset == 0 || !vertrix_build_store(env->services, address, 0, size, value))
         {
-            vertrix_calln(env->calls, LIFT_GLOBAL_STORE, address, value, 0, 0, stack, 1, NULL);
+            lift_global_store(env, address, size, value);
         }
     }
     else if (!vertrix_build_store(env->services, base, offset, size, value) &&
              !(base != 0 && offset != 0 &&
                vertrix_build_store(env->services, address, 0, size, value)))
     {
-        uint32_t stack[1] = {size};
-        vertrix_calln(env->calls, LIFT_GLOBAL_STORE, address, value, 0, 0, stack, 1, NULL);
+        lift_global_store(env, address, size, value);
     }
 }
 
