@@ -1205,4 +1205,66 @@ uint32_t vertrix_port_thread_list_add(PORT_SIGNATURE);
  * 0x4f1808, 0x4f1a78) into +0x18 and +0x1c. */
 uint32_t vertrix_port_screen_metrics_read(PORT_SIGNATURE);
 
+/* Original 0x484550: load the tables 0x50fc16, 0x50fc1e and 0x50fc26 into 0x598dfc, 0x59939c and
+ * 0x59993c (0x4848f0). Returns the handler chain. */
+uint32_t vertrix_port_tables_load(PORT_SIGNATURE);
+
+/* Original 0x4e39f0(eax = text, edx = count): the width of the first count characters, stopping at
+ * the end (0x4e7b50); a lead byte of a double byte character (0x5c8961 with 0x5c8950 set) adds
+ * 0x4e6f30, others 1. Steps with 0x4e3a90. */
+uint32_t vertrix_port_text_width_chars(PORT_SIGNATURE);
+
+/* Original 0x4154b0: once (0x532b40) take the player key 0x532b90 from 0x54d640 when it is down
+ * (0x476480, 0x4762e0), play its sound (0x482a60) and mark it taken (0x532b40, 0x532b48, clearing
+ * 0x532b44). */
+uint32_t vertrix_port_player_key_pickup(PORT_SIGNATURE);
+
+/* Original 0x418050(eax = level): count the 0x4c byte entries of the level (count 0x534f10) whose
+ * dword at 0x534c18 is 0, 3, 4 or 5. */
+uint32_t vertrix_port_level_count_free(PORT_SIGNATURE);
+
+/* Original 0x45f1f0(eax = target): draw the eight digit images of 0x544d28 (0x4877f0, 0x482e10)
+ * into 0x5b9c60 at 31 pixel steps (0x483ed0). */
+uint32_t vertrix_port_digits_draw(PORT_SIGNATURE);
+
+/* Original 0x471c40(eax = target): 0 when an actor of the list 0x546720 (count 0x546724) with
+ * another target +0x14c is busy (0x4ac900), otherwise 1. */
+uint32_t vertrix_port_actors_target_idle(PORT_SIGNATURE);
+
+/* Original 0x43f190(eax = first, edx = source, ebx = count, ecx): prepare count images of 0x5410f8
+ * from the source index (0x483400) into the slots from first + 1, reporting progress (0x418270).
+ * Returns the count in edx. */
+uint32_t vertrix_port_images_prepare(PORT_SIGNATURE);
+
+/* Original 0x489b40(eax = path, edx = extension): split a copy of the path at 0x5ba5f8 (0x4daae8)
+ * and compare its extension 0x5ba908 (0x489d00). */
+uint32_t vertrix_port_file_extension_is(PORT_SIGNATURE);
+
+/* Original 0x41aa20: when 0x558c84 and 0x544070 are set, under the lock 0x5b9c50 (0x4854a0,
+ * 0x485520) hand the rectangle words +0x214..+0x21a and +0x268 of 0x544070 to 0x558c84 (0x47ce10).
+ */
+uint32_t vertrix_port_view_rect_set_locked(PORT_SIGNATURE);
+
+/* Original 0x472100: allocate a 0x15c byte actor (0x4ca000, 0x4abd70), place it (0x4adf20), set its
+ * kind 7 and mode 1 (0x4ac7b0), the update 0x456ea0 (0x4ac8f0), clear 0x4ac910 and add it to the
+ * layer list 0x54676c (0x4b5e70). */
+uint32_t vertrix_port_marker_actor_add(PORT_SIGNATURE);
+
+/* Original 0x478b70(eax = fade): fill its +0x26 ramp bytes +0x130 from 0 to 255 in 256 / (count -
+ * 1) steps, or all 0x80 for one. */
+uint32_t vertrix_port_fade_ramp_build(PORT_SIGNATURE);
+
+/* Original 0x4b5fc0(eax = list): destroy every item through method +0 of its table +0x158 (with 2),
+ * then free the list (0x4d8770). */
+uint32_t vertrix_port_layer_list_destroy(PORT_SIGNATURE);
+
+/* Original 0x4b7b00(eax = list): destroy every item through method +4 of its table (with 2), then
+ * free the list (0x4d8770). */
+uint32_t vertrix_port_object_list_free(PORT_SIGNATURE);
+
+/* Original 0x4d8490(eax = pool, edx = value, ebx = next): take a node from the free list +0x10,
+ * growing it by a block of +0x18 nodes of 12 bytes (0x4e23e0) when empty, and fill it with next,
+ * value and 0. */
+uint32_t vertrix_port_pool_node_take(PORT_SIGNATURE);
+
 #endif
