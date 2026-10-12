@@ -93,4 +93,19 @@ uint32_t vertrix_port_render_palette_subtract_tinted(PORT_SIGNATURE);
  * entry tables [0x54cdcc] (the index kept at 0x54d5e4) and the channels taken untinted. */
 uint32_t vertrix_port_render_palette_add(PORT_SIGNATURE);
 
+/* Original 0x48da80: average a palette pixel: the source's entry (0x54d5d4) and the target's index
+ * pick, by their halved sum, a palette (0x54d5d0) the source entry's three channel bytes are mapped
+ * through into the target pixel. Returns the target pixel's address; edx is unchanged. */
+uint32_t vertrix_port_render_palette_average(PORT_SIGNATURE);
+
+/* Original 0x48dba0: halve a palette pixel: the source's entry (0x54d5d4) picks the palette
+ * (0x54d5d0) and each channel of the target pixel is the palette at the halved sum of the source's
+ * and the target's (0x54d5d8) entry bytes. Returns the target pixel's address; edx is unchanged. */
+uint32_t vertrix_port_render_palette_halve(PORT_SIGNATURE);
+
+/* Original 0x48de30: map a palette pixel: the source's index picks the palette (0x54d5d0) the
+ * target's entry (0x54d5d4) bytes are mapped through. Returns the target pixel's address; edx is
+ * unchanged. */
+uint32_t vertrix_port_render_palette_map(PORT_SIGNATURE);
+
 #endif

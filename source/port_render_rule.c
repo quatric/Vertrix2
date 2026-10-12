@@ -81,6 +81,7 @@ enum
     ROW_WIDTH_COPY = 0x5bc016,
     ROW_SOURCE_SKIP = 0x5bb79c,
     ROW_TARGET_SKIP = 0x5bb7c8,
+    TARGET_ENTRY = 0x54d5d8,
 };
 
 uint32_t vertrix_port_render_flags(PORT_SIGNATURE)
@@ -554,4 +555,82 @@ uint32_t vertrix_port_render_palette_add(PORT_SIGNATURE)
     port_set32(&port, 0, FORMAT_ENTRY, entry_bits);
     port_set32(&port, 0, SATURATE_COLOUR, entry_colour(&port, entry_bits, palette, 0));
     return port_return(&port, saturate_add(&port, port_u32(&port, 0, SATURATE_COLOUR)), entry->edx);
+}
+
+/* The source or target pixel's entry from the index table, as a whole word. */
+static uint32_t pixel_entry(Port *port, uint32_t pointer)
+{
+    uint32_t pixel = port_u32(port, port_u32(port, 0, pointer), 0);
+    uint32_t index = (((pixel & 0xfc0000) >> 4) | ((pixel & 0xfc00) >> 2) | (pixel & 0xfc)) >> 2;
+    return port_u32(port, port_u32(port, 0, PALETTE_INDEXES), index * 4);
+}
+
+/* The three channel bytes of an entry (bits 24, 16 and 8) mapped through a palette. */
+static uint32_t mapped_colour(Port *port, uint32_t palette, uint32_t entry)
+{
+    return (port_u8(port, palette, entry >> 24) << 16) |
+           (port_u8(port, palette, (entry >> 16) & 0xff) << 8) |
+           port_u8(port, palette, (entry >> 8) & 0xff);
+}
+
+uint32_t vertrix_port_render_palette_average(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t source;
+    uint32_t target;
+    uint32_t palette;
+    port_open(&port, calls, services, globals, entry);
+    source = pixel_entry(&port, PALETTE_SOURCE);
+    port_set32(&port, 0, FORMAT_ENTRY, source);
+    target = pixel_entry(&port, PALETTE_TARGET) & 0xff;
+    palette = port_u32(&port, port_u32(&port, 0, PALETTE_ENTRIES),
+                       (uint32_t)(int16_t)(((source & 0xff) + target) >> 1) * 4);
+    port_set32(&port, 0, PALETTE_ENTRY, palette);
+    target = port_u32(&port, 0, PALETTE_TARGET);
+    port_set32(&port, target, 0, mapped_colour(&port, palette, source));
+    return port_return(&port, target, entry->edx);
+}
+
+uint32_t vertrix_port_render_palette_halve(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t source;
+    uint32_t other;
+    uint32_t palette;
+    uint32_t target;
+    uint32_t colour = 0;
+    uint32_t shift;
+    port_open(&port, calls, services, globals, entry);
+    source = pixel_entry(&port, PALETTE_SOURCE);
+    port_set32(&port, 0, FORMAT_ENTRY, source);
+    palette = port_u32(&port, port_u32(&port, 0, PALETTE_ENTRIES), (source & 0xff) * 4);
+    port_set32(&port, 0, PALETTE_ENTRY, palette);
+    other = pixel_entry(&port, PALETTE_TARGET);
+    port_set32(&port, 0, TARGET_ENTRY, other);
+    for (shift = 24; shift >= 8; shift -= 8)
+    {
+        colour =
+            (colour << 8) |
+            port_u8(&port, palette, (((source >> shift) & 0xff) + ((other >> shift) & 0xff)) >> 1);
+    }
+    target = port_u32(&port, 0, PALETTE_TARGET);
+    port_set32(&port, target, 0, colour);
+    return port_return(&port, target, entry->edx);
+}
+
+uint32_t vertrix_port_render_palette_map(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t palette;
+    uint32_t other;
+    uint32_t target;
+    port_open(&port, calls, services, globals, entry);
+    palette = port_u32(&port, port_u32(&port, 0, PALETTE_ENTRIES),
+                       (pixel_entry(&port, PALETTE_SOURCE) & 0xff) * 4);
+    port_set32(&port, 0, PALETTE_ENTRY, palette);
+    other = pixel_entry(&port, PALETTE_TARGET);
+    port_set32(&port, 0, FORMAT_ENTRY, other);
+    target = port_u32(&port, 0, PALETTE_TARGET);
+    port_set32(&port, target, 0, mapped_colour(&port, palette, other));
+    return port_return(&port, target, entry->edx);
 }
