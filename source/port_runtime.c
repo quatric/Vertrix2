@@ -41,6 +41,13 @@ enum
     TRIG = 0x4c9b6a,
     TRIG_SINE = 2,
     GUARD_HANDLER = 0x4ec1ec,
+    AUDIO_DEVICE = 0x4f6418,
+    AUDIO_LOCKS = 0x4f644c,
+    AUDIO_LOCKED = 0x52f020,
+    AUDIO_LOCK = 0x40ab20,
+    LIST_CREATE = 0x4d8650,
+    LIST_TABLE = 0x518694,
+    LIST_REMOVE = 0x4d88a0,
     STREAM_ENDED = 0x48a910,
     STREAM_PEEK = 0x48aa80,
     STREAM_SKIP = 0x48aa90,
@@ -828,4 +835,52 @@ uint32_t vertrix_port_stream_token_ahead(PORT_SIGNATURE)
         port_call(&port, STREAM_SKIP, stream, 1, reader, stream);
         edx = vertrix_lift_edx;
     }
+}
+
+uint32_t vertrix_port_audio_lock_call(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    result = port_call(&port, AUDIO_LOCK, 0, entry->edx, entry->ebx, entry->ecx);
+    return port_return(&port, result, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_audio_lock(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t locks;
+    uint32_t result = 0;
+    port_open(&port, calls, services, globals, entry);
+    if (port_u32(&port, 0, AUDIO_DEVICE) == 0xffff)
+    {
+        return port_return(&port, 0, entry->edx);
+    }
+    locks = port_u32(&port, 0, AUDIO_LOCKS) + 1;
+    port_set32(&port, 0, AUDIO_LOCKS, locks);
+    if (locks == 1)
+    {
+        result = port_call(&port, port_u32(&port, 0, AUDIO_LOCKED), entry->eax, entry->eax, locks,
+                           entry->ecx);
+    }
+    port_set32(&port, 0, AUDIO_LOCKS, port_u32(&port, 0, AUDIO_LOCKS) - 1);
+    return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_list_construct(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t list;
+    port_open(&port, calls, services, globals, entry);
+    list = port_call(&port, LIST_CREATE, entry->eax, entry->edx, entry->ebx, entry->ecx);
+    port_set32(&port, list, 0, LIST_TABLE);
+    return port_return(&port, list, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_list_delete(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    port_call(&port, LIST_REMOVE, entry->eax, port_u32(&port, entry->eax, 8), entry->edx, 1);
+    return port_return(&port, 0, vertrix_lift_edx);
 }

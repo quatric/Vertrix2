@@ -26,6 +26,39 @@ enum
     TEXT_PREPARE = 0x4ae150,
     TEXT_LAYOUT = 0x4408e0,
     TEXT_FONT = 0x15c,
+    ACTOR_COUNTER_ADVANCE = 0x4ac500,
+    ACTOR_COUNTER_DUE = 0x4ac520,
+    ACTOR_STEPS_CONSUME = 0x4ac5b0,
+    ACTOR_SET_UPDATE = 0x4ac8f0,
+    TITLE_RESOURCE = 0x546688,
+    TITLE_UPDATE = 0x45ceb0,
+    TITLE_RUN = 0x45cdc0,
+    METHOD_UPDATE = 4,
+    LIST_COUNT = 8,
+    LIST_ITEMS = 4,
+    ACTOR_PROGRESS_ADVANCE = 0x4ac600,
+    ACTOR_PROGRESS_DONE = 0x4ac620,
+    ACTOR_PROGRESS_CONSUME = 0x4ac6b0,
+    ACTOR_TURN_STEP = 0x4ad060,
+    ACTOR_SET_STEPS = 0x4ac860,
+    ACTOR_POLAR = 0x4ad1c0,
+    ACTOR_REPLACE = 0x4adfe0,
+    ACTOR_ATTACH = 0x4ac8d0,
+    ACTOR_ANIMATION = 0x4ac710,
+    ACTOR_IMAGE_SET = 0x4ac8a0,
+    ACTOR_TIME_SCALE_SET = 0x4ac7b0,
+    RANDOM = 0x4826c0,
+    RANDOM_GENERATOR = 0x598d30,
+    WANDER_SPEED = 0x30,
+    ACTOR_ORIGIN_Y = 0xa,
+    ACTOR_ORIGIN_X = 8,
+    SCREEN_WIDTH = 0x5b9c8e,
+    SCREEN_HEIGHT = 0x5b9c90,
+    STAR_WIDTH = 0x541014,
+    STAR_HEIGHT = 0x541016,
+    STAR_HALF_WIDTH = 0x541018,
+    STAR_HALF_HEIGHT = 0x54101a,
+    STAR_RESOURCE = 0x544c10,
     OBJECT_STATE = 0x58,
     OBJECT_ACTIVE_RUN = 0x45cff0,
     PAINT = 0x4b17b0,
@@ -1174,4 +1207,141 @@ uint32_t vertrix_port_object_run_active(PORT_SIGNATURE)
     }
     result = port_call(&port, OBJECT_ACTIVE_RUN, entry->eax, entry->edx, entry->ebx, entry->ecx);
     return port_return(&port, result, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_actor_wander(PORT_SIGNATURE)
+{
+    /* push ebp, ebx, ecx, edx, esi, edi, then the old y and the polar results. */
+    enum
+    {
+        BELOW = 0x20
+    };
+    Port port;
+    uint32_t actor = entry->eax;
+    uint32_t ebp = entry->esp - 4;
+    uint32_t arguments[1];
+    uint32_t eax;
+    uint32_t edx;
+    uint32_t x;
+    port_open_frame(&port, calls, services, globals, entry, BELOW);
+    port_call(&port, ACTOR_PROGRESS_ADVANCE, actor, entry->edx, entry->ebx, entry->ecx);
+    eax = port_call(&port, ACTOR_PROGRESS_DONE, actor, vertrix_lift_edx, entry->ebx, entry->ecx);
+    if (eax != 1)
+    {
+        return port_return(&port, eax, entry->edx);
+    }
+    eax = port_call(&port, ACTOR_PROGRESS_STEPS, actor, vertrix_lift_edx, entry->ebx, entry->ecx);
+    port_call(&port, ACTOR_PROGRESS_CONSUME, actor, eax, entry->ebx, entry->ecx);
+    eax = port_call(&port, ACTOR_TURN_STEP, actor, vertrix_lift_edx, entry->ebx, entry->ecx);
+    if (eax == 0)
+    {
+        eax = port_call(&port, RANDOM, RANDOM_GENERATOR, 5, entry->ebx, entry->ecx);
+        port_set16(&port, actor, WANDER_SPEED, eax);
+        eax = port_call(&port, RANDOM, RANDOM_GENERATOR, 5, entry->ebx, entry->ecx);
+        eax = port_call(&port, ACTOR_SET_STEPS, actor, (eax & 0xffff) + 5, entry->ebx, entry->ecx);
+    }
+    port_set32(&port, ebp, -0x18u, (eax & 0xffff0000u) | port_u16(&port, actor, ACTOR_Y));
+    edx = actor_word(&port, actor, WANDER_SPEED);
+    x = port_u16(&port, actor, ACTOR_X);
+    arguments[0] = ebp - 0x1c;
+    eax = port_call_stack(&port, ACTOR_POLAR, actor, edx, edx, ebp - 0x20, arguments, 1);
+    edx = ((vertrix_lift_edx & 0xffff0000u) | port_u16(&port, actor, ACTOR_ORIGIN_Y)) +
+          port_u32(&port, ebp, -0x1cu);
+    port_set16(&port, actor, ACTOR_Y, edx);
+    if ((edx & 0xffff) == port_u16(&port, ebp, -0x18u) && x == port_u16(&port, actor, ACTOR_X))
+    {
+        return port_return(&port, eax, entry->edx);
+    }
+    eax = port_call(&port, ACTOR_REPLACE, actor, edx, port_u32(&port, ebp, -0x1cu),
+                    port_u32(&port, ebp, -0x18u));
+    return port_return(&port, eax, entry->edx);
+}
+
+uint32_t vertrix_port_star_setup(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t actor = entry->edx;
+    uint32_t value;
+    port_open(&port, calls, services, globals, entry);
+    port_set16(&port, 0, STAR_WIDTH, port_u16(&port, 0, SCREEN_WIDTH));
+    port_set16(&port, 0, STAR_HEIGHT, port_u16(&port, 0, SCREEN_HEIGHT));
+    port_set16(&port, 0, STAR_HALF_WIDTH, port_u16(&port, 0, SCREEN_WIDTH) >> 1);
+    port_set16(&port, 0, STAR_HALF_HEIGHT, port_u16(&port, 0, SCREEN_HEIGHT) >> 1);
+    port_call(&port, ACTOR_ATTACH, actor, STAR_RESOURCE, entry->ebx, actor);
+    port_call(&port, ACTOR_ANIMATION, actor, 0xf, entry->ebx, actor);
+    port_call(&port, ACTOR_IMAGE_SET, actor, 1, entry->ebx, actor);
+    port_call(&port, ACTOR_TIME_SCALE_SET, actor, vertrix_lift_edx, entry->ebx, actor);
+    port_set16(&port, actor, ACTOR_X, 0);
+    port_set16(&port, actor, ACTOR_Y, 0);
+    value = port_call(&port, RANDOM, RANDOM_GENERATOR, port_u16(&port, 0, STAR_WIDTH), entry->ebx,
+                      actor);
+    port_set16(&port, actor, ACTOR_ORIGIN_X, (value - port_u16(&port, 0, STAR_HALF_WIDTH)) * 0x96);
+    value = port_call(&port, RANDOM, RANDOM_GENERATOR, port_u16(&port, 0, STAR_HEIGHT), entry->ebx,
+                      actor);
+    port_set32(&port, actor, STEP_VALUE, 0xc8);
+    port_set16(&port, actor, ACTOR_ORIGIN_Y, (value - port_u16(&port, 0, STAR_HALF_HEIGHT)) * 0x96);
+    port_set32(&port, actor, STEP_GOAL, 0);
+    value = (port_call(&port, RANDOM, RANDOM_GENERATOR, 3, entry->ebx, actor) & 0xffff) + 1;
+    port_set32(&port, actor, PAINT_SETTINGS, 0);
+    port_set32(&port, actor, STEP_SPEED, value);
+    return port_return(&port, value, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_actor_counter_steps(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t limit;
+    port_open(&port, calls, services, globals, entry);
+    limit = port_u32(&port, entry->eax, ACTOR_COUNTER_LIMIT);
+    if (limit == 0)
+    {
+        limit = 1;
+    }
+    return port_return(&port, port_u32(&port, entry->eax, ACTOR_COUNTER) / limit, entry->edx);
+}
+
+uint32_t vertrix_port_title_actor_frame(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t actor = entry->eax;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    port_call(&port, TITLE_RUN, actor, entry->edx, entry->ebx, actor);
+    port_call(&port, ACTOR_COUNTER_ADVANCE, actor, vertrix_lift_edx, entry->ebx, actor);
+    result = port_call(&port, ACTOR_COUNTER_DUE, actor, vertrix_lift_edx, entry->ebx, actor);
+    if (result != 1)
+    {
+        return port_return(&port, result, entry->edx);
+    }
+    port_call(&port, ACTOR_STEPS_CONSUME, actor, vertrix_lift_edx, entry->ebx, actor);
+    if (port_u32(&port, actor, OBJECT_STATE) == 0)
+    {
+        port_call(&port, ACTOR_ATTACH, actor, TITLE_RESOURCE, entry->ebx, actor);
+        port_call(&port, ACTOR_IMAGE_SET, actor, vertrix_lift_edx, entry->ebx, actor);
+        port_call(&port, ACTOR_REPLACE, actor, vertrix_lift_edx, entry->ebx, actor);
+    }
+    result = port_call(&port, ACTOR_SET_UPDATE, actor, TITLE_UPDATE, entry->ebx, actor);
+    return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_actor_list_update(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t list = entry->eax;
+    uint32_t count;
+    uint32_t number = 0;
+    uint32_t offset = 0;
+    uint32_t eax;
+    port_open(&port, calls, services, globals, entry);
+    count = eax = port_u32(&port, list, LIST_COUNT);
+    while (number < count && count != 0)
+    {
+        uint32_t item = port_u32(&port, port_u32(&port, list, LIST_ITEMS), offset);
+        uint32_t methods = port_u32(&port, item, ACTOR_METHODS);
+        offset += 4;
+        eax = port_call(&port, port_u32(&port, methods, METHOD_UPDATE), item, number + 1, methods,
+                        offset);
+        number = vertrix_lift_edx;
+    }
+    return port_return(&port, eax, entry->edx);
 }

@@ -139,4 +139,19 @@ uint32_t vertrix_port_upper_case(PORT_SIGNATURE);
  * 0x48a380). */
 uint32_t vertrix_port_stream_token_ahead(PORT_SIGNATURE);
 
+/* Original 0x40ab10: 0x40ab20 with eax 0. */
+uint32_t vertrix_port_audio_lock_call(PORT_SIGNATURE);
+
+/* Original 0x40ab20 (eax = argument): when the audio device is open (0x4f6418 not 0xffff) and the
+ * lock count (0x4f644c) goes from 0 to 1, call 0x52f020 with the argument. Returns its eax, else 0;
+ * edx is unchanged. */
+uint32_t vertrix_port_audio_lock(PORT_SIGNATURE);
+
+/* Original 0x4b7600: construct the list (0x4d8650) and set its table to 0x518694. */
+uint32_t vertrix_port_list_construct(PORT_SIGNATURE);
+
+/* Original 0x4b79a0 (eax = list, edx = index): delete the item (0x4d88a0, one item, edx the list's
+ * items +8). Returns 0. */
+uint32_t vertrix_port_list_delete(PORT_SIGNATURE);
+
 #endif

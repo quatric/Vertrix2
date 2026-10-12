@@ -237,4 +237,32 @@ uint32_t vertrix_port_actor_set_time_scale(PORT_SIGNATURE);
 /* Original 0x45cdc0 (eax = object): run 0x45cff0 when its state (+0x58) is 1. */
 uint32_t vertrix_port_object_run_active(PORT_SIGNATURE);
 
+/* Original 0x45cff0 (eax = actor): a wandering actor's step: advance its progress (0x4ac600) and,
+ * when a step is due (0x4ac620), consume it (0x4ac640, 0x4ac6b0) and turn (0x4ad060); when the
+ * turn wrapped it picks a new turn (+0x30) and step count (0x4ac860, 5 plus a random below 5,
+ * 0x4826c0 with the generator 0x598d30). It then moves by the polar offset of its speed (+0x30,
+ * 0x4ad1c0) from its origin (+0xa) and re-places itself (0x4adfe0) when it moved. Registers but
+ * eax are unchanged. */
+uint32_t vertrix_port_actor_wander(PORT_SIGNATURE);
+
+/* Original 0x43e740 (edx = actor): set up a star of the title: the screen size (0x5b9c8e, 0x5b9c90)
+ * and its half kept at 0x541014 to 0x54101a, the actor attached to 0x544c10 (0x4ac8d0) with
+ * animation 15 (0x4ac710), image 1 (0x4ac8a0) and the time scale (0x4ac7b0), and a random spot
+ * around the centre (times 150), speed 200 and a random step of 1 to 3. Returns the step. */
+uint32_t vertrix_port_star_setup(PORT_SIGNATURE);
+
+/* Original 0x4ac3b0 (eax = actor): its counter (+0xcc) over its limit (+0xd0, 1 when 0). edx is
+ * unchanged. */
+uint32_t vertrix_port_actor_counter_steps(PORT_SIGNATURE);
+
+/* Original 0x45ce50 (eax = actor): a title actor's frame: run it (0x45cdc0), advance its counter
+ * (0x4ac500) and when due (0x4ac520) consume it (0x4ac5b0); in state 0 it is re-attached to
+ * 0x546688 (0x4ac8d0, 0x4ac8a0) and re-placed (0x4adfe0). Its update becomes 0x45ceb0 (0x4ac8f0).
+ * Registers but eax are unchanged. */
+uint32_t vertrix_port_title_actor_frame(PORT_SIGNATURE);
+
+/* Original 0x4b6200 (eax = list): call each actor's update (its table's +4) with edx its number
+ * from 1. Registers but eax are unchanged. */
+uint32_t vertrix_port_actor_list_update(PORT_SIGNATURE);
+
 #endif
