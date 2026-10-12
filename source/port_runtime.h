@@ -1438,4 +1438,56 @@ uint32_t vertrix_port_actor_glide(PORT_SIGNATURE);
  * 0x4acb00), updating 0x45c8b0 (0x4ac8f0) once it arrived. */
 uint32_t vertrix_port_actor_glide_45c8b0(PORT_SIGNATURE);
 
+/* Original 0x40e8a0(eax = voice, edx = command): apply the flags of byte +1: sample +0x38
+ * (0x40adb0) with offset +0x74 (0x40ade0), stop (0x40add0), period +0x2c (0x40ce20, 0x40adf0),
+ * volume +0x18 scaled by 0x531b68 (0x40ae00), pan +0x20 (0x40ae10) and start (0x40adc0), then clear
+ * the flags. */
+uint32_t vertrix_port_voice_command_apply(PORT_SIGNATURE);
+
+/* Original 0x43e840(edx = actor): store the screen size 0x5b9c8e in 0x54101c, set the actor up
+ * (0x4ac8d0 with 0x544c64, 0x4ac710, 0x4ac8a0 by 5, 0x4ac7b0) at a random place on it (0x4826c0)
+ * with the update 0x4574a0 (0x4ac8f0) and a random wait of 100 + random(200) into +0x5c. Returns
+ * the random part in edx. */
+uint32_t vertrix_port_drop_actor_start(PORT_SIGNATURE);
+
+/* Original 0x443460(eax = actor): set mode 1 (0x4ac7b0) and step it (0x4ac500); when its frame is
+ * due (0x4ac520) advance it (0x4ac540, 0x4ac5b0) and move it on all three axes (0x4aca60, 0x4acab0,
+ * 0x4acb00); once it arrived take its next update (0x4ac940 with 2) and reset its mode (0x4ac7b0).
+ */
+uint32_t vertrix_port_actor_glide_take(PORT_SIGNATURE);
+
+/* Original 0x4854a0(eax = display): lock its surface +0x6c (method +0x64 with 0x5b9944), restoring
+ * it (method +0x6c, 0x487080) and retrying while it is lost; on success store the pitch 0x5b9954
+ * and pixels 0x5b9968 in 0x558c84 (0x478da0). Returns 1, or 0 when it stays lost. */
+uint32_t vertrix_port_surface_lock(PORT_SIGNATURE);
+
+/* Original 0x489d00(eax = first, edx = second): 1 when the strings have the same length and match
+ * ignoring case (0x4dabb0), otherwise 0. Returns where the second stopped in edx. */
+uint32_t vertrix_port_name_equals(PORT_SIGNATURE);
+
+/* Original 0x4d9150: initialise the locks 0x5c7618 and 0x5c7619 (0x4d30f0), construct the exception
+ * records 0x5c761c and 0x5c76b8 (0x4d92f0, tables 0x51a524 and 0x51a544, codes 0xf023 and 0xf021)
+ * with the lock 0x5c76b4 between, registering 0x504af0 and 0x504b00 (0x4ec1f7). Returns the handler
+ * chain. */
+uint32_t vertrix_port_static_init_5c7618(PORT_SIGNATURE);
+
+/* Original 0x477d70(eax = box): make it cover the screen 0x5b9c8e by 0x5b9c90 (0x477e10), put it in
+ * the middle (0x478480) and clear +0x64..+0x70. */
+uint32_t vertrix_port_box_fit_screen(PORT_SIGNATURE);
+
+
+/* Original 0x40a950(eax = result): find the highest of the audio drivers 7..1 (0x52f090) whose
+ * first or second routine table (+4 of each) opens, storing its number. Returns 0, 2 without a
+ * result, 3 when audio is busy (0x4f6418) or 5 when none opens. */
+uint32_t vertrix_port_audio_driver_find(PORT_SIGNATURE);
+
+/* Original 0x43f480(eax = font): map the twelve punctuation characters ' . & ! ? , / ; : < > @ to
+ * glyphs 0..11 (0x48abf0). */
+uint32_t vertrix_port_font_glyphs_map(PORT_SIGNATURE);
+
+/* Original 0x4e53b4(eax = double, edx = target): convert the double to the 80 bit extended format
+ * at the target, normalising denormals and quieting NaNs (0x4e2371). Returns the mantissa in eax
+ * and edx. */
+uint32_t vertrix_port_double_to_extended(PORT_SIGNATURE);
+
 #endif
