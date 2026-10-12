@@ -182,4 +182,23 @@ uint32_t vertrix_port_string_list_clear(PORT_SIGNATURE);
  * (0x4ca050), under a guard record. Returns the list. */
 uint32_t vertrix_port_string_list_destroy(PORT_SIGNATURE);
 
+/* Original 0x4e9194 (eax, edx = two times as struct tm, ebx passed on): whether the first is
+ * later: by the year (+0x10) when neither has a day-of-year flag (+0x20), else by their day counts
+ * (0x4e909c). */
+uint32_t vertrix_port_time_later(PORT_SIGNATURE);
+
+/* Original 0x4e33d0 (eax = result, edx = year, ebx = month, ecx = day, stack = hour, minute,
+ * second, dst): mktime (0x4e7850) of a struct tm built in the frame. Stores and returns the
+ * result's address. */
+uint32_t vertrix_port_time_make(PORT_SIGNATURE);
+
+/* Original 0x4e3420 (eax = result, edx = SYSTEMTIME, ebx = dst): its time as 0x4e33d0 makes it, 0
+ * before 1900. Stores and returns the result's address. */
+uint32_t vertrix_port_time_from_system(PORT_SIGNATURE);
+
+/* Original 0x4e3470 (eax = result, edx = FILETIME): its local time (FileTimeToLocalFileTime
+ * 0x4f1b54, FileTimeToSystemTime 0x4f1b58, then 0x4e3420), the failing call's 0 otherwise. Stores
+ * and returns the result's address. */
+uint32_t vertrix_port_time_from_file(PORT_SIGNATURE);
+
 #endif

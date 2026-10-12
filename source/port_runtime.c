@@ -41,6 +41,12 @@ enum
     TRIG = 0x4c9b6a,
     TRIG_SINE = 2,
     GUARD_HANDLER = 0x4ec1ec,
+    TIME_BUILD = 0x4e33d0,
+    TIME_FROM_SYSTEM = 0x4e3420,
+    FILE_TIME_TO_LOCAL = 0x4f1b54,
+    FILE_TIME_TO_SYSTEM = 0x4f1b58,
+    TIME_DAYS = 0x4e909c,
+    TIME_MAKE = 0x4e7850,
     STRING_LIST_DESTROY_GUARD = 0x518620,
     STRING_LIST_CLEAR = 0x4b7830,
     LIST_DESTROY = 0x4d86d0,
@@ -1095,4 +1101,116 @@ uint32_t vertrix_port_string_list_destroy(PORT_SIGNATURE)
         edx = vertrix_lift_edx;
     }
     return port_return(&port, result, edx);
+}
+
+uint32_t vertrix_port_time_later(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t first = entry->eax;
+    uint32_t second = entry->edx;
+    uint32_t days;
+    port_open(&port, calls, services, globals, entry);
+    if (port_u32(&port, first, 0x20) == 0 && port_u32(&port, second, 0x20) == 0)
+    {
+        int32_t a = (int32_t)port_u32(&port, first, 0x10);
+        int32_t b = (int32_t)port_u32(&port, second, 0x10);
+        if (a != b)
+        {
+            return port_return(&port, a > b, entry->edx);
+        }
+    }
+    days = port_call(&port, TIME_DAYS, first, entry->ebx, entry->ebx, second);
+    return port_return(&port,
+                       (int32_t)days > (int32_t)port_call(&port, TIME_DAYS, second, entry->ebx,
+                                                          entry->ebx, second),
+                       vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_time_make(PORT_SIGNATURE)
+{
+    /* push esi, then 0x24 bytes: the struct tm. */
+    enum
+    {
+        BELOW = 0x28
+    };
+    Port port;
+    uint32_t tm = entry->esp - BELOW;
+    uint32_t result;
+    port_open_frame(&port, calls, services, globals, entry, BELOW);
+    port_set32(&port, entry->esp, -4u, entry->esi);
+    port_set32(&port, tm, 0xc, entry->ecx);
+    port_set32(&port, tm, 0, entry->arguments[2]);
+    port_set32(&port, tm, 4, entry->arguments[1]);
+    port_set32(&port, tm, 8, entry->arguments[0]);
+    port_set32(&port, tm, 0x10, entry->ebx - 1);
+    port_set32(&port, tm, 0x20, entry->arguments[3]);
+    port_set32(&port, tm, 0x14, entry->edx - 1900);
+    result = port_call(&port, TIME_MAKE, tm, entry->edx - 1900, entry->ebx - 1, entry->ecx);
+    port_set32(&port, entry->eax, 0, result);
+    return port_return(&port, entry->eax, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_time_from_system(PORT_SIGNATURE)
+{
+    /* push ecx, esi, then the result slot. */
+    enum
+    {
+        BELOW = 0xc
+    };
+    Port port;
+    uint32_t system = entry->edx;
+    uint32_t slot = entry->esp - BELOW;
+    uint32_t year;
+    uint32_t arguments[4];
+    port_open_frame(&port, calls, services, globals, entry, BELOW);
+    port_set32(&port, entry->esp, -4u, entry->ecx);
+    port_set32(&port, entry->esp, -8u, entry->esi);
+    year = port_u16(&port, system, 0);
+    if ((int32_t)year < 1900)
+    {
+        port_set32(&port, entry->eax, 0, 0);
+        return port_return(&port, entry->eax, entry->edx);
+    }
+    arguments[0] = port_u16(&port, system, 8);
+    arguments[1] = port_u16(&port, system, 0xa);
+    arguments[2] = port_u16(&port, system, 0xc);
+    arguments[3] = entry->ebx;
+    port_call_stack(&port, TIME_BUILD, slot, year, port_u16(&port, system, 2),
+                    port_u16(&port, system, 6), arguments, 4);
+    port_set32(&port, entry->eax, 0, port_u32(&port, slot, 0));
+    return port_return(&port, entry->eax, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_time_from_file(PORT_SIGNATURE)
+{
+    /* push ecx, esi, then 0x1c bytes: the SYSTEMTIME, the local FILETIME and the result. */
+    enum
+    {
+        BELOW = 0x24
+    };
+    Port port;
+    uint32_t locals = entry->esp - BELOW;
+    uint32_t arguments[2];
+    uint32_t result;
+    port_open_frame(&port, calls, services, globals, entry, BELOW);
+    port_set32(&port, entry->esp, -4u, entry->ecx);
+    port_set32(&port, entry->esp, -8u, entry->esi);
+    arguments[0] = entry->edx;
+    arguments[1] = locals + 0x10;
+    result = port_call_stack(&port, FILE_TIME_TO_LOCAL, locals + 0x10, entry->edx, entry->ebx,
+                             entry->ecx, arguments, 2);
+    if (result != 0)
+    {
+        arguments[0] = locals + 0x10;
+        arguments[1] = locals;
+        result = port_call_stack(&port, FILE_TIME_TO_SYSTEM, locals + 0x10, vertrix_lift_edx,
+                                 entry->ebx, entry->ecx, arguments, 2);
+        if (result != 0)
+        {
+            port_call(&port, TIME_FROM_SYSTEM, locals + 0x18, locals, entry->ebx, entry->ecx);
+            result = port_u32(&port, locals, 0x18);
+        }
+    }
+    port_set32(&port, entry->eax, 0, result);
+    return port_return(&port, entry->eax, vertrix_lift_edx);
 }
