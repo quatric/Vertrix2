@@ -271,4 +271,51 @@ uint32_t vertrix_port_frame_rate(PORT_SIGNATURE);
  * Returns the last call's result; edx is unchanged. */
 uint32_t vertrix_port_surface_flip(PORT_SIGNATURE);
 
+/* Original 0x48abf0 (eax = table, dl = index, bx = value): store the word at +8 + index * 2. edx
+ * is the index. */
+uint32_t vertrix_port_word_table_set(PORT_SIGNATURE);
+
+/* Original 0x475810: the field +4. edx is unchanged. */
+uint32_t vertrix_port_field_04(PORT_SIGNATURE);
+
+/* Original 0x475820: the field +8. edx is unchanged. */
+uint32_t vertrix_port_field_08(PORT_SIGNATURE);
+
+/* Original 0x475830: the field +0xc. edx is unchanged. */
+uint32_t vertrix_port_field_0c(PORT_SIGNATURE);
+
+/* Original 0x4757b0: clear the first byte. */
+uint32_t vertrix_port_clear_first_byte(PORT_SIGNATURE);
+
+/* Original 0x478d80 (eax = holder): free its buffer (+0, 0x4ea190), then itself. edx is
+ * unchanged. */
+uint32_t vertrix_port_holder_free(PORT_SIGNATURE);
+
+/* Original 0x476120 (eax = records, dx = index): clear the record of 0x60 bytes (0x4757b0). */
+uint32_t vertrix_port_record_clear(PORT_SIGNATURE);
+
+/* Original 0x4ca710 (eax = address of a string): make it its own (0x4ca1a0) and upper-case it
+ * (CharUpperA 0x4f1904). edx is unchanged. */
+uint32_t vertrix_port_string_upper(PORT_SIGNATURE);
+
+/* Original 0x4b7d70: the milliseconds since the last frame time (timeGetTime 0x4f172c kept at
+ * 0x5bd838, against 0x5bd844), 0 when not later. edx is unchanged. */
+uint32_t vertrix_port_time_since_frame(PORT_SIGNATURE);
+
+/* Original 0x41a520 (eax = state): after two seconds since the last frame (0x4b7d70) run 0x418830.
+ * edx is unchanged. */
+uint32_t vertrix_port_idle_check(PORT_SIGNATURE);
+
+/* Original 0x4194b0: unless paused (0x532b40) or the pointer is hidden (0x558958), 0x45fab0 with
+ * 0x558c7c. */
+uint32_t vertrix_port_cursor_update(PORT_SIGNATURE);
+
+/* Original 0x419490: as 0x4194b0 with 0x45fa70. */
+uint32_t vertrix_port_cursor_draw(PORT_SIGNATURE);
+
+/* Original 0x41dec0: inside the input lock (0x5328c0) keep the mouse place (0x478460 of
+ * 0x5588f8) and age the keys (0x476400 of 0x54d640 with the frame time 0x5bd834). edx is
+ * unchanged. */
+uint32_t vertrix_port_input_frame(PORT_SIGNATURE);
+
 #endif

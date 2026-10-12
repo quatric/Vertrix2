@@ -26,6 +26,7 @@ enum
     TEXT_PREPARE = 0x4ae150,
     TEXT_LAYOUT = 0x4408e0,
     TEXT_FONT = 0x15c,
+    SLOT_PLACE = 0x4ac1e0,
     LAYER_UPDATE = 0x4b6200,
     LAYER_CALL_14 = 0x4b6170,
     LAYER_CALL_10 = 0x4b6120,
@@ -1803,4 +1804,20 @@ uint32_t vertrix_port_actor_keep_place(PORT_SIGNATURE)
     port_set16(&port, entry->eax, 0x4c, port_u16(&port, entry->eax, 0x48));
     port_set16(&port, entry->eax, 0x4e, port_u16(&port, entry->eax, 0x4a));
     return port_return(&port, entry->eax, entry->edx);
+}
+
+uint32_t vertrix_port_actor_replace(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t actor = entry->eax;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    if (port_u16(&port, actor, 0x148) == 0xffff)
+    {
+        port_set32(&port, actor, 0x120, 1);
+        return port_return(&port, actor, entry->edx);
+    }
+    result = port_call(&port, SLOT_PLACE, actor_word(&port, actor, 0x148), entry->edx, entry->ebx,
+                       entry->ecx);
+    return port_return(&port, result, vertrix_lift_edx);
 }

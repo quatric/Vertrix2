@@ -357,4 +357,8 @@ uint32_t vertrix_port_layer_front_call0c(PORT_SIGNATURE);
  * unchanged. */
 uint32_t vertrix_port_actor_keep_place(PORT_SIGNATURE);
 
+/* Original 0x4adfe0 (eax = actor): re-place it: without a slot (the word +0x148 is -1) it is
+ * marked for placing (+0x120); otherwise 0x4ac1e0 with the slot. */
+uint32_t vertrix_port_actor_replace(PORT_SIGNATURE);
+
 #endif
