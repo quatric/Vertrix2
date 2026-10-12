@@ -265,4 +265,20 @@ uint32_t vertrix_port_title_actor_frame(PORT_SIGNATURE);
  * from 1. Registers but eax are unchanged. */
 uint32_t vertrix_port_actor_list_update(PORT_SIGNATURE);
 
+/* Original 0x4b6170 (eax = list, edx = argument): call each actor's table entry +0x14 with the
+ * argument (ebx its number from 1, ecx its offset). Returns the last call's eax; edx is the count
+ * when there were actors. */
+uint32_t vertrix_port_actor_list_call14(PORT_SIGNATURE);
+
+/* Original 0x4b6120: as 0x4b6170 with the table entry +0x10. */
+uint32_t vertrix_port_actor_list_call10(PORT_SIGNATURE);
+
+/* Original 0x4b60c0 (eax = list, edx, ebx = arguments): call each actor's table entry +0xc with the
+ * arguments. Returns the last call's eax; edx is the count when there were actors. */
+uint32_t vertrix_port_actor_list_call0c(PORT_SIGNATURE);
+
+/* Original 0x4b23c0 (eax = array, edx = count): call each actor's update (its table's +4) in an
+ * array of actor pointers, skipping empty slots. edx is the slot pointer after the last. */
+uint32_t vertrix_port_actor_array_update(PORT_SIGNATURE);
+
 #endif

@@ -41,6 +41,9 @@ enum
     TRIG = 0x4c9b6a,
     TRIG_SINE = 2,
     GUARD_HANDLER = 0x4ec1ec,
+    LIST_CREATE_GUARD = 0x51a04c,
+    LIST_BASE_TABLE = 0x517454,
+    LIST_EMPTY_TABLE = 0x51a0d4,
     AUDIO_DEVICE = 0x4f6418,
     AUDIO_LOCKS = 0x4f644c,
     AUDIO_LOCKED = 0x52f020,
@@ -883,4 +886,54 @@ uint32_t vertrix_port_list_delete(PORT_SIGNATURE)
     port_open(&port, calls, services, globals, entry);
     port_call(&port, LIST_REMOVE, entry->eax, port_u32(&port, entry->eax, 8), entry->edx, 1);
     return port_return(&port, 0, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_stream_skip_line(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t stream = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t eax;
+    port_open(&port, calls, services, globals, entry);
+    eax = port_call(&port, STREAM_ENDED, stream, entry->edx, ebx, stream);
+    while (eax == 0)
+    {
+        uint32_t byte = port_u8(&port, port_call(&port, STREAM_PEEK, stream, 1, ebx, stream), 0);
+        ebx = (ebx & 0xffffff00u) | byte;
+        eax = port_call(&port, STREAM_SKIP, stream, vertrix_lift_edx, ebx, stream);
+        if (byte == '\n' || byte == '\r')
+        {
+            break;
+        }
+        eax = port_call(&port, STREAM_ENDED, stream, vertrix_lift_edx, ebx, stream);
+    }
+    return port_return(&port, eax, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_list_create(PORT_SIGNATURE)
+{
+    /* push edx, then 0x20 bytes: the guard record from esp, the list at esp + 0x14. */
+    enum
+    {
+        BELOW = 0x24
+    };
+    Port port;
+    uint32_t list = entry->eax;
+    uint32_t record = entry->esp - BELOW;
+    port_open_frame(&port, calls, services, globals, entry, BELOW);
+    port_set32(&port, entry->esp, -4u, entry->edx);
+    port_set32(&port, record, 0, port.env.chain);
+    port_set32(&port, record, 4, GUARD_HANDLER);
+    port_set32(&port, record, 8, LIST_CREATE_GUARD);
+    port_set32(&port, record, 0xc, 0);
+    port_set8(&port, record, 0x18, 0);
+    port_set32(&port, record, 0x14, list);
+    port_set32(&port, list, 0, LIST_BASE_TABLE);
+    port_set32(&port, record, 0xc, 1);
+    port_set32(&port, list, 0, LIST_EMPTY_TABLE);
+    port_set32(&port, list, 4, 0);
+    port_set32(&port, list, 0x10, 0);
+    port_set32(&port, list, 0xc, 0);
+    port_set32(&port, list, 8, 0);
+    return port_return(&port, list, entry->edx);
 }

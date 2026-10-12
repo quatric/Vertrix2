@@ -1345,3 +1345,115 @@ uint32_t vertrix_port_actor_list_update(PORT_SIGNATURE)
     }
     return port_return(&port, eax, entry->edx);
 }
+
+/* 0x4b6170 and 0x4b6120: each actor's table entry `method` with edx the argument. */
+static uint32_t list_call_numbered(PORT_SIGNATURE, uint32_t method)
+{
+    /* push ebp, ebx, ecx, esi, edi, then the list and count slots. */
+    enum
+    {
+        BELOW = 0x1c
+    };
+    Port port;
+    uint32_t ebp = entry->esp - 4;
+    uint32_t list = entry->eax;
+    uint32_t count;
+    uint32_t number = 0;
+    uint32_t offset = 0;
+    uint32_t eax;
+    uint32_t edx = entry->edx;
+    port_open_frame(&port, calls, services, globals, entry, BELOW);
+    port_set32(&port, ebp, -0x14u, list);
+    count = eax = port_u32(&port, list, LIST_COUNT);
+    port_set32(&port, ebp, -0x18u, count);
+    if (count == 0)
+    {
+        return port_return(&port, eax, edx);
+    }
+    do
+    {
+        uint32_t item =
+            port_u32(&port, port_u32(&port, port_u32(&port, ebp, -0x14u), LIST_ITEMS), offset);
+        uint32_t methods = port_u32(&port, item, ACTOR_METHODS);
+        number++;
+        eax = port_call(&port, port_u32(&port, methods, method), item, entry->edx, number, offset);
+        edx = port_u32(&port, ebp, -0x18u);
+        offset += 4;
+    } while (number < edx);
+    return port_return(&port, eax, edx);
+}
+
+uint32_t vertrix_port_actor_list_call14(PORT_SIGNATURE)
+{
+    return list_call_numbered(calls, services, globals, entry, 0x14);
+}
+
+uint32_t vertrix_port_actor_list_call10(PORT_SIGNATURE)
+{
+    return list_call_numbered(calls, services, globals, entry, 0x10);
+}
+
+uint32_t vertrix_port_actor_list_call0c(PORT_SIGNATURE)
+{
+    /* push ebp, ecx, esi, edi, then the list, the arguments and the count. */
+    enum
+    {
+        BELOW = 0x20
+    };
+    Port port;
+    uint32_t ebp = entry->esp - 4;
+    uint32_t list = entry->eax;
+    uint32_t count;
+    uint32_t number = 0;
+    uint32_t offset = 0;
+    uint32_t eax;
+    uint32_t edx = entry->edx;
+    port_open_frame(&port, calls, services, globals, entry, BELOW);
+    port_set32(&port, ebp, -0x10u, list);
+    port_set32(&port, ebp, -0x14u, entry->edx);
+    port_set32(&port, ebp, -0x1cu, entry->ebx);
+    count = eax = port_u32(&port, list, LIST_COUNT);
+    port_set32(&port, ebp, -0x18u, count);
+    if (count == 0)
+    {
+        return port_return(&port, eax, edx);
+    }
+    do
+    {
+        uint32_t item =
+            port_u32(&port, port_u32(&port, port_u32(&port, ebp, -0x10u), LIST_ITEMS), offset);
+        uint32_t methods = port_u32(&port, item, ACTOR_METHODS);
+        number++;
+        eax = port_call(&port, port_u32(&port, methods, 0xc), item, port_u32(&port, ebp, -0x14u),
+                        port_u32(&port, ebp, -0x1cu), offset);
+        edx = port_u32(&port, ebp, -0x18u);
+        offset += 4;
+    } while (number < edx);
+    return port_return(&port, eax, edx);
+}
+
+uint32_t vertrix_port_actor_array_update(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t at = entry->eax;
+    uint32_t end;
+    uint32_t eax = entry->eax;
+    port_open(&port, calls, services, globals, entry);
+    if (entry->edx == 0)
+    {
+        return port_return(&port, eax, entry->edx);
+    }
+    end = entry->eax + entry->edx * 4;
+    do
+    {
+        uint32_t item = port_u32(&port, at, 0);
+        if (item != 0)
+        {
+            uint32_t methods = port_u32(&port, item, ACTOR_METHODS);
+            eax = port_call(&port, port_u32(&port, methods, METHOD_UPDATE), item, at, end, methods);
+            at = vertrix_lift_edx;
+        }
+        at += 4;
+    } while (at < end);
+    return port_return(&port, eax, at);
+}

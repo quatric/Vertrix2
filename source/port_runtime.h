@@ -154,4 +154,12 @@ uint32_t vertrix_port_list_construct(PORT_SIGNATURE);
  * items +8). Returns 0. */
 uint32_t vertrix_port_list_delete(PORT_SIGNATURE);
 
+/* Original 0x48a380 (edx = stream): skip to the end of the line (0x48a910 ends, 0x48aa80 peeks,
+ * 0x48aa90 skips a line break too). Returns the last call's eax and edx. */
+uint32_t vertrix_port_stream_skip_line(PORT_SIGNATURE);
+
+/* Original 0x4d8650 (eax = list): construct an empty list (table 0x51a0d4, no items, count or
+ * capacity) under a guard record. Returns the list; edx is unchanged. */
+uint32_t vertrix_port_list_create(PORT_SIGNATURE);
+
 #endif
