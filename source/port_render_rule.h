@@ -80,4 +80,17 @@ uint32_t vertrix_port_render_palette_blend(PORT_SIGNATURE);
  * the target's address; edx is unchanged. */
 uint32_t vertrix_port_render_palette_mix(PORT_SIGNATURE);
 
+/* Original 0x48ea30: add the source pixel to the target, saturating each channel: the source's
+ * palette entry (0x54d5d4, from its index as 0x48d7f0 finds it) gives the channels halfway to the
+ * tint (0x54d5dc to 0x54d5e0) in its palette (0x54d5d0); the colour is kept at 0x5bc018, the
+ * unsaturated sum at 0x54d624. Returns the target's address; edx is unchanged. */
+uint32_t vertrix_port_render_palette_add_tinted(PORT_SIGNATURE);
+
+/* Original 0x48ec70: 0x48ea30 subtracting, each channel stopping at 0. */
+uint32_t vertrix_port_render_palette_subtract_tinted(PORT_SIGNATURE);
+
+/* Original 0x491620: 0x48ea30 with the entry picked through the selector table [0x54b804] and the
+ * entry tables [0x54cdcc] (the index kept at 0x54d5e4) and the channels taken untinted. */
+uint32_t vertrix_port_render_palette_add(PORT_SIGNATURE);
+
 #endif
