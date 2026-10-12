@@ -26,6 +26,10 @@ enum
     TEXT_PREPARE = 0x4ae150,
     TEXT_LAYOUT = 0x4408e0,
     TEXT_FONT = 0x15c,
+    LAYER_UPDATE = 0x4b6200,
+    LAYER_CALL_14 = 0x4b6170,
+    LAYER_CALL_10 = 0x4b6120,
+    LAYER_CALL_0C = 0x4b60c0,
     ACTOR_COUNTER_STEPS = 0x4ac3b0,
     ACTOR_WANDER = 0x45cff0,
     ACTOR_COUNTER_RESET = 0x4ac510,
@@ -1710,4 +1714,93 @@ uint32_t vertrix_port_wanderer_frame(PORT_SIGNATURE)
     port_set32(&port, actor, 0x64, port_u32(&port, actor, 0x68));
     result = port_call(&port, ACTOR_SET_UPDATE, actor, WANDERER_NEXT, entry->ebx, actor);
     return port_return(&port, result, entry->edx);
+}
+
+/* A layer list's actors through 0x4b6200, 0x4b6170, 0x4b6120 or 0x4b60c0. */
+static uint32_t layer_call(PORT_SIGNATURE, uint32_t list, uint32_t routine)
+{
+    Port port;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    if (routine == LAYER_UPDATE)
+    {
+        result = port_call(&port, routine, list, entry->edx, entry->ebx, entry->ecx);
+        return port_return(&port, result, vertrix_lift_edx);
+    }
+    if (routine == LAYER_CALL_0C)
+    {
+        result = port_call(&port, routine, list, entry->eax, entry->edx, entry->ecx);
+        return port_return(&port, result, vertrix_lift_edx);
+    }
+    result = port_call(&port, routine, list, entry->eax, entry->ebx, entry->ecx);
+    return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_layer_back_update(PORT_SIGNATURE)
+{
+    return layer_call(calls, services, globals, entry, 0x54671c, LAYER_UPDATE);
+}
+
+uint32_t vertrix_port_layer_back_call14(PORT_SIGNATURE)
+{
+    return layer_call(calls, services, globals, entry, 0x54671c, LAYER_CALL_14);
+}
+
+uint32_t vertrix_port_layer_back_call10(PORT_SIGNATURE)
+{
+    return layer_call(calls, services, globals, entry, 0x54671c, LAYER_CALL_10);
+}
+
+uint32_t vertrix_port_layer_back_call0c(PORT_SIGNATURE)
+{
+    return layer_call(calls, services, globals, entry, 0x54671c, LAYER_CALL_0C);
+}
+
+uint32_t vertrix_port_layer_middle_update(PORT_SIGNATURE)
+{
+    return layer_call(calls, services, globals, entry, 0x546730, LAYER_UPDATE);
+}
+
+uint32_t vertrix_port_layer_middle_call14(PORT_SIGNATURE)
+{
+    return layer_call(calls, services, globals, entry, 0x546730, LAYER_CALL_14);
+}
+
+uint32_t vertrix_port_layer_middle_call10(PORT_SIGNATURE)
+{
+    return layer_call(calls, services, globals, entry, 0x546730, LAYER_CALL_10);
+}
+
+uint32_t vertrix_port_layer_middle_call0c(PORT_SIGNATURE)
+{
+    return layer_call(calls, services, globals, entry, 0x546730, LAYER_CALL_0C);
+}
+
+uint32_t vertrix_port_layer_front_update(PORT_SIGNATURE)
+{
+    return layer_call(calls, services, globals, entry, 0x546744, LAYER_UPDATE);
+}
+
+uint32_t vertrix_port_layer_front_call14(PORT_SIGNATURE)
+{
+    return layer_call(calls, services, globals, entry, 0x546744, LAYER_CALL_14);
+}
+
+uint32_t vertrix_port_layer_front_call10(PORT_SIGNATURE)
+{
+    return layer_call(calls, services, globals, entry, 0x546744, LAYER_CALL_10);
+}
+
+uint32_t vertrix_port_layer_front_call0c(PORT_SIGNATURE)
+{
+    return layer_call(calls, services, globals, entry, 0x546744, LAYER_CALL_0C);
+}
+
+uint32_t vertrix_port_actor_keep_place(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    port_set16(&port, entry->eax, 0x4c, port_u16(&port, entry->eax, 0x48));
+    port_set16(&port, entry->eax, 0x4e, port_u16(&port, entry->eax, 0x4a));
+    return port_return(&port, entry->eax, entry->edx);
 }

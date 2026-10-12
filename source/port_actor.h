@@ -325,4 +325,24 @@ uint32_t vertrix_port_actor_counter_consume(PORT_SIGNATURE);
  * 0x45d1a0 (0x4ac8f0). Registers but eax are unchanged. */
 uint32_t vertrix_port_wanderer_frame(PORT_SIGNATURE);
 
+/* The layer lists 0x54671c (back), 0x546730 (middle) and 0x546744 (front): update every actor
+ * (0x4b6200), or call each one's table entry +0x14 (0x4b6170) or +0x10 (0x4b6120) with eax, or
+ * +0xc (0x4b60c0) with eax and edx. */
+uint32_t vertrix_port_layer_back_update(PORT_SIGNATURE);   /* 0x471a70 */
+uint32_t vertrix_port_layer_back_call14(PORT_SIGNATURE);   /* 0x471a50 */
+uint32_t vertrix_port_layer_back_call10(PORT_SIGNATURE);   /* 0x471a40 */
+uint32_t vertrix_port_layer_back_call0c(PORT_SIGNATURE);   /* 0x471a20 */
+uint32_t vertrix_port_layer_middle_update(PORT_SIGNATURE); /* 0x471b00 */
+uint32_t vertrix_port_layer_middle_call14(PORT_SIGNATURE); /* 0x471b60 */
+uint32_t vertrix_port_layer_middle_call10(PORT_SIGNATURE); /* 0x471b50 */
+uint32_t vertrix_port_layer_middle_call0c(PORT_SIGNATURE); /* 0x471b30 */
+uint32_t vertrix_port_layer_front_update(PORT_SIGNATURE);  /* 0x471a80 */
+uint32_t vertrix_port_layer_front_call14(PORT_SIGNATURE);  /* 0x471ae0 */
+uint32_t vertrix_port_layer_front_call10(PORT_SIGNATURE);  /* 0x471ad0 */
+uint32_t vertrix_port_layer_front_call0c(PORT_SIGNATURE);  /* 0x471ab0 */
+
+/* Original 0x478460 (eax = actor): copy its place (+0x48, +0x4a) to +0x4c, +0x4e. Registers are
+ * unchanged. */
+uint32_t vertrix_port_actor_keep_place(PORT_SIGNATURE);
+
 #endif
