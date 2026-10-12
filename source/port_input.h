@@ -58,4 +58,13 @@ uint32_t vertrix_port_key_record_fields(PORT_SIGNATURE);
  * Returns 0x100. */
 uint32_t vertrix_port_keys_age(PORT_SIGNATURE);
 
+/* Original 0x475a20 (eax = key record): reset it: its flag (0x475af0), counters +0x3c to +0x54,
+ * state (0x475790 with zeros) and pending events (0x4759e0). Registers but eax are unchanged. */
+uint32_t vertrix_port_key_record_reset(PORT_SIGNATURE);
+
+/* Original 0x475cd0 (eax = key record, edx = elapsed time): age it (0x475e50); unless input is
+ * frozen (0x553648), a released key with events (+0x2c) or a held key (state 1) whose hold has
+ * not ended (0x475800) and has events runs them (0x475c30). */
+uint32_t vertrix_port_key_record_age(PORT_SIGNATURE);
+
 #endif

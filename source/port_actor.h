@@ -373,4 +373,18 @@ uint32_t vertrix_port_cursor_actors_draw(PORT_SIGNATURE);
  * choice and set the menu's update to 0x45c760 (0x4ac8f0). edx is unchanged. */
 uint32_t vertrix_port_menu_choice(PORT_SIGNATURE);
 
+/* Original 0x457420 (eax = actor): play its animation (0x4ac250); when it ends switch to the
+ * animation step 0x457460 (0x4ac720, 0x4ac8f0). Then pick its image (0x4ac8a0). edx is
+ * unchanged. */
+uint32_t vertrix_port_actor_play_then(PORT_SIGNATURE);
+
+/* Original 0x457460 (eax = actor): play its animation backwards (0x4ac2b0); when it ends restart
+ * it (0x4ac710 with 0), set its update to 0x457330 and clear +0x4e. Then pick its image
+ * (0x4ac8a0). edx is unchanged. */
+uint32_t vertrix_port_actor_play_back(PORT_SIGNATURE);
+
+/* Original 0x4b2380 (eax = array, edx = count, ebx = surface): draw each actor in an array of
+ * actor pointers (their tables' +8), skipping empty slots. */
+uint32_t vertrix_port_actor_array_draw(PORT_SIGNATURE);
+
 #endif

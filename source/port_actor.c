@@ -26,6 +26,11 @@ enum
     TEXT_PREPARE = 0x4ae150,
     TEXT_LAYOUT = 0x4408e0,
     TEXT_FONT = 0x15c,
+    ANIMATION_PLAY = 0x4ac250,
+    ANIMATION_BACK = 0x4ac2b0,
+    ANIMATION_NEXT = 0x4ac720,
+    PLAY_BACK_STEP = 0x457460,
+    PLAY_BACK_DONE = 0x457330,
     MENU_CHOICE_RUN = 0x471bb0,
     MENU_NEXT = 0x45c760,
     SLOT_PLACE = 0x4ac1e0,
@@ -1874,4 +1879,63 @@ uint32_t vertrix_port_menu_choice(PORT_SIGNATURE)
     port_set32(&port, 0, MENU_CHOSEN, 0);
     result = port_call(&port, ACTOR_SET_UPDATE, menu, MENU_NEXT, 0, menu);
     return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_actor_play_then(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t actor = entry->eax;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    if (port_call(&port, ANIMATION_PLAY, actor, entry->edx, entry->ebx, actor) == 0)
+    {
+        port_call(&port, ANIMATION_NEXT, actor, PLAY_BACK_STEP, entry->ebx, actor);
+        port_call(&port, ACTOR_SET_UPDATE, actor, vertrix_lift_edx, entry->ebx, actor);
+    }
+    result = port_call(&port, ACTOR_IMAGE_SET, actor, vertrix_lift_edx, entry->ebx, actor);
+    return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_actor_play_back(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t actor = entry->eax;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    if (port_call(&port, ANIMATION_BACK, actor, entry->edx, entry->ebx, actor) == 0)
+    {
+        port_call(&port, ACTOR_ANIMATION, actor, 0, entry->ebx, actor);
+        port_call(&port, ACTOR_SET_UPDATE, actor, PLAY_BACK_DONE, entry->ebx, actor);
+        port_set8(&port, actor, 0x4e, 0);
+    }
+    result = port_call(&port, ACTOR_IMAGE_SET, actor, vertrix_lift_edx, entry->ebx, actor);
+    return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_actor_array_draw(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t at = entry->eax;
+    uint32_t end;
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    port_open(&port, calls, services, globals, entry);
+    if (entry->edx == 0)
+    {
+        return port_return(&port, eax, edx);
+    }
+    end = entry->eax + entry->edx * 4;
+    do
+    {
+        edx = port_u32(&port, at, 0);
+        if (edx != 0)
+        {
+            uint32_t methods = port_u32(&port, edx, ACTOR_METHODS);
+            eax = port_call(&port, port_u32(&port, methods, METHOD_DRAW), edx, entry->ebx,
+                            entry->ebx, at);
+            edx = vertrix_lift_edx;
+        }
+        at += 4;
+    } while (at < end);
+    return port_return(&port, eax, edx);
 }
