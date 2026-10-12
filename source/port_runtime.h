@@ -113,4 +113,9 @@ uint32_t vertrix_port_clear_allocate(PORT_SIGNATURE);
  * that; edx is unchanged. */
 uint32_t vertrix_port_surface_padding(PORT_SIGNATURE);
 
+/* Original 0x4b76d0 (eax = list, edx = string address): append a copy of the string: 0x4ca000
+ * allocates the 4-byte slot (0 when it fails), 0x4ca090 copies the string into it, and 0x4d88a0
+ * puts it at the list's end (edx the count, ecx 1). Returns 0. */
+uint32_t vertrix_port_list_append_text(PORT_SIGNATURE);
+
 #endif

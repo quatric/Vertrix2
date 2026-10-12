@@ -8,6 +8,18 @@ enum
     ACTOR_COUNTER = 0xcc,
     ACTOR_PROGRESS_STEPS = 0x4ac640,
     ACTOR_ANGLE = 0x22,
+    ACTOR_SPOT_DRAW = 0x4ae010,
+    SAVED_HIDDEN = 0x558958,
+    SAVED_X = 0x558944,
+    SAVED_Y = 0x558946,
+    OFF_SCREEN = 0x7d00,
+    ANIMATION_TICK = 0x4ac1f0,
+    ACTOR_IMAGE_LOOKUP = 0x4ac8a0,
+    ACTOR_UPDATE_BASE = 0x4adf70,
+    ACTOR_UPDATE_HOOK = 0x154,
+    TIMER_ARMED = 0x174,
+    TIMER_COUNT = 0x17a,
+    TIMER_LIMIT = 0x17c,
     ACTOR_X = 0xe,
     ACTOR_Y = 0x16,
     ACTOR_SCALE = 0x44,
@@ -923,4 +935,65 @@ uint32_t vertrix_port_actor_text_layout(PORT_SIGNATURE)
     port_set32(&port, actor, ACTOR_TEXT_WIDTH, port_u32(&port, ebp, -0x20u));
     port_set32(&port, actor, ACTOR_TEXT_HEIGHT, port_u32(&port, ebp, -0x1cu));
     return port_return(&port, port_u32(&port, ebp, -0x1cu), entry->edx);
+}
+
+uint32_t vertrix_port_actor_spot_draw_call(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    result = port_call(&port, ACTOR_SPOT_DRAW, entry->eax, entry->edx, entry->ebx, entry->ecx);
+    return port_return(&port, result, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_actor_place_saved(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t actor = entry->eax;
+    uint32_t result;
+    uint32_t edx;
+    port_open(&port, calls, services, globals, entry);
+    if (port_u32(&port, 0, SAVED_HIDDEN) != 0)
+    {
+        port_set16(&port, actor, ACTOR_X, OFF_SCREEN);
+        port_set16(&port, actor, ACTOR_Y, OFF_SCREEN);
+    }
+    else
+    {
+        port_set16(&port, actor, ACTOR_X, port_u16(&port, 0, SAVED_X));
+        port_set16(&port, actor, ACTOR_Y, port_u16(&port, 0, SAVED_Y));
+    }
+    port_call(&port, ANIMATION_TICK, actor, actor, entry->ebx, entry->ecx);
+    edx = vertrix_lift_edx;
+    result = port_call(&port, ACTOR_IMAGE_LOOKUP, edx, edx, entry->ebx, entry->ecx);
+    return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_actor_update_hook(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t actor;
+    uint32_t hook;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    result = port_call(&port, ACTOR_UPDATE_BASE, entry->eax, entry->eax, entry->ebx, entry->ecx);
+    actor = vertrix_lift_edx;
+    hook = port_u32(&port, actor, ACTOR_UPDATE_HOOK);
+    if (hook != 0)
+    {
+        result = port_call(&port, hook, actor, actor, entry->ebx, entry->ecx);
+    }
+    return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_timer_running(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t timer = entry->eax;
+    port_open(&port, calls, services, globals, entry);
+    return port_return(&port,
+                       port_u32(&port, timer, TIMER_ARMED) == 0 ||
+                           (int16_t)port_u16(&port, timer, TIMER_COUNT) <=
+                               (int16_t)port_u16(&port, timer, TIMER_LIMIT),
+                       entry->edx);
 }

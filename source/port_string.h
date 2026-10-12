@@ -126,4 +126,9 @@ uint32_t vertrix_port_char_code(PORT_SIGNATURE);
  * address, with the last call's edx. */
 uint32_t vertrix_port_string_copy(PORT_SIGNATURE);
 
+/* Original 0x4ca6c0 (eax = address of a string, edx = length or -1): after the text was written in
+ * place, make the string its own (0x4ca1a0) and set its length (lstrlenA [0x4f1d24] for -1) with
+ * the zero after it. Returns the text, edx the length. */
+uint32_t vertrix_port_string_set_length(PORT_SIGNATURE);
+
 #endif

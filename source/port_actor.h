@@ -187,4 +187,21 @@ uint32_t vertrix_port_actor_turn(PORT_SIGNATURE);
  * unchanged. */
 uint32_t vertrix_port_actor_text_layout(PORT_SIGNATURE);
 
+/* Original 0x4b6890: 0x4ae010 with the same registers. */
+uint32_t vertrix_port_actor_spot_draw_call(PORT_SIGNATURE);
+
+/* Original 0x443260 (eax = actor): put the actor at the saved position (words 0x558944 and
+ * 0x558946), or off screen at 0x7d00 when 0x558958 is set, then tick its animation (0x4ac1f0)
+ * and look up its image (0x4ac8a0), each given the edx the previous call leaves. Returns the last
+ * call's eax; edx is unchanged. */
+uint32_t vertrix_port_actor_place_saved(PORT_SIGNATURE);
+
+/* Original 0x4b5560 (eax = actor): 0x4adf70, then the actor's hook (+0x154) when it has one (on
+ * the edx that leaves). Returns the last call's eax; edx is unchanged. */
+uint32_t vertrix_port_actor_update_hook(PORT_SIGNATURE);
+
+/* Original 0x4b6560 (eax = timer): whether it is running: not armed (+0x174 is 0), or its count
+ * (word +0x17a) not past its limit (word +0x17c). edx is unchanged. */
+uint32_t vertrix_port_timer_running(PORT_SIGNATURE);
+
 #endif

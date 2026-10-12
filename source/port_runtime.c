@@ -64,6 +64,9 @@ enum
     CLEAR_BYTES = 0x4eb5c0,
     MOVE_BYTES = 0x4eb5e0,
     ALLOCATE_MEMORY = 0x4e7c90,
+    ALLOCATE_OBJECT = 0x4ca000,
+    STRING_COPY = 0x4ca090,
+    LIST_INSERT = 0x4d88a0,
     SURFACE_WIDTH = 4,
     SURFACE_BYTES = 0xc,
     SURFACE_PADDED = 0x10,
@@ -550,4 +553,21 @@ uint32_t vertrix_port_surface_padding(PORT_SIGNATURE)
     port_set32(&port, surface, SURFACE_PADDING, padding);
     port_set32(&port, surface, SURFACE_PADDED, padding != 0);
     return port_return(&port, padding != 0, entry->edx);
+}
+
+uint32_t vertrix_port_list_append_text(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t list = entry->eax;
+    uint32_t count;
+    uint32_t slot;
+    port_open(&port, calls, services, globals, entry);
+    count = port_u32(&port, list, LIST_COUNT);
+    slot = port_call(&port, ALLOCATE_OBJECT, 4, entry->edx, entry->ebx, entry->ecx);
+    if (slot != 0)
+    {
+        slot = port_call(&port, STRING_COPY, slot, vertrix_lift_edx, entry->ebx, entry->ecx);
+    }
+    port_call(&port, LIST_INSERT, list, count, slot, 1);
+    return port_return(&port, 0, vertrix_lift_edx);
 }
