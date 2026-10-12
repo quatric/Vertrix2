@@ -118,4 +118,10 @@ uint32_t vertrix_port_surface_padding(PORT_SIGNATURE);
  * puts it at the list's end (edx the count, ecx 1). Returns 0. */
 uint32_t vertrix_port_list_append_text(PORT_SIGNATURE);
 
+/* Original 0x440ca0 (eax = surface, dl = alignment, bx, cx and the first two stack words = the
+ * box, then the text and the actor): lay the text out in the box (0x4408e0, the actor's scale
+ * +0x44) and draw it at the place found (0x440a20), under a guard record. Returns the record's
+ * previous link; edx from the draw. */
+uint32_t vertrix_port_text_draw(PORT_SIGNATURE);
+
 #endif

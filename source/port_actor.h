@@ -204,4 +204,15 @@ uint32_t vertrix_port_actor_update_hook(PORT_SIGNATURE);
  * (word +0x17a) not past its limit (word +0x17c). edx is unchanged. */
 uint32_t vertrix_port_timer_running(PORT_SIGNATURE);
 
+/* Original 0x4b65d0 (eax = actor, edx = text, bl = alignment, cx and the three stack words = the
+ * box): set the actor's text (+0x15c, 0x4ca370), alignment and box, lay it out (0x4408e0) and
+ * store its place (+0xe, +0x16) and size (+0xf4, +0xf8). Returns the height, edx from the layout.
+ */
+uint32_t vertrix_port_actor_set_text(PORT_SIGNATURE);
+
+/* Original 0x4b6800 (eax = actor, edx = surface): draw the actor's text (0x440ca0) at its place,
+ * then, unless its timer is running (0x4b6560), its cursor (0x440fc0, with the timer byte +0x178
+ * and word +0x17a). Returns the last call's eax and edx. */
+uint32_t vertrix_port_actor_draw_text(PORT_SIGNATURE);
+
 #endif

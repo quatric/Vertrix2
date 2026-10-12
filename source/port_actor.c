@@ -26,6 +26,12 @@ enum
     TEXT_PREPARE = 0x4ae150,
     TEXT_LAYOUT = 0x4408e0,
     TEXT_FONT = 0x15c,
+    TEXT_DRAW = 0x440ca0,
+    TEXT_CURSOR = 0x440fc0,
+    TIMER_RUNNING = 0x4b6560,
+    TIMER_BYTE = 0x178,
+    TIMER_WORD = 0x17a,
+    STRING_SET_TEXT = 0x4ca370,
     TEXT_ALIGN = 0x160,
     TEXT_BOX = 0x162,
     ACTOR_TEXT_WIDTH = 0xf4,
@@ -996,4 +1002,87 @@ uint32_t vertrix_port_timer_running(PORT_SIGNATURE)
                            (int16_t)port_u16(&port, timer, TIMER_COUNT) <=
                                (int16_t)port_u16(&port, timer, TIMER_LIMIT),
                        entry->edx);
+}
+
+uint32_t vertrix_port_actor_set_text(PORT_SIGNATURE)
+{
+    /* push ebp, esi, then 0x14 bytes: the alignment byte and the four results. */
+    enum
+    {
+        BELOW = 0x1c
+    };
+    Port port;
+    uint32_t actor = entry->eax;
+    uint32_t ebp = entry->esp - 4;
+    uint32_t arguments[7];
+    uint32_t edx;
+    port_open_frame(&port, calls, services, globals, entry, BELOW);
+    port_set8(&port, ebp, -8u, entry->ebx);
+    port_call(&port, STRING_SET_TEXT, actor + TEXT_FONT, entry->edx, entry->ecx, actor + TEXT_FONT);
+    port_set8(&port, actor, TEXT_ALIGN, port_u8(&port, ebp, -8u));
+    port_set16(&port, actor, TEXT_BOX + 2, entry->arguments[0]);
+    port_set16(&port, actor, TEXT_BOX + 4, entry->arguments[1]);
+    port_set16(&port, actor, TEXT_BOX + 6, entry->arguments[2]);
+    port_set16(&port, actor, TEXT_BOX, entry->ecx);
+    arguments[0] = actor_word(&port, actor, TEXT_BOX + 6);
+    arguments[1] = port_u32(&port, actor, TEXT_FONT);
+    arguments[2] = port_u8(&port, actor, ACTOR_SCALE);
+    arguments[3] = ebp - 0x18;
+    arguments[4] = ebp - 0x14;
+    arguments[5] = ebp - 0x10;
+    arguments[6] = ebp - 0xc;
+    port_call_stack(&port, TEXT_LAYOUT,
+                    (uint32_t)((int32_t)port_u32(&port, actor, TEXT_ALIGN - 3) >> 24),
+                    actor_word(&port, actor, TEXT_BOX), actor_word(&port, actor, TEXT_BOX + 2),
+                    actor_word(&port, actor, TEXT_BOX + 4), arguments, 7);
+    edx = vertrix_lift_edx;
+    port_set16(&port, actor, ACTOR_X, port_u32(&port, ebp, -0x10u));
+    port_set16(&port, actor, ACTOR_Y, port_u32(&port, ebp, -0xcu));
+    port_set32(&port, actor, ACTOR_TEXT_WIDTH, port_u32(&port, ebp, -0x18u));
+    port_set32(&port, actor, ACTOR_TEXT_HEIGHT, port_u32(&port, ebp, -0x14u));
+    return port_return(&port, port_u32(&port, ebp, -0x14u), edx);
+}
+
+uint32_t vertrix_port_actor_draw_text(PORT_SIGNATURE)
+{
+    /* push ebp, ebx, ecx, esi, edi, then the text slot. */
+    enum
+    {
+        BELOW = 0x18
+    };
+    Port port;
+    uint32_t actor = entry->eax;
+    uint32_t surface = entry->edx;
+    uint32_t ebp = entry->esp - 4;
+    uint32_t arguments[6];
+    uint32_t x;
+    uint32_t y;
+    uint32_t result;
+    port_open_frame(&port, calls, services, globals, entry, BELOW);
+    port_set32(&port, ebp, -0x14u, actor + TEXT_FONT);
+    x = actor_word(&port, actor, ACTOR_X);
+    y = actor_word(&port, actor, ACTOR_Y);
+    arguments[0] = y;
+    arguments[1] = y;
+    arguments[2] = port_u32(&port, actor, TEXT_FONT);
+    arguments[3] = actor;
+    port_call_stack(&port, TEXT_DRAW, surface,
+                    (uint32_t)((int32_t)port_u32(&port, actor, TEXT_ALIGN - 3) >> 24), x, x,
+                    arguments, 4);
+    result = port_call(&port, TIMER_RUNNING, actor, vertrix_lift_edx, x, x);
+    if (result != 0)
+    {
+        return port_return(&port, result, vertrix_lift_edx);
+    }
+    arguments[0] = actor_word(&port, actor, ACTOR_X);
+    arguments[1] = actor_word(&port, actor, ACTOR_Y);
+    arguments[2] = arguments[1];
+    arguments[3] = port_u32(&port, port_u32(&port, ebp, -0x14u), 0);
+    arguments[4] = actor;
+    arguments[5] = actor_word(&port, actor, TIMER_WORD);
+    result = port_call_stack(&port, TEXT_CURSOR, surface,
+                             (uint32_t)((int32_t)port_u32(&port, actor, TEXT_ALIGN - 3) >> 24),
+                             (uint32_t)((int32_t)port_u32(&port, actor, TIMER_BYTE - 3) >> 24),
+                             arguments[0], arguments, 6);
+    return port_return(&port, result, vertrix_lift_edx);
 }

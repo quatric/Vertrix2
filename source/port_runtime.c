@@ -41,6 +41,10 @@ enum
     TRIG = 0x4c9b6a,
     TRIG_SINE = 2,
     GUARD_HANDLER = 0x4ec1ec,
+    TEXT_DRAW_GUARD = 0x514f58,
+    TEXT_MEASURE = 0x4408e0,
+    TEXT_DRAW_AT = 0x440a20,
+    DRAW_SCALE = 0x44,
     OBJECT_GUARD = 0x516af0,
     OBJECT_TYPE = 0x515130,
     OBJECT_FINALIZE = 0x4ccb9f,
@@ -570,4 +574,41 @@ uint32_t vertrix_port_list_append_text(PORT_SIGNATURE)
     }
     port_call(&port, LIST_INSERT, list, count, slot, 1);
     return port_return(&port, 0, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_text_draw(PORT_SIGNATURE)
+{
+    /* push ebp, esi, edi, then 0x28 bytes: the guard record and the four results. */
+    enum
+    {
+        BELOW = 0x34
+    };
+    Port port;
+    uint32_t ebp = entry->esp - 4;
+    uint32_t alignment = (uint32_t)(int8_t)entry->edx;
+    uint32_t text = entry->arguments[2];
+    uint32_t actor = entry->arguments[3];
+    uint32_t arguments[7];
+    port_open_frame(&port, calls, services, globals, entry, BELOW);
+    port_set32(&port, ebp, -0x30u, port.env.chain);
+    port_set32(&port, ebp, -0x2cu, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x28u, TEXT_DRAW_GUARD);
+    port_set32(&port, ebp, -0x24u, 0);
+    port_set32(&port, ebp, -0x14u, (uint32_t)(int16_t)entry->ebx);
+    arguments[0] = (uint32_t)(int16_t)entry->arguments[1];
+    arguments[1] = text;
+    arguments[2] = port_u8(&port, actor, DRAW_SCALE);
+    arguments[3] = ebp - 0x1c;
+    arguments[4] = ebp - 0x18;
+    arguments[5] = ebp - 0xc;
+    arguments[6] = ebp - 0x10;
+    port_call_stack(&port, TEXT_MEASURE, alignment, (uint32_t)(int16_t)entry->ebx,
+                    (uint32_t)(int16_t)entry->ecx, (uint32_t)(int16_t)entry->arguments[0],
+                    arguments, 7);
+    arguments[0] = text;
+    arguments[1] = actor;
+    port_call_stack(&port, TEXT_DRAW_AT, entry->eax, alignment,
+                    (uint32_t)((int32_t)port_u32(&port, ebp, -0xeu) >> 16),
+                    (uint32_t)((int32_t)port_u32(&port, ebp, -0x12u) >> 16), arguments, 2);
+    return port_return(&port, port_u32(&port, ebp, -0x30u), vertrix_lift_edx);
 }
