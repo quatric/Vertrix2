@@ -1561,4 +1561,47 @@ uint32_t vertrix_port_actor_bob_low(PORT_SIGNATURE);
  * the record, or 0 when either allocation fails. */
 uint32_t vertrix_port_chunk_list_add(PORT_SIGNATURE);
 
+/* Original 0x45d420(eax = actor): update the climb (0x45cff0, 0x4ac370); on a new frame (0x4ac390)
+ * take its step count (0x4ac3b0, 0x4ac420) and walk it (0x4ac780, 0x4ac740), ending (0x4ac4a0,
+ * 0x4adfe0); when a step is blocked, fall back to the idle state 0x45d0c0 with animation 0x544a34.
+ */
+uint32_t vertrix_port_actor_climb_step(PORT_SIGNATURE);
+
+/* Original 0x40c6b0(eax = format): clear the mixer channels at 0x52f918, store the rate and flags
+ * from +4 and +6, pick the mixing routines for 16 bit (0x8000) and stereo (0x100) output, allocate
+ * the 1K aligned mix buffers (0x4e7c90) and start the mixer timer (0x40ac30, 0x40ac00). Returns 0,
+ * or 8 without memory. */
+uint32_t vertrix_port_mixer_open(PORT_SIGNATURE);
+
+/* Original 0x483110(eax = image): copy the image record (0x4ec160) and its pixels (0x4ec160).
+ * Returns the copy, or 0 without an image. */
+uint32_t vertrix_port_image_clone(PORT_SIGNATURE);
+
+/* Original 0x457330(eax = actor): on a new frame (0x4ac520) and once the animation ends (0x4ad6e0)
+ * pick a random heading (0x482750) and pause (0x4826c0, 0x4ac470), jump to a random spot of the
+ * area table 0x546744 (0x4b5eb0) and go to state 0x457420; then step (0x4ac8a0). */
+uint32_t vertrix_port_actor_wander_start(PORT_SIGNATURE);
+
+/* Original 0x40e580(eax = voice): mark the voice on +0 when its note +7 is 1..0x60 and pick the
+ * sample +6 for the note from the instrument +0x34 keyboard map, taking its record +0x38 (of the
+ * +0xf8 records of 0x3c bytes), fine tune +0xc and relative note +8; then, unless the effect +3 is
+ * 3 or 5 or a fine tune +2 is given, set the period +0x24 and +0x28 (0x40ce80). */
+uint32_t vertrix_port_voice_sample_select(PORT_SIGNATURE);
+
+/* Original 0x45ed60(eax = sheet): cut the 0x5d glyphs of font 0x544a88 (0x4877f0) out of the sheet
+ * (0x482e10) at their cells in the grid 0x4f9054..0x4f9064, numbered by 0x4f92a0, paste each into
+ * the next grid cell (0x482e80) and add it to 0x5b9c60 (0x483ed0). */
+uint32_t vertrix_port_font_sheet_cut(PORT_SIGNATURE);
+
+/* Original 0x45ef40(eax = target, edx = sheet): cut the 0x13 glyphs of font 0x544aa4 (0x4877f0) out
+ * of the sheet (0x482e10) along the strip 0x4f9068..0x4f9070, numbered by 0x4f9300, and paste each
+ * doubled (0x482f00) into the grid 0x4f9054..0x4f9064 from cell 0x53bc20 on, adding it to 0x5b9c60
+ * (0x483ed0). */
+uint32_t vertrix_port_font_sheet_cut_wide(PORT_SIGNATURE);
+
+/* Original 0x40e690(eax = cell): read the next packed cell of the pattern stream 0x530440 into the
+ * five bytes note, instrument, volume, effect and parameter: a byte with bit 7 set says which
+ * follow, otherwise all five do; a missing stream gives an empty cell. */
+uint32_t vertrix_port_pattern_cell_read(PORT_SIGNATURE);
+
 #endif
