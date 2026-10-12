@@ -6823,7 +6823,6 @@ uint32_t vertrix_port_box_fit_screen(PORT_SIGNATURE)
     return port_return(&port, result, entry->edx);
 }
 
-
 uint32_t vertrix_port_audio_driver_find(PORT_SIGNATURE)
 {
     Port port;
@@ -6864,19 +6863,82 @@ uint32_t vertrix_port_audio_driver_find(PORT_SIGNATURE)
     return port_return(&port, 5, entry->edx);
 }
 
-uint32_t vertrix_port_font_glyphs_map(PORT_SIGNATURE)
+/* Map the twelve punctuation characters ' . & ! ? , / ; : < > @ of a font to the glyphs from
+ * `first` on (0x48abf0), as the font setups 0x43f480 to 0x43fb70 do. */
+static uint32_t font_punctuation_map(Port *port, uint32_t font, uint32_t first)
 {
-    Port port;
-    uint32_t result;
-    port_open(&port, calls, services, globals, entry);
     static const uint8_t characters[12] = {0x27, 0x2e, 0x26, 0x21, 0x3f, 0x2c,
                                            0x2f, 0x3b, 0x3a, 0x3c, 0x3e, 0x40};
+    uint32_t result = 0;
     uint32_t glyph;
     for (glyph = 0; glyph < 12; glyph++)
     {
-        result = port_call(&port, 0x48abf0, entry->eax, characters[glyph], glyph, entry->eax);
+        result = port_call(port, 0x48abf0, font, characters[glyph], first + glyph, font);
     }
-    return port_return(&port, result, entry->edx);
+    return result;
+}
+
+uint32_t vertrix_port_font_glyphs_map(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    return port_return(&port, font_punctuation_map(&port, entry->eax, 0x0), entry->edx);
+}
+
+uint32_t vertrix_port_font_glyphs_map_d6(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    return port_return(&port, font_punctuation_map(&port, entry->eax, 0xd6), entry->edx);
+}
+
+uint32_t vertrix_port_font_glyphs_map_5e(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    return port_return(&port, font_punctuation_map(&port, entry->eax, 0x5e), entry->edx);
+}
+
+uint32_t vertrix_port_font_glyphs_map_e6(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    return port_return(&port, font_punctuation_map(&port, entry->eax, 0xe6), entry->edx);
+}
+
+uint32_t vertrix_port_font_glyphs_map_116(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    return port_return(&port, font_punctuation_map(&port, entry->eax, 0x116), entry->edx);
+}
+
+uint32_t vertrix_port_font_glyphs_map_146(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    return port_return(&port, font_punctuation_map(&port, entry->eax, 0x146), entry->edx);
+}
+
+uint32_t vertrix_port_font_glyphs_map_176(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    return port_return(&port, font_punctuation_map(&port, entry->eax, 0x176), entry->edx);
+}
+
+uint32_t vertrix_port_font_glyphs_map_1a6(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    return port_return(&port, font_punctuation_map(&port, entry->eax, 0x1a6), entry->edx);
+}
+
+uint32_t vertrix_port_font_glyphs_map_1d6(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    return port_return(&port, font_punctuation_map(&port, entry->eax, 0x1d6), entry->edx);
 }
 
 uint32_t vertrix_port_double_to_extended(PORT_SIGNATURE)
@@ -6932,4 +6994,144 @@ uint32_t vertrix_port_double_to_extended(PORT_SIGNATURE)
     port_set32(&port, entry->edx, 4, mantissa_high);
     port_set16(&port, entry->edx, 8, ((exponent >> 31) << 15) | (exponent & 0x7fff));
     return port_return(&port, mantissa_low, mantissa_high);
+}
+
+uint32_t vertrix_port_player_entry_init(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    uint32_t target = entry->eax;
+    uint32_t source = entry->edx;
+    uint32_t value;
+    do
+    {
+        value = port_u8(&port, source++, 0);
+        port_set8(&port, target++, 0, value);
+    } while (value != 0);
+    target = entry->eax + 0x104;
+    source = entry->arguments[3];
+    do
+    {
+        value = port_u8(&port, source++, 0);
+        port_set8(&port, target++, 0, value);
+    } while (value != 0);
+    port_set32(&port, entry->eax, 0x208, 0);
+    port_set32(&port, entry->eax, 0x20c, 0);
+    port_set8(&port, entry->eax, 0x220, entry->ebx);
+    port_set8(&port, entry->eax, 0x221, entry->ecx);
+    port_set32(&port, entry->eax, 0x268, 0);
+    port_set32(&port, entry->eax, 0x26c, 0);
+    port_set32(&port, entry->eax, 0x270, 0);
+    port_set32(&port, entry->eax, 0x274, 0);
+    port_set32(&port, entry->eax, 0x278, 0);
+    port_set8(&port, entry->eax, 0x222, entry->arguments[0]);
+    port_set8(&port, entry->eax, 0x223, entry->arguments[1]);
+    port_set8(&port, entry->eax, 0x224, entry->arguments[2]);
+    return port_return(&port, entry->eax & 0xffffff00,
+                       (entry->eax & 0xffffff00) | (entry->arguments[2] & 0xff));
+}
+
+uint32_t vertrix_port_static_init_50c08c(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    static const uint32_t records[3] = {0x50c08c, 0x50c0ac, 0x50c0cc};
+    static const uint32_t handlers[3] = {0x4ee7f0, 0x4ee800, 0x4ee810};
+    uint32_t index;
+    for (index = 0; index < 3; index++)
+    {
+        port_set32(&port, records[index], 0, handlers[index]);
+        port_set32(&port, records[index], 4, 0);
+        port_set32(&port, records[index], 8, 0);
+    }
+    port_set32(&port, 0x50c0ec, 0, 0);
+    port_set32(&port, 0x50c0f0, 0, 0);
+    port_set32(&port, 0x50c0f4, 0, 0);
+    return port_return(
+        &port, port_call(&port, 0x4d30f0, 0x5c8b00, 0x50c0f8, entry->ebx, entry->ecx), entry->edx);
+}
+
+uint32_t vertrix_port_image_alpha_from_mask(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    uint32_t mask =
+        port_call_with(&port, 0x4816f0, entry->edx, 0, port_u32(&port, 0x558a28, 0),
+                       port_u32(&port, 0x558a24, 0), port_u32(&port, 0x558a20, 0), entry->eax, 0);
+    uint32_t count;
+    uint32_t pixel;
+    uint32_t value;
+    uint32_t source;
+    if (mask == 0)
+    {
+        return port_return(&port, 0, vertrix_lift_edx);
+    }
+    count = port_u32(&port, entry->eax, 4) * port_u32(&port, entry->eax, 8);
+    source = port_u32(&port, mask, 0);
+    pixel = port_u32(&port, entry->eax, 0);
+    value = count;
+    port_set32(&port, 0x558a20, 0, source);
+    port_set32(&port, 0x558a2c, 0, count);
+    port_set32(&port, 0x558a28, 0, count);
+    port_set32(&port, 0x558a24, 0, pixel);
+    for (; count != 0; count--)
+    {
+        value = port_u32(&port, pixel, 0);
+        value = port_u8(&port, source, 0) != 0 ? value | 0xff000000 : value & 0xffffff;
+        port_set32(&port, pixel, 0, value);
+        pixel += 4;
+        source++;
+        port_set32(&port, 0x558a24, 0, pixel);
+        port_set32(&port, 0x558a20, 0, source);
+        port_set32(&port, 0x558a28, 0, count - 1);
+    }
+    value = port_call_with(&port, 0x478d80, mask, value, 0, pixel, source, entry->eax, 0);
+    return port_return(&port, value, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_mix_buffer_feed(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    uint32_t samples = entry->eax;
+    uint32_t remaining = entry->edx;
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    while (remaining != 0)
+    {
+        uint32_t piece = remaining;
+        uint32_t channel;
+        if (port_u32(&port, 0x52fc30, 0) != 0)
+        {
+            uint32_t space = port_u32(&port, 0x52fc24, 0) - port_u32(&port, 0x52fc28, 0) + 0x40;
+            uint32_t position;
+            uint32_t size;
+            piece = (space & 0xffffff00) | (space & 0xc0);
+            if (piece > remaining)
+            {
+                piece = remaining;
+            }
+            position = port_u32(&port, 0x52fc28, 0) + piece;
+            port_set32(&port, 0x52fc28, 0, position);
+            size = port_u32(&port, 0x52fc24, 0);
+            if ((int32_t)position >= (int32_t)size)
+            {
+                eax = position - size;
+                port_set32(&port, 0x52fc28, 0, eax);
+                eax = port_call_with(&port, port_u32(&port, 0x52fc30, 0), eax, edx, position,
+                                     remaining, size, piece, 0);
+                edx = vertrix_lift_edx;
+            }
+        }
+        for (channel = 0; channel < port_u32(&port, 0x52fc18, 0); channel++)
+        {
+            uint32_t record = 0x52f918 + channel * 0x18;
+            eax =
+                port_call_with(&port, 0x40c460, samples, piece, record, record, channel, piece, 0);
+            edx = vertrix_lift_edx;
+        }
+        samples += piece * 4;
+        remaining -= piece;
+    }
+    return port_return(&port, eax, edx);
 }

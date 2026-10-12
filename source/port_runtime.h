@@ -1475,19 +1475,62 @@ uint32_t vertrix_port_static_init_5c7618(PORT_SIGNATURE);
  * the middle (0x478480) and clear +0x64..+0x70. */
 uint32_t vertrix_port_box_fit_screen(PORT_SIGNATURE);
 
-
 /* Original 0x40a950(eax = result): find the highest of the audio drivers 7..1 (0x52f090) whose
  * first or second routine table (+4 of each) opens, storing its number. Returns 0, 2 without a
  * result, 3 when audio is busy (0x4f6418) or 5 when none opens. */
 uint32_t vertrix_port_audio_driver_find(PORT_SIGNATURE);
 
 /* Original 0x43f480(eax = font): map the twelve punctuation characters ' . & ! ? , / ; : < > @ to
- * glyphs 0..11 (0x48abf0). */
+ * glyphs 0..11 (0x48abf0). The setups after it map them from the glyph in their name on. */
 uint32_t vertrix_port_font_glyphs_map(PORT_SIGNATURE);
 
 /* Original 0x4e53b4(eax = double, edx = target): convert the double to the 80 bit extended format
  * at the target, normalising denormals and quieting NaNs (0x4e2371). Returns the mantissa in eax
  * and edx. */
 uint32_t vertrix_port_double_to_extended(PORT_SIGNATURE);
+
+/* Original 0x43f550(eax = font): the punctuation from glyph 0xd6 on. */
+uint32_t vertrix_port_font_glyphs_map_d6(PORT_SIGNATURE);
+
+/* Original 0x43f630(eax = font): the punctuation from glyph 0x5e on. */
+uint32_t vertrix_port_font_glyphs_map_5e(PORT_SIGNATURE);
+
+/* Original 0x43f710(eax = font): the punctuation from glyph 0xe6 on. */
+uint32_t vertrix_port_font_glyphs_map_e6(PORT_SIGNATURE);
+
+/* Original 0x43f7f0(eax = font): the punctuation from glyph 0x116 on. */
+uint32_t vertrix_port_font_glyphs_map_116(PORT_SIGNATURE);
+
+/* Original 0x43f8d0(eax = font): the punctuation from glyph 0x146 on. */
+uint32_t vertrix_port_font_glyphs_map_146(PORT_SIGNATURE);
+
+/* Original 0x43f9b0(eax = font): the punctuation from glyph 0x176 on. */
+uint32_t vertrix_port_font_glyphs_map_176(PORT_SIGNATURE);
+
+/* Original 0x43fa90(eax = font): the punctuation from glyph 0x1a6 on. */
+uint32_t vertrix_port_font_glyphs_map_1a6(PORT_SIGNATURE);
+
+/* Original 0x43fb70(eax = font): the punctuation from glyph 0x1d6 on. */
+uint32_t vertrix_port_font_glyphs_map_1d6(PORT_SIGNATURE);
+
+/* Original 0x441530(eax = entry, edx = name, ebx, ecx, stack: three flags and a second name): copy
+ * the names to +0 and +0x104, store bl, cl and the flags at +0x220..+0x224 and clear the counters.
+ */
+uint32_t vertrix_port_player_entry_init(PORT_SIGNATURE);
+
+/* Original 0x4ee420(static initialiser): set the three handler records at 0x50c08c, 0x50c0ac and
+ * 0x50c0cc to 0x4ee7f0, 0x4ee800 and 0x4ee810, clear 0x50c0ec..0x50c0f4 and register the table
+ * (0x4d30f0). */
+uint32_t vertrix_port_static_init_50c08c(PORT_SIGNATURE);
+
+/* Original 0x4797f0(eax = image, edx = mask name): load the mask (0x4816f0) and set the alpha byte
+ * of each of the width +4 by height +8 pixels at +0 to 0xff where the mask byte is set, otherwise
+ * 0, through the cursors at 0x558a20..0x558a2c; then free the mask (0x478d80). */
+uint32_t vertrix_port_image_alpha_from_mask(PORT_SIGNATURE);
+
+/* Original 0x40c5c0(eax = samples, edx = count): hand the samples to each of the 0x52fc18 mixer
+ * channels at 0x52f918 (0x40c460), in pieces that fit the ring at 0x52fc24 and 0x52fc28 when the
+ * ring callback 0x52fc30 is set, calling it each time the ring wraps. */
+uint32_t vertrix_port_mix_buffer_feed(PORT_SIGNATURE);
 
 #endif
