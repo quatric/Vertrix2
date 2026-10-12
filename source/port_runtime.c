@@ -41,6 +41,8 @@ enum
     TRIG = 0x4c9b6a,
     TRIG_SINE = 2,
     GUARD_HANDLER = 0x4ec1ec,
+    ENVIRONMENT = 0x5c81d4,
+    COMPARE_LENGTH = 0x4e4080,
     LIST_CREATE_GUARD = 0x51a04c,
     LIST_BASE_TABLE = 0x517454,
     LIST_EMPTY_TABLE = 0x51a0d4,
@@ -936,4 +938,62 @@ uint32_t vertrix_port_list_create(PORT_SIGNATURE)
     port_set32(&port, list, 0xc, 0);
     port_set32(&port, list, 8, 0);
     return port_return(&port, list, entry->edx);
+}
+
+uint32_t vertrix_port_stream_skip_blank(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t reader = entry->eax;
+    uint32_t stream = entry->edx;
+    uint32_t eax;
+    port_open(&port, calls, services, globals, entry);
+    eax = port_call(&port, STREAM_ENDED, stream, entry->edx, reader, stream);
+    while (eax == 0)
+    {
+        uint32_t at = port_call(&port, STREAM_PEEK, stream, vertrix_lift_edx, reader, stream);
+        uint32_t byte = port_u8(&port, at, 0);
+        if (byte == '/')
+        {
+            port_call(&port, STREAM_SKIP, stream, 1, reader, stream);
+            port_call(&port, STREAM_SKIP_LINE, reader, stream, reader, stream);
+        }
+        else if (byte == ' ' || byte == '\n' || byte == '\r')
+        {
+            port_call(&port, STREAM_SKIP, stream, 1, reader, stream);
+        }
+        else
+        {
+            return port_return(&port, (at & 0xffffff00u) | byte, vertrix_lift_edx);
+        }
+        eax = port_call(&port, STREAM_ENDED, stream, vertrix_lift_edx, reader, stream);
+    }
+    return port_return(&port, eax, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_environment_value(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t name = entry->eax;
+    uint32_t at;
+    uint32_t length = 0;
+    uint32_t text;
+    port_open(&port, calls, services, globals, entry);
+    at = port_u32(&port, 0, ENVIRONMENT);
+    if (at == 0 || name == 0)
+    {
+        return port_return(&port, 0, entry->edx);
+    }
+    while (port_u8(&port, name, length) != 0)
+    {
+        length++;
+    }
+    for (; (text = port_u32(&port, at, 0)) != 0; at += 4)
+    {
+        if (port_call(&port, COMPARE_LENGTH, text, name, length, text) == 0 &&
+            port_u8(&port, text, length) == '=')
+        {
+            return port_return(&port, text + length + 1, entry->edx);
+        }
+    }
+    return port_return(&port, 0, entry->edx);
 }

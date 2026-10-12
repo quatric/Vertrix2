@@ -162,4 +162,13 @@ uint32_t vertrix_port_stream_skip_line(PORT_SIGNATURE);
  * capacity) under a guard record. Returns the list; edx is unchanged. */
 uint32_t vertrix_port_list_create(PORT_SIGNATURE);
 
+/* Original 0x48a310 (eax = reader, edx = stream): skip spaces, line breaks and '/' comments (the
+ * rest of the line by 0x48a380). Returns the end test's eax, or the peeked pointer with its low
+ * byte the next character. */
+uint32_t vertrix_port_stream_skip_blank(PORT_SIGNATURE);
+
+/* Original 0x4dac40 (eax = name): getenv: the value after "name=" in the environment 0x5c81d4
+ * (strncmp 0x4e4080), else 0. edx is unchanged. */
+uint32_t vertrix_port_environment_value(PORT_SIGNATURE);
+
 #endif

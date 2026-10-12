@@ -767,3 +767,41 @@ uint32_t vertrix_port_mix_clamp(PORT_SIGNATURE)
     } while (--count > 0);
     return port_return(&port, entry->eax, entry->edx);
 }
+
+enum
+{
+    READER = 0x51f01c,
+    READER_LEFT = 0x51f014,
+    READER_PENDING = 0x51f018,
+    READER_OFFSET = 0x10,
+    READER_FRAME = 0x3668,
+    READER_FRAMES = 0x25c,
+    READER_FRAME_SIZE = 0x900,
+    COPY_BYTES = 0x4eb5e0
+};
+
+uint32_t vertrix_port_reader_consume(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t used = entry->eax;
+    uint32_t reader;
+    uint32_t left;
+    port_open(&port, calls, services, globals, entry);
+    if ((int32_t)port_u32(&port, port_u32(&port, 0, READER), READER_OFFSET) < 0 &&
+        (int32_t)used > 0)
+    {
+        return port_return(&port, 0xffffffffu, entry->edx);
+    }
+    reader = port_u32(&port, 0, READER);
+    left = port_u32(&port, 0, READER_LEFT) - used;
+    port_set32(&port, 0, READER_LEFT, left);
+    if (used != 0)
+    {
+        uint32_t from = reader + READER_FRAMES +
+                        port_u32(&port, reader, READER_FRAME) * READER_FRAME_SIZE +
+                        port_u32(&port, reader, READER_OFFSET) - used;
+        port_call(&port, COPY_BYTES, left, from, used, left);
+    }
+    port_set32(&port, 0, READER_PENDING, 0);
+    return port_return(&port, 0, entry->edx);
+}

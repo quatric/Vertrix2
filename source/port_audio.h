@@ -75,4 +75,10 @@ uint32_t vertrix_port_mixer_output(PORT_SIGNATURE);
  * 16-bit sample (at least one is written). Registers are unchanged. */
 uint32_t vertrix_port_mix_clamp(PORT_SIGNATURE);
 
+/* Original 0x4060e0 (eax = bytes used): drop the used bytes from the reader's buffer: the count
+ * left (0x51f014) shrinks and the rest moves down (0x4eb5e0) from the buffer (the reader 0x51f01c,
+ * its frame +0x3668 of 0x900 bytes from +0x25c, offset +0x10); the pending flag 0x51f018 is
+ * cleared. Returns 0, or -1 for a used count past a failed read. edx is unchanged. */
+uint32_t vertrix_port_reader_consume(PORT_SIGNATURE);
+
 #endif
