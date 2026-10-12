@@ -25,7 +25,16 @@ enum
     LIST_COUNT = 8,
     LIST_ITEM = 0x4b79c0,
     LIST_ITEM_FIELD = 0x4b7a80,
-    ITEM_FIELD = 8
+    ITEM_FIELD = 8,
+    LIST_TEXT = 0x4b79e0,
+    OBJECT_TABLE = 0x28,
+    OBJECT_TABLE_VALUE = 0x516b14,
+    BUFFER_AT = 0,
+    BUFFER_COUNT = 0x10,
+    FPU_PRESENT = 0x5054a1,
+    SINE_FPU = 0x4db710,
+    TRIG = 0x4c9b6a,
+    TRIG_SINE = 2
 };
 
 uint32_t vertrix_port_random_seed_address(PORT_SIGNATURE)
@@ -238,4 +247,49 @@ uint32_t vertrix_port_field8(PORT_SIGNATURE)
     Port port;
     port_open(&port, calls, services, globals, entry);
     return port_return(&port, port_u32(&port, entry->eax, ITEM_FIELD), entry->edx);
+}
+
+uint32_t vertrix_port_list_text_slot(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    port_call(&port, LIST_TEXT, entry->eax, entry->edx, entry->ebx, entry->ecx);
+    return port_return(&port, entry->edx, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_object_set_table(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    port_set32(&port, entry->eax, OBJECT_TABLE, OBJECT_TABLE_VALUE);
+    return port_return(&port, entry->eax, entry->edx);
+}
+
+uint32_t vertrix_port_buffer_put(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t buffer = entry->eax;
+    uint32_t at;
+    port_open(&port, calls, services, globals, entry);
+    at = port_u32(&port, buffer, BUFFER_AT);
+    port_set32(&port, buffer, BUFFER_AT, at + 1);
+    port_set8(&port, at, 0, entry->edx);
+    port_set32(&port, buffer, BUFFER_COUNT, port_u32(&port, buffer, BUFFER_COUNT) + 1);
+    return port_return(&port, buffer, at);
+}
+
+uint32_t vertrix_port_sine(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    if (port_u8(&port, 0, FPU_PRESENT) != 0)
+    {
+        result = port_call(&port, SINE_FPU, entry->eax, entry->edx, entry->ebx, entry->ecx);
+    }
+    else
+    {
+        result = port_call(&port, TRIG, entry->eax, entry->edx, TRIG_SINE, entry->ecx);
+    }
+    return port_return(&port, result, vertrix_lift_edx);
 }

@@ -54,4 +54,19 @@ uint32_t vertrix_port_list_find(PORT_SIGNATURE);
 /* Original 0x48a2e0: the dword at eax + 8. edx is unchanged. */
 uint32_t vertrix_port_field8(PORT_SIGNATURE);
 
+/* Original 0x48a300: 0x4b79e0 with the same registers; returns the edx it was given, with the
+ * call's edx. */
+uint32_t vertrix_port_list_text_slot(PORT_SIGNATURE);
+
+/* Original 0x481b20: store 0x516b14 at eax + 0x28. Returns eax; edx is unchanged. */
+uint32_t vertrix_port_object_set_table(PORT_SIGNATURE);
+
+/* Original 0x4cd090 (eax = output buffer, dl = byte): append the byte at the buffer's pointer
+ * (+0) and count it (+0x10). Returns the buffer, edx the byte's address. */
+uint32_t vertrix_port_buffer_put(PORT_SIGNATURE);
+
+/* Original 0x4c9dd6: sin: the coprocessor's (0x4db710) when 0x5054a1 is set, else 0x4c9b6a with
+ * ebx 2. Returns its eax and edx. */
+uint32_t vertrix_port_sine(PORT_SIGNATURE);
+
 #endif

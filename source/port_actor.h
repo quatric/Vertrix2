@@ -140,4 +140,16 @@ uint32_t vertrix_port_actor_counter_done(PORT_SIGNATURE);
  * actor; edx is unchanged. */
 uint32_t vertrix_port_actor_counter_advance(PORT_SIGNATURE);
 
+/* Original 0x4ac620: whether the actor's progress (+0xdc) has reached its scale (+0xe0,
+ * unsigned). edx is unchanged. */
+uint32_t vertrix_port_actor_progress_done(PORT_SIGNATURE);
+
+/* Original 0x4ac600: add the frame time (0x5bd834) to the actor's progress (+0xdc). Returns the
+ * actor; edx is unchanged. */
+uint32_t vertrix_port_actor_progress_advance(PORT_SIGNATURE);
+
+/* Original 0x4ae110 (eax = actor, dx, bx = x, y, ecx = width, stack = height): store the actor's
+ * span (+0x128 words, +0x12c and +0x130 dwords). Returns the actor; edx is unchanged. */
+uint32_t vertrix_port_actor_set_span(PORT_SIGNATURE);
+
 #endif

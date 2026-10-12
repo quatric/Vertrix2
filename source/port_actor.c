@@ -6,6 +6,10 @@ enum
     ACTOR_ELAPSED = 0xbc,
     ACTOR_TIME_SCALE = 0xc0,
     ACTOR_COUNTER = 0xcc,
+    ACTOR_SPAN_X = 0x128,
+    ACTOR_SPAN_Y = 0x12a,
+    ACTOR_SPAN_WIDTH = 0x12c,
+    ACTOR_SPAN_HEIGHT = 0x130,
     ACTOR_COUNTER_LIMIT = 0xd0,
     ACTOR_PROGRESS = 0xdc,
     ACTOR_PROGRESS_SCALE = 0xe0,
@@ -712,5 +716,38 @@ uint32_t vertrix_port_actor_counter_advance(PORT_SIGNATURE)
     port_open(&port, calls, services, globals, entry);
     port_set32(&port, actor, ACTOR_COUNTER,
                port_u32(&port, actor, ACTOR_COUNTER) + port_u32(&port, 0, FRAME_TIME));
+    return port_return(&port, actor, entry->edx);
+}
+
+uint32_t vertrix_port_actor_progress_done(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t actor = entry->eax;
+    port_open(&port, calls, services, globals, entry);
+    return port_return(&port,
+                       port_u32(&port, actor, ACTOR_PROGRESS) >=
+                           port_u32(&port, actor, ACTOR_PROGRESS_SCALE),
+                       entry->edx);
+}
+
+uint32_t vertrix_port_actor_progress_advance(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t actor = entry->eax;
+    port_open(&port, calls, services, globals, entry);
+    port_set32(&port, actor, ACTOR_PROGRESS,
+               port_u32(&port, actor, ACTOR_PROGRESS) + port_u32(&port, 0, FRAME_TIME));
+    return port_return(&port, actor, entry->edx);
+}
+
+uint32_t vertrix_port_actor_set_span(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t actor = entry->eax;
+    port_open(&port, calls, services, globals, entry);
+    port_set16(&port, actor, ACTOR_SPAN_X, entry->edx);
+    port_set16(&port, actor, ACTOR_SPAN_Y, entry->ebx);
+    port_set32(&port, actor, ACTOR_SPAN_WIDTH, entry->ecx);
+    port_set32(&port, actor, ACTOR_SPAN_HEIGHT, entry->arguments[0]);
     return port_return(&port, actor, entry->edx);
 }
