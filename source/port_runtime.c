@@ -41,6 +41,10 @@ enum
     TRIG = 0x4c9b6a,
     TRIG_SINE = 2,
     GUARD_HANDLER = 0x4ec1ec,
+    STREAM_ENDED = 0x48a910,
+    STREAM_PEEK = 0x48aa80,
+    STREAM_SKIP = 0x48aa90,
+    STREAM_SKIP_LINE = 0x48a380,
     TEXT_DRAW_GUARD = 0x514f58,
     TEXT_MEASURE = 0x4408e0,
     TEXT_DRAW_AT = 0x440a20,
@@ -776,4 +780,52 @@ uint32_t vertrix_port_text_draw_glyphs(PORT_SIGNATURE)
         port_set32(&port, ebp, 8, text);
     }
     return port_return(&port, port_u32(&port, ebp, -0x40u), edx);
+}
+
+uint32_t vertrix_port_upper_case(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t character = entry->eax;
+    port_open(&port, calls, services, globals, entry);
+    if ((int32_t)character >= 'a' && (int32_t)character <= 'z')
+    {
+        character -= 0x20;
+    }
+    return port_return(&port, character, entry->edx);
+}
+
+uint32_t vertrix_port_stream_token_ahead(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t reader = entry->eax;
+    uint32_t stream = entry->edx;
+    uint32_t edx = entry->edx;
+    port_open(&port, calls, services, globals, entry);
+    for (;;)
+    {
+        uint32_t byte;
+        if (port_call(&port, STREAM_ENDED, stream, edx, reader, stream) != 0)
+        {
+            return port_return(&port, 0, vertrix_lift_edx);
+        }
+        byte = port_u8(&port,
+                       port_call(&port, STREAM_PEEK, stream, vertrix_lift_edx, reader, stream), 0);
+        if (byte == '/')
+        {
+            port_call(&port, STREAM_SKIP, stream, 1, reader, stream);
+            port_call(&port, STREAM_SKIP_LINE, reader, stream, reader, stream);
+            return port_return(&port, 0, vertrix_lift_edx);
+        }
+        if (byte == '\n' || byte == '\r')
+        {
+            port_call(&port, STREAM_SKIP, stream, 1, reader, stream);
+            return port_return(&port, 0, vertrix_lift_edx);
+        }
+        if (byte != ' ')
+        {
+            return port_return(&port, 1, vertrix_lift_edx);
+        }
+        port_call(&port, STREAM_SKIP, stream, 1, reader, stream);
+        edx = vertrix_lift_edx;
+    }
 }

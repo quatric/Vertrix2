@@ -26,6 +26,8 @@ enum
     TEXT_PREPARE = 0x4ae150,
     TEXT_LAYOUT = 0x4408e0,
     TEXT_FONT = 0x15c,
+    OBJECT_STATE = 0x58,
+    OBJECT_ACTIVE_RUN = 0x45cff0,
     PAINT = 0x4b17b0,
     PAINT_CALL = 0x4b5550,
     PAINT_GATE = 0x4b17e0,
@@ -1150,5 +1152,26 @@ uint32_t vertrix_port_actor_draw_call(PORT_SIGNATURE)
     methods = port_u32(&port, entry->eax, ACTOR_METHODS);
     result = port_call(&port, port_u32(&port, methods, METHOD_DRAW), entry->eax, entry->edx,
                        entry->ebx, methods);
+    return port_return(&port, result, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_actor_set_time_scale(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    port_set32(&port, entry->eax, ACTOR_TIME_SCALE, entry->edx * 12);
+    return port_return(&port, entry->edx * 12, entry->edx);
+}
+
+uint32_t vertrix_port_object_run_active(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    if (port_u32(&port, entry->eax, OBJECT_STATE) != 1)
+    {
+        return port_return(&port, entry->eax, entry->edx);
+    }
+    result = port_call(&port, OBJECT_ACTIVE_RUN, entry->eax, entry->edx, entry->ebx, entry->ecx);
     return port_return(&port, result, vertrix_lift_edx);
 }

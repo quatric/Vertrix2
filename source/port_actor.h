@@ -230,4 +230,11 @@ uint32_t vertrix_port_actor_paint_attached(PORT_SIGNATURE);
 /* Original 0x4b3380 (eax = actor): its table's (+0x158) draw (+8). */
 uint32_t vertrix_port_actor_draw_call(PORT_SIGNATURE);
 
+/* Original 0x4ac7b0 (eax = actor, edx = rate): store the rate times 12 as the time scale (+0xc0).
+ * Returns that; edx is unchanged. */
+uint32_t vertrix_port_actor_set_time_scale(PORT_SIGNATURE);
+
+/* Original 0x45cdc0 (eax = object): run 0x45cff0 when its state (+0x58) is 1. */
+uint32_t vertrix_port_object_run_active(PORT_SIGNATURE);
+
 #endif

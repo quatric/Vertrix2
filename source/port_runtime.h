@@ -131,4 +131,12 @@ uint32_t vertrix_port_text_draw(PORT_SIGNATURE);
  * font's space width (0x541988, 0x20c bytes a font). Returns the record's previous link. */
 uint32_t vertrix_port_text_draw_glyphs(PORT_SIGNATURE);
 
+/* Original 0x4dabb0 (eax = character): toupper for 'a' to 'z'. edx is unchanged. */
+uint32_t vertrix_port_upper_case(PORT_SIGNATURE);
+
+/* Original 0x48a420 (eax = reader, edx = stream): skip spaces; true when a token follows, false at
+ * the end, a line break (skipped) or a '/' comment (skipped, the rest of the line read by
+ * 0x48a380). */
+uint32_t vertrix_port_stream_token_ahead(PORT_SIGNATURE);
+
 #endif
