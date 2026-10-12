@@ -26,6 +26,18 @@ enum
     TEXT_PREPARE = 0x4ae150,
     TEXT_LAYOUT = 0x4408e0,
     TEXT_FONT = 0x15c,
+    INPUT_CLICK = 0x4764a0,
+    CLICK_KEY = 0x74,
+    ACTOR_HIT = 0x4b0b70,
+    BUTTON_CLICKED = 0x45c600,
+    BUTTON_PRESSED = 0x45c7e0,
+    BUTTON_LIT = 0x45c480,
+    BUTTON_INPUT = 0x45c2f0,
+    ACTOR_SET_NEXT = 0x4ac910,
+    MENU_CHOSEN = 0x532a48,
+    BUTTON_SHADE = 0x52,
+    ACTOR_KEY_PRESSED = 0x4b5500,
+    ACTOR_APPROACH = 0x4ad530,
     INPUT = 0x54d640,
     INPUT_READY = 0x476480,
     INPUT_TAKE = 0x4762e0,
@@ -1514,4 +1526,91 @@ uint32_t vertrix_port_actor_approach(PORT_SIGNATURE)
     port_set16(&port, actor, APPROACH_VALUE, (uint32_t)value);
     return port_return(&port, ((uint32_t)value & 0xffff) != target,
                        ((uint32_t)to & 0xffff0000u) | target);
+}
+
+/* The saved pointer position, off screen while it is hidden, in edx and ebx as the original leaves
+ * them. */
+static void pointer_place(Port *port, uint32_t *edx, uint32_t *ebx)
+{
+    uint32_t y = port_u32(port, 0, SAVED_HIDDEN) != 0
+                     ? OFF_SCREEN
+                     : (*edx & 0xffff0000u) | port_u16(port, 0, SAVED_Y);
+    *ebx = (uint32_t)(int16_t)y;
+    *edx = port_u32(port, 0, SAVED_HIDDEN) != 0 ? OFF_SCREEN
+                                                : (uint32_t)(int16_t)port_u16(port, 0, SAVED_X);
+}
+
+uint32_t vertrix_port_menu_button_input(PORT_SIGNATURE)
+{
+    /* push ebp, ebx, ecx, edx, esi, edi, then the click's three results. */
+    enum
+    {
+        BELOW = 0x20
+    };
+    Port port;
+    uint32_t button = entry->eax;
+    uint32_t ebp = entry->esp - 4;
+    uint32_t arguments[1];
+    uint32_t eax;
+    uint32_t edx;
+    uint32_t ebx;
+    port_open_frame(&port, calls, services, globals, entry, BELOW);
+    if (port_call(&port, INPUT_READY, INPUT, CLICK_KEY, entry->ebx, button) != 1)
+    {
+        eax = port_call(&port, ACTOR_KEY_PRESSED, button, vertrix_lift_edx, entry->ebx, button);
+        if (eax == 0)
+        {
+            return port_return(&port, eax, entry->edx);
+        }
+        eax = port_call(&port, ACTOR_SET_NEXT, button, BUTTON_PRESSED, entry->ebx, button);
+        port_set32(&port, 0, MENU_CHOSEN, 1);
+        return port_return(&port, eax, entry->edx);
+    }
+    arguments[0] = ebp - 0x18;
+    eax =
+        port_call_stack(&port, INPUT_CLICK, INPUT, CLICK_KEY, ebp - 0x20, ebp - 0x1c, arguments, 1);
+    edx = eax;
+    pointer_place(&port, &edx, &ebx);
+    eax = port_call(&port, ACTOR_HIT, button, edx, ebx, ebp - 0x1c);
+    if ((eax & 0xff) == 0)
+    {
+        return port_return(&port, eax, entry->edx);
+    }
+    eax = port_call(&port, ACTOR_SET_UPDATE, button, BUTTON_CLICKED, ebx, ebp - 0x1c);
+    return port_return(&port, eax, entry->edx);
+}
+
+uint32_t vertrix_port_menu_button_frame(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t button = entry->eax;
+    uint32_t edx;
+    uint32_t ebx;
+    uint32_t eax;
+    port_open(&port, calls, services, globals, entry);
+    port_call(&port, ACTOR_COUNTER_ADVANCE, button, entry->edx, entry->ebx, button);
+    eax = port_call(&port, ACTOR_COUNTER_DUE, button, vertrix_lift_edx, entry->ebx, button);
+    if (eax == 1)
+    {
+        eax = port_call(&port, ACTOR_STEPS, button, vertrix_lift_edx, entry->ebx, button);
+        port_call(&port, ACTOR_STEPS_CONSUME, button, eax, entry->ebx, button);
+        port_set16(&port, button, APPROACH_TARGET, 0);
+        port_set16(&port, button, APPROACH_SPEED, 5);
+        port_call(&port, ACTOR_APPROACH, button, vertrix_lift_edx, entry->ebx, button);
+    }
+    edx = vertrix_lift_edx;
+    pointer_place(&port, &edx, &ebx);
+    eax = port_call(&port, ACTOR_HIT, button, edx, ebx, button);
+    if ((eax & 0xff) != 0)
+    {
+        port_set16(&port, button, APPROACH_VALUE, 0x23);
+        port_set8(&port, button, BUTTON_SHADE, 0xa);
+        port_call(&port, ACTOR_SET_UPDATE, button, BUTTON_LIT, ebx, button);
+    }
+    else
+    {
+        port_set8(&port, button, BUTTON_SHADE, 9);
+    }
+    eax = port_call(&port, BUTTON_INPUT, button, vertrix_lift_edx, ebx, button);
+    return port_return(&port, eax, entry->edx);
 }

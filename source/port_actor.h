@@ -291,4 +291,16 @@ uint32_t vertrix_port_actor_key_pressed(PORT_SIGNATURE);
  * yet; edx is the target word over the sign of the target. */
 uint32_t vertrix_port_actor_approach(PORT_SIGNATURE);
 
+/* Original 0x45c2f0 (eax = button): a menu button's input: on a click (input 0x54d640 key 0x74,
+ * 0x476480 then 0x4764a0) a hit at the saved pointer (0x558944, 0x558946, off screen while hidden,
+ * 0x4b0b70) sets its update to 0x45c600 (0x4ac8f0); otherwise its own key (0x4b5500) presses it
+ * (0x4ac910 with 0x45c7e0, 0x532a48 set). Registers but eax are unchanged. */
+uint32_t vertrix_port_menu_button_input(PORT_SIGNATURE);
+
+/* Original 0x45c3c0 (eax = button): a menu button's frame: when its counter is due it grows back
+ * (0x4ac540, 0x4ac5b0, the approach 0x4ad530 to 0 at speed 5); under the pointer it is lit (+0x52
+ * 10, value 0x23, update 0x45c480), else +0x52 is 9; then its input (0x45c2f0). Registers but eax
+ * are unchanged. */
+uint32_t vertrix_port_menu_button_frame(PORT_SIGNATURE);
+
 #endif
