@@ -18,6 +18,12 @@ enum
     OUTPUT_STEP = 0x4056b0,
     OUTPUT_ADVANCE = 0x80,
     TAPS = 16,
+    DCT_POINTS = 32,
+    /* Pointers to the cosine tables of the transform's five passes. */
+    DCT_COSINES = 0x4f5f90,
+    /* esi, edi, ebp and 0xc bytes of locals. */
+    DCT_FRAME = 0x18,
+    DCT_TABLE_SLOT = 1,
     PHASES = 16,
     SINGLE_MULTIPLY = 0x4d8177,
     SINGLE_SUBTRACT = 0x4d809c,
@@ -49,6 +55,206 @@ enum
     CHANNEL_PING_PONG = 8,
     CHANNEL_BACKWARD = 0x10
 };
+
+/* 0x404730's state: the work buffers, which its helpers also see in ebx and ecx. */
+typedef struct Dct
+{
+    Port port;
+    uint32_t first;
+    uint32_t second;
+    uint32_t result;
+    uint32_t edx;
+    /* The original's esp: its first local is pass 1's table, the third pass 4's first cosine. */
+    uint32_t frame;
+} Dct;
+
+static uint32_t dct_call(Dct *dct, uint32_t target, uint32_t eax, uint32_t edx)
+{
+    dct->result = port_call(&dct->port, target, eax, edx, dct->first, dct->second);
+    dct->edx = vertrix_lift_edx;
+    return dct->result;
+}
+
+static uint32_t dct_at(Dct *dct, uint32_t buffer, unsigned index)
+{
+    return port_u32(&dct->port, buffer, index * 4);
+}
+
+static void dct_set(Dct *dct, uint32_t buffer, unsigned index, uint32_t value)
+{
+    port_set32(&dct->port, buffer, index * 4, value);
+}
+
+/* to[low] = from[low] + from[high]; to[high] = (from[low] - from[high]) * cosine, the difference
+ * the other way round when `reversed`. The cosine is read from `table` (at `index`) after the
+ * difference, or given in `cosine` when `table` is 0. */
+static uint32_t dct_pair(Dct *dct, uint32_t from, uint32_t to, unsigned low, unsigned high,
+                         int reversed, uint32_t table, unsigned index, uint32_t cosine)
+{
+    uint32_t difference;
+    dct_set(dct, to, low,
+            dct_call(dct, SINGLE_ADD, dct_at(dct, from, low), dct_at(dct, from, high)));
+    difference =
+        reversed ? dct_call(dct, SINGLE_SUBTRACT, dct_at(dct, from, high), dct_at(dct, from, low))
+                 : dct_call(dct, SINGLE_SUBTRACT, dct_at(dct, from, low), dct_at(dct, from, high));
+    if (table == DCT_TABLE_SLOT)
+    {
+        /* The first pass's table is kept in the frame and read back for each cosine; but for the
+         * first and last pair, the difference is parked in the frame meanwhile. */
+        if (index != 0 && index != DCT_POINTS / 2 - 1)
+        {
+            port_set32(&dct->port, dct->frame, 4, difference);
+        }
+        cosine = port_u32(&dct->port, port_u32(&dct->port, dct->frame, 0), index * 4);
+    }
+    else if (table != 0)
+    {
+        cosine = port_u32(&dct->port, table, index * 4);
+    }
+    dct_set(dct, to, high, dct_call(dct, SINGLE_MULTIPLY, difference, cosine));
+    return dct->result;
+}
+
+/* One butterfly pass over groups of `size`, every other group's differences reversed. */
+static void dct_pass(Dct *dct, uint32_t from, uint32_t to, unsigned size, uint32_t table)
+{
+    unsigned base;
+    unsigned i;
+    for (base = 0; base < DCT_POINTS; base += size)
+    {
+        int reversed = size < DCT_POINTS && (base / size) & 1;
+        for (i = 0; i < size / 2; i++)
+        {
+            dct_pair(dct, from, to, base + i, base + size - 1 - i, reversed, table, i, 0);
+        }
+    }
+}
+
+/* out[offset] = first[a] + first[b]. */
+static void dct_sum(Dct *dct, uint32_t out, uint32_t offset, unsigned a, unsigned b)
+{
+    port_set32(&dct->port, out, offset,
+               dct_call(dct, SINGLE_ADD, dct_at(dct, dct->first, a), dct_at(dct, dct->first, b)));
+}
+
+static void dct_accumulate(Dct *dct, unsigned a, unsigned b)
+{
+    dct_set(dct, dct->first, a,
+            dct_call(dct, SINGLE_ADD, dct_at(dct, dct->first, a), dct_at(dct, dct->first, b)));
+}
+
+static uint32_t dct_copy(Dct *dct, uint32_t out, uint32_t offset, unsigned index)
+{
+    uint32_t value = dct_at(dct, dct->first, index);
+    port_set32(&dct->port, out, offset, value);
+    return value;
+}
+
+uint32_t vertrix_port_synth_dct(PORT_SIGNATURE)
+{
+    Dct dct;
+    uint32_t low = entry->eax;
+    uint32_t high = entry->edx;
+    uint32_t samples = entry->arguments[0];
+    uint32_t table;
+    uint32_t cosine_a;
+    uint32_t cosine_b;
+    unsigned base;
+    unsigned i;
+    port_open_frame(&dct.port, calls, services, globals, entry, DCT_FRAME);
+    dct.frame = entry->esp - DCT_FRAME;
+    port_set32(&dct.port, entry->esp, -4u, entry->esi);
+    port_set32(&dct.port, entry->esp, -8u, entry->edi);
+    port_set32(&dct.port, entry->esp, -12u, entry->ebp);
+    dct.first = entry->ebx;
+    dct.second = entry->ecx;
+    dct.edx = entry->edx;
+    /* Pass 1, samples into the first buffer: 16 pairs from the ends inwards. */
+    port_set32(&dct.port, dct.frame, 0, port_u32(&dct.port, 0, DCT_COSINES));
+    for (i = 0; i < DCT_POINTS / 2; i++)
+    {
+        dct_pair(&dct, samples, dct.first, i, DCT_POINTS - 1 - i, 0, DCT_TABLE_SLOT, i, 0);
+    }
+    /* Passes 2 and 3: halves of 16 and quarters of 8, the odd ones reversed. */
+    dct_pass(&dct, dct.first, dct.second, 16, port_u32(&dct.port, 0, DCT_COSINES + 4));
+    dct_pass(&dct, dct.second, dct.first, 8, port_u32(&dct.port, 0, DCT_COSINES + 8));
+    /* Pass 4, groups of 4 with two cosines read once. */
+    table = port_u32(&dct.port, 0, DCT_COSINES + 12);
+    port_set32(&dct.port, dct.frame, 8, port_u32(&dct.port, table, 0));
+    cosine_b = port_u32(&dct.port, table, 4);
+    for (base = 0; base < DCT_POINTS; base += 4)
+    {
+        int reversed = (base / 4) & 1;
+        dct_pair(&dct, dct.first, dct.second, base, base + 3, reversed, 0, 0,
+                 port_u32(&dct.port, dct.frame, 8));
+        dct_pair(&dct, dct.first, dct.second, base + 1, base + 2, reversed, 0, 0, cosine_b);
+    }
+    /* Pass 5, pairs with one cosine, each group of 8 then folded. */
+    cosine_a = port_u32(&dct.port, port_u32(&dct.port, 0, DCT_COSINES + 16), 0);
+    for (base = 0; base < DCT_POINTS; base += 8)
+    {
+        uint32_t product;
+        dct_pair(&dct, dct.second, dct.first, base, base + 1, 0, 0, 0, cosine_a);
+        product = dct_pair(&dct, dct.second, dct.first, base + 2, base + 3, 1, 0, 0, cosine_a);
+        dct_set(&dct, dct.first, base + 2,
+                dct_call(&dct, SINGLE_ADD, dct_at(&dct, dct.first, base + 2), product));
+        dct_pair(&dct, dct.second, dct.first, base + 4, base + 5, 0, 0, 0, cosine_a);
+        product = dct_pair(&dct, dct.second, dct.first, base + 6, base + 7, 1, 0, 0, cosine_a);
+        dct_set(&dct, dct.first, base + 6,
+                dct_call(&dct, SINGLE_ADD, dct_at(&dct, dct.first, base + 6), product));
+        dct_set(&dct, dct.first, base + 4,
+                dct_call(&dct, SINGLE_ADD, dct_at(&dct, dct.first, base + 4), dct.result));
+        dct_accumulate(&dct, base + 6, base + 5);
+        dct_accumulate(&dct, base + 5, base + 7);
+    }
+    /* The outputs: the first 8 copied, */
+    dct_copy(&dct, low, 0x400, 0);
+    dct_copy(&dct, low, 0x300, 4);
+    dct_copy(&dct, low, 0x200, 2);
+    dct_copy(&dct, low, 0x100, 6);
+    port_set32(&dct.port, high, 0, dct_copy(&dct, low, 0, 1));
+    dct_copy(&dct, high, 0x100, 5);
+    dct_copy(&dct, high, 0x200, 3);
+    dct_copy(&dct, high, 0x300, 7);
+    /* the next 8 summed in place, */
+    {
+        static const struct
+        {
+            uint8_t a, b, high;
+            uint16_t offset;
+        } middle[] = {{8, 12, 0, 0x380}, {12, 10, 0, 0x280}, {10, 14, 0, 0x180}, {14, 9, 0, 0x80},
+                      {9, 13, 1, 0x80},  {13, 11, 1, 0x180}, {11, 15, 1, 0x280}};
+        for (i = 0; i < sizeof middle / sizeof middle[0]; i++)
+        {
+            dct_accumulate(&dct, middle[i].a, middle[i].b);
+            port_set32(&dct.port, middle[i].high ? high : low, middle[i].offset, dct.result);
+        }
+        dct_copy(&dct, high, 0x380, 15);
+    }
+    /* and the last 16 from pairwise sums. */
+    {
+        static const struct
+        {
+            uint8_t a, b, first, second;
+            uint16_t first_offset, second_offset;
+        } last[] = {{24, 28, 16, 20, 0x3c0, 0x340},
+                    {28, 26, 20, 18, 0x2c0, 0x240},
+                    {26, 30, 18, 22, 0x1c0, 0x140},
+                    {30, 25, 22, 17, 0xc0, 0x40},
+                    {25, 29, 17, 21, 0x40 | 0x8000, 0xc0 | 0x8000},
+                    {29, 27, 21, 19, 0x140 | 0x8000, 0x1c0 | 0x8000},
+                    {27, 31, 19, 23, 0x240 | 0x8000, 0x2c0 | 0x8000}};
+        for (i = 0; i < sizeof last / sizeof last[0]; i++)
+        {
+            uint32_t out = last[i].first_offset & 0x8000 ? high : low;
+            dct_accumulate(&dct, last[i].a, last[i].b);
+            dct_sum(&dct, out, last[i].first_offset & 0x7fff, last[i].first, last[i].a);
+            dct_sum(&dct, out, last[i].second_offset & 0x7fff, last[i].a, last[i].second);
+        }
+        dct_sum(&dct, high, 0x340, 23, 31);
+    }
+    return port_return(&dct.port, dct_copy(&dct, high, 0x3c0, 31), dct.edx);
+}
 
 uint32_t vertrix_port_synth_window(PORT_SIGNATURE)
 {

@@ -4,6 +4,13 @@
 
 /* Clean ports of the audio decoder's synthesis (port.h). */
 
+/* Original 0x404730 (eax and edx = the two output halves, 0x40 bytes a sample, ebx and ecx =
+ * 0x80-byte work buffers, stack = 32 singles): the 32-point cosine transform of the polyphase
+ * synthesis, five butterfly passes between the work buffers with the cosine tables at 0x4f5f90 to
+ * 0x4f5fa0, then the outputs summed from the last pass. Every operation is a call to the
+ * single-precision helpers. Returns the last output (32 into the second half). */
+uint32_t vertrix_port_synth_dct(PORT_SIGNATURE);
+
 /* Original 0x405680 (eax, edx passed on): 0x404730 with two 0x80-byte buffers of the frame, ebx
  * the one at ebp-0x104 and ecx the one at ebp-0x84, and the entry ebx as its stack argument.
  * Returns its eax and edx. */

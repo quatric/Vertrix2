@@ -108,7 +108,7 @@ static const LiftedRoutine routines[] = {
     {0x404610, lifted_bit_reader_bits24, 76, 0},
     {0x404680, vertrix_port_bits_get, 0, 0},
     {0x4046e0, vertrix_native_bit_read, 0, 0},
-    {0x404730, lifted_f404730, 1244, 1},
+    {0x404730, vertrix_port_synth_dct, 0, 0},
     {0x405680, vertrix_port_synth_window, 268, 0},
     {0x4056c0, vertrix_port_synth_samples, 152, 0},
     {0x405720, vertrix_port_synth_filter, 0, 0},
