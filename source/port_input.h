@@ -32,4 +32,12 @@ uint32_t vertrix_port_byte_get(PORT_SIGNATURE);
  * byte and edx is the tick's. */
 uint32_t vertrix_port_input_drain(PORT_SIGNATURE);
 
+/* Original 0x475d70 (eax = input slot): whether its byte at +4 (read by 0x475800) is 1. Returns
+ * 1 or 0, with the call's edx. */
+uint32_t vertrix_port_input_ready(PORT_SIGNATURE);
+
+/* Original 0x476480 (eax = input table, dx = slot): 0x475d70 for the slot's 0x60-byte record
+ * (edx the slot, ecx the table). */
+uint32_t vertrix_port_input_slot_ready(PORT_SIGNATURE);
+
 #endif

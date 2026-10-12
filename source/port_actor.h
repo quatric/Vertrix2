@@ -123,4 +123,13 @@ uint32_t vertrix_port_actor_paint(PORT_SIGNATURE);
  * when 0), unsigned. edx is unchanged. */
 uint32_t vertrix_port_actor_steps(PORT_SIGNATURE);
 
+/* Original 0x4ac640: the actor's progress (+0xdc) in whole steps of its progress scale (+0xe0, 1
+ * when 0), unsigned. edx is unchanged. */
+uint32_t vertrix_port_actor_progress_steps(PORT_SIGNATURE);
+
+/* Original 0x4ac5b0: take the whole steps (0x4ac540, edx the actor, ecx the scale) out of the
+ * actor's elapsed time, leaving the remainder (0 when they are not below it). Returns the steps'
+ * time; edx is unchanged. */
+uint32_t vertrix_port_actor_steps_consume(PORT_SIGNATURE);
+
 #endif

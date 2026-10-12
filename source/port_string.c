@@ -477,3 +477,17 @@ uint32_t vertrix_port_string_from(PORT_SIGNATURE)
     }
     return port_return(&port, string, edx);
 }
+
+uint32_t vertrix_port_char_code(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t text = entry->eax;
+    uint32_t code;
+    port_open(&port, calls, services, globals, entry);
+    code = port_u8(&port, text, 0);
+    if (lead_byte(&port, text))
+    {
+        code = (code << 8) | port_u8(&port, text, 1);
+    }
+    return port_return(&port, code, entry->edx);
+}

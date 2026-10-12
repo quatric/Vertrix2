@@ -20,7 +20,10 @@ enum
     STEP = 0x475b20,
     REPEAT_TICK = 0x475e50,
     HANDLER_CALL = 0x475c30,
-    KEY_HELD = 0x475800
+    KEY_HELD = 0x475800,
+    KEY_DOWN = 1,
+    INPUT_READY = 0x475d70,
+    SLOT_SIZE = 0x60
 };
 
 uint32_t vertrix_port_input_repeat_tick(PORT_SIGNATURE)
@@ -145,4 +148,24 @@ uint32_t vertrix_port_input_drain(PORT_SIGNATURE)
         }
         port_call(&port, HANDLER_CALL, input, edx, target, input);
     }
+}
+
+uint32_t vertrix_port_input_ready(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t held;
+    port_open(&port, calls, services, globals, entry);
+    held = port_call(&port, KEY_HELD, entry->eax + INPUT_KEY, entry->edx, entry->ebx, entry->ecx);
+    return port_return(&port, (held & 0xff) == KEY_DOWN, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_input_slot_ready(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t slot = entry->edx & 0xffff;
+    uint32_t ready;
+    port_open(&port, calls, services, globals, entry);
+    ready =
+        port_call(&port, INPUT_READY, entry->eax + slot * SLOT_SIZE, slot, entry->ebx, entry->eax);
+    return port_return(&port, ready, vertrix_lift_edx);
 }

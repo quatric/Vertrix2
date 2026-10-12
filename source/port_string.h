@@ -116,4 +116,8 @@ uint32_t vertrix_port_string_make_unique(PORT_SIGNATURE);
  * Returns the address. */
 uint32_t vertrix_port_string_from(PORT_SIGNATURE);
 
+/* Original 0x4e3a50 (eax = text): the character there: a lead byte and the next as one code
+ * (lead byte high), otherwise the byte. edx is unchanged. */
+uint32_t vertrix_port_char_code(PORT_SIGNATURE);
+
 #endif

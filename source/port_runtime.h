@@ -40,4 +40,11 @@ uint32_t vertrix_port_list_item(PORT_SIGNATURE);
  * offset, edx its sign). Otherwise the box's left and top are added. Returns the top. */
 uint32_t vertrix_port_text_layout(PORT_SIGNATURE);
 
+/* Original 0x4b7a80 (eax = list, edx = index): the dword at +8 of the list's item (0x4b79c0), 0
+ * when there is none. edx is the call's. */
+uint32_t vertrix_port_list_item_field(PORT_SIGNATURE);
+
+/* Original 0x48a2f0: 0x4b7a80 with the same registers. */
+uint32_t vertrix_port_list_item_field_call(PORT_SIGNATURE);
+
 #endif

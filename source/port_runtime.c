@@ -22,7 +22,10 @@ enum
     CT_CTYPE1 = 1,
     C1_SPACE = 8,
     LIST_ITEMS = 4,
-    LIST_COUNT = 8
+    LIST_COUNT = 8,
+    LIST_ITEM = 0x4b79c0,
+    LIST_ITEM_FIELD = 0x4b7a80,
+    ITEM_FIELD = 8
 };
 
 uint32_t vertrix_port_random_seed_address(PORT_SIGNATURE)
@@ -184,4 +187,22 @@ uint32_t vertrix_port_text_layout(PORT_SIGNATURE)
     port_set16(&port, x_out, 0, port_u16(&port, x_out, 0) + left);
     port_set16(&port, y_out, 0, port_u16(&port, y_out, 0) + top);
     return port_return(&port, top, edx);
+}
+
+uint32_t vertrix_port_list_item_field(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t item;
+    port_open(&port, calls, services, globals, entry);
+    item = port_call(&port, LIST_ITEM, entry->eax, entry->edx, entry->ebx, entry->ecx);
+    return port_return(&port, item != 0 ? port_u32(&port, item, ITEM_FIELD) : 0, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_list_item_field_call(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t field;
+    port_open(&port, calls, services, globals, entry);
+    field = port_call(&port, LIST_ITEM_FIELD, entry->eax, entry->edx, entry->ebx, entry->ecx);
+    return port_return(&port, field, vertrix_lift_edx);
 }
