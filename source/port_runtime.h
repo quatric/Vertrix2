@@ -1076,7 +1076,6 @@ uint32_t vertrix_port_audio_tempo_set(PORT_SIGNATURE);
  * 0x534f10) whose dword at 0x534c18 equals the value. Returns the end offset in edx. */
 uint32_t vertrix_port_level_count_matches(PORT_SIGNATURE);
 
-
 /* Original 0x4e58b8: when 0x507c98 is unset read the mode (import 0x4f1cd4), rereading it while
  * 0x509731 and 0x50972f allow and it stays 0 to 2. Stores it in 0x507c98 and returns 1 unless it is
  * -1. */
@@ -1102,5 +1101,108 @@ uint32_t vertrix_port_script_object_load(PORT_SIGNATURE);
 /* Original 0x478ae0: when audio is open (0x5589d4) stop and release the eight sounds when sound is
  * on (0x482b40, 0x40ad50), then close the device (0x40ed70, 0x40aba0, 0x40ef90 with 0x5589d8). */
 uint32_t vertrix_port_audio_shutdown(PORT_SIGNATURE);
+
+/* Original 0x482930: when sound is on (0x598d60) give the eight samples 0x598d88 their default pans
+ * (0x40ae10). */
+uint32_t vertrix_port_sounds_pan_default(PORT_SIGNATURE);
+
+/* Original 0x4d7bb0(eax = stream): seek to the end through method +0x30 to read the length, then
+ * back to where it was. */
+uint32_t vertrix_port_stream_length(PORT_SIGNATURE);
+
+/* Original 0x457550(eax = actor): step it (0x4ac500); when its frame is due (0x4ac520) advance it
+ * (0x4ac540, 0x4ac5b0) and, at the end (0x4acc10), drop it at speed (-150, 10) with the update
+ * 0x4575b0 (0x4ac8f0). Then move it (0x4ac8a0). */
+uint32_t vertrix_port_actor_animate_drop(PORT_SIGNATURE);
+
+/* Original 0x45e6b0: allocate bank 0x544a50 with 19 entries (0x487640) and fill each with entry i
+ * of 0x544a34 combined with 0x546538 (0x4877f0, 0x4831b0, 0x487850), reporting progress (0x418270).
+ */
+uint32_t vertrix_port_bank_build_544a50(PORT_SIGNATURE);
+
+/* Original 0x475660: construct 0x54d640 (0x475ec0) and 0x55364c (0x475840), registering their exit
+ * routines 0x4fd6e0 and 0x4fd6f0 (0x4ec1f7). Returns the handler chain. */
+uint32_t vertrix_port_static_init_54d640(PORT_SIGNATURE);
+
+/* Original 0x476870: construct the keys 0x5536c8 and 0x553798 (0x4768e0), registering their exit
+ * routines 0x4fea6d and 0x4fea7d (0x4ec1f7). Returns the handler chain. */
+uint32_t vertrix_port_static_init_5536c8(PORT_SIGNATURE);
+
+/* Original 0x482410: construct the readers 0x598d30 and 0x598d48 (0x482480), registering their exit
+ * routines 0x4feb43 and 0x4feb53 (0x4ec1f7). Returns the handler chain. */
+uint32_t vertrix_port_static_init_598d30(PORT_SIGNATURE);
+
+/* Original 0x476a00(eax = key, bl = flag, ecx = layout): store the layout at +0xb4, the flag at +8
+ * and +0 (0 or 0x476aa0 when the flag is clear), and set the five key codes +0xb8..+0xc8 for layout
+ * 0 or 1. Returns the layout in edx. */
+uint32_t vertrix_port_key_layout_set(PORT_SIGNATURE);
+
+/* Original 0x483750(eax = image): for a 4 byte per pixel image (+0x27) make transparent pixels
+ * opaque and the rest transparent. Returns the end of the pixels. */
+uint32_t vertrix_port_image_alpha_invert(PORT_SIGNATURE);
+
+/* Original 0x4845d0(eax = value): look the value up in the table 0x59993c, mirrored to 180 - entry
+ * for negative values. Out of range gives 0 or 180. */
+uint32_t vertrix_port_angle_lookup(PORT_SIGNATURE);
+
+/* Original 0x45f620: construct the six layer lists 0x54671c..0x546780 (0x4b5db0), registering their
+ * exit routines 0x4fd430..0x4fd480 (0x4ec1f7), and copy the four bytes 0x4f9c06 to 0x546830. */
+uint32_t vertrix_port_layer_lists_init(PORT_SIGNATURE);
+
+/* Original 0x48a8c0(eax = record): release its object +0 (0x478d80), clear it and copy the default
+ * name 0x510ac1 to +0xc. */
+uint32_t vertrix_port_name_record_reset(PORT_SIGNATURE);
+
+/* Original 0x4cf3a0(eax = stream, edx = owner): construct the base (0x4cb460), give it the table
+ * 0x519664, clear the 0x20 bytes +0x1c (0x4eb5c0) and store the owner at +0x1c. */
+uint32_t vertrix_port_memory_stream_construct(PORT_SIGNATURE);
+
+/* Original 0x40cb10(eax = voice, edx = rate): for a voice below 0x52fc18 and a rate of 0x200 to
+ * 0x80000 store the step (rate << 12) / 0x52fc20, rounded, in the voice +0x52f920. Returns 0, 1 for
+ * a bad voice or 2 for a bad rate. */
+uint32_t vertrix_port_voice_rate_set(PORT_SIGNATURE);
+
+/* Original 0x4b6070(eax = list, edx = argument): call method +8 of the table +0x158 of every item
+ * with the argument. Returns the count in edx. */
+uint32_t vertrix_port_layer_list_call(PORT_SIGNATURE);
+
+/* Original 0x40acf0(eax = slot pointer): take the first free one of the 0x52f130 sample slots
+ * 0x52f0b0, storing its number (from 1). Returns 0, 2 for no pointer or 8 when all are taken. */
+uint32_t vertrix_port_sample_slot_take(PORT_SIGNATURE);
+
+/* Original 0x45cdd0(eax = actor): reset it (0x45cdc0) and wait a random time (0x4826c0 on 0x598d30,
+ * 0x4ac7d0): 3000 + random(5000) with a random 50 + random(50) +0xd0 (0x4ac490) when +0x58 is 1,
+ * otherwise 1000 + random(5000). Then update 0x45ce50 (0x4ac8f0). */
+uint32_t vertrix_port_actor_respawn_wait(PORT_SIGNATURE);
+
+/* Original 0x4aca60(eax = actor, edx = steps): move the x word +0xe towards +0x10 by steps * speed
+ * +0x12, not past it. 1 while it has not arrived; the target word in dx. */
+uint32_t vertrix_port_actor_approach_x(PORT_SIGNATURE);
+
+/* Original 0x4acab0(eax = actor, edx = steps): move the y word +0x16 towards +0x18 by steps * speed
+ * +0x1a, not past it. 1 while it has not arrived; the target word in dx. */
+uint32_t vertrix_port_actor_approach_y(PORT_SIGNATURE);
+
+/* Original 0x4acb00(eax = actor, edx = steps): move the word +0x1e towards +0x20 by steps * speed
+ * +0x22, not past it. 1 while it has not arrived; the target word in dx. */
+uint32_t vertrix_port_actor_approach_z(PORT_SIGNATURE);
+
+/* Original 0x41b680(eax = scene): construct it (0x41b310), set +0xc8, the update 0x4237d0
+ * (0x418840) and +0xc0 = 0x41b820 (0x418820). Returns the handler chain. */
+uint32_t vertrix_port_scene_title_construct(PORT_SIGNATURE);
+
+/* Original 0x475c30(eax = key): clear its entry +4 (0x475790), then take the next queued entry from
+ * +0x20 (0x4d8540), copy it in (0x4757e0) and release it through its table +0x18. */
+uint32_t vertrix_port_key_queue_next(PORT_SIGNATURE);
+
+/* Original 0x4e8510(eax = thread, edx = record): under the lock hooks 0x507cc8 and 0x507ccc link a
+ * 0x10 byte node (0x4ec160) for them into 0x5c8aa0, unless 0x4ea144 refuses (then free it,
+ * 0x4ea190). Returns 1 when linked. */
+uint32_t vertrix_port_thread_list_add(PORT_SIGNATURE);
+
+/* Original 0x4de900(eax = metrics): read the screen size (import 0x4f19e4) into +8 and +0xc, the
+ * extra metrics (0x4de5c0 or 0x4de600 by +0x88) and the pixels per inch (imports 0x4f1974,
+ * 0x4f1808, 0x4f1a78) into +0x18 and +0x1c. */
+uint32_t vertrix_port_screen_metrics_read(PORT_SIGNATURE);
 
 #endif
