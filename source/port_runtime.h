@@ -975,4 +975,61 @@ uint32_t vertrix_port_box_construct(PORT_SIGNATURE);
  * and release its semaphore +0 (import 0x4f1c40). */
 uint32_t vertrix_port_lock_leave_5c8920(PORT_SIGNATURE);
 
+/* Original 0x4784d0(eax = box, dx = key): press the key in 0x54d640 (0x4761d0) at the box position
+ * +0x48, +0x4a, or at 0x7d00 when +0x60 is set. */
+uint32_t vertrix_port_box_key_press(PORT_SIGNATURE);
+
+/* Original 0x478520(eax = box, dx = key): release the key in 0x54d640 (0x476280) at the box
+ * position +0x48, +0x4a, or at 0x7d00 when +0x60 is set. */
+uint32_t vertrix_port_box_key_release(PORT_SIGNATURE);
+
+/* Original 0x40ee60(eax = channels): when the device flags 0x531b44 have 0x80 store up to 64
+ * channels in 0x531b68 and flag 0x10 unless 0x20 is set. Returns 0, 2 for too many or 3 without a
+ * device. */
+uint32_t vertrix_port_audio_channels_set(PORT_SIGNATURE);
+
+/* Original 0x40c8d0(eax = count): for 1 to 32 store it in 0x52fc18 and set the enable byte of that
+ * many 0x18 byte voices at 0x52f92e. Returns 0, or 2 for a bad count. */
+uint32_t vertrix_port_voices_enable(PORT_SIGNATURE);
+
+/* Original 0x459760(eax = actor): step it (0x4ac500); when its frame is due (0x4ac520) advance it
+ * (0x4ac540, 0x4ac5b0) and show it (0x4ac8f0) unless it ended (0x4ad6e0). */
+uint32_t vertrix_port_actor_animate(PORT_SIGNATURE);
+
+/* Original 0x48d480(eax = rule): clear its 16 bytes and the dwords +0x10..+0x30. */
+uint32_t vertrix_port_rule_clear(PORT_SIGNATURE);
+
+/* Original 0x40af30: install the audio hooks (0x40ae80), clear 0x52f148 and 0x52f14c and start the
+ * audio thread 0x40aed0 (import 0x4f1b38) into 0x52f140, raising its priority (imports 0x4f1cb4 and
+ * 0x4f1cbc). */
+uint32_t vertrix_port_audio_thread_start(PORT_SIGNATURE);
+
+/* Original 0x45ec00: create the screen-sized surface 0x544bf4 from 0x4f90b0, 0x4f90b8 and 0x4f90bc
+ * (0x4875a0). */
+uint32_t vertrix_port_surface_create_544bf4(PORT_SIGNATURE);
+
+/* Original 0x48a620(eax = record): clear it, give it the table 0x517684 at +0x110 and copy the
+ * default name 0x510a5a to +0xc. */
+uint32_t vertrix_port_name_record_construct(PORT_SIGNATURE);
+
+/* Original 0x4cb460(eax = stream): give it the table 0x518cb4 with +4 and +0x14 set and the rest
+ * clear. */
+uint32_t vertrix_port_stream_base_construct(PORT_SIGNATURE);
+
+/* Original 0x4deec0(eax = object, edx = code): give it the table 0x51bb54, the kind 0x11 at +8 and
+ * the code at +0x18. */
+uint32_t vertrix_port_error_object_construct(PORT_SIGNATURE);
+
+/* Original 0x41aaa0: under the lock 0x5b9c50 (0x4854a0, 0x485520) hand the size +4, +8 of 0x558c84
+ * to 0x558c88 (0x47ce10). */
+uint32_t vertrix_port_view_size_set(PORT_SIGNATURE);
+
+/* Original 0x45f590(eax = name): 1 when the archive 0x5466c8 holds it (0x487fd0) or, without an
+ * archive, when the file exists (0x4895e0). */
+uint32_t vertrix_port_file_exists(PORT_SIGNATURE);
+
+/* Original 0x472360: 1 when no actor of the list 0x546770 (count 0x546774) is busy (0x4ac900),
+ * otherwise 0. */
+uint32_t vertrix_port_actors_all_idle(PORT_SIGNATURE);
+
 #endif
