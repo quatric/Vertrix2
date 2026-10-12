@@ -1267,4 +1267,59 @@ uint32_t vertrix_port_object_list_free(PORT_SIGNATURE);
  * value and 0. */
 uint32_t vertrix_port_pool_node_take(PORT_SIGNATURE);
 
+/* Original 0x45ceb0(eax = actor): reset it (0x45cdc0, keeping +0xb8); while it is busy (0x4ac250)
+ * stop and move it (0x4adfe0, 0x4ac8a0) once +0xb8 changed, otherwise stop it, move it by 1000 and
+ * wait 100 + random(edx) (0x4826c0, 0x4ac7d0) with the update 0x45cf30 (0x4ac8f0). */
+uint32_t vertrix_port_actor_wander_45cf30(PORT_SIGNATURE);
+
+/* Original 0x45f540(eax = target, edx = first, ebx = second): copy the first string to the target
+ * and append the second. */
+uint32_t vertrix_port_path_join(PORT_SIGNATURE);
+
+/* Original 0x45e490: allocate banks 0x546618 and 0x546634 (0x487640), each holding 0x5449fc entry
+ * 0x4fbfac combined with 0x546538 entry 9 (0x4877f0, 0x4831b0, 0x487850). */
+uint32_t vertrix_port_banks_setup_546618(PORT_SIGNATURE);
+
+/* Original 0x4765b0(eax = keys): release keys 0x74, 0x75 and 0xbe..0xc3 (0x476120) and reset keys
+ * 0x70..0x73 (0x476140). */
+uint32_t vertrix_port_keys_release_group(PORT_SIGNATURE);
+
+/* Original 0x4876c0(eax = bank, edx = argument): call 0x483790 on every image of the bank with the
+ * argument. Returns the count, with the last image or 0x483790 edx in edx. */
+uint32_t vertrix_port_bank_images_apply(PORT_SIGNATURE);
+
+/* Original 0x41a700(eax = scene): reload it (0x41a4e0), apply the setting 0x513c1d (0x41a320,
+ * 0x41a440) around 0x41aa20 and set +0xc0 to 0x41a780 (0x418820). Returns the handler chain. */
+uint32_t vertrix_port_scene_reload_513c1d(PORT_SIGNATURE);
+
+/* Original 0x456ea0(eax = actor): step it (0x4ac500); when its frame is due (0x4ac520) advance it
+ * (0x4ac540, 0x4ac5b0), set the speed +0x5c to two thirds of 0x5b9c8e and +0x60 to 4, and show it
+ * (0x4ac8f0) unless it ended (0x4ad6e0). */
+uint32_t vertrix_port_actor_animate_slide(PORT_SIGNATURE);
+
+/* Original 0x4724f0: allocate a 0x15c byte actor (0x4ca000, 0x4abd70), place it (0x4adf20), set its
+ * kind 8, wait 10 (0x4ac7d0), speed 100 at +0x5c with +0x60 = 1, the update 0x459760 (0x4ac8f0),
+ * clear 0x4ac910 and add it to the layer list 0x54676c (0x4b5e70). */
+uint32_t vertrix_port_sparkle_actor_add(PORT_SIGNATURE);
+
+/* Original 0x478d10(eax = width, edx = height, bl = bytes per pixel): allocate a 0x1c byte image
+ * (0x4ec160) with its pixels, set its depth (0x478cd0) and pitch +0x14 and clear it (0x478da0). */
+uint32_t vertrix_port_image_create(PORT_SIGNATURE);
+
+/* Original 0x40ce20(eax = value): for a positive value the period: 0x4f6584[value % 768] >> (value
+ * / 768) in linear mode (0x531b46 bit 0), otherwise 0xda7790 / value. 0 for the rest. */
+uint32_t vertrix_port_audio_period_from(PORT_SIGNATURE);
+
+/* Original 0x4acc10(eax = actor, edx = steps): move the byte +0x44 towards +0x45 by steps times the
+ * speed +0x46, not past it. 1 while it has not arrived. */
+uint32_t vertrix_port_actor_fade_approach(PORT_SIGNATURE);
+
+/* Original 0x48b4a0: construct 0x5bb254 (0x48b550) and the rule sets 0x5bb4ec..0x5bb594 (0x48d330),
+ * registering their exit routines 0x4feca0..0x4fece0 (0x4ec1f7). Returns the handler chain. */
+uint32_t vertrix_port_static_init_5bb254(PORT_SIGNATURE);
+
+/* Original 0x4ce7a0: allocate 0x84 bytes (0x4dba80) and construct the buffered file in them: two
+ * error objects (0x4deec0), a pool of 10 (0x4d8340) and the table 0x519364. */
+uint32_t vertrix_port_file_buffer_new(PORT_SIGNATURE);
+
 #endif
