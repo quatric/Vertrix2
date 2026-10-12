@@ -26,6 +26,7 @@ enum
     TEXT_PREPARE = 0x4ae150,
     TEXT_LAYOUT = 0x4408e0,
     TEXT_FONT = 0x15c,
+    RESOURCE_FRAMES = 0x487860,
     INPUT_CLICK = 0x4764a0,
     CLICK_KEY = 0x74,
     ACTOR_HIT = 0x4b0b70,
@@ -1613,4 +1614,24 @@ uint32_t vertrix_port_menu_button_frame(PORT_SIGNATURE)
     }
     eax = port_call(&port, BUTTON_INPUT, button, vertrix_lift_edx, ebx, button);
     return port_return(&port, eax, entry->edx);
+}
+
+uint32_t vertrix_port_actor_frame_count(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    port_set32(&port, entry->eax, ACTOR_FRAME_INDEX,
+               port_u32(&port, entry->eax, ACTOR_FRAME_INDEX) + 1);
+    return port_return(&port, entry->eax, entry->edx);
+}
+
+uint32_t vertrix_port_actor_frames_done(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t frames;
+    port_open(&port, calls, services, globals, entry);
+    frames = port_call(&port, RESOURCE_FRAMES, port_u32(&port, entry->eax, ACTOR_RESOURCE_DATA),
+                       entry->eax, entry->ebx, entry->ecx);
+    return port_return(&port, frames == port_u32(&port, vertrix_lift_edx, ACTOR_FRAME_INDEX),
+                       entry->edx);
 }

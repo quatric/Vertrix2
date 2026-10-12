@@ -303,4 +303,11 @@ uint32_t vertrix_port_menu_button_input(PORT_SIGNATURE);
  * are unchanged. */
 uint32_t vertrix_port_menu_button_frame(PORT_SIGNATURE);
 
+/* Original 0x4ac740 (eax = actor): count a frame (+0xb8). Registers are unchanged. */
+uint32_t vertrix_port_actor_frame_count(PORT_SIGNATURE);
+
+/* Original 0x4ac760 (eax = actor): whether its frame count (+0xb8) reached its resource's frame
+ * count (0x487860 of +0xb0). edx is unchanged. */
+uint32_t vertrix_port_actor_frames_done(PORT_SIGNATURE);
+
 #endif

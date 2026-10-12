@@ -201,4 +201,37 @@ uint32_t vertrix_port_time_from_system(PORT_SIGNATURE);
  * and returns the result's address. */
 uint32_t vertrix_port_time_from_file(PORT_SIGNATURE);
 
+/* Original 0x487860 (eax = object): its field +4. edx is unchanged. */
+uint32_t vertrix_port_field4(PORT_SIGNATURE);
+
+/* Original 0x475af0 (eax = object): clear its byte +0x5a. Registers are unchanged. */
+uint32_t vertrix_port_clear_flag5a(PORT_SIGNATURE);
+
+/* Original 0x41d660: count a tick at 0x5329f8. Registers are unchanged. */
+uint32_t vertrix_port_tick_count(PORT_SIGNATURE);
+
+/* Original 0x41aaf0: 0x485550 with eax 0x5b9c50. */
+uint32_t vertrix_port_screen_present_call(PORT_SIGNATURE);
+
+/* Original 0x475790 (eax = record, dl, ebx, ecx, stack = its fields): fill an input record: the
+ * byte +0, dwords +4, +8, +0xc, and clear the word +0x10 and dword +0x14. Registers are
+ * unchanged. */
+uint32_t vertrix_port_input_record_set(PORT_SIGNATURE);
+
+/* Original 0x4ca180 (eax = address of a string): copy it (0x4ca110) unless its record is the
+ * static one (negative count), when it is set to the empty text 0x5c5c00 (0x4ca370). edx is
+ * unchanged. */
+uint32_t vertrix_port_string_detach(PORT_SIGNATURE);
+
+/* Original 0x4e39d0 (eax = target, edx = source, ebx passed on): copy the source's length
+ * (0x4e39f0) plus one bytes (0x4e7b90). Returns the target. */
+uint32_t vertrix_port_text_copy(PORT_SIGNATURE);
+
+/* Original 0x486da0 (eax = surface holder): restore its surface (+0x68, the COM method +0x80 with
+ * 0), keeping the result at 0x5b9bc8. Returns whether it succeeded. edx is unchanged. */
+uint32_t vertrix_port_surface_restore_68(PORT_SIGNATURE);
+
+/* Original 0x485520: as 0x486da0 with the surface +0x6c and the result at 0x5b99c0. */
+uint32_t vertrix_port_surface_restore_6c(PORT_SIGNATURE);
+
 #endif

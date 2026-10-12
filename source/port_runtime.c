@@ -41,6 +41,14 @@ enum
     TRIG = 0x4c9b6a,
     TRIG_SINE = 2,
     GUARD_HANDLER = 0x4ec1ec,
+    TICKS = 0x5329f8,
+    SCREEN_PRESENT = 0x485550,
+    SCREEN_STATE = 0x5b9c50,
+    STRING_COPY_RECORD = 0x4ca110,
+    STRING_EMPTY_TEXT = 0x5c5c00,
+    STRING_SET_TEXT = 0x4ca370,
+    TEXT_LENGTH = 0x4e39f0,
+    COPY_MEMORY = 0x4e7b90,
     TIME_BUILD = 0x4e33d0,
     TIME_FROM_SYSTEM = 0x4e3420,
     FILE_TIME_TO_LOCAL = 0x4f1b54,
@@ -1213,4 +1221,111 @@ uint32_t vertrix_port_time_from_file(PORT_SIGNATURE)
     }
     port_set32(&port, entry->eax, 0, result);
     return port_return(&port, entry->eax, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_field4(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    return port_return(&port, port_u32(&port, entry->eax, 4), entry->edx);
+}
+
+uint32_t vertrix_port_clear_flag5a(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    port_set8(&port, entry->eax, 0x5a, 0);
+    return port_return(&port, entry->eax, entry->edx);
+}
+
+uint32_t vertrix_port_tick_count(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    port_set32(&port, 0, TICKS, port_u32(&port, 0, TICKS) + 1);
+    return port_return(&port, entry->eax, entry->edx);
+}
+
+uint32_t vertrix_port_screen_present_call(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    result = port_call(&port, SCREEN_PRESENT, SCREEN_STATE, entry->edx, entry->ebx, entry->ecx);
+    return port_return(&port, result, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_input_record_set(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t record = entry->eax;
+    port_open(&port, calls, services, globals, entry);
+    port_set16(&port, record, 0x10, 0);
+    port_set32(&port, record, 0x14, 0);
+    port_set8(&port, record, 0, entry->edx);
+    port_set32(&port, record, 4, entry->ebx);
+    port_set32(&port, record, 8, entry->ecx);
+    port_set32(&port, record, 0xc, entry->arguments[0]);
+    return port_return(&port, record, entry->edx);
+}
+
+uint32_t vertrix_port_string_detach(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t string = entry->eax;
+    uint32_t record;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    record = port_u32(&port, string, 0) - 0xc;
+    if ((int32_t)port_u32(&port, record, 0) >= 0)
+    {
+        result = port_call(&port, STRING_COPY_RECORD, string, record, entry->ebx, entry->ecx);
+    }
+    else
+    {
+        result =
+            port_call(&port, STRING_SET_TEXT, string, STRING_EMPTY_TEXT, entry->ebx, entry->ecx);
+    }
+    return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_text_copy(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t target = entry->eax;
+    uint32_t source = entry->edx;
+    uint32_t length;
+    port_open(&port, calls, services, globals, entry);
+    length = port_call(&port, TEXT_LENGTH, source, entry->ebx, entry->ebx, target);
+    port_call(&port, COPY_MEMORY, target, source, length + 1, target);
+    return port_return(&port, target, vertrix_lift_edx);
+}
+
+/* 0x486da0 and 0x485520: the COM restore of the surface at `field`, the result kept at `keep`. */
+static uint32_t surface_restore(PORT_SIGNATURE, uint32_t field, uint32_t keep)
+{
+    Port port;
+    uint32_t surface;
+    uint32_t methods;
+    uint32_t arguments[2];
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    surface = port_u32(&port, entry->eax, field);
+    methods = port_u32(&port, surface, 0);
+    arguments[0] = surface;
+    arguments[1] = 0;
+    result = port_call_stack(&port, port_u32(&port, methods, 0x80), surface, methods, entry->ebx,
+                             entry->ecx, arguments, 2);
+    port_set32(&port, 0, keep, result);
+    return port_return(&port, result == 0, entry->edx);
+}
+
+uint32_t vertrix_port_surface_restore_68(PORT_SIGNATURE)
+{
+    return surface_restore(calls, services, globals, entry, 0x68, 0x5b9bc8);
+}
+
+uint32_t vertrix_port_surface_restore_6c(PORT_SIGNATURE)
+{
+    return surface_restore(calls, services, globals, entry, 0x6c, 0x5b99c0);
 }
