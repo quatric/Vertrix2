@@ -1648,9 +1648,47 @@ uint32_t vertrix_port_mixer_volume_tables(PORT_SIGNATURE);
  * busy or 8 when voices run out (0x40ed70). */
 uint32_t vertrix_port_module_start(PORT_SIGNATURE);
 
-
 /* Original 0x4d6830(static initialiser): set the eight handler records 0x503a1c..0x503afc (every
  * 0x20 bytes) to 0x4d7430..0x4d74a0, clear 0x503b1c..0x503b24 and register the table (0x4d30f0). */
 uint32_t vertrix_port_static_init_503a1c(PORT_SIGNATURE);
+
+
+/* Original 0x4b9050(): expand the 16 dither patterns 0x4ff8ac into 64 rows of 16 flag bytes each at
+ * 0x5bdb00, count the set flags before each position of the first row of each into 0x5c1b00, and
+ * for patterns 1..15 record the gaps between set flags at 0x5c1c00 (cleared first, 0x4eb5c0). */
+uint32_t vertrix_port_dither_tables_build(PORT_SIGNATURE);
+
+/* Original 0x45eac0(): create the six fonts 0x544a88, 0x544aa4, 0x544b84, 0x544ba0, 0x544bbc and
+ * 0x544bd8 with their glyph counts and cell sizes from 0x4f9060..0x4f90ac (0x4875a0); the last one
+ * without the flag the others pass. */
+uint32_t vertrix_port_fonts_create(PORT_SIGNATURE);
+
+/* Original 0x40e940(): move the module player to the next row: unless it is stopped (0x531b44 bit
+ * 4), past the pattern length 0x531b54 advance the order position 0x531b5c (or jump to 0x531b70 or
+ * break to 0x531b74), wrapping to the restart order +0x24 or stopping at the song length +0x22 (bit
+ * 0x20); load the pattern of the order (+0x150 records of 12 bytes, 0x40 empty rows when missing)
+ * into 0x530440 and skip to the break row (0x40e690), then read the cell of each channel
+ * (0x40e770). */
+uint32_t vertrix_port_module_next_row(PORT_SIGNATURE);
+
+/* Original 0x404480(eax = frame, edx = header): decode an MPEG audio frame header into the frame
+ * record: version +0xc and +0x10, layer +0x18, rate index +0x24, protection +0x1c, bit rate +0x20,
+ * padding +0x28, private +0x2c, mode +0x30, extension +0x34, copyright +0x38, original +0x3c,
+ * emphasis +0x40 and channels +0; for layer III the frame size +0x44 from the tables 0x4f40ac and
+ * 0x4f41ac. A reserved rate stops (0x4eb4d4). Returns 1 for a usable header. */
+uint32_t vertrix_port_mpeg_header_decode(PORT_SIGNATURE);
+
+/* Original 0x472db0(): spawn the two title screen actors (0x4ca000, 0x4abd70 when it fails): random
+ * heading and speed (0x4826c0), an animation from 0x546834 (0x4ac950 or 0x4ac8d0 with 0x4fd648,
+ * 0x4ac710, 0x4ac8a0), position from 0x4fd650 and 0x4fd658, state 0x4fd660, the first one marked
+ * leading, and add each to the area list 0x546744 (0x4b5e70). */
+uint32_t vertrix_port_title_actors_spawn(PORT_SIGNATURE);
+
+/* Original 0x45d4d0(eax = actor): on a new frame (0x4ac520, 0x4adfe0, 0x4ac510) measure the
+ * distance (0x484680) and angle (0x484700) from (0x1aa, 0x28) to the target 0x558944, 0x558946
+ * (0x7d00 while 0x558958 is set); near it stop (0x4ac8d0, 0x4ac950), otherwise turn the facing
+ * +0xb8 one of eight steps towards the angle (0x4ac710, 0x4ac8a0), or face it at once with
+ * animation 0x54666c when not turning (+0xb0). */
+uint32_t vertrix_port_actor_face_target(PORT_SIGNATURE);
 
 #endif
