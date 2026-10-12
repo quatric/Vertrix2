@@ -69,4 +69,24 @@ uint32_t vertrix_port_buffer_put(PORT_SIGNATURE);
  * ebx 2. Returns its eax and edx. */
 uint32_t vertrix_port_sine(PORT_SIGNATURE);
 
+/* Original 0x481b30 (eax = object, dl = mode): its destructor, as 0x4ac130 is the actor's: with
+ * mode bit 4, 0x4ccb9f finalizes the record (type 0x515130) and 0x4ca040 frees it; otherwise the
+ * object gets its base table (0x516b14) under a guard record (0x516af0) and, with mode bit 2,
+ * 0x4ca050 frees it. Returns the object. */
+uint32_t vertrix_port_object_destroy(PORT_SIGNATURE);
+
+/* Original 0x4b79e0 (eax = list, edx = address of a string, ebx = index, ecx = argument): set the
+ * string to the list item's text: it starts as 0x5110cb (0x4ca280); for an item (0x4b79c0),
+ * 0x4b7710 makes the text into a local string, 0x4ca310 assigns it and 0x4ca210 releases the
+ * local, under a guard record (0x5186cc). Returns the string's address. */
+uint32_t vertrix_port_list_text(PORT_SIGNATURE);
+
+/* Original 0x4d8770 (eax = pointer array, edx = new size, ebx = grow step or -1): resize it (data
+ * +4, size +8, capacity +0xc, grow step +0x10). Size 0 frees the data (0x4ca040); with no data it
+ * is allocated (0x4c9ff0) and cleared (0x4eb5c0); within the capacity the new slots are cleared;
+ * beyond it the capacity grows by the step (the old size / 8 within 4 and 0x400 when 0), or to the
+ * size, and the slots are copied (0x4eb5e0) into the new data, the rest cleared and the old freed.
+ * Returns the last call's eax and edx (the array and size when none is made). */
+uint32_t vertrix_port_pointer_array_resize(PORT_SIGNATURE);
+
 #endif

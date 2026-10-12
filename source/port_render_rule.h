@@ -67,4 +67,11 @@ uint32_t vertrix_port_render_palette_pixel(PORT_SIGNATURE);
  * (0x5bb7c8). Returns the target skip (eax unchanged when there are no rows); edx is unchanged. */
 uint32_t vertrix_port_render_rows(PORT_SIGNATURE);
 
+/* Original 0x490c60: blend the source pixel ([[0x5bb764]]) into the target ([[0x5bb768]]): each
+ * channel is (source weight [0x55f1f0] + target weight [0x55f1f4] + the colour 0x54d5e8 to
+ * 0x54d5ea) halved, the halves ORed in place (a carry spills into the channel above). That pixel
+ * goes through the palette as 0x48d7f0 does, its entry kept at 0x54d5d4 (red, green and blue
+ * offsets in its top three bytes). Returns the target's address; edx is unchanged. */
+uint32_t vertrix_port_render_palette_blend(PORT_SIGNATURE);
+
 #endif

@@ -63,6 +63,8 @@ enum
     TRAVERSE_DEPTH = 0x5bb738,
     TRAVERSE_LAST = 0x5bbff0,
     PALETTE_SOURCE = 0x5bb764,
+    BLEND_SOURCE_WEIGHTS = 0x55f1f0,
+    BLEND_TARGET_WEIGHTS = 0x55f1f4,
     PALETTE_TARGET = 0x5bb768,
     PALETTE_INDEXES = 0x54b800,
     PALETTE_ENTRIES = 0x54cdc8,
@@ -374,4 +376,46 @@ uint32_t vertrix_port_render_rows(PORT_SIGNATURE)
     }
     port_set16(&port, 0, ROWS, 0);
     return port_return(&port, eax, entry->edx);
+}
+
+/* One channel of 0x490c60's blend: the two weights and the colour, halved. */
+static uint32_t blend_channel(Port *port, uint32_t source, uint32_t target, uint32_t colour)
+{
+    uint32_t sum = port_u8(port, port_u32(port, 0, BLEND_SOURCE_WEIGHTS), source) +
+                   port_u8(port, port_u32(port, 0, BLEND_TARGET_WEIGHTS), target) +
+                   port_u8(port, 0, colour);
+    return sum >> 1;
+}
+
+uint32_t vertrix_port_render_palette_blend(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t source;
+    uint32_t target;
+    uint32_t pixel;
+    uint32_t index;
+    uint32_t entry_bits;
+    uint32_t palette;
+    uint32_t colour;
+    port_open(&port, calls, services, globals, entry);
+    source = port_u32(&port, port_u32(&port, 0, PALETTE_SOURCE), 0);
+    target = port_u32(&port, 0, PALETTE_TARGET);
+    pixel = port_u32(&port, target, 0);
+    colour = blend_channel(&port, (source >> 16) & 0xff, (pixel >> 16) & 0xff, FORMAT_COLOUR_RED)
+             << 16;
+    colour |= blend_channel(&port, (source >> 8) & 0xff, (pixel >> 8) & 0xff, FORMAT_COLOUR_RED + 1)
+              << 8;
+    colour |= blend_channel(&port, source & 0xff, pixel & 0xff, FORMAT_COLOUR_RED + 2);
+    port_set32(&port, target, 0, colour);
+    pixel = port_u32(&port, target, 0);
+    index = (((pixel & 0xfc0000) >> 4) | ((pixel & 0xfc00) >> 2) | (pixel & 0xfc)) >> 2;
+    entry_bits = port_u32(&port, port_u32(&port, 0, PALETTE_INDEXES), index * 4);
+    port_set32(&port, 0, FORMAT_ENTRY, entry_bits);
+    palette = port_u32(&port, port_u32(&port, 0, PALETTE_ENTRIES), (entry_bits & 0xff) * 4);
+    colour = port_u8(&port, entry_bits >> 24, palette) << 16;
+    colour |= port_u8(&port, (entry_bits >> 16) & 0xff, palette) << 8;
+    colour |= port_u8(&port, (entry_bits >> 8) & 0xff, palette);
+    port_set32(&port, target, 0, colour);
+    port_set32(&port, 0, PALETTE_ENTRY, palette);
+    return port_return(&port, target, entry->edx);
 }

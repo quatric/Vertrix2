@@ -34,7 +34,30 @@ enum
     FPU_PRESENT = 0x5054a1,
     SINE_FPU = 0x4db710,
     TRIG = 0x4c9b6a,
-    TRIG_SINE = 2
+    TRIG_SINE = 2,
+    GUARD_HANDLER = 0x4ec1ec,
+    OBJECT_GUARD = 0x516af0,
+    OBJECT_TYPE = 0x515130,
+    OBJECT_FINALIZE = 0x4ccb9f,
+    FREE_RECORD = 0x4ca040,
+    FREE_OBJECT = 0x4ca050,
+    DESTROY_FREE = 2,
+    DESTROY_FINALIZE = 4,
+    LIST_TEXT_GUARD = 0x5186cc,
+    LIST_TEXT_DEFAULT = 0x5110cb,
+    STRING_FROM = 0x4ca280,
+    ITEM_TEXT = 0x4b7710,
+    STRING_ASSIGN = 0x4ca310,
+    STRING_RELEASE = 0x4ca210,
+    ARRAY_DATA = 4,
+    ARRAY_SIZE = 8,
+    ARRAY_CAPACITY = 0xc,
+    ARRAY_GROW = 0x10,
+    ARRAY_GROW_MIN = 4,
+    ARRAY_GROW_MAX = 0x400,
+    ALLOCATE = 0x4c9ff0,
+    CLEAR_BYTES = 0x4eb5c0,
+    MOVE_BYTES = 0x4eb5e0
 };
 
 uint32_t vertrix_port_random_seed_address(PORT_SIGNATURE)
@@ -292,4 +315,145 @@ uint32_t vertrix_port_sine(PORT_SIGNATURE)
         result = port_call(&port, TRIG, entry->eax, entry->edx, TRIG_SINE, entry->ecx);
     }
     return port_return(&port, result, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_object_destroy(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t object = entry->eax;
+    uint32_t mode = entry->edx;
+    uint32_t ebp = entry->esp - 4;
+    uint32_t result;
+    /* push ebp, ebx, ecx, esi, edi, then 0x24 bytes of locals. */
+    port_open_frame(&port, calls, services, globals, entry, 0x38);
+    if (mode & DESTROY_FINALIZE)
+    {
+        port_set32(&port, ebp, -0x34u, object);
+        port_set32(&port, ebp, -0x14u, 1);
+        result = port_call(&port, OBJECT_FINALIZE, object, OBJECT_TYPE, entry->ebx, object);
+        port_set32(&port, ebp, -0x14u, 0);
+        port_call(&port, FREE_RECORD, result, 0, entry->ebx, object);
+        return port_return(&port, object, vertrix_lift_edx);
+    }
+    port_set32(&port, object, OBJECT_TABLE, OBJECT_TABLE_VALUE);
+    /* The guard record the original links into fs:[0] and unlinks after the free. */
+    port_set32(&port, ebp, -0x20u, port.env.chain);
+    port_set32(&port, ebp, -0x1cu, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x18u, OBJECT_GUARD);
+    port_set32(&port, ebp, -0x14u, 0);
+    if ((mode & DESTROY_FREE) == 0)
+    {
+        return port_return(&port, object, mode);
+    }
+    port_call(&port, FREE_OBJECT, object, mode, GUARD_HANDLER, object);
+    return port_return(&port, object, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_list_text(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t list = entry->eax;
+    uint32_t string = entry->edx;
+    uint32_t ebp = entry->esp - 4;
+    uint32_t item;
+    /* push ebp, esi, edi, then 0x18 bytes of locals: the guard record and a string. */
+    port_open_frame(&port, calls, services, globals, entry, 0x24);
+    port_set32(&port, ebp, -0x20u, port.env.chain);
+    port_set32(&port, ebp, -0x1cu, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x18u, LIST_TEXT_GUARD);
+    port_set32(&port, ebp, -0x14u, 0);
+    port_call(&port, STRING_FROM, string, LIST_TEXT_DEFAULT, entry->ebx, entry->ecx);
+    item = port_call(&port, LIST_ITEM, list, entry->ebx, entry->ebx, entry->ecx);
+    if (item != 0)
+    {
+        uint32_t text = port_call(&port, ITEM_TEXT, item, ebp - 0xc, entry->ecx, entry->ecx);
+        port_set32(&port, ebp, -0x14u, 1);
+        port_call(&port, STRING_ASSIGN, string, text, 0, 1);
+        port_set32(&port, ebp, -0x14u, 0);
+        port_call(&port, STRING_RELEASE, ebp - 0xc, 0, 0, 1);
+    }
+    port_set32(&port, ebp, -0x14u, 0);
+    return port_return(&port, string, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_pointer_array_resize(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t array = entry->eax;
+    uint32_t size = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t edx = entry->edx;
+    uint32_t data;
+    uint32_t count;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    if (ebx != 0xffffffffu)
+    {
+        port_set32(&port, array, ARRAY_GROW, ebx);
+    }
+    if (size == 0)
+    {
+        result = port_call(&port, FREE_RECORD, port_u32(&port, array, ARRAY_DATA), 0, ebx, array);
+        port_set32(&port, array, ARRAY_DATA, 0);
+        port_set32(&port, array, ARRAY_CAPACITY, 0);
+        port_set32(&port, array, ARRAY_SIZE, 0);
+        return port_return(&port, result, vertrix_lift_edx);
+    }
+    if (port_u32(&port, array, ARRAY_DATA) == 0)
+    {
+        data = port_call(&port, ALLOCATE, size * 4, 0, size * 4, array);
+        port_set32(&port, array, ARRAY_DATA, data);
+        result = port_call(&port, CLEAR_BYTES, data, vertrix_lift_edx, size * 4, array);
+        port_set32(&port, array, ARRAY_CAPACITY, size);
+        port_set32(&port, array, ARRAY_SIZE, size);
+        return port_return(&port, result, vertrix_lift_edx);
+    }
+    if ((int32_t)size <= (int32_t)port_u32(&port, array, ARRAY_CAPACITY))
+    {
+        result = array;
+        count = port_u32(&port, array, ARRAY_SIZE);
+        if ((int32_t)size > (int32_t)count)
+        {
+            result = port_call(&port, CLEAR_BYTES, port_u32(&port, array, ARRAY_DATA) + count * 4,
+                               0, (size - count) * 4, array);
+            edx = vertrix_lift_edx;
+        }
+        port_set32(&port, array, ARRAY_SIZE, size);
+        return port_return(&port, result, edx);
+    }
+    {
+        uint32_t grow = port_u32(&port, array, ARRAY_GROW);
+        uint32_t capacity;
+        if (grow == 0)
+        {
+            /* The old size / 8 towards zero; edx keeps the rounding's -8 or 0. */
+            count = port_u32(&port, array, ARRAY_SIZE);
+            edx = (uint32_t)((int32_t)count >> 31) << 3;
+            grow = (uint32_t)((int32_t)count / 8);
+            if ((int32_t)grow < ARRAY_GROW_MIN)
+            {
+                grow = ARRAY_GROW_MIN;
+            }
+            else if ((int32_t)grow > ARRAY_GROW_MAX)
+            {
+                grow = ARRAY_GROW_MAX;
+            }
+        }
+        capacity = port_u32(&port, array, ARRAY_CAPACITY) + grow;
+        if ((int32_t)size >= (int32_t)capacity)
+        {
+            capacity = size;
+        }
+        data = port_call(&port, ALLOCATE, capacity * 4, edx, ebx, array);
+        count = port_u32(&port, array, ARRAY_SIZE);
+        port_call(&port, MOVE_BYTES, data, port_u32(&port, array, ARRAY_DATA), count * 4, array);
+        count = port_u32(&port, array, ARRAY_SIZE);
+        port_call(&port, CLEAR_BYTES, data + count * 4, 0, (size - count) * 4, array);
+        result = port_call(&port, FREE_RECORD, port_u32(&port, array, ARRAY_DATA), vertrix_lift_edx,
+                           (size - count) * 4, array);
+        port_set32(&port, array, ARRAY_DATA, data);
+        port_set32(&port, array, ARRAY_SIZE, size);
+        port_set32(&port, array, ARRAY_CAPACITY, capacity);
+        return port_return(&port, result, vertrix_lift_edx);
+    }
 }
