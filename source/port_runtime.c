@@ -15,6 +15,11 @@ enum
     CODE_PAGE = 0x50a820,
     CODE_PAGE_DOUBLE_BYTE = 0x3a4,
     IS_SPACE_DOUBLE_BYTE = 0x4e7140,
+    IS_DIGIT_DOUBLE_BYTE = 0x4e70d0,
+    C1_DIGIT = 4,
+    CHARACTER_CLASSES = 0x507d58,
+    CLASS_SPACE = 2,
+    CLASS_DIGIT = 0x20,
     CHARACTER_BYTES = 0x4e7120,
     BYTES_LENGTH = 0x4e6f30,
     GET_STRING_TYPE = 0x4f1bec,
@@ -116,7 +121,9 @@ uint32_t vertrix_port_thread_data(PORT_SIGNATURE)
     return port_return(&port, data, entry->edx);
 }
 
-uint32_t vertrix_port_is_space(PORT_SIGNATURE)
+/* The character test of 0x4e10d0 and 0x4e1060: `double_byte` answers for a lead byte under the
+ * double-byte code page, otherwise GetStringTypeA's CT_CTYPE1 type is masked. */
+static uint32_t character_type(PORT_SIGNATURE, uint32_t double_byte, uint32_t mask)
 {
     /* push ecx, push edx, then the character type (esp) and the bytes (esp + 4). */
     enum
@@ -134,7 +141,7 @@ uint32_t vertrix_port_is_space(PORT_SIGNATURE)
     if (port_u32(&port, 0, CODE_PAGE) == CODE_PAGE_DOUBLE_BYTE && (entry->eax & 0xff00) != 0)
     {
         uint32_t result =
-            port_call(&port, IS_SPACE_DOUBLE_BYTE, entry->eax, entry->edx, entry->ebx, entry->ecx);
+            port_call(&port, double_byte, entry->eax, entry->edx, entry->ebx, entry->ecx);
         return port_return(&port, result, port_u32(&port, entry->esp, -8u));
     }
     port_call(&port, CHARACTER_BYTES, entry->eax, bytes, entry->ebx, entry->ecx);
@@ -151,8 +158,55 @@ uint32_t vertrix_port_is_space(PORT_SIGNATURE)
     {
         return port_return(&port, 0, port_u32(&port, entry->esp, -8u));
     }
-    return port_return(&port, port_u32(&port, type, 0) & C1_SPACE,
-                       port_u32(&port, entry->esp, -8u));
+    return port_return(&port, port_u32(&port, type, 0) & mask, port_u32(&port, entry->esp, -8u));
+}
+
+uint32_t vertrix_port_is_space(PORT_SIGNATURE)
+{
+    return character_type(calls, services, globals, entry, IS_SPACE_DOUBLE_BYTE, C1_SPACE);
+}
+
+uint32_t vertrix_port_is_digit(PORT_SIGNATURE)
+{
+    return character_type(calls, services, globals, entry, IS_DIGIT_DOUBLE_BYTE, C1_DIGIT);
+}
+
+uint32_t vertrix_port_leap_year(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t year = entry->eax;
+    port_open(&port, calls, services, globals, entry);
+    return port_return(&port, (year & 3) == 0 && (year % 100 != 0 || year % 400 == 0), entry->edx);
+}
+
+uint32_t vertrix_port_parse_integer(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t text = entry->eax;
+    uint32_t sign;
+    uint32_t value = 0;
+    port_open(&port, calls, services, globals, entry);
+    while (port_u8(&port, 0, CHARACTER_CLASSES + ((port_u8(&port, text, 0) + 1) & 0xff)) &
+           CLASS_SPACE)
+    {
+        text++;
+    }
+    sign = port_u8(&port, text, 0);
+    if (sign == '+' || sign == '-')
+    {
+        text++;
+    }
+    while (port_u8(&port, 0, CHARACTER_CLASSES + ((port_u8(&port, text, 0) + 1) & 0xff)) &
+           CLASS_DIGIT)
+    {
+        value = value * 10 + port_u8(&port, text, 0) - '0';
+        text++;
+    }
+    if (sign == '-')
+    {
+        value = 0u - value;
+    }
+    return port_return(&port, value, entry->edx);
 }
 
 uint32_t vertrix_port_fixed_multiply(PORT_SIGNATURE)

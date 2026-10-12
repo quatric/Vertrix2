@@ -8,6 +8,11 @@ enum
     ACTOR_COUNTER = 0xcc,
     ACTOR_PROGRESS_STEPS = 0x4ac640,
     ACTOR_ANGLE = 0x22,
+    ACTOR_ANGLE_WORD = 0x24,
+    ACTOR_TURN = 0x28,
+    FULL_TURN = 360,
+    TURN_WHOLE = 0x5bb5f4,
+    TURN_STEPS = 0x5bb5f8,
     COSINES = 0x59939c,
     SINES = 0x598dfc,
     FIXED_MULTIPLY = 0x4849e0,
@@ -832,4 +837,43 @@ uint32_t vertrix_port_actor_attach(PORT_SIGNATURE)
         port_call(&port, ACTOR_CLEAR_FRAME_COUNTER, actor, vertrix_lift_edx, entry->ebx, actor);
     port_set32(&port, actor, ACTOR_RESOURCE_DATA, vertrix_lift_edx);
     return port_return(&port, result, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_actor_turn(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t actor = entry->eax;
+    uint32_t steps = entry->edx;
+    uint32_t whole = 1;
+    uint32_t taken;
+    uint32_t edx;
+    port_open(&port, calls, services, globals, entry);
+    taken = port_u32(&port, 0, TURN_STEPS);
+    edx = (entry->edx & 0xffff0000u) | port_u16(&port, actor, ACTOR_TURN);
+    if ((edx & 0xffff) != 0 && steps != 0)
+    {
+        for (taken = 0; taken < steps; taken++)
+        {
+            uint32_t angle =
+                (port_u16(&port, actor, ACTOR_ANGLE_WORD) + port_u16(&port, actor, ACTOR_TURN)) &
+                0xffff;
+            port_set16(&port, actor, ACTOR_ANGLE_WORD, angle);
+            edx = actor_angle(&port, actor);
+            if ((int32_t)edx >= FULL_TURN)
+            {
+                port_set16(&port, actor, ACTOR_ANGLE_WORD, angle % FULL_TURN);
+                whole = 0;
+                edx = actor_angle(&port, actor);
+            }
+            if ((int32_t)edx < 0)
+            {
+                edx = ((port_u16(&port, actor, ACTOR_ANGLE_WORD) + FULL_TURN) & 0xffff) % FULL_TURN;
+                port_set16(&port, actor, ACTOR_ANGLE_WORD, edx);
+                whole = 0;
+            }
+        }
+    }
+    port_set32(&port, 0, TURN_WHOLE, whole);
+    port_set32(&port, 0, TURN_STEPS, taken);
+    return port_return(&port, whole, edx);
 }

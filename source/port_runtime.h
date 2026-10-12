@@ -25,6 +25,17 @@ uint32_t vertrix_port_thread_data(PORT_SIGNATURE);
  * type, 0 when the call fails. edx is its saved copy, which long bytes overrun. */
 uint32_t vertrix_port_is_space(PORT_SIGNATURE);
 
+/* Original 0x4e1060 (eax = character): isdigit, as 0x4e10d0 with 0x4e70d0 for a lead byte and the
+ * digit bit (4) of the type. */
+uint32_t vertrix_port_is_digit(PORT_SIGNATURE);
+
+/* Original 0x4e9060 (eax = year): whether it is a leap year. edx is unchanged. */
+uint32_t vertrix_port_leap_year(PORT_SIGNATURE);
+
+/* Original 0x4d6710 (eax = text): atoi: spaces skipped (class bit 2 of the table 0x507d58, indexed
+ * by the byte plus one), a sign, then the digits (class bit 0x20). edx is unchanged. */
+uint32_t vertrix_port_parse_integer(PORT_SIGNATURE);
+
 /* Original 0x4849e0 (eax, edx = 16.16 fixed-point values): their product, the signed 64-bit
  * product's middle 32 bits; edx is its high dword. */
 uint32_t vertrix_port_fixed_multiply(PORT_SIGNATURE);

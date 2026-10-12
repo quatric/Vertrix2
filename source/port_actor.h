@@ -175,4 +175,10 @@ uint32_t vertrix_port_actor_clear_counter(PORT_SIGNATURE);
  * edx. */
 uint32_t vertrix_port_actor_attach(PORT_SIGNATURE);
 
+/* Original 0x4ad060 (eax = actor, edx = steps): turn the actor's angle (the word +0x24) by its
+ * turn (+0x28) that many times, wrapped into 0 to 359 (a negative angle as its unsigned word plus
+ * 360). Returns 1 when it never wrapped, else 0, also kept at 0x5bb5f4 with the steps taken at
+ * 0x5bb5f8 (left when there is no turn). edx is the last angle read or remainder. */
+uint32_t vertrix_port_actor_turn(PORT_SIGNATURE);
+
 #endif
