@@ -131,4 +131,22 @@ uint32_t vertrix_port_string_copy(PORT_SIGNATURE);
  * the zero after it. Returns the text, edx the length. */
 uint32_t vertrix_port_string_set_length(PORT_SIGNATURE);
 
+/* Original 0x4ca670 (eax = address of a string, edx = size): make it its own and at least that
+ * big: when shared or too small, 0x4ca0d0 makes a record of the size (at least the length), the
+ * text is copied (0x4eb5e0) with its length, and 0x4ca150 releases the old record. Returns the
+ * text. */
+uint32_t vertrix_port_string_reserve_unique(PORT_SIGNATURE);
+
+/* Original 0x4cdfe0 (eax = address of a string): cut the spaces off its end (isspace 0x4e10d0, the
+ * next character 0x4e1054) after making it its own (0x4ca1a0). edx is unchanged. */
+uint32_t vertrix_port_string_trim_end(PORT_SIGNATURE);
+
+/* Original 0x4ce030 (eax = address of a string): cut the spaces off its start, moving the rest
+ * down (0x4e1140). edx is unchanged. */
+uint32_t vertrix_port_string_trim_start(PORT_SIGNATURE);
+
+/* Original 0x4df884 (eax = text, ebx = limit): its length, at most the limit; edx is left one past
+ * the last byte read. */
+uint32_t vertrix_port_text_length_limit(PORT_SIGNATURE);
+
 #endif

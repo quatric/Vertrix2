@@ -26,6 +26,9 @@ enum
     STRING_RESERVE = 0x4ca1e0,
     STRING_SET = 0x4ca2e0,
     STRING_MAKE_UNIQUE = 0x4ca1a0,
+    IS_SPACE = 0x4e10d0,
+    CHAR_NEXT = 0x4e1054,
+    MOVE_TEXT = 0x4e1140,
     STRING_SET_TEXT = 0x4ca370,
     TEXT_LENGTH = 0x4f1d24,
     READ_RESOURCE_STRING = 0x4db8c0
@@ -538,4 +541,119 @@ uint32_t vertrix_port_string_set_length(PORT_SIGNATURE)
     text = port_u32(&port, string, 0);
     port_set8(&port, length, text, 0);
     return port_return(&port, text, length);
+}
+
+uint32_t vertrix_port_string_reserve_unique(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t string = entry->eax;
+    uint32_t size = entry->edx;
+    uint32_t record;
+    uint32_t length;
+    port_open(&port, calls, services, globals, entry);
+    record = port_u32(&port, string, 0) - STRING_TEXT;
+    if ((int32_t)port_u32(&port, record, STRING_COUNT) <= 1 &&
+        (int32_t)size <= (int32_t)port_u32(&port, record, STRING_CAPACITY))
+    {
+        return port_return(&port, port_u32(&port, string, 0), entry->edx);
+    }
+    record = port_u32(&port, string, 0) - STRING_TEXT;
+    length = port_u32(&port, record, STRING_LENGTH);
+    if ((int32_t)size < (int32_t)length)
+    {
+        size = length;
+    }
+    port_call(&port, STRING_NEW, string, size, entry->ebx, length);
+    port_call(&port, MOVE_BYTES, port_u32(&port, string, 0), record + STRING_TEXT, length + 1,
+              length);
+    port_set32(&port, port_u32(&port, string, 0) - STRING_TEXT, STRING_LENGTH, length);
+    port_call_stack(&port, RELEASE_RECORD, port_u32(&port, string, 0) - STRING_TEXT,
+                    vertrix_lift_edx, length + 1, length, &record, 1);
+    return port_return(&port, port_u32(&port, string, 0), vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_string_trim_end(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t string = entry->eax;
+    uint32_t at;
+    uint32_t last = 0;
+    uint32_t eax;
+    port_open(&port, calls, services, globals, entry);
+    eax = port_call(&port, STRING_MAKE_UNIQUE, string, entry->edx, entry->ebx, entry->ecx);
+    at = port_u32(&port, string, 0);
+    while (port_u8(&port, at, 0) != 0)
+    {
+        /* The first of a run of trailing spaces. */
+        if (port_call(&port, IS_SPACE, (uint32_t)(int8_t)port_u8(&port, at, 0), at, entry->ebx,
+                      last) != 0)
+        {
+            if (last == 0)
+            {
+                last = at;
+            }
+        }
+        else
+        {
+            last = 0;
+        }
+        at = vertrix_lift_edx;
+        eax = at = port_call(&port, CHAR_NEXT, at, at, entry->ebx, last);
+    }
+    if (last != 0)
+    {
+        port_set8(&port, last, 0, 0);
+        eax = port_u32(&port, string, 0);
+        port_set32(&port, eax, -8u, last - port_u32(&port, string, 0));
+        eax -= STRING_TEXT;
+    }
+    return port_return(&port, eax, entry->edx);
+}
+
+uint32_t vertrix_port_string_trim_start(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t string = entry->eax;
+    uint32_t at;
+    uint32_t text;
+    uint32_t length;
+    port_open(&port, calls, services, globals, entry);
+    port_call(&port, STRING_MAKE_UNIQUE, string, entry->edx, entry->ebx, string);
+    at = port_u32(&port, string, 0);
+    for (;;)
+    {
+        uint32_t space = port_call(&port, IS_SPACE, (uint32_t)(int8_t)port_u8(&port, at, 0), at,
+                                   entry->ebx, string);
+        at = vertrix_lift_edx;
+        if (space == 0)
+        {
+            break;
+        }
+        at = port_call(&port, CHAR_NEXT, at, at, entry->ebx, string);
+    }
+    text = port_u32(&port, string, 0);
+    length = port_u32(&port, text - STRING_TEXT, STRING_LENGTH) - (at - text);
+    port_call(&port, MOVE_TEXT, text, at, length + 1, string);
+    text = port_u32(&port, string, 0);
+    port_set32(&port, text, -8u, length);
+    return port_return(&port, text - STRING_TEXT, entry->edx);
+}
+
+uint32_t vertrix_port_text_length_limit(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t at = entry->eax;
+    uint32_t length = 0;
+    port_open(&port, calls, services, globals, entry);
+    for (;;)
+    {
+        uint32_t byte = port_u8(&port, at, 0);
+        at++;
+        if (byte == 0 || length == entry->ebx)
+        {
+            break;
+        }
+        length++;
+    }
+    return port_return(&port, length, at);
 }
