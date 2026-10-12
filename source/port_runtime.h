@@ -18,4 +18,19 @@ uint32_t vertrix_port_random(PORT_SIGNATURE);
  * +0x53 is set, 0x4e843c (eax and ebx the data) gives it instead. edx is unchanged. */
 uint32_t vertrix_port_thread_data(PORT_SIGNATURE);
 
+/* Original 0x4e10d0 (eax = character): isspace. With the double-byte code page 0x3a4 and a lead
+ * byte in ah, 0x4e7140 answers. Otherwise 0x4e7120 writes the character's bytes to a local,
+ * 0x4e6f30 (dl 0) gives their length and the byte after them is cleared (with the low byte of its
+ * edx), and GetStringTypeA ([0x4f1bec], CT_CTYPE1) types them: the space bit (8) of the first's
+ * type, 0 when the call fails. edx is its saved copy, which long bytes overrun. */
+uint32_t vertrix_port_is_space(PORT_SIGNATURE);
+
+/* Original 0x4849e0 (eax, edx = 16.16 fixed-point values): their product, the signed 64-bit
+ * product's middle 32 bits; edx is its high dword. */
+uint32_t vertrix_port_fixed_multiply(PORT_SIGNATURE);
+
+/* Original 0x4b79c0 (eax = list, edx = index): the list's item at the index (the items at +4,
+ * their count at +8), 0 past the end (unsigned). edx is unchanged. */
+uint32_t vertrix_port_list_item(PORT_SIGNATURE);
+
 #endif

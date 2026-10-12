@@ -119,4 +119,8 @@ uint32_t vertrix_port_actor_value_idle_call(PORT_SIGNATURE);
  * unchanged. */
 uint32_t vertrix_port_actor_paint(PORT_SIGNATURE);
 
+/* Original 0x4ac540: the actor's elapsed time (+0xbc) in whole steps of its time scale (+0xc0, 1
+ * when 0), unsigned. edx is unchanged. */
+uint32_t vertrix_port_actor_steps(PORT_SIGNATURE);
+
 #endif

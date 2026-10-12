@@ -19,7 +19,14 @@ enum
     RELEASE_RECORD = 0x4ca150,
     GROW_APPEND = 0x4ca3f0,
     MOVE_BYTES = 0x4eb5e0,
-    STRING_NEW = 0x4ca0d0
+    STRING_NEW = 0x4ca0d0,
+    STRING_CLEAR = 0x4ca110,
+    STRING_COPY = 0x4ca2e0,
+    INCREMENT = 0x4f1c38,
+    STRING_RESERVE = 0x4ca1e0,
+    STRING_SET = 0x4ca2e0,
+    TEXT_LENGTH = 0x4f1d24,
+    READ_RESOURCE_STRING = 0x4db8c0
 };
 
 static int lead_byte(Port *port, uint32_t text)
@@ -256,4 +263,217 @@ uint32_t vertrix_port_string_concat(PORT_SIGNATURE)
     result = port_call(&port, MOVE_BYTES, port_u32(&port, string, 0) + first_count, second,
                        second_count, second_count);
     return port_return(&port, result, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_string_assign(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t variable = entry->eax;
+    uint32_t source = entry->edx;
+    uint32_t record;
+    uint32_t edx = entry->edx;
+    port_open(&port, calls, services, globals, entry);
+    if (port_u32(&port, variable, 0) == port_u32(&port, source, 0))
+    {
+        return port_return(&port, variable, edx);
+    }
+    record = port_u32(&port, variable, 0) - STRING_TEXT;
+    if (((int32_t)port_u32(&port, record, STRING_COUNT) >= 0 ||
+         record == port_u32(&port, 0, EMPTY_STRING)) &&
+        (int32_t)port_u32(&port, port_u32(&port, source, 0) - STRING_TEXT, STRING_COUNT) >= 0)
+    {
+        port_call(&port, STRING_CLEAR, variable, source, entry->ebx, entry->ecx);
+        edx = vertrix_lift_edx;
+        record = port_u32(&port, edx, 0);
+        port_set32(&port, variable, 0, record);
+        record -= STRING_TEXT;
+        port_call_stack(&port, INCREMENT, record, edx, entry->ebx, entry->ecx, &record, 1);
+    }
+    else
+    {
+        uint32_t text = port_u32(&port, source, 0);
+        port_call(&port, STRING_COPY, variable, port_u32(&port, text - STRING_TEXT, STRING_LENGTH),
+                  text, entry->ecx);
+    }
+    return port_return(&port, variable, vertrix_lift_edx);
+}
+
+/* Whether the dword holds a zero byte (the original's `(x - 0x01010101) & ~x & 0x80808080`). */
+static int has_zero(uint32_t value)
+{
+    return ((value + 0xfefefeffu) & ~value & 0x80808080u) != 0;
+}
+
+/* Two differing dwords: -1 or 1 by their first differing byte, 0 when a matching zero byte comes
+ * first. */
+static uint32_t dword_order(uint32_t mine, uint32_t theirs, LiftFlags *flags)
+{
+    unsigned shift;
+    for (shift = 0; shift < 32; shift += 8)
+    {
+        uint32_t a = (mine >> shift) & 0xff;
+        uint32_t b = (theirs >> shift) & 0xff;
+        if (a != b)
+        {
+            return lift_or(8, a < b ? 0xff : 0, 1, flags) == 1 ? 1 : 0xffffffffu;
+        }
+        if (a == 0)
+        {
+            break;
+        }
+    }
+    return 0;
+}
+
+uint32_t vertrix_port_string_compare(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t text = entry->eax;
+    uint32_t other = entry->edx;
+    uint32_t result = 0;
+    LiftFlags flags = {0, 0, 0, 0, 0, 0};
+    port_open(&port, calls, services, globals, entry);
+    while (text != other)
+    {
+        unsigned index;
+        int ended = 0;
+        for (index = 0; index < 4 && !ended; index++)
+        {
+            uint32_t mine = port_u32(&port, text, index * 4);
+            uint32_t theirs = port_u32(&port, other, index * 4);
+            if (mine != theirs)
+            {
+                result = dword_order(mine, theirs, &flags);
+                ended = 1;
+                break;
+            }
+            if (index == 3)
+            {
+                text += 16;
+                other += 16;
+            }
+            ended = has_zero(mine);
+        }
+        if (ended)
+        {
+            break;
+        }
+    }
+    if (result == 0)
+    {
+        (void)lift_sub(32, 0, 0, &flags);
+    }
+    vertrix_lift_fl = flags;
+    return port_return(&port, result, other);
+}
+
+uint32_t vertrix_port_string_init(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t string = entry->eax;
+    uint32_t text;
+    port_open(&port, calls, services, globals, entry);
+    text = port_call(&port, EMPTY_TEXT, string, entry->edx, string, entry->ecx);
+    port_set32(&port, string, 0, port_u32(&port, text, 0));
+    return port_return(&port, string, entry->edx);
+}
+
+uint32_t vertrix_port_string_reserve(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t string = entry->eax;
+    uint32_t record;
+    port_open(&port, calls, services, globals, entry);
+    record = port_u32(&port, string, 0) - STRING_TEXT;
+    if ((int32_t)port_u32(&port, record, STRING_COUNT) <= 1 &&
+        (int32_t)entry->edx <= (int32_t)port_u32(&port, record, STRING_CAPACITY))
+    {
+        return port_return(&port, record, entry->edx);
+    }
+    port_call(&port, STRING_CLEAR, string, entry->edx, entry->ebx, string);
+    record = port_call(&port, STRING_NEW, string, vertrix_lift_edx, entry->ebx, string);
+    return port_return(&port, record, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_string_set(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t string = entry->eax;
+    uint32_t length = entry->edx;
+    uint32_t text = entry->ebx;
+    uint32_t edx;
+    port_open(&port, calls, services, globals, entry);
+    port_call(&port, STRING_RESERVE, string, length, text, string);
+    port_call(&port, MOVE_BYTES, port_u32(&port, string, 0), text, length, string);
+    edx = vertrix_lift_edx;
+    text = port_u32(&port, string, 0);
+    port_set32(&port, text, -8u, length);
+    text = port_u32(&port, string, 0);
+    port_set8(&port, length, text, 0);
+    return port_return(&port, text, edx);
+}
+
+uint32_t vertrix_port_string_set_text(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t string = entry->eax;
+    uint32_t text = entry->edx;
+    uint32_t length = text;
+    port_open(&port, calls, services, globals, entry);
+    if (text != 0)
+    {
+        length = port_call_stack(&port, TEXT_LENGTH, string, text, text, entry->ecx, &text, 1);
+    }
+    port_call(&port, STRING_SET, string, length, text, entry->ecx);
+    return port_return(&port, string, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_string_make_unique(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t string = entry->eax;
+    uint32_t record;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    record = port_u32(&port, string, 0) - STRING_TEXT;
+    if ((int32_t)port_u32(&port, record, STRING_COUNT) <= 1)
+    {
+        return port_return(&port, string, entry->edx);
+    }
+    port_call(&port, STRING_CLEAR, string, entry->edx, record, string);
+    port_call(&port, STRING_NEW, string, port_u32(&port, record, STRING_LENGTH), record, string);
+    result = port_call(&port, MOVE_BYTES, port_u32(&port, string, 0), record + STRING_TEXT,
+                       port_u32(&port, record, STRING_LENGTH) + 1, port_u32(&port, string, 0));
+    return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_string_from(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t string = entry->eax;
+    uint32_t source = entry->edx;
+    uint32_t text;
+    uint32_t edx;
+    port_open(&port, calls, services, globals, entry);
+    text = port_call(&port, EMPTY_TEXT, string, entry->edx, entry->ebx, entry->ecx);
+    port_set32(&port, string, 0, port_u32(&port, text, 0));
+    edx = vertrix_lift_edx;
+    if (source != 0 && (source >> 16) == 0)
+    {
+        port_call(&port, READ_RESOURCE_STRING, string, source & 0xffff, entry->ebx, entry->ecx);
+        edx = vertrix_lift_edx;
+    }
+    else if (source != 0)
+    {
+        uint32_t length = port_call_stack(&port, TEXT_LENGTH, source >> 16, edx, entry->ebx,
+                                          entry->ecx, &source, 1);
+        edx = vertrix_lift_edx;
+        if (length != 0)
+        {
+            port_call(&port, STRING_NEW, string, length, length, entry->ecx);
+            port_call(&port, MOVE_BYTES, port_u32(&port, string, 0), source, length, entry->ecx);
+            edx = vertrix_lift_edx;
+        }
+    }
+    return port_return(&port, string, edx);
 }

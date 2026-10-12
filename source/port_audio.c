@@ -498,6 +498,22 @@ uint32_t vertrix_port_bits_get(PORT_SIGNATURE)
     return port_return(&port, value, entry->edx);
 }
 
+uint32_t vertrix_port_bit_get(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t position;
+    uint32_t byte;
+    uint32_t offset;
+    port_open(&port, calls, services, globals, entry);
+    position = port_u32(&port, 0, BIT_POSITION);
+    byte = port_shl(port_u8(&port, position, 0), port_u8(&port, 0, BIT_OFFSET)) & 0xff;
+    offset = port_u32(&port, 0, BIT_OFFSET) + 1;
+    port_set32(&port, 0, BIT_OFFSET, offset);
+    port_set32(&port, 0, BIT_POSITION, position + (uint32_t)((int32_t)offset >> 3));
+    port_set32(&port, 0, BIT_OFFSET, offset & 7);
+    return port_return(&port, byte >> 7, entry->edx);
+}
+
 static uint32_t channel_state(Port *port, uint32_t channel)
 {
     return port_u8(port, channel, CHANNEL_STATE);

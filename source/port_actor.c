@@ -644,3 +644,16 @@ uint32_t vertrix_port_actor_paint(PORT_SIGNATURE)
     eax = outline_box(&port, actor, 2, ACTOR_OUTLINE_INNER);
     return port_return(&port, eax, entry->edx);
 }
+
+uint32_t vertrix_port_actor_steps(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t scale;
+    port_open(&port, calls, services, globals, entry);
+    scale = port_u32(&port, entry->eax, ACTOR_TIME_SCALE);
+    if (scale == 0)
+    {
+        scale = 1;
+    }
+    return port_return(&port, port_u32(&port, entry->eax, ACTOR_ELAPSED) / scale, entry->edx);
+}

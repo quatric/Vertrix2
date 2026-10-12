@@ -72,4 +72,48 @@ uint32_t vertrix_port_char_end(PORT_SIGNATURE);
  * address and 0. */
 uint32_t vertrix_port_string_concat(PORT_SIGNATURE);
 
+/* Original 0x4ca310 (eax = the string variable, edx = the source variable): assignment. Nothing
+ * happens when they already share their text. A source whose count is negative (locked), or a
+ * locked target that is not the empty string, is copied by 0x4ca2e0 (ebx the text, edx its
+ * length); otherwise 0x4ca110 clears the target and it shares the source's record, whose count
+ * InterlockedIncrement ([0x4f1c38]) raises. Returns the variable. */
+uint32_t vertrix_port_string_assign(PORT_SIGNATURE);
+
+/* Original 0x4ccfe0 (eax and edx = the texts): strcmp, a dword at a time in blocks of 16 bytes.
+ * Returns 0 when they match to their ends, otherwise -1 or 1 as the first differing byte of eax's
+ * is below or above edx's (unsigned), with the flags of `sub eax, eax` or `or al, 1`. edx is left
+ * advanced past the whole blocks that matched (the last block's when its last dword ends it). */
+uint32_t vertrix_port_string_compare(PORT_SIGNATURE);
+
+/* Original 0x4ca070 (eax = address of a string): make it the empty string (0x4ca060, ebx the
+ * address). Returns the address; edx is unchanged. */
+uint32_t vertrix_port_string_init(PORT_SIGNATURE);
+
+/* Original 0x4ca1e0 (eax = address of a string, edx = length): make sure the string is its own
+ * and holds the length: when it is shared (count over 1) or too small (signed), 0x4ca110 clears it
+ * and 0x4ca0d0 makes a new one (ecx the address both times). Returns the new record, or the old
+ * one when it is kept. */
+uint32_t vertrix_port_string_reserve(PORT_SIGNATURE);
+
+/* Original 0x4ca2e0 (eax = address of a string, edx = length, ebx = text): set the string to the
+ * text: 0x4ca1e0 reserves it, 0x4eb5e0 copies the bytes, then the length and a terminating zero
+ * are stored (ecx the address throughout). Returns the text. */
+uint32_t vertrix_port_string_set(PORT_SIGNATURE);
+
+/* Original 0x4ca370 (eax = address of a string, edx = C text or 0): set the string to the text,
+ * its length from lstrlenA ([0x4f1d24]), through 0x4ca2e0 (ebx the text). Returns the address. */
+uint32_t vertrix_port_string_set_text(PORT_SIGNATURE);
+
+/* Original 0x4ca1a0 (eax = address of a string): when it is shared, give it its own copy: 0x4ca110
+ * releases it, 0x4ca0d0 makes a record of the same length and 0x4eb5e0 copies the text with its
+ * zero (ebx the old record, ecx the address, until the copy). Returns the copy's result, or the
+ * address when the string is its own; edx is unchanged. */
+uint32_t vertrix_port_string_make_unique(PORT_SIGNATURE);
+
+/* Original 0x4ca280 (eax = address of a string, edx = text or resource number): start it empty
+ * (0x4ca060), then set it to the resource string numbered edx when edx is under 0x10000
+ * (0x4db8c0), or else to the C text (lstrlenA [0x4f1d24], 0x4ca0d0, 0x4eb5e0, ebx the length).
+ * Returns the address. */
+uint32_t vertrix_port_string_from(PORT_SIGNATURE);
+
 #endif

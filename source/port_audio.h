@@ -40,6 +40,11 @@ uint32_t vertrix_port_synth_filter(PORT_SIGNATURE);
  * count; its whole bytes (signed) move the position and it keeps the rest. edx is unchanged. */
 uint32_t vertrix_port_bits_get(PORT_SIGNATURE);
 
+/* Original 0x4046e0: the next bit of the stream: the byte at the position shifted left by the
+ * bit offset (modulo 32, kept to 8 bits), its top bit. The offset grows by one; a whole byte moves
+ * the position. edx is unchanged. */
+uint32_t vertrix_port_bit_get(PORT_SIGNATURE);
+
 /* Original 0x40c460 (eax = buffer, edx = samples, ebx = channel): mix the channel into the
  * buffer (halving the samples for stereo, bit 1 of 0x52fc1d). A channel keeps its position at
  * +4, its step at +8, its loop at +0xc to +0x10 and its state byte at +0x16 (1 stopped, 2 ramped,
