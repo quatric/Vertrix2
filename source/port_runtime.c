@@ -135,3 +135,53 @@ uint32_t vertrix_port_list_item(PORT_SIGNATURE)
     }
     return port_return(&port, item, entry->edx);
 }
+
+/* `(span - size) / 2` as the original rounds it (towards zero), with edx the dividend's sign. */
+static uint32_t center_offset(uint32_t span, uint32_t *edx)
+{
+    *edx = (uint32_t)((int32_t)span >> 31);
+    return (uint32_t)((int32_t)(span - *edx) >> 1);
+}
+
+uint32_t vertrix_port_text_layout(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t x_out = entry->eax;
+    uint32_t y_out = entry->edx;
+    uint32_t left = entry->arguments[0];
+    uint32_t right = entry->arguments[1];
+    uint32_t top = entry->arguments[2];
+    uint32_t bottom = entry->arguments[3];
+    uint32_t edx = entry->edx;
+    uint32_t eax;
+    port_open(&port, calls, services, globals, entry);
+    port_set16(&port, x_out, 0, 0);
+    port_set16(&port, y_out, 0, 0);
+    if ((int16_t)right > (int16_t)left)
+    {
+        eax = (uint32_t)(int16_t)right - (uint32_t)(int16_t)left + 1 -
+              (uint32_t)(int16_t)entry->ebx + 1;
+        eax = center_offset(eax, &edx);
+        port_set16(&port, x_out, 0, eax);
+        eax = (uint32_t)(int16_t)eax;
+        if ((int32_t)eax < 0)
+        {
+            return port_return(&port, eax, edx);
+        }
+    }
+    if ((int16_t)top < (int16_t)bottom)
+    {
+        eax =
+            (uint32_t)(int16_t)bottom - (uint32_t)(int16_t)top + 1 - (uint32_t)(int16_t)entry->ecx;
+        eax = center_offset(eax, &edx);
+        port_set16(&port, y_out, 0, eax);
+        eax = (uint32_t)(int16_t)eax;
+        if ((int32_t)eax < 0)
+        {
+            return port_return(&port, eax, edx);
+        }
+    }
+    port_set16(&port, x_out, 0, port_u16(&port, x_out, 0) + left);
+    port_set16(&port, y_out, 0, port_u16(&port, y_out, 0) + top);
+    return port_return(&port, top, edx);
+}

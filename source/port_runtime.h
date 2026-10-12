@@ -33,4 +33,11 @@ uint32_t vertrix_port_fixed_multiply(PORT_SIGNATURE);
  * their count at +8), 0 past the end (unsigned). edx is unchanged. */
 uint32_t vertrix_port_list_item(PORT_SIGNATURE);
 
+/* Original 0x440990 (eax, edx = addresses of the x and y words, ebx, ecx = the text's width and
+ * height, stack = left, right, top, bottom words): where to put text centred in the box. Each
+ * word starts 0; when the box is wider (taller) than one pixel the offset is half the room left
+ * (the width counted one wider), rounded towards zero, and a negative one ends it there (eax that
+ * offset, edx its sign). Otherwise the box's left and top are added. Returns the top. */
+uint32_t vertrix_port_text_layout(PORT_SIGNATURE);
+
 #endif

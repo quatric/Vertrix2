@@ -997,7 +997,7 @@ static const LiftedRoutine routines[] = {
     {0x440490, lifted_f440490, 136, 1},
     {0x440610, lifted_font_measure, 264, 1},
     {0x4408e0, lifted_corner_transform_call, 152, 7},
-    {0x440990, lifted_text_layout, 72, 4},
+    {0x440990, vertrix_port_text_layout, 0, 0},
     {0x440a20, lifted_f440a20, 224, 2},
     {0x440ca0, lifted_object_corner_call, 164, 4},
     {0x440d50, lifted_f440d50, 244, 4},
