@@ -1604,4 +1604,53 @@ uint32_t vertrix_port_font_sheet_cut_wide(PORT_SIGNATURE);
  * follow, otherwise all five do; a missing stream gives an empty cell. */
 uint32_t vertrix_port_pattern_cell_read(PORT_SIGNATURE);
 
+/* Original 0x45ee30(eax = sheet): cut the glyph strips of the fonts 0x544ba0 (12, along 0x4f9090),
+ * 0x544bbc (12, along 0x4f9080) and 0x544bd8 (7, along 0x4f90a0) out of the sheet (0x4877f0,
+ * 0x482e10) and add each to 0x5b9c60 (0x483ed0). */
+uint32_t vertrix_port_font_strips_cut(PORT_SIGNATURE);
+
+/* Original 0x40eb10(): advance the module player a tick unless it is stopped (0x531b44 bit 0x20):
+ * past the speed 0x531b60 read the next row (0x40e940), run the effects of each of the 0x531b48
+ * channels at 0x530444 (0x40dc80, 0x40dc50, 0x40e030), count down the pattern delay 0x531b78, apply
+ * a pending volume change to all channels (bit 0x10) and tempo (bit 8, 0x40ac20), then mix each
+ * channel into its voice 0x531ac4 (0x40e8a0). */
+uint32_t vertrix_port_module_tick(PORT_SIGNATURE);
+
+/* Original 0x4e8098(): once (0x5c81d4), copy the double null terminated environment block 0x509729
+ * into a new buffer 0x5c8a90 (0x4e7c90) and build the null ended table of its strings 0x5c81d4,
+ * whose end is 0x5c81d0, clearing the per string flags after it (0x4eb5c0); then finish (0x4e9f10).
+ */
+uint32_t vertrix_port_environment_table_build(PORT_SIGNATURE);
+
+/* Original 0x40e770(eax = channel): read the channel's next pattern cell into 0x531b80
+ * (0x40e690), keep the vibrato period unless the new effect continues it, take the effect,
+ * parameter and volume, switch to the cell's instrument of the module 0x53043c, and start the
+ * note (0x40e580, 0x40df20) or key it off (0x40e640), resetting the volume and panning from the
+ * sample. */
+uint32_t vertrix_port_channel_row_read(PORT_SIGNATURE);
+
+/* Original 0x40a9d0(eax = settings): open the audio driver named by +0 (or, when that is the busy
+ * marker, the best one found by 0x40a950): copy its routine tables to 0x52f010 and 0x52f028
+ * (0x4eb5e0, defaults 0x4f7658 and 0x4f651c), probe (0x52f018) and open it (0x52f030), then clear
+ * the voice table 0x52f0b0 (0x4eb5c0) and mark it busy in 0x4f6418. Errors go through 0x40a800; 3
+ * when audio is already open. */
+uint32_t vertrix_port_audio_driver_open(PORT_SIGNATURE);
+
+/* Original 0x40c7d0(eax = 1, edx = volume up to 0x100): fill the 16 bit volume table 0x52f910 (65
+ * levels of 128 positive and 128 negative samples, halving the volume for 8 bit output) and the 8
+ * bit table 0x52f914 (32 levels). Returns 0, 3 without mix buffers or 2 for a bad request. */
+uint32_t vertrix_port_mixer_volume_tables(PORT_SIGNATURE);
+
+/* Original 0x40ec40(eax = module): start playing the module unless one is playing (0x531b44 bit
+ * 0x80): clear the player state 0x53043c (0x4eb5c0), take the channel count, flags, speed and
+ * tempo, allocate a voice for each channel (0x40acf0) with its default panning (0x40ae10), set the
+ * tempo (0x40ac20) and install the tick 0x40eb10 (0x40ac10). Returns 0, 2 without a module, 3 when
+ * busy or 8 when voices run out (0x40ed70). */
+uint32_t vertrix_port_module_start(PORT_SIGNATURE);
+
+
+/* Original 0x4d6830(static initialiser): set the eight handler records 0x503a1c..0x503afc (every
+ * 0x20 bytes) to 0x4d7430..0x4d74a0, clear 0x503b1c..0x503b24 and register the table (0x4d30f0). */
+uint32_t vertrix_port_static_init_503a1c(PORT_SIGNATURE);
+
 #endif
