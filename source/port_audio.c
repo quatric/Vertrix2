@@ -19,6 +19,9 @@ enum
     OUTPUT_ADVANCE = 0x80,
     TAPS = 16,
     ROW_EFFECT = 3,
+    MIXER_MODE = 0x52fc1c,
+    OUTPUT_STEREO = 0x401054,
+    OUTPUT_MONO = 0x401010,
     ROW_PARAMETER = 4,
     EFFECTS = 0x24,
     EFFECT_TABLE = 0x4f7444,
@@ -725,4 +728,17 @@ uint32_t vertrix_port_mixer_effect(PORT_SIGNATURE)
                            (entry->ebx & 0xffffff00u) | effect, entry->ecx);
     }
     return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_mixer_output(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t arguments[3] = {entry->eax, entry->edx, entry->ebx};
+    uint32_t output;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    output = (port_u8(&port, 0, MIXER_MODE) & MIXER_STEREO) ? OUTPUT_STEREO : OUTPUT_MONO;
+    result = port_call_stack(&port, output, entry->eax, entry->edx, entry->ebx, entry->ecx,
+                             arguments, 3);
+    return port_return(&port, result, vertrix_lift_edx);
 }

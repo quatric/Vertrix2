@@ -152,4 +152,27 @@ uint32_t vertrix_port_actor_progress_advance(PORT_SIGNATURE);
  * span (+0x128 words, +0x12c and +0x130 dwords). Returns the actor; edx is unchanged. */
 uint32_t vertrix_port_actor_set_span(PORT_SIGNATURE);
 
+/* Original 0x4ac6b0: take the whole progress steps (0x4ac640, edx the actor, ecx the scale) out of
+ * the actor's progress, leaving the remainder (0 when they are not below it). Returns the steps
+ * taken; edx is unchanged. */
+uint32_t vertrix_port_actor_progress_consume(PORT_SIGNATURE);
+
+/* Original 0x4ad1c0 (eax = actor, edx, ebx = distances, ecx = x out, stack = y out): the actor's
+ * angle (the word +0x24) turned into offsets: the x distance times the cosine table 0x59939c and
+ * the y distance times the sine table 0x598dfc (16.16 products from 0x4849e0), whole parts stored.
+ * Returns the y offset, edx the y address. */
+uint32_t vertrix_port_actor_polar_offset(PORT_SIGNATURE);
+
+/* Original 0x4ac700: clear the actor's frame counter (+0xb8). Returns the actor; edx is
+ * unchanged. */
+uint32_t vertrix_port_actor_clear_frame_counter(PORT_SIGNATURE);
+
+/* Original 0x4ac380: clear the actor's counter (+0xcc). Returns the actor; edx is unchanged. */
+uint32_t vertrix_port_actor_clear_counter(PORT_SIGNATURE);
+
+/* Original 0x4ac8d0 (eax = actor, edx = resource): clear its counters (0x4ac380, 0x4ac700, ecx the
+ * actor) and store the resource (+0xb0, the edx those leave). Returns the last call's eax and
+ * edx. */
+uint32_t vertrix_port_actor_attach(PORT_SIGNATURE);
+
 #endif

@@ -6,6 +6,15 @@ enum
     ACTOR_ELAPSED = 0xbc,
     ACTOR_TIME_SCALE = 0xc0,
     ACTOR_COUNTER = 0xcc,
+    ACTOR_PROGRESS_STEPS = 0x4ac640,
+    ACTOR_ANGLE = 0x22,
+    COSINES = 0x59939c,
+    SINES = 0x598dfc,
+    FIXED_MULTIPLY = 0x4849e0,
+    ACTOR_FRAME_COUNTER = 0xb8,
+    ACTOR_RESOURCE_DATA = 0xb0,
+    ACTOR_CLEAR_COUNTER = 0x4ac380,
+    ACTOR_CLEAR_FRAME_COUNTER = 0x4ac700,
     ACTOR_SPAN_X = 0x128,
     ACTOR_SPAN_Y = 0x12a,
     ACTOR_SPAN_WIDTH = 0x12c,
@@ -750,4 +759,77 @@ uint32_t vertrix_port_actor_set_span(PORT_SIGNATURE)
     port_set32(&port, actor, ACTOR_SPAN_WIDTH, entry->ecx);
     port_set32(&port, actor, ACTOR_SPAN_HEIGHT, entry->arguments[0]);
     return port_return(&port, actor, entry->edx);
+}
+
+uint32_t vertrix_port_actor_progress_consume(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t actor = entry->eax;
+    uint32_t scale;
+    uint32_t progress;
+    uint32_t current;
+    port_open(&port, calls, services, globals, entry);
+    scale = port_u32(&port, actor, ACTOR_PROGRESS_SCALE);
+    if (scale == 0)
+    {
+        scale = 1;
+    }
+    progress = port_call(&port, ACTOR_PROGRESS_STEPS, actor, actor, entry->ebx, scale) * scale;
+    current = port_u32(&port, actor, ACTOR_PROGRESS);
+    port_set32(&port, actor, ACTOR_PROGRESS, progress < current ? current - progress : 0);
+    return port_return(&port, progress, entry->edx);
+}
+
+/* The angle: the word at +0x24, read as the original's `[+0x22] >> 16`. */
+static uint32_t actor_angle(Port *port, uint32_t actor)
+{
+    return (uint32_t)((int32_t)port_u32(port, actor, ACTOR_ANGLE) >> 16);
+}
+
+uint32_t vertrix_port_actor_polar_offset(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t actor = entry->eax;
+    uint32_t y_out = entry->arguments[0];
+    uint32_t offset;
+    port_open(&port, calls, services, globals, entry);
+    offset = port_call(&port, FIXED_MULTIPLY,
+                       port_u32(&port, 0, COSINES + actor_angle(&port, actor) * 4),
+                       entry->edx << 16, entry->ebx, entry->ecx);
+    port_set32(&port, entry->ecx, 0, (uint32_t)((int32_t)offset >> 16));
+    offset =
+        port_call(&port, FIXED_MULTIPLY, port_u32(&port, 0, SINES + actor_angle(&port, actor) * 4),
+                  entry->ebx << 16, entry->ebx, entry->ecx);
+    offset = (uint32_t)((int32_t)offset >> 16);
+    port_set32(&port, y_out, 0, offset);
+    return port_return(&port, offset, y_out);
+}
+
+uint32_t vertrix_port_actor_clear_frame_counter(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    port_set32(&port, entry->eax, ACTOR_FRAME_COUNTER, 0);
+    return port_return(&port, entry->eax, entry->edx);
+}
+
+uint32_t vertrix_port_actor_clear_counter(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    port_set32(&port, entry->eax, ACTOR_COUNTER, 0);
+    return port_return(&port, entry->eax, entry->edx);
+}
+
+uint32_t vertrix_port_actor_attach(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t actor = entry->eax;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    port_call(&port, ACTOR_CLEAR_COUNTER, actor, entry->edx, entry->ebx, actor);
+    result =
+        port_call(&port, ACTOR_CLEAR_FRAME_COUNTER, actor, vertrix_lift_edx, entry->ebx, actor);
+    port_set32(&port, actor, ACTOR_RESOURCE_DATA, vertrix_lift_edx);
+    return port_return(&port, result, vertrix_lift_edx);
 }

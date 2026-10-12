@@ -57,7 +57,13 @@ enum
     ARRAY_GROW_MAX = 0x400,
     ALLOCATE = 0x4c9ff0,
     CLEAR_BYTES = 0x4eb5c0,
-    MOVE_BYTES = 0x4eb5e0
+    MOVE_BYTES = 0x4eb5e0,
+    ALLOCATE_MEMORY = 0x4e7c90,
+    SURFACE_WIDTH = 4,
+    SURFACE_BYTES = 0xc,
+    SURFACE_PADDED = 0x10,
+    SURFACE_PITCH = 0x14,
+    SURFACE_PADDING = 0x18
 };
 
 uint32_t vertrix_port_random_seed_address(PORT_SIGNATURE)
@@ -456,4 +462,38 @@ uint32_t vertrix_port_pointer_array_resize(PORT_SIGNATURE)
         port_set32(&port, array, ARRAY_CAPACITY, capacity);
         return port_return(&port, result, vertrix_lift_edx);
     }
+}
+
+uint32_t vertrix_port_nothing(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    return port_return(&port, entry->eax, entry->edx);
+}
+
+uint32_t vertrix_port_clear_allocate(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t size = entry->eax * entry->edx;
+    uint32_t memory;
+    port_open(&port, calls, services, globals, entry);
+    memory = port_call(&port, ALLOCATE_MEMORY, size, entry->edx, size, entry->ecx);
+    if (memory != 0)
+    {
+        memory = port_call(&port, CLEAR_BYTES, memory, 0, size, entry->ecx);
+    }
+    return port_return(&port, memory, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_surface_padding(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t surface = entry->eax;
+    uint32_t padding;
+    port_open(&port, calls, services, globals, entry);
+    padding = port_u32(&port, surface, SURFACE_PITCH) -
+              port_u32(&port, surface, SURFACE_WIDTH) * port_u8(&port, surface, SURFACE_BYTES);
+    port_set32(&port, surface, SURFACE_PADDING, padding);
+    port_set32(&port, surface, SURFACE_PADDED, padding != 0);
+    return port_return(&port, padding != 0, entry->edx);
 }

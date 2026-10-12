@@ -66,4 +66,9 @@ uint32_t vertrix_port_bits_get24(PORT_SIGNATURE);
  * effect's eax (the row otherwise); edx is unchanged. */
 uint32_t vertrix_port_mixer_effect(PORT_SIGNATURE);
 
+/* Original 0x40c430 (eax, edx, ebx = arguments): the mixer's output routine, cdecl with the three
+ * as its arguments: 0x401054 for stereo (0x52fc1c bit 1), 0x401010 otherwise. Returns its eax and
+ * edx. */
+uint32_t vertrix_port_mixer_output(PORT_SIGNATURE);
+
 #endif

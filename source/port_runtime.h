@@ -89,4 +89,17 @@ uint32_t vertrix_port_list_text(PORT_SIGNATURE);
  * Returns the last call's eax and edx (the array and size when none is made). */
 uint32_t vertrix_port_pointer_array_resize(PORT_SIGNATURE);
 
+/* Original 0x4b3360: returns at once (eax and edx unchanged). */
+uint32_t vertrix_port_nothing(PORT_SIGNATURE);
+
+/* Original 0x4ec160 (eax = count, edx = size): calloc: 0x4e7c90 allocates count * size bytes (ebx
+ * the size) and 0x4eb5c0 clears them. Returns the memory (0 when it fails), with the last call's
+ * edx. */
+uint32_t vertrix_port_clear_allocate(PORT_SIGNATURE);
+
+/* Original 0x478da0 (eax = surface): its padding, the pitch (+0x14) less the width (+4) times the
+ * pixel bytes (byte +0xc), stored at +0x18, and whether there is any, stored at +0x10. Returns
+ * that; edx is unchanged. */
+uint32_t vertrix_port_surface_padding(PORT_SIGNATURE);
+
 #endif
