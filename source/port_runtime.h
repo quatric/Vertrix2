@@ -318,4 +318,17 @@ uint32_t vertrix_port_cursor_draw(PORT_SIGNATURE);
  * unchanged. */
 uint32_t vertrix_port_input_frame(PORT_SIGNATURE);
 
+/* Original 0x4d93f0 (eax = record): push a record on this thread's chain (its block from 0x4dbf80
+ * of 0x5c5c60 for GetCurrentThreadId 0x4f1bbc, SetLastError 0x4f1cb0 restoring the error; the
+ * chain at +0x10), clearing its +4. Returns the record; edx is unchanged. */
+uint32_t vertrix_port_thread_chain_push(PORT_SIGNATURE);
+
+/* Original 0x4d9430: pop this thread's chain record, running its cleanup (+4, 0x4d9350) first.
+ * Returns the next record; edx is the popped one. */
+uint32_t vertrix_port_thread_chain_pop(PORT_SIGNATURE);
+
+/* Original 0x4d66cd (eax = flags byte, edx = bit): test and set the bit under the lock 0x50817e
+ * (0x4e14b0, 0x4e14b7). Returns 1 when it was already set, else 0. */
+uint32_t vertrix_port_flag_test_set(PORT_SIGNATURE);
+
 #endif
