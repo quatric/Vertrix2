@@ -1652,7 +1652,6 @@ uint32_t vertrix_port_module_start(PORT_SIGNATURE);
  * 0x20 bytes) to 0x4d7430..0x4d74a0, clear 0x503b1c..0x503b24 and register the table (0x4d30f0). */
 uint32_t vertrix_port_static_init_503a1c(PORT_SIGNATURE);
 
-
 /* Original 0x4b9050(): expand the 16 dither patterns 0x4ff8ac into 64 rows of 16 flag bytes each at
  * 0x5bdb00, count the set flags before each position of the first row of each into 0x5c1b00, and
  * for patterns 1..15 record the gaps between set flags at 0x5c1c00 (cleared first, 0x4eb5c0). */
@@ -1690,5 +1689,23 @@ uint32_t vertrix_port_title_actors_spawn(PORT_SIGNATURE);
  * +0xb8 one of eight steps towards the angle (0x4ac710, 0x4ac8a0), or face it at once with
  * animation 0x54666c when not turning (+0xb0). */
 uint32_t vertrix_port_actor_face_target(PORT_SIGNATURE);
+
+/* Original 0x45d880(static initialiser): construct the animation and image objects
+ * 0x5449c4..0x5466a4 (0x4872f0, or 0x4ccf3b for the arrays) and register the destructor records
+ * 0x4fbc30..0x4fbec0 (0x4ec1f7). */
+uint32_t vertrix_port_static_init_animations(PORT_SIGNATURE);
+
+/* Original 0x4b1fa0(eax = actor): draw the actor: a sprite with a colour key (+0x11c not
+ * 0xff000000) through 0x47c710, otherwise through its draw routine 0x4ff024 for the colour depth
+ * 0x5bb733 and the frame (0x4af370, 0x4af2a0, 0x4ae250); then, when selected (+0x110), its outline
+ * in colour +0x118 and +0x114 (0x47c520, plain in mode 2 of 0x5bbffe) and, unless +0x13c, its hit
+ * box (0x4ae110). */
+uint32_t vertrix_port_actor_draw_frame(PORT_SIGNATURE);
+
+/* Original 0x4e7850(eax = tm): mktime: normalise the month into the year, count the days since 1900
+ * with the leap year (0x4e9060) month table 0x51c06c or 0x51c086, add the seconds of the day, set
+ * the time zone (0x4e7a00, 0x4e960c), apply daylight saving (0x4e91e0, 0x50b0e4) and the zone
+ * 0x50b0dc, and return seconds since 1970, or -1 out of range. */
+uint32_t vertrix_port_time_from_tm(PORT_SIGNATURE);
 
 #endif

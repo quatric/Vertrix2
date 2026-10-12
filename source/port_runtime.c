@@ -8142,7 +8142,6 @@ uint32_t vertrix_port_static_init_503a1c(PORT_SIGNATURE)
         &port, port_call(&port, 0x4d30f0, 0x5c75fc, 0x503b28, entry->ebx, entry->ecx), entry->edx);
 }
 
-
 uint32_t vertrix_port_dither_tables_build(PORT_SIGNATURE)
 {
     Port port;
@@ -8552,4 +8551,260 @@ uint32_t vertrix_port_actor_face_target(PORT_SIGNATURE)
     port_call(&port, 0x4ac710, actor, facing, distance, side);
     return port_return(&port, port_call(&port, 0x4ac8a0, actor, vertrix_lift_edx, distance, side),
                        entry->edx);
+}
+
+uint32_t vertrix_port_static_init_animations(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    /* Each step: the routine, its object, then the ebx and edx the original sets
+     * before it (0xffffffff where it keeps them). */
+    static const uint32_t steps[84][4] = {
+        {0x4872f0, 0x5449c4, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbc30, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x5449e0, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbc40, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x5449fc, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbc50, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x544a18, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbc60, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x544a34, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbc70, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x544a50, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbc80, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x544a6c, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbc90, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x544a88, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbca0, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x544aa4, 0x515610, 0xffffffff},   {0x4ec1f7, 0x4fbcb0, 0xffffffff, 0x7},
+        {0x4ccf3b, 0x544ac0, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbcc0, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x544b84, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbcd0, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x544ba0, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbce0, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x544bbc, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbcf0, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x544bd8, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbd00, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x544bf4, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbd10, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x544c10, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbd20, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x544c2c, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbd30, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x544c48, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbd40, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x544c64, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbd50, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x544c80, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbd60, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x544c9c, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbd70, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x544cb8, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbd80, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x544cd4, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbd90, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x544cf0, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbda0, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x544d0c, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbdb0, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x544d28, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbdc0, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x544d44, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbdd0, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x544d60, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbde0, 0xffffffff, 0xffffffff},
+        {0x4ccf3b, 0x544d7c, 0x515610, 0x13},         {0x4ec1f7, 0x4fbdf0, 0x515610, 0xbe},
+        {0x4ccf3b, 0x544f90, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbe00, 0x515610, 0x5},
+        {0x4ccf3b, 0x546458, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbe10, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x5464e4, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbe20, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x546500, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbe30, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x54651c, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbe40, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x546538, 0x515610, 0xffffffff},   {0x4ec1f7, 0x4fbe50, 0xffffffff, 0x7},
+        {0x4ccf3b, 0x546554, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbe60, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x546618, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbe70, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x546634, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbe80, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x546650, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbe90, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x54666c, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbea0, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x546688, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbeb0, 0xffffffff, 0xffffffff},
+        {0x4872f0, 0x5466a4, 0xffffffff, 0xffffffff}, {0x4ec1f7, 0x4fbec0, 0xffffffff, 0xffffffff}};
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t result = 0;
+    uint32_t index;
+    for (index = 0; index < 84; index++)
+    {
+        if (steps[index][2] != 0xffffffff)
+        {
+            ebx = steps[index][2];
+        }
+        if (steps[index][3] != 0xffffffff)
+        {
+            edx = steps[index][3];
+        }
+        result = port_call(&port, steps[index][0], steps[index][1], edx, ebx, entry->ecx);
+        edx = vertrix_lift_edx;
+    }
+    return port_return(&port, result, entry->edx);
+}
+
+/* The high half of the dword at `address`, sign extended (mov eax, [address]; sar eax, 16). */
+static uint32_t port_high16(Port *port, uint32_t address)
+{
+    return (uint32_t)(int16_t)port_u16(port, address, 2);
+}
+
+uint32_t vertrix_port_actor_draw_frame(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    uint32_t actor = entry->eax;
+    uint32_t key = port_u32(&port, actor, 0x11c);
+    uint32_t screen = port_u32(&port, 0x5bc010, 0);
+    uint32_t eax;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    if (key != 0xff000000)
+    {
+        uint32_t stack[7] = {port_high16(&port, 0x5bb746),
+                             port_high16(&port, 0x5bb748),
+                             port_high16(&port, 0x5bbff4),
+                             port_high16(&port, 0x5bbff8),
+                             port_high16(&port, 0x5bbff6),
+                             port_high16(&port, 0x5bbffa),
+                             key};
+        ebx = port_high16(&port, 0x5bb79e);
+        ecx = port_high16(&port, 0x5bb7a0);
+        eax = port_call_stack(&port, 0x47c710, screen, 0x5b9c60, ebx, ecx, stack, 7);
+    }
+    else
+    {
+        uint32_t depth = port_u8(&port, 0x5bb733, 0);
+        uint32_t frame;
+        uint32_t draw;
+        if (depth == 4)
+        {
+            ecx = 0;
+        }
+        else if (depth == 2)
+        {
+            ecx = 1;
+        }
+        else if (depth == 1)
+        {
+            ecx = 2;
+        }
+        else if (depth == 0)
+        {
+            ecx = 3;
+        }
+        frame = port_call(&port, 0x4af370, actor, 1, ebx, ecx);
+        frame = port_call(&port, 0x4af2a0, actor, frame, ebx, ecx);
+        eax = frame;
+        if (frame >= 0x5c)
+        {
+            ecx = 0;
+            port_set32(&port, 0x5bb72c, 0, 0);
+        }
+        else
+        {
+            draw = port_u32(&port, 0x4ff024, ecx * 0x170 + frame * 4);
+            port_set32(&port, 0x5bb72c, 0, draw);
+            eax = draw;
+            if (draw != 0)
+            {
+                eax = port_call(&port, 0x4ae250, actor, frame, ebx, ecx);
+                eax =
+                    port_call(&port, port_u32(&port, 0x5bb72c, 0), eax, vertrix_lift_edx, ebx, ecx);
+            }
+        }
+    }
+    if (port_u8(&port, actor, 0x110) == 0)
+    {
+        return port_return(&port, eax, entry->edx);
+    }
+    screen = port_u32(&port, 0x5bc010, 0);
+    if (port_u8(&port, 0x5bbffe, 0) == 2)
+    {
+        uint32_t left = port_high16(&port, 0x5bb746);
+        uint32_t top = port_high16(&port, 0x5bb748);
+        uint32_t right = port_high16(&port, 0x5bb79e);
+        uint32_t bottom = port_high16(&port, 0x5bb7a0);
+        uint32_t stack[7] = {left, top, right, bottom, left, top, port_u32(&port, actor, 0x118)};
+        eax = port_call_stack(&port, 0x47c520, screen, 0x5b9c60, right, bottom, stack, 7);
+        return port_return(&port, eax, entry->edx);
+    }
+    {
+        uint32_t stack[7] = {port_high16(&port, 0x5bb746) + 1, port_high16(&port, 0x5bb748) + 1,
+                             port_high16(&port, 0x5bbff4),     port_high16(&port, 0x5bbff8),
+                             port_high16(&port, 0x5bbff6),     port_high16(&port, 0x5bbffa),
+                             port_u32(&port, actor, 0x118)};
+        eax = port_call_stack(&port, 0x47c520, screen, 0x5b9c60, port_high16(&port, 0x5bb79e) - 1,
+                              port_high16(&port, 0x5bb7a0) - 1, stack, 7);
+    }
+    {
+        uint32_t stack[7] = {port_high16(&port, 0x5bb746) + 2, port_high16(&port, 0x5bb748) + 2,
+                             port_high16(&port, 0x5bbff4),     port_high16(&port, 0x5bbff8),
+                             port_high16(&port, 0x5bbff6),     port_high16(&port, 0x5bbffa),
+                             port_u32(&port, actor, 0x114)};
+        eax = port_call_stack(&port, 0x47c520, port_u32(&port, 0x5bc010, 0), 0x5b9c60,
+                              port_high16(&port, 0x5bb79e) - 2, port_high16(&port, 0x5bb7a0) - 2,
+                              stack, 7);
+    }
+    if (port_u32(&port, actor, 0x13c) == 0)
+    {
+        uint32_t box = port_u32(&port, actor, 0x130) + 4;
+        eax = port_call_stack(&port, 0x4ae110, actor,
+                              (uint32_t)(int16_t)(port_u16(&port, actor, 0x128) - 2),
+                              (uint32_t)(int16_t)(port_u16(&port, actor, 0x12a) - 2),
+                              port_u32(&port, actor, 0x12c) + 4, &box, 1);
+    }
+    return port_return(&port, eax, entry->edx);
+}
+
+uint32_t vertrix_port_time_from_tm(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    uint32_t tm = entry->eax;
+    int32_t month = (int32_t)port_u32(&port, tm, 0x10);
+    int32_t index = month % 12;
+    uint32_t year = port_u32(&port, tm, 0x14);
+    uint32_t table = 0x51c06c;
+    uint32_t days;
+    uint32_t seconds;
+    if ((int32_t)year < (int32_t)0xf4fb7ea1)
+    {
+        return port_return(&port, 0xffffffff, entry->edx);
+    }
+    year += (uint32_t)(month / 12);
+    while (index < 0)
+    {
+        index += 12;
+        year--;
+    }
+    if ((int32_t)year < 0)
+    {
+        return port_return(&port, 0xffffffff, entry->edx);
+    }
+    if (port_call(&port, 0x4e9060, year + 0x76c, (uint32_t)(month % 12), table, 0xc) != 0)
+    {
+        table = 0x51c086;
+    }
+    days = ((year + 3) >> 2) + year * 365;
+    days -= (uint32_t)((int32_t)(year + 0x63) / 100);
+    days += (uint32_t)((int32_t)(year + 0x12b) / 400);
+    days = (uint32_t)(int16_t)port_u16(&port, table, (uint32_t)index * 2) + days +
+           port_u32(&port, tm, 0xc) - 1;
+    seconds = port_u32(&port, tm, 0) + (port_u32(&port, tm, 4) + port_u32(&port, tm, 8) * 60) * 60;
+    while ((int32_t)seconds < 0)
+    {
+        seconds += 0x15180;
+        days--;
+    }
+    port_call(&port, 0x4e960c, port_call(&port, 0x4e7a00, days, seconds, 0, tm), vertrix_lift_edx,
+              0, tm);
+    seconds += port_u32(&port, 0x50b0dc, 0);
+    if ((int32_t)port_u32(&port, tm, 0x20) < 0)
+    {
+        port_call(&port, 0x4e91e0, tm, vertrix_lift_edx, port_u32(&port, 0x50b0dc, 0),
+                  port_u32(&port, tm, 0x20));
+    }
+    if ((int32_t)port_u32(&port, tm, 0x20) > 0)
+    {
+        seconds -= port_u32(&port, 0x50b0e4, 0);
+    }
+    while ((int32_t)seconds < 0)
+    {
+        days--;
+        seconds += 0x15180;
+    }
+    if ((int32_t)days < 0x63de)
+    {
+        return port_return(&port, 0xffffffff, entry->edx);
+    }
+    if (days == 0x63de)
+    {
+        seconds -= 0x15180;
+        if ((int32_t)port_u32(&port, 0x50b0dc, 0) <= 0 || (int32_t)seconds < 0)
+        {
+            return port_return(&port, 0xffffffff, entry->edx);
+        }
+        return port_return(&port, seconds, entry->edx);
+    }
+    return port_return(&port, seconds + (days - 0x63df) * 0x15180, entry->edx);
 }
