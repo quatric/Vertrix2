@@ -1384,4 +1384,58 @@ uint32_t vertrix_port_actor_frames_busy_4ac7a0(PORT_SIGNATURE);
  * it (0x4762e0) and act on it (0x4192a0). Returns the handler chain. */
 uint32_t vertrix_port_player_key_use(PORT_SIGNATURE);
 
+/* Original 0x41ddf0(eax = scene): when the player key 0x532b94 of 0x54d640 is down (0x476480) take
+ * it (0x4762e0) and act on it (0x4193b0). Returns the handler chain. */
+uint32_t vertrix_port_player_key_use_4193b0(PORT_SIGNATURE);
+
+/* Original 0x45ec50(eax = target): draw the 0x4f90b0 tiles of 0x544bf4 (0x4877f0, 0x482e10) into
+ * 0x5b9c60 (0x483ed0) on a grid 0x4f90b4 wide with cells of 0x4f90b8 by 0x4f90bc plus one. */
+uint32_t vertrix_port_tiles_draw(PORT_SIGNATURE);
+
+/* Original 0x4ca7b0: set up the stream type tables 0x500b80, 0x500ba0 and 0x500bc0 with their
+ * copies at 0x5c5c0c and 0x5c5c18, initialise the lock 0x5c5c24 with 0x500bec (0x4d30f0) and
+ * register the exit routine 0x500820 (0x4ec1f7). */
+uint32_t vertrix_port_stream_types_init(PORT_SIGNATURE);
+
+/* Original 0x4e55d4: take the next of the 64 lock records 0x5c8310, or allocate one (0x4ec160) and
+ * add it to the list 0x5c8948 (0x4ec0e0, failing through 0x4e628c), then initialise its critical
+ * section (import 0x4f1c30). */
+uint32_t vertrix_port_lock_record_new(PORT_SIGNATURE);
+
+/* Original 0x43e100(eax = hud): construct the actor base (0x4abd70), give it the table 0x514e94 and
+ * clear its 0x1c2 item slots +0x15c, 3 dwords +0x864 and 1 at +0x870 (0x4b2290), then set +0x968.
+ * Returns the hud. */
+uint32_t vertrix_port_hud_object_construct(PORT_SIGNATURE);
+
+/* Original 0x4574a0(eax = actor): clear +0x4e and step it (0x4ac500); when its frame is due
+ * (0x4ac520) advance it (0x4ac540, 0x4ac5b0) and, at the end (0x4ad6e0), start the drop: +0x58 = 0,
+ * +0x5c = +0x64 + random(+0x70) (0x4826c0), 0x43e920, the fade bytes and words, +0x4e = 50 and the
+ * update 0x457550 (0x4ac8f0). Then move it (0x4ac8a0). */
+uint32_t vertrix_port_actor_drop_start(PORT_SIGNATURE);
+
+/* Original 0x4e3f70: set the mode bits of 0x505275 and link a 0x1d byte buffer (0x4e7c90, failing
+ * through 0x4e628c) for each 0x1a byte stream record from 0x505234 into the list 0x5c7760, then
+ * clear 0x5c7764. */
+uint32_t vertrix_port_file_streams_init(PORT_SIGNATURE);
+
+/* Original 0x411c70(eax = game): construct the base (0x4ca970), give it the table 0x5131c4, start
+ * the audio thread (0x40af30), reset the scale 0x5560bc (0x477910), call 0x45f3f0 and initialise
+ * the critical sections 0x5328c0, 0x5328d8 and 0x5328f0 (import 0x4f1c30). Returns the game. */
+uint32_t vertrix_port_game_object_construct(PORT_SIGNATURE);
+
+/* Original 0x40c9d0(eax = voice, edx = sample): for a voice below 0x52fc18 and a sample with data
+ * +4 set the voice +0x52f918 to play it: start 0, loop or length from the sample flags +0x16,
+ * halved for 16 bit, all in 20.12 fixed point. Returns 0, or 1 when refused. */
+uint32_t vertrix_port_voice_sample_set(PORT_SIGNATURE);
+
+/* Original 0x448790(eax = actor): set mode 1 (0x4ac7b0) and step it (0x4ac500); when its frame is
+ * due (0x4ac520) advance it (0x4ac540, 0x4ac5b0) and move it on all three axes (0x4aca60, 0x4acab0,
+ * 0x4acb00), showing it (0x4ac8f0) once it arrived. */
+uint32_t vertrix_port_actor_glide(PORT_SIGNATURE);
+
+/* Original 0x45c830(eax = actor): set mode 1 (0x4ac7b0) and step it (0x4ac500); when its frame is
+ * due (0x4ac520) advance it (0x4ac540, 0x4ac5b0) and move it on all three axes (0x4aca60, 0x4acab0,
+ * 0x4acb00), updating 0x45c8b0 (0x4ac8f0) once it arrived. */
+uint32_t vertrix_port_actor_glide_45c8b0(PORT_SIGNATURE);
+
 #endif

@@ -6261,3 +6261,326 @@ uint32_t vertrix_port_player_key_use(PORT_SIGNATURE)
     }
     return port_return(&port, entry->chain, entry->edx);
 }
+
+uint32_t vertrix_port_player_key_use_4193b0(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    result =
+        port_call(&port, 0x476480, 0x54d640, port_u16(&port, 0x532b94, 0), 0x51409c, entry->eax);
+    if (result != 0)
+    {
+        port_call(&port, 0x4762e0, 0x54d640, port_u16(&port, 0x532b94, 0), 0x51409c, entry->eax);
+        port_call(&port, 0x4193b0, entry->eax, vertrix_lift_edx, 0x51409c, entry->eax);
+    }
+    return port_return(&port, entry->chain, entry->edx);
+}
+
+uint32_t vertrix_port_tiles_draw(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    uint32_t tile;
+    result = entry->eax;
+    for (tile = 0; tile < port_u32(&port, 0x4f90b0, 0); tile++)
+    {
+        uint32_t columns = port_u32(&port, 0x4f90b4, 0);
+        uint32_t row = columns != 0 ? tile / columns : 0;
+        uint32_t x = (port_u32(&port, 0x4f90b8, 0) + 1) * (tile - columns * row) + 1;
+        uint32_t y = (port_u32(&port, 0x4f90bc, 0) + 1) * row + 1;
+        uint32_t image = port_call(&port, 0x4877f0, 0x544bf4, tile, x, y);
+        port_call(&port, 0x482e10, image, entry->eax, x, y);
+        result = port_call(&port, 0x483ed0, image, 0x5b9c60, x, y);
+    }
+    return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_stream_types_init(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    port_set32(&port, 0x500b80, 0, 0x4cb390);
+    port_set32(&port, 0x500b84, 0, 0);
+    port_set32(&port, 0x500b88, 0, 0);
+    port_set32(&port, 0x5c5c0c, 0, 0x4cb3a0);
+    port_set32(&port, 0x5c5c10, 0, 0);
+    port_set32(&port, 0x5c5c14, 0, 0);
+    port_set32(&port, 0x500ba0, 0, 0x4cb3a0);
+    port_set32(&port, 0x500ba4, 0, 0);
+    port_set32(&port, 0x500ba8, 0, 0);
+    port_set32(&port, 0x5c5c18, 0, 0x4cb3b0);
+    port_set32(&port, 0x5c5c1c, 0, 0);
+    port_set32(&port, 0x5c5c20, 0, 0);
+    port_set32(&port, 0x500bc0, 0, 0x4cb3b0);
+    port_set32(&port, 0x500be0, 0, 0);
+    port_set32(&port, 0x500bc4, 0, 0);
+    port_set32(&port, 0x500be4, 0, 0);
+    port_set32(&port, 0x500bc8, 0, 0);
+    port_set32(&port, 0x500be8, 0, 0);
+    port_call(&port, 0x4d30f0, 0x5c5c24, 0x500bec, entry->ebx, entry->ecx);
+    result = port_call(&port, 0x4ec1f7, 0x500820, vertrix_lift_edx, entry->ebx, entry->ecx);
+    return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_lock_record_new(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t used;
+    uint32_t record;
+    uint32_t eax;
+    uint32_t edx;
+    uint32_t ecx = entry->ecx;
+    port_open(&port, calls, services, globals, entry);
+    used = port_u32(&port, 0x5c8940, 0);
+    if ((int32_t)used < 0x40)
+    {
+        eax = used * 0x18;
+        edx = used;
+        record = 0x5c8310 + eax;
+        port_set32(&port, 0x5c8940, 0, used + 1);
+    }
+    else
+    {
+        uint32_t list;
+        record = port_call(&port, 0x4ec160, 1, 0x18, entry->ebx, entry->ecx);
+        if (record == 0)
+        {
+            port_call(&port, 0x4e628c, 0x5129c0, 1, record, entry->ecx);
+        }
+        list = port_call(&port, 0x4ec0e0, port_u32(&port, 0x5c8948, 0),
+                         (port_u32(&port, 0x5c8944, 0) + 1) * 4, record, entry->ecx);
+        port_set32(&port, 0x5c8948, 0, list);
+        if (list == 0)
+        {
+            port_call(&port, 0x4e628c, 0x5129e4, 1, record, entry->ecx);
+        }
+        eax = port_u32(&port, 0x5c8944, 0);
+        edx = port_u32(&port, 0x5c8948, 0);
+        ecx = eax + 1;
+        port_set32(&port, edx, eax * 4, record);
+        port_set32(&port, 0x5c8944, 0, ecx);
+    }
+    port_call_stack(&port, 0x4f1c30, eax, edx, record, ecx, &record, 1);
+    return port_return(&port, record, entry->edx);
+}
+
+uint32_t vertrix_port_hud_object_construct(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    uint32_t hud = port_call(&port, 0x4abd70, entry->eax, 0x4ec1ec, 0x514e30, entry->eax);
+    port_set32(&port, hud, 0x158, 0x514e94);
+    port_call(&port, 0x4b2290, hud + 0x15c, 0x1c2, 0x514e30, hud);
+    port_call(&port, 0x4b2290, hud + 0x864, 3, 0x514e30, hud);
+    port_call(&port, 0x4b2290, hud + 0x870, 1, 0x514e30, hud);
+    port_set32(&port, hud, 0x968, 1);
+    return port_return(&port, hud, entry->edx);
+}
+
+uint32_t vertrix_port_actor_drop_start(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    uint32_t actor = entry->eax;
+    port_set8(&port, actor, 0x4e, 0);
+    port_call(&port, 0x4ac500, actor, entry->edx, entry->ebx, actor);
+    result = port_call(&port, 0x4ac520, actor, vertrix_lift_edx, entry->ebx, actor);
+    if (result == 1)
+    {
+        result = port_call(&port, 0x4ac540, actor, vertrix_lift_edx, entry->ebx, actor);
+        port_call(&port, 0x4ac5b0, actor, result, entry->ebx, actor);
+        result = port_call(&port, 0x4ad6e0, actor, vertrix_lift_edx, entry->ebx, actor);
+        if (result == 0)
+        {
+            port_set32(&port, actor, 0x58, 0);
+            result = port_call(&port, 0x4826c0, 0x598d30, port_u16(&port, actor, 0x70), entry->ebx,
+                               actor);
+            port_set32(&port, actor, 0x5c, port_u32(&port, actor, 0x64) + (result & 0xffff));
+            port_call(&port, 0x43e920, actor, port_u32(&port, actor, 0x5c), entry->ebx, actor);
+            port_set8(&port, actor, 0x8e, 0);
+            port_set8(&port, actor, 0x8f, 1);
+            port_set8(&port, actor, 0x44, 0);
+            port_set8(&port, actor, 0x45, 0x10);
+            port_set16(&port, actor, 0x46, 1);
+            port_set8(&port, actor, 0x4e, 0x32);
+            port_set16(&port, actor, 0x48, 0);
+            port_call(&port, 0x4ac8f0, actor, 0x457550, entry->ebx, actor);
+        }
+    }
+    result = port_call(&port, 0x4ac8a0, actor, vertrix_lift_edx, entry->ebx, actor);
+    return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_file_streams_init(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    uint32_t flags = port_u8(&port, 0x505275, 0) & 0xf8;
+    uint32_t stream = 0x505234;
+    uint32_t edx;
+    uint32_t ecx = entry->ecx;
+    port_set8(&port, 0x505275, 0, flags);
+    port_set8(&port, 0x505275, 0, flags | 4);
+    result = (entry->eax & 0xffff00ff) | (flags << 8);
+    edx = port_u32(&port, 0x505240, 0);
+    if (edx != 0)
+    {
+        do
+        {
+            uint32_t buffer = port_call(&port, 0x4e7c90, 0x1d, edx, stream, ecx);
+            edx = vertrix_lift_edx;
+            if (buffer == 0)
+            {
+                buffer = port_call(&port, 0x4e7c90, 0x1d, edx, stream, ecx);
+                edx = vertrix_lift_edx;
+                if (buffer == 0)
+                {
+                    port_call(&port, 0x4e628c, 0x512904, 1, stream, 0);
+                    edx = vertrix_lift_edx;
+                }
+            }
+            port_set32(&port, buffer, 4, stream);
+            port_set32(&port, buffer, 0, port_u32(&port, 0x5c7760, 0));
+            port_set32(&port, stream, 8, buffer);
+            port_set32(&port, buffer, 8, 0);
+            port_set8(&port, port_u32(&port, stream, 8), 0x14, 0);
+            port_set32(&port, port_u32(&port, stream, 8), 0xc, 0);
+            result = port_u32(&port, stream, 8);
+            port_set32(&port, 0x5c7760, 0, buffer);
+            ecx = port_u32(&port, stream, 0x26);
+            stream += 0x1a;
+        } while (ecx != 0);
+    }
+    port_set32(&port, 0x5c7764, 0, 0);
+    return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_game_object_construct(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    uint32_t game = port_call(&port, 0x4ca970, entry->eax, 0, entry->eax, 0x513130);
+    uint32_t section;
+    port_set32(&port, game, 0, 0x5131c4);
+    result = port_call(&port, 0x40af30, game, vertrix_lift_edx, game, 0x513130);
+    result = port_call(&port, 0x477910, 0x5560bc, vertrix_lift_edx, game, 0x513130);
+    result = port_call(&port, 0x45f3f0, result, vertrix_lift_edx, game, 0x513130);
+    for (section = 0x5328c0; section <= 0x5328f0; section += 0x18)
+    {
+        result =
+            port_call_stack(&port, 0x4f1c30, result, vertrix_lift_edx, game, 0x513130, &section, 1);
+    }
+    return port_return(&port, game, entry->edx);
+}
+
+uint32_t vertrix_port_voice_sample_set(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    uint32_t voice;
+    uint32_t data;
+    uint32_t flags;
+    if (entry->eax >= port_u32(&port, 0x52fc18, 0) || entry->edx == 0)
+    {
+        return port_return(&port, 1, entry->edx);
+    }
+    data = port_u32(&port, entry->edx, 4);
+    if (data == 0)
+    {
+        return port_return(&port, 1, entry->edx);
+    }
+    voice = 0x52f918 + entry->eax * 0x18;
+    port_set32(&port, voice, 0, data);
+    port_set8(&port, voice, 0x16, 1);
+    port_set32(&port, voice, 4, 0);
+    flags = port_u8(&port, entry->edx, 0x16);
+    if ((flags & 0x30) == 0)
+    {
+        port_set32(&port, voice, 0xc, port_u32(&port, entry->edx, 8));
+        port_set32(&port, voice, 0x10, port_u32(&port, entry->edx, 8));
+    }
+    else
+    {
+        port_set32(&port, voice, 0xc, port_u32(&port, entry->edx, 0xc));
+        port_set32(&port, voice, 0x10, port_u32(&port, entry->edx, 0x10));
+        port_set8(&port, voice, 0x16, port_u8(&port, voice, 0x16) | 4);
+        if (port_u8(&port, entry->edx, 0x16) & 0x20)
+        {
+            port_set8(&port, voice, 0x16, port_u8(&port, voice, 0x16) | 8);
+        }
+    }
+    if (port_u8(&port, entry->edx, 0x16) & 1)
+    {
+        port_set32(&port, voice, 0xc, (uint32_t)((int32_t)port_u32(&port, voice, 0xc) >> 1));
+        port_set32(&port, voice, 0x10, (uint32_t)((int32_t)port_u32(&port, voice, 0x10) >> 1));
+        port_set8(&port, voice, 0x16, port_u8(&port, voice, 0x16) | 2);
+    }
+    port_set32(&port, voice, 4, port_u32(&port, voice, 4) << 12);
+    port_set32(&port, voice, 0xc, port_u32(&port, voice, 0xc) << 12);
+    port_set32(&port, voice, 0x10, port_u32(&port, voice, 0x10) << 12);
+    return port_return(&port, 0, entry->edx);
+}
+
+uint32_t vertrix_port_actor_glide(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    uint32_t actor = entry->eax;
+    uint32_t frame;
+    uint32_t across;
+    uint32_t down;
+    port_call(&port, 0x4ac7b0, actor, 1, entry->ebx, actor);
+    port_call(&port, 0x4ac500, actor, vertrix_lift_edx, entry->ebx, actor);
+    result = port_call(&port, 0x4ac520, actor, vertrix_lift_edx, entry->ebx, actor);
+    if (result != 1)
+    {
+        return port_return(&port, result, entry->edx);
+    }
+    frame = port_call(&port, 0x4ac540, actor, vertrix_lift_edx, entry->ebx, actor);
+    port_call(&port, 0x4ac5b0, actor, vertrix_lift_edx, frame, actor);
+    across = port_call(&port, 0x4aca60, actor, frame, frame, actor);
+    down = port_call(&port, 0x4acab0, actor, frame, frame, actor);
+    result = port_call(&port, 0x4acb00, actor, frame, frame, actor);
+    if (across != 0 || down != 0 || result != 0)
+    {
+        return port_return(&port, result, entry->edx);
+    }
+    result = port_call(&port, 0x4ac8f0, actor, 0, frame, actor);
+    return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_actor_glide_45c8b0(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    uint32_t actor = entry->eax;
+    uint32_t frame;
+    uint32_t across;
+    uint32_t down;
+    port_call(&port, 0x4ac7b0, actor, 1, entry->ebx, actor);
+    port_call(&port, 0x4ac500, actor, vertrix_lift_edx, entry->ebx, actor);
+    result = port_call(&port, 0x4ac520, actor, vertrix_lift_edx, entry->ebx, actor);
+    if (result != 1)
+    {
+        return port_return(&port, result, entry->edx);
+    }
+    frame = port_call(&port, 0x4ac540, actor, vertrix_lift_edx, entry->ebx, actor);
+    port_call(&port, 0x4ac5b0, actor, vertrix_lift_edx, frame, actor);
+    across = port_call(&port, 0x4aca60, actor, frame, frame, actor);
+    down = port_call(&port, 0x4acab0, actor, frame, frame, actor);
+    result = port_call(&port, 0x4acb00, actor, frame, frame, actor);
+    if (across != 0 || down != 0 || result != 0)
+    {
+        return port_return(&port, result, entry->edx);
+    }
+    result = port_call(&port, 0x4ac8f0, actor, 0x45c8b0, frame, actor);
+    return port_return(&port, result, entry->edx);
+}
