@@ -281,4 +281,14 @@ uint32_t vertrix_port_actor_list_call0c(PORT_SIGNATURE);
  * array of actor pointers, skipping empty slots. edx is the slot pointer after the last. */
 uint32_t vertrix_port_actor_array_update(PORT_SIGNATURE);
 
+/* Original 0x4b5500 (eax = actor): whether its input key (the word +0x15c) was pressed: when the
+ * input 0x54d640 has it ready (0x476480) the press is taken (0x4762e0) and 1 returned, else 0. edx
+ * is unchanged. */
+uint32_t vertrix_port_actor_key_pressed(PORT_SIGNATURE);
+
+/* Original 0x4ad530 (eax = actor, edx = steps): move the value (word +0x48) towards the target
+ * (+0x4a) by the steps times the speed (+0x4c), stopping at it. Returns whether it is not there
+ * yet; edx is the target word over the sign of the target. */
+uint32_t vertrix_port_actor_approach(PORT_SIGNATURE);
+
 #endif

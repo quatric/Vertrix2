@@ -26,6 +26,13 @@ enum
     TEXT_PREPARE = 0x4ae150,
     TEXT_LAYOUT = 0x4408e0,
     TEXT_FONT = 0x15c,
+    INPUT = 0x54d640,
+    INPUT_READY = 0x476480,
+    INPUT_TAKE = 0x4762e0,
+    ACTOR_KEY = 0x15c,
+    APPROACH_VALUE = 0x48,
+    APPROACH_TARGET = 0x4a,
+    APPROACH_SPEED = 0x4c,
     ACTOR_COUNTER_ADVANCE = 0x4ac500,
     ACTOR_COUNTER_DUE = 0x4ac520,
     ACTOR_STEPS_CONSUME = 0x4ac5b0,
@@ -1456,4 +1463,55 @@ uint32_t vertrix_port_actor_array_update(PORT_SIGNATURE)
         at += 4;
     } while (at < end);
     return port_return(&port, eax, at);
+}
+
+uint32_t vertrix_port_actor_key_pressed(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t actor = entry->eax;
+    uint32_t key;
+    port_open(&port, calls, services, globals, entry);
+    key = port_u16(&port, actor, ACTOR_KEY);
+    if (key == 0 || port_call(&port, INPUT_READY, INPUT, key, 0, actor) != 1)
+    {
+        return port_return(&port, 0, entry->edx);
+    }
+    port_call(&port, INPUT_TAKE, INPUT, port_u16(&port, actor, ACTOR_KEY), 1, actor);
+    return port_return(&port, 1, entry->edx);
+}
+
+uint32_t vertrix_port_actor_approach(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t actor = entry->eax;
+    uint32_t step;
+    int32_t from;
+    int32_t to;
+    int32_t value;
+    uint32_t target;
+    port_open(&port, calls, services, globals, entry);
+    step = entry->edx * actor_word(&port, actor, APPROACH_SPEED);
+    from = (int32_t)actor_word(&port, actor, APPROACH_VALUE);
+    to = (int32_t)actor_word(&port, actor, APPROACH_TARGET);
+    value = from;
+    if (from > to)
+    {
+        value = (int32_t)((uint32_t)from - step);
+        if (value < to)
+        {
+            value = to;
+        }
+    }
+    else if (from < to)
+    {
+        value = (int32_t)((uint32_t)from + step);
+        if (value > to)
+        {
+            value = to;
+        }
+    }
+    target = port_u16(&port, actor, APPROACH_TARGET);
+    port_set16(&port, actor, APPROACH_VALUE, (uint32_t)value);
+    return port_return(&port, ((uint32_t)value & 0xffff) != target,
+                       ((uint32_t)to & 0xffff0000u) | target);
 }

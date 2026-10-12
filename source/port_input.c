@@ -169,3 +169,47 @@ uint32_t vertrix_port_input_slot_ready(PORT_SIGNATURE)
         port_call(&port, INPUT_READY, entry->eax + slot * SLOT_SIZE, slot, entry->ebx, entry->eax);
     return port_return(&port, ready, vertrix_lift_edx);
 }
+
+enum
+{
+    INPUT_RUNNING = 0x5328bc,
+    INPUT_LOCK = 0x5328c0,
+    ENTER_CRITICAL_SECTION = 0x4f1b48,
+    LEAVE_CRITICAL_SECTION = 0x4f1c40
+};
+
+/* One input device: polled when it is open (its first dword 1). */
+static uint32_t poll_device(Port *port, uint32_t device, uint32_t poll, uint32_t eax, uint32_t *edx,
+                            uint32_t ebx, uint32_t ecx)
+{
+    if (port_u32(port, device, 0) != 1)
+    {
+        return eax;
+    }
+    eax = port_call(port, poll, device, *edx, ebx, ecx);
+    *edx = vertrix_lift_edx;
+    return eax;
+}
+
+uint32_t vertrix_port_input_poll_devices(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t lock = INPUT_LOCK;
+    uint32_t eax;
+    uint32_t edx;
+    port_open(&port, calls, services, globals, entry);
+    if (port_u32(&port, 0, INPUT_RUNNING) != 1)
+    {
+        return port_return(&port, entry->eax, entry->edx);
+    }
+    eax = port_call_stack(&port, ENTER_CRITICAL_SECTION, entry->eax, entry->edx, entry->ebx,
+                          entry->ecx, &lock, 1);
+    edx = vertrix_lift_edx;
+    eax = poll_device(&port, 0x55608c, 0x4774e0, eax, &edx, entry->ebx, entry->ecx);
+    eax = poll_device(&port, 0x5588f8, 0x477f10, eax, &edx, entry->ebx, entry->ecx);
+    eax = poll_device(&port, 0x5536c8, 0x476d70, eax, &edx, entry->ebx, entry->ecx);
+    eax = poll_device(&port, 0x553798, 0x476d70, eax, &edx, entry->ebx, entry->ecx);
+    eax =
+        port_call_stack(&port, LEAVE_CRITICAL_SECTION, eax, edx, entry->ebx, entry->ecx, &lock, 1);
+    return port_return(&port, eax, entry->edx);
+}

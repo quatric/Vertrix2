@@ -40,4 +40,10 @@ uint32_t vertrix_port_input_ready(PORT_SIGNATURE);
  * (edx the slot, ecx the table). */
 uint32_t vertrix_port_input_slot_ready(PORT_SIGNATURE);
 
+/* Original 0x4b7b80: when the input thread is running (0x5328bc), inside its critical section
+ * (0x5328c0, EnterCriticalSection 0x4f1b48 and LeaveCriticalSection 0x4f1c40) poll the open
+ * devices: 0x55608c (0x4774e0), 0x5588f8 (0x477f10), 0x5536c8 and 0x553798 (0x476d70). Returns
+ * the last call's eax; edx is unchanged. */
+uint32_t vertrix_port_input_poll_devices(PORT_SIGNATURE);
+
 #endif
