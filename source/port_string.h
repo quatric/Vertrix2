@@ -149,4 +149,15 @@ uint32_t vertrix_port_string_trim_start(PORT_SIGNATURE);
  * the last byte read. */
 uint32_t vertrix_port_text_length_limit(PORT_SIGNATURE);
 
+/* Original 0x4df81c (eax = format text, edx = specification): read printf's flags: '-' sets bit 8
+ * of the flags (the byte +0x1e, cleared first), '#' bit 1, '+' bit 4 (clearing bit 2), ' ' bit 2
+ * unless '+' was seen, and '0' sets the pad character (+0x16). Returns the first other character's
+ * address; edx is unchanged. */
+uint32_t vertrix_port_format_flags(PORT_SIGNATURE);
+
+/* Original 0x4dfa7c (eax = specification): for '0' padding without '-', grow the zero count
+ * (+0x24) by whatever the width (+4) has left after the six parts (+0x20 to +0x34). Registers are
+ * unchanged. */
+uint32_t vertrix_port_format_zero_pad(PORT_SIGNATURE);
+
 #endif

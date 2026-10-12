@@ -101,7 +101,7 @@ void (*vertrix_lifted_after_hook)(uint32_t target, uint32_t eax);
 
 static const LiftedRoutine routines[] = {
     {0x401010, lifted_mixer_output, 92, 0},
-    {0x401054, lifted_mixer_output_401054, 92, 0},
+    {0x401054, vertrix_port_mix_clamp, 0, 0},
     {0x401328, lifted_mixer_pcm8_stereo, 116, 0},
     {0x402c18, lifted_mixer_pcm16_stereo, 116, 0},
     {0x404480, lifted_mpeg_header_decode, 80, 0},
@@ -3704,11 +3704,11 @@ static const LiftedRoutine routines[] = {
     {0x4df307, lifted_f4df307, 68, 0},
     {0x4df320, lifted_f4df320, 248, 0},
     {0x4df6c8, lifted_format_spec, 80, 0},
-    {0x4df81c, lifted_rtl_parse_format_flags, 72, 0},
+    {0x4df81c, vertrix_port_format_flags, 0, 0},
     {0x4df884, vertrix_port_text_length_limit, 0, 0},
     {0x4df978, lifted_f4df978, 88, 0},
     {0x4dfa74, lifted_f4dfa74, 68, 0},
-    {0x4dfa7c, lifted_rtl_distribute_slack, 88, 0},
+    {0x4dfa7c, vertrix_port_format_zero_pad, 0, 0},
     {0x4dfac0, lifted_f4dfac0, 92, 0},
     {0x4dfb24, lifted_f4dfb24, 168, 0},
     {0x4e012c, lifted_f4e012c, 76, 0},

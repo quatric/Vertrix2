@@ -742,3 +742,28 @@ uint32_t vertrix_port_mixer_output(PORT_SIGNATURE)
                              arguments, 3);
     return port_return(&port, result, vertrix_lift_edx);
 }
+
+uint32_t vertrix_port_mix_clamp(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t out = entry->arguments[0];
+    uint32_t in = entry->arguments[1];
+    int32_t count = (int32_t)entry->arguments[2];
+    port_open(&port, calls, services, globals, entry);
+    do
+    {
+        int32_t value = (int32_t)port_u32(&port, in, 0);
+        if (value < -0x8000)
+        {
+            value = -0x8000;
+        }
+        else if (value > 0x7fff)
+        {
+            value = 0x7fff;
+        }
+        port_set16(&port, out, 0, (uint32_t)value);
+        in += 4;
+        out += 2;
+    } while (--count > 0);
+    return port_return(&port, entry->eax, entry->edx);
+}

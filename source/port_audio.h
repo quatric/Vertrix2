@@ -71,4 +71,8 @@ uint32_t vertrix_port_mixer_effect(PORT_SIGNATURE);
  * edx. */
 uint32_t vertrix_port_mixer_output(PORT_SIGNATURE);
 
+/* Original 0x401054 (cdecl: samples out, 32-bit mix in, count): clamp each mixed value into a
+ * 16-bit sample (at least one is written). Registers are unchanged. */
+uint32_t vertrix_port_mix_clamp(PORT_SIGNATURE);
+
 #endif

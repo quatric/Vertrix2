@@ -657,3 +657,81 @@ uint32_t vertrix_port_text_length_limit(PORT_SIGNATURE)
     }
     return port_return(&port, length, at);
 }
+
+enum
+{
+    FORMAT_WIDTH = 4,
+    FORMAT_PAD = 0x16,
+    FORMAT_FLAGS = 0x1e,
+    FORMAT_PARTS = 0x20,
+    FORMAT_ZEROS = 0x24,
+    FLAG_ALTERNATE = 1,
+    FLAG_SPACE = 2,
+    FLAG_PLUS = 4,
+    FLAG_LEFT = 8
+};
+
+uint32_t vertrix_port_format_flags(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t at = entry->eax;
+    uint32_t spec = entry->edx;
+    port_open(&port, calls, services, globals, entry);
+    port_set16(&port, spec, FORMAT_FLAGS, 0);
+    for (;; at++)
+    {
+        uint32_t byte = port_u8(&port, at, 0);
+        uint32_t flags = port_u8(&port, spec, FORMAT_FLAGS);
+        if (byte == '-')
+        {
+            flags |= FLAG_LEFT;
+        }
+        else if (byte == '#')
+        {
+            flags |= FLAG_ALTERNATE;
+        }
+        else if (byte == '+')
+        {
+            flags = (flags | FLAG_PLUS) & ~FLAG_SPACE;
+        }
+        else if (byte == ' ')
+        {
+            if (!(flags & FLAG_PLUS))
+            {
+                flags |= FLAG_SPACE;
+            }
+        }
+        else if (byte == '0')
+        {
+            port_set8(&port, spec, FORMAT_PAD, byte);
+        }
+        else
+        {
+            break;
+        }
+        port_set8(&port, spec, FORMAT_FLAGS, flags);
+    }
+    return port_return(&port, at, entry->edx);
+}
+
+uint32_t vertrix_port_format_zero_pad(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t spec = entry->eax;
+    port_open(&port, calls, services, globals, entry);
+    if (!(port_u8(&port, spec, FORMAT_FLAGS) & FLAG_LEFT) &&
+        port_u8(&port, spec, FORMAT_PAD) == '0')
+    {
+        int32_t left = (int32_t)port_u32(&port, spec, FORMAT_WIDTH);
+        uint32_t part;
+        for (part = 0; part < 6; part++)
+        {
+            left -= (int32_t)port_u32(&port, spec, FORMAT_PARTS + part * 4);
+        }
+        if (left > 0)
+        {
+            port_set32(&port, spec, FORMAT_ZEROS, port_u32(&port, spec, FORMAT_ZEROS) + left);
+        }
+    }
+    return port_return(&port, entry->eax, entry->edx);
+}
