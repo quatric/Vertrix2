@@ -171,4 +171,15 @@ uint32_t vertrix_port_stream_skip_blank(PORT_SIGNATURE);
  * (strncmp 0x4e4080), else 0. edx is unchanged. */
 uint32_t vertrix_port_environment_value(PORT_SIGNATURE);
 
+/* Original 0x4b7830 (eax = list of strings): release each string (0x4ca210 then 0x4ca050) and
+ * empty the list (0x4d8770 with no size), under a guard record. Returns the record's previous
+ * link; edx is unchanged. */
+uint32_t vertrix_port_string_list_clear(PORT_SIGNATURE);
+
+/* Original 0x4b7610 (eax = list of strings, dl = flags): its destructor: with flag 4 it destroys an
+ * array of them (0x4ccb9f with the destructor 0x513ea0, then 0x4ca040); otherwise its strings are
+ * released (0x4b7830), the base list destroyed (0x4d86d0) and, with flag 2, its memory freed
+ * (0x4ca050), under a guard record. Returns the list. */
+uint32_t vertrix_port_string_list_destroy(PORT_SIGNATURE);
+
 #endif

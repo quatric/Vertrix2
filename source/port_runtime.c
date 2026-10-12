@@ -41,6 +41,16 @@ enum
     TRIG = 0x4c9b6a,
     TRIG_SINE = 2,
     GUARD_HANDLER = 0x4ec1ec,
+    STRING_LIST_DESTROY_GUARD = 0x518620,
+    STRING_LIST_CLEAR = 0x4b7830,
+    LIST_DESTROY = 0x4d86d0,
+    ARRAY_DESTROY = 0x4ccb9f,
+    ARRAY_FREE = 0x4ca040,
+    STRING_LIST_DESTRUCTOR = 0x513ea0,
+    STRING_LIST_GUARD = 0x51864c,
+    STRING_DESTROY = 0x4ca210,
+    FREE_MEMORY = 0x4ca050,
+    POINTER_ARRAY_RESIZE = 0x4d8770,
     ENVIRONMENT = 0x5c81d4,
     COMPARE_LENGTH = 0x4e4080,
     LIST_CREATE_GUARD = 0x51a04c,
@@ -996,4 +1006,93 @@ uint32_t vertrix_port_environment_value(PORT_SIGNATURE)
         }
     }
     return port_return(&port, 0, entry->edx);
+}
+
+uint32_t vertrix_port_string_list_clear(PORT_SIGNATURE)
+{
+    /* push ebp, ebx, ecx, edx, esi, edi, then 0x24 bytes: the guard record and a string. */
+    enum
+    {
+        BELOW = 0x3c
+    };
+    Port port;
+    uint32_t list = entry->eax;
+    uint32_t ebp = entry->esp - 4;
+    uint32_t count;
+    uint32_t index;
+    uint32_t ecx = STRING_LIST_GUARD;
+    port_open_frame(&port, calls, services, globals, entry, BELOW);
+    port_set32(&port, ebp, -0x24u, port.env.chain);
+    port_set32(&port, ebp, -0x20u, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x1cu, STRING_LIST_GUARD);
+    port_set32(&port, ebp, -0x18u, 0);
+    count = port_u32(&port, list, 8);
+    if (count != 0)
+    {
+        ecx = 0;
+        for (index = 0; index < count;)
+        {
+            uint32_t item = port_u32(&port, port_u32(&port, list, 4), ecx);
+            if (item != 0)
+            {
+                uint32_t memory;
+                port_set32(&port, ebp, -0x18u, 1);
+                port_set32(&port, ebp, -0x38u, item);
+                memory = port_call(&port, STRING_DESTROY, item, 0, index, ecx);
+                port_set32(&port, ebp, -0x18u, 0);
+                port_call(&port, FREE_MEMORY, memory, 0, index, ecx);
+            }
+            ecx += 4;
+            index++;
+            port_set32(&port, ebp, -0x18u, 0);
+        }
+    }
+    port_call(&port, POINTER_ARRAY_RESIZE, list, 0, 0xffffffffu, ecx);
+    return port_return(&port, port_u32(&port, ebp, -0x24u), entry->edx);
+}
+
+uint32_t vertrix_port_string_list_destroy(PORT_SIGNATURE)
+{
+    /* push ebp, ebx, ecx, esi, edi, then 0x40 bytes: the guard record and its state. */
+    enum
+    {
+        BELOW = 0x54
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t list = entry->eax;
+    uint32_t flags = entry->edx;
+    uint32_t ebp = entry->esp - 4;
+    uint32_t result;
+    uint32_t edx;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    if (flags & 4)
+    {
+        port_set32(&port, ebp, -0x50u, list);
+        port_set32(&port, ebp, -0x30u, 1);
+        result = port_call(&port, ARRAY_DESTROY, list, STRING_LIST_DESTRUCTOR, 1, list);
+        port_set32(&port, ebp, -0x30u, 0);
+        port_call(&port, ARRAY_FREE, result, vertrix_lift_edx, 1, list);
+        return port_return(&port, list, vertrix_lift_edx);
+    }
+    port_set32(&port, list, 0, LIST_TABLE);
+    port_set32(&port, ebp, -0x28u, list);
+    port_set32(&port, ebp, -0x1cu, list);
+    port_set8(&port, ebp, -0x24u, 1);
+    port_set8(&port, ebp, -0x18u, flags);
+    port_set32(&port, ebp, -0x3cu, port.env.chain);
+    port_set32(&port, ebp, -0x38u, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x34u, STRING_LIST_DESTROY_GUARD);
+    port_set32(&port, ebp, -0x30u, 3);
+    port_call(&port, STRING_LIST_CLEAR, list, GUARD_HANDLER, flags, list);
+    port_set32(&port, ebp, -0x30u, 0);
+    result = port_call(&port, LIST_DESTROY, list, 1, flags, list);
+    port_set32(&port, ebp, -0x30u, 0);
+    edx = 0;
+    if (flags & 2)
+    {
+        port_call(&port, FREE_MEMORY, result, 0, flags, result);
+        edx = vertrix_lift_edx;
+    }
+    return port_return(&port, result, edx);
 }

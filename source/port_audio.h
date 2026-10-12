@@ -81,4 +81,11 @@ uint32_t vertrix_port_mix_clamp(PORT_SIGNATURE);
  * cleared. Returns 0, or -1 for a used count past a failed read. edx is unchanged. */
 uint32_t vertrix_port_reader_consume(PORT_SIGNATURE);
 
+/* Original 0x4111c0: the wave output pump: the current buffer (0x532570 of 3, 0x20-byte headers
+ * from 0x532510) when done (flag bit 1 of +0x10) and with a fill routine (0x532574) is unprepared
+ * (waveOutUnprepareHeader 0x4f1750) if still prepared (+0xc), refilled (data +0, size +4), then
+ * prepared (0x4f1748) and written (0x4f1754) to the device 0x532500, and the next buffer becomes
+ * current. Returns 0; edx is unchanged. */
+uint32_t vertrix_port_wave_pump(PORT_SIGNATURE);
+
 #endif

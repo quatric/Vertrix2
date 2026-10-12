@@ -805,3 +805,57 @@ uint32_t vertrix_port_reader_consume(PORT_SIGNATURE)
     port_set32(&port, 0, READER_PENDING, 0);
     return port_return(&port, 0, entry->edx);
 }
+
+enum
+{
+    WAVE_DEVICE = 0x532500,
+    WAVE_HEADERS = 0x532510,
+    WAVE_CURRENT = 0x532570,
+    WAVE_FILL = 0x532574,
+    WAVE_HEADER_SIZE = 0x20,
+    WAVE_DONE = 0x10,
+    WAVE_PREPARED = 0xc,
+    WAVE_PREPARE = 0x4f1748,
+    WAVE_UNPREPARE = 0x4f1750,
+    WAVE_WRITE = 0x4f1754
+};
+
+uint32_t vertrix_port_wave_pump(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t header;
+    uint32_t arguments[3];
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t current;
+    port_open(&port, calls, services, globals, entry);
+    header = WAVE_HEADERS + port_u32(&port, 0, WAVE_CURRENT) * WAVE_HEADER_SIZE;
+    if (!(port_u8(&port, header, WAVE_DONE) & 1) || port_u32(&port, 0, WAVE_FILL) == 0)
+    {
+        return port_return(&port, 0, entry->edx);
+    }
+    arguments[1] = header;
+    arguments[2] = WAVE_HEADER_SIZE;
+    if (port_u32(&port, header, WAVE_PREPARED) != 0)
+    {
+        arguments[0] = port_u32(&port, 0, WAVE_DEVICE);
+        eax = port_call_stack(&port, WAVE_UNPREPARE, eax, edx, header, entry->ecx, arguments, 3);
+        edx = vertrix_lift_edx;
+        port_set32(&port, header, WAVE_PREPARED, 0);
+    }
+    if (port_u32(&port, header, 0) != 0)
+    {
+        port_set32(&port, header, WAVE_DONE, 0);
+        port_set32(&port, header, WAVE_PREPARED, 1);
+        port_call(&port, port_u32(&port, 0, WAVE_FILL), port_u32(&port, header, 0),
+                  port_u32(&port, header, 4), header, entry->ecx);
+        arguments[0] = port_u32(&port, 0, WAVE_DEVICE);
+        eax = port_call_stack(&port, WAVE_PREPARE, arguments[0], vertrix_lift_edx, header,
+                              entry->ecx, arguments, 3);
+        arguments[0] = port_u32(&port, 0, WAVE_DEVICE);
+        port_call_stack(&port, WAVE_WRITE, eax, arguments[0], header, entry->ecx, arguments, 3);
+    }
+    current = port_u32(&port, 0, WAVE_CURRENT) + 1;
+    port_set32(&port, 0, WAVE_CURRENT, current >= 3 ? 0 : current);
+    return port_return(&port, 0, entry->edx);
+}
