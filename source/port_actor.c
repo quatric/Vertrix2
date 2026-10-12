@@ -26,6 +26,15 @@ enum
     TEXT_PREPARE = 0x4ae150,
     TEXT_LAYOUT = 0x4408e0,
     TEXT_FONT = 0x15c,
+    PAINT = 0x4b17b0,
+    PAINT_CALL = 0x4b5550,
+    PAINT_GATE = 0x4b17e0,
+    PAINT_DRAW = 0x4b1fa0,
+    PAINT_TARGET = 0x5bc010,
+    PAINT_SETTINGS = 0x144,
+    ACTOR_ATTACHED = 0x160,
+    ACTOR_METHODS = 0x158,
+    METHOD_DRAW = 8,
     TEXT_DRAW = 0x440ca0,
     TEXT_CURSOR = 0x440fc0,
     TIMER_RUNNING = 0x4b6560,
@@ -1084,5 +1093,62 @@ uint32_t vertrix_port_actor_draw_text(PORT_SIGNATURE)
                              (uint32_t)((int32_t)port_u32(&port, actor, TEXT_ALIGN - 3) >> 24),
                              (uint32_t)((int32_t)port_u32(&port, actor, TIMER_BYTE - 3) >> 24),
                              arguments[0], arguments, 6);
+    return port_return(&port, result, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_actor_paint_call(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    result = port_call(&port, PAINT, entry->eax, entry->edx, entry->ebx, entry->ecx);
+    return port_return(&port, result, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_actor_paint_target(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t actor = entry->eax;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    port_set32(&port, 0, PAINT_TARGET, entry->edx);
+    result = port_call(&port, PAINT_GATE, actor, port_u32(&port, actor, PAINT_SETTINGS), entry->ebx,
+                       actor);
+    if (result != 0)
+    {
+        result = port_call(&port, PAINT_DRAW, actor, vertrix_lift_edx, entry->ebx, actor);
+    }
+    return port_return(&port, result, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_actor_paint_attached(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t actor = entry->eax;
+    uint32_t attached;
+    uint32_t methods;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    result = port_call(&port, PAINT_CALL, actor, entry->edx, actor, entry->edx);
+    attached = port_u32(&port, actor, ACTOR_ATTACHED);
+    if (attached == 0)
+    {
+        return port_return(&port, result, 0);
+    }
+    methods = port_u32(&port, attached, ACTOR_METHODS);
+    result = port_call(&port, port_u32(&port, methods, METHOD_DRAW), attached, entry->edx, methods,
+                       entry->edx);
+    return port_return(&port, result, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_actor_draw_call(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t methods;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    methods = port_u32(&port, entry->eax, ACTOR_METHODS);
+    result = port_call(&port, port_u32(&port, methods, METHOD_DRAW), entry->eax, entry->edx,
+                       entry->ebx, methods);
     return port_return(&port, result, vertrix_lift_edx);
 }

@@ -215,4 +215,19 @@ uint32_t vertrix_port_actor_set_text(PORT_SIGNATURE);
  * and word +0x17a). Returns the last call's eax and edx. */
 uint32_t vertrix_port_actor_draw_text(PORT_SIGNATURE);
 
+/* Original 0x4b5550: calls 0x4b17b0 with the same registers. */
+uint32_t vertrix_port_actor_paint_call(PORT_SIGNATURE);
+
+/* Original 0x4b17b0 (eax = actor, edx = target surface): set the target (0x5bc010) and, when the
+ * gate 0x4b17e0 (edx the actor's +0x144) passes, paint (0x4b1fa0). Returns the last call's eax and
+ * edx. */
+uint32_t vertrix_port_actor_paint_target(PORT_SIGNATURE);
+
+/* Original 0x4b3340 (eax = actor, edx = surface): paint it (0x4b5550), then its attached actor
+ * (+0x160) through its table's draw (+8). Returns the last call's eax and edx. */
+uint32_t vertrix_port_actor_paint_attached(PORT_SIGNATURE);
+
+/* Original 0x4b3380 (eax = actor): its table's (+0x158) draw (+8). */
+uint32_t vertrix_port_actor_draw_call(PORT_SIGNATURE);
+
 #endif
