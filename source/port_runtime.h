@@ -251,4 +251,24 @@ uint32_t vertrix_port_text_characters(PORT_SIGNATURE);
  * the target. */
 uint32_t vertrix_port_text_copy_limit(PORT_SIGNATURE);
 
+/* Original 0x4759e0 (eax = owner): destroy every object in its list (+0x20): each one taken
+ * (0x4d8540) is deleted through its table's (+0x18) first entry with 2. Registers but eax are
+ * unchanged. */
+uint32_t vertrix_port_object_list_destroy(PORT_SIGNATURE);
+
+/* Original 0x4b7d10: the frame time: timeGetTime (0x4f172c) kept at 0x5bd838 and 0x5bd844, the
+ * milliseconds since the last call (at most 0xffff) at 0x5bd834. Returns them; registers are
+ * unchanged. */
+uint32_t vertrix_port_frame_time(PORT_SIGNATURE);
+
+/* Original 0x41d670: the frame rate: once a second (0x5bd838 against 0x5329fc) the frames counted
+ * at 0x5329f8 become the rate at 0x532a04 and the count restarts. Returns the time; edx is
+ * unchanged. */
+uint32_t vertrix_port_frame_rate(PORT_SIGNATURE);
+
+/* Original 0x487020 (eax = screen): flip its surface (+0x64, COM method +0x2c with 0 and 1, the
+ * result at 0x5b9c4c); a lost surface (0x887601c2) is restored (+0x6c) and flipped again.
+ * Returns the last call's result; edx is unchanged. */
+uint32_t vertrix_port_surface_flip(PORT_SIGNATURE);
+
 #endif

@@ -41,6 +41,15 @@ enum
     TRIG = 0x4c9b6a,
     TRIG_SINE = 2,
     GUARD_HANDLER = 0x4ec1ec,
+    LIST_TAKE = 0x4d8540,
+    TIME_GET_TIME = 0x4f172c,
+    FRAME_DELTA = 0x5bd834,
+    FRAME_NOW = 0x5bd838,
+    FRAME_LAST = 0x5bd844,
+    RATE_START = 0x5329fc,
+    RATE_TIME = 0x532a00,
+    RATE = 0x532a04,
+    FLIP_RESULT = 0x5b9c4c,
     PAUSE_KEY = 0x3b,
     PAUSED = 0x532a08,
     KEY_INPUT = 0x54d640,
@@ -1438,4 +1447,105 @@ uint32_t vertrix_port_text_copy_limit(PORT_SIGNATURE)
         edx = vertrix_lift_edx;
     }
     return port_return(&port, target, edx);
+}
+
+/* DDERR_SURFACELOST. */
+static const uint32_t SURFACE_LOST = 0x887601c2u;
+
+uint32_t vertrix_port_object_list_destroy(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t list = entry->eax + 0x20;
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    port_open(&port, calls, services, globals, entry);
+    while (port_u32(&port, list, 0xc) != 0)
+    {
+        uint32_t item = port_call(&port, LIST_TAKE, list, edx, ebx, list);
+        edx = vertrix_lift_edx;
+        eax = item;
+        if (item != 0)
+        {
+            ebx = port_u32(&port, item, 0x18);
+            eax = port_call(&port, port_u32(&port, ebx, 0), item, 2, ebx, list);
+            edx = vertrix_lift_edx;
+        }
+    }
+    return port_return(&port, eax, entry->edx);
+}
+
+uint32_t vertrix_port_frame_time(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t now;
+    uint32_t last;
+    uint32_t delta = 0;
+    port_open(&port, calls, services, globals, entry);
+    now = port_call_stack(&port, TIME_GET_TIME, entry->eax, entry->edx,
+                          port_u32(&port, 0, FRAME_DELTA), entry->ecx, 0, 0);
+    port_set32(&port, 0, FRAME_NOW, now);
+    last = port_u32(&port, 0, FRAME_LAST);
+    if (now > last)
+    {
+        delta = now - last;
+    }
+    port_set32(&port, 0, FRAME_LAST, now);
+    if (delta >= 0xffff)
+    {
+        delta = 0xffff;
+    }
+    port_set32(&port, 0, FRAME_DELTA, delta);
+    return port_return(&port, delta, entry->edx);
+}
+
+uint32_t vertrix_port_frame_rate(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t now;
+    uint32_t span;
+    port_open(&port, calls, services, globals, entry);
+    now = port_u32(&port, 0, FRAME_NOW);
+    span = now - port_u32(&port, 0, RATE_START);
+    port_set32(&port, 0, RATE_TIME, now);
+    if (span < 1000)
+    {
+        return port_return(&port, now, entry->edx);
+    }
+    port_set32(&port, 0, RATE, port_u32(&port, 0, TICKS) * 1000 / span);
+    port_set32(&port, 0, TICKS, 0);
+    now = port_u32(&port, 0, FRAME_NOW);
+    port_set32(&port, 0, RATE_START, now);
+    return port_return(&port, now, entry->edx);
+}
+
+/* The surface's COM method at `method`, with its stack arguments after the surface. */
+static uint32_t surface_method(Port *port, uint32_t surface, uint32_t method, uint32_t ebx,
+                               uint32_t ecx, int flip)
+{
+    uint32_t methods = port_u32(port, surface, 0);
+    uint32_t arguments[3] = {surface, 0, 1};
+    return port_call_stack(port, port_u32(port, methods, method), surface, methods, ebx, ecx,
+                           arguments, flip ? 3 : 1);
+}
+
+uint32_t vertrix_port_surface_flip(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t screen = entry->eax;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    result = surface_method(&port, port_u32(&port, screen, 0x64), 0x2c, screen, entry->ecx, 1);
+    port_set32(&port, 0, FLIP_RESULT, result);
+    if (result != SURFACE_LOST)
+    {
+        return port_return(&port, result, entry->edx);
+    }
+    result = surface_method(&port, port_u32(&port, screen, 0x64), 0x6c, screen, entry->ecx, 0);
+    if (result != 0)
+    {
+        return port_return(&port, result, entry->edx);
+    }
+    result = surface_method(&port, port_u32(&port, screen, 0x64), 0x2c, screen, entry->ecx, 1);
+    return port_return(&port, result, entry->edx);
 }
