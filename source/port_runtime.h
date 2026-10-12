@@ -433,4 +433,43 @@ uint32_t vertrix_port_list_construct_518344(PORT_SIGNATURE);
  * the count at +4. */
 uint32_t vertrix_port_dword_array_allocate(PORT_SIGNATURE);
 
+/* Original 0x4e5810 (eax = lock): release one level of a counted lock (+0xc); at the last its
+ * owner (+8) is cleared and its section (+0) left (LeaveCriticalSection 0x4f1c40). Registers but
+ * eax are unchanged. */
+uint32_t vertrix_port_counted_unlock(PORT_SIGNATURE);
+
+/* Original 0x4ec1f7 (a jump to 0x4df2e1; eax = node): push the node on the free list 0x50818e
+ * under the lock 0x50817e. edx is unchanged. */
+uint32_t vertrix_port_free_list_push(PORT_SIGNATURE);
+
+/* Original 0x4ce9fd (eax = object): 0x4ce9c0 when its first field is set. Returns the object. */
+uint32_t vertrix_port_object_release_if(PORT_SIGNATURE);
+
+/* Original 0x4eb860 (eax = target, edx = source, ebx = size): strncpy. Returns the target; edx is
+ * 0. */
+uint32_t vertrix_port_text_copy_padded(PORT_SIGNATURE);
+
+/* Original 0x4dba10 (eax = list, edx = node): push the node, linking it by the list's offset (+4).
+ * Registers are unchanged. */
+uint32_t vertrix_port_link_push(PORT_SIGNATURE);
+
+/* Original 0x4dea40 (stack = lock number): leave the lock's section (0x18 bytes each from
+ * 0x5c79d8) unless locking is off (0x5c79d4). */
+uint32_t vertrix_port_lock_leave(PORT_SIGNATURE);
+
+/* Original 0x4d30f0 (eax = value, edx = node): link the node into the application's (0x4ce740)
+ * list +0x1c inside lock 0 (0x4de9c0, 0x4dea40). Returns the value. */
+uint32_t vertrix_port_application_link(PORT_SIGNATURE);
+
+/* Original 0x4e14b0: the lock routine at 0x509748. */
+uint32_t vertrix_port_lock_enter_call(PORT_SIGNATURE);
+
+/* Original 0x4e14b7: the unlock routine at 0x50974c. */
+uint32_t vertrix_port_lock_leave_call(PORT_SIGNATURE);
+
+/* Original 0x4ec1a0 (eax = result or 0): time(): the local time (0x4ec850, rounded up from 500
+ * milliseconds) as mktime (0x4e7850) gives it, stored at the result when given. edx is unchanged.
+ */
+uint32_t vertrix_port_time_now(PORT_SIGNATURE);
+
 #endif
