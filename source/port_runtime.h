@@ -47,4 +47,11 @@ uint32_t vertrix_port_list_item_field(PORT_SIGNATURE);
 /* Original 0x48a2f0: 0x4b7a80 with the same registers. */
 uint32_t vertrix_port_list_item_field_call(PORT_SIGNATURE);
 
+/* Original 0x4b5eb0 (eax = list, edx = key): the first item whose first dword is the key, or 0.
+ * edx is left as the last item read (the key when the list is empty). */
+uint32_t vertrix_port_list_find(PORT_SIGNATURE);
+
+/* Original 0x48a2e0: the dword at eax + 8. edx is unchanged. */
+uint32_t vertrix_port_field8(PORT_SIGNATURE);
+
 #endif

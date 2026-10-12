@@ -61,7 +61,17 @@ enum
     RULE_COUNT = 0x5c,
     TRAVERSE_FIRST = 0x5bbfff,
     TRAVERSE_DEPTH = 0x5bb738,
-    TRAVERSE_LAST = 0x5bbff0
+    TRAVERSE_LAST = 0x5bbff0,
+    PALETTE_SOURCE = 0x5bb764,
+    PALETTE_TARGET = 0x5bb768,
+    PALETTE_INDEXES = 0x54b800,
+    PALETTE_ENTRIES = 0x54cdc8,
+    PALETTE_ENTRY = 0x54d5d0,
+    ROWS = 0x5bb752,
+    ROW_WIDTH = 0x5bb750,
+    ROW_WIDTH_COPY = 0x5bc016,
+    ROW_SOURCE_SKIP = 0x5bb79c,
+    ROW_TARGET_SKIP = 0x5bb7c8,
 };
 
 uint32_t vertrix_port_render_flags(PORT_SIGNATURE)
@@ -317,5 +327,51 @@ uint32_t vertrix_port_render_prepare(PORT_SIGNATURE)
         return port_return(&port, eax, entry->edx);
     }
     port_set32(&port, 0, CHANNEL_MAP_MIRROR, CHANNEL_MAP_PLAIN);
+    return port_return(&port, eax, entry->edx);
+}
+
+uint32_t vertrix_port_render_palette_pixel(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t pixel;
+    uint32_t index;
+    uint32_t palette;
+    uint32_t colour;
+    port_open(&port, calls, services, globals, entry);
+    pixel = port_u32(&port, port_u32(&port, 0, PALETTE_SOURCE), 0);
+    index = (((pixel & 0xfc0000) >> 4) | ((pixel & 0xfc00) >> 2) | (pixel & 0xfc)) >> 2;
+    index = port_u8(&port, port_u32(&port, 0, PALETTE_INDEXES), index * 4);
+    palette = port_u32(&port, port_u32(&port, 0, PALETTE_ENTRIES), index * 4);
+    port_set32(&port, 0, PALETTE_ENTRY, palette);
+    colour = port_u8(&port, port_u16(&port, 0, FORMAT_TINT_RED), palette) << 16;
+    colour |= port_u8(&port, port_u16(&port, 0, FORMAT_TINT_GREEN), palette) << 8;
+    colour |= port_u8(&port, port_u16(&port, 0, FORMAT_TINT_BLUE), palette);
+    port_set32(&port, port_u32(&port, 0, PALETTE_TARGET), 0, colour);
+    return port_return(&port, colour, entry->edx);
+}
+
+uint32_t vertrix_port_render_rows(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t routine = entry->eax;
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t rows;
+    port_open(&port, calls, services, globals, entry);
+    rows = port_u16(&port, 0, ROWS);
+    while (rows != 0)
+    {
+        eax = (eax & 0xffff0000u) | port_u16(&port, 0, ROW_WIDTH);
+        port_set16(&port, 0, ROWS, rows);
+        port_set16(&port, 0, ROW_WIDTH_COPY, eax);
+        port_call(&port, routine, eax, edx, (entry->ebx & 0xffff0000u) | rows, routine);
+        port_set32(&port, 0, PALETTE_SOURCE,
+                   port_u32(&port, 0, PALETTE_SOURCE) + (port_u32(&port, 0, ROW_SOURCE_SKIP) << 2));
+        eax = port_u32(&port, 0, ROW_TARGET_SKIP);
+        edx = port_u32(&port, 0, PALETTE_TARGET) + eax;
+        port_set32(&port, 0, PALETTE_TARGET, edx);
+        rows = (port_u16(&port, 0, ROWS) - 1) & 0xffff;
+    }
+    port_set16(&port, 0, ROWS, 0);
     return port_return(&port, eax, entry->edx);
 }

@@ -120,4 +120,10 @@ uint32_t vertrix_port_string_from(PORT_SIGNATURE);
  * (lead byte high), otherwise the byte. edx is unchanged. */
 uint32_t vertrix_port_char_code(PORT_SIGNATURE);
 
+/* Original 0x4ca090 (eax = address of a new string, edx = address of the source): copy-construct.
+ * An unlocked source's record is shared (its count raised by InterlockedIncrement [0x4f1c38]);
+ * a locked one's text is copied into an empty string (0x4ca060, then 0x4ca370). Returns the
+ * address, with the last call's edx. */
+uint32_t vertrix_port_string_copy(PORT_SIGNATURE);
+
 #endif

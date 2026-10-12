@@ -56,4 +56,14 @@ uint32_t vertrix_port_bit_get(PORT_SIGNATURE);
  * the original leaves. */
 uint32_t vertrix_port_mixer_channel(PORT_SIGNATURE);
 
+/* Original 0x404610 (eax = count, at most 24): the next `count` bits of the stream, like 0x404680
+ * with three bytes kept to 24 bits; nothing is read for a count of 0 (returns 0). edx is
+ * unchanged. */
+uint32_t vertrix_port_bits_get24(PORT_SIGNATURE);
+
+/* Original 0x40dc50 (eax = channel row): run the row's effect (byte +3, below 0x24) through the
+ * table at 0x4f7444 (edx and bl the effect), when it or the parameter (+4) is set. Returns the
+ * effect's eax (the row otherwise); edx is unchanged. */
+uint32_t vertrix_port_mixer_effect(PORT_SIGNATURE);
+
 #endif

@@ -132,4 +132,12 @@ uint32_t vertrix_port_actor_progress_steps(PORT_SIGNATURE);
  * time; edx is unchanged. */
 uint32_t vertrix_port_actor_steps_consume(PORT_SIGNATURE);
 
+/* Original 0x4ac390: whether the actor's counter (+0xcc) has reached its limit (+0xd0, unsigned).
+ * edx is unchanged. */
+uint32_t vertrix_port_actor_counter_done(PORT_SIGNATURE);
+
+/* Original 0x4ac370: add the frame time (0x5bd834) to the actor's counter (+0xcc). Returns the
+ * actor; edx is unchanged. */
+uint32_t vertrix_port_actor_counter_advance(PORT_SIGNATURE);
+
 #endif

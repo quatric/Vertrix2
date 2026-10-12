@@ -18,6 +18,10 @@ enum
     OUTPUT_STEP = 0x4056b0,
     OUTPUT_ADVANCE = 0x80,
     TAPS = 16,
+    ROW_EFFECT = 3,
+    ROW_PARAMETER = 4,
+    EFFECTS = 0x24,
+    EFFECT_TABLE = 0x4f7444,
     DCT_POINTS = 32,
     /* Pointers to the cosine tables of the transform's five passes. */
     DCT_COSINES = 0x4f5f90,
@@ -40,6 +44,7 @@ enum
     BIT_POSITION = 0x51f014,
     BIT_OFFSET = 0x51f018,
     BITS_WINDOW = 16,
+    BITS_WINDOW24 = 24,
     MIXER_FLAGS = 0x52fc1d,
     MIXER_STEREO = 1,
     MIXER_RENDER = 0x52fc34,
@@ -680,4 +685,44 @@ uint32_t vertrix_port_mixer_channel(PORT_SIGNATURE)
         left -= run;
     }
     return port_return(&port, eax, edx);
+}
+
+uint32_t vertrix_port_bits_get24(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t count = entry->eax;
+    uint32_t position;
+    uint32_t value;
+    uint32_t offset;
+    port_open(&port, calls, services, globals, entry);
+    if (count == 0)
+    {
+        return port_return(&port, 0, entry->edx);
+    }
+    position = port_u32(&port, 0, BIT_POSITION);
+    value = (port_u8(&port, position, 0) << 16) | (port_u8(&port, position, 1) << 8) |
+            port_u8(&port, position, 2);
+    value = port_shl(value, port_u8(&port, 0, BIT_OFFSET)) & 0xffffff;
+    port_set32(&port, 0, BIT_OFFSET, port_u32(&port, 0, BIT_OFFSET) + count);
+    value = port_shr(value, BITS_WINDOW24 - count);
+    offset = port_u32(&port, 0, BIT_OFFSET);
+    port_set32(&port, 0, BIT_POSITION, position + (uint32_t)((int32_t)offset >> 3));
+    port_set32(&port, 0, BIT_OFFSET, port_u32(&port, 0, BIT_OFFSET) & 7);
+    return port_return(&port, value, entry->edx);
+}
+
+uint32_t vertrix_port_mixer_effect(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t row = entry->eax;
+    uint32_t effect;
+    uint32_t result = row;
+    port_open(&port, calls, services, globals, entry);
+    effect = port_u8(&port, row, ROW_EFFECT);
+    if ((effect != 0 || port_u8(&port, row, ROW_PARAMETER) != 0) && effect < EFFECTS)
+    {
+        result = port_call(&port, port_u32(&port, 0, EFFECT_TABLE + effect * 4), row, effect,
+                           (entry->ebx & 0xffffff00u) | effect, entry->ecx);
+    }
+    return port_return(&port, result, entry->edx);
 }

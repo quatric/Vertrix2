@@ -55,4 +55,16 @@ uint32_t vertrix_port_render_source_size(PORT_SIGNATURE);
  * Returns 0x4754e0's eax, or the last value the original computed in eax; edx is unchanged. */
 uint32_t vertrix_port_render_prepare(PORT_SIGNATURE);
 
+/* Original 0x48d7f0: paint one pixel through the palette: the source pixel ([[0x5bb764]]) reduced
+ * to 6 bits a channel picks a palette index from [0x54b800] (every fourth byte), its entry from
+ * [0x54cdc8] (kept at 0x54d5d0) gives the tinted channels at the offsets 0x54d5dc, 0x54d5de and
+ * 0x54d5e0, stored at [0x5bb768] as 0x00rrggbb. Returns that; edx is unchanged. */
+uint32_t vertrix_port_render_palette_pixel(PORT_SIGNATURE);
+
+/* Original 0x492880 (eax = row routine): call it for each visible row (the word 0x5bb752 counting
+ * down, ebx its count, ax the visible width also stored at 0x5bc016), stepping the source
+ * (0x5bb764) past the skipped pixels (0x5bb79c dwords) and the target (0x5bb768) by its skip
+ * (0x5bb7c8). Returns the target skip (eax unchanged when there are no rows); edx is unchanged. */
+uint32_t vertrix_port_render_rows(PORT_SIGNATURE);
+
 #endif

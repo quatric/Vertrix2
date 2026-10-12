@@ -206,3 +206,36 @@ uint32_t vertrix_port_list_item_field_call(PORT_SIGNATURE)
     field = port_call(&port, LIST_ITEM_FIELD, entry->eax, entry->edx, entry->ebx, entry->ecx);
     return port_return(&port, field, vertrix_lift_edx);
 }
+
+uint32_t vertrix_port_list_find(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t list = entry->eax;
+    uint32_t count;
+    uint32_t edx = entry->edx;
+    port_open(&port, calls, services, globals, entry);
+    count = port_u32(&port, list, LIST_COUNT);
+    if (count != 0)
+    {
+        uint32_t at = port_u32(&port, list, LIST_ITEMS);
+        uint32_t end = at + count * 4;
+        edx = at;
+        do
+        {
+            edx = port_u32(&port, at, 0);
+            if (port_u32(&port, edx, 0) == entry->edx)
+            {
+                return port_return(&port, edx, edx);
+            }
+            at += 4;
+        } while (at < end);
+    }
+    return port_return(&port, 0, edx);
+}
+
+uint32_t vertrix_port_field8(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    return port_return(&port, port_u32(&port, entry->eax, ITEM_FIELD), entry->edx);
+}

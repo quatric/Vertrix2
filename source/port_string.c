@@ -25,6 +25,7 @@ enum
     INCREMENT = 0x4f1c38,
     STRING_RESERVE = 0x4ca1e0,
     STRING_SET = 0x4ca2e0,
+    STRING_SET_TEXT = 0x4ca370,
     TEXT_LENGTH = 0x4f1d24,
     READ_RESOURCE_STRING = 0x4db8c0
 };
@@ -490,4 +491,28 @@ uint32_t vertrix_port_char_code(PORT_SIGNATURE)
         code = (code << 8) | port_u8(&port, text, 1);
     }
     return port_return(&port, code, entry->edx);
+}
+
+uint32_t vertrix_port_string_copy(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t string = entry->eax;
+    uint32_t source = entry->edx;
+    uint32_t text;
+    uint32_t record;
+    port_open(&port, calls, services, globals, entry);
+    text = port_u32(&port, source, 0);
+    record = text - STRING_TEXT;
+    if ((int32_t)port_u32(&port, record, STRING_COUNT) >= 0)
+    {
+        port_set32(&port, string, 0, text);
+        port_call_stack(&port, INCREMENT, record, record, string, entry->ecx, &record, 1);
+    }
+    else
+    {
+        uint32_t empty = port_call(&port, EMPTY_TEXT, text, record, string, entry->ecx);
+        port_set32(&port, string, 0, port_u32(&port, empty, 0));
+        port_call(&port, STRING_SET_TEXT, string, port_u32(&port, source, 0), string, entry->ecx);
+    }
+    return port_return(&port, string, vertrix_lift_edx);
 }

@@ -5,6 +5,8 @@ enum
     ACTOR_FRAME_INDEX = 0xb8,
     ACTOR_ELAPSED = 0xbc,
     ACTOR_TIME_SCALE = 0xc0,
+    ACTOR_COUNTER = 0xcc,
+    ACTOR_COUNTER_LIMIT = 0xd0,
     ACTOR_PROGRESS = 0xdc,
     ACTOR_PROGRESS_SCALE = 0xe0,
     ACTOR_STEPS = 0x4ac540,
@@ -691,4 +693,24 @@ uint32_t vertrix_port_actor_steps_consume(PORT_SIGNATURE)
     elapsed = port_u32(&port, actor, ACTOR_ELAPSED);
     port_set32(&port, actor, ACTOR_ELAPSED, time < elapsed ? elapsed - time : 0);
     return port_return(&port, time, entry->edx);
+}
+
+uint32_t vertrix_port_actor_counter_done(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t actor = entry->eax;
+    port_open(&port, calls, services, globals, entry);
+    return port_return(
+        &port, port_u32(&port, actor, ACTOR_COUNTER) >= port_u32(&port, actor, ACTOR_COUNTER_LIMIT),
+        entry->edx);
+}
+
+uint32_t vertrix_port_actor_counter_advance(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t actor = entry->eax;
+    port_open(&port, calls, services, globals, entry);
+    port_set32(&port, actor, ACTOR_COUNTER,
+               port_u32(&port, actor, ACTOR_COUNTER) + port_u32(&port, 0, FRAME_TIME));
+    return port_return(&port, actor, entry->edx);
 }
