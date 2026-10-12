@@ -234,4 +234,21 @@ uint32_t vertrix_port_surface_restore_68(PORT_SIGNATURE);
 /* Original 0x485520: as 0x486da0 with the surface +0x6c and the result at 0x5b99c0. */
 uint32_t vertrix_port_surface_restore_6c(PORT_SIGNATURE);
 
+/* Original 0x478cd0 (eax = surface, dl = bits per pixel): its pixel format (+0xd): 0 to 4 for 8,
+ * 15, 16, 24 and 32 bits, unchanged otherwise. Registers are unchanged. */
+uint32_t vertrix_port_surface_set_format(PORT_SIGNATURE);
+
+/* Original 0x41de80: the pause key (0x3b of input 0x54d640, 0x476480 then taken by 0x4762e0)
+ * toggles 0x532a08. Returns the new value, or 0 without the key; edx is unchanged. */
+uint32_t vertrix_port_pause_toggle(PORT_SIGNATURE);
+
+/* Original 0x4e39a0 (eax = text, edx = byte limit): how many characters (0x4e6f30 bytes each) fit
+ * in the limit before the end (0x4e7b50). edx is the bytes left. */
+uint32_t vertrix_port_text_characters(PORT_SIGNATURE);
+
+/* Original 0x4e7b90 (eax = target, edx = source, ebx = size): strncpy that drops a split lead byte
+ * (the double-byte table 0x5c8961 when 0x5c8950 is set) and clears the rest (0x4eb5c0). Returns
+ * the target. */
+uint32_t vertrix_port_text_copy_limit(PORT_SIGNATURE);
+
 #endif

@@ -26,6 +26,10 @@ enum
     TEXT_PREPARE = 0x4ae150,
     TEXT_LAYOUT = 0x4408e0,
     TEXT_FONT = 0x15c,
+    ACTOR_COUNTER_STEPS = 0x4ac3b0,
+    ACTOR_WANDER = 0x45cff0,
+    ACTOR_COUNTER_RESET = 0x4ac510,
+    WANDERER_NEXT = 0x45d1a0,
     RESOURCE_FRAMES = 0x487860,
     INPUT_CLICK = 0x4764a0,
     CLICK_KEY = 0x74,
@@ -1634,4 +1638,76 @@ uint32_t vertrix_port_actor_frames_done(PORT_SIGNATURE)
                        entry->eax, entry->ebx, entry->ecx);
     return port_return(&port, frames == port_u32(&port, vertrix_lift_edx, ACTOR_FRAME_INDEX),
                        entry->edx);
+}
+
+uint32_t vertrix_port_actor_step_value(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t actor = entry->eax;
+    uint32_t step;
+    int32_t value;
+    int32_t goal;
+    int32_t next;
+    port_open(&port, calls, services, globals, entry);
+    step = entry->edx * port_u32(&port, actor, STEP_SPEED);
+    value = (int32_t)port_u32(&port, actor, STEP_VALUE);
+    goal = (int32_t)port_u32(&port, actor, STEP_GOAL);
+    next = value;
+    if (value > goal)
+    {
+        next = (int32_t)((uint32_t)value - step);
+        if (next < goal)
+        {
+            next = goal;
+        }
+    }
+    else if (value < goal)
+    {
+        next = (int32_t)((uint32_t)value + step);
+        if (next > goal)
+        {
+            next = goal;
+        }
+    }
+    goal = (int32_t)port_u32(&port, actor, STEP_GOAL);
+    port_set32(&port, actor, STEP_VALUE, (uint32_t)next);
+    return port_return(&port, next != goal, (uint32_t)goal);
+}
+
+uint32_t vertrix_port_actor_counter_consume(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t actor = entry->eax;
+    uint32_t limit;
+    uint32_t taken;
+    uint32_t counter;
+    port_open(&port, calls, services, globals, entry);
+    limit = port_u32(&port, actor, ACTOR_COUNTER_LIMIT);
+    if (limit == 0)
+    {
+        limit = 1;
+    }
+    taken = port_call(&port, ACTOR_COUNTER_STEPS, actor, actor, entry->ebx, limit) * limit;
+    counter = port_u32(&port, actor, ACTOR_COUNTER);
+    port_set32(&port, actor, ACTOR_COUNTER, taken < counter ? counter - taken : 0);
+    return port_return(&port, taken, entry->edx);
+}
+
+uint32_t vertrix_port_wanderer_frame(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t actor = entry->eax;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    port_call(&port, ACTOR_WANDER, actor, entry->edx, entry->ebx, actor);
+    port_call(&port, ACTOR_COUNTER_ADVANCE, actor, vertrix_lift_edx, entry->ebx, actor);
+    result = port_call(&port, ACTOR_COUNTER_DUE, actor, vertrix_lift_edx, entry->ebx, actor);
+    if (result != 1)
+    {
+        return port_return(&port, result, entry->edx);
+    }
+    port_call(&port, ACTOR_COUNTER_RESET, actor, vertrix_lift_edx, entry->ebx, actor);
+    port_set32(&port, actor, 0x64, port_u32(&port, actor, 0x68));
+    result = port_call(&port, ACTOR_SET_UPDATE, actor, WANDERER_NEXT, entry->ebx, actor);
+    return port_return(&port, result, entry->edx);
 }

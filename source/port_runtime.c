@@ -41,6 +41,16 @@ enum
     TRIG = 0x4c9b6a,
     TRIG_SINE = 2,
     GUARD_HANDLER = 0x4ec1ec,
+    PAUSE_KEY = 0x3b,
+    PAUSED = 0x532a08,
+    KEY_INPUT = 0x54d640,
+    KEY_READY = 0x476480,
+    KEY_TAKE = 0x4762e0,
+    TEXT_AT_END = 0x4e7b50,
+    CHARACTER_SIZE = 0x4e6f30,
+    DOUBLE_BYTE_ON = 0x5c8950,
+    DOUBLE_BYTE_LEADS = 0x5c8961,
+    FILL_BYTES = 0x4eb5c0,
     TICKS = 0x5329f8,
     SCREEN_PRESENT = 0x485550,
     SCREEN_STATE = 0x5b9c50,
@@ -1328,4 +1338,104 @@ uint32_t vertrix_port_surface_restore_68(PORT_SIGNATURE)
 uint32_t vertrix_port_surface_restore_6c(PORT_SIGNATURE)
 {
     return surface_restore(calls, services, globals, entry, 0x6c, 0x5b99c0);
+}
+
+uint32_t vertrix_port_surface_set_format(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t bits = entry->edx & 0xff;
+    port_open(&port, calls, services, globals, entry);
+    if (bits == 8 || bits == 15 || bits == 16 || bits == 24 || bits == 32)
+    {
+        port_set8(&port, entry->eax, 0xd,
+                  bits == 8    ? 0
+                  : bits == 15 ? 1
+                  : bits == 16 ? 2
+                  : bits == 24 ? 3
+                               : 4);
+    }
+    return port_return(&port, entry->eax, entry->edx);
+}
+
+uint32_t vertrix_port_pause_toggle(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t paused;
+    port_open(&port, calls, services, globals, entry);
+    if (port_call(&port, KEY_READY, KEY_INPUT, PAUSE_KEY, entry->ebx, entry->ecx) == 0)
+    {
+        return port_return(&port, 0, entry->edx);
+    }
+    port_call(&port, KEY_TAKE, KEY_INPUT, PAUSE_KEY, entry->ebx, entry->ecx);
+    paused = 1 - port_u32(&port, 0, PAUSED);
+    port_set32(&port, 0, PAUSED, paused);
+    return port_return(&port, paused, entry->edx);
+}
+
+uint32_t vertrix_port_text_characters(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t at = entry->eax;
+    uint32_t left = entry->edx;
+    uint32_t count = 0;
+    port_open(&port, calls, services, globals, entry);
+    for (;;)
+    {
+        uint32_t size;
+        if (port_call(&port, TEXT_AT_END, at, left, at, count) != 0)
+        {
+            left = vertrix_lift_edx;
+            break;
+        }
+        left = vertrix_lift_edx;
+        if (left == 0)
+        {
+            break;
+        }
+        size = port_call(&port, CHARACTER_SIZE, at, left, at, count);
+        left = vertrix_lift_edx;
+        if (left < size)
+        {
+            break;
+        }
+        count++;
+        left -= size;
+        at += size;
+    }
+    return port_return(&port, count, left);
+}
+
+uint32_t vertrix_port_text_copy_limit(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t target = entry->eax;
+    uint32_t at = entry->eax;
+    uint32_t source = entry->edx;
+    uint32_t left = entry->ebx;
+    uint32_t edx;
+    uint32_t ecx = entry->ecx;
+    port_open(&port, calls, services, globals, entry);
+    while (left != 0 && port_u8(&port, source, 0) != 0)
+    {
+        ecx = (ecx & 0xffffff00u) | port_u8(&port, source, 0);
+        port_set8(&port, at, 0, ecx);
+        at++;
+        source++;
+        left--;
+    }
+    edx = source;
+    if (port_u8(&port, source, 0) != 0 && at > target && port_u32(&port, 0, DOUBLE_BYTE_ON) != 0)
+    {
+        edx = port_u8(&port, 0, DOUBLE_BYTE_LEADS + port_u8(&port, source, -1u)) & 1;
+        if (edx != 0)
+        {
+            port_set8(&port, at, -1u, 0);
+        }
+    }
+    if (left != 0)
+    {
+        port_call(&port, FILL_BYTES, at, 0, left, ecx);
+        edx = vertrix_lift_edx;
+    }
+    return port_return(&port, target, edx);
 }

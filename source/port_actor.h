@@ -310,4 +310,19 @@ uint32_t vertrix_port_actor_frame_count(PORT_SIGNATURE);
  * count (0x487860 of +0xb0). edx is unchanged. */
 uint32_t vertrix_port_actor_frames_done(PORT_SIGNATURE);
 
+/* Original 0x4ad6e0 (eax = actor, edx = steps): move the value (+0x58) towards the goal (+0x5c)
+ * by the steps times the speed (+0x60), stopping at it. Returns whether it is not there yet; edx
+ * is the goal. */
+uint32_t vertrix_port_actor_step_value(PORT_SIGNATURE);
+
+/* Original 0x4ac420 (eax = actor): take the whole counter steps (0x4ac3b0) out of its counter
+ * (+0xcc), clearing it when they are not below it. Returns the steps times the limit; edx is
+ * unchanged. */
+uint32_t vertrix_port_actor_counter_consume(PORT_SIGNATURE);
+
+/* Original 0x45d100 (eax = actor): a wandering actor's frame (0x45cff0) that, when its counter is
+ * due (0x4ac500, 0x4ac520), resets it (0x4ac510), restores +0x64 from +0x68 and sets its update to
+ * 0x45d1a0 (0x4ac8f0). Registers but eax are unchanged. */
+uint32_t vertrix_port_wanderer_frame(PORT_SIGNATURE);
+
 #endif
