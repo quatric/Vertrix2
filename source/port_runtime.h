@@ -545,7 +545,6 @@ uint32_t vertrix_port_reader_restart(PORT_SIGNATURE);
  * are full. */
 uint32_t vertrix_port_audio_hook_add(PORT_SIGNATURE);
 
-
 /* Original 0x48d520: construct a list (0x4d8650) with the table 0x517a94. */
 uint32_t vertrix_port_list_construct_517a94(PORT_SIGNATURE);
 
@@ -554,5 +553,104 @@ uint32_t vertrix_port_key_records_reset(PORT_SIGNATURE);
 
 /* Original 0x472330: draw the top layer list 0x54676c (0x4b5fc0). */
 uint32_t vertrix_port_layer_top_draw(PORT_SIGNATURE);
+
+/* Original 0x45e530: allocate bank 0x5466a4 (0x487640), load 0x546538 and 0x5449fc (0x4877f0),
+ * combine them (0x4831b0) and store it in the bank (0x487850). */
+uint32_t vertrix_port_bank_setup_5466a4(PORT_SIGNATURE);
+
+/* Original 0x45e400: create the 160x120 surface 0x544a6c (0x4875a0). */
+uint32_t vertrix_port_surface_create_544a6c(PORT_SIGNATURE);
+
+/* Original 0x45e3c0: create the 30x30 surface 0x544d28 (0x4875a0). */
+uint32_t vertrix_port_surface_create_544d28(PORT_SIGNATURE);
+
+/* Original 0x4486f0(eax = actor): size it 8x8 from +0x14 and +0x1c, then set its mode (0x4ac7b0),
+ * update 0x448790 (0x4ac510) and show it (0x4ac8f0). */
+uint32_t vertrix_port_actor_square_setup(PORT_SIGNATURE);
+
+/* Original 0x41ac80(eax = scene): leave it (0x41aa20, 0x41aaa0), read the frame time (0x4b7cd0) and
+ * reset 0x5588f8 (0x477d70). */
+uint32_t vertrix_port_scene_leave(PORT_SIGNATURE);
+
+/* Original 0x41ab90: hand the rectangle words +0x214..+0x21a and +0x268 of 0x544070 to 0x558c80
+ * (0x47ce10). */
+uint32_t vertrix_port_view_rect_set(PORT_SIGNATURE);
+
+/* Original 0x41a9e0: close 0x544070 (0x441a80), destroy it through its table (+0x27c) and clear it.
+ */
+uint32_t vertrix_port_scene_release(PORT_SIGNATURE);
+
+/* Original 0x41a940: set 0x540040 and call 0x41a040. */
+uint32_t vertrix_port_scene_flag_enter(PORT_SIGNATURE);
+
+/* Original 0x41a930: clear 0x54004c. */
+uint32_t vertrix_port_scene_flag_clear(PORT_SIGNATURE);
+
+/* Original 0x4e2400(eax = block): free the chain of blocks linked through +0 (0x4ca040). */
+uint32_t vertrix_port_block_chain_free(PORT_SIGNATURE);
+
+/* Original 0x4d8540(eax = queue): unlink its first node, release it (0x4d84f0) and return the node
+ * +8. */
+uint32_t vertrix_port_queue_pop(PORT_SIGNATURE);
+
+/* Original 0x4d8510(eax = queue, edx = value): append a node (0x4d8490) holding the value at +8. */
+uint32_t vertrix_port_queue_push(PORT_SIGNATURE);
+
+
+/* Original 0x4d83c0(eax = pool): clear its counters and lists and free its blocks +0x14 (0x4e2400).
+ */
+uint32_t vertrix_port_pool_reset(PORT_SIGNATURE);
+
+/* Original 0x4872c0(eax = record): look up the cell of +0x3e, +0x40 and +0x10 (0x478d10) and give
+ * it the colour byte +0x24. */
+uint32_t vertrix_port_cell_colour_set(PORT_SIGNATURE);
+
+/* Original 0x482a60(al = sound): play it (0x482a40) when 0x4829c0 reports it ready. */
+uint32_t vertrix_port_sound_play_if_ready(PORT_SIGNATURE);
+
+/* Original 0x482a40(al = sound): play the sample of slot 0x598d88 (0x40adc0). */
+uint32_t vertrix_port_sound_play(PORT_SIGNATURE);
+
+/* Original 0x482720(eax = holder): allocate 0x1001 bytes (0x4ec160) into +0 and set the owned flag
+ * +4. */
+uint32_t vertrix_port_buffer_4k_allocate(PORT_SIGNATURE);
+
+/* Original 0x482480(eax = reader): clear it and give it the table 0x516c24. */
+uint32_t vertrix_port_reader_construct(PORT_SIGNATURE);
+
+/* Original 0x476d20(eax = key): clear the 32 slots +0x24 and the dwords +0xa4..+0xb0. Returns key +
+ * 0x80. */
+uint32_t vertrix_port_key_slots_clear(PORT_SIGNATURE);
+
+/* Original 0x4768e0(eax = key): clear it and give it the table 0x5166d4. */
+uint32_t vertrix_port_key_construct(PORT_SIGNATURE);
+
+/* Original 0x476590(eax = keys): reset keys 0x7a and 0x7b (0x476140). */
+uint32_t vertrix_port_key_pair_reset(PORT_SIGNATURE);
+
+/* Original 0x4760c0(eax = keys): release all 256 keys (0x476120). */
+uint32_t vertrix_port_key_all_release(PORT_SIGNATURE);
+
+/* Original 0x475b00(eax = record): 1 when byte +0x5a is clear. */
+uint32_t vertrix_port_record_free_test(PORT_SIGNATURE);
+
+/* Original 0x4757e0(eax = target, edx = source): copy the byte +0 and dwords +4..+0xc. Returns
+ * dword +0xc in edx. */
+uint32_t vertrix_port_entry_copy(PORT_SIGNATURE);
+
+/* Original 0x473cd0(eax = name): open it in mode 4 with 0x513e60 (0x4cea15). */
+uint32_t vertrix_port_stream_open_513e60(PORT_SIGNATURE);
+
+/* Original 0x45ea60(eax = slot, edx = count): allocate bank 0x544d7c + slot * 0x1c (0x487640) when
+ * count is nonzero. */
+uint32_t vertrix_port_bank_slot_allocate(PORT_SIGNATURE);
+
+/* Original 0x45d140(eax = actor): reset it (0x45cff0), update 0x45d160 (0x4ac510) and show it
+ * (0x4ac8f0). */
+uint32_t vertrix_port_actor_restart_45d160(PORT_SIGNATURE);
+
+/* Original 0x45d0c0(eax = actor): reset it (0x45cff0), wait 2000 + random(10000) (0x4826c0,
+ * 0x4ac7d0), update 0x45d100 (0x4ac510) and show it (0x4ac8f0). */
+uint32_t vertrix_port_actor_restart_45d100(PORT_SIGNATURE);
 
 #endif
