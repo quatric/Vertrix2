@@ -1032,4 +1032,75 @@ uint32_t vertrix_port_file_exists(PORT_SIGNATURE);
  * otherwise 0. */
 uint32_t vertrix_port_actors_all_idle(PORT_SIGNATURE);
 
+/* Original 0x4771e0: construct 0x55608c (0x477240) and register its exit routine 0x4fea9d
+ * (0x4ec1f7). Returns the handler chain. */
+uint32_t vertrix_port_static_init_55608c(PORT_SIGNATURE);
+
+/* Original 0x477810: construct 0x5560bc (0x477870) and register its exit routine 0x4feac9
+ * (0x4ec1f7). Returns the handler chain. */
+uint32_t vertrix_port_static_init_5560bc(PORT_SIGNATURE);
+
+/* Original 0x477960: construct 0x5588f8 (0x4779c0) and register its exit routine 0x4feae4
+ * (0x4ec1f7). Returns the handler chain. */
+uint32_t vertrix_port_static_init_5588f8(PORT_SIGNATURE);
+
+/* Original 0x484a00: construct 0x5b9c50 (0x484a60) and register its exit routine 0x4feb7c
+ * (0x4ec1f7). Returns the handler chain. */
+uint32_t vertrix_port_static_init_5b9c50(PORT_SIGNATURE);
+
+/* Original 0x4799f0(eax = image, edx = key colour): make the key colour transparent and every other
+ * pixel opaque, counting them into 0x558a4c and leaving the end in 0x558a44. */
+uint32_t vertrix_port_image_alpha_key(PORT_SIGNATURE);
+
+/* Original 0x482b40(al = sound): when sound is on (0x598d60) and the sound is playing (0x598d68)
+ * stop its sample (0x40add0) if 0x4828a0 allows it, then clear its playing flag. */
+uint32_t vertrix_port_sound_stop(PORT_SIGNATURE);
+
+/* Original 0x492710: run the row hook 0x5bb72c for every row counted down in 0x5bc016, stepping the
+ * row pointer 0x5bb7dc and the offsets 0x5bb764 and 0x5bb768. */
+uint32_t vertrix_port_music_rows_play(PORT_SIGNATURE);
+
+/* Original 0x4b61c0(eax = list): call method +0x18 of the table +0x158 of every item. */
+uint32_t vertrix_port_layer_list_clear(PORT_SIGNATURE);
+
+/* Original 0x4d8340(eax = pool, edx = size): give it the table 0x51a024 and the block size +0x18,
+ * clearing the rest. */
+uint32_t vertrix_port_pool_construct(PORT_SIGNATURE);
+
+/* Original 0x40cd40(eax = tempo): for 32 to 255 set the samples per tick 0x52fc24 from the rate
+ * 0x52fc20 (doubled when 0x52fc1d bit 0 is set) as rate * 5 / (tempo * 2). Returns 0, or 2 for a
+ * bad tempo. */
+uint32_t vertrix_port_audio_tempo_set(PORT_SIGNATURE);
+
+/* Original 0x417fc0(eax = level, edx = value): count the 0x4c byte entries of the level (count
+ * 0x534f10) whose dword at 0x534c18 equals the value. Returns the end offset in edx. */
+uint32_t vertrix_port_level_count_matches(PORT_SIGNATURE);
+
+
+/* Original 0x4e58b8: when 0x507c98 is unset read the mode (import 0x4f1cd4), rereading it while
+ * 0x509731 and 0x50972f allow and it stays 0 to 2. Stores it in 0x507c98 and returns 1 unless it is
+ * -1. */
+uint32_t vertrix_port_console_mode_probe(PORT_SIGNATURE);
+
+/* Original 0x4d7510(eax = object): construct its lock +0xc (0x4ca070), give it the table 0x519f14
+ * with no handle (+4 = -1) and set the lock up (0x4ca180). */
+uint32_t vertrix_port_event_object_construct(PORT_SIGNATURE);
+
+/* Original 0x40ac50(eax = sample): allocate its data (0x4e7c90, size +8 + 4) into +0 and load it
+ * through the hook 0x52f054, freeing it (0x4ea190) when that fails. Returns 0, 2 for no sample, 8
+ * for no memory or the hook error. */
+uint32_t vertrix_port_sample_load(PORT_SIGNATURE);
+
+/* Original 0x411bf0: construct 0x5327f0 (0x411c70), register its exit routine 0x4f7700 (0x4ec1f7)
+ * and clear 0x53291c..0x532924. Returns the handler chain. */
+uint32_t vertrix_port_static_init_5327f0(PORT_SIGNATURE);
+
+/* Original 0x423d70(eax = name): load it as a 0x50de07 object (0x473f10) or a 0x50de0c object
+ * (0x48ac50) by its extension (0x489b40). Returns the object or 0. */
+uint32_t vertrix_port_script_object_load(PORT_SIGNATURE);
+
+/* Original 0x478ae0: when audio is open (0x5589d4) stop and release the eight sounds when sound is
+ * on (0x482b40, 0x40ad50), then close the device (0x40ed70, 0x40aba0, 0x40ef90 with 0x5589d8). */
+uint32_t vertrix_port_audio_shutdown(PORT_SIGNATURE);
+
 #endif
