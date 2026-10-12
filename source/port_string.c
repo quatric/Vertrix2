@@ -735,3 +735,129 @@ uint32_t vertrix_port_format_zero_pad(PORT_SIGNATURE)
     }
     return port_return(&port, entry->eax, entry->edx);
 }
+
+enum
+{
+    FORMAT_PRECISION = 8,
+    FORMAT_SIZE = 0x1f,
+    FORMAT_READ_FLAGS = 0x4df81c,
+    SIZE_LONG = 0x20,
+    SIZE_SHORT = 0x10,
+    SIZE_NEAR = 0x40,
+    SIZE_FAR = 0x80,
+    SIZE_WIDE = 1
+};
+
+/* The next variable argument, as the original's `va_arg`. */
+static uint32_t next_argument(Port *port, uint32_t list)
+{
+    uint32_t at = port_u32(port, list, 0) + 4;
+    port_set32(port, list, 0, at);
+    return port_u32(port, at, -4u);
+}
+
+/* Read decimal digits into the field, leaving edx as the original does. */
+static uint32_t read_number(Port *port, uint32_t spec, uint32_t field, uint32_t *at, uint32_t edx)
+{
+    for (;;)
+    {
+        uint32_t byte = port_u8(port, *at, 0);
+        edx = (edx & 0xffffff00u) | byte;
+        if (byte < '0' || byte > '9')
+        {
+            return edx;
+        }
+        edx = byte - '0';
+        port_set32(port, spec, field, port_u32(port, spec, field) * 10 + edx);
+        (*at)++;
+    }
+}
+
+uint32_t vertrix_port_format_spec(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t list = entry->edx;
+    uint32_t spec = entry->ebx;
+    uint32_t at;
+    uint32_t edx;
+    uint32_t byte;
+    port_open(&port, calls, services, globals, entry);
+    port_set8(&port, spec, FORMAT_PAD, ' ');
+    at = port_call(&port, FORMAT_READ_FLAGS, entry->eax, spec, spec, entry->ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, spec, FORMAT_WIDTH, 0);
+    if (port_u8(&port, at, 0) == '*')
+    {
+        edx = next_argument(&port, list);
+        port_set32(&port, spec, FORMAT_WIDTH, edx);
+        if ((int32_t)edx < 0)
+        {
+            port_set32(&port, spec, FORMAT_WIDTH, 0u - edx);
+            port_set8(&port, spec, FORMAT_FLAGS, port_u8(&port, spec, FORMAT_FLAGS) | FLAG_LEFT);
+        }
+        at++;
+    }
+    else
+    {
+        edx = read_number(&port, spec, FORMAT_WIDTH, &at, edx);
+    }
+    port_set32(&port, spec, FORMAT_PRECISION, 0xffffffffu);
+    if (port_u8(&port, at, 0) == '.')
+    {
+        port_set32(&port, spec, FORMAT_PRECISION, 0);
+        at++;
+        if (port_u8(&port, at, 0) == '*')
+        {
+            edx = next_argument(&port, list);
+            port_set32(&port, spec, FORMAT_PRECISION, edx);
+            if ((int32_t)edx < 0)
+            {
+                port_set32(&port, spec, FORMAT_PRECISION, 0xffffffffu);
+            }
+            at++;
+        }
+        else
+        {
+            edx = read_number(&port, spec, FORMAT_PRECISION, &at, edx);
+        }
+        if (port_u32(&port, spec, FORMAT_PRECISION) != 0xffffffffu)
+        {
+            port_set8(&port, spec, FORMAT_PAD, ' ');
+        }
+    }
+    byte = port_u8(&port, at, 0);
+    edx = (edx & 0xffffff00u) | byte;
+    switch (byte)
+    {
+        case 'l':
+        case 'w':
+            port_set8(&port, spec, FORMAT_FLAGS, port_u8(&port, spec, FORMAT_FLAGS) | SIZE_LONG);
+            at++;
+            break;
+        case 'h':
+            port_set8(&port, spec, FORMAT_FLAGS, port_u8(&port, spec, FORMAT_FLAGS) | SIZE_SHORT);
+            at++;
+            break;
+        case 'N':
+            port_set8(&port, spec, FORMAT_FLAGS, port_u8(&port, spec, FORMAT_FLAGS) | SIZE_NEAR);
+            at++;
+            break;
+        case 'F':
+            port_set8(&port, spec, FORMAT_FLAGS, port_u8(&port, spec, FORMAT_FLAGS) | SIZE_FAR);
+            at++;
+            break;
+        case 'L':
+            edx = (edx & 0xffffff00u) | (port_u8(&port, spec, FORMAT_SIZE) | SIZE_WIDE);
+            port_set8(&port, spec, FORMAT_SIZE, edx);
+            at++;
+            break;
+        case 'I':
+            if (port_u8(&port, at, 1) == '6' && port_u8(&port, at, 2) == '4')
+            {
+                port_set8(&port, spec, FORMAT_SIZE, port_u8(&port, spec, FORMAT_SIZE) | SIZE_WIDE);
+                at += 3;
+            }
+            break;
+    }
+    return port_return(&port, at, edx);
+}

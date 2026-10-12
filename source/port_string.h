@@ -160,4 +160,12 @@ uint32_t vertrix_port_format_flags(PORT_SIGNATURE);
  * unchanged. */
 uint32_t vertrix_port_format_zero_pad(PORT_SIGNATURE);
 
+/* Original 0x4df6c8 (eax = format text after '%', edx = address of the argument pointer, ebx =
+ * specification): read printf's flags (0x4df81c, the pad set to ' '), the width (+4, '*' taking an
+ * argument, negative meaning '-'), the precision (+8, -1 when none, '0' padding dropped when given)
+ * and the size: 'l' or 'w' (bit 0x20 of +0x1e), 'h' (0x10), 'N' (0x40), 'F' (0x80), 'L' or "I64"
+ * (bit 1 of +0x1f). Returns the conversion character's address; edx's low byte is the last byte
+ * read. */
+uint32_t vertrix_port_format_spec(PORT_SIGNATURE);
+
 #endif

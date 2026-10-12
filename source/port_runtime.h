@@ -124,4 +124,11 @@ uint32_t vertrix_port_list_append_text(PORT_SIGNATURE);
  * previous link; edx from the draw. */
 uint32_t vertrix_port_text_draw(PORT_SIGNATURE);
 
+/* Original 0x440a20 (eax = surface, dl = font, bx, cx = place, stack = text and the actor): draw
+ * the text a character at a time under a guard record: each glyph (0x43f420) becomes a temporary
+ * actor (0x4ca000, 0x4abd70, 0x4adf20) copying the actor's drawing settings, is measured (0x4b14c0)
+ * and drawn (its table's +8) and destroyed (its table's first entry); a space only advances by the
+ * font's space width (0x541988, 0x20c bytes a font). Returns the record's previous link. */
+uint32_t vertrix_port_text_draw_glyphs(PORT_SIGNATURE);
+
 #endif
