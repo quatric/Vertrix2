@@ -1890,7 +1890,7 @@ static const LiftedRoutine routines[] = {
     {0x475be0, lifted_f475be0, 92, 0},
     {0x475c30, lifted_input_queue_consume_full, 100, 0},
     {0x475c80, lifted_queue_next, 84, 0},
-    {0x475cd0, vertrix_port_key_record_age, 0, 0},
+    {0x475cd0, vertrix_port_input_poll, 0, 0},
     {0x475d20, vertrix_port_input_drain, 0, 0},
     {0x475d70, vertrix_port_input_ready, 0, 0},
     {0x475d90, lifted_offset_call, 68, 0},

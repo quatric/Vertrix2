@@ -271,11 +271,7 @@ enum
 {
     KEY_CLEAR_FLAG = 0x475af0,
     KEY_STATE_SET = 0x475790,
-    KEY_EVENTS_CLEAR = 0x4759e0,
-    KEY_TIMER_AGE = 0x475e50,
-    KEY_EVENTS_RUN = 0x475c30,
-    KEY_HOLD_ENDED = 0x475800,
-    INPUT_FROZEN = 0x553648
+    KEY_EVENTS_CLEAR = 0x4759e0
 };
 
 uint32_t vertrix_port_key_record_reset(PORT_SIGNATURE)
@@ -294,43 +290,4 @@ uint32_t vertrix_port_key_record_reset(PORT_SIGNATURE)
     port_call_stack(&port, KEY_STATE_SET, record + 4, 0, 0, 0, &zero, 1);
     result = port_call(&port, KEY_EVENTS_CLEAR, record, vertrix_lift_edx, 0, 0);
     return port_return(&port, result, entry->edx);
-}
-
-uint32_t vertrix_port_key_record_age(PORT_SIGNATURE)
-{
-    Port port;
-    uint32_t record = entry->eax;
-    uint32_t eax;
-    uint32_t state;
-    uint32_t events = record + 0x20;
-    port_open(&port, calls, services, globals, entry);
-    eax = port_call(&port, KEY_TIMER_AGE, record, entry->edx, entry->ebx, record);
-    if (port_u32(&port, 0, INPUT_FROZEN) != 0)
-    {
-        return port_return(&port, eax, vertrix_lift_edx);
-    }
-    state = port_u8(&port, record, 0);
-    eax = (eax & 0xffff00ffu) | (state << 8);
-    if (state == 0)
-    {
-        if (port_u32(&port, events, 0xc) == 0)
-        {
-            return port_return(&port, eax, events);
-        }
-    }
-    else if (state == 1)
-    {
-        eax = port_call(&port, KEY_HOLD_ENDED, record + 4, events, entry->ebx, record);
-        events = vertrix_lift_edx;
-        if ((eax & 0xff) == 1 || port_u32(&port, events, 0xc) == 0)
-        {
-            return port_return(&port, eax, events);
-        }
-    }
-    else
-    {
-        return port_return(&port, eax, events);
-    }
-    eax = port_call(&port, KEY_EVENTS_RUN, record, events, entry->ebx, record);
-    return port_return(&port, eax, vertrix_lift_edx);
 }
