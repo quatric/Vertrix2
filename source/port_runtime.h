@@ -1533,4 +1533,32 @@ uint32_t vertrix_port_image_alpha_from_mask(PORT_SIGNATURE);
  * ring callback 0x52fc30 is set, calling it each time the ring wraps. */
 uint32_t vertrix_port_mix_buffer_feed(PORT_SIGNATURE);
 
+/* Original 0x40df20(eax = voice): reset the voice for a new note from its instrument +0x34: clear
+ * the volume and pitch envelopes the instrument uses, take its pan +0x86 and set up the vibrato
+ * step from depth +0x84 over speed +0x83. */
+uint32_t vertrix_port_voice_note_reset(PORT_SIGNATURE);
+
+/* Original 0x486d00(eax = display): flip the back buffer +0x68 (method 0x64) until it succeeds,
+ * restoring lost surfaces (+0x64 method 0x6c, then 0x487080) and waiting out busy ones (method
+ * 0x48); then reattach the view (0x478da0). Returns 1, or 0 when a surface cannot be restored. */
+uint32_t vertrix_port_display_restore(PORT_SIGNATURE);
+
+/* Original 0x4575b0(eax = actor): on a new frame (0x4ac520) start the hop animation, nudge +0xe and
+ * +0x16 by 2 less a random 0..4 (0x4826c0 on 0x598d30) and, when it ends (0x4ad530), settle
+ * (0x4ac740, 0x4ac700) and go back to state 0x4574a0; then step (0x4ac8a0). */
+uint32_t vertrix_port_actor_hop_step(PORT_SIGNATURE);
+
+/* Original 0x45c480(eax = actor): the bobbing state at height 0x32, going to 0x45c540
+ * (actor_bob_step). */
+uint32_t vertrix_port_actor_bob_high(PORT_SIGNATURE);
+
+/* Original 0x45c540(eax = actor): the bobbing state at height 0, going to 0x45c480
+ * (actor_bob_step). */
+uint32_t vertrix_port_actor_bob_low(PORT_SIGNATURE);
+
+/* Original 0x405e00(eax = list, ebx = size): allocate a 0x14 byte chunk record (0x4e7c90) with a
+ * cleared buffer of the size (0x4eb5e0) and append it to the list, adding the size to +8. Returns
+ * the record, or 0 when either allocation fails. */
+uint32_t vertrix_port_chunk_list_add(PORT_SIGNATURE);
+
 #endif
