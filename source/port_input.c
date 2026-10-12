@@ -213,3 +213,56 @@ uint32_t vertrix_port_input_poll_devices(PORT_SIGNATURE)
         port_call_stack(&port, LEAVE_CRITICAL_SECTION, eax, edx, entry->ebx, entry->ecx, &lock, 1);
     return port_return(&port, eax, entry->edx);
 }
+
+enum
+{
+    KEY_RECORD_FIELDS = 0x475da0,
+    KEY_RECORD_SIZE = 0x60,
+    STATE_FIELD_04 = 0x475810,
+    STATE_FIELD_08 = 0x475820,
+    STATE_FIELD_0C = 0x475830,
+    KEY_RECORD_AGE = 0x475cd0
+};
+
+uint32_t vertrix_port_key_fields(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    result =
+        port_call(&port, KEY_RECORD_FIELDS, entry->eax + (entry->edx & 0xffff) * KEY_RECORD_SIZE,
+                  entry->ebx, entry->ecx, entry->arguments[0]);
+    return port_return(&port, result, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_key_record_fields(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t state = entry->eax + 4;
+    uint32_t value;
+    port_open(&port, calls, services, globals, entry);
+    value = port_call(&port, STATE_FIELD_04, state, state, entry->ebx, entry->ecx);
+    port_set32(&port, entry->edx, 0, value);
+    state = vertrix_lift_edx;
+    value = port_call(&port, STATE_FIELD_08, state, state, entry->ebx, entry->ecx);
+    port_set32(&port, entry->ebx, 0, value);
+    state = vertrix_lift_edx;
+    value = port_call(&port, STATE_FIELD_0C, state, state, entry->ebx, entry->ecx);
+    port_set32(&port, entry->ecx, 0, value);
+    return port_return(&port, value, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_keys_age(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t key;
+    uint32_t edx = entry->edx;
+    port_open(&port, calls, services, globals, entry);
+    for (key = 0; key < 0x100; key++)
+    {
+        port_call(&port, KEY_RECORD_AGE, entry->eax + key * KEY_RECORD_SIZE, entry->edx, key + 1,
+                  entry->edx);
+        edx = vertrix_lift_edx;
+    }
+    return port_return(&port, 0x100, edx);
+}

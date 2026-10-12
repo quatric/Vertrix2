@@ -26,6 +26,8 @@ enum
     TEXT_PREPARE = 0x4ae150,
     TEXT_LAYOUT = 0x4408e0,
     TEXT_FONT = 0x15c,
+    MENU_CHOICE_RUN = 0x471bb0,
+    MENU_NEXT = 0x45c760,
     SLOT_PLACE = 0x4ac1e0,
     LAYER_UPDATE = 0x4b6200,
     LAYER_CALL_14 = 0x4b6170,
@@ -1820,4 +1822,56 @@ uint32_t vertrix_port_actor_replace(PORT_SIGNATURE)
     result = port_call(&port, SLOT_PLACE, actor_word(&port, actor, 0x148), entry->edx, entry->ebx,
                        entry->ecx);
     return port_return(&port, result, vertrix_lift_edx);
+}
+
+static const uint32_t cursor_actors_update[4] = {0x54670c, 0x546710, 0x546714, 0x546718};
+static const uint32_t cursor_actors_draw[4] = {0x546710, 0x546714, 0x546718, 0x54670c};
+
+uint32_t vertrix_port_cursor_actors_update(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t result = entry->eax;
+    uint32_t index;
+    port_open(&port, calls, services, globals, entry);
+    for (index = 0; index < 4; index++)
+    {
+        uint32_t actor = port_u32(&port, 0, cursor_actors_update[index]);
+        uint32_t methods = port_u32(&port, actor, ACTOR_METHODS);
+        result = port_call(&port, port_u32(&port, methods, METHOD_UPDATE), actor, methods,
+                           entry->ebx, entry->ecx);
+    }
+    return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_cursor_actors_draw(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t surface = entry->eax;
+    uint32_t result = entry->eax;
+    uint32_t index;
+    port_open(&port, calls, services, globals, entry);
+    for (index = 0; index < 4; index++)
+    {
+        uint32_t actor = port_u32(&port, 0, cursor_actors_draw[index]);
+        uint32_t methods = port_u32(&port, actor, ACTOR_METHODS);
+        result = port_call(&port, port_u32(&port, methods, METHOD_DRAW), actor, surface, methods,
+                           surface);
+    }
+    return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_menu_choice(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t menu = entry->eax;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    if (port_u32(&port, 0, MENU_CHOSEN) != 1)
+    {
+        return port_return(&port, menu, entry->edx);
+    }
+    port_call(&port, MENU_CHOICE_RUN, menu, entry->edx, entry->ebx, menu);
+    port_set32(&port, 0, MENU_CHOSEN, 0);
+    result = port_call(&port, ACTOR_SET_UPDATE, menu, MENU_NEXT, 0, menu);
+    return port_return(&port, result, entry->edx);
 }

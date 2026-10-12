@@ -361,4 +361,16 @@ uint32_t vertrix_port_actor_keep_place(PORT_SIGNATURE);
  * marked for placing (+0x120); otherwise 0x4ac1e0 with the slot. */
 uint32_t vertrix_port_actor_replace(PORT_SIGNATURE);
 
+/* Original 0x45fa70: update the four cursor actors (0x54670c to 0x546718, their tables' +4). edx
+ * is unchanged. */
+uint32_t vertrix_port_cursor_actors_update(PORT_SIGNATURE);
+
+/* Original 0x45fab0 (eax = surface): draw the cursor actors 0x546710, 0x546714, 0x546718 and
+ * 0x54670c (their tables' +8). edx is unchanged. */
+uint32_t vertrix_port_cursor_actors_draw(PORT_SIGNATURE);
+
+/* Original 0x45c7b0 (eax = menu): once a choice was made (0x532a48), run 0x471bb0, clear the
+ * choice and set the menu's update to 0x45c760 (0x4ac8f0). edx is unchanged. */
+uint32_t vertrix_port_menu_choice(PORT_SIGNATURE);
+
 #endif

@@ -46,4 +46,16 @@ uint32_t vertrix_port_input_slot_ready(PORT_SIGNATURE);
  * the last call's eax; edx is unchanged. */
 uint32_t vertrix_port_input_poll_devices(PORT_SIGNATURE);
 
+/* Original 0x4764a0 (eax = keys, dx = key, ebx, ecx, stack = the three outputs): the key record's
+ * three fields (0x475da0 of the 0x60-byte record). */
+uint32_t vertrix_port_key_fields(PORT_SIGNATURE);
+
+/* Original 0x475da0 (eax = record, edx, ebx, ecx = outputs): store its fields +4, +8 and +0xc of
+ * the state at +4 (0x475810, 0x475820, 0x475830). */
+uint32_t vertrix_port_key_record_fields(PORT_SIGNATURE);
+
+/* Original 0x476400 (eax = keys, edx = elapsed time): age each of the 256 key records (0x475cd0).
+ * Returns 0x100. */
+uint32_t vertrix_port_keys_age(PORT_SIGNATURE);
+
 #endif
