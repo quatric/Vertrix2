@@ -116,4 +116,23 @@ uint32_t vertrix_port_sample_rewind(PORT_SIGNATURE);
  * 1 without an open device, 2 without a buffer. */
 uint32_t vertrix_port_driver_write(PORT_SIGNATURE);
 
+/* Original 0x405ea0 (eax = queue): drop its first node (+4, the next at +0xc whose back link +0x10
+ * is cleared, or the queue emptied), freeing its data and itself (0x4ea190). edx is unchanged. */
+uint32_t vertrix_port_queue_drop(PORT_SIGNATURE);
+
+/* Original 0x405d60 (eax = reader): clear the 0x4770-byte reader (0x4eb5c0) and set it up: no
+ * frames, offsets -1, ready (+0x476c), then the volume 0x7fff (0x40a590) and buffer 0x20
+ * (0x406170). Returns 1; edx is unchanged. */
+uint32_t vertrix_port_reader_reset(PORT_SIGNATURE);
+
+/* Original 0x404580: returns at once. */
+uint32_t vertrix_port_nothing_404580(PORT_SIGNATURE);
+
+/* Original 0x40cbb0 (eax = channel, dl = pan): set the channel's pan (byte +0x15). Returns 1 for a
+ * channel past 0x52fc18, 2 for a value over 0xff, else 0. edx is unchanged. */
+uint32_t vertrix_port_channel_pan(PORT_SIGNATURE);
+
+/* Original 0x40ae10: the driver routine 0x52f078 with the channel from 0. */
+uint32_t vertrix_port_driver_call_78(PORT_SIGNATURE);
+
 #endif

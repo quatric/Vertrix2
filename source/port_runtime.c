@@ -41,6 +41,15 @@ enum
     TRIG = 0x4c9b6a,
     TRIG_SINE = 2,
     GUARD_HANDLER = 0x4ec1ec,
+    CALL_48A930 = 0x48a930,
+    IMAGE_LIBRARY = 0x544a6c,
+    IMAGE_LOAD = 0x4877f0,
+    IMAGE_DRAW = 0x482e10,
+    IMAGE_RELEASE = 0x483ed0,
+    IMAGE_RELEASE_STATE = 0x5b9c60,
+    BLOCK_ALLOCATE = 0x4d85f0,
+    LIST_TABLE_518344 = 0x518344,
+    CLEAR_ALLOCATE = 0x4ec160,
     CALL_4B7B00 = 0x4b7b00,
     RESOURCE_IS_LOADED = 0x4877e0,
     STREAM_TELL = 0x5bb250,
@@ -2030,4 +2039,124 @@ uint32_t vertrix_port_resource_frame(PORT_SIGNATURE)
     }
     return port_return(&port, port_u32(&port, port_u32(&port, resource, 8), vertrix_lift_edx * 4),
                        vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_call_48a930(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    result = port_call(&port, CALL_48A930, entry->eax, entry->edx, 1, 2);
+    return port_return(&port, result, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_fixed_divide(PORT_SIGNATURE)
+{
+    Port port;
+    int64_t dividend = (int64_t)(int32_t)entry->eax * 65536;
+    int64_t divisor = (int32_t)entry->edx;
+    port_open(&port, calls, services, globals, entry);
+    return port_return(&port, (uint32_t)(dividend / divisor), (uint32_t)(dividend % divisor));
+}
+
+uint32_t vertrix_port_array_set(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t array;
+    port_open(&port, calls, services, globals, entry);
+    array = port_u32(&port, entry->eax, 0);
+    port_set32(&port, array, entry->edx * 4, entry->ebx);
+    return port_return(&port, array, entry->edx);
+}
+
+uint32_t vertrix_port_list_delete_4b5e70(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    port_call(&port, LIST_REMOVE, entry->eax, port_u32(&port, entry->eax, 8), entry->edx, 1);
+    return port_return(&port, 0, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_frame_time_reset(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t now;
+    port_open(&port, calls, services, globals, entry);
+    now =
+        port_call_stack(&port, TIME_GET_TIME, entry->eax, entry->edx, entry->ebx, entry->ecx, 0, 0);
+    port_set32(&port, 0, FRAME_NOW, now);
+    port_set32(&port, 0, FRAME_LAST, now);
+    return port_return(&port, now, entry->edx);
+}
+
+uint32_t vertrix_port_image_show(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t image;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    image = port_call(&port, IMAGE_LOAD, IMAGE_LIBRARY, entry->eax, 0, 0);
+    port_call(&port, IMAGE_DRAW, image, entry->edx, 0, 0);
+    result = port_call(&port, IMAGE_RELEASE, image, IMAGE_RELEASE_STATE, 0, 0);
+    return port_return(&port, result, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_pair_set(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    port_set32(&port, entry->eax, 0, entry->edx);
+    port_set32(&port, entry->eax, 4, entry->ebx);
+    return port_return(&port, entry->eax, entry->edx);
+}
+
+uint32_t vertrix_port_word_table_init(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t table = entry->eax;
+    uint32_t index;
+    port_open(&port, calls, services, globals, entry);
+    port_set32(&port, table, 0x208, 0x5176b4);
+    port_set32(&port, table, 0, 0);
+    port_set32(&port, table, 4, 0);
+    for (index = 0; index < 0xff; index++)
+    {
+        port_set16(&port, table, 8 + index * 2, 0xffff);
+    }
+    return port_return(&port, table, entry->edx);
+}
+
+uint32_t vertrix_port_block_allocate(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t block;
+    port_open(&port, calls, services, globals, entry);
+    block = port_call(&port, BLOCK_ALLOCATE, entry->eax, entry->eax, entry->ebx, entry->ecx);
+    if (block != 0)
+    {
+        port_set32(&port, block, 0, vertrix_lift_edx);
+    }
+    return port_return(&port, block, entry->edx);
+}
+
+uint32_t vertrix_port_list_construct_518344(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t list;
+    port_open(&port, calls, services, globals, entry);
+    list = port_call(&port, LIST_CREATE, entry->eax, entry->edx, entry->ebx, entry->ecx);
+    port_set32(&port, list, 0, LIST_TABLE_518344);
+    return port_return(&port, list, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_dword_array_allocate(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t array = entry->eax;
+    uint32_t memory;
+    port_open(&port, calls, services, globals, entry);
+    port_set32(&port, array, 4, entry->edx);
+    memory = port_call(&port, CLEAR_ALLOCATE, entry->edx, 4, entry->ebx, array);
+    port_set32(&port, array, 0, memory);
+    return port_return(&port, memory, vertrix_lift_edx);
 }

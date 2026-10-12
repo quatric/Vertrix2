@@ -2042,3 +2042,35 @@ uint32_t vertrix_port_actor_frame_image(PORT_SIGNATURE)
     port_set32(&port, actor, ACTOR_COUNTER_LIMIT, result);
     return port_return(&port, result, entry->edx);
 }
+
+uint32_t vertrix_port_actor_set_progress_scale(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    port_set32(&port, entry->eax, ACTOR_PROGRESS_SCALE, entry->edx);
+    return port_return(&port, entry->eax, entry->edx);
+}
+
+uint32_t vertrix_port_actor_set_time_scale_raw(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    port_set32(&port, entry->eax, ACTOR_TIME_SCALE, entry->edx);
+    return port_return(&port, entry->eax, entry->edx);
+}
+
+uint32_t vertrix_port_actor_set_next(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    port_set32(&port, entry->eax, 0xec, entry->edx);
+    return port_return(&port, entry->eax, entry->edx);
+}
+
+uint32_t vertrix_port_actor_set_counter_rate(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    port_set32(&port, entry->eax, ACTOR_COUNTER_LIMIT, entry->edx * 12);
+    return port_return(&port, entry->edx * 12, entry->edx);
+}

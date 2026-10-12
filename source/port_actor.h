@@ -418,4 +418,17 @@ uint32_t vertrix_port_actor_frame_back(PORT_SIGNATURE);
  * current frame's image (0x487770) into +0xd0. edx is unchanged. */
 uint32_t vertrix_port_actor_frame_image(PORT_SIGNATURE);
 
+/* Original 0x4ac860 (eax = actor, edx): set its progress scale (+0xe0). */
+uint32_t vertrix_port_actor_set_progress_scale(PORT_SIGNATURE);
+
+/* Original 0x4ac7d0 (eax = actor, edx): set its time scale (+0xc0). */
+uint32_t vertrix_port_actor_set_time_scale_raw(PORT_SIGNATURE);
+
+/* Original 0x4ac910 (eax = actor, edx): set its next routine (+0xec). */
+uint32_t vertrix_port_actor_set_next(PORT_SIGNATURE);
+
+/* Original 0x4ac470 (eax = actor, edx = rate): set its counter limit (+0xd0) to the rate times
+ * 12. Returns that; edx is unchanged. */
+uint32_t vertrix_port_actor_set_counter_rate(PORT_SIGNATURE);
+
 #endif

@@ -393,4 +393,44 @@ uint32_t vertrix_port_call_4b7b00(PORT_SIGNATURE);
  * (0x4877e0), else 0. */
 uint32_t vertrix_port_resource_frame(PORT_SIGNATURE);
 
+/* Original 0x482bb0 (eax, edx): 0x48a930 with ebx 1 and ecx 2. */
+uint32_t vertrix_port_call_48a930(PORT_SIGNATURE);
+
+/* Original 0x4849f0 (eax = dividend, edx = divisor): 16.16 fixed-point division: the dividend
+ * shifted up 16 over the divisor. edx is the remainder. */
+uint32_t vertrix_port_fixed_divide(PORT_SIGNATURE);
+
+/* Original 0x487850 (eax = holder, edx = index, ebx = value): store the value in its array (+0).
+ * Registers are unchanged. */
+uint32_t vertrix_port_array_set(PORT_SIGNATURE);
+
+/* Original 0x4b5e70: as 0x4b79a0 (delete an item). */
+uint32_t vertrix_port_list_delete_4b5e70(PORT_SIGNATURE);
+
+/* Original 0x4b7cd0: restart the frame time: timeGetTime (0x4f172c) into 0x5bd838 and 0x5bd844.
+ * edx is unchanged. */
+uint32_t vertrix_port_frame_time_reset(PORT_SIGNATURE);
+
+/* Original 0x45ed10 (eax = name, edx = surface): load the image (0x4877f0 of 0x544a6c), draw it
+ * (0x482e10) and release it (0x483ed0 with 0x5b9c60). */
+uint32_t vertrix_port_image_show(PORT_SIGNATURE);
+
+/* Original 0x48abe0 (eax = pair, edx, ebx): store edx and ebx. */
+uint32_t vertrix_port_pair_set(PORT_SIGNATURE);
+
+/* Original 0x48ab10 (eax = table): initialise a word table: its type 0x5176b4, two cleared fields
+ * and 0xff words of -1 from +8. Returns it; edx is unchanged. */
+uint32_t vertrix_port_word_table_init(PORT_SIGNATURE);
+
+/* Original 0x4d8620 (eax = size): allocate a block (0x4d85f0) and store the size in its first
+ * dword. edx is unchanged. */
+uint32_t vertrix_port_block_allocate(PORT_SIGNATURE);
+
+/* Original 0x4b5db0: construct a list (0x4d8650) with the table 0x518344. */
+uint32_t vertrix_port_list_construct_518344(PORT_SIGNATURE);
+
+/* Original 0x487640 (eax = array, edx = count): allocate its count of dwords (0x4ec160) and keep
+ * the count at +4. */
+uint32_t vertrix_port_dword_array_allocate(PORT_SIGNATURE);
+
 #endif
