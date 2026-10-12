@@ -331,4 +331,56 @@ uint32_t vertrix_port_thread_chain_pop(PORT_SIGNATURE);
  * (0x4e14b0, 0x4e14b7). Returns 1 when it was already set, else 0. */
 uint32_t vertrix_port_flag_test_set(PORT_SIGNATURE);
 
+/* Original 0x48a8a0 (eax = stream): rewind it: its position (+4) to its buffer's start and its end
+ * (+8) past the buffer's size. Registers are unchanged. */
+uint32_t vertrix_port_stream_rewind(PORT_SIGNATURE);
+
+/* Original 0x48aad0 (eax = stream): its position from the start, kept at 0x5bb250. edx is
+ * unchanged. */
+uint32_t vertrix_port_stream_tell(PORT_SIGNATURE);
+
+/* Original 0x48aaf0 (eax = stream, edx = offset): seek to the offset from the start. Registers are
+ * unchanged. */
+uint32_t vertrix_port_stream_seek(PORT_SIGNATURE);
+
+/* Original 0x4d9280 (eax = object): construct a counted object (table 0x517474, count 1) under a
+ * guard record. Returns it; edx is unchanged. */
+uint32_t vertrix_port_counted_create(PORT_SIGNATURE);
+
+/* Original 0x4182c0: the timer count 0x540044 read inside its lock (0x540020). edx is
+ * unchanged. */
+uint32_t vertrix_port_timer_count(PORT_SIGNATURE);
+
+/* Original 0x418270 (eax = ticks): add them to the timer count inside its lock, then refresh the
+ * screen (0x41a040) of the application's main window (0x4ce740). edx is unchanged. */
+uint32_t vertrix_port_timer_advance(PORT_SIGNATURE);
+
+/* Original 0x41a040 (eax = window, edx = force): when the timer count (0x4182c0) changed since
+ * 0x54004c or forced, repaint (0x41a2b0 with 0x540048). */
+uint32_t vertrix_port_screen_refresh(PORT_SIGNATURE);
+
+/* Original 0x41a2f0 (eax = window, edx = surface, ebx, ecx = scale): blit the screen buffer (+0xd0)
+ * scaled by ebx over ecx (0x47ce10, mode 0x1cd). */
+uint32_t vertrix_port_screen_blit(PORT_SIGNATURE);
+
+/* Original 0x487750 (eax = table, edx = index, ebx, ecx, stack = values): store the entry's three
+ * values in the arrays +0xc, +0x10 and +8. Returns the last slot; edx is the last value. */
+uint32_t vertrix_port_triple_set(PORT_SIGNATURE);
+
+/* Original 0x4872f0 (eax = list): initialise it empty with the table 0x516d94. */
+uint32_t vertrix_port_list_init_516d94(PORT_SIGNATURE);
+
+/* Original 0x4756d0 (eax = state): initialise an input state with the table 0x5165c4. */
+uint32_t vertrix_port_input_state_init(PORT_SIGNATURE);
+
+/* Original 0x4759d0: set the first byte to 1. */
+uint32_t vertrix_port_set_first_byte(PORT_SIGNATURE);
+
+/* Original 0x476140 (eax = records, dx = index): set the record's first byte (0x4759d0). */
+uint32_t vertrix_port_record_mark(PORT_SIGNATURE);
+
+/* Original 0x475a80 (eax = key record): clear its flag (0x475af0), state (0x475790) and events
+ * (0x4759e0). Registers but eax are unchanged. */
+uint32_t vertrix_port_key_record_clear(PORT_SIGNATURE);
+
 #endif

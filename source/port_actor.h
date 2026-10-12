@@ -387,4 +387,14 @@ uint32_t vertrix_port_actor_play_back(PORT_SIGNATURE);
  * actor pointers (their tables' +8), skipping empty slots. */
 uint32_t vertrix_port_actor_array_draw(PORT_SIGNATURE);
 
+/* Original 0x4ac900 (eax = actor): its update routine (+0x154). edx is unchanged. */
+uint32_t vertrix_port_actor_update_routine(PORT_SIGNATURE);
+
+/* Original 0x4ac780 (eax = actor): whether its next frame (+0xb8 plus one) is its resource's frame
+ * count (0x487860 of +0xb0). edx is unchanged. */
+uint32_t vertrix_port_actor_last_frame(PORT_SIGNATURE);
+
+/* Original 0x472350: update the layer list 0x54676c (0x4b6200). */
+uint32_t vertrix_port_layer_top_update(PORT_SIGNATURE);
+
 #endif

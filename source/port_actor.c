@@ -1939,3 +1939,25 @@ uint32_t vertrix_port_actor_array_draw(PORT_SIGNATURE)
     } while (at < end);
     return port_return(&port, eax, edx);
 }
+
+uint32_t vertrix_port_actor_update_routine(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    return port_return(&port, port_u32(&port, entry->eax, ACTOR_UPDATE_HOOK), entry->edx);
+}
+
+uint32_t vertrix_port_actor_last_frame(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t frames;
+    port_open(&port, calls, services, globals, entry);
+    frames = port_call(&port, RESOURCE_FRAMES, port_u32(&port, entry->eax, ACTOR_RESOURCE_DATA),
+                       port_u32(&port, entry->eax, ACTOR_FRAME_INDEX) + 1, entry->ebx, entry->ecx);
+    return port_return(&port, vertrix_lift_edx == frames, entry->edx);
+}
+
+uint32_t vertrix_port_layer_top_update(PORT_SIGNATURE)
+{
+    return layer_call(calls, services, globals, entry, 0x54676c, LAYER_UPDATE);
+}

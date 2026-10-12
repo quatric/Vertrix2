@@ -41,6 +41,22 @@ enum
     TRIG = 0x4c9b6a,
     TRIG_SINE = 2,
     GUARD_HANDLER = 0x4ec1ec,
+    STREAM_TELL = 0x5bb250,
+    COUNTED_GUARD = 0x51a344,
+    COUNTED_TABLE = 0x517474,
+    TIMER_LOCK = 0x540020,
+    TIMER_COUNT = 0x540044,
+    TIMER_DRAWN = 0x54004c,
+    TIMER_SURFACE = 0x540048,
+    TIMER_COUNT_GET = 0x4182c0,
+    MAIN_APPLICATION = 0x4ce740,
+    SCREEN_REFRESH = 0x41a040,
+    SCREEN_REPAINT = 0x41a2b0,
+    SCREEN_BLIT = 0x47ce10,
+    SET_FIRST = 0x4759d0,
+    KEY_FLAG_CLEAR = 0x475af0,
+    KEY_STATE = 0x475790,
+    KEY_EVENTS = 0x4759e0,
     THREAD_ID = 0x4f1bbc,
     THREAD_BLOCK = 0x4dbf80,
     THREAD_BLOCKS = 0x5c5c60,
@@ -1784,4 +1800,203 @@ uint32_t vertrix_port_flag_test_set(PORT_SIGNATURE)
     }
     port_call(&port, LOCK_LEAVE, FLAG_LOCK, bit, was, flags);
     return port_return(&port, was, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_stream_rewind(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t stream = entry->eax;
+    uint32_t buffer;
+    port_open(&port, calls, services, globals, entry);
+    buffer = port_u32(&port, stream, 0);
+    port_set32(&port, stream, 4, port_u32(&port, buffer, 0));
+    buffer = port_u32(&port, stream, 0);
+    port_set32(&port, stream, 8, port_u32(&port, stream, 4) + port_u32(&port, buffer, 4));
+    return port_return(&port, stream, entry->edx);
+}
+
+uint32_t vertrix_port_stream_tell(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t place;
+    port_open(&port, calls, services, globals, entry);
+    place = port_u32(&port, entry->eax, 4) - port_u32(&port, port_u32(&port, entry->eax, 0), 0);
+    port_set32(&port, 0, STREAM_TELL, place);
+    return port_return(&port, place, entry->edx);
+}
+
+uint32_t vertrix_port_stream_seek(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    port_set32(&port, entry->eax, 4,
+               port_u32(&port, port_u32(&port, entry->eax, 0), 0) + entry->edx);
+    return port_return(&port, entry->eax, entry->edx);
+}
+
+uint32_t vertrix_port_counted_create(PORT_SIGNATURE)
+{
+    /* push edx, then 0x20 bytes: the guard record from esp, the object at esp + 0x14. */
+    enum
+    {
+        BELOW = 0x24
+    };
+    Port port;
+    uint32_t object = entry->eax;
+    uint32_t record = entry->esp - BELOW;
+    port_open_frame(&port, calls, services, globals, entry, BELOW);
+    port_set32(&port, entry->esp, -4u, entry->edx);
+    port_set32(&port, record, 0, port.env.chain);
+    port_set32(&port, record, 4, GUARD_HANDLER);
+    port_set32(&port, record, 8, COUNTED_GUARD);
+    port_set32(&port, record, 0xc, 0);
+    port_set8(&port, record, 0x18, 0);
+    port_set32(&port, record, 0x14, object);
+    port_set32(&port, object, 0, LIST_BASE_TABLE);
+    port_set32(&port, record, 0xc, 1);
+    port_set32(&port, object, 0, COUNTED_TABLE);
+    port_set32(&port, object, 4, 1);
+    return port_return(&port, object, entry->edx);
+}
+
+uint32_t vertrix_port_timer_count(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t lock = TIMER_LOCK;
+    uint32_t count;
+    uint32_t eax;
+    port_open(&port, calls, services, globals, entry);
+    eax = port_call_stack(&port, ENTER_SECTION, entry->eax, entry->edx, entry->ebx, entry->ecx,
+                          &lock, 1);
+    count = port_u32(&port, 0, TIMER_COUNT);
+    port_call_stack(&port, LEAVE_SECTION, eax, vertrix_lift_edx, count, entry->ecx, &lock, 1);
+    return port_return(&port, count, entry->edx);
+}
+
+uint32_t vertrix_port_timer_advance(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t lock = TIMER_LOCK;
+    uint32_t ticks = entry->eax;
+    uint32_t eax;
+    uint32_t application;
+    port_open(&port, calls, services, globals, entry);
+    eax =
+        port_call_stack(&port, ENTER_SECTION, entry->eax, entry->edx, ticks, entry->ecx, &lock, 1);
+    port_set32(&port, 0, TIMER_COUNT, port_u32(&port, 0, TIMER_COUNT) + ticks);
+    eax = port_call_stack(&port, LEAVE_SECTION, eax, port_u32(&port, 0, TIMER_COUNT), ticks,
+                          entry->ecx, &lock, 1);
+    application = port_call(&port, MAIN_APPLICATION, eax, vertrix_lift_edx, ticks, entry->ecx);
+    eax = port_call(&port, SCREEN_REFRESH, port_u32(&port, port_u32(&port, application, 4), 0x1c),
+                    0, ticks, entry->ecx);
+    return port_return(&port, eax, entry->edx);
+}
+
+uint32_t vertrix_port_screen_refresh(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t window = entry->eax;
+    uint32_t count;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    count = port_call(&port, TIMER_COUNT_GET, window, port_u32(&port, 0, TIMER_DRAWN), entry->edx,
+                      window);
+    if (vertrix_lift_edx == count && entry->edx != 1)
+    {
+        return port_return(&port, count, vertrix_lift_edx);
+    }
+    port_set32(&port, 0, TIMER_DRAWN, count);
+    result = port_call(&port, SCREEN_REPAINT, window, vertrix_lift_edx,
+                       port_u32(&port, 0, TIMER_SURFACE), window);
+    return port_return(&port, result, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_screen_blit(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t buffer;
+    uint32_t arguments[4];
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    buffer = port_u32(&port, entry->eax, 0xd0);
+    arguments[0] = 0;
+    arguments[1] = 0;
+    arguments[2] = port_u32(&port, buffer, 4) * entry->ebx / entry->ecx;
+    arguments[3] = port_u32(&port, buffer, 8);
+    result = port_call_stack(&port, SCREEN_BLIT, entry->edx, buffer, 0, 0x1cd, arguments, 4);
+    return port_return(&port, result, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_triple_set(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t table = entry->eax;
+    uint32_t offset = entry->edx << 2;
+    uint32_t slot;
+    port_open(&port, calls, services, globals, entry);
+    port_set32(&port, port_u32(&port, table, 0xc), offset, entry->ebx);
+    port_set32(&port, port_u32(&port, table, 0x10), offset, entry->ecx);
+    slot = port_u32(&port, table, 8) + offset;
+    port_set32(&port, slot, 0, entry->arguments[0]);
+    return port_return(&port, slot, entry->arguments[0]);
+}
+
+uint32_t vertrix_port_list_init_516d94(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t list = entry->eax;
+    uint32_t offset;
+    port_open(&port, calls, services, globals, entry);
+    port_set32(&port, list, 0x18, 0x516d94);
+    for (offset = 0; offset <= 0x14; offset += 4)
+    {
+        port_set32(&port, list, offset, 0);
+    }
+    return port_return(&port, list, entry->edx);
+}
+
+uint32_t vertrix_port_input_state_init(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t state = entry->eax;
+    port_open(&port, calls, services, globals, entry);
+    port_set32(&port, state, 0x18, 0x5165c4);
+    port_set8(&port, state, 0, 0);
+    port_set32(&port, state, 4, 0);
+    port_set32(&port, state, 8, 0);
+    port_set32(&port, state, 0xc, 0);
+    port_set16(&port, state, 0x10, 0);
+    port_set32(&port, state, 0x14, 0);
+    return port_return(&port, state, entry->edx);
+}
+
+uint32_t vertrix_port_set_first_byte(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    port_set8(&port, entry->eax, 0, 1);
+    return port_return(&port, entry->eax, entry->edx);
+}
+
+uint32_t vertrix_port_record_mark(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t index = entry->edx & 0xffff;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    result = port_call(&port, SET_FIRST, entry->eax + index * 0x60, index, entry->ebx, entry->eax);
+    return port_return(&port, result, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_key_record_clear(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t record = entry->eax;
+    uint32_t zero = 0;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    port_call(&port, KEY_FLAG_CLEAR, record, entry->edx, entry->ebx, entry->ecx);
+    port_call_stack(&port, KEY_STATE, record + 4, 0, 0, 0, &zero, 1);
+    result = port_call(&port, KEY_EVENTS, record, vertrix_lift_edx, 0, 0);
+    return port_return(&port, result, entry->edx);
 }
