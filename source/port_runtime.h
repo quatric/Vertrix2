@@ -510,4 +510,49 @@ uint32_t vertrix_port_state_copy_c0(PORT_SIGNATURE);
 /* Original 0x418840 (eax = state, edx): set +0xbc. */
 uint32_t vertrix_port_state_set_bc(PORT_SIGNATURE);
 
+/* Original 0x4dc400(stack = handle pointer): close the handle it holds (0x4f17e0) and clear it. */
+uint32_t vertrix_port_handle_close_clear(PORT_SIGNATURE);
+
+/* Original 0x4e04f4: does nothing. */
+uint32_t vertrix_port_nothing_4e04f4(PORT_SIGNATURE);
+
+/* Original 0x477e10(eax = box, dx, bx, cx, stack): set the words +0x3c, +0x3e, +0x40 and +0x42. edx
+ * is the stack word. */
+uint32_t vertrix_port_box_set(PORT_SIGNATURE);
+
+/* Original 0x45e8d0(eax = bank, edx = count): allocate the dword list of bank +0x1c bytes each from
+ * 0x546458 (0x487640) when count is nonzero. */
+uint32_t vertrix_port_bank_list_allocate(PORT_SIGNATURE);
+
+/* Original 0x41d640: take the frame time (0x4b7cd0) as the clock start (0x5329fc), clearing
+ * 0x5329f8 and 0x532a04. */
+uint32_t vertrix_port_clock_reset(PORT_SIGNATURE);
+
+/* Original 0x4ac950(eax = actor, edx): set +0xb4. */
+uint32_t vertrix_port_actor_set_b4(PORT_SIGNATURE);
+
+/* Original 0x4ac940(eax = actor): make +0xf0 its update (+0x154). Registers are unchanged. */
+uint32_t vertrix_port_actor_take_f0(PORT_SIGNATURE);
+
+/* Original 0x48d330(eax = set): give it the table 0x517a44 at +0x34 and construct its list
+ * (0x48d480). */
+uint32_t vertrix_port_rule_set_construct(PORT_SIGNATURE);
+
+/* Original 0x482540(eax = reader): restart at its start (+8 from +0) with +0xc cleared. */
+uint32_t vertrix_port_reader_restart(PORT_SIGNATURE);
+
+/* Original 0x40a890(eax = hook): add it to the eight hook slots at 0x52f090. Returns 8 when they
+ * are full. */
+uint32_t vertrix_port_audio_hook_add(PORT_SIGNATURE);
+
+
+/* Original 0x48d520: construct a list (0x4d8650) with the table 0x517a94. */
+uint32_t vertrix_port_list_construct_517a94(PORT_SIGNATURE);
+
+/* Original 0x476090(eax = records): reset all 256 key records of 0x60 bytes each (0x475a20). */
+uint32_t vertrix_port_key_records_reset(PORT_SIGNATURE);
+
+/* Original 0x472330: draw the top layer list 0x54676c (0x4b5fc0). */
+uint32_t vertrix_port_layer_top_draw(PORT_SIGNATURE);
+
 #endif
