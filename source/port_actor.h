@@ -332,10 +332,14 @@ uint32_t vertrix_port_layer_back_update(PORT_SIGNATURE);   /* 0x471a70 */
 uint32_t vertrix_port_layer_back_call14(PORT_SIGNATURE);   /* 0x471a50 */
 uint32_t vertrix_port_layer_back_call10(PORT_SIGNATURE);   /* 0x471a40 */
 uint32_t vertrix_port_layer_back_call0c(PORT_SIGNATURE);   /* 0x471a20 */
-uint32_t vertrix_port_layer_middle_update(PORT_SIGNATURE); /* 0x471b00 */
-uint32_t vertrix_port_layer_middle_call14(PORT_SIGNATURE); /* 0x471b60 */
-uint32_t vertrix_port_layer_middle_call10(PORT_SIGNATURE); /* 0x471b50 */
-uint32_t vertrix_port_layer_middle_call0c(PORT_SIGNATURE); /* 0x471b30 */
+/* Original 0x471b00: the layer wrapper. */
+uint32_t vertrix_port_layer_middle_update(PORT_SIGNATURE);
+/* Original 0x471b60: the layer wrapper. */
+uint32_t vertrix_port_layer_middle_call14(PORT_SIGNATURE);
+/* Original 0x471b50: the layer wrapper. */
+uint32_t vertrix_port_layer_middle_call10(PORT_SIGNATURE);
+/* Original 0x471b30: the layer wrapper. */
+uint32_t vertrix_port_layer_middle_call0c(PORT_SIGNATURE);
 uint32_t vertrix_port_layer_front_update(PORT_SIGNATURE);  /* 0x471a80 */
 uint32_t vertrix_port_layer_front_call14(PORT_SIGNATURE);  /* 0x471ae0 */
 uint32_t vertrix_port_layer_front_call10(PORT_SIGNATURE);  /* 0x471ad0 */
