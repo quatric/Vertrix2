@@ -596,7 +596,6 @@ uint32_t vertrix_port_queue_pop(PORT_SIGNATURE);
 /* Original 0x4d8510(eax = queue, edx = value): append a node (0x4d8490) holding the value at +8. */
 uint32_t vertrix_port_queue_push(PORT_SIGNATURE);
 
-
 /* Original 0x4d83c0(eax = pool): clear its counters and lists and free its blocks +0x14 (0x4e2400).
  */
 uint32_t vertrix_port_pool_reset(PORT_SIGNATURE);
@@ -652,5 +651,179 @@ uint32_t vertrix_port_actor_restart_45d160(PORT_SIGNATURE);
 /* Original 0x45d0c0(eax = actor): reset it (0x45cff0), wait 2000 + random(10000) (0x4826c0,
  * 0x4ac7d0), update 0x45d100 (0x4ac510) and show it (0x4ac8f0). */
 uint32_t vertrix_port_actor_restart_45d100(PORT_SIGNATURE);
+
+/* Original 0x4ee820: initialise the lock 0x5c8b04 with 0x50c428 (0x4d30f0). */
+uint32_t vertrix_port_lock_init_5c8b04(PORT_SIGNATURE);
+
+/* Original 0x4e7520: initialise the lock 0x5c8a84 with 0x50ae38 (0x4d30f0). */
+uint32_t vertrix_port_lock_init_5c8a84(PORT_SIGNATURE);
+
+/* Original 0x4ecb98: mark the current handle record (0x507c9c + 0x5c5c54) as text (flag 2 at +4).
+ */
+uint32_t vertrix_port_handle_mark_text(PORT_SIGNATURE);
+
+/* Original 0x4ecb50(eax = code): map the code (-3 to -1, 0 to -3, 0x3a4 to -4) and set it
+ * (0x4e6f60). Returns -1 on failure, 0 on success. */
+uint32_t vertrix_port_error_set_code(PORT_SIGNATURE);
+
+/* Original 0x4ec940(eax = stream): reset its state to text mode (0x4ec910 with 0, 0x410). Returns
+ * the stream. */
+uint32_t vertrix_port_stream_reset_text(PORT_SIGNATURE);
+
+/* Original 0x4ec2b0: set the hook pair 0x509794 to 0x4ec970 and 0x4eca85. */
+uint32_t vertrix_port_hooks_set_509794(PORT_SIGNATURE);
+
+/* Original 0x4e8db0: set the hook pair 0x507cdc to 0x4e8d38 and 0x4e8d80. */
+uint32_t vertrix_port_hooks_set_507cdc(PORT_SIGNATURE);
+
+/* Original 0x4ea130: returns 0. */
+uint32_t vertrix_port_zero_4ea130(PORT_SIGNATURE);
+
+/* Original 0x4ea144: call the hook 0x50b20c. */
+uint32_t vertrix_port_hook_call_50b20c(PORT_SIGNATURE);
+
+/* Original 0x4e8620(eax = record): mark it started (+0xc), set it up (0x4e6630) and store the
+ * thread id (+0xda). */
+uint32_t vertrix_port_thread_record_start(PORT_SIGNATURE);
+
+/* Original 0x4e85c0: under the lock hooks 0x507cc8 and 0x507ccc set byte +0x53 of every record in
+ * the list 0x5c8aa0. */
+uint32_t vertrix_port_threads_mark_all(PORT_SIGNATURE);
+
+/* Original 0x425f40: does nothing. */
+uint32_t vertrix_port_nothing_425f40(PORT_SIGNATURE);
+
+/* Original 0x4e08b0: does nothing. */
+uint32_t vertrix_port_nothing_4e08b0(PORT_SIGNATURE);
+
+/* Original 0x40ac00: call the hook 0x52f024. */
+uint32_t vertrix_port_hook_call_52f024(PORT_SIGNATURE);
+
+/* Original 0x40ac10: call the hook 0x52f044. */
+uint32_t vertrix_port_hook_call_52f044(PORT_SIGNATURE);
+
+/* Original 0x40ac20: call the hook 0x52f048. */
+uint32_t vertrix_port_hook_call_52f048(PORT_SIGNATURE);
+
+/* Original 0x40ac30: call the hook 0x52f04c. */
+uint32_t vertrix_port_hook_call_52f04c(PORT_SIGNATURE);
+
+/* Original 0x429660(eax): returns eax + 4. */
+uint32_t vertrix_port_pointer_add_4(PORT_SIGNATURE);
+
+/* Original 0x477870(eax = object): give it the table 0x5167a4 at +0xc. */
+uint32_t vertrix_port_table_set_5167a4(PORT_SIGNATURE);
+
+/* Original 0x484410(eax = object): give it the table 0x516c84 at +4. */
+uint32_t vertrix_port_table_set_516c84(PORT_SIGNATURE);
+
+/* Original 0x4ac4f0(eax = actor, edx): set +0x11c. */
+uint32_t vertrix_port_actor_set_11c(PORT_SIGNATURE);
+
+/* Original 0x4b7da0: returns 0x5bd83c. */
+uint32_t vertrix_port_frame_count_get(PORT_SIGNATURE);
+
+/* Original 0x40cd30(eax): store it in 0x52fc30. Returns 0. */
+uint32_t vertrix_port_global_set_52fc30(PORT_SIGNATURE);
+
+/* Original 0x411270(eax): store it in 0x532574. Returns 0. */
+uint32_t vertrix_port_global_set_532574(PORT_SIGNATURE);
+
+/* Original 0x4719e0: draw the layer list 0x54671c (0x4b5fc0). */
+uint32_t vertrix_port_layer_draw_54671c(PORT_SIGNATURE);
+
+/* Original 0x471a60: clear the layer list 0x54671c (0x4b61c0). */
+uint32_t vertrix_port_layer_clear_54671c(PORT_SIGNATURE);
+
+/* Original 0x471af0: clear the layer list 0x546744 (0x4b61c0). */
+uint32_t vertrix_port_layer_clear_546744(PORT_SIGNATURE);
+
+/* Original 0x471b70: clear the layer list 0x546730 (0x4b61c0). */
+uint32_t vertrix_port_layer_clear_546730(PORT_SIGNATURE);
+
+/* Original 0x4b6ea0: construct a list (0x4d8650) with the table 0x518574. */
+uint32_t vertrix_port_list_construct_518574(PORT_SIGNATURE);
+
+/* Original 0x4e04ec: returns 0x5c7b9c. */
+uint32_t vertrix_port_global_get_5c7b9c(PORT_SIGNATURE);
+
+/* Original 0x477240(eax = reader): clear +0 and +4 and give it the table 0x516744 at +0x14. */
+uint32_t vertrix_port_reader_construct_516744(PORT_SIGNATURE);
+
+/* Original 0x4df307: allocate 0x24 bytes (0x4e62b0) as the handle table 0x5c5c54. */
+uint32_t vertrix_port_handle_table_allocate(PORT_SIGNATURE);
+
+/* Original 0x417f40: clear 0x540014. */
+uint32_t vertrix_port_global_clear_540014(PORT_SIGNATURE);
+
+/* Original 0x484a60(eax = object): construct its part at +0x10 (0x481b20) and give that the table
+ * 0x516d34 at +0x60. */
+uint32_t vertrix_port_sound_object_construct(PORT_SIGNATURE);
+
+/* Original 0x4b7b60: construct 0x5bd82c (0x484410) and register its exit routine 0x4ff89b
+ * (0x4ec1f7). */
+uint32_t vertrix_port_frame_counter_init(PORT_SIGNATURE);
+
+/* Original 0x45e690: allocate bank 0x544a34 with 0x13 entries (0x487640). */
+uint32_t vertrix_port_bank_allocate_544a34(PORT_SIGNATURE);
+
+/* Original 0x45ed40: load bank 0x544a88 with 0x50 (0x4876c0). */
+uint32_t vertrix_port_bank_load_544a88(PORT_SIGNATURE);
+
+/* Original 0x4719f0(eax = item): add it to the layer list 0x54671c (0x4b6070). */
+uint32_t vertrix_port_layer_add_54671c(PORT_SIGNATURE);
+
+/* Original 0x471aa0(eax = item): add it to the layer list 0x546744 (0x4b6070). */
+uint32_t vertrix_port_layer_add_546744(PORT_SIGNATURE);
+
+/* Original 0x471b20(eax = item): add it to the layer list 0x546730 (0x4b6070). */
+uint32_t vertrix_port_layer_add_546730(PORT_SIGNATURE);
+
+/* Original 0x477910(eax = scale): clear +0 and +4 and set +8 to 0x1800000. */
+uint32_t vertrix_port_scale_reset(PORT_SIGNATURE);
+
+/* Original 0x4884f0: initialise the lock 0x5bb228 with 0x4fec10 (0x4d30f0). */
+uint32_t vertrix_port_lock_init_5bb228(PORT_SIGNATURE);
+
+/* Original 0x4cbe60: initialise the lock 0x5c5c50 with 0x501368 (0x4d30f0). */
+uint32_t vertrix_port_lock_init_5c5c50(PORT_SIGNATURE);
+
+/* Original 0x4d2fe0: initialise the lock 0x5c7560 with 0x502e48 (0x4d30f0). */
+uint32_t vertrix_port_lock_init_5c7560(PORT_SIGNATURE);
+
+/* Original 0x4d74f0: initialise the lock 0x5c7600 with 0x503e68 (0x4d30f0). */
+uint32_t vertrix_port_lock_init_5c7600(PORT_SIGNATURE);
+
+/* Original 0x4d8320: initialise the lock 0x5c7604 with 0x5041a8 (0x4d30f0). */
+uint32_t vertrix_port_lock_init_5c7604(PORT_SIGNATURE);
+
+/* Original 0x4d8630: initialise the lock 0x5c7610 with 0x5044b8 (0x4d30f0). */
+uint32_t vertrix_port_lock_init_5c7610(PORT_SIGNATURE);
+
+/* Original 0x4d8a90: initialise the lock 0x5c7614 with 0x5047d8 (0x4d30f0). */
+uint32_t vertrix_port_lock_init_5c7614(PORT_SIGNATURE);
+
+/* Original 0x4d9910: initialise the lock 0x5c7750 with 0x5051a8 (0x4d30f0). */
+uint32_t vertrix_port_lock_init_5c7750(PORT_SIGNATURE);
+
+/* Original 0x4deea0: initialise the lock 0x5c7b88 with 0x507c08 (0x4d30f0). */
+uint32_t vertrix_port_lock_init_5c7b88(PORT_SIGNATURE);
+
+/* Original 0x4e1190: initialise the lock 0x5c81c0 with 0x508158 (0x4d30f0). */
+uint32_t vertrix_port_lock_init_5c81c0(PORT_SIGNATURE);
+
+/* Original 0x4e7290: initialise the lock 0x5c8a80 with 0x50ab28 (0x4d30f0). */
+uint32_t vertrix_port_lock_init_5c8a80(PORT_SIGNATURE);
+
+/* Original 0x4189f0: clear 0x532a38, then call 0x415580 and 0x413bd0. */
+uint32_t vertrix_port_level_restart(PORT_SIGNATURE);
+
+/* Original 0x4ce810: allocate 0x103c bytes (0x4dba80), construct them (0x4ce230 with 1) and give
+ * them the table 0x519374. */
+uint32_t vertrix_port_file_object_new(PORT_SIGNATURE);
+
+/* Original 0x4ce7c0: allocate 0x114 bytes (0x4dba80) and give them the table 0x519334 with +0xd8
+ * and +0x104 at -1. */
+uint32_t vertrix_port_stream_object_new(PORT_SIGNATURE);
 
 #endif
