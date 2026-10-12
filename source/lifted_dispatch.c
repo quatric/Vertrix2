@@ -62,6 +62,7 @@
 #include "port_float.h"
 #include "port_font.h"
 #include "port_frame_resource.h"
+#include "port_gate.h"
 #include "port_imdct.h"
 #include "port_input.h"
 #include "port_layout.h"
@@ -2853,7 +2854,7 @@ static const LiftedRoutine routines[] = {
     {0x4ae170, lifted_cursor_clamp, 80, 0},
     {0x4ae1f0, lifted_f4ae1f0, 68, 0},
     {0x4ae250, vertrix_port_render_prepare, 0, 0},
-    {0x4ae3e0, lifted_actor_gate, 128, 0},
+    {0x4ae3e0, vertrix_port_actor_gate, 0, 0},
     {0x4af2a0, vertrix_port_render_rule, 0, 0},
     {0x4af2e0, vertrix_port_render_direction_index, 0, 0},
     {0x4af340, vertrix_port_render_mirror_index, 0, 0},
