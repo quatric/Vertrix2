@@ -88,4 +88,32 @@ uint32_t vertrix_port_reader_consume(PORT_SIGNATURE);
  * current. Returns 0; edx is unchanged. */
 uint32_t vertrix_port_wave_pump(PORT_SIGNATURE);
 
+/* Original 0x40cb70 (eax = channel, edx = volume): set the channel's volume (byte +0x14 of its
+ * 0x18-byte record at 0x52f918) to half the volume. Returns 1 for a channel past 0x52fc18, 2 for
+ * a volume over 0x40, else 0. */
+uint32_t vertrix_port_channel_volume(PORT_SIGNATURE);
+
+/* Original 0x40ca70 (eax = channel): clear the channel's playing bit (bit 0 of byte +0x16).
+ * Returns 1 for a channel past 0x52fc18, else 0. edx is unchanged. */
+uint32_t vertrix_port_channel_stop(PORT_SIGNATURE);
+
+/* Original 0x40adb0 (eax = channel from 1): the driver routine 0x52f060, like 0x40adc0, 0x40adf0,
+ * 0x40ae00 and their routines at 0x52f060, 0x52f064, 0x52f070 and 0x52f074 with the channel from 0.
+ */
+uint32_t vertrix_port_driver_call_60(PORT_SIGNATURE);
+/* Original 0x40adc0: the driver routine 0x52f064. */
+uint32_t vertrix_port_driver_call_64(PORT_SIGNATURE);
+/* Original 0x40adf0: the driver routine 0x52f070. */
+uint32_t vertrix_port_driver_call_70(PORT_SIGNATURE);
+/* Original 0x40ae00: the driver routine 0x52f074. */
+uint32_t vertrix_port_driver_call_74(PORT_SIGNATURE);
+
+/* Original 0x40c950 (eax = sample): rewind it (+4 from +0). Returns 1 without a sample, else 0.
+ * edx is unchanged. */
+uint32_t vertrix_port_sample_rewind(PORT_SIGNATURE);
+
+/* Original 0x40acd0 (eax = device, ebx = buffer): the driver's write routine (0x52f05c). Returns
+ * 1 without an open device, 2 without a buffer. */
+uint32_t vertrix_port_driver_write(PORT_SIGNATURE);
+
 #endif

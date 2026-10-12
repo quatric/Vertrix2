@@ -41,6 +41,8 @@ enum
     TRIG = 0x4c9b6a,
     TRIG_SINE = 2,
     GUARD_HANDLER = 0x4ec1ec,
+    CALL_4B7B00 = 0x4b7b00,
+    RESOURCE_IS_LOADED = 0x4877e0,
     STREAM_TELL = 0x5bb250,
     COUNTED_GUARD = 0x51a344,
     COUNTED_TABLE = 0x517474,
@@ -1999,4 +2001,33 @@ uint32_t vertrix_port_key_record_clear(PORT_SIGNATURE)
     port_call_stack(&port, KEY_STATE, record + 4, 0, 0, 0, &zero, 1);
     result = port_call(&port, KEY_EVENTS, record, vertrix_lift_edx, 0, 0);
     return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_object_field4(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    return port_return(&port, port_u32(&port, port_u32(&port, entry->eax, 0), 4), entry->edx);
+}
+
+uint32_t vertrix_port_call_4b7b00(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    result = port_call(&port, CALL_4B7B00, entry->eax, entry->edx, entry->ebx, entry->ecx);
+    return port_return(&port, result, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_resource_frame(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t resource = entry->eax;
+    port_open(&port, calls, services, globals, entry);
+    if (port_call(&port, RESOURCE_IS_LOADED, resource, entry->edx, entry->ebx, resource) != 1)
+    {
+        return port_return(&port, 0, vertrix_lift_edx);
+    }
+    return port_return(&port, port_u32(&port, port_u32(&port, resource, 8), vertrix_lift_edx * 4),
+                       vertrix_lift_edx);
 }

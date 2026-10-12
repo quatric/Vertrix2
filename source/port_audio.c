@@ -859,3 +859,108 @@ uint32_t vertrix_port_wave_pump(PORT_SIGNATURE)
     port_set32(&port, 0, WAVE_CURRENT, current >= 3 ? 0 : current);
     return port_return(&port, 0, entry->edx);
 }
+
+enum
+{
+    CHANNEL_COUNT = 0x52fc18,
+    CHANNEL_RECORDS = 0x52f918,
+    CHANNEL_RECORD_SIZE = 0x18,
+    CHANNEL_VOLUME = 0x14,
+    CHANNEL_FLAGS = 0x16,
+    DRIVER_WRITE = 0x52f05c
+};
+
+uint32_t vertrix_port_channel_volume(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t channel = entry->eax;
+    uint32_t volume = entry->edx;
+    port_open(&port, calls, services, globals, entry);
+    if (channel >= port_u32(&port, 0, CHANNEL_COUNT))
+    {
+        return port_return(&port, 1, entry->edx);
+    }
+    if (volume > 0x40)
+    {
+        return port_return(&port, 2, entry->edx);
+    }
+    port_set8(&port, 0, CHANNEL_RECORDS + CHANNEL_VOLUME + channel * CHANNEL_RECORD_SIZE,
+              volume >> 1);
+    return port_return(&port, 0, (entry->edx & 0xffffff00u) | ((volume >> 1) & 0xff));
+}
+
+uint32_t vertrix_port_channel_stop(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t channel = entry->eax;
+    uint32_t flags;
+    port_open(&port, calls, services, globals, entry);
+    if (channel >= port_u32(&port, 0, CHANNEL_COUNT))
+    {
+        return port_return(&port, 1, entry->edx);
+    }
+    flags = CHANNEL_RECORDS + CHANNEL_FLAGS + channel * CHANNEL_RECORD_SIZE;
+    port_set8(&port, 0, flags, port_u8(&port, 0, flags) & 0xfe);
+    return port_return(&port, 0, entry->edx);
+}
+
+/* The driver routine held at `slot`, with the channel from 0. */
+static uint32_t driver_call(PORT_SIGNATURE, uint32_t slot)
+{
+    Port port;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    result = port_call(&port, port_u32(&port, 0, slot), entry->eax - 1, entry->edx, entry->ebx,
+                       entry->ecx);
+    return port_return(&port, result, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_driver_call_60(PORT_SIGNATURE)
+{
+    return driver_call(calls, services, globals, entry, 0x52f060);
+}
+
+uint32_t vertrix_port_driver_call_64(PORT_SIGNATURE)
+{
+    return driver_call(calls, services, globals, entry, 0x52f064);
+}
+
+uint32_t vertrix_port_driver_call_70(PORT_SIGNATURE)
+{
+    return driver_call(calls, services, globals, entry, 0x52f070);
+}
+
+uint32_t vertrix_port_driver_call_74(PORT_SIGNATURE)
+{
+    return driver_call(calls, services, globals, entry, 0x52f074);
+}
+
+uint32_t vertrix_port_sample_rewind(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    if (entry->eax == 0)
+    {
+        return port_return(&port, 1, entry->edx);
+    }
+    port_set32(&port, entry->eax, 4, port_u32(&port, entry->eax, 0));
+    return port_return(&port, 0, entry->edx);
+}
+
+uint32_t vertrix_port_driver_write(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    if (entry->eax == 0 || port_u32(&port, entry->eax, 0) == 0)
+    {
+        return port_return(&port, 1, entry->edx);
+    }
+    if (entry->ebx == 0)
+    {
+        return port_return(&port, 2, entry->edx);
+    }
+    result = port_call(&port, port_u32(&port, 0, DRIVER_WRITE), entry->eax, entry->edx, entry->ebx,
+                       entry->ecx);
+    return port_return(&port, result, vertrix_lift_edx);
+}

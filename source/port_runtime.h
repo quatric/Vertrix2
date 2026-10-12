@@ -383,4 +383,14 @@ uint32_t vertrix_port_record_mark(PORT_SIGNATURE);
  * (0x4759e0). Registers but eax are unchanged. */
 uint32_t vertrix_port_key_record_clear(PORT_SIGNATURE);
 
+/* Original 0x48aa70 (eax = holder): its object's (+0) field +4. edx is unchanged. */
+uint32_t vertrix_port_object_field4(PORT_SIGNATURE);
+
+/* Original 0x48a2d0: calls 0x4b7b00 with the same registers. */
+uint32_t vertrix_port_call_4b7b00(PORT_SIGNATURE);
+
+/* Original 0x487770 (eax = resource, edx = frame): the frame's image (+8 array) when loaded
+ * (0x4877e0), else 0. */
+uint32_t vertrix_port_resource_frame(PORT_SIGNATURE);
+
 #endif

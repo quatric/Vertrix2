@@ -397,4 +397,25 @@ uint32_t vertrix_port_actor_last_frame(PORT_SIGNATURE);
 /* Original 0x472350: update the layer list 0x54676c (0x4b6200). */
 uint32_t vertrix_port_layer_top_update(PORT_SIGNATURE);
 
+/* Original 0x45cf30 (eax = actor): a title actor's frame (0x45cdc0) that, when its counter is due
+ * (0x4ac500, 0x4ac520), consumes it (0x4ac5b0) and sets its update to 0x45cf70 (0x4ac8f0). edx is
+ * unchanged. */
+uint32_t vertrix_port_title_actor_wait(PORT_SIGNATURE);
+
+/* Original 0x45d160 (eax = actor): as 0x45d100 without restoring +0x64. */
+uint32_t vertrix_port_wanderer_wait(PORT_SIGNATURE);
+
+/* Original 0x4ac7a0 (eax = actor): whether its frame (+0xb8) is 0. edx is unchanged. */
+uint32_t vertrix_port_actor_first_frame(PORT_SIGNATURE);
+
+/* Original 0x4ac8f0 (eax = actor, edx = routine): set its update routine (+0x154). */
+uint32_t vertrix_port_actor_set_update(PORT_SIGNATURE);
+
+/* Original 0x4ac750 (eax = actor): step its frame (+0xb8) back. Registers are unchanged. */
+uint32_t vertrix_port_actor_frame_back(PORT_SIGNATURE);
+
+/* Original 0x4ac4a0 (eax = actor): when its resource (+0xb0) is loaded (0x4877e0), take its
+ * current frame's image (0x487770) into +0xd0. edx is unchanged. */
+uint32_t vertrix_port_actor_frame_image(PORT_SIGNATURE);
+
 #endif
