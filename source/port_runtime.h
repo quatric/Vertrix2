@@ -472,4 +472,42 @@ uint32_t vertrix_port_lock_leave_call(PORT_SIGNATURE);
  */
 uint32_t vertrix_port_time_now(PORT_SIGNATURE);
 
+/* Original 0x4877d0: load (0x4877f0) and, when found, prepare (0x483ce0). */
+uint32_t vertrix_port_load_prepare(PORT_SIGNATURE);
+
+/* Original 0x487710 (eax = table, edx = count): allocate its three dword arrays (+8, +0xc, +0x10,
+ * 0x4ec160), keep the count (+4) and mark it ready (+0x14). */
+uint32_t vertrix_port_triple_allocate(PORT_SIGNATURE);
+
+/* Original 0x4830f0 (eax = holder or 0): free its buffer and itself (0x4ea190). edx is
+ * unchanged. */
+uint32_t vertrix_port_holder_free_if(PORT_SIGNATURE);
+
+/* Original 0x482750 (eax = generator, edx = low, ebx = high): a random word from low to high
+ * (0x4826c0). edx is the low word. */
+uint32_t vertrix_port_random_range(PORT_SIGNATURE);
+
+/* Original 0x45e950 (eax = bank, edx = slot, ebx = count): allocate the table of slot +0x1c bytes
+ * each in bank +0x118 bytes each from 0x544f90 (0x487710). */
+uint32_t vertrix_port_bank_table_allocate(PORT_SIGNATURE);
+
+/* Original 0x4b78d0: construct a list (0x4d8650) with the table 0x518704. */
+uint32_t vertrix_port_list_construct_518704(PORT_SIGNATURE);
+
+/* Original 0x489f90: a list from 0x4b78d0 with the field +0x14 set to 0x517644. */
+uint32_t vertrix_port_list_construct_517644(PORT_SIGNATURE);
+
+/* Original 0x4dba80 (stack = size): LocalAlloc (0x4f1c4c) of zeroed memory, 0x4d9510 when it
+ * fails. */
+uint32_t vertrix_port_local_allocate(PORT_SIGNATURE);
+
+/* Original 0x418820 (eax = state, edx): set +0xc0. */
+uint32_t vertrix_port_state_set_c0(PORT_SIGNATURE);
+
+/* Original 0x418830 (eax = state): copy +0xc0 to +0xbc. Registers are unchanged. */
+uint32_t vertrix_port_state_copy_c0(PORT_SIGNATURE);
+
+/* Original 0x418840 (eax = state, edx): set +0xbc. */
+uint32_t vertrix_port_state_set_bc(PORT_SIGNATURE);
+
 #endif

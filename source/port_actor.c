@@ -26,6 +26,8 @@ enum
     TEXT_PREPARE = 0x4ae150,
     TEXT_LAYOUT = 0x4408e0,
     TEXT_FONT = 0x15c,
+    KEY_ACTOR_CONSTRUCT = 0x4b5400,
+    ACTOR_CONSTRUCT_BASE = 0x4abd70,
     TITLE_WAIT_NEXT = 0x45cf70,
     RESOURCE_LOADED = 0x4877e0,
     RESOURCE_FRAME = 0x487770,
@@ -2073,4 +2075,98 @@ uint32_t vertrix_port_actor_set_counter_rate(PORT_SIGNATURE)
     port_open(&port, calls, services, globals, entry);
     port_set32(&port, entry->eax, ACTOR_COUNTER_LIMIT, entry->edx * 12);
     return port_return(&port, entry->edx * 12, entry->edx);
+}
+
+uint32_t vertrix_port_actor_replace_call(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    result = port_call(&port, ACTOR_REPLACE, entry->eax, entry->edx, entry->ebx, entry->ecx);
+    return port_return(&port, result, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_actor_set_d0(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    port_set32(&port, entry->eax, 0xd0, entry->edx);
+    return port_return(&port, entry->eax, entry->edx);
+}
+
+uint32_t vertrix_port_actor_set_f0(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    port_set32(&port, entry->eax, 0xf0, entry->edx);
+    return port_return(&port, entry->eax, entry->edx);
+}
+
+uint32_t vertrix_port_actor_set_114(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    port_set32(&port, entry->eax, 0x114, entry->ebx);
+    port_set32(&port, entry->eax, 0x118, entry->edx);
+    return port_return(&port, entry->eax, entry->edx);
+}
+
+uint32_t vertrix_port_actor_take_next(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    port_set32(&port, entry->eax, ACTOR_UPDATE_HOOK, port_u32(&port, entry->eax, 0xec));
+    return port_return(&port, entry->eax, entry->edx);
+}
+
+uint32_t vertrix_port_actor_last_frame_set(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t frame;
+    port_open(&port, calls, services, globals, entry);
+    frame = port_call(&port, RESOURCE_FRAMES, port_u32(&port, entry->eax, ACTOR_RESOURCE_DATA),
+                      entry->eax, entry->ebx, entry->ecx) -
+            1;
+    port_set32(&port, vertrix_lift_edx, ACTOR_FRAME_INDEX, frame);
+    return port_return(&port, frame, entry->edx);
+}
+
+uint32_t vertrix_port_actor_place_size(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t actor = entry->eax;
+    uint32_t height = entry->arguments[0] & 0xffff;
+    port_open(&port, calls, services, globals, entry);
+    port_set16(&port, actor, ACTOR_X, entry->edx);
+    port_set16(&port, actor, ACTOR_Y, entry->ebx);
+    port_set32(&port, actor, ACTOR_TEXT_WIDTH, entry->ecx & 0xffff);
+    port_set32(&port, actor, ACTOR_TEXT_HEIGHT, height);
+    return port_return(&port, height, entry->edx);
+}
+
+uint32_t vertrix_port_key_actor_construct(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t actor;
+    port_open(&port, calls, services, globals, entry);
+    actor = port_call(&port, ACTOR_CONSTRUCT_BASE, entry->eax, entry->edx, entry->ebx, entry->ecx);
+    port_set32(&port, actor, ACTOR_METHODS, 0x518174);
+    port_set8(&port, actor, 0x94, 0);
+    port_set16(&port, actor, ACTOR_KEY, 0);
+    return port_return(&port, actor, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_text_actor_construct(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t actor;
+    port_open(&port, calls, services, globals, entry);
+    actor = port_call(&port, KEY_ACTOR_CONSTRUCT, entry->eax, entry->edx, entry->ebx, entry->ecx);
+    port_set32(&port, actor, ACTOR_METHODS, 0x517c64);
+    port_set32(&port, actor, 0x160, 0);
+    port_set16(&port, actor, 0x164, 0);
+    port_set16(&port, actor, 0x166, 0);
+    port_set32(&port, actor, 0x168, 0);
+    port_set32(&port, actor, 0x16c, 0);
+    return port_return(&port, actor, vertrix_lift_edx);
 }

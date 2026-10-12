@@ -431,4 +431,36 @@ uint32_t vertrix_port_actor_set_next(PORT_SIGNATURE);
  * 12. Returns that; edx is unchanged. */
 uint32_t vertrix_port_actor_set_counter_rate(PORT_SIGNATURE);
 
+/* Original 0x4adf90: calls 0x4adfe0 with the same registers. */
+uint32_t vertrix_port_actor_replace_call(PORT_SIGNATURE);
+
+/* Original 0x4ac490 (eax = actor, edx): set +0xd0. */
+uint32_t vertrix_port_actor_set_d0(PORT_SIGNATURE);
+
+/* Original 0x4ac930 (eax = actor, edx): set +0xf0. */
+uint32_t vertrix_port_actor_set_f0(PORT_SIGNATURE);
+
+/* Original 0x4ac4e0 (eax = actor, edx, ebx): set +0x118 and +0x114. */
+uint32_t vertrix_port_actor_set_114(PORT_SIGNATURE);
+
+/* Original 0x4ac920 (eax = actor): make its next routine (+0xec) its update (+0x154). Registers
+ * are unchanged. */
+uint32_t vertrix_port_actor_take_next(PORT_SIGNATURE);
+
+/* Original 0x4ac720 (eax = actor): set its frame (+0xb8) to its resource's last (0x487860 of +0xb0
+ * less one). edx is unchanged. */
+uint32_t vertrix_port_actor_last_frame_set(PORT_SIGNATURE);
+
+/* Original 0x4b54d0 (eax = actor, dx, bx, cx, stack = place and size): place it (+0xe, +0x16) and
+ * size it (+0xf4, +0xf8). Returns the height; edx is unchanged. */
+uint32_t vertrix_port_actor_place_size(PORT_SIGNATURE);
+
+/* Original 0x4b5400: construct an actor (0x4abd70) with the table 0x518174, clearing +0x94 and
+ * the key +0x15c. */
+uint32_t vertrix_port_key_actor_construct(PORT_SIGNATURE);
+
+/* Original 0x4b3100: construct a key actor (0x4b5400) as a text actor (table 0x517c64, its fields
+ * +0x160 to +0x16c cleared). */
+uint32_t vertrix_port_text_actor_construct(PORT_SIGNATURE);
+
 #endif
