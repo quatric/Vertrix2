@@ -74,4 +74,10 @@ uint32_t vertrix_port_render_rows(PORT_SIGNATURE);
  * offsets in its top three bytes). Returns the target's address; edx is unchanged. */
 uint32_t vertrix_port_render_palette_blend(PORT_SIGNATURE);
 
+/* Original 0x4907d0: mix the source pixel into the target through the palette: both pixels' palette
+ * indexes (as 0x48d7f0 finds them) pick words from the tables at [0x5785f8] and [0x5785fc], whose
+ * sum (a signed word) is the entry in [0x54cdc8] (kept at 0x54d5d0) the colour comes from. Returns
+ * the target's address; edx is unchanged. */
+uint32_t vertrix_port_render_palette_mix(PORT_SIGNATURE);
+
 #endif

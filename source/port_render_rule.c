@@ -64,6 +64,8 @@ enum
     TRAVERSE_LAST = 0x5bbff0,
     PALETTE_SOURCE = 0x5bb764,
     BLEND_SOURCE_WEIGHTS = 0x55f1f0,
+    MIX_SOURCE_TABLE = 0x5785f8,
+    MIX_TARGET_TABLE = 0x5785fc,
     BLEND_TARGET_WEIGHTS = 0x55f1f4,
     PALETTE_TARGET = 0x5bb768,
     PALETTE_INDEXES = 0x54b800,
@@ -417,5 +419,37 @@ uint32_t vertrix_port_render_palette_blend(PORT_SIGNATURE)
     colour |= port_u8(&port, (entry_bits >> 8) & 0xff, palette);
     port_set32(&port, target, 0, colour);
     port_set32(&port, 0, PALETTE_ENTRY, palette);
+    return port_return(&port, target, entry->edx);
+}
+
+/* A pixel's palette index: 6 bits a channel looked up in [0x54b800] (every fourth byte). */
+static uint32_t palette_index(Port *port, uint32_t pixel)
+{
+    uint32_t index = (((pixel & 0xfc0000) >> 4) | ((pixel & 0xfc00) >> 2) | (pixel & 0xfc)) >> 2;
+    return port_u8(port, port_u32(port, 0, PALETTE_INDEXES), index * 4);
+}
+
+uint32_t vertrix_port_render_palette_mix(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t target;
+    uint32_t source_word;
+    uint32_t target_word;
+    uint32_t palette;
+    uint32_t colour;
+    port_open(&port, calls, services, globals, entry);
+    source_word =
+        port_u16(&port, port_u32(&port, 0, MIX_SOURCE_TABLE),
+                 palette_index(&port, port_u32(&port, port_u32(&port, 0, PALETTE_SOURCE), 0)) * 2);
+    target = port_u32(&port, 0, PALETTE_TARGET);
+    target_word = port_u16(&port, port_u32(&port, 0, MIX_TARGET_TABLE),
+                           palette_index(&port, port_u32(&port, target, 0)) * 2);
+    palette = port_u32(&port, port_u32(&port, 0, PALETTE_ENTRIES),
+                       (uint32_t)(int16_t)(source_word + target_word) * 4);
+    port_set32(&port, 0, PALETTE_ENTRY, palette);
+    colour = port_u8(&port, port_u16(&port, 0, FORMAT_TINT_RED), palette) << 16;
+    colour |= port_u8(&port, port_u16(&port, 0, FORMAT_TINT_GREEN), palette) << 8;
+    colour |= port_u8(&port, port_u16(&port, 0, FORMAT_TINT_BLUE), palette);
+    port_set32(&port, target, 0, colour);
     return port_return(&port, target, entry->edx);
 }

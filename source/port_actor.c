@@ -8,6 +8,16 @@ enum
     ACTOR_COUNTER = 0xcc,
     ACTOR_PROGRESS_STEPS = 0x4ac640,
     ACTOR_ANGLE = 0x22,
+    ACTOR_X = 0xe,
+    ACTOR_Y = 0x16,
+    ACTOR_SCALE = 0x44,
+    TEXT_PREPARE = 0x4ae150,
+    TEXT_LAYOUT = 0x4408e0,
+    TEXT_FONT = 0x15c,
+    TEXT_ALIGN = 0x160,
+    TEXT_BOX = 0x162,
+    ACTOR_TEXT_WIDTH = 0xf4,
+    ACTOR_TEXT_HEIGHT = 0xf8,
     ACTOR_ANGLE_WORD = 0x24,
     ACTOR_TURN = 0x28,
     FULL_TURN = 360,
@@ -876,4 +886,41 @@ uint32_t vertrix_port_actor_turn(PORT_SIGNATURE)
     port_set32(&port, 0, TURN_WHOLE, whole);
     port_set32(&port, 0, TURN_STEPS, taken);
     return port_return(&port, whole, edx);
+}
+
+/* The signed word at actor + offset (the original's `[offset - 2] >> 16`). */
+static uint32_t actor_word(Port *port, uint32_t actor, uint32_t offset)
+{
+    return (uint32_t)((int32_t)port_u32(port, actor, offset - 2) >> 16);
+}
+
+uint32_t vertrix_port_actor_text_layout(PORT_SIGNATURE)
+{
+    /* push ebp, ebx, ecx, edx, esi, then the four results. */
+    enum
+    {
+        BELOW = 0x24
+    };
+    Port port;
+    uint32_t actor = entry->eax;
+    uint32_t ebp = entry->esp - 4;
+    uint32_t arguments[7];
+    port_open_frame(&port, calls, services, globals, entry, BELOW);
+    port_call(&port, TEXT_PREPARE, actor, entry->edx, entry->ebx, entry->ecx);
+    arguments[0] = actor_word(&port, actor, TEXT_BOX + 6);
+    arguments[1] = port_u32(&port, actor, TEXT_FONT);
+    arguments[2] = port_u8(&port, actor, ACTOR_SCALE);
+    arguments[3] = ebp - 0x20;
+    arguments[4] = ebp - 0x1c;
+    arguments[5] = ebp - 0x14;
+    arguments[6] = ebp - 0x18;
+    port_call_stack(&port, TEXT_LAYOUT,
+                    (uint32_t)((int32_t)port_u32(&port, actor, TEXT_ALIGN - 3) >> 24),
+                    actor_word(&port, actor, TEXT_BOX), actor_word(&port, actor, TEXT_BOX + 2),
+                    actor_word(&port, actor, TEXT_BOX + 4), arguments, 7);
+    port_set16(&port, actor, ACTOR_X, port_u32(&port, ebp, -0x14u));
+    port_set16(&port, actor, ACTOR_Y, port_u32(&port, ebp, -0x18u));
+    port_set32(&port, actor, ACTOR_TEXT_WIDTH, port_u32(&port, ebp, -0x20u));
+    port_set32(&port, actor, ACTOR_TEXT_HEIGHT, port_u32(&port, ebp, -0x1cu));
+    return port_return(&port, port_u32(&port, ebp, -0x1cu), entry->edx);
 }

@@ -181,4 +181,10 @@ uint32_t vertrix_port_actor_attach(PORT_SIGNATURE);
  * 0x5bb5f8 (left when there is no turn). edx is the last angle read or remainder. */
 uint32_t vertrix_port_actor_turn(PORT_SIGNATURE);
 
+/* Original 0x4b68a0 (eax = text actor): lay its text out: 0x4ae150, then 0x4408e0 with the layout
+ * fields (+0x15c to +0x168), the scale byte (+0x44) and four locals for the results, which become
+ * the actor's position (+0xe, +0x16) and size (+0xf4, +0xf8). Returns the height; edx is
+ * unchanged. */
+uint32_t vertrix_port_actor_text_layout(PORT_SIGNATURE);
+
 #endif
