@@ -1322,4 +1322,66 @@ uint32_t vertrix_port_static_init_5bb254(PORT_SIGNATURE);
  * error objects (0x4deec0), a pool of 10 (0x4d8340) and the table 0x519364. */
 uint32_t vertrix_port_file_buffer_new(PORT_SIGNATURE);
 
+/* Original 0x4180a0(eax = level, edx = n): the index of the n-th entry of the level (count
+ * 0x534f10) whose dword at 0x534c18 is 0, 3, 4 or 5, or 0. Returns the index reached in edx. */
+uint32_t vertrix_port_level_free_index(PORT_SIGNATURE);
+
+/* Original 0x418a10(eax = game): load the game in steps reported to 0x418270, running 0x475090,
+ * 0x417c80, 0x425f40, 0x4b9050, 0x484550, 0x480730 and 0x478860 only while +0xd8 is clear, then
+ * read the frame time (0x4b7cd0, 0x4b7c00). */
+uint32_t vertrix_port_game_load_all(PORT_SIGNATURE);
+
+/* Original 0x40a8f0(eax = driver, edx = info): clear the 0x24 byte info (0x4eb5c0) and fill it
+ * through the first or second routine of driver slot 0x52f090. Returns 2 without info, 4 without a
+ * driver. */
+uint32_t vertrix_port_audio_driver_info(PORT_SIGNATURE);
+
+/* Original 0x45cf70(eax = actor): reset it (0x45cdc0, keeping +0xb8) and stop it (0x4adfe0); while
+ * it is busy (0x4ac2b0) stop and move it (0x4adfe0, 0x4ac8a0) once +0xb8 changed, otherwise clear
+ * 0x4ac710, move it by +0x58 (0x4ac8a0) or reset 0x4ac950 and 0x4ac8d0 without, and restart with
+ * 0x45cdd0 (0x4adfe0, 0x4ac8f0). */
+uint32_t vertrix_port_actor_wander_45cdd0(PORT_SIGNATURE);
+
+/* Original 0x4b7710(eax = list, edx = string, ebx = index): set the string to 0x5110ca (0x4ca280),
+ * then to entry index of the list when it has one (0x4ca310). Returns the string. */
+uint32_t vertrix_port_string_list_get(PORT_SIGNATURE);
+
+/* Original 0x414a90: for each of the 19 levels store the offsets of its 0x53969c entries from the
+ * origin 0x534888, 0x5348d4 into 0x5372fc and 0x5384cc when both are not negative. */
+uint32_t vertrix_port_level_offsets_534888(PORT_SIGNATURE);
+
+/* Original 0x414b10: for each of the 5 groups store the offsets of its 0x54021c entries from the
+ * origin 0x540064, 0x540078 into 0x540154 and 0x5401b8 when both are not negative. */
+uint32_t vertrix_port_level_offsets_540064(PORT_SIGNATURE);
+
+/* Original 0x41a800(eax = scene): reload it (0x41a4e0), release its images +0xcc and +0xd0
+ * (0x478d80), leave the critical section 0x540020 (import 0x4f1b3c), clear +0xd4, refresh the view
+ * (0x4b7cd0, 0x41aa20, 0x41aaa0), refresh the rules with 0x41b680 (0x48c9f0) and update it
+ * (0x418840). Returns the handler chain. */
+uint32_t vertrix_port_scene_leave_game(PORT_SIGNATURE);
+
+/* Original 0x417c80: expand the 0x34 group sizes 0x4f90c0 into the level numbers 0x53bb18 (8 per
+ * group) and sum the 7 section counts 0x4f90f8 of those sizes into 0x53bcc0. */
+uint32_t vertrix_port_level_tables_build(PORT_SIGNATURE);
+
+/* Original 0x4413b0(eax = hud): construct its three layer lists +0x22c, +0x240 and +0x254
+ * (0x4b5db0) and give it the table 0x5150f4 at +0x27c. Returns the hud. */
+uint32_t vertrix_port_hud_construct(PORT_SIGNATURE);
+
+/* Original 0x441a80(eax = hud): release its images +0x268, +0x274, +0x278, +0x270 (when +0x220 is
+ * 1) and +0x26c (when +0x222 is 1) through 0x478d80 and clear them. */
+uint32_t vertrix_port_hud_images_release(PORT_SIGNATURE);
+
+/* Original 0x4ac250(eax = actor): 0 when one of its remaining frames (0x4ac390, 0x4ac3b0, 0x4ac420)
+ * is busy (0x4ac780), stepping with 0x4ac740; otherwise 1. */
+uint32_t vertrix_port_actor_frames_busy(PORT_SIGNATURE);
+
+/* Original 0x4ac2b0(eax = actor): 0 when one of its remaining frames (0x4ac390, 0x4ac3b0, 0x4ac420)
+ * is busy (0x4ac7a0), stepping with 0x4ac750; otherwise 1. */
+uint32_t vertrix_port_actor_frames_busy_4ac7a0(PORT_SIGNATURE);
+
+/* Original 0x41dd60(eax = scene): when the player key 0x532b94 of 0x54d640 is down (0x476480) take
+ * it (0x4762e0) and act on it (0x4192a0). Returns the handler chain. */
+uint32_t vertrix_port_player_key_use(PORT_SIGNATURE);
+
 #endif
