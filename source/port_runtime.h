@@ -826,4 +826,79 @@ uint32_t vertrix_port_file_object_new(PORT_SIGNATURE);
  * and +0x104 at -1. */
 uint32_t vertrix_port_stream_object_new(PORT_SIGNATURE);
 
+/* Original 0x41ab00: under the lock 0x5b9c50 (0x4854a0, 0x485520) add 0x558c84 to the layer list
+ * 0x54671c (0x4719f0). */
+uint32_t vertrix_port_hud_layer_add_54671c(PORT_SIGNATURE);
+
+/* Original 0x41ab30: under the lock 0x5b9c50 (0x4854a0, 0x485520) add 0x558c84 to the layer list
+ * 0x546730 (0x471b20). */
+uint32_t vertrix_port_hud_layer_add_546730(PORT_SIGNATURE);
+
+/* Original 0x41ab60: under the lock 0x5b9c50 (0x4854a0, 0x485520) add 0x558c84 to the layer list
+ * 0x546744 (0x471aa0). */
+uint32_t vertrix_port_hud_layer_add_546744(PORT_SIGNATURE);
+
+/* Original 0x475ad0(eax = record, edx, ebx, ecx): mark it busy (+0x5a), restart it from +0x3c and
+ * store the three arguments at +0x4c..+0x54. */
+uint32_t vertrix_port_record_start(PORT_SIGNATURE);
+
+/* Original 0x4c9daf: free through 0x4db719 when 0x5054a1 is set, otherwise through 0x4c9b6a with
+ * ebx 0. */
+uint32_t vertrix_port_memory_free_dispatch(PORT_SIGNATURE);
+
+/* Original 0x4c9e00: free through 0x4db7c8 when 0x5054a1 is set, otherwise through 0x4c9b6a with
+ * ebx 1. */
+uint32_t vertrix_port_memory_free_dispatch_4db7c8(PORT_SIGNATURE);
+
+/* Original 0x43e9e0: initialise 0x541988 with 0x13 and 0x514fb0 (0x4ccf3b) and register its exit
+ * routine 0x4fb9ae (0x4ec1f7). */
+uint32_t vertrix_port_table_init_541988(PORT_SIGNATURE);
+
+/* Original 0x45c8b0(eax = player): when its target +0x14c is valid (0x471c40), make it the current
+ * target 0x532a4c. */
+uint32_t vertrix_port_player_target_take(PORT_SIGNATURE);
+
+/* Original 0x48c9f0: under the lock 0x5bb254 (0x47e7d0, 0x47e9b0) run 0x48c970 and 0x48c860 on it.
+ */
+uint32_t vertrix_port_rules_refresh(PORT_SIGNATURE);
+
+/* Original 0x410f80: 0 when the import 0x4f1740 succeeds, otherwise 5. */
+uint32_t vertrix_port_import_check_4f1740(PORT_SIGNATURE);
+
+/* Original 0x478b40: when 0x5589d4 is 1 call 0x40ee60, with eax 0 unless 0x5589dc is also 1. */
+uint32_t vertrix_port_input_mode_apply(PORT_SIGNATURE);
+
+/* Original 0x4e62b0(eax = size): under the lock hooks 0x507cc8 and 0x507ccc advance the heap top
+ * 0x509768 by size and mark the threads (0x4e85c0). Returns the old top. */
+uint32_t vertrix_port_heap_reserve(PORT_SIGNATURE);
+
+/* Original 0x40ae80: when 0x4f6418 is 0xffff add the four audio hooks (0x40a890) and start them
+ * (0x40a800); otherwise returns 3. */
+uint32_t vertrix_port_audio_hooks_install(PORT_SIGNATURE);
+
+/* Original 0x477af0(eax = holder, bl = flag): store the flag at +8 and +0 = 0, or the result of
+ * 0x477b10 when the flag is clear. */
+uint32_t vertrix_port_handle_flag_set(PORT_SIGNATURE);
+
+/* Original 0x4856a0(eax = record): look up its cell twice (0x4872c0) into 0x558c80 and 0x558c88,
+ * clearing each (0x478f50). Returns 1. */
+uint32_t vertrix_port_view_cells_setup(PORT_SIGNATURE);
+
+/* Original 0x4ce0e0: register the exit routines 0x501fc0 and 0x501fd0 (0x4ec1f7). */
+uint32_t vertrix_port_exit_register_501fc0(PORT_SIGNATURE);
+
+/* Original 0x4dea80: register the exit routines 0x507250 and 0x507260 (0x4ec1f7). */
+uint32_t vertrix_port_exit_register_507250(PORT_SIGNATURE);
+
+/* Original 0x4de5a0: read the metrics into 0x5c7944 (0x4de630) and register the exit routine
+ * 0x506c30 (0x4ec1f7). */
+uint32_t vertrix_port_metrics_init(PORT_SIGNATURE);
+
+/* Original 0x4760f0(eax = keys): reset all 256 keys (0x476140). */
+uint32_t vertrix_port_key_all_reset(PORT_SIGNATURE);
+
+/* Original 0x484b30: 1 when the library 0x50fc31 loads (import 0x4f1c44), releasing it again
+ * (import 0x4f1b78); otherwise 0. */
+uint32_t vertrix_port_library_probe(PORT_SIGNATURE);
+
 #endif
