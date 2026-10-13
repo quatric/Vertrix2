@@ -486,3 +486,197 @@ uint32_t vertrix_port_keyboard_poll(PORT_SIGNATURE)
     } while (port_u32(&port, 0, EVENT_INDEX) < port_u32(&port, 0, EVENT_COUNT));
     return port_return(&port, eax, entry->edx);
 }
+
+/* One screen edge for 0x477f10: entering it (`inside` 1) runs `enter`, leaving it `leave`; the
+ * state is kept at `field`. */
+static uint32_t mouse_edge(Port *port, uint32_t mouse, uint32_t inside, uint32_t field,
+                           uint32_t enter, uint32_t leave, uint32_t *edx, uint32_t ebx)
+{
+    uint32_t state = port_u32(port, mouse, field);
+    uint32_t eax = inside;
+    if (state == 0 && inside == 1)
+    {
+        eax = port_call(port, enter, mouse, *edx, ebx, 1);
+        *edx = vertrix_lift_edx;
+        port_set32(port, mouse, field, 1);
+    }
+    else if (state == 1 && inside == 0)
+    {
+        eax = port_call(port, leave, mouse, *edx, ebx, 1);
+        *edx = vertrix_lift_edx;
+        port_set32(port, mouse, field, 0);
+    }
+    return eax;
+}
+
+uint32_t vertrix_port_mouse_poll(PORT_SIGNATURE)
+{
+    enum
+    {
+        X = 0x5560d4,
+        Y = 0x5560d8,
+        EVENTS = 0x5560dc, /* DIDEVICEOBJECTDATA: offset, data, ... (0x14 bytes) */
+        EVENT_COUNT = 0x5588dc,
+        EVENT_INDEX = 0x5588e0,
+        STATUS = 0x5588e4,
+        START_X = 0x5588e8,
+        START_Y = 0x5588ec,
+        CLAMP = 0x478480,
+        PRESS = 0x4784d0,
+        RELEASE = 0x478520
+    };
+    Port port;
+    uint32_t mouse = entry->eax;
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    if (port_u8(&port, mouse, 8) != 0)
+    {
+        return port_return(&port, eax, entry->edx);
+    }
+    port_set32(&port, 0, START_X, port_u16(&port, mouse, 0x48));
+    port_set32(&port, 0, START_Y, port_u16(&port, mouse, 0x4a));
+    port_set32(&port, 0, X, port_u32(&port, 0, START_X));
+    eax = port_u32(&port, 0, START_Y);
+    port_set32(&port, 0, Y, eax);
+    if (port_u32(&port, mouse, 0x30) == 0)
+    {
+        return port_return(&port, eax, entry->edx);
+    }
+    port_set32(&port, 0, STATUS, 0x8007001eu);
+    ebx = 0;
+    /* GetDeviceData for up to 0x200 events; a lost device is reacquired (0x477c30). */
+    do
+    {
+        uint32_t arguments[5];
+        uint32_t device = port_u32(&port, mouse, 0x30);
+        uint32_t table = port_u32(&port, device, 0);
+        arguments[0] = device;
+        arguments[1] = 0x14;
+        arguments[2] = EVENTS;
+        arguments[3] = EVENT_COUNT;
+        arguments[4] = 0;
+        port_set32(&port, 0, EVENT_COUNT, 0x200);
+        result = port_call_stack(&port, port_u32(&port, table, 0x28), device, table, ebx, ecx,
+                                 arguments, 5);
+        edx = vertrix_lift_edx;
+        port_set32(&port, 0, STATUS, result);
+        if (result == 0x8000000au || result == 0x80070057u)
+        {
+            return port_return(&port, result, entry->edx);
+        }
+        if (result != 0)
+        {
+            port_set32(&port, mouse, 0xc, 0);
+            eax = port_call(&port, 0x477c30, mouse, edx, ebx, ecx);
+            edx = vertrix_lift_edx;
+            if (port_u32(&port, mouse, 0xc) == 0)
+            {
+                return port_return(&port, eax, entry->edx);
+            }
+        }
+    } while (port_u32(&port, 0, STATUS) != 0);
+    ecx = 0;
+    ebx = port_u32(&port, 0, EVENT_COUNT);
+    port_set32(&port, 0, EVENT_INDEX, 0);
+    if (ebx != 0)
+    {
+        do
+        {
+            uint32_t event = port_u32(&port, 0, EVENT_INDEX) * 0x14;
+            uint32_t data = port_u32(&port, event, EVENTS + 4);
+            uint32_t swap = port_u32(&port, mouse, 0x38);
+            uint32_t key = 0;
+            ecx = port_u32(&port, event, EVENTS);
+            eax = event;
+            if (ecx == 0 || ecx == 4)
+            {
+                /* An axis, scaled by the speed (+0x44) in percent, then clamped. */
+                int32_t step = (int32_t)(port_u32(&port, mouse, 0x44) * data) / 100;
+                if (ecx == 0)
+                {
+                    port_set32(&port, 0, X, port_u32(&port, 0, X) + (uint32_t)step);
+                    ebx = port_u32(&port, 0, Y);
+                }
+                else
+                {
+                    ecx = port_u32(&port, 0, Y) + (uint32_t)step;
+                    port_set32(&port, 0, Y, ecx);
+                    ebx = ecx;
+                }
+                eax = port_call(&port, CLAMP, mouse, port_u32(&port, 0, X), ebx, ecx);
+            }
+            else if (ecx == 0xc || ecx == 0xd)
+            {
+                /* The two main buttons, swapped when +0x38 is set. */
+                key = (ecx == 0xc) == (swap == 0) ? 0x74 : 0x75;
+            }
+            else if (ecx >= 0xe && ecx <= 0x13)
+            {
+                key = 0xbe + ecx - 0xe;
+            }
+            if (key != 0)
+            {
+                eax = port_call(&port, (port_u8(&port, event, EVENTS + 4) & 0x80) ? PRESS : RELEASE,
+                                mouse, key, ebx, ecx);
+            }
+            port_set32(&port, 0, EVENT_INDEX, port_u32(&port, 0, EVENT_INDEX) + 1);
+        } while (port_u32(&port, 0, EVENT_INDEX) < port_u32(&port, 0, EVENT_COUNT));
+    }
+    if (port_u32(&port, mouse, 0x60) != 1)
+    {
+        return port_return(&port, eax, entry->edx);
+    }
+    /* Edge scrolling: the position within +0x54 of the left, right, top and bottom of the
+     * scroll centre (+0x5c, +0x5e). */
+    {
+        uint32_t center_x = port_u16(&port, mouse, 0x5c);
+        uint32_t margin = port_u32(&port, mouse, 0x54);
+        uint32_t inside;
+        ebx = port_u16(&port, mouse, 0x48);
+        edx = 0;
+        inside = ebx < center_x - margin;
+        if (inside)
+        {
+            edx = 1;
+        }
+        eax = mouse_edge(&port, mouse, inside, 0x64, 0x478570, 0x4785c0, &edx, ebx);
+        ebx = port_u16(&port, mouse, 0x48);
+        inside = ebx > port_u16(&port, mouse, 0x5c) + port_u32(&port, mouse, 0x54);
+        if (inside)
+        {
+            edx = 1;
+        }
+        eax = mouse_edge(&port, mouse, inside, 0x68, 0x478610, 0x478660, &edx, ebx);
+        if (edx == 1)
+        {
+            ebx = port_u16(&port, mouse, 0x4a);
+            eax = port_call(&port, CLAMP, mouse, port_u16(&port, mouse, 0x5c), ebx, 1);
+            edx = vertrix_lift_edx;
+        }
+        ebx = port_u16(&port, mouse, 0x5e) - port_u32(&port, mouse, 0x54);
+        edx = 0;
+        inside = port_u16(&port, mouse, 0x4a) < ebx;
+        if (inside)
+        {
+            edx = 1;
+        }
+        eax = mouse_edge(&port, mouse, inside, 0x6c, 0x4786b0, 0x478700, &edx, ebx);
+        ebx = port_u32(&port, mouse, 0x54) + port_u16(&port, mouse, 0x5e);
+        inside = port_u16(&port, mouse, 0x4a) > ebx;
+        if (inside)
+        {
+            edx = 1;
+        }
+        eax = mouse_edge(&port, mouse, inside, 0x70, 0x478750, 0x4787a0, &edx, ebx);
+        if (edx == 1)
+        {
+            eax = port_call(&port, CLAMP, mouse, port_u16(&port, mouse, 0x48),
+                            port_u16(&port, mouse, 0x5e), 1);
+        }
+    }
+    return port_return(&port, eax, entry->edx);
+}

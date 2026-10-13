@@ -1973,7 +1973,7 @@ static const LiftedRoutine routines[] = {
     {0x477e10, vertrix_port_box_set, 0, 0},
     {0x477e30, lifted_object_center_place, 84, 0},
     {0x477ed0, lifted_object_reset_center, 88, 0},
-    {0x477f10, lifted_f477f10, 220, 0},
+    {0x477f10, vertrix_port_mouse_poll, 0, 0},
     {0x478460, vertrix_port_actor_keep_place, 0, 0},
     {0x478480, vertrix_port_object_clamp_position, 0, 0},
     {0x4784d0, vertrix_port_box_key_press, 0, 0},

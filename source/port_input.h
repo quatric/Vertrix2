@@ -77,4 +77,13 @@ uint32_t vertrix_port_joystick_poll(PORT_SIGNATURE);
  * released (0x476280); key 0x6b is skipped. Keeps edx. */
 uint32_t vertrix_port_keyboard_poll(PORT_SIGNATURE);
 
+/* Original 0x477f10(eax = mouse): poll a DirectInput mouse unless it is disabled (+8). Its
+ * buffered events (GetDeviceData into 0x5560dc, a lost device reacquired by 0x477c30) move the
+ * position (0x5560d4, 0x5560d8; from +0x48 and +0x4a) by the axis data times the speed (+0x44)
+ * in percent, clamped by 0x478480, and press (0x4784d0) or release (0x478520) the keys of the
+ * buttons: 0x74 and 0x75 (swapped by +0x38), 0xbe to 0xc3. With edge scrolling (+0x60 == 1)
+ * the four edges around +0x5c and +0x5e, +0x54 wide, run their enter and leave routines and
+ * the cursor is held at the centre. Keeps edx. */
+uint32_t vertrix_port_mouse_poll(PORT_SIGNATURE);
+
 #endif
