@@ -53,4 +53,9 @@ uint32_t vertrix_port_object_destroy_d(PORT_SIGNATURE);
  * record, its list (0x48a2d0) and base (0x4b78e0) are destroyed, mode 2 freeing it. */
 uint32_t vertrix_port_parser_destroy(PORT_SIGNATURE);
 
+/* Original 0x441450(eax = panel, edx = mode): a screen panel destructor: mode 4 destroys an array
+ * (element destructor 0x515100); otherwise the table 0x5150f4 (+0x27c) is set and, under a guard
+ * record, its three embedded objects are destroyed (0x4b5dc0), mode 2 freeing it. */
+uint32_t vertrix_port_screen_panel_destroy(PORT_SIGNATURE);
+
 #endif

@@ -2039,4 +2039,9 @@ uint32_t vertrix_port_path_split_strings(PORT_SIGNATURE);
  * stack (0x48a620, 0x48a710, 0x48a8a0, 0x48a930, 0x48a8c0). */
 uint32_t vertrix_port_archive_file_read(PORT_SIGNATURE);
 
+/* Original 0x4b78e0(eax = object, edx = mode): a destructor: mode 4 destroys an array (element
+ * destructor 0x518720); otherwise the table 0x518704 is set and, under a guard record, its
+ * contents (0x4b7b00) and base (0x4d86d0) are destroyed, mode 2 freeing it. */
+uint32_t vertrix_port_object_destroy_parser_base(PORT_SIGNATURE);
+
 #endif

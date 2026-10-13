@@ -735,3 +735,40 @@ uint32_t vertrix_port_parser_destroy(PORT_SIGNATURE)
     port_set32(&port, ebp, -0x24u, 0);
     return box_destroy_free(&port, result, 0, mode);
 }
+
+uint32_t vertrix_port_screen_panel_destroy(PORT_SIGNATURE)
+{
+    Port port;
+    uint8_t stack[0x48 + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t object = entry->eax;
+    uint32_t mode = entry->edx;
+    uint32_t result;
+    port_open_stack(&port, stack, calls, services, globals, entry, 0x48);
+    if (mode & 4)
+    {
+        /* An array (element destructor 0x515100, freed by 0x4ca040), with the mode kept in ebx. */
+        uint32_t block;
+        port_set32(&port, ebp, -0x44u, object);
+        port_set32(&port, ebp, -0x24u, 1);
+        block = port_call(&port, 0x4ccb9f, object, 0x515100, mode, object);
+        port_set32(&port, ebp, -0x24u, 0);
+        port_call(&port, 0x4ca040, block, 0, mode, object);
+        return port_return(&port, object, vertrix_lift_edx);
+    }
+    port_set32(&port, object, 0x27c, 0x5150f4);
+    port_set32(&port, ebp, -0x1cu, object);
+    port_set8(&port, ebp, -0x18u, mode);
+    port_set32(&port, ebp, -0x30u, port.env.chain);
+    port_set32(&port, ebp, -0x2cu, 0x4ec1ec);
+    port_set32(&port, ebp, -0x28u, 0x51502c);
+    port_set32(&port, ebp, -0x24u, 4);
+    /* Its three embedded objects (+0x254, +0x240, +0x22c) are destroyed by 0x4b5dc0 in turn. */
+    result = port_call(&port, 0x4b5dc0, object + 0x254, 0, mode, object);
+    port_set32(&port, ebp, -0x24u, 3);
+    result = port_call(&port, 0x4b5dc0, result - 0x14, 0, mode, 0);
+    port_set32(&port, ebp, -0x24u, 0);
+    result = port_call(&port, 0x4b5dc0, result - 0x14, 0, mode, 0) - 0x22c;
+    port_set32(&port, ebp, -0x24u, 0);
+    return box_destroy_free(&port, result, vertrix_lift_edx, mode);
+}

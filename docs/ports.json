@@ -754,6 +754,11 @@
   "lifted": "lifted_chain_object_construct",
   "chunk": "whole_1"
  },
+ "0x441450": {
+  "port": "vertrix_port_screen_panel_destroy",
+  "lifted": "lifted_f441450",
+  "chunk": "whole_21"
+ },
  "0x441530": {
   "port": "vertrix_port_player_entry_init",
   "lifted": "lifted_record_init",
@@ -2917,6 +2922,11 @@
  "0x4b78d0": {
   "port": "vertrix_port_list_construct_518704",
   "lifted": "lifted_object_table_new_4b78d0",
+  "chunk": "whole_5"
+ },
+ "0x4b78e0": {
+  "port": "vertrix_port_object_destroy_parser_base",
+  "lifted": "lifted_f4b78e0",
   "chunk": "whole_5"
  },
  "0x4b79a0": {
