@@ -10828,3 +10828,69 @@ uint32_t vertrix_port_list_parse_texts(PORT_SIGNATURE)
     }
     return port_return(&port, port_u32(&port, ebp, -0x2cu), edx);
 }
+
+uint32_t vertrix_port_list_file_read(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x13c,
+        GUARD_HANDLER = 0x4ec1ec,
+        READ_GUARD = 0x516acc
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t parser = ebp - 0x138;
+    uint32_t mode = 0;
+    uint32_t result = 0;
+    uint32_t edx;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    port_set32(&port, ebp, -0x24u, port.env.chain);
+    port_set32(&port, ebp, -0x20u, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x1cu, READ_GUARD);
+    port_set32(&port, ebp, -0x18u, 0);
+    /* A parser on the stack (0x48a620) opens the named file (0x48a710 with 0x5466c8) and, when it
+     * opens, reads the list from it (0x480ec0, then 0x48a8c0); it is destroyed (0x48a670). */
+    port_call(&port, 0x48a620, parser, GUARD_HANDLER, 0, READ_GUARD);
+    port_set32(&port, ebp, -0x18u, 1);
+    mode = port_u32(&port, 0, 0x5466c8);
+    if (port_call(&port, 0x48a710, parser, entry->eax, mode, 0) == 1)
+    {
+        result = port_call(&port, 0x480ec0, parser, entry->edx, mode, 0);
+        port_call(&port, 0x48a8c0, parser, vertrix_lift_edx, mode, result);
+    }
+    port_set32(&port, ebp, -0x18u, 0);
+    port_call(&port, 0x48a670, parser, 0, 0, result);
+    edx = vertrix_lift_edx;
+    port_set32(&port, ebp, -0x18u, 0);
+    return port_return(&port, result, edx);
+}
+
+uint32_t vertrix_port_array_list_make(PORT_SIGNATURE)
+{
+    Port port;
+    uint8_t stack[8 + 8 + 10 * 4];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t list = entry->eax;
+    uint32_t slot = entry->edx * 4;
+    uint32_t arguments[8];
+    uint32_t image;
+    uint32_t array;
+    unsigned index;
+    port_open_arguments(&port, stack, calls, services, globals, entry, 8, 10);
+    port_set32(&port, port_u32(&port, list, 0), slot, 0);
+    for (index = 0; index < 4; index++)
+    {
+        arguments[index] = port_u32(&port, ebp, 0x10 + 4 * index);
+    }
+    arguments[4] = port_u8(&port, ebp, 0x20);
+    arguments[5] = (uint32_t)(int32_t)(int8_t)port_u8(&port, ebp, 0x24);
+    arguments[6] = (uint32_t)(int32_t)(int8_t)port_u8(&port, ebp, 0x28);
+    arguments[7] = port_u8(&port, ebp, 0x2c);
+    /* The entry is built by 0x483060 from the ten arguments. */
+    image = port_call_stack(&port, 0x483060, entry->ebx, entry->ecx, port_u32(&port, ebp, 8),
+                            port_u32(&port, ebp, 0xc), arguments, 8);
+    array = port_u32(&port, list, 0);
+    port_set32(&port, array, slot, image);
+    return port_return(&port, image, array);
+}

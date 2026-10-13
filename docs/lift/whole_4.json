@@ -572,46 +572,6 @@
   "virtual": [],
   "address": 4724096
  },
- "f4816f0": {
-  "callees": {
-   "0x48a620": [
-    0,
-    false
-   ],
-   "0x48a710": [
-    0,
-    false
-   ],
-   "0x48a670": [
-    0,
-    false
-   ],
-   "0x480ec0": [
-    0,
-    false
-   ],
-   "0x48a8c0": [
-    0,
-    false
-   ]
-  },
-  "stack": 404,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2,
-   295,
-   296,
-   297
-  ],
-  "virtual": [],
-  "address": 4724464
- },
  "object_create_with_class": {
   "callees": {
    "0x4ccf3b": [
@@ -1541,25 +1501,6 @@
   ],
   "virtual": [],
   "address": 4748528
- },
- "array_list_make": {
-  "callees": {
-   "0x483060": [
-    8,
-    false
-   ]
-  },
-  "stack": 112,
-  "arguments": 10,
-  "pointer_callees": [],
-  "pointer_fields": [
-   0
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4748896
  },
  "table_object_construct": {
   "callees": {},

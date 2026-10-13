@@ -1965,4 +1965,12 @@ uint32_t vertrix_port_lock_enter(PORT_SIGNATURE);
  * than the limit, otherwise to the default. */
 uint32_t vertrix_port_list_parse_texts(PORT_SIGNATURE);
 
+/* Original 0x4816f0(eax = name, edx): open the named file with a parser on the stack (0x48a620,
+ * 0x48a710 with 0x5466c8) and read a list from it (0x480ec0, 0x48a8c0); returns the list or 0. */
+uint32_t vertrix_port_list_file_read(PORT_SIGNATURE);
+
+/* Original 0x487660(eax = list, edx = index, ebx, ecx; ten stack arguments): build the entry at
+ * the index of the list's array with 0x483060. Returns it, edx the array. */
+uint32_t vertrix_port_array_list_make(PORT_SIGNATURE);
+
 #endif
