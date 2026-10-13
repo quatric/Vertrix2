@@ -1708,4 +1708,21 @@ uint32_t vertrix_port_actor_draw_frame(PORT_SIGNATURE);
  * 0x50b0dc, and return seconds since 1970, or -1 out of range. */
 uint32_t vertrix_port_time_from_tm(PORT_SIGNATURE);
 
+/* Original 0x4408e0(al = font, edx = x, bx = y, ecx = width; stack: the alignment word, the text,
+ * the flags byte and pointers for the line start, the line count, the left and the top; ret
+ * 0x1c): measure the text (0x440610, the line start and count into the frame at ebp - 0x20 and
+ * ebp - 0x1c) and lay it out (0x440990 with x, y, width and the alignment sign-extended), then
+ * store the left and top words and the start and count dwords through the pointers. Returns the
+ * saved exception chain in eax and the count pointer in edx. */
+uint32_t vertrix_port_text_measure_layout(PORT_SIGNATURE);
+
+/* Original 0x440610(al = font, edx = text, bl = style, ecx = width pointer; stack: the height
+ * pointer; ret 4): measure a text. Width and height start at 0. Empty text (0x4ccfe0 against
+ * 0x50e12c) sizes one blank glyph: the width becomes 0 and the height its height. Otherwise each
+ * character makes a glyph actor (0x4ca000, 0x4abd70, placed by 0x4adf20): a space with the font's
+ * size from 0x541988, any other with its image from 0x43f420 (skipped when there is none). Each
+ * measured glyph (0x4b14c0) adds its width plus 1 and raises the height to its own; the glyph is
+ * then destroyed through its table (+0x158, with 2). Returns the saved exception chain. */
+uint32_t vertrix_port_text_measure(PORT_SIGNATURE);
+
 #endif

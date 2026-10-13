@@ -877,7 +877,7 @@ The synthesis (0x405720, 491 instructions) is three windowed sums, written as lo
 single helpers. The port keeps the ebx and ecx its helpers see, which carry the loop counters and
 the last clamp's limit.
 
-688 routines run as clean ports. Counted by calls, 99.65% of the calls the dispatcher serves in the
+691 routines run as clean ports. Counted by calls, 99.65% of the calls the dispatcher serves in the
 1,500-tick gameplay profile go to a port or a recovered native (202,169 of 57,234,341 still ran lifted
 copies before 0x4928f0 below).
 
@@ -927,6 +927,18 @@ register (`code_registers`) and points that register at the leaf stub, so the or
 stub whose registers are compared. The port passes 256 cases in both modes (a random 16-bit row
 count makes larger runs slow) and handing the routine a wrong ecx fails it; 0x492980, the other
 row loop taking a routine in eax, still passes.
+
+With that oracle the 65 remaining batch failures (all but the ported ones and the setjmp
+0x4d9f06, whose saved esp can never match) were lifted again (`work/relift_code`) and verified
+with 256 cases a mode: 8 pass. They are `source/lifted_whole_44.[ch]`: 0x480ca0, 0x491050,
+0x49a600, 0x4a2650, 0x4a26c0, 0x4aa3c0, 0x4d71d0 and 0x4dae80; six left the unverified tier
+(`tools/drop_unverified.py`). 60 failures remain (`docs/lifted-batch-verification.json`).
+
+Three more of the gameplay profile's busiest lifted routines are ports: the pixel format from
+channel masks (0x481bc0), the text measure (0x440610) and the measure-and-layout wrapper
+(0x4408e0), verified with 4,096 cases in both register modes (0x4408e0 with 1,024: at 4,096 its lifted copy
+times out with wide registers). The byte reader 0x405ee0 is
+not: with its refill stubbed the original loops until the time limit, its lifted copy as well.
 
 With the ports in, the host run matches the recorded baselines: the 1,500-tick frames (9 of 9
 identical) and the 3,000-tick audio (WAV byte-identical). Boundary calls fell from 62,764 to 3; the

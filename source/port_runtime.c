@@ -174,6 +174,7 @@ enum
     TEXT_MEASURE = 0x4408e0,
     TEXT_DRAW_AT = 0x440a20,
     GLYPHS_GUARD = 0x514f4c,
+    MEASURE_GUARD = 0x514f2c,
     GLYPH_LOOKUP = 0x43f420,
     ACTOR_SIZE = 0x15c,
     ACTOR_CONSTRUCT = 0x4abd70,
@@ -760,6 +761,224 @@ static void copy8(Port *port, uint32_t to, uint32_t from, uint32_t offset)
 static void copy16(Port *port, uint32_t to, uint32_t from, uint32_t offset)
 {
     port_set16(port, to, offset, port_u16(port, from, offset));
+}
+
+/* 0x440610's glyph setup and measure: style, size (unless a glyph) and the sum of the widths. */
+static uint32_t measure_glyph(Port *port, uint32_t ebp, uint32_t glyph, uint32_t ecx, int sized)
+{
+    uint32_t font = (uint32_t)(int8_t)port_u8(port, ebp, -0x10u);
+    if (sized)
+    {
+        uint32_t size = FONT_SIZES + font * FONT_SIZE;
+        port_set8(port, glyph, 0x44, port_u8(port, ebp, -0xcu));
+        port_set8(port, glyph, 0x8e, 0);
+        port_set8(port, glyph, 0x8f, 1);
+        port_set8(port, glyph, 0x91, 0);
+        port_set32(port, glyph, 0xf4, port_u32(port, size, 0));
+        port_set32(port, glyph, 0xf8, port_u32(port, size, 4));
+    }
+    else
+    {
+        uint32_t style = port_u8(port, ebp, -0xcu);
+        port_set8(port, glyph, 0x8e, 0);
+        port_set8(port, glyph, 0x8f, 1);
+        port_set8(port, glyph, 0x44, style);
+        port_set8(port, glyph, 0x91, 0);
+    }
+    return port_call(port, ACTOR_MEASURE, glyph, ebp - 0x2c, ebp - 0x28, ecx);
+}
+
+uint32_t vertrix_port_text_measure(PORT_SIGNATURE)
+{
+    /* push ebp, esi, edi, then 0x38 bytes: the guard record, the glyph and its size. */
+    enum
+    {
+        BELOW = 0x40,
+        ARGUMENTS = 1
+    };
+    Port port;
+    uint8_t stack[BELOW + 8 + 4 * ARGUMENTS];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t width = entry->ecx;
+    uint32_t zeros[5] = {0, 0, 0, 0, 0};
+    uint32_t edx;
+    uint32_t ebx = 0;
+    uint32_t ecx = MEASURE_GUARD;
+    uint32_t glyph;
+    uint32_t byte;
+    port_open_arguments(&port, stack, calls, services, globals, entry, BELOW, ARGUMENTS);
+    port_set32(&port, ebp, 0, entry->ebp);
+    port_set32(&port, ebp, -4u, entry->esi);
+    port_set32(&port, ebp, -8u, entry->edi);
+    port_set8(&port, ebp, -0x10u, entry->eax);
+    port_set32(&port, ebp, -0x14u, entry->edx);
+    port_set8(&port, ebp, -0xcu, entry->ebx);
+    port_set32(&port, ebp, -0x40u, port.env.chain);
+    port_set32(&port, ebp, -0x3cu, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x38u, MEASURE_GUARD);
+    port_set32(&port, ebp, -0x34u, 0);
+    port_set32(&port, width, 0, 0);
+    port_set32(&port, port_u32(&port, ebp, 8), 0, 0);
+    if (port_call(&port, 0x4ccfe0, port_u32(&port, ebp, -0x14u), 0x50e12c, ebx, ecx) == 0)
+    {
+        /* No text: one blank glyph sizes the line. */
+        edx = vertrix_lift_edx;
+        glyph = port_call(&port, ALLOCATE_OBJECT, ACTOR_SIZE, edx, ebx, ecx);
+        edx = vertrix_lift_edx;
+        if (glyph != 0)
+        {
+            glyph = port_call(&port, ACTOR_CONSTRUCT, glyph, edx, ebx, ecx);
+        }
+        port_call_stack(&port, ACTOR_PLACE, glyph, 0, 0, 0, zeros, 5);
+        ecx = 0;
+        port_set32(&port, ebp, -0x20u, glyph);
+        if (measure_glyph(&port, ebp, glyph, ecx, 1) != 0)
+        {
+            port_set32(&port, width, 0, 0);
+            port_set32(&port, port_u32(&port, ebp, 8), 0, port_u32(&port, ebp, -0x28u));
+        }
+        edx = vertrix_lift_edx;
+        glyph = port_u32(&port, ebp, -0x20u);
+        if (glyph != 0)
+        {
+            ebx = port_u32(&port, glyph, ACTOR_TABLE);
+            port_call(&port, port_u32(&port, ebx, 0), glyph, 2, ebx, ecx);
+            edx = vertrix_lift_edx;
+        }
+        return port_return(&port, port_u32(&port, ebp, -0x40u), edx);
+    }
+    edx = vertrix_lift_edx;
+    for (;;)
+    {
+        uint32_t holder;
+        byte = port_u8(&port, port_u32(&port, ebp, -0x14u), 0);
+        edx = (edx & 0xffffff00u) | byte;
+        if (byte == 0)
+        {
+            break;
+        }
+        if (byte == ' ')
+        {
+            glyph = port_call(&port, ALLOCATE_OBJECT, ACTOR_SIZE, edx, ebx, ecx);
+            edx = vertrix_lift_edx;
+            if (glyph != 0)
+            {
+                port_set32(&port, ebp, -0x24u, glyph);
+                port_set32(&port, ebp, -0x34u, 1);
+                glyph = port_call(&port, ACTOR_CONSTRUCT, glyph, 1, ebx, 0);
+                edx = vertrix_lift_edx;
+                ecx = 0;
+                port_set32(&port, ebp, -0x34u, 0);
+            }
+            port_call_stack(&port, ACTOR_PLACE, glyph, 0, 0, 0, zeros, 5);
+            ebx = 0;
+            ecx = 0;
+            holder = ebp - 0x1c;
+            port_set32(&port, holder, 0, glyph);
+            if (measure_glyph(&port, ebp, glyph, ecx, 1) != 0)
+            {
+                uint32_t total = port_u32(&port, width, 0) + port_u32(&port, ebp, -0x2cu);
+                uint32_t high = port_u32(&port, ebp, 8);
+                port_set32(&port, width, 0, total);
+                port_set32(&port, width, 0, total + 1);
+                if (port_u32(&port, ebp, -0x28u) > port_u32(&port, high, 0))
+                {
+                    port_set32(&port, high, 0, port_u32(&port, ebp, -0x28u));
+                }
+            }
+            edx = vertrix_lift_edx;
+        }
+        else
+        {
+            uint32_t source = port_call(
+                &port, GLYPH_LOOKUP, (uint32_t)(int8_t)port_u8(&port, ebp, -0x10u), byte, ebx, ecx);
+            edx = source;
+            if (source == 0)
+            {
+                port_set32(&port, ebp, -0x14u, port_u32(&port, ebp, -0x14u) + 1);
+                continue;
+            }
+            glyph = port_call(&port, ALLOCATE_OBJECT, ACTOR_SIZE, edx, ebx, ecx);
+            edx = vertrix_lift_edx;
+            if (glyph != 0)
+            {
+                port_set32(&port, ebp, -0x24u, glyph);
+                port_set32(&port, ebp, -0x34u, 3);
+                glyph = port_call(&port, ACTOR_CONSTRUCT, glyph, edx, 0, 3);
+                edx = vertrix_lift_edx;
+                ecx = 3;
+                ebx = 0;
+                port_set32(&port, ebp, -0x34u, 0);
+            }
+            zeros[2] = edx;
+            port_call_stack(&port, ACTOR_PLACE, glyph, 0, 0, 0, zeros, 5);
+            zeros[2] = 0;
+            ebx = 0;
+            ecx = 0;
+            holder = ebp - 0x18;
+            port_set32(&port, holder, 0, glyph);
+            if (measure_glyph(&port, ebp, glyph, ecx, 0) != 0)
+            {
+                uint32_t total = port_u32(&port, width, 0) + port_u32(&port, ebp, -0x2cu);
+                uint32_t high = port_u32(&port, ebp, 8);
+                port_set32(&port, width, 0, total);
+                port_set32(&port, width, 0, total + 1);
+                if (port_u32(&port, ebp, -0x28u) > port_u32(&port, high, 0))
+                {
+                    port_set32(&port, high, 0, port_u32(&port, ebp, -0x28u));
+                }
+            }
+            edx = vertrix_lift_edx;
+        }
+        glyph = port_u32(&port, holder, 0);
+        if (glyph != 0)
+        {
+            ebx = port_u32(&port, glyph, ACTOR_TABLE);
+            port_call(&port, port_u32(&port, ebx, 0), glyph, 2, ebx, ecx);
+            edx = vertrix_lift_edx;
+        }
+        port_set32(&port, ebp, -0x34u, 0);
+        port_set32(&port, ebp, -0x14u, port_u32(&port, ebp, -0x14u) + 1);
+    }
+    return port_return(&port, port_u32(&port, ebp, -0x40u), edx);
+}
+
+uint32_t vertrix_port_text_measure_layout(PORT_SIGNATURE)
+{
+    /* push ebp, esi, edi, then 0x2c bytes: the guard record and the measure and layout results. */
+    enum
+    {
+        BELOW = 0x38,
+        ARGUMENTS = 7
+    };
+    Port port;
+    uint8_t stack[BELOW + 8 + 4 * ARGUMENTS];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t pushed[4];
+    port_open_arguments(&port, stack, calls, services, globals, entry, BELOW, ARGUMENTS);
+    port_set32(&port, ebp, 0, entry->ebp);
+    port_set32(&port, ebp, -4u, entry->esi);
+    port_set32(&port, ebp, -8u, entry->edi);
+    port_set8(&port, ebp, -0xcu, entry->eax);
+    port_set16(&port, ebp, -0x10u, entry->ebx);
+    port_set32(&port, ebp, -0x34u, port.env.chain);
+    port_set32(&port, ebp, -0x30u, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x2cu, 0x514f48);
+    port_set32(&port, ebp, -0x28u, 0);
+    pushed[0] = ebp - 0x1c;
+    port_call_stack(&port, 0x440610, (uint32_t)(int8_t)port_u8(&port, ebp, -0xcu),
+                    port_u32(&port, ebp, 0xc), port_u8(&port, ebp, 0x10), ebp - 0x20, pushed, 1);
+    pushed[0] = (uint32_t)(int16_t)entry->edx;
+    pushed[1] = (uint32_t)(int16_t)port_u16(&port, ebp, -0x10u);
+    pushed[2] = (uint32_t)(int16_t)entry->ecx;
+    pushed[3] = (uint32_t)(int16_t)port_u16(&port, ebp, 8);
+    port_call_stack(&port, 0x440990, ebp - 0x18, ebp - 0x14, port_u32(&port, ebp, -0x20u),
+                    port_u32(&port, ebp, -0x1cu), pushed, 4);
+    port_set16(&port, port_u32(&port, ebp, 0x1c), 0, port_u32(&port, ebp, -0x18u));
+    port_set16(&port, port_u32(&port, ebp, 0x20), 0, port_u32(&port, ebp, -0x14u));
+    port_set32(&port, port_u32(&port, ebp, 0x14), 0, port_u32(&port, ebp, -0x20u));
+    port_set32(&port, port_u32(&port, ebp, 0x18), 0, port_u32(&port, ebp, -0x1cu));
+    return port_return(&port, port_u32(&port, ebp, -0x34u), port_u32(&port, ebp, 0x18));
 }
 
 uint32_t vertrix_port_text_draw_glyphs(PORT_SIGNATURE)

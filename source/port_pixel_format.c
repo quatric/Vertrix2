@@ -92,3 +92,92 @@ uint32_t vertrix_port_pixel_pack(PORT_SIGNATURE)
     port_set8(&port, 0, LAST_KIND, kind);
     return port_return(&port, colour, colour);
 }
+
+uint32_t vertrix_port_pixel_format_from_masks(PORT_SIGNATURE)
+{
+    enum
+    {
+        ARGUMENTS = 1
+    };
+    static const uint8_t kinds[][3] = {
+        {8, 0, 1}, {0xf, 1, 2}, {0x10, 2, 2}, {0x18, 3, 3}, {0x20, 4, 4}};
+    uint8_t stack[8 + 4 * ARGUMENTS];
+    Port port;
+    uint32_t format = entry->eax;
+    uint32_t masks[4];
+    uint32_t bit;
+    uint32_t channel;
+    uint32_t sum;
+    unsigned i;
+    port_open_arguments(&port, stack, calls, services, globals, entry, 0, ARGUMENTS);
+    for (channel = 0; channel < 8; channel++)
+    {
+        port_set8(&port, format, 0x15 + channel, 0);
+    }
+    port_set32(&port, format, 4, entry->edx);
+    port_set32(&port, format, 8, entry->ebx);
+    port_set32(&port, format, 0xc, entry->ecx);
+    masks[0] = port_u32(&port, format, 4);
+    masks[1] = port_u32(&port, format, 8);
+    port_set32(&port, format, 0x10, port_u32(&port, entry->esp, 4));
+    masks[2] = port_u32(&port, format, 0xc);
+    masks[3] = port_u32(&port, format, 0x10);
+    /* Per channel: its bit count at +0x15 and the zero bits below its lowest set bit at +0x19. */
+    for (bit = 0; bit < 32; bit++)
+    {
+        for (channel = 0; channel < 4; channel++)
+        {
+            if ((masks[channel] & 1) != 0)
+            {
+                port_set8(&port, format, 0x15 + channel,
+                          port_u8(&port, format, 0x15 + channel) + 1);
+            }
+            else if (port_u8(&port, format, 0x15 + channel) == 0)
+            {
+                port_set8(&port, format, 0x19 + channel,
+                          port_u8(&port, format, 0x19 + channel) + 1);
+            }
+        }
+        for (channel = 0; channel < 4; channel++)
+        {
+            masks[channel] >>= 1;
+        }
+    }
+    port_set8(&port, format, 0x1d, 8 - port_u8(&port, format, 0x15));
+    port_set8(&port, format, 0x1e, 8 - port_u8(&port, format, 0x16));
+    port_set8(&port, format, 0x21, 0);
+    port_set8(&port, format, 0x1f, 8 - port_u8(&port, format, 0x17));
+    port_set8(&port, format, 0x22, 0);
+    port_set8(&port, format, 0x23, 0);
+    port_set8(&port, format, 0x20, 8 - port_u8(&port, format, 0x18));
+    port_set8(&port, format, 0x24, 0);
+    /* Each of the first three channels moves up 8 for each other one lying below it. */
+    for (channel = 0; channel < 3; channel++)
+    {
+        uint32_t other;
+        for (other = 0; other < 3; other++)
+        {
+            if (other != channel &&
+                port_u8(&port, format, 0x19 + channel) > port_u8(&port, format, 0x19 + other))
+            {
+                port_set8(&port, format, 0x21 + channel,
+                          port_u8(&port, format, 0x21 + channel) + 8);
+            }
+        }
+    }
+    sum = port_u8(&port, format, 0x15);
+    sum = (sum + port_u8(&port, format, 0x16)) & 0xff;
+    sum = (sum + port_u8(&port, format, 0x17)) & 0xff;
+    sum = (sum + port_u8(&port, format, 0x18)) & 0xff;
+    port_set8(&port, format, 0x24, 0x18);
+    for (i = 0; i < sizeof kinds / sizeof kinds[0]; i++)
+    {
+        if (sum == kinds[i][0])
+        {
+            port_set8(&port, format, 0x14, kinds[i][1]);
+            port_set8(&port, format, 0, kinds[i][2]);
+            return port_return(&port, 1, port_u8(&port, format, 0x16) << 8 | sum);
+        }
+    }
+    return port_return(&port, 0, port_u8(&port, format, 0x16) << 8 | sum);
+}
