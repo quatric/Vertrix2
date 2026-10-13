@@ -13442,3 +13442,178 @@ uint32_t vertrix_port_menu_item_input_449d60(PORT_SIGNATURE)
 {
     return menu_item_input(calls, services, globals, entry, 0x4fbef0, 0x449e10);
 }
+
+/* The actor frame shape of 0x44d250, 0x44c4c0 and their copies: `first` and 0x4ac500, then, when
+ * the counter is due (0x4ac520), its steps consumed (0x4ac540, 0x4ac5b0), the fade (+0x4a set to
+ * `start`, +0x4c to `fade`) stepped (0x4ad530) and, once it is done, the update `next` set
+ * (0x4ac8f0); the image is refreshed (0x4ac8a0) in every case. */
+static uint32_t actor_fade_frame_with(PORT_SIGNATURE, uint32_t first, uint32_t next, uint32_t start,
+                                      uint32_t fade)
+{
+    Port port;
+    uint32_t actor = entry->eax;
+    uint32_t ebx = entry->ebx;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    port_call(&port, first, actor, entry->edx, ebx, actor);
+    port_call(&port, 0x4ac500, actor, vertrix_lift_edx, ebx, actor);
+    if (port_call(&port, 0x4ac520, actor, vertrix_lift_edx, ebx, actor) == 1)
+    {
+        result = port_call(&port, 0x4ac540, actor, vertrix_lift_edx, ebx, actor);
+        port_call(&port, 0x4ac5b0, actor, result, ebx, actor);
+        port_set16(&port, actor, 0x4a, start);
+        port_set16(&port, actor, 0x4c, fade);
+        if (port_call(&port, 0x4ad530, actor, vertrix_lift_edx, ebx, actor) == 0)
+        {
+            port_call(&port, 0x4ac8f0, actor, next, ebx, actor);
+        }
+    }
+    result = port_call(&port, 0x4ac8a0, actor, vertrix_lift_edx, ebx, actor);
+    return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_actor_fade_frame_44d250(PORT_SIGNATURE)
+{
+    return actor_fade_frame_with(calls, services, globals, entry, 0x4ac1f0, 0x44d2c0, 0, 0x14);
+}
+
+uint32_t vertrix_port_actor_fade_frame_44d4f0(PORT_SIGNATURE)
+{
+    return actor_fade_frame_with(calls, services, globals, entry, 0x4ac1f0, 0x44d560, 0, 0x14);
+}
+
+uint32_t vertrix_port_actor_fade_frame_44d840(PORT_SIGNATURE)
+{
+    return actor_fade_frame_with(calls, services, globals, entry, 0x4ac1f0, 0x44c860, 0, 0x14);
+}
+
+uint32_t vertrix_port_actor_fade_frame_44dc80(PORT_SIGNATURE)
+{
+    return actor_fade_frame_with(calls, services, globals, entry, 0x4ac1f0, 0x44c860, 0, 0x14);
+}
+
+uint32_t vertrix_port_actor_fade_frame_44e670(PORT_SIGNATURE)
+{
+    return actor_fade_frame_with(calls, services, globals, entry, 0x4ac1f0, 0x44c860, 0, 0xa);
+}
+
+uint32_t vertrix_port_actor_fade_frame_44f0b0(PORT_SIGNATURE)
+{
+    return actor_fade_frame_with(calls, services, globals, entry, 0x4ac1f0, 0x44c860, 0, 0x14);
+}
+
+uint32_t vertrix_port_actor_fade_frame_44f770(PORT_SIGNATURE)
+{
+    return actor_fade_frame_with(calls, services, globals, entry, 0x4ac1f0, 0x44c860, 0, 0xa);
+}
+
+uint32_t vertrix_port_actor_fade_frame_44f920(PORT_SIGNATURE)
+{
+    return actor_fade_frame_with(calls, services, globals, entry, 0x4ac1f0, 0x44c860, 0, 0x14);
+}
+
+uint32_t vertrix_port_actor_fade_frame_45be40(PORT_SIGNATURE)
+{
+    return actor_fade_frame_with(calls, services, globals, entry, 0x4ac1f0, 0x44c860, 0, 0x14);
+}
+
+uint32_t vertrix_port_actor_fade_frame_44c4c0(PORT_SIGNATURE)
+{
+    return actor_fade_frame_with(calls, services, globals, entry, 0x44c2a0, 0x44c530, 0x28, 0xa);
+}
+
+uint32_t vertrix_port_actor_fade_frame_44d1e0(PORT_SIGNATURE)
+{
+    return actor_fade_frame_with(calls, services, globals, entry, 0x4ac1f0, 0x44d250, 0x64, 0xa);
+}
+
+uint32_t vertrix_port_actor_fade_frame_44d480(PORT_SIGNATURE)
+{
+    return actor_fade_frame_with(calls, services, globals, entry, 0x4ac1f0, 0x44d4f0, 0xff9c, 0x14);
+}
+
+uint32_t vertrix_port_actor_fade_frame_44d7d0(PORT_SIGNATURE)
+{
+    return actor_fade_frame_with(calls, services, globals, entry, 0x4ac1f0, 0x44d840, 0x32, 0xa);
+}
+
+uint32_t vertrix_port_actor_fade_frame_44f040(PORT_SIGNATURE)
+{
+    return actor_fade_frame_with(calls, services, globals, entry, 0x4ac1f0, 0x44f0b0, 0x32, 0xa);
+}
+
+uint32_t vertrix_port_actor_fade_frame_44f700(PORT_SIGNATURE)
+{
+    return actor_fade_frame_with(calls, services, globals, entry, 0x4ac1f0, 0x44f770, 0x64, 0xa);
+}
+
+uint32_t vertrix_port_actor_fade_frame_45bdd0(PORT_SIGNATURE)
+{
+    return actor_fade_frame_with(calls, services, globals, entry, 0x4ac1f0, 0x45be40, 0xff9c, 0x14);
+}
+
+/* The scene step shape of 0x41c0f0 and its six copies: under the guard record `guard` run `first`,
+ * then set the scene's step `step` (0x418840) and next `next` (0x418820). */
+static uint32_t scene_step_with(PORT_SIGNATURE, uint32_t first, uint32_t step, uint32_t next,
+                                uint32_t guard)
+{
+    /* push ebp, ebx, ecx, edx, esi, then 0x14 bytes holding the guard record. */
+    enum
+    {
+        BELOW = 0x28
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t scene = entry->eax;
+    uint32_t record = ebp - 0x24;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    port_set32(&port, ebp, 0, entry->ebp);
+    port_set32(&port, ebp, -4u, entry->ebx);
+    port_set32(&port, ebp, -8u, entry->ecx);
+    port_set32(&port, ebp, -0xcu, entry->edx);
+    port_set32(&port, ebp, -0x10u, entry->esi);
+    port_set32(&port, record, 0, port.env.chain);
+    port_set32(&port, ebp, -0x20u, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x1cu, guard);
+    port_set32(&port, ebp, -0x18u, 0);
+    port_call(&port, first, scene, GUARD_HANDLER, guard, scene);
+    port_call(&port, 0x418840, scene, step, guard, scene);
+    port_call(&port, 0x418820, scene, next, guard, scene);
+    return port_return(&port, port_u32(&port, record, 0), entry->edx);
+}
+
+uint32_t vertrix_port_scene_step_41c0f0(PORT_SIGNATURE)
+{
+    return scene_step_with(calls, services, globals, entry, 0x41c020, 0x421f10, 0x41b680, 0x514024);
+}
+
+uint32_t vertrix_port_scene_step_41c160(PORT_SIGNATURE)
+{
+    return scene_step_with(calls, services, globals, entry, 0x41c020, 0x421f10, 0x41f080, 0x514028);
+}
+
+uint32_t vertrix_port_scene_step_41c1d0(PORT_SIGNATURE)
+{
+    return scene_step_with(calls, services, globals, entry, 0x41c020, 0x421f10, 0x41c6d0, 0x51402c);
+}
+
+uint32_t vertrix_port_scene_step_41c240(PORT_SIGNATURE)
+{
+    return scene_step_with(calls, services, globals, entry, 0x41c020, 0x421f10, 0x41c6d0, 0x514030);
+}
+
+uint32_t vertrix_port_scene_step_41c2b0(PORT_SIGNATURE)
+{
+    return scene_step_with(calls, services, globals, entry, 0x41c020, 0x421f10, 0x41c6d0, 0x514034);
+}
+
+uint32_t vertrix_port_scene_step_41c6d0(PORT_SIGNATURE)
+{
+    return scene_step_with(calls, services, globals, entry, 0x41c410, 0x423960, 0x41c7b0, 0x514044);
+}
+
+uint32_t vertrix_port_scene_step_41c740(PORT_SIGNATURE)
+{
+    return scene_step_with(calls, services, globals, entry, 0x41c410, 0x423960, 0x41c7b0, 0x514048);
+}

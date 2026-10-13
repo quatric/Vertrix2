@@ -2329,4 +2329,42 @@ uint32_t vertrix_port_menu_item_input_449aa0(PORT_SIGNATURE);
 uint32_t vertrix_port_menu_item_input_449c00(PORT_SIGNATURE);
 uint32_t vertrix_port_menu_item_input_449d60(PORT_SIGNATURE);
 
+/* Originals 0x44d250, 0x44d4f0, 0x44d840, 0x44dc80, 0x44e670, 0x44f0b0, 0x44f770, 0x44f920 and
+ * 0x45be40(eax = actor): when the counter is due, step a fade from 0 by 0x14 (0xa for 0x44e670 and
+ * 0x44f770) and on its end set the update 0x44d2c0, 0x44d560 or (the rest) 0x44c860; then refresh
+ * the image (0x4ac8a0). Keep edx. */
+uint32_t vertrix_port_actor_fade_frame_44d250(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_fade_frame_44d4f0(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_fade_frame_44d840(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_fade_frame_44dc80(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_fade_frame_44e670(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_fade_frame_44f0b0(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_fade_frame_44f770(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_fade_frame_44f920(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_fade_frame_45be40(PORT_SIGNATURE);
+
+/* Originals 0x44c4c0, 0x44d1e0, 0x44d480, 0x44d7d0, 0x44f040, 0x44f700 and 0x45bdd0(eax = actor):
+ * the same frame starting the fade at 0x28, 0x64, -0x64, 0x32, 0x32, 0x64 and -0x64 (by 0xa, or
+ * 0x14 for 0x44d480 and 0x45bdd0) into the updates 0x44c530, 0x44d250, 0x44d4f0, 0x44d840,
+ * 0x44f0b0, 0x44f770 and 0x45be40; 0x44c4c0 runs 0x44c2a0 first, the rest 0x4ac1f0. */
+uint32_t vertrix_port_actor_fade_frame_44c4c0(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_fade_frame_44d1e0(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_fade_frame_44d480(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_fade_frame_44d7d0(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_fade_frame_44f040(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_fade_frame_44f700(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_fade_frame_45bdd0(PORT_SIGNATURE);
+
+/* Originals 0x41c0f0, 0x41c160, 0x41c1d0, 0x41c240, 0x41c2b0, 0x41c6d0 and 0x41c740(eax = scene):
+ * under the guard records 0x514024..0x514034, 0x514044 and 0x514048 run 0x41c020 (0x41c410 for the
+ * last two), set the step 0x421f10 (0x423960) and the next 0x41b680, 0x41f080, 0x41c6d0 (three) or
+ * 0x41c7b0 (two). Return the saved chain. */
+uint32_t vertrix_port_scene_step_41c0f0(PORT_SIGNATURE);
+uint32_t vertrix_port_scene_step_41c160(PORT_SIGNATURE);
+uint32_t vertrix_port_scene_step_41c1d0(PORT_SIGNATURE);
+uint32_t vertrix_port_scene_step_41c240(PORT_SIGNATURE);
+uint32_t vertrix_port_scene_step_41c2b0(PORT_SIGNATURE);
+uint32_t vertrix_port_scene_step_41c6d0(PORT_SIGNATURE);
+uint32_t vertrix_port_scene_step_41c740(PORT_SIGNATURE);
+
 #endif
