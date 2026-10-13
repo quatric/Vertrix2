@@ -1804,6 +1804,16 @@
   "lifted": "lifted_f4872f0",
   "chunk": "whole_4"
  },
+ "0x4873d0": {
+  "port": "vertrix_port_image_list_file_read",
+  "lifted": "lifted_f4873d0",
+  "chunk": "whole_4"
+ },
+ "0x4875a0": {
+  "port": "vertrix_port_array_list_build",
+  "lifted": "lifted_array_list_build",
+  "chunk": "whole_32"
+ },
  "0x487640": {
   "port": "vertrix_port_dword_array_allocate",
   "lifted": "lifted_list_node_alloc",

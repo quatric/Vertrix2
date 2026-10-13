@@ -53,7 +53,6 @@ enum
     LIFTED_F487130_STACK = 256,
     LIFTED_F4871D0_STACK = 232,
     LIFTED_FORWARD_CALL_STACK = 68,
-    LIFTED_F4873D0_STACK = 420,
     LIFTED_ARRAY_LIST_RELEASE_STACK = 104,
     LIFTED_TABLE_OBJECT_CONSTRUCT_STACK = 68,
     LIFTED_F487920_STACK = 68,
@@ -394,10 +393,6 @@ uint32_t lifted_f4871d0(const VertrixCalls *calls, const VertrixFactoryServices 
 /* Original 0x4872b0. */
 uint32_t lifted_forward_call(const VertrixCalls *calls, const VertrixFactoryServices *services,
                              const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4873d0. */
-uint32_t lifted_f4873d0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4874f0. */
 uint32_t lifted_array_list_release(const VertrixCalls *calls,

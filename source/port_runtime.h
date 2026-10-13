@@ -1992,4 +1992,13 @@ uint32_t vertrix_port_table_file_read(PORT_SIGNATURE);
  * keeps edx. */
 uint32_t vertrix_port_image_file_load(PORT_SIGNATURE);
 
+/* Original 0x4873d0(eax = list, edx): open a file with a parser on the stack (0x48a620, 0x48a710
+ * with 0x5466c8) and read a word count (0x482bb0) and that many images (0x482d00) into a new array
+ * at +0, the count at +4. */
+uint32_t vertrix_port_image_list_file_read(PORT_SIGNATURE);
+
+/* Original 0x4875a0(eax = list, edx = count, ebx, ecx; ten stack arguments): a new array of count
+ * entries (+0, the count at +4), each built by 0x483060 from the arguments. */
+uint32_t vertrix_port_array_list_build(PORT_SIGNATURE);
+
 #endif
