@@ -141,4 +141,24 @@ uint32_t vertrix_port_exp(PORT_SIGNATURE);
  * negative n). Every helper gets the registers the original leaves in it. */
 uint32_t vertrix_port_power(PORT_SIGNATURE);
 
+/* Original 0x4c9b6a (edx:eax = x, ebx = 0 sine, 1 tangent, 2 cosine): the trigonometric core. An
+ * exponent (0x4db1fd) of 0x20 or more raises 0x4dad2e with entry ebx of 0x518824 | 0x2400. x is
+ * reduced by pi/4 (0x4db250, stack arguments: the octant at ebp - 0x28, the rest at ebp - 0x34),
+ * the octant moved by 2 for the cosine; an odd octant takes pi/4 - r. The exponent of r picks the
+ * series length (0x518800); the cosine series (0x4db6a4 on 0x5187b8) and the sine series (0x4db6d9
+ * on 0x518770) run as the octant and the kind need, below 2^-26 r and 1 stand in. Octant bit 4
+ * negates; the tangent divides by the other series (0 gives the signed infinity 0x51ab90 after
+ * 0x4dae94). An exponent of 0x1c or more raises 0x4dad38 with 0x200. Every helper gets the
+ * registers the original leaves in it. */
+uint32_t vertrix_port_trig(PORT_SIGNATURE);
+
+/* Original 0x4db250 (stack: a, b, int *quotient, double *remainder; registers kept): the
+ * remainder of a by b with the low bits of the quotient. b's high dword 0 gives 0 and 0. Both
+ * mantissas get the hidden bit (a denormal's too); an exponent of a below b's leaves a as the
+ * remainder. Otherwise long division, one quotient bit per exponent step: a doubled past 2^53
+ * subtracts without comparing, below 2^52 shifts in a 0. A non-zero remainder is normalized at
+ * b's exponent; a's sign is set unless the high dword is 0, and the quotient is negated when the
+ * signs differ. */
+uint32_t vertrix_port_double_remainder(PORT_SIGNATURE);
+
 #endif

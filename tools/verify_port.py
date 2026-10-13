@@ -24,8 +24,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 # Ports whose original runs long loops in Unicorn: checked with fewer cases (still more than the
 # 64 per mode the batch used for the lifted copies).
+# cdecl routines (plain ret) read stack arguments the lifter cannot count: the oracle draws this
+# many, so stores through pointer arguments are compared.
+STACK_ARGUMENTS = {0x4db250: 6}
 SLOW = {'0x48a930': 64, '0x492980': 256, '0x4ec307': 256, '0x492460': 256, '0x4922f0': 256,
-        '0x4db6a4': 256, '0x405720': 512, '0x4af560': 256, '0x4b1fa0': 256, '0x4ae3e0': 1024,
+        '0x4db6a4': 256, '0x405720': 512, '0x4af560': 256, '0x4b1fa0': 256, '0x4db250': 512, '0x4ae3e0': 1024,
         # Copies whose random pointers overrun a pool page past these counts, for the lifted copy
         # as well.
         '0x4ab310': 64, '0x4ab2a0': 128}
@@ -94,7 +97,8 @@ def verify(address, function, cases, timeout=600):
     scratch = ROOT / 'build' / 'ports' / name
     lifted = scratch / 'lifted'
     lifted.mkdir(parents=True, exist_ok=True)
-    text, header, meta = lift.render(address, name, lift.return_arguments(address))
+    text, header, meta = lift.render(address, name,
+                                     STACK_ARGUMENTS.get(address, lift.return_arguments(address)))
     meta['address'] = address
     for directory in (scratch, lifted):
         (directory / ('lifted_%s.h' % name)).write_text(header)

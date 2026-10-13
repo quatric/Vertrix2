@@ -62,6 +62,21 @@ static inline void port_open_stack(Port *port, uint8_t *stack, const VertrixCall
     lift_begin(&port->env, calls, services, globals, stack, below, 0, &top);
 }
 
+/* port_open_stack for a routine that reads `count` stack arguments above its return slot (a cdecl
+ * routine, whose count the lifter cannot see): `stack` holds below + 8 + 4 * count bytes. */
+static inline void port_open_arguments(Port *port, uint8_t *stack, const VertrixCalls *calls,
+                                       const VertrixFactoryServices *services,
+                                       const VertrixGlobals *globals, const LiftEntry *entry,
+                                       uint32_t below, unsigned count)
+{
+    LiftEntry top = *entry;
+    if (vertrix_port_garbage_size > below)
+    {
+        top.garbage += vertrix_port_garbage_size - below;
+    }
+    lift_begin(&port->env, calls, services, globals, stack, below, count, &top);
+}
+
 /* port_open_stack with the frame in the port, for frames of at most PORT_FRAME_LIMIT bytes. */
 static inline void port_open_frame(Port *port, const VertrixCalls *calls,
                                    const VertrixFactoryServices *services,

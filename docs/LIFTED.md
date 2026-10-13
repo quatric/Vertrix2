@@ -877,7 +877,7 @@ The synthesis (0x405720, 491 instructions) is three windowed sums, written as lo
 single helpers. The port keeps the ebx and ecx its helpers see, which carry the loop counters and
 the last clamp's limit.
 
-685 routines run as clean ports. Counted by calls, they handle 96% of the calls to lifted
+687 routines run as clean ports. Counted by calls, they handle 96% of the calls to lifted
 routines in the gameplay profile.
 
 Some ports were checked in one register mode only, at a reduced number of cases, because their
@@ -899,6 +899,21 @@ leaves in it, the caller's ebx and ecx carrying over a call as the lifted code a
 subtract's software add is written out in full; its coprocessor path reports through `lift_x87`
 as the lifted copy does. With these the four busiest lifted routines of the gameplay profile
 (about 2.2 million calls in 1,500 ticks) are ports.
+
+The trigonometric core (0x4c9b6a) and the remainder it reduces by (0x4db250) followed. The
+remainder is cdecl: its plain `ret` hides its six stack arguments from the lifter, so the batch
+oracle had drawn none and never compared its stores through the quotient and remainder pointers.
+`STACK_ARGUMENTS` in `tools/verify_port.py` gives the count for such routines, and a port opens
+with `port_open_arguments` (`source/port.h`) to read them. Changing either stored value now fails
+the check; at 4,096 cases the lifted copy times out with wide registers, so it is listed in `SLOW`
+at 512.
+
+The batch lift of 0x4c9b6a called 0x4db250 with no stack arguments (`lift_call(..., 0, esp)`),
+for the same reason, so on the host the remainder wrote through garbage pointers and every call
+answered 1.0: 17,262 cosines in the 3,000-tick run. The port passes the six arguments, and its
+answers match the C library's sin, cos and tan to 1e-12 except tan(pi/2), which the original turns
+into infinity (a zero denominator, 0x4dae94). The host frames are unchanged; the audio differs
+from byte 4,828,149 of the 3,000-tick WAV, and the new baseline is `work/abase2/a.wav`.
 
 With the ports in, the host run matches the recorded baselines: the 1,500-tick frames (9 of 9
 identical) and the 3,000-tick audio (WAV byte-identical). Boundary calls fell from 62,764 to 3; the

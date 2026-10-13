@@ -43,7 +43,13 @@ enum
     DOUBLE_SPLIT_CALL = 0x4dae1e,
     POWER_ERROR = 0x4dad38,
     LOG = 0x4c9e2f,
-    EXP = 0x4daed8
+    EXP = 0x4daed8,
+    DOUBLE_REMAINDER = 0x4db250,
+    DOUBLE_POLYNOMIAL_ODD = 0x4db6d9,
+    TRIG_ERRORS = 0x518824,
+    TRIG_DEGREES = 0x518800,
+    TRIG_COSINE = 0x5187b8,
+    TRIG_SINE = 0x518770
 };
 
 uint32_t vertrix_port_double_compare(PORT_SIGNATURE)
@@ -1207,4 +1213,298 @@ store:
     port_set32(&port, x, 4, edx);
 result:
     return port_return(&port, port_u32(&port, x, 0), port_u32(&port, x, 4));
+}
+
+uint32_t vertrix_port_trig(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x48
+    };
+    uint8_t stack[BELOW + 8];
+    Port port;
+    uint32_t base = entry->esp - 4; /* the original's ebp */
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi;
+    uint32_t edi = entry->edi;
+    uint32_t arguments[6];
+#define LOCAL(offset) base, (uint32_t)-(offset)
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    port_set32(&port, base, 0, entry->ebp);
+    port_set32(&port, LOCAL(4), entry->ecx);
+    port_set32(&port, LOCAL(8), entry->esi);
+    port_set32(&port, LOCAL(0xc), entry->edi);
+    port_set32(&port, LOCAL(0x44), eax);
+    port_set32(&port, LOCAL(0x40), edx);
+    esi = ebx;
+    ebx = base - 0x2c;
+    log_call(&port, DOUBLE_EXPONENT_SPLIT, &eax, &edx, ebx, ecx);
+    if ((int32_t)port_u32(&port, LOCAL(0x2c)) >= 0x20)
+    {
+        eax = port_u32(&port, esi * 4, TRIG_ERRORS) | 0x2400;
+        edx = base - 0x44;
+        log_call(&port, FLOAT_ERROR, &eax, &edx, ebx, ecx);
+        return port_return(&port, eax, edx);
+    }
+    eax = base - 0x28;
+    ebx = port_u32(&port, LOCAL(0x40));
+    ecx = port_u32(&port, LOCAL(0x44));
+    arguments[0] = ecx;
+    arguments[1] = ebx;
+    arguments[2] = 0x54442d18u;
+    arguments[3] = 0x3fe921fbu;
+    arguments[4] = base - 0x28;
+    arguments[5] = base - 0x34;
+    eax = port_call_stack(&port, DOUBLE_REMAINDER, eax, edx, ebx, ecx, arguments, 6);
+    edx = port_u32(&port, LOCAL(0x28));
+    eax = ((esi & 2) + edx) & 7;
+    port_set32(&port, LOCAL(0x28), eax);
+    if ((port_u8(&port, LOCAL(0x28)) & 1) != 0)
+    {
+        eax = 0x54442d18u;
+        edx = 0x3fe921fbu;
+        ebx = port_u32(&port, LOCAL(0x34));
+        ecx = port_u32(&port, LOCAL(0x30));
+        log_call(&port, DOUBLE_SUBTRACT, &eax, &edx, ebx, ecx);
+        port_set32(&port, LOCAL(0x34), eax);
+        port_set32(&port, LOCAL(0x30), edx);
+    }
+    ebx = base - 0x1c;
+    eax = port_u32(&port, LOCAL(0x34));
+    edx = port_u32(&port, LOCAL(0x30));
+    log_call(&port, DOUBLE_EXPONENT_SPLIT, &eax, &edx, ebx, ecx);
+    ebx = port_u32(&port, LOCAL(0x1c));
+    if ((int32_t)ebx < -0x1a)
+    {
+        edi = port_u32(&port, LOCAL(0x34));
+        eax = port_u32(&port, LOCAL(0x30));
+        ecx = 0;
+        port_set32(&port, LOCAL(0x14), eax);
+        eax = 0x3ff00000u;
+        port_set32(&port, LOCAL(0x18), ecx);
+        port_set32(&port, LOCAL(0x10), eax);
+    }
+    else
+    {
+        if ((int32_t)ebx > 0)
+        {
+            port_set32(&port, LOCAL(0x1c), 0);
+        }
+        edx = 0u - port_u32(&port, LOCAL(0x1c));
+        port_set32(&port, LOCAL(0x1c), edx);
+        if ((int32_t)edx > 8)
+        {
+            port_set32(&port, LOCAL(0x1c), 8);
+        }
+        eax = port_u32(&port, port_u32(&port, LOCAL(0x1c)) * 4, TRIG_DEGREES);
+        port_set32(&port, LOCAL(0x1c), eax);
+        eax = port_u32(&port, LOCAL(0x28)) + 1;
+        if ((eax & 2) != 0 || esi == 1)
+        {
+            edx = port_u32(&port, LOCAL(0x1c));
+            port_set32(&port, LOCAL(0x24), 8 - edx);
+            edx = TRIG_COSINE + (edx << 3);
+            eax = port_u32(&port, LOCAL(0x34));
+            port_set32(&port, LOCAL(0x20), edx);
+            edx = port_u32(&port, LOCAL(0x30));
+            ebx = eax;
+            ecx = edx;
+            log_call(&port, DOUBLE_MULTIPLY, &eax, &edx, ebx, ecx);
+            ecx = port_u32(&port, LOCAL(0x24));
+            ebx = port_u32(&port, LOCAL(0x20));
+            log_call(&port, DOUBLE_POLYNOMIAL, &eax, &edx, ebx, ecx);
+            port_set32(&port, LOCAL(0x18), eax);
+            port_set32(&port, LOCAL(0x10), edx);
+        }
+        eax = port_u32(&port, LOCAL(0x28)) + 1;
+        if ((eax & 2) == 0 || esi == 1)
+        {
+            ebx = port_u32(&port, LOCAL(0x1c));
+            eax = port_u32(&port, LOCAL(0x34));
+            ecx = 8 - ebx;
+            ebx = (ebx << 3) + TRIG_SINE;
+            edx = port_u32(&port, LOCAL(0x30));
+            log_call(&port, DOUBLE_POLYNOMIAL_ODD, &eax, &edx, ebx, ecx);
+            edi = eax;
+            port_set32(&port, LOCAL(0x14), edx);
+        }
+    }
+    eax = port_u32(&port, LOCAL(0x28)) + 1;
+    if ((eax & 2) != 0)
+    {
+        port_set32(&port, LOCAL(0x3c), port_u32(&port, LOCAL(0x18)));
+        eax = port_u32(&port, LOCAL(0x10));
+    }
+    else
+    {
+        eax = port_u32(&port, LOCAL(0x14));
+        port_set32(&port, LOCAL(0x3c), edi);
+    }
+    port_set32(&port, LOCAL(0x38), eax);
+    if ((port_u8(&port, LOCAL(0x28)) & 4) != 0)
+    {
+        eax = port_u32(&port, LOCAL(0x3c));
+        edx = port_u32(&port, LOCAL(0x38));
+        log_call(&port, DOUBLE_NEGATE, &eax, &edx, ebx, ecx);
+        port_set32(&port, LOCAL(0x3c), eax);
+        port_set32(&port, LOCAL(0x38), edx);
+    }
+    if (esi == 1)
+    {
+        edx = port_u32(&port, LOCAL(0x28)) + 2;
+        eax = port_u32(&port, LOCAL(0x28)) + 3;
+        port_set32(&port, LOCAL(0x28), edx);
+        if ((eax & 2) != 0)
+        {
+            ebx = port_u32(&port, LOCAL(0x18));
+            ecx = port_u32(&port, LOCAL(0x10));
+        }
+        else
+        {
+            ecx = port_u32(&port, LOCAL(0x14));
+            ebx = edi;
+        }
+        if ((port_u8(&port, LOCAL(0x28)) & 4) != 0)
+        {
+            eax = ebx;
+            edx = ecx;
+            log_call(&port, DOUBLE_NEGATE, &eax, &edx, ebx, ecx);
+            ebx = eax;
+            ecx = edx;
+        }
+        if (ecx == 0)
+        {
+            log_call(&port, SCALE_OVERFLOW, &eax, &edx, ebx, ecx);
+            eax = port_u32(&port, DOUBLE_INFINITY, 0);
+            edx = port_u32(&port, DOUBLE_INFINITY, 4);
+            if ((int32_t)port_u32(&port, LOCAL(0x38)) <= 0)
+            {
+                log_call(&port, DOUBLE_NEGATE, &eax, &edx, ebx, ecx);
+            }
+            return port_return(&port, eax, edx);
+        }
+        eax = port_u32(&port, LOCAL(0x3c));
+        edx = port_u32(&port, LOCAL(0x38));
+        log_call(&port, DOUBLE_DIVIDE, &eax, &edx, ebx, ecx);
+        port_set32(&port, LOCAL(0x3c), eax);
+        port_set32(&port, LOCAL(0x38), edx);
+    }
+    if ((int32_t)port_u32(&port, LOCAL(0x2c)) >= 0x1c)
+    {
+        ebx = base - 0x3c;
+        eax = port_u32(&port, esi * 4, TRIG_ERRORS) | 0x200;
+        edx = base - 0x44;
+        log_call(&port, POWER_ERROR, &eax, &edx, ebx, ecx);
+        return port_return(&port, eax, edx);
+    }
+    return port_return(&port, port_u32(&port, LOCAL(0x3c)), port_u32(&port, LOCAL(0x38)));
+#undef LOCAL
+}
+
+uint32_t vertrix_port_double_remainder(PORT_SIGNATURE)
+{
+    enum
+    {
+        COMPARE,
+        SUBTRACT,
+        SHIFT_IN,
+        BELOW = 0x24,
+        ARGUMENTS = 6
+    };
+    uint8_t stack[BELOW + 8 + 4 * ARGUMENTS];
+    Port port;
+    uint32_t base = entry->esp - 4; /* the original's ebp */
+    uint32_t a_low;
+    uint32_t a_high;
+    uint32_t b_low;
+    uint32_t b_high;
+    uint32_t quotient = 0;
+    uint32_t exponent;
+    uint32_t remainder;
+    uint32_t high;
+    uint64_t a;
+    uint64_t b;
+    port_open_arguments(&port, stack, calls, services, globals, entry, BELOW, ARGUMENTS);
+    /* The pushes: the registers come back from these slots after the stores below. */
+    port_set32(&port, base, 0, entry->ebp);
+    port_set32(&port, base, (uint32_t)-4, entry->edx);
+    port_set32(&port, base, (uint32_t)-8, entry->ecx);
+    port_set32(&port, base, (uint32_t)-0xc, entry->ebx);
+    port_set32(&port, base, (uint32_t)-0x10, entry->eax);
+    a_low = port_u32(&port, base, 8);
+    a_high = port_u32(&port, base, 0xc);
+    b_low = port_u32(&port, base, 0x10);
+    b_high = port_u32(&port, base, 0x14);
+    if (b_high == 0)
+    {
+        port_set32(&port, port_u32(&port, base, 0x18), 0, 0);
+        remainder = port_u32(&port, base, 0x1c);
+        port_set32(&port, remainder, 0, 0);
+        port_set32(&port, remainder, 4, 0);
+        return port_return(&port, port_u32(&port, base, (uint32_t)-0x10),
+                           port_u32(&port, base, (uint32_t)-4));
+    }
+    port_set32(&port, base, (uint32_t)-0x14, entry->esi);
+    port_set32(&port, base, (uint32_t)-0x18, entry->edi);
+    port_set32(&port, base, (uint32_t)-0x1c, a_high);
+    port_set32(&port, base, (uint32_t)-0x20, b_high);
+    exponent = (a_high & EXPONENT) - (b_high & EXPONENT);
+    a = (uint64_t)((a_high & MANTISSA_HIGH) | EXPONENT_UNIT) << 32 | a_low;
+    b = (uint64_t)((b_high & MANTISSA_HIGH) | EXPONENT_UNIT) << 32 | b_low;
+    if ((int32_t)exponent < 0)
+    {
+        /* |a| below |b|'s exponent: a is the remainder. */
+        exponent += b_high & EXPONENT;
+    }
+    else
+    {
+        int state = COMPARE;
+        for (;;)
+        {
+            uint32_t bit = 0;
+            if (state == SUBTRACT || (state == COMPARE && a >= b))
+            {
+                a -= b;
+                bit = 1;
+            }
+            quotient = quotient * 2 + bit;
+            exponent -= EXPONENT_UNIT;
+            if ((int32_t)exponent < 0)
+            {
+                break;
+            }
+            a <<= 1;
+            high = (uint32_t)(a >> 32);
+            state = high >= 0x200000 ? SUBTRACT : high >= EXPONENT_UNIT ? COMPARE : SHIFT_IN;
+        }
+        exponent = 0;
+        if (a != 0)
+        {
+            while (((uint32_t)(a >> 32) & 0x200000) == 0)
+            {
+                a <<= 1;
+                exponent -= EXPONENT_UNIT;
+            }
+            a >>= 1;
+            exponent += EXPONENT_UNIT + (b_high & EXPONENT);
+        }
+    }
+    high = ((uint32_t)(a >> 32) & MANTISSA_HIGH) + exponent;
+    if (high != 0)
+    {
+        high |= a_high & SIGN;
+    }
+    if (((a_high ^ b_high) & SIGN) != 0)
+    {
+        quotient = 0u - quotient;
+    }
+    port_set32(&port, port_u32(&port, base, 0x18), 0, quotient);
+    remainder = port_u32(&port, base, 0x1c);
+    port_set32(&port, remainder, 0, (uint32_t)a);
+    port_set32(&port, remainder, 4, high);
+    return port_return(&port, port_u32(&port, base, (uint32_t)-0x10),
+                       port_u32(&port, base, (uint32_t)-4));
 }
