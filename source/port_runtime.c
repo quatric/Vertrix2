@@ -12198,3 +12198,119 @@ uint32_t vertrix_port_sound_device_open(PORT_SIGNATURE)
     }
     return port_return(&port, eax, entry->edx);
 }
+
+uint32_t vertrix_port_font_set_construct(PORT_SIGNATURE)
+{
+    /* push ebp, ebx, ecx, edx, esi, edi, then 0x20 bytes holding the guard record. */
+    enum
+    {
+        BELOW = 0x38,
+        GUARD = 0x517740
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t object = entry->eax;
+    uint32_t part;
+    uint32_t set;
+    uint32_t index;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    port_set32(&port, ebp, 0, entry->ebp);
+    port_set32(&port, ebp, -4u, entry->ebx);
+    port_set32(&port, ebp, -8u, entry->ecx);
+    port_set32(&port, ebp, -0xcu, entry->edx);
+    port_set32(&port, ebp, -0x10u, entry->esi);
+    port_set32(&port, ebp, -0x14u, entry->edi);
+    port_set32(&port, ebp, -0x34u, port.env.chain);
+    port_set32(&port, ebp, -0x30u, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x2cu, GUARD);
+    port_set32(&port, ebp, -0x28u, 0);
+    port_set32(&port, ebp, -0x20u, object);
+    port_set8(&port, ebp, -0x1cu, 0);
+    /* The base (0x47e4f0), then three parts at +0x1ec, +0x200 and +0x214 (0x48d520), the guard
+     * state counting them; the set's table is 0x517994 with its part numbers, the set is kept at
+     * 0x558ccc and the eleven slots from 0x5bb47c are cleared. */
+    part = port_call(&port, 0x47e4f0, object, object, 4, 3);
+    port_set32(&port, ebp, -0x28u, 1);
+    part = port_call(&port, 0x48d520, part + 0x1ec, 2, 4, 3);
+    port_set32(&port, ebp, -0x28u, vertrix_lift_edx);
+    part = port_call(&port, 0x48d520, part + 0x14, vertrix_lift_edx, 4, 3);
+    port_set32(&port, ebp, -0x28u, 3);
+    set = port_call(&port, 0x48d520, part + 0x14, vertrix_lift_edx, 4, 3) - 0x214;
+    port_set32(&port, ebp, -0x28u, 4);
+    for (index = 0; index < 11; index++)
+    {
+        port_set32(&port, 0, 0x5bb47c + index * 4, 0);
+    }
+    port_set32(&port, set, 0x1c8, 0x517994);
+    port_set8(&port, set, 0x1cc, 3);
+    port_set8(&port, set, 0x1d0, 4);
+    port_set8(&port, set, 0x1d8, 5);
+    port_set8(&port, set, 0x1e0, 6);
+    port_set8(&port, set, 0x1e2, 7);
+    port_set8(&port, set, 0x1e4, 8);
+    port_set8(&port, set, 0x1e5, 9);
+    port_set8(&port, set, 0x1e6, 0xa);
+    port_set8(&port, set, 0x1e7, 2);
+    port_set32(&port, 0, 0x558ccc, set);
+    return port_return(&port, set, entry->edx);
+}
+
+uint32_t vertrix_port_surface_lock_test(PORT_SIGNATURE)
+{
+    /* push ebp, ebx, ecx, edx, esi, edi, then 0x64 bytes: a 100-byte surface description. */
+    enum
+    {
+        BELOW = 0x78
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t display = entry->eax;
+    uint32_t description = ebp - 0x78;
+    uint32_t attempt;
+    uint32_t ecx = entry->ecx;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    port_set32(&port, ebp, 0, entry->ebp);
+    port_set32(&port, ebp, -4u, entry->ebx);
+    port_set32(&port, ebp, -8u, entry->ecx);
+    port_set32(&port, ebp, -0xcu, entry->edx);
+    port_set32(&port, ebp, -0x10u, entry->esi);
+    port_set32(&port, ebp, -0x14u, entry->edi);
+    /* Up to twice: lock the surface at +0x68 (method +0x14, flags 0x1000400) and, when that
+     * works, unlock the one at +0x64 (method +0x2c); 1 once both work, 0 when either fails. */
+    for (attempt = 0; attempt < 2; attempt++)
+    {
+        uint32_t surface;
+        uint32_t other;
+        uint32_t table;
+        uint32_t lock[6];
+        uint32_t unlock[3];
+        port_set32(&port, description, 0, 0x64);
+        port_set32(&port, ebp, -0x28u, 0);
+        surface = port_u32(&port, display, 0x68);
+        ecx = port_u32(&port, surface, 0);
+        lock[0] = surface;
+        lock[1] = 0;
+        lock[2] = 0;
+        lock[3] = 0;
+        lock[4] = 0x1000400;
+        lock[5] = description;
+        if (port_call_stack(&port, port_u32(&port, ecx, 0x14), surface, description, attempt, ecx,
+                            lock, 6) != 0)
+        {
+            return port_return(&port, 0, entry->edx);
+        }
+        other = port_u32(&port, display, 0x64);
+        table = port_u32(&port, other, 0);
+        unlock[0] = other;
+        unlock[1] = 0;
+        unlock[2] = 1;
+        if (port_call_stack(&port, port_u32(&port, table, 0x2c), other, table, attempt, ecx, unlock,
+                            3) != 0)
+        {
+            return port_return(&port, 0, entry->edx);
+        }
+    }
+    return port_return(&port, 1, entry->edx);
+}

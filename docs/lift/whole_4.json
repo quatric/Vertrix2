@@ -1101,48 +1101,6 @@
   ],
   "address": 4747360
  },
- "f487080": {
-  "callees": {
-   "virtual_4870ad": [
-    6,
-    false
-   ],
-   "virtual_4870d6": [
-    3,
-    false
-   ]
-  },
-  "stack": 232,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   100,
-   104
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   1,
-   2,
-   3,
-   99,
-   100,
-   101
-  ],
-  "virtual": [
-   [
-    0,
-    20,
-    6
-   ],
-   [
-    0,
-    44,
-    3
-   ]
-  ],
-  "address": 4747392
- },
  "f487130": {
   "callees": {
    "virtual_48717b": [
@@ -2155,33 +2113,6 @@
    ]
   ],
   "address": 4763136
- },
- "f48b550": {
-  "callees": {
-   "0x47e4f0": [
-    0,
-    false
-   ],
-   "0x48d520": [
-    0,
-    false
-   ]
-  },
-  "stack": 140,
-  "arguments": 0,
-  "pointer_callees": [
-   "0x48d520"
-  ],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   31,
-   32,
-   33
-  ],
-  "virtual": [],
-  "address": 4765008
  },
  "f48b770": {
   "callees": {

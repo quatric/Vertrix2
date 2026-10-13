@@ -2133,4 +2133,13 @@ uint32_t vertrix_port_system_info_init(PORT_SIGNATURE);
  * success sets 0x5589e0. Keeps edx. */
 uint32_t vertrix_port_sound_device_open(PORT_SIGNATURE);
 
+/* Original 0x48b550(eax = object): construct the font set under the guard record 0x517740: the
+ * base (0x47e4f0), three parts (0x48d520) at +0x1ec, +0x200 and +0x214, the table 0x517994 and
+ * part numbers; clears 0x5bb47c..0x5bb4a4 and keeps the set at 0x558ccc. Returns it; keeps edx. */
+uint32_t vertrix_port_font_set_construct(PORT_SIGNATURE);
+
+/* Original 0x487080(eax = display): up to two tries locking the surface at +0x68 (method +0x14)
+ * then unlocking the one at +0x64 (method +0x2c); 1 when both work, else 0. Keeps edx. */
+uint32_t vertrix_port_surface_lock_test(PORT_SIGNATURE);
+
 #endif
