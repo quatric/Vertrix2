@@ -3451,6 +3451,33 @@ uint32_t vertrix_port_stream_open_513e60(PORT_SIGNATURE)
     return port_return(&port, result, vertrix_lift_edx);
 }
 
+uint32_t vertrix_port_stream_open_513e60_4182f0(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    result = port_call(&port, 0x4cea15, entry->eax, 7, 0x513e60, entry->ecx);
+    return port_return(&port, result, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_stream_open_513e60_418550(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    result = port_call(&port, 0x4cea15, entry->eax, 5, 0x513e60, entry->ecx);
+    return port_return(&port, result, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_stream_open_513e60_418570(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    result = port_call(&port, 0x4cea15, entry->eax, 6, 0x513e60, entry->ecx);
+    return port_return(&port, result, vertrix_lift_edx);
+}
+
 uint32_t vertrix_port_bank_slot_allocate(PORT_SIGNATURE)
 {
     Port port;
@@ -6094,7 +6121,8 @@ uint32_t vertrix_port_view_rect_set_locked(PORT_SIGNATURE)
     return port_return(&port, result, entry->edx);
 }
 
-uint32_t vertrix_port_marker_actor_add(PORT_SIGNATURE)
+/* 0x472100's actor of the kind `kind` at the rate `rate` (0x4ac7b0) with the update `next`. */
+static uint32_t marker_actor_add_with(PORT_SIGNATURE, uint32_t kind, uint32_t rate, uint32_t next)
 {
     Port port;
     uint32_t result;
@@ -6106,12 +6134,42 @@ uint32_t vertrix_port_marker_actor_add(PORT_SIGNATURE)
         actor = port_call(&port, 0x4abd70, actor, vertrix_lift_edx, entry->ebx, entry->ecx);
     }
     port_call_stack(&port, 0x4adf20, actor, 0, 0, 0, place, 5);
-    port_set32(&port, actor, 0, 7);
-    port_call(&port, 0x4ac7b0, actor, 1, 0, 0);
-    port_call(&port, 0x4ac8f0, actor, 0x456ea0, 0, 0);
+    port_set32(&port, actor, 0, kind);
+    port_call(&port, 0x4ac7b0, actor, rate, 0, 0);
+    port_call(&port, 0x4ac8f0, actor, next, 0, 0);
     port_call(&port, 0x4ac910, actor, 0, 0, 0);
     result = port_call(&port, 0x4b5e70, 0x54676c, actor, 0, 0);
     return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_marker_actor_add(PORT_SIGNATURE)
+{
+    return marker_actor_add_with(calls, services, globals, entry, 7, 1, 0x456ea0);
+}
+
+uint32_t vertrix_port_marker_actor_add_472020(PORT_SIGNATURE)
+{
+    return marker_actor_add_with(calls, services, globals, entry, 2, 1, 0x456de0);
+}
+
+uint32_t vertrix_port_marker_actor_add_472090(PORT_SIGNATURE)
+{
+    return marker_actor_add_with(calls, services, globals, entry, 2, 1, 0x456e40);
+}
+
+uint32_t vertrix_port_marker_actor_add_4721e0(PORT_SIGNATURE)
+{
+    return marker_actor_add_with(calls, services, globals, entry, 3, 1, 0x456fa0);
+}
+
+uint32_t vertrix_port_marker_actor_add_472250(PORT_SIGNATURE)
+{
+    return marker_actor_add_with(calls, services, globals, entry, 4, 1, 0x457000);
+}
+
+uint32_t vertrix_port_marker_actor_add_4722c0(PORT_SIGNATURE)
+{
+    return marker_actor_add_with(calls, services, globals, entry, 5, 3, 0x457060);
 }
 
 uint32_t vertrix_port_fade_ramp_build(PORT_SIGNATURE)
@@ -13973,4 +14031,43 @@ uint32_t vertrix_port_actor_value_frame_44d3a0(PORT_SIGNATURE)
 uint32_t vertrix_port_actor_value_frame_44d5f0(PORT_SIGNATURE)
 {
     return actor_value_frame(calls, services, globals, entry, 0x4ac1f0, 0xffffff9c, 0x14, 0x44d660);
+}
+
+uint32_t vertrix_port_actor_fade_frame_44c530(PORT_SIGNATURE)
+{
+    return actor_fade_frame_with(calls, services, globals, entry, 0x44c2a0, 0x44c3d0, 0, 2);
+}
+
+uint32_t vertrix_port_actor_fade_frame_44e600(PORT_SIGNATURE)
+{
+    return actor_fade_frame_with(calls, services, globals, entry, 0x4ac1f0, 0x44e670, 0x32, 5);
+}
+
+uint32_t vertrix_port_actor_fade_frame_45c0e0(PORT_SIGNATURE)
+{
+    return actor_fade_frame_with(calls, services, globals, entry, 0x4ac1f0, 0x44c860, 0xffd8, 2);
+}
+
+uint32_t vertrix_port_actor_value_frame_44d660(PORT_SIGNATURE)
+{
+    return actor_value_frame(calls, services, globals, entry, 0x4ac1f0, 0, 0x14, 0x44d6d0);
+}
+
+uint32_t vertrix_port_actor_value_frame_45b860(PORT_SIGNATURE)
+{
+    return actor_value_frame(calls, services, globals, entry, 0x4ac1f0, 0x64, 4, 0x45b8d0);
+}
+
+uint32_t vertrix_port_actor_swing_frame_44f1e0(PORT_SIGNATURE)
+{
+    return actor_swing_frame(calls, services, globals, entry, 0, 0x44c860);
+}
+
+uint32_t vertrix_port_bank_allocate_5464e4(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    result = port_call(&port, 0x487640, 0x5464e4, 8, entry->ebx, entry->ecx);
+    return port_return(&port, result, entry->edx);
 }

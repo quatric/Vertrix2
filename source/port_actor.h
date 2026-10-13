@@ -444,6 +444,9 @@ uint32_t vertrix_port_wanderer_wait(PORT_SIGNATURE);
 /* Original 0x4ac7a0 (eax = actor): whether its frame (+0xb8) is 0. edx is unchanged. */
 uint32_t vertrix_port_actor_first_frame(PORT_SIGNATURE);
 
+/* Original 0x43ba70(eax = actor): whether its state +0x18c is 3. */
+uint32_t vertrix_port_actor_state_three(PORT_SIGNATURE);
+
 /* Original 0x4ac8f0 (eax = actor, edx = routine): set its update routine (+0x154). */
 uint32_t vertrix_port_actor_set_update(PORT_SIGNATURE);
 

@@ -22,6 +22,9 @@ uint32_t vertrix_port_stream_skip(PORT_SIGNATURE);
  * otherwise 0. edx is unchanged. */
 uint32_t vertrix_port_stream_done(PORT_SIGNATURE);
 
+/* Original 0x475df0: the same for the position and end at +0x44 and +0x48. */
+uint32_t vertrix_port_stream_done_475df0(PORT_SIGNATURE);
+
 /* Original 0x48aa80 (eax = stream): the read position. edx is unchanged. */
 uint32_t vertrix_port_stream_position(PORT_SIGNATURE);
 

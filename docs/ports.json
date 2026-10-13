@@ -529,6 +529,21 @@
   "lifted": "lifted_f4182c0",
   "chunk": "whole_0"
  },
+ "0x4182f0": {
+  "port": "vertrix_port_stream_open_513e60_4182f0",
+  "lifted": "lifted_resource_entry_call",
+  "chunk": "whole_0"
+ },
+ "0x418550": {
+  "port": "vertrix_port_stream_open_513e60_418550",
+  "lifted": "lifted_resource_entry_call_418550",
+  "chunk": "whole_0"
+ },
+ "0x418570": {
+  "port": "vertrix_port_stream_open_513e60_418570",
+  "lifted": "lifted_resource_entry_call_418570",
+  "chunk": "whole_0"
+ },
  "0x4185f0": {
   "port": "vertrix_port_handler_table_setup",
   "lifted": "lifted_f4185f0",
@@ -854,6 +869,11 @@
   "lifted": "lifted_f43a2c0",
   "chunk": "whole_14"
  },
+ "0x43ba70": {
+  "port": "vertrix_port_actor_state_three",
+  "lifted": "lifted_player_bonus_ready",
+  "chunk": "whole_1"
+ },
  "0x43d400": {
   "port": "vertrix_port_object_destroy_call_43d400",
   "lifted": "lifted_f43d400",
@@ -1089,6 +1109,11 @@
   "lifted": "lifted_f44c4c0",
   "chunk": "whole_2"
  },
+ "0x44c530": {
+  "port": "vertrix_port_actor_fade_frame_44c530",
+  "lifted": "lifted_f44c530",
+  "chunk": "whole_2"
+ },
  "0x44c860": {
   "port": "vertrix_port_actor_chain_update_44c860",
   "lifted": "lifted_block_update",
@@ -1149,6 +1174,11 @@
   "lifted": "lifted_f44d5f0",
   "chunk": "whole_2"
  },
+ "0x44d660": {
+  "port": "vertrix_port_actor_value_frame_44d660",
+  "lifted": "lifted_f44d660",
+  "chunk": "whole_2"
+ },
  "0x44d7d0": {
   "port": "vertrix_port_actor_fade_frame_44d7d0",
   "lifted": "lifted_f44d7d0",
@@ -1162,6 +1192,11 @@
  "0x44dc80": {
   "port": "vertrix_port_actor_fade_frame_44dc80",
   "lifted": "lifted_f44dc80",
+  "chunk": "whole_2"
+ },
+ "0x44e600": {
+  "port": "vertrix_port_actor_fade_frame_44e600",
+  "lifted": "lifted_f44e600",
   "chunk": "whole_2"
  },
  "0x44e670": {
@@ -1192,6 +1227,11 @@
  "0x44f180": {
   "port": "vertrix_port_actor_swing_frame_44f180",
   "lifted": "lifted_block_effect_update_44f180",
+  "chunk": "whole_2"
+ },
+ "0x44f1e0": {
+  "port": "vertrix_port_actor_swing_frame_44f1e0",
+  "lifted": "lifted_block_effect_update_44f1e0",
   "chunk": "whole_2"
  },
  "0x44f4a0": {
@@ -1409,6 +1449,11 @@
   "lifted": "lifted_f45b7f0",
   "chunk": "whole_2"
  },
+ "0x45b860": {
+  "port": "vertrix_port_actor_value_frame_45b860",
+  "lifted": "lifted_f45b860",
+  "chunk": "whole_2"
+ },
  "0x45bd00": {
   "port": "vertrix_port_actor_step_frame_45bd00",
   "lifted": "lifted_f45bd00",
@@ -1437,6 +1482,11 @@
  "0x45bf80": {
   "port": "vertrix_port_actor_fade_frame_45bf80",
   "lifted": "lifted_f45bf80",
+  "chunk": "whole_3"
+ },
+ "0x45c0e0": {
+  "port": "vertrix_port_actor_fade_frame_45c0e0",
+  "lifted": "lifted_f45c0e0",
   "chunk": "whole_3"
  },
  "0x45c2f0": {
@@ -1588,6 +1638,11 @@
   "port": "vertrix_port_bank_build_544a50",
   "lifted": "lifted_resource_column_build",
   "chunk": "whole_3"
+ },
+ "0x45e720": {
+  "port": "vertrix_port_bank_allocate_5464e4",
+  "lifted": "lifted_resource_one_frame_45e720",
+  "chunk": "whole_21"
  },
  "0x45e7b0": {
   "port": "vertrix_port_table_fill_slot",
@@ -1859,9 +1914,34 @@
   "lifted": "lifted_return_unchanged_471ee0",
   "chunk": "whole_21"
  },
+ "0x472020": {
+  "port": "vertrix_port_marker_actor_add_472020",
+  "lifted": "lifted_f472020",
+  "chunk": "whole_3"
+ },
+ "0x472090": {
+  "port": "vertrix_port_marker_actor_add_472090",
+  "lifted": "lifted_f472090",
+  "chunk": "whole_3"
+ },
  "0x472100": {
   "port": "vertrix_port_marker_actor_add",
   "lifted": "lifted_f472100",
+  "chunk": "whole_3"
+ },
+ "0x4721e0": {
+  "port": "vertrix_port_marker_actor_add_4721e0",
+  "lifted": "lifted_f4721e0",
+  "chunk": "whole_3"
+ },
+ "0x472250": {
+  "port": "vertrix_port_marker_actor_add_472250",
+  "lifted": "lifted_f472250",
+  "chunk": "whole_3"
+ },
+ "0x4722c0": {
+  "port": "vertrix_port_marker_actor_add_4722c0",
+  "lifted": "lifted_f4722c0",
   "chunk": "whole_3"
  },
  "0x472330": {
@@ -2047,6 +2127,11 @@
  "0x475da0": {
   "port": "vertrix_port_key_record_fields",
   "lifted": "lifted_object_triple",
+  "chunk": "whole_3"
+ },
+ "0x475df0": {
+  "port": "vertrix_port_stream_done_475df0",
+  "lifted": "lifted_progress_done",
   "chunk": "whole_3"
  },
  "0x475e50": {

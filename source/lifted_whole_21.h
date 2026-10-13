@@ -61,7 +61,6 @@ enum
     LIFTED_F43E1A0_STACK = 160,
     LIFTED_F43EAB0_STACK = 384,
     LIFTED_OBJECT_START_HOLD_STACK = 84,
-    LIFTED_RESOURCE_ONE_FRAME_45E720_STACK = 72,
     LIFTED_TABLE_FILL_SLOT_STACK = 136,
     LIFTED_RESOURCE_PAIRED_FINISH_STACK = 212,
     LIFTED_F461610_STACK = 240,
@@ -751,11 +750,6 @@ uint32_t lifted_f43eab0(const VertrixCalls *calls, const VertrixFactoryServices 
 /* Original 0x450f80. */
 uint32_t lifted_object_start_hold(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x45e720. */
-uint32_t lifted_resource_one_frame_45e720(const VertrixCalls *calls,
-                                          const VertrixFactoryServices *services,
-                                          const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x45e750. */
 uint32_t lifted_table_fill_slot(const VertrixCalls *calls, const VertrixFactoryServices *services,

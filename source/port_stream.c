@@ -90,6 +90,16 @@ uint32_t vertrix_port_stream_done(PORT_SIGNATURE)
     return port_return(&port, position >= port_u32(&port, stream, STREAM_END), entry->edx);
 }
 
+uint32_t vertrix_port_stream_done_475df0(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t stream = entry->eax;
+    uint32_t position;
+    port_open(&port, calls, services, globals, entry);
+    position = port_u32(&port, stream, 0x44);
+    return port_return(&port, position >= port_u32(&port, stream, 0x48), entry->edx);
+}
+
 uint32_t vertrix_port_stream_position(PORT_SIGNATURE)
 {
     Port port;

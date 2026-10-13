@@ -5310,22 +5310,6 @@
   "virtual": [],
   "address": 4438464
  },
- "player_bonus_ready": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   2,
-   3,
-   4
-  ],
-  "virtual": [],
-  "address": 4438640
- },
  "player_clear_field_18c": {
   "callees": {},
   "stack": 64,

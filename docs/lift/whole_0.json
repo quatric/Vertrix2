@@ -2792,57 +2792,6 @@
   "virtual": [],
   "address": 4292976
  },
- "resource_entry_call": {
-  "callees": {
-   "0x4cea15": [
-    0,
-    false
-   ]
-  },
-  "stack": 72,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4293360
- },
- "resource_entry_call_418550": {
-  "callees": {
-   "0x4cea15": [
-    0,
-    false
-   ]
-  },
-  "stack": 72,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4293968
- },
- "resource_entry_call_418570": {
-  "callees": {
-   "0x4cea15": [
-    0,
-    false
-   ]
-  },
-  "stack": 72,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4294000
- },
  "rtl_construct_derived_stream": {
   "callees": {
    "0x4d3e20": [

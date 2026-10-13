@@ -663,6 +663,11 @@ uint32_t vertrix_port_entry_copy(PORT_SIGNATURE);
 /* Original 0x473cd0(eax = name): open it in mode 4 with 0x513e60 (0x4cea15). */
 uint32_t vertrix_port_stream_open_513e60(PORT_SIGNATURE);
 
+/* Originals 0x4182f0, 0x418550 and 0x418570: the same with the modes 7, 5 and 6. */
+uint32_t vertrix_port_stream_open_513e60_4182f0(PORT_SIGNATURE);
+uint32_t vertrix_port_stream_open_513e60_418550(PORT_SIGNATURE);
+uint32_t vertrix_port_stream_open_513e60_418570(PORT_SIGNATURE);
+
 /* Original 0x45ea60(eax = slot, edx = count): allocate bank 0x544d7c + slot * 0x1c (0x487640) when
  * count is nonzero. */
 uint32_t vertrix_port_bank_slot_allocate(PORT_SIGNATURE);
@@ -1323,6 +1328,15 @@ uint32_t vertrix_port_view_rect_set_locked(PORT_SIGNATURE);
  * kind 7 and mode 1 (0x4ac7b0), the update 0x456ea0 (0x4ac8f0), clear 0x4ac910 and add it to the
  * layer list 0x54676c (0x4b5e70). */
 uint32_t vertrix_port_marker_actor_add(PORT_SIGNATURE);
+
+/* Originals 0x472020, 0x472090, 0x4721e0, 0x472250 and 0x4722c0: the same actor of the kinds 2, 2,
+ * 3, 4 and 5 with the updates 0x456de0, 0x456e40, 0x456fa0, 0x457000 and 0x457060 (rate 3 for the
+ * last). */
+uint32_t vertrix_port_marker_actor_add_472020(PORT_SIGNATURE);
+uint32_t vertrix_port_marker_actor_add_472090(PORT_SIGNATURE);
+uint32_t vertrix_port_marker_actor_add_4721e0(PORT_SIGNATURE);
+uint32_t vertrix_port_marker_actor_add_472250(PORT_SIGNATURE);
+uint32_t vertrix_port_marker_actor_add_4722c0(PORT_SIGNATURE);
 
 /* Original 0x478b70(eax = fade): fill its +0x26 ramp bytes +0x130 from 0 to 255 in 256 / (count -
  * 1) steps, or all 0x80 for one. */
@@ -2437,5 +2451,16 @@ uint32_t vertrix_port_actor_value_frame_44c3e0(PORT_SIGNATURE);
 uint32_t vertrix_port_actor_value_frame_44c450(PORT_SIGNATURE);
 uint32_t vertrix_port_actor_value_frame_44d3a0(PORT_SIGNATURE);
 uint32_t vertrix_port_actor_value_frame_44d5f0(PORT_SIGNATURE);
+
+/* More copies of the shared actor frames (0x44d250, 0x44c3e0, 0x44f120 shapes). */
+uint32_t vertrix_port_actor_fade_frame_44c530(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_fade_frame_44e600(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_fade_frame_45c0e0(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_value_frame_44d660(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_value_frame_45b860(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_swing_frame_44f1e0(PORT_SIGNATURE);
+
+/* Original 0x45e720: allocate bank 0x5464e4 with 8 (0x487640). */
+uint32_t vertrix_port_bank_allocate_5464e4(PORT_SIGNATURE);
 
 #endif

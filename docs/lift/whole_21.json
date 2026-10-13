@@ -2279,23 +2279,6 @@
   "virtual": [],
   "address": 4525952
  },
- "resource_one_frame_45e720": {
-  "callees": {
-   "0x487640": [
-    0,
-    false
-   ]
-  },
-  "stack": 72,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4581152
- },
  "table_fill_slot": {
   "callees": {
    "0x487660": [

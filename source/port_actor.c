@@ -2130,6 +2130,13 @@ uint32_t vertrix_port_actor_first_frame(PORT_SIGNATURE)
     return port_return(&port, port_u32(&port, entry->eax, ACTOR_FRAME_INDEX) == 0, entry->edx);
 }
 
+uint32_t vertrix_port_actor_state_three(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    return port_return(&port, port_u32(&port, entry->eax, 0x18c) == 3, entry->edx);
+}
+
 uint32_t vertrix_port_actor_set_update(PORT_SIGNATURE)
 {
     Port port;

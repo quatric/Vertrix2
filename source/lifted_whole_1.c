@@ -26979,44 +26979,6 @@ L_43ba48:
     return env.failed ? 0u : eax;
 }
 
-uint32_t lifted_player_bonus_ready(const VertrixCalls *calls,
-                                   const VertrixFactoryServices *services,
-                                   const VertrixGlobals *globals, const LiftEntry *entry)
-{
-    uint8_t stack[LIFTED_PLAYER_BONUS_READY_STACK + 4 + 4 * 0 + 4];
-    LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0, 0};
-    uint32_t eax = entry->eax;
-    uint32_t edx = entry->edx;
-    uint32_t ebx = entry->ebx;
-    uint32_t ecx = entry->ecx;
-    uint32_t esi = entry->esi;
-    uint32_t edi = entry->edi;
-    uint32_t ebp = entry->ebp;
-    uint32_t esp = entry->esp;
-    (void)fl;
-    (void)eax;
-    (void)edx;
-    (void)ebx;
-    (void)ecx;
-    (void)esi;
-    (void)edi;
-    (void)ebp;
-    (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_PLAYER_BONUS_READY_STACK, 0, entry);
-    {
-        (void)lift_sub(32, lift_load(&env, eax, 0x18cu, 4), 0x3u, &fl);
-    }
-    eax = (eax & 0xffffff00u) | (((fl.zf) ? 1u : 0u) & 0xffu);
-    {
-        uint32_t r = lift_and(32, eax, 0xffu, &fl);
-        eax = r;
-    }
-    vertrix_lift_edx = edx;
-    vertrix_lift_fl = fl;
-    return env.failed ? 0u : eax;
-}
-
 uint32_t lifted_player_clear_field_18c(const VertrixCalls *calls,
                                        const VertrixFactoryServices *services,
                                        const VertrixGlobals *globals, const LiftEntry *entry)

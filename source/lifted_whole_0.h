@@ -120,9 +120,6 @@ enum
     LIFTED_F418130_STACK = 84,
     LIFTED_COMPARE_UNSIGNED_STACK = 64,
     LIFTED_CLOCK_TEXT_STACK = 212,
-    LIFTED_RESOURCE_ENTRY_CALL_STACK = 72,
-    LIFTED_RESOURCE_ENTRY_CALL_418550_STACK = 72,
-    LIFTED_RESOURCE_ENTRY_CALL_418570_STACK = 72,
     LIFTED_RTL_CONSTRUCT_DERIVED_STREAM_STACK = 68,
     LIFTED_F418970_STACK = 120,
     LIFTED_F418AE0_STACK = 76,
@@ -742,21 +739,6 @@ uint32_t lifted_compare_unsigned(const VertrixCalls *calls, const VertrixFactory
 /* Original 0x418170. */
 uint32_t lifted_clock_text(const VertrixCalls *calls, const VertrixFactoryServices *services,
                            const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4182f0. */
-uint32_t lifted_resource_entry_call(const VertrixCalls *calls,
-                                    const VertrixFactoryServices *services,
-                                    const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x418550. */
-uint32_t lifted_resource_entry_call_418550(const VertrixCalls *calls,
-                                           const VertrixFactoryServices *services,
-                                           const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x418570. */
-uint32_t lifted_resource_entry_call_418570(const VertrixCalls *calls,
-                                           const VertrixFactoryServices *services,
-                                           const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x418760. */
 uint32_t lifted_rtl_construct_derived_stream(const VertrixCalls *calls,

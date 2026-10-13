@@ -193,7 +193,6 @@ enum
     LIFTED_PLAYER_TEST_4E8_STACK = 64,
     LIFTED_PLAYER_RELEASE_SIDE_STACK = 84,
     LIFTED_PLAYER_MATCH_REWARD_STACK = 96,
-    LIFTED_PLAYER_BONUS_READY_STACK = 64,
     LIFTED_PLAYER_CLEAR_FIELD_18C_STACK = 64,
     LIFTED_PLAYER_ADD_SCORE_STACK = 72,
     LIFTED_PLAYER_SET_CD_FULL_STACK = 64,
@@ -1250,11 +1249,6 @@ uint32_t lifted_player_release_side(const VertrixCalls *calls,
 uint32_t lifted_player_match_reward(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services,
                                     const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x43ba70. */
-uint32_t lifted_player_bonus_ready(const VertrixCalls *calls,
-                                   const VertrixFactoryServices *services,
-                                   const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x43ba80. */
 uint32_t lifted_player_clear_field_18c(const VertrixCalls *calls,
