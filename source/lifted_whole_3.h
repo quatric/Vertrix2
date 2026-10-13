@@ -193,7 +193,6 @@ enum
     LIFTED_SOUND_CUE_POSITION_478700_STACK = 92,
     LIFTED_SOUND_CUE_POSITION_478750_STACK = 92,
     LIFTED_SOUND_CUE_POSITION_4787A0_STACK = 92,
-    LIFTED_F478860_STACK = 140,
     LIFTED_F478910_STACK = 180,
     LIFTED_WHEN_FLAG_CALL_STACK = 72,
     LIFTED_OFFSET_PAIR_CALL_STACK = 92,
@@ -1049,10 +1048,6 @@ uint32_t lifted_sound_cue_position_478750(const VertrixCalls *calls,
 uint32_t lifted_sound_cue_position_4787a0(const VertrixCalls *calls,
                                           const VertrixFactoryServices *services,
                                           const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x478860. */
-uint32_t lifted_f478860(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x478910. */
 uint32_t lifted_f478910(const VertrixCalls *calls, const VertrixFactoryServices *services,

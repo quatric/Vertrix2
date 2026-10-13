@@ -12093,3 +12093,108 @@ uint32_t vertrix_port_runtime_errors_init(PORT_SIGNATURE)
     /* The saved guard chain is returned. */
     return port_return(&port, port_u32(&port, esp, -0x30u), entry->edx);
 }
+
+uint32_t vertrix_port_system_info_init(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t info = entry->eax;
+    uint32_t local = entry->esp - 0x10;
+    uint32_t version;
+    uint32_t major;
+    uint32_t minor;
+    uint32_t ecx;
+    uint32_t eax;
+    uint32_t edx;
+    uint32_t nt;
+    uint32_t argument;
+    port_open_frame(&port, calls, services, globals, entry, 0x18);
+    /* The system version (import 0x4f1c00): +0x70 major.minor, +0x74 the high bit (not NT),
+     * +0x78 and +0x80 major 4 or above, +0x7c its inverse, +0x84 Win32s, +0x88 large memory
+     * (import 0x4f1be0); then 0x4de900, the two grey brushes (import 0x4f17d8), 0x4de810 and the
+     * arrow and wait cursors (import 0x4f1a38). */
+    version = port_call(&port, 0x4f1c00, entry->eax, entry->edx, info, entry->ecx);
+    major = version & 0xff;
+    minor = (version >> 8) & 0xff;
+    port_set32(&port, local, 0, minor);
+    ecx = (major << 8) + minor;
+    port_set32(&port, info, 0x70, ecx);
+    port_set32(&port, info, 0x74, (version & 0x80000000u) != 0);
+    nt = (int32_t)major >= 4;
+    port_set32(&port, info, 0x78, nt);
+    edx = 1 - nt;
+    port_set32(&port, info, 0x7c, edx);
+    port_set32(&port, info, 0x80, nt);
+    eax = port_u32(&port, info, 0x74) != 0 && nt == 0;
+    port_set32(&port, info, 0x88, 0);
+    port_set32(&port, info, 0x84, eax);
+    if (port_u32(&port, info, 0x78) != 0)
+    {
+        argument = 0;
+        eax = port_call_stack(&port, 0x4f1be0, eax, edx, info, ecx, &argument, 1);
+        edx = vertrix_lift_edx;
+        port_set32(&port, info, 0x88, eax >= 0x40000);
+    }
+    eax = port_call(&port, 0x4de900, info, edx, info, ecx);
+    argument = 0xc0c0c0;
+    eax = port_call_stack(&port, 0x4f17d8, eax, vertrix_lift_edx, info, ecx, &argument, 1);
+    argument = 0x808080;
+    port_set32(&port, info, 0x20, eax);
+    eax = port_call_stack(&port, 0x4f17d8, eax, vertrix_lift_edx, info, ecx, &argument, 1);
+    port_set32(&port, info, 0x2c, 0);
+    port_set32(&port, info, 0x30, 0);
+    port_set32(&port, info, 0x28, 0);
+    port_set32(&port, info, 0x34, 0);
+    port_set32(&port, info, 0x3c, 0);
+    port_set32(&port, info, 0x38, 0);
+    port_set32(&port, info, 0x24, eax);
+    port_set32(&port, info, 0x40, 0);
+    eax = port_call(&port, 0x4de810, info, vertrix_lift_edx, info, ecx);
+    {
+        uint32_t cursor[2];
+        cursor[0] = 0;
+        cursor[1] = 0x7f02;
+        eax = port_call_stack(&port, 0x4f1a38, eax, vertrix_lift_edx, info, ecx, cursor, 2);
+        port_set32(&port, info, 0x58, eax);
+        cursor[1] = 0x7f00;
+        eax = port_call_stack(&port, 0x4f1a38, eax, vertrix_lift_edx, info, ecx, cursor, 2);
+    }
+    port_set32(&port, info, 0x60, 0);
+    port_set32(&port, info, 0x5c, eax);
+    port_set32(&port, info, 0x10, (port_u32(&port, info, 0x78) != 0) + 1);
+    port_set32(&port, info, 0x6c, 0);
+    port_set32(&port, info, 0x60, 0);
+    port_set32(&port, info, 0x14, (port_u32(&port, info, 0x78) != 0) + 1);
+    return port_return(&port, info, entry->edx);
+}
+
+uint32_t vertrix_port_sound_device_open(PORT_SIGNATURE)
+{
+    Port port;
+    uint8_t stack[0x40 + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t eax;
+    port_open_stack(&port, stack, calls, services, globals, entry, 0x40);
+    port_set32(&port, 0, 0x5589e0, 0);
+    port_set32(&port, 0, 0x598dac, 0);
+    port_set32(&port, 0, 0x5589d4, 0);
+    port_set32(&port, 0, 0x598d60, 0);
+    port_set32(&port, 0, 0x598da8, 1);
+    port_set32(&port, 0, 0x5589dc, 1);
+    /* The output device (0x40a950) set to 44100 Hz (0x40a8f0) in 16-bit stereo (0x40a9d0, the
+     * format 0x101); success sets 0x5589e0. */
+    eax = port_call(&port, 0x40a950, ebp - 0x10, 0, entry->ebx, entry->ecx);
+    if (eax != 0)
+    {
+        return port_return(&port, eax, entry->edx);
+    }
+    port_call(&port, 0x40a8f0, port_u32(&port, ebp, -0x10u), ebp - 0x3c, 0xac44, entry->ecx);
+    port_set16(&port, ebp, -0x12u, 0xac44);
+    port_set32(&port, ebp, -0x18u, port_u32(&port, ebp, -0x10u));
+    port_set16(&port, ebp, -0x14u, 0x101);
+    eax = port_call(&port, 0x40a9d0, ebp - 0x18, 0x101, 0xac44, entry->ecx);
+    if (eax == 0)
+    {
+        port_set32(&port, 0, 0x5589e0, 1);
+    }
+    return port_return(&port, eax, entry->edx);
+}

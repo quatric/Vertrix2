@@ -1559,6 +1559,11 @@
   "lifted": "lifted_sound_cue_position_478520",
   "chunk": "whole_3"
  },
+ "0x478860": {
+  "port": "vertrix_port_sound_device_open",
+  "lifted": "lifted_f478860",
+  "chunk": "whole_3"
+ },
  "0x478ae0": {
   "port": "vertrix_port_audio_shutdown",
   "lifted": "lifted_f478ae0",
@@ -3652,6 +3657,11 @@
  "0x4de5c0": {
   "port": "vertrix_port_console_handles",
   "lifted": "lifted_f4de5c0",
+  "chunk": "whole_6"
+ },
+ "0x4de630": {
+  "port": "vertrix_port_system_info_init",
+  "lifted": "lifted_f4de630",
   "chunk": "whole_6"
  },
  "0x4de900": {

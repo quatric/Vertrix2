@@ -74,7 +74,6 @@ enum
     LIFTED_RTL_RELEASE_LIST_HEAD_STACK = 84,
     LIFTED_F4DDE50_STACK = 72,
     LIFTED_F4DE600_STACK = 80,
-    LIFTED_F4DE630_STACK = 140,
     LIFTED_F4DE810_STACK = 252,
     LIFTED_RTL_RECORD_INCREMENT_STACK = 68,
     LIFTED_F4DEC70_STACK = 104,
@@ -521,10 +520,6 @@ uint32_t lifted_f4dde50(const VertrixCalls *calls, const VertrixFactoryServices 
 
 /* Original 0x4de600. */
 uint32_t lifted_f4de600(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4de630. */
-uint32_t lifted_f4de630(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4de810. */

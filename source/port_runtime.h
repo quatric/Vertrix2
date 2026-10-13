@@ -2123,4 +2123,14 @@ uint32_t vertrix_port_thread_runtime_init(PORT_SIGNATURE);
  * at 0x5c7938 (0x4d30f0). Keeps edx. */
 uint32_t vertrix_port_runtime_errors_init(PORT_SIGNATURE);
 
+/* Original 0x4de630(eax = info): fill the system information from the version (import 0x4f1c00)
+ * and memory (import 0x4f1be0), with its two grey brushes (import 0x4f17d8) and the arrow and
+ * wait cursors (import 0x4f1a38), via 0x4de900 and 0x4de810. Returns it; keeps edx. */
+uint32_t vertrix_port_system_info_init(PORT_SIGNATURE);
+
+/* Original 0x478860: reset the sound state (0x5589e0, 0x598dac, 0x5589d4, 0x598d60, 0x598da8,
+ * 0x5589dc) and open the output device (0x40a950) at 44100 Hz (0x40a8f0, 0x40a9d0 with 0x101);
+ * success sets 0x5589e0. Keeps edx. */
+uint32_t vertrix_port_sound_device_open(PORT_SIGNATURE);
+
 #endif
