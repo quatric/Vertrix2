@@ -2754,6 +2754,11 @@
   "lifted": "lifted_actor_construct_518174_full",
   "chunk": "whole_4"
  },
+ "0x4b5420": {
+  "port": "vertrix_port_object_destroy_call",
+  "lifted": "lifted_object_destroy_call",
+  "chunk": "whole_4"
+ },
  "0x4b54d0": {
   "port": "vertrix_port_actor_place_size",
   "lifted": "lifted_actor_set_box_full",
@@ -2833,6 +2838,11 @@
   "port": "vertrix_port_object_construct_labeled_box",
   "lifted": "lifted_object_construct_labeled_box",
   "chunk": "whole_9"
+ },
+ "0x4b6460": {
+  "port": "vertrix_port_object_destroy_d",
+  "lifted": "lifted_object_destroy_d",
+  "chunk": "whole_4"
  },
  "0x4b6560": {
   "port": "vertrix_port_timer_running",

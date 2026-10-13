@@ -38,4 +38,14 @@ uint32_t vertrix_port_object_construct_labeled_box(PORT_SIGNATURE);
  * label's text at the object's position (0x4b65d0) under a guard record. */
 uint32_t vertrix_port_object_place_label(PORT_SIGNATURE);
 
+/* Original 0x4b5420(eax = object, edx = mode): a box destructor: mode 4 destroys an array (element
+ * destructor 0x518190); otherwise the table 0x518174 is set and the base destructor 0x4ac130 runs
+ * under a guard record, mode 2 freeing it (0x4ca050). */
+uint32_t vertrix_port_object_destroy_call(PORT_SIGNATURE);
+
+/* Original 0x4b6460(eax = box, edx = mode): the labeled box destructor: as 0x4b5420 with the table
+ * 0x518404 and element destructor 0x518420, the label string (+0x15c) destroyed first
+ * (0x4ca210). */
+uint32_t vertrix_port_object_destroy_d(PORT_SIGNATURE);
+
 #endif

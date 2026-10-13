@@ -627,3 +627,83 @@ uint32_t vertrix_port_object_place_label(PORT_SIGNATURE)
     port_set32(&port, ebp, -0x18u, 0);
     return port_return(&port, port_u32(&port, ebp, -0x24u), vertrix_lift_edx);
 }
+
+/* The box destructors' shared parts. Mode 4 destroys an array: each element by the element
+ * destructor (0x4ccb9f), the block freed by 0x4ca040 (with edx 0 when `clear` is set). */
+static uint32_t box_destroy_array(Port *port, uint32_t ebp, uint32_t object, uint32_t element,
+                                  int clear)
+{
+    uint32_t block;
+    port_set32(port, ebp, -0x44u, object);
+    port_set32(port, ebp, -0x24u, 1);
+    block = port_call(port, 0x4ccb9f, object, element, 1, object);
+    port_set32(port, ebp, -0x24u, 0);
+    port_call(port, 0x4ca040, block, clear ? 0 : vertrix_lift_edx, 1, object);
+    return port_return(port, object, vertrix_lift_edx);
+}
+
+/* Otherwise the method table is set at +0x158 and a guard record is entered in the state given. */
+static void box_destroy_enter(Port *port, uint32_t ebp, uint32_t object, uint32_t mode,
+                              uint32_t table, uint32_t guard, uint32_t state)
+{
+    port_set32(port, object, 0x158, table);
+    port_set32(port, ebp, -0x1cu, object);
+    port_set8(port, ebp, -0x18u, mode);
+    port_set32(port, ebp, -0x30u, port->env.chain);
+    port_set32(port, ebp, -0x2cu, 0x4ec1ec);
+    port_set32(port, ebp, -0x28u, guard);
+    port_set32(port, ebp, -0x24u, state);
+}
+
+/* The base destructor's result is freed by 0x4ca050 when mode 2 is set. */
+static uint32_t box_destroy_free(Port *port, uint32_t result, uint32_t edx, uint32_t mode)
+{
+    if (mode & 2)
+    {
+        port_call(port, 0x4ca050, result, edx, mode, result);
+        edx = vertrix_lift_edx;
+    }
+    return port_return(port, result, edx);
+}
+
+uint32_t vertrix_port_object_destroy_call(PORT_SIGNATURE)
+{
+    Port port;
+    uint8_t stack[0x48 + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t object = entry->eax;
+    uint32_t mode = entry->edx;
+    uint32_t result;
+    port_open_stack(&port, stack, calls, services, globals, entry, 0x48);
+    if (mode & 4)
+    {
+        return box_destroy_array(&port, ebp, object, 0x518190, 0);
+    }
+    box_destroy_enter(&port, ebp, object, mode, 0x518174, 0x518130, 0);
+    result = port_call(&port, 0x4ac130, object, 1, mode, object);
+    port_set32(&port, ebp, -0x24u, 0);
+    return box_destroy_free(&port, result, vertrix_lift_edx, mode);
+}
+
+uint32_t vertrix_port_object_destroy_d(PORT_SIGNATURE)
+{
+    Port port;
+    uint8_t stack[0x48 + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t object = entry->eax;
+    uint32_t mode = entry->edx;
+    uint32_t box;
+    uint32_t result;
+    port_open_stack(&port, stack, calls, services, globals, entry, 0x48);
+    if (mode & 4)
+    {
+        return box_destroy_array(&port, ebp, object, 0x518420, 0);
+    }
+    box_destroy_enter(&port, ebp, object, mode, 0x518404, 0x518374, 3);
+    /* The label string (+0x15c) first. */
+    box = port_call(&port, 0x4ca210, object + 0x15c, 0, mode, object) - 0x15c;
+    port_set32(&port, ebp, -0x24u, 0);
+    result = port_call(&port, 0x4ac130, box, 1, mode, box);
+    port_set32(&port, ebp, -0x24u, 0);
+    return box_destroy_free(&port, result, 0, mode);
+}
