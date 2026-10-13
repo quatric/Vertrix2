@@ -14295,3 +14295,119 @@ uint32_t vertrix_port_actor_orbit_frame(PORT_SIGNATURE)
     result = port_call(&port, 0x4ac8f0, actor, 0, ebp - 0x1c, actor);
     return port_return(&port, result, entry->edx);
 }
+
+/* The attack effect shape of 0x454e90 and its three copies: the board (+0x3b0) gets 0x43bb60 with
+ * 4, 0x43bae0 and the update `next`; its game's (+0x15c) flags +0xb80..+0xb88 are set, the object's
+ * child (+0x15c) gets its method +4 (table +0x158) and 0x43bbf0 runs. */
+static uint32_t effect_attack(PORT_SIGNATURE, uint32_t next)
+{
+    Port port;
+    uint32_t object = entry->eax;
+    uint32_t board;
+    uint32_t child;
+    uint32_t game;
+    uint32_t table;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    board = port_u32(&port, object, 0x3b0);
+    child = port_u32(&port, object, 0x15c);
+    game = port_u32(&port, board, 0x15c);
+    port_call(&port, 0x43bb60, board, 4, object, board);
+    port_call(&port, 0x43bae0, board, vertrix_lift_edx, object, board);
+    port_call(&port, 0x4ac8f0, board, next, object, board);
+    port_set32(&port, game, 0xb80, 1);
+    port_set32(&port, game, 0xb84, 1);
+    port_set32(&port, game, 0xb88, 1);
+    table = port_u32(&port, child, 0x158);
+    port_call(&port, port_u32(&port, table, 4), child, vertrix_lift_edx, object, table);
+    result = port_call(&port, 0x43bbf0, object, vertrix_lift_edx, object, table);
+    return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_effect_attack_454e90(PORT_SIGNATURE)
+{
+    return effect_attack(calls, services, globals, entry, 0x454f00);
+}
+
+uint32_t vertrix_port_effect_attack_455b20(PORT_SIGNATURE)
+{
+    return effect_attack(calls, services, globals, entry, 0x455b90);
+}
+
+uint32_t vertrix_port_effect_attack_455ca0(PORT_SIGNATURE)
+{
+    return effect_attack(calls, services, globals, entry, 0x455d10);
+}
+
+uint32_t vertrix_port_effect_attack_45b9c0(PORT_SIGNATURE)
+{
+    return effect_attack(calls, services, globals, entry, 0x45ba30);
+}
+
+/* The pool destructor shape of 0x4d83f0 and its three copies: mode 4 destroys an array (each
+ * element by `element` through 0x4ccb9f, the block freed by 0x4ca040); otherwise, under the guard
+ * record `guard`, the table `table` is set, the pages released (`release`), the base table 0x517454
+ * set and, when the edx it leaves has bit 1, the object freed (0x4ca050). Returns the object. */
+static uint32_t pool_destroy(PORT_SIGNATURE, uint32_t table, uint32_t element, uint32_t guard,
+                             uint32_t release)
+{
+    /* push ecx, then 0x30 bytes holding the guard record at esp + 0x14. */
+    enum
+    {
+        BELOW = 0x34
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t pool = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t frame = entry->esp - BELOW;
+    uint32_t result;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    port_set32(&port, entry->esp, -4u, entry->ecx);
+    if (edx & 4)
+    {
+        port_set32(&port, frame, 0x20, 1);
+        port_set32(&port, frame, 0, pool);
+        result = port_call(&port, 0x4ccb9f, pool, element, entry->ebx, pool);
+        port_set32(&port, frame, 0x20, 0);
+        port_call(&port, 0x4ca040, result, vertrix_lift_edx, entry->ebx, pool);
+        return port_return(&port, pool, vertrix_lift_edx);
+    }
+    port_set32(&port, pool, 0, table);
+    port_set32(&port, frame, 0x24, pool);
+    port_set8(&port, frame, 0x28, edx);
+    port_set32(&port, frame, 0x14, port.env.chain);
+    port_set32(&port, frame, 0x18, GUARD_HANDLER);
+    port_set32(&port, frame, 0x1c, guard);
+    port_set32(&port, frame, 0x20, 3);
+    port_call(&port, release, pool, edx, entry->ebx, pool);
+    edx = vertrix_lift_edx;
+    port_set32(&port, frame, 0x20, 0);
+    port_set32(&port, pool, 0, 0x517454);
+    if (edx & 2)
+    {
+        port_call(&port, 0x4ca050, pool, edx, entry->ebx, pool);
+        edx = vertrix_lift_edx;
+    }
+    return port_return(&port, pool, edx);
+}
+
+uint32_t vertrix_port_pool_destroy_4d83f0(PORT_SIGNATURE)
+{
+    return pool_destroy(calls, services, globals, entry, 0x51a024, 0x519a10, 0x519fc8, 0x4d83c0);
+}
+
+uint32_t vertrix_port_pool_destroy_4d8b80(PORT_SIGNATURE)
+{
+    return pool_destroy(calls, services, globals, entry, 0x51a1b4, 0x516f80, 0x51a128, 0x4d8b30);
+}
+
+uint32_t vertrix_port_pool_destroy_4defd0(PORT_SIGNATURE)
+{
+    return pool_destroy(calls, services, globals, entry, 0x51bb54, 0x51bb70, 0x51baf8, 0x4def90);
+}
+
+uint32_t vertrix_port_pool_destroy_4ee980(PORT_SIGNATURE)
+{
+    return pool_destroy(calls, services, globals, entry, 0x51c2d4, 0x51c2f0, 0x51c278, 0x4ee910);
+}

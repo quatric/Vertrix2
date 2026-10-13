@@ -2496,4 +2496,21 @@ uint32_t vertrix_port_button_frame_456760(PORT_SIGNATURE);
  * update is cleared (0x4ac8f0 with 0). Keep edx. */
 uint32_t vertrix_port_actor_orbit_frame(PORT_SIGNATURE);
 
+/* Originals 0x454e90, 0x455b20, 0x455ca0 and 0x45b9c0(eax = object): start an attack on the board
+ * (0x43bb60 with 4, 0x43bae0, the update 0x454f00, 0x455b90, 0x455d10 or 0x45ba30), set its game's
+ * flags +0xb80..+0xb88, run the child's method +4 and 0x43bbf0. Keep edx. */
+uint32_t vertrix_port_effect_attack_454e90(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_attack_455b20(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_attack_455ca0(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_attack_45b9c0(PORT_SIGNATURE);
+
+/* Originals 0x4d83f0, 0x4d8b80, 0x4defd0 and 0x4ee980(eax = pool, edx = mode): destroy the pool
+ * with the tables 0x51a024, 0x51a1b4, 0x51bb54 and 0x51c2d4, the element destructors 0x519a10,
+ * 0x516f80, 0x51bb70 and 0x51c2f0, the guard records 0x519fc8, 0x51a128, 0x51baf8 and 0x51c278 and
+ * the page releases 0x4d83c0, 0x4d8b30, 0x4def90 and 0x4ee910. */
+uint32_t vertrix_port_pool_destroy_4d83f0(PORT_SIGNATURE);
+uint32_t vertrix_port_pool_destroy_4d8b80(PORT_SIGNATURE);
+uint32_t vertrix_port_pool_destroy_4defd0(PORT_SIGNATURE);
+uint32_t vertrix_port_pool_destroy_4ee980(PORT_SIGNATURE);
+
 #endif
