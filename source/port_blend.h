@@ -168,6 +168,15 @@ uint32_t vertrix_port_render_mask_row_4a9f40(PORT_SIGNATURE);
  * for pixels whose top byte is not 0 (eax that byte). */
 uint32_t vertrix_port_render_mask_alpha_row(PORT_SIGNATURE);
 
+/* Originals 0x492770, 0x49a480, 0x4a2540 and 0x4aa240: a masked row drawn backwards (the row
+ * start's skipped part with mask bit 0 clear, then the row count's pixels) by the pixel operation
+ * [0x5bb72c], stepping the source by the sampled steps 0x5bb7dc, with the target pixel at 0x5bb768,
+ * 0x5bb780, 0x5bb780 and 0x5bb778. */
+uint32_t vertrix_port_render_mask_row_back_492770(PORT_SIGNATURE);
+uint32_t vertrix_port_render_mask_row_back_49a480(PORT_SIGNATURE);
+uint32_t vertrix_port_render_mask_row_back_4a2540(PORT_SIGNATURE);
+uint32_t vertrix_port_render_mask_row_back_4aa240(PORT_SIGNATURE);
+
 /* Original 0x48db70: the target becomes the average of source and target. Returns the target
  * address. */
 uint32_t vertrix_port_blend_average(PORT_SIGNATURE);
