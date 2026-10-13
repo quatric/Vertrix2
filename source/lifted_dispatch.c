@@ -2139,7 +2139,7 @@ static const LiftedRoutine routines[] = {
     {0x482b30, lifted_call_unless_zero, 68, 0},
     {0x482b40, vertrix_port_sound_stop, 0, 0},
     {0x482bb0, vertrix_port_call_48a930, 0, 0},
-    {0x482d00, lifted_f482d00, 188, 0},
+    {0x482d00, vertrix_port_image_read_tga, 0, 0},
     {0x482e10, vertrix_port_event_frame_draw_direct, 0, 0},
     {0x482e80, lifted_event_frame_draw_blend, 144, 1},
     {0x482f00, lifted_event_frame_draw_scaled, 144, 5},

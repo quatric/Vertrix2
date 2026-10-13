@@ -81,4 +81,10 @@ uint32_t vertrix_port_image_new_drawn(PORT_SIGNATURE);
  * (0x478d10), whose pixels 0x480d60 reads. Returns the surface. */
 uint32_t vertrix_port_image_read(PORT_SIGNATURE);
 
+/* Original 0x482d00(eax = stream): read an image: a 0x30-byte header (0x48a930) whose last 40
+ * bytes become the new image record (0x4ec160), then its pixels by depth (+0x27): 8-bit read raw
+ * or unpacked by 0x481480, 32-bit read raw then blended with 0x5b9c60 (0x483750) and converted
+ * (0x483ed0). Returns the image; keeps edx. */
+uint32_t vertrix_port_image_read_tga(PORT_SIGNATURE);
+
 #endif

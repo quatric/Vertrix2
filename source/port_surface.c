@@ -681,3 +681,66 @@ uint32_t vertrix_port_image_read(PORT_SIGNATURE)
     port_call(&port, 0x480d60, pixels, stream, entry->edx, surface);
     return port_return(&port, surface, vertrix_lift_edx);
 }
+
+uint32_t vertrix_port_image_read_tga(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x54,
+        HEADER = 0x50,
+        FIELDS = 0x48,
+        FIELD_BYTES = 0x28
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t stream = entry->eax;
+    uint32_t image;
+    uint32_t size;
+    uint32_t depth;
+    uint32_t pixels;
+    uint32_t offset;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    port_set32(&port, ebp, -0x20u, stream);
+    image = port_call(&port, 0x4ec160, 1, FIELD_BYTES, 1, 0x30);
+    port_set32(&port, ebp, -0x1cu, image);
+    port_set32(&port, ebp, -0x18u, image);
+    port_call(&port, 0x48a930, stream, ebp - HEADER, 1, 0x30);
+    /* The image record is the 40 bytes after the header's first 8. */
+    for (offset = 0; offset < FIELD_BYTES; offset += 4)
+    {
+        port_set32(&port, image, offset, port_u32(&port, ebp, offset - FIELDS));
+    }
+    size = port_u32(&port, image, 4) * port_u32(&port, image, 8);
+    depth = port_u8(&port, image, 0x27);
+    if (depth == 1)
+    {
+        /* 8-bit pixels: read raw (header byte 0) or unpacked by 0x481480 (1). */
+        uint32_t packing = port_u8(&port, ebp, -HEADER);
+        pixels = port_call(&port, 0x4ec160, size, 1, 1, size);
+        if (packing == 0)
+        {
+            port_call(&port, 0x48a930, stream, pixels, 1, size);
+        }
+        else if (packing == 1)
+        {
+            port_call(&port, 0x481480, stream, pixels, port_u32(&port, ebp, 4 - HEADER), size);
+        }
+        port_set32(&port, image, 0, pixels);
+    }
+    else if (depth == 4)
+    {
+        uint32_t edx;
+        size *= depth;
+        pixels = port_call(&port, 0x4ec160, size, 1, 1, size);
+        if (port_u8(&port, ebp, -HEADER) == 0)
+        {
+            port_call(&port, 0x48a930, stream, pixels, 1, size);
+        }
+        port_set32(&port, image, 0, pixels);
+        port_call(&port, 0x483750, image, 0x5b9c60, 1, size);
+        edx = vertrix_lift_edx;
+        port_call(&port, 0x483ed0, image, edx, 1, size);
+    }
+    return port_return(&port, image, entry->edx);
+}
