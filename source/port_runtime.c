@@ -10530,3 +10530,52 @@ uint32_t vertrix_port_console_handles(PORT_SIGNATURE)
     }
     return port_return(&port, eax, edx);
 }
+
+uint32_t vertrix_port_runtime_version_init(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t edx = entry->edx;
+    port_open_frame(&port, calls, services, globals, entry, 4);
+    if (port_u32(&port, 0, 0x5c79d0) == 0)
+    {
+        uint32_t version;
+        uint32_t old;
+        port_set32(&port, 0, 0x5c79d0, port_u32(&port, 0, 0x5c79d0) + 1);
+        version = port_call(&port, 0x4f1c00, entry->eax, entry->edx, entry->ebx, entry->ecx);
+        edx = version & 0xff;
+        /* A Win32s or Windows 9x system (high bit, major version under 4) has no section. */
+        old = (int32_t)edx < 4 && (version & 0x80000000u) != 0;
+        port_set32(&port, 0, 0x5c79d4, old);
+        if (!old)
+        {
+            uint32_t section = 0x5c7b28;
+            port_call_stack(&port, 0x4f1c30, 0, edx, entry->ebx, entry->ecx, &section, 1);
+            edx = vertrix_lift_edx;
+        }
+    }
+    return port_return(&port, port_u32(&port, 0, 0x5c79d0), edx);
+}
+
+uint32_t vertrix_port_stream_flush_handle(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t stream = entry->eax;
+    uint32_t inner;
+    uint32_t eax;
+    port_open_frame(&port, calls, services, globals, entry, 0xc);
+    inner = port_u32(&port, stream, 0x38);
+    if (inner == 0)
+    {
+        uint32_t arguments[2];
+        arguments[0] = port_u32(&port, stream, 0x1c);
+        arguments[1] = entry->edx;
+        eax = port_call_stack(&port, 0x4f1af0, stream, entry->edx, entry->ebx, entry->ecx,
+                              arguments, 2);
+    }
+    else
+    {
+        uint32_t table = port_u32(&port, inner, 0);
+        eax = port_call(&port, port_u32(&port, table, 0xa4), inner, entry->edx, entry->ebx, table);
+    }
+    return port_return(&port, eax, vertrix_lift_edx);
+}

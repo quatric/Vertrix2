@@ -1924,4 +1924,13 @@ uint32_t vertrix_port_exit_list_init(PORT_SIGNATURE);
  * at 0x5c7944 and 0x5c7948 and set 0x5c79cc. */
 uint32_t vertrix_port_console_handles(PORT_SIGNATURE);
 
+/* Original 0x4de970: once (0x5c79d0), note at 0x5c79d4 whether the system version (import
+ * 0x4f1c00) is an old one and otherwise initialise the section 0x5c7b28 (import 0x4f1c30).
+ * Returns 0x5c79d0. */
+uint32_t vertrix_port_runtime_version_init(PORT_SIGNATURE);
+
+/* Original 0x4ccdd0(eax = stream, edx): the import 0x4f1af0 on the handle (+0x1c) and edx, or the
+ * method +0xa4 of the stream's inner object (+0x38). */
+uint32_t vertrix_port_stream_flush_handle(PORT_SIGNATURE);
+
 #endif
