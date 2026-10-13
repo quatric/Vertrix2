@@ -1879,4 +1879,16 @@ uint32_t vertrix_port_error_construct(PORT_SIGNATURE);
  * edx (eax and 0 for none). */
 uint32_t vertrix_port_zero_dwords(PORT_SIGNATURE);
 
+/* Original 0x4ca600(eax = string, edx = text): 0x4ca5a0 with the text's length (0 for none) and
+ * ebx = text. Returns the string. */
+uint32_t vertrix_port_string_assign_text(PORT_SIGNATURE);
+
+/* Original 0x41a4e0(eax = player): 0x4182c0, then 0x41a2f0 (with +0x268 of 0x544070's object),
+ * 0x41ab90 and 0x41a9e0 with its result in ebx and 0x540048 in ecx. Keeps edx. */
+uint32_t vertrix_port_player_refresh(PORT_SIGNATURE);
+
+/* Original 0x4e23e0(chain, count, size; cdecl): allocate count * size bytes after a link
+ * (0x4c9ff0) and push it onto the chain. Returns the block. */
+uint32_t vertrix_port_block_chain_new(PORT_SIGNATURE);
+
 #endif

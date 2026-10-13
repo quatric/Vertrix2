@@ -10287,3 +10287,54 @@ uint32_t vertrix_port_zero_dwords(PORT_SIGNATURE)
     } while (at < end);
     return port_return(&port, at, end);
 }
+
+uint32_t vertrix_port_string_assign_text(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t edx = entry->edx;
+    port_open_frame(&port, calls, services, globals, entry, 0x10);
+    /* A text gives its length (strlen import) to 0x4ca5a0. */
+    if (edx != 0)
+    {
+        uint32_t text = entry->edx;
+        edx = port_call_stack(&port, 0x4f1d24, entry->eax, edx, edx, entry->ecx, &text, 1);
+    }
+    port_call(&port, 0x4ca5a0, entry->eax, edx, entry->edx, entry->ecx);
+    return port_return(&port, entry->eax, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_player_refresh(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t player = entry->eax;
+    uint32_t value;
+    uint32_t eax;
+    uint32_t ecx;
+    port_open(&port, calls, services, globals, entry);
+    value = port_call(&port, 0x4182c0, player, entry->edx, entry->ebx, entry->ecx);
+    ecx = port_u32(&port, 0, 0x540048);
+    port_call(&port, 0x41a2f0, player, port_u32(&port, port_u32(&port, 0, 0x544070), 0x268), value,
+              ecx);
+    port_call(&port, 0x41ab90, player, vertrix_lift_edx, value, ecx);
+    eax = port_call(&port, 0x41a9e0, player, vertrix_lift_edx, value, ecx);
+    return port_return(&port, eax, entry->edx);
+}
+
+uint32_t vertrix_port_block_chain_new(PORT_SIGNATURE)
+{
+    Port port;
+    uint8_t stack[8 + 3 * 4];
+    uint32_t esp = entry->esp;
+    uint32_t chain;
+    uint32_t block;
+    uint32_t next;
+    port_open_arguments(&port, stack, calls, services, globals, entry, 0, 3);
+    chain = port_u32(&port, esp, 4);
+    /* A block of count * size bytes after a link, pushed onto the chain. */
+    block = port_call(&port, 0x4c9ff0, port_u32(&port, esp, 8) * port_u32(&port, esp, 0xc) + 4,
+                      entry->edx, entry->ebx, chain);
+    next = port_u32(&port, chain, 0);
+    port_set32(&port, block, 0, next);
+    port_set32(&port, chain, 0, block);
+    return port_return(&port, block, next);
+}
