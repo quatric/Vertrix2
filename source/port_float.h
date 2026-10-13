@@ -100,4 +100,45 @@ uint32_t vertrix_port_double_polynomial(PORT_SIGNATURE);
 /* Original 0x4d67b2: 0x4d67e4 with cl = 0x9f (saturating at 0xffffffff). */
 uint32_t vertrix_port_float_to_uint32(PORT_SIGNATURE);
 
+/* Original 0x4db34a: the double edx:eax minus ecx:ebx: ecx's sign flipped, then the add 0x4db350.
+ * A zero operand (its low dword 0 and its high one 0 or 0x80000000) returns the other. With the
+ * coprocessor (0x5054a1) it adds with fadd, which this platform does not have (lift_x87). In
+ * software the mantissas get their hidden bits and one guard bit; the smaller is shifted right by
+ * the exponent difference (more than 0x36 returns the larger), the bits shifted out kept as
+ * sticky bits; a negative sum is negated, rounded up first when the shift was 0x35 or more and a
+ * sticky bit other than the top one is set. The sum is normalized, rounded to nearest even and
+ * packed; an exponent reaching 0 gives the denormal unrounded, one reaching 0x7ff jumps to
+ * 0x4e2389 with eax = sign and exponent, edx the high mantissa, ebx the rounding scratch and ecx
+ * the sign difference and shift. */
+uint32_t vertrix_port_double_subtract(PORT_SIGNATURE);
+
+/* Original 0x4c9e2f: log of the double edx:eax. A high dword of 0 or below goes to the math error
+ * 0x4db866 (ebx = 0xa); with the coprocessor (0x5054a1) to 0x4db896. Otherwise frexp (0x4db1fd,
+ * the exponent e in the frame at ebp - 0x24) gives m. Above sqrt(1/2) (0x4eb57c) f = m - 0.5 - 0.5
+ * and x = m; otherwise e is lowered and f = x = m - 0.5. z = f / (x * 0.5 + 0.5), w = z * z and
+ * r = f + z * w * P(w) / Q(w) (0x4db6a4 on 0x518830 and 0x518848); a non-zero e adds
+ * e * -2.12e-4 and e * 0.693359375. Every helper is called with the registers the original leaves
+ * in it: the caller's ebx and ecx carry over a call. */
+uint32_t vertrix_port_log(PORT_SIGNATURE);
+
+/* Original 0x4daed8: e to the edx:eax, as recovered in float_exp.h, written call by call: x and
+ * the working value at ebp - 0x3c (handed to the error raise 0x4dad2e), the integer parts at
+ * ebp - 0x34 (0x4dae1e). |x| below 0x3cc003c9f368cb40 gives 1; above 0x40862e42fefa39ef 0 for a
+ * negative x, else 0x4dad2e with 0x8104; the coprocessor (0x5054a1) hands it to 0x4e51c8.
+ * Otherwise x * log2(e) is split, the fraction scaled by 16 and split again into a nibble, the
+ * rational approximation (P + Q) / (Q - P) is multiplied by the table 0x51ab70 entry of each set
+ * bit of the nibble and scaled by 2^n (0x4e5271). Every helper gets the registers the original
+ * leaves in it. */
+uint32_t vertrix_port_exp(PORT_SIGNATURE);
+
+/* Original 0x4c9921: edx:eax (x) to the power ecx:ebx (y), x at ebp - 0x24 and y at ebp - 0x14
+ * handed to the error raise 0x4dad38. x = 0 (0x4dad19) gives 0 for y > 0, else raises 0x8047
+ * (y < 0) or 0x4047. y is split (0x4dae1e) into n (0x4eb892) and a fraction; a negative x with a
+ * fraction raises 0x2047 (its result returned as is), otherwise x is negated and the result's sign
+ * kept for an odd n. y * log(x) (0x4c9e2f) beyond 0x40862e42fefa39ef in magnitude gives 0
+ * (through 0x4dae94 with ecx = 0) when negative, else raises 0x8107 (a positive sign) or 0x1107.
+ * A fraction or n = 0x80000000 takes exp (0x4daed8); otherwise x^n by squaring (1/x first for a
+ * negative n). Every helper gets the registers the original leaves in it. */
+uint32_t vertrix_port_power(PORT_SIGNATURE);
+
 #endif

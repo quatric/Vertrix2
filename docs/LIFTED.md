@@ -877,7 +877,7 @@ The synthesis (0x405720, 491 instructions) is three windowed sums, written as lo
 single helpers. The port keeps the ebx and ecx its helpers see, which carry the loop counters and
 the last clamp's limit.
 
-681 routines run as clean ports. Counted by calls, they handle 96% of the calls to lifted
+685 routines run as clean ports. Counted by calls, they handle 96% of the calls to lifted
 routines in the gameplay profile.
 
 Some ports were checked in one register mode only, at a reduced number of cases, because their
@@ -891,8 +891,14 @@ lifted copies fail or time out in the other mode:
 0x47c3b0 (the surface fill) is written but not in `PORTS`. Its lifted copy fails the same cases
 (pool-page overruns), so it cannot be checked yet.
 
-Two recovered natives were tried as ports and dropped: 0x4daed8 (exp) and 0x4c9921 (power). They
-compute the right values but do not hand their helpers the original's incidental registers.
+Two recovered natives were first tried as ports and dropped: 0x4daed8 (exp) and 0x4c9921 (power).
+They computed the right values but did not hand their helpers the original's incidental
+registers. They now run as ports written call by call (`source/port_float.c`), as do log
+(0x4c9e2f) and the double subtract (0x4db34a): each helper call gets the registers the original
+leaves in it, the caller's ebx and ecx carrying over a call as the lifted code assumes. The
+subtract's software add is written out in full; its coprocessor path reports through `lift_x87`
+as the lifted copy does. With these the four busiest lifted routines of the gameplay profile
+(about 2.2 million calls in 1,500 ticks) are ports.
 
 With the ports in, the host run matches the recorded baselines: the 1,500-tick frames (9 of 9
 identical) and the 3,000-tick audio (WAV byte-identical). Boundary calls fell from 62,764 to 3; the

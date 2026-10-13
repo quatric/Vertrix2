@@ -22,7 +22,28 @@ enum
     DOUBLE_NEGATE = 0x4dae4a,
     DOUBLE_INFINITY = 0x51ab90,
     DOUBLE_MULTIPLY = 0x4db507,
-    DOUBLE_ADD = 0x4db350
+    DOUBLE_ADD = 0x4db350,
+    FPU_PRESENT = 0x5054a1,
+    ADD_OVERFLOW = 0x4e2389,
+    DOUBLE_DIVIDE = 0x4eb652,
+    DOUBLE_COMPARE = 0x4eb57c,
+    DOUBLE_EXPONENT_SPLIT = 0x4db1fd,
+    DOUBLE_POLYNOMIAL = 0x4db6a4,
+    INT_TO_DOUBLE = 0x4d6768,
+    MATH_ERROR = 0x4db866,
+    FPU_LOG = 0x4db896,
+    DOUBLE_ABSOLUTE = 0x4dae62,
+    DOUBLE_SIGN = 0x4dad19,
+    DOUBLE_TO_INT = 0x4eb892,
+    DOUBLE_SUBTRACT = 0x4db34a,
+    DOUBLE_SCALE = 0x4e5271,
+    FLOAT_ERROR = 0x4dad2e,
+    FPU_EXP = 0x4e51c8,
+    EXP_TABLE = 0x51ab70,
+    DOUBLE_SPLIT_CALL = 0x4dae1e,
+    POWER_ERROR = 0x4dad38,
+    LOG = 0x4c9e2f,
+    EXP = 0x4daed8
 };
 
 uint32_t vertrix_port_double_compare(PORT_SIGNATURE)
@@ -498,4 +519,692 @@ uint32_t vertrix_port_float_to_uint32(PORT_SIGNATURE)
     value = port_call(&port, FLOAT_TO_SIGNED, entry->eax, entry->edx, entry->ebx,
                       (entry->ecx & 0xffffff00u) | UINT32_LIMIT);
     return port_return(&port, value, vertrix_lift_edx);
+}
+
+/* 0x4db350 on edx:eax (a) and ecx:ebx (b); see port_float.h. */
+static uint32_t double_add(Port *port, const LiftEntry *entry, uint32_t eax, uint32_t edx,
+                           uint32_t ebx, uint32_t ecx)
+{
+    uint32_t differ = (edx ^ ecx) & SIGN;
+    uint32_t a_exponent = (edx >> 20) & 0x7ff;
+    uint32_t b_exponent = (ecx >> 20) & 0x7ff;
+    uint32_t ebp = (ecx & SIGN) | b_exponent;
+    uint32_t count = 0;
+    uint32_t sticky = 0;
+    uint32_t mixed;
+    uint32_t exponent;
+    uint64_t a;
+    uint64_t b;
+    uint64_t sum;
+    if (ebx == 0 && (ecx << 1) == 0)
+    {
+        return port_return(port, eax, edx);
+    }
+    if (eax == 0 && (edx << 1) == 0)
+    {
+        return port_return(port, ebx, ecx);
+    }
+    if (port_u8(port, FPU_PRESENT, 0) != 0)
+    {
+        lift_x87(&port->env, 0x4db374);
+        return port_return(port, eax, edx);
+    }
+    a = ((uint64_t)((edx & MANTISSA_HIGH) | (a_exponent != 0 ? EXPONENT_UNIT : 0)) << 32 | eax)
+        << 1;
+    b = ((uint64_t)((ecx & MANTISSA_HIGH) | (b_exponent != 0 ? EXPONENT_UNIT : 0)) << 32 | ebx)
+        << 1;
+    if (b_exponent != a_exponent)
+    {
+        if (b_exponent > a_exponent)
+        {
+            count = b_exponent - a_exponent;
+        }
+        else
+        {
+            uint64_t swap = a;
+            ebp = (edx & SIGN) | a_exponent;
+            count = a_exponent - b_exponent;
+            a = b;
+            b = swap;
+        }
+        if (count > 0x36)
+        {
+            /* The larger operand alone, its hidden bit dropped. */
+            uint32_t high = (uint32_t)(b >> 32);
+            uint32_t low = (uint32_t)b;
+            return port_return(port, (high << 31) | (low >> 1),
+                               (((ebp & SIGN) | (high >> 1)) & 0x800fffffu) |
+                                   ((ebp & 0x7ff) << 20));
+        }
+    }
+    if (differ != 0)
+    {
+        b = 0u - b;
+        ebp ^= SIGN;
+    }
+    if (count != 0)
+    {
+        uint32_t shift = count;
+        if (count >= 32)
+        {
+            sticky = (uint32_t)a != 0;
+            a >>= 32;
+            shift -= 32;
+        }
+        if (shift != 0)
+        {
+            sticky |= (uint32_t)a << (32 - shift);
+            a >>= shift;
+        }
+    }
+    sum = a + b;
+    if ((sum >> 63) != 0)
+    {
+        if (count >= 0x35 && (sticky & 0x7fffffffu) != 0)
+        {
+            sum++;
+        }
+        sum = 0u - sum;
+        ebp ^= SIGN;
+    }
+    if (sum == 0)
+    {
+        return port_return(port, 0, 0);
+    }
+    /* ebx keeps this until the rounding below: the overflow callee sees it. */
+    mixed = (uint32_t)sum | (uint32_t)(sum >> 32);
+    exponent = ebp & 0xffff;
+    while (exponent != 0 && ((uint32_t)(sum >> 32) & 0x7fe00000u) == 0)
+    {
+        exponent--;
+        if (exponent != 0)
+        {
+            sum <<= 1;
+        }
+    }
+    if (exponent == 0)
+    {
+        /* Denormal: shifted right once with the sign above, not rounded. */
+        sum = (sum >> 1) | ((uint64_t)(ebp & SIGN) << 32);
+        return port_return(port, (uint32_t)sum, (uint32_t)(sum >> 32));
+    }
+    ebp = (ebp & 0xffff0000u) | exponent;
+    if (((uint32_t)(sum >> 32) & 0x400000) != 0)
+    {
+        sticky += (uint32_t)sum & 1;
+        sum >>= 1;
+        ebp++;
+        if ((ebp & 0xffff) == 0x7ff)
+        {
+            goto overflow;
+        }
+    }
+    if ((sum & 1) != 0)
+    {
+        sum >>= 1;
+        mixed = ((mixed & 0xffffff00u) | (sticky != 0)) | (uint32_t)sum;
+        if ((mixed & 1) != 0)
+        {
+            sum++;
+        }
+        mixed >>= 1;
+        if (((uint32_t)(sum >> 32) & 0x200000) != 0)
+        {
+            sum >>= 1;
+            ebp++;
+            if ((ebp & 0xffff) == 0x7ff)
+            {
+                goto overflow;
+            }
+        }
+    }
+    else
+    {
+        sum >>= 1;
+    }
+    return port_return(port, (uint32_t)sum,
+                       ((uint32_t)(sum >> 32) & MANTISSA_HIGH) | (ebp & SIGN) |
+                           ((ebp & 0x7ff) << 20));
+overflow:
+    {
+        uint32_t result = port_call_with(port, ADD_OVERFLOW, ebp, (uint32_t)(sum >> 32), mixed,
+                                         differ | count, entry->esi, entry->edi, entry->ebp);
+        return port_return(port, result, vertrix_lift_edx);
+    }
+}
+
+uint32_t vertrix_port_double_subtract(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    return double_add(&port, entry, entry->eax, entry->edx, entry->ebx, entry->ecx ^ SIGN);
+}
+
+/* A helper call: eax and edx come back, the other registers keep what the caller put in them. */
+static uint32_t log_call(Port *port, uint32_t target, uint32_t *eax, uint32_t *edx, uint32_t ebx,
+                         uint32_t ecx)
+{
+    *eax = port_call(port, target, *eax, *edx, ebx, ecx);
+    *edx = vertrix_lift_edx;
+    return *eax;
+}
+
+uint32_t vertrix_port_log(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t base = entry->esp - 4; /* the original's ebp */
+    uint32_t exponent = base - 0x24;
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi;
+    uint32_t edi;
+    uint32_t sum_low;
+    uint32_t sum_high;
+    uint32_t term_low;
+    uint32_t term_high;
+    LiftFlags fl;
+    port_open_frame(&port, calls, services, globals, entry, 0x28);
+    port_set32(&port, base, 0, entry->ebp);
+    port_set32(&port, base, (uint32_t)-4, entry->ebx);
+    port_set32(&port, base, (uint32_t)-8, entry->ecx);
+    port_set32(&port, base, (uint32_t)-0xc, entry->esi);
+    port_set32(&port, base, (uint32_t)-0x10, entry->edi);
+    edi = eax;
+    esi = edx;
+    if ((int32_t)edx <= 0)
+    {
+        log_call(&port, MATH_ERROR, &eax, &edx, 0xa, ecx);
+        return port_return(&port, eax, edx);
+    }
+    if (port_u8(&port, FPU_PRESENT, 0) != 0)
+    {
+        eax = edi;
+        log_call(&port, FPU_LOG, &eax, &edx, ebx, ecx);
+        return port_return(&port, eax, edx);
+    }
+    ebx = exponent;
+    eax = edi;
+    ecx = 0xbfe00000u;
+    log_call(&port, DOUBLE_EXPONENT_SPLIT, &eax, &edx, ebx, ecx);
+    edi = eax;
+    ebx = 0;
+    esi = edx;
+    log_call(&port, DOUBLE_ADD, &eax, &edx, ebx, ecx);
+    ebx = 0x667f3bcdu;
+    ecx = 0x3fe6a09eu;
+    sum_low = eax;
+    sum_high = edx;
+    eax = edi;
+    edx = esi;
+    log_call(&port, DOUBLE_COMPARE, &eax, &edx, ebx, ecx);
+    fl = vertrix_lift_fl;
+    if (!fl.zf && fl.sf == fl.of)
+    {
+        eax = sum_low;
+        edx = sum_high;
+        ecx = 0xbfe00000u;
+        ebx = 0;
+        log_call(&port, DOUBLE_ADD, &eax, &edx, ebx, ecx);
+        sum_low = eax;
+        sum_high = edx;
+    }
+    else
+    {
+        edx = port_u32(&port, exponent, 0) - 1;
+        edi = sum_low;
+        esi = sum_high;
+        port_set32(&port, exponent, 0, edx);
+    }
+    ecx = 0x3fe00000u;
+    eax = edi;
+    edx = esi;
+    ebx = 0;
+    log_call(&port, DOUBLE_MULTIPLY, &eax, &edx, ebx, ecx);
+    ecx = 0x3fe00000u;
+    ebx = 0;
+    log_call(&port, DOUBLE_ADD, &eax, &edx, ebx, ecx);
+    ebx = eax;
+    ecx = edx;
+    eax = sum_low;
+    edx = sum_high;
+    log_call(&port, DOUBLE_DIVIDE, &eax, &edx, ebx, ecx);
+    sum_low = eax;
+    ebx = eax;
+    ecx = edx;
+    sum_high = edx;
+    log_call(&port, DOUBLE_MULTIPLY, &eax, &edx, ebx, ecx);
+    edi = eax;
+    esi = edx;
+    eax = sum_low;
+    edx = sum_high;
+    ebx = edi;
+    ecx = esi;
+    log_call(&port, DOUBLE_MULTIPLY, &eax, &edx, ebx, ecx);
+    ecx = 2;
+    ebx = 0x518830;
+    term_low = eax;
+    term_high = edx;
+    eax = edi;
+    edx = esi;
+    log_call(&port, DOUBLE_POLYNOMIAL, &eax, &edx, ebx, ecx);
+    ebx = eax;
+    ecx = edx;
+    eax = term_low;
+    edx = term_high;
+    log_call(&port, DOUBLE_MULTIPLY, &eax, &edx, ebx, ecx);
+    ecx = 3;
+    ebx = 0x518848;
+    term_low = eax;
+    term_high = edx;
+    eax = edi;
+    edx = esi;
+    log_call(&port, DOUBLE_POLYNOMIAL, &eax, &edx, ebx, ecx);
+    ebx = eax;
+    ecx = edx;
+    eax = term_low;
+    edx = term_high;
+    log_call(&port, DOUBLE_DIVIDE, &eax, &edx, ebx, ecx);
+    ebx = eax;
+    ecx = edx;
+    eax = sum_low;
+    edx = sum_high;
+    log_call(&port, DOUBLE_ADD, &eax, &edx, ebx, ecx);
+    ebx = port_u32(&port, exponent, 0);
+    edi = eax;
+    esi = edx;
+    if (ebx == 0)
+    {
+        return port_return(&port, edi, esi);
+    }
+    eax = ebx;
+    ecx = 0xbf2bd010u;
+    log_call(&port, INT_TO_DOUBLE, &eax, &edx, ebx, ecx);
+    ebx = 0x5c610ca9u;
+    term_low = eax;
+    term_high = edx;
+    log_call(&port, DOUBLE_MULTIPLY, &eax, &edx, ebx, ecx);
+    ebx = edi;
+    ecx = esi;
+    log_call(&port, DOUBLE_ADD, &eax, &edx, ebx, ecx);
+    ecx = 0x3fe63000u;
+    edi = eax;
+    esi = edx;
+    ebx = 0;
+    eax = term_low;
+    edx = term_high;
+    log_call(&port, DOUBLE_MULTIPLY, &eax, &edx, ebx, ecx);
+    ebx = eax;
+    ecx = edx;
+    eax = edi;
+    edx = esi;
+    log_call(&port, DOUBLE_ADD, &eax, &edx, ebx, ecx);
+    return port_return(&port, eax, edx);
+}
+
+uint32_t vertrix_port_exp(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t base = entry->esp - 4; /* the original's ebp */
+    uint32_t x = base - 0x3c;       /* x, then the working value, handed to 0x4dad2e */
+    uint32_t whole = base - 0x34;   /* the integer part 0x4dae1e stores */
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi = entry->esi;
+    uint32_t edi = entry->edi;
+    uint32_t power;
+    uint32_t square_high;
+    uint32_t p_low;
+    uint32_t q_low;
+    uint32_t q_high;
+    uint32_t sum_low;
+    uint32_t sum_high;
+    LiftFlags fl;
+    port_open_frame(&port, calls, services, globals, entry, 0x40);
+    port_set32(&port, base, 0, entry->ebp);
+    port_set32(&port, base, (uint32_t)-4, entry->ebx);
+    port_set32(&port, base, (uint32_t)-8, entry->ecx);
+    port_set32(&port, base, (uint32_t)-0xc, entry->esi);
+    port_set32(&port, base, (uint32_t)-0x10, entry->edi);
+    port_set32(&port, x, 0, eax);
+    port_set32(&port, x, 4, edx);
+    log_call(&port, DOUBLE_ABSOLUTE, &eax, &edx, ebx, ecx);
+    ebx = 0xf368cb40u;
+    ecx = 0x3cc003c9u;
+    edi = eax;
+    esi = edx;
+    log_call(&port, DOUBLE_COMPARE, &eax, &edx, ebx, ecx);
+    fl = vertrix_lift_fl;
+    if (fl.sf != fl.of)
+    {
+        port_set32(&port, x, 0, 0);
+        port_set32(&port, x, 4, 0x3ff00000u);
+        goto done;
+    }
+    ebx = 0xfefa39efu;
+    ecx = 0x40862e42u;
+    eax = edi;
+    edx = esi;
+    log_call(&port, DOUBLE_COMPARE, &eax, &edx, ebx, ecx);
+    fl = vertrix_lift_fl;
+    if (!fl.zf && fl.sf == fl.of)
+    {
+        if ((int32_t)port_u32(&port, x, 4) < 0)
+        {
+            port_set32(&port, x, 0, 0);
+            port_set32(&port, x, 4, 0);
+            goto done;
+        }
+        edx = x;
+        eax = 0x8104;
+        log_call(&port, FLOAT_ERROR, &eax, &edx, ebx, ecx);
+        goto store;
+    }
+    if (port_u8(&port, FPU_PRESENT, 0) != 0)
+    {
+        eax = port_u32(&port, x, 0);
+        edx = port_u32(&port, x, 4);
+        log_call(&port, FPU_EXP, &eax, &edx, ebx, ecx);
+        goto store;
+    }
+    eax = port_u32(&port, x, 0);
+    edx = port_u32(&port, x, 4);
+    ebx = 0x652b8301u;
+    ecx = 0x3ff71547u;
+    log_call(&port, DOUBLE_MULTIPLY, &eax, &edx, ebx, ecx);
+    port_set32(&port, x, 0, eax);
+    port_set32(&port, x, 4, edx);
+    log_call(&port, DOUBLE_SIGN, &eax, &edx, ebx, ecx);
+    edx = port_u32(&port, x, 4);
+    esi = eax;
+    eax = port_u32(&port, x, 0);
+    ebx = whole;
+    log_call(&port, DOUBLE_ABSOLUTE, &eax, &edx, ebx, ecx);
+    log_call(&port, DOUBLE_SPLIT_CALL, &eax, &edx, ebx, ecx);
+    ebx = eax;
+    ecx = edx;
+    port_set32(&port, x, 0, eax);
+    port_set32(&port, x, 4, edx);
+    eax = port_u32(&port, whole, 0);
+    edx = port_u32(&port, whole, 4);
+    log_call(&port, DOUBLE_TO_INT, &eax, &edx, ebx, ecx);
+    power = eax;
+    if ((int32_t)esi < 0)
+    {
+        edx = 0u - eax;
+        power = edx;
+        if (ecx != 0)
+        {
+            esi = edx - 1;
+            eax = 0;
+            edx = 0x3ff00000u;
+            power = esi;
+            log_call(&port, DOUBLE_SUBTRACT, &eax, &edx, ebx, ecx);
+            port_set32(&port, x, 0, eax);
+            port_set32(&port, x, 4, edx);
+        }
+    }
+    eax = port_u32(&port, x, 4);
+    edi = 0;
+    if (eax != 0)
+    {
+        ebx = 4;
+        eax = port_u32(&port, x, 0);
+        edx = port_u32(&port, x, 4);
+        log_call(&port, DOUBLE_SCALE, &eax, &edx, ebx, ecx);
+        ebx = whole;
+        log_call(&port, DOUBLE_SPLIT_CALL, &eax, &edx, ebx, ecx);
+        port_set32(&port, x, 0, eax);
+        port_set32(&port, x, 4, edx);
+        if (edx != 0)
+        {
+            ebx = 0xfffffffcu;
+            log_call(&port, DOUBLE_SCALE, &eax, &edx, ebx, ecx);
+            port_set32(&port, x, 0, eax);
+            port_set32(&port, x, 4, edx);
+        }
+        eax = port_u32(&port, whole, 0);
+        edx = port_u32(&port, whole, 4);
+        log_call(&port, DOUBLE_TO_INT, &eax, &edx, ebx, ecx);
+        edi = eax;
+    }
+    eax = port_u32(&port, x, 0);
+    edx = port_u32(&port, x, 4);
+    ebx = eax;
+    ecx = edx;
+    log_call(&port, DOUBLE_MULTIPLY, &eax, &edx, ebx, ecx);
+    ebx = 0x4f237e45u;
+    ecx = 0x4034d053u;
+    esi = eax;
+    square_high = edx;
+    log_call(&port, DOUBLE_ADD, &eax, &edx, ebx, ecx);
+    ebx = 0x1ac13af9u;
+    ecx = 0x3fad92deu;
+    q_low = eax;
+    q_high = edx;
+    edx = square_high;
+    eax = esi;
+    log_call(&port, DOUBLE_MULTIPLY, &eax, &edx, ebx, ecx);
+    ebx = 0xa35ca6dcu;
+    ecx = 0x401cdaa0u;
+    log_call(&port, DOUBLE_ADD, &eax, &edx, ebx, ecx);
+    ebx = port_u32(&port, x, 0);
+    ecx = port_u32(&port, x, 4);
+    log_call(&port, DOUBLE_MULTIPLY, &eax, &edx, ebx, ecx);
+    p_low = eax;
+    esi = edx;
+    eax = q_low;
+    edx = q_high;
+    ebx = p_low;
+    ecx = esi;
+    log_call(&port, DOUBLE_ADD, &eax, &edx, ebx, ecx);
+    ebx = p_low;
+    sum_low = eax;
+    sum_high = edx;
+    ecx = esi;
+    eax = q_low;
+    edx = q_high;
+    log_call(&port, DOUBLE_SUBTRACT, &eax, &edx, ebx, ecx);
+    ebx = eax;
+    ecx = edx;
+    eax = sum_low;
+    edx = sum_high;
+    esi = EXP_TABLE;
+    log_call(&port, DOUBLE_DIVIDE, &eax, &edx, ebx, ecx);
+    port_set32(&port, x, 0, eax);
+    port_set32(&port, x, 4, edx);
+    while (edi != 0)
+    {
+        if ((edi & 1) != 0)
+        {
+            eax = port_u32(&port, x, 0);
+            edx = port_u32(&port, x, 4);
+            ebx = port_u32(&port, esi, 0);
+            ecx = port_u32(&port, esi, 4);
+            log_call(&port, DOUBLE_MULTIPLY, &eax, &edx, ebx, ecx);
+            port_set32(&port, x, 0, eax);
+            port_set32(&port, x, 4, edx);
+        }
+        edi = (uint32_t)((int32_t)edi >> 1);
+        esi += 8;
+    }
+    ebx = power;
+    eax = port_u32(&port, x, 0);
+    edx = port_u32(&port, x, 4);
+    log_call(&port, DOUBLE_SCALE, &eax, &edx, ebx, ecx);
+    goto store;
+done:
+    return port_return(&port, port_u32(&port, x, 0), port_u32(&port, x, 4));
+store:
+    port_set32(&port, x, 0, eax);
+    port_set32(&port, x, 4, edx);
+    goto done;
+}
+
+uint32_t vertrix_port_power(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t base = entry->esp - 4; /* the original's ebp */
+    uint32_t x = base - 0x24;       /* x, then the result */
+    uint32_t whole = base - 0x1c;   /* y's integer part, then y * log(x), then the product */
+    uint32_t y = base - 0x14;
+    uint32_t n = base - 0xc;
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi;
+    uint32_t edi;
+    LiftFlags fl;
+    port_open_frame(&port, calls, services, globals, entry, 0x28);
+    port_set32(&port, base, 0, entry->ebp);
+    port_set32(&port, base, (uint32_t)-4, entry->esi);
+    port_set32(&port, base, (uint32_t)-8, entry->edi);
+    port_set32(&port, x, 0, eax);
+    port_set32(&port, x, 4, edx);
+    port_set32(&port, y, 0, ebx);
+    port_set32(&port, y, 4, ecx);
+    log_call(&port, DOUBLE_SIGN, &eax, &edx, ebx, ecx);
+    ecx = eax;
+    esi = eax;
+    if (eax == 0)
+    {
+        edi = port_u32(&port, y, 4);
+        if ((int32_t)edi > 0)
+        {
+            goto result;
+        }
+        eax = (int32_t)edi < 0 ? 0x8047 : 0x4047;
+        goto error;
+    }
+    ebx = whole;
+    eax = port_u32(&port, y, 0);
+    edx = port_u32(&port, y, 4);
+    log_call(&port, DOUBLE_SPLIT_CALL, &eax, &edx, ebx, ecx);
+    eax = port_u32(&port, whole, 0);
+    ebx = edx;
+    edi = edx;
+    edx = port_u32(&port, whole, 4);
+    log_call(&port, DOUBLE_TO_INT, &eax, &edx, ebx, ecx);
+    port_set32(&port, n, 0, eax);
+    if ((int32_t)ecx < 0)
+    {
+        if (ebx != 0)
+        {
+            eax = 0x2047;
+            ebx = y;
+            edx = x;
+            log_call(&port, POWER_ERROR, &eax, &edx, ebx, ecx);
+            return port_return(&port, eax, edx);
+        }
+        eax = port_u32(&port, x, 0);
+        edx = port_u32(&port, x, 4);
+        log_call(&port, DOUBLE_NEGATE, &eax, &edx, ebx, ecx);
+        port_set32(&port, x, 0, eax);
+        port_set32(&port, x, 4, edx);
+        if ((port_u8(&port, n, 0) & 1) == 0)
+        {
+            esi ^= ecx;
+        }
+    }
+    eax = port_u32(&port, x, 0);
+    edx = port_u32(&port, x, 4);
+    log_call(&port, LOG, &eax, &edx, ebx, ecx);
+    ebx = port_u32(&port, y, 0);
+    ecx = port_u32(&port, y, 4);
+    log_call(&port, DOUBLE_MULTIPLY, &eax, &edx, ebx, ecx);
+    ebx = 0xfefa39efu;
+    ecx = 0x40862e42u;
+    port_set32(&port, whole, 0, eax);
+    port_set32(&port, whole, 4, edx);
+    log_call(&port, DOUBLE_ABSOLUTE, &eax, &edx, ebx, ecx);
+    log_call(&port, DOUBLE_COMPARE, &eax, &edx, ebx, ecx);
+    fl = vertrix_lift_fl;
+    if (!fl.zf && fl.sf == fl.of)
+    {
+        if ((int32_t)port_u32(&port, whole, 4) < 0)
+        {
+            ecx = 0;
+            log_call(&port, SCALE_OVERFLOW, &eax, &edx, ebx, ecx);
+            port_set32(&port, x, 0, ecx);
+            port_set32(&port, x, 4, ecx);
+            goto result;
+        }
+        eax = (int32_t)esi > 0 ? 0x8107 : 0x1107;
+        goto error;
+    }
+    if (edi != 0 || port_u32(&port, n, 0) == 0x80000000u)
+    {
+        eax = port_u32(&port, whole, 0);
+        edx = port_u32(&port, whole, 4);
+        log_call(&port, EXP, &eax, &edx, ebx, ecx);
+        port_set32(&port, x, 0, eax);
+        port_set32(&port, x, 4, edx);
+        goto sign;
+    }
+    edx = port_u32(&port, n, 0);
+    if ((int32_t)edx < 0)
+    {
+        ebx = port_u32(&port, x, 0);
+        ecx = 0u - edx;
+        eax = 0;
+        edx = 0x3ff00000u;
+        port_set32(&port, n, 0, ecx);
+        ecx = port_u32(&port, x, 4);
+        log_call(&port, DOUBLE_DIVIDE, &eax, &edx, ebx, ecx);
+        port_set32(&port, x, 0, eax);
+        port_set32(&port, x, 4, edx);
+    }
+    if (port_u32(&port, n, 0) != 1)
+    {
+        eax = 0;
+        edx = 0x3ff00000u;
+        port_set32(&port, whole, 0, eax);
+        port_set32(&port, whole, 4, edx);
+        while (port_u32(&port, n, 0) != 0)
+        {
+            if ((port_u8(&port, n, 0) & 1) != 0)
+            {
+                eax = port_u32(&port, whole, 0);
+                edx = port_u32(&port, whole, 4);
+                ebx = port_u32(&port, x, 0);
+                ecx = port_u32(&port, x, 4);
+                log_call(&port, DOUBLE_MULTIPLY, &eax, &edx, ebx, ecx);
+                port_set32(&port, whole, 0, eax);
+                port_set32(&port, whole, 4, edx);
+            }
+            eax = port_u32(&port, x, 0);
+            edx = port_u32(&port, x, 4);
+            ebx = eax;
+            ecx = edx;
+            log_call(&port, DOUBLE_MULTIPLY, &eax, &edx, ebx, ecx);
+            ebx = (uint32_t)((int32_t)port_u32(&port, n, 0) >> 1);
+            port_set32(&port, x, 0, eax);
+            port_set32(&port, x, 4, edx);
+            port_set32(&port, n, 0, ebx);
+        }
+        port_set32(&port, x, 0, port_u32(&port, whole, 0));
+        port_set32(&port, x, 4, port_u32(&port, whole, 4));
+    }
+sign:
+    if ((int32_t)esi >= 0)
+    {
+        goto result;
+    }
+    eax = port_u32(&port, x, 0);
+    edx = port_u32(&port, x, 4);
+    log_call(&port, DOUBLE_NEGATE, &eax, &edx, ebx, ecx);
+    goto store;
+error:
+    ebx = y;
+    edx = x;
+    log_call(&port, POWER_ERROR, &eax, &edx, ebx, ecx);
+store:
+    port_set32(&port, x, 0, eax);
+    port_set32(&port, x, 4, edx);
+result:
+    return port_return(&port, port_u32(&port, x, 0), port_u32(&port, x, 4));
 }
