@@ -96,3 +96,40 @@ uint32_t vertrix_port_stream_position(PORT_SIGNATURE)
     port_open(&port, calls, services, globals, entry);
     return port_return(&port, port_u32(&port, entry->eax, STREAM_POSITION), entry->edx);
 }
+
+uint32_t vertrix_port_stream_read_token(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t stream = entry->edx;
+    uint32_t text = entry->ebx;
+    uint32_t eax;
+    uint32_t edx;
+    uint32_t ebx = entry->ebx;
+    port_open(&port, calls, services, globals, entry);
+    port_call(&port, 0x4ca370, text, 0x510a59, ebx, stream);
+    edx = vertrix_lift_edx;
+    for (;;)
+    {
+        uint32_t byte;
+        eax = port_call(&port, 0x48a910, stream, edx, ebx, stream);
+        edx = vertrix_lift_edx;
+        if (eax != 0)
+        {
+            break;
+        }
+        eax = port_call(&port, 0x48aa80, stream, 1, ebx, stream);
+        byte = port_u8(&port, eax, 0);
+        ebx = (ebx & 0xffffff00u) | byte;
+        port_call(&port, 0x48aa90, stream, vertrix_lift_edx, ebx, stream);
+        edx = vertrix_lift_edx;
+        if (byte == '\\' || byte == '\n' || byte == '\r')
+        {
+            break;
+        }
+        port_call(&port, 0x4ca630, text, byte, ebx, stream);
+        edx = vertrix_lift_edx;
+    }
+    port_call(&port, 0x4ce030, text, edx, ebx, stream);
+    eax = port_call(&port, 0x4cdfe0, text, vertrix_lift_edx, ebx, stream);
+    return port_return(&port, eax, vertrix_lift_edx);
+}

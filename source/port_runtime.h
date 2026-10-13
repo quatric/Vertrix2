@@ -1725,4 +1725,12 @@ uint32_t vertrix_port_text_measure_layout(PORT_SIGNATURE);
  * then destroyed through its table (+0x158, with 2). Returns the saved exception chain. */
 uint32_t vertrix_port_text_measure(PORT_SIGNATURE);
 
+/* Original 0x4b3390(eax = actor): refresh its label actor (+0x160). The actor's style +0x44 is set
+ * to 0x10 and 0x4b5560 runs; with a label, its text (+0x15c) is copied into a frame string and the
+ * label placed (0x4b65d0, font byte +0x160) at the actor's position plus the label offset
+ * (+0x164, +0x166) or, when +0x168 or +0x16c is set, plus its size (+0xf4, +0xf8) less one,
+ * then updated through its table slot 1 and the string released (0x4ca210). Returns the saved
+ * exception chain; edx is unchanged. */
+uint32_t vertrix_port_actor_label_refresh(PORT_SIGNATURE);
+
 #endif

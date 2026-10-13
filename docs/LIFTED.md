@@ -877,7 +877,7 @@ The synthesis (0x405720, 491 instructions) is three windowed sums, written as lo
 single helpers. The port keeps the ebx and ecx its helpers see, which carry the loop counters and
 the last clamp's limit.
 
-691 routines run as clean ports. Counted by calls, 99.65% of the calls the dispatcher serves in the
+694 routines run as clean ports. Counted by calls, 99.65% of the calls the dispatcher serves in the
 1,500-tick gameplay profile go to a port or a recovered native (202,169 of 57,234,341 still ran lifted
 copies before 0x4928f0 below).
 
@@ -939,6 +939,9 @@ channel masks (0x481bc0), the text measure (0x440610) and the measure-and-layout
 (0x4408e0), verified with 4,096 cases in both register modes (0x4408e0 with 1,024: at 4,096 its lifted copy
 times out with wide registers). The byte reader 0x405ee0 is
 not: with its refill stubbed the original loops until the time limit, its lifted copy as well.
+
+Then the odd polynomial x * P(x * x) (0x4db6d9), the stream token reader (0x48a3c0) and the label
+refresh (0x4b3390) followed; the last two at 1,024 cases (`SLOW`).
 
 With the ports in, the host run matches the recorded baselines: the 1,500-tick frames (9 of 9
 identical) and the 3,000-tick audio (WAV byte-identical). Boundary calls fell from 62,764 to 3; the

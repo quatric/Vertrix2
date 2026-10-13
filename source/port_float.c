@@ -1508,3 +1508,15 @@ uint32_t vertrix_port_double_remainder(PORT_SIGNATURE)
     return port_return(&port, port_u32(&port, base, (uint32_t)-0x10),
                        port_u32(&port, base, (uint32_t)-4));
 }
+
+uint32_t vertrix_port_double_polynomial_odd(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    port_open(&port, calls, services, globals, entry);
+    log_call(&port, DOUBLE_MULTIPLY, &eax, &edx, entry->eax, entry->edx);
+    log_call(&port, DOUBLE_POLYNOMIAL, &eax, &edx, entry->ebx, entry->ecx);
+    log_call(&port, DOUBLE_MULTIPLY, &eax, &edx, entry->eax, entry->edx);
+    return port_return(&port, eax, edx);
+}

@@ -25,4 +25,10 @@ uint32_t vertrix_port_stream_done(PORT_SIGNATURE);
 /* Original 0x48aa80 (eax = stream): the read position. edx is unchanged. */
 uint32_t vertrix_port_stream_position(PORT_SIGNATURE);
 
+/* Original 0x48a3c0(edx = stream, ebx = string): read a token. The string is set to 0x510a59
+ * (0x4ca370); until the stream ends (0x48a910) the next byte (0x48aa80, consumed by 0x48aa90) is
+ * appended (0x4ca630), stopping after a backslash or a line end, which are not kept. The string
+ * is then trimmed (0x4ce030 and 0x4cdfe0, whose eax and edx are returned). */
+uint32_t vertrix_port_stream_read_token(PORT_SIGNATURE);
+
 #endif

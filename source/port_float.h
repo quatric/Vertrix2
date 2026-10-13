@@ -161,4 +161,8 @@ uint32_t vertrix_port_trig(PORT_SIGNATURE);
  * signs differ. */
 uint32_t vertrix_port_double_remainder(PORT_SIGNATURE);
 
+/* Original 0x4db6d9 (edx:eax = x, ebx = coefficients, ecx = count): x * P(x * x) with 0x4db6a4
+ * on the coefficients (the odd series of the sine). */
+uint32_t vertrix_port_double_polynomial_odd(PORT_SIGNATURE);
+
 #endif

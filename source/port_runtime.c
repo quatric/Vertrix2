@@ -943,6 +943,86 @@ uint32_t vertrix_port_text_measure(PORT_SIGNATURE)
     return port_return(&port, port_u32(&port, ebp, -0x40u), edx);
 }
 
+uint32_t vertrix_port_actor_label_refresh(PORT_SIGNATURE)
+{
+    /* push ebp, ebx, ecx, edx, esi, then 0x1c bytes: the guard record and a string. */
+    enum
+    {
+        BELOW = 0x30,
+        GUARD = 0x517c38
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t actor = entry->eax;
+    uint32_t label;
+    uint32_t x;
+    uint32_t y;
+    uint32_t pushed[3];
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    port_set32(&port, ebp, 0, entry->ebp);
+    port_set32(&port, ebp, -4u, entry->ebx);
+    port_set32(&port, ebp, -8u, entry->ecx);
+    port_set32(&port, ebp, -0xcu, entry->edx);
+    port_set32(&port, ebp, -0x10u, entry->eax);
+    port_set32(&port, ebp, -0x2cu, port.env.chain);
+    port_set32(&port, ebp, -0x28u, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x24u, GUARD);
+    port_set32(&port, ebp, -0x20u, 0);
+    port_set8(&port, actor, 0x44, 0x10);
+    port_call(&port, 0x4b5560, actor, GUARD_HANDLER, 0, GUARD);
+    if (port_u32(&port, actor, 0x160) == 0)
+    {
+        return port_return(&port, port_u32(&port, ebp, -0x2cu), entry->edx);
+    }
+    port_call(&port, 0x4ca070, ebp - 0x18, vertrix_lift_edx, 0, GUARD);
+    port_set32(&port, ebp, -0x20u, 1);
+    port_call(&port, 0x4ca370, ebp - 0x18, port_u32(&port, port_u32(&port, actor, 0x160), 0x15c), 0,
+              GUARD);
+    port_set8(&port, ebp, -0x14u, port_u8(&port, port_u32(&port, actor, 0x160), 0x160));
+    /* The label's box: the actor's position plus the label offset (the sum then stands in both
+     * registers) or plus its size less one. ecx keeps the x register for the calls below. */
+    {
+        uint32_t ecx;
+        uint32_t near_y;
+        x = port_u16(&port, actor, 0xe);
+        if (port_u32(&port, actor, 0x168) == 0)
+        {
+            x += port_u16(&port, actor, 0x164);
+            ecx = (uint32_t)(int16_t)x;
+        }
+        else
+        {
+            ecx = (uint32_t)(int16_t)x;
+            x += port_u16(&port, actor, 0xf4) - 1;
+        }
+        y = port_u16(&port, actor, 0x16);
+        if (port_u32(&port, actor, 0x16c) == 0)
+        {
+            y += port_u16(&port, actor, 0x166);
+            near_y = y;
+        }
+        else
+        {
+            near_y = y;
+            y += port_u16(&port, actor, 0xf8) - 1;
+        }
+        pushed[0] = (uint32_t)(int16_t)x;
+        pushed[1] = (uint32_t)(int16_t)near_y;
+        pushed[2] = (uint32_t)(int16_t)y;
+        label = port_u32(&port, actor, 0x160);
+        port_call_stack(&port, 0x4b65d0, label, port_u32(&port, ebp, -0x18u),
+                        (uint32_t)(int8_t)port_u8(&port, ebp, -0x14u), ecx, pushed, 3);
+        label = port_u32(&port, actor, 0x160);
+        port_call(&port, port_u32(&port, port_u32(&port, label, 0x158), 4), label,
+                  port_u32(&port, label, 0x158), 0, ecx);
+        port_set32(&port, ebp, -0x20u, 0);
+        port_call(&port, 0x4ca210, ebp - 0x18, 0, 0, ecx);
+    }
+    port_set32(&port, ebp, -0x20u, 0);
+    return port_return(&port, port_u32(&port, ebp, -0x2cu), entry->edx);
+}
+
 uint32_t vertrix_port_text_measure_layout(PORT_SIGNATURE)
 {
     /* push ebp, esi, edi, then 0x2c bytes: the guard record and the measure and layout results. */
