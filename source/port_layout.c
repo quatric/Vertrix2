@@ -510,3 +510,120 @@ uint32_t vertrix_port_point_heading(PORT_SIGNATURE)
     }
     return port_return(&port, (eax & 0xffff0000u) | port_u16(&port, 0, HEADING), edx);
 }
+
+uint32_t vertrix_port_object_construct_labeled_box(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x38,
+        GUARD_HANDLER = 0x4ec1ec,
+        BOX_GUARD = 0x518360
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t object = entry->eax;
+    uint32_t base;
+    uint32_t box;
+    uint32_t offset;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    port_set32(&port, ebp, -0x34u, port.env.chain);
+    port_set32(&port, ebp, -0x30u, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x2cu, BOX_GUARD);
+    port_set32(&port, ebp, -0x28u, 0);
+    port_set8(&port, ebp, -0x1cu, 0);
+    port_set32(&port, ebp, -0x20u, object);
+    /* The base object (0x4abd70), its label string at +0x15c (0x4ca070, then 0x5110b7). */
+    base = port_call(&port, 0x4abd70, object, GUARD_HANDLER, BOX_GUARD, object);
+    port_set32(&port, ebp, -0x28u, 1);
+    box = port_call(&port, 0x4ca070, base + 0x15c, vertrix_lift_edx, BOX_GUARD, object) - 0x15c;
+    port_set32(&port, ebp, -0x28u, 2);
+    port_set32(&port, box, 0x158, 0x518404);
+    port_call(&port, 0x4ca370, box + 0x15c, 0x5110b7, BOX_GUARD, box);
+    port_set8(&port, box, 0x160, 0);
+    for (offset = 0x162; offset <= 0x170; offset += 2)
+    {
+        port_set16(&port, box, offset, 0);
+    }
+    port_set8(&port, box, 0x94, 0);
+    port_set8(&port, box, 0x95, 3);
+    port_set16(&port, box, 0x172, 0);
+    port_set16(&port, box, 0x17a, 0xff9c);
+    port_set16(&port, box, 0x17c, 0xff9c);
+    port_set32(&port, box, 0x174, 0);
+    return port_return(&port, box, entry->edx);
+}
+
+uint32_t vertrix_port_object_place_label(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x28,
+        GUARD_HANDLER = 0x4ec1ec,
+        PLACE_GUARD = 0x517c2c
+    };
+    Port port;
+    uint8_t stack[BELOW + 8 + 2 * 4];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t object = entry->eax;
+    uint32_t text = ebp - 0x10;
+    uint32_t label;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    port_open_arguments(&port, stack, calls, services, globals, entry, BELOW, 2);
+    port_set32(&port, ebp, -0x24u, port.env.chain);
+    port_set32(&port, ebp, -0x20u, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x1cu, PLACE_GUARD);
+    port_set32(&port, ebp, -0x18u, 0);
+    port_call(&port, 0x4ca070, text, entry->edx, entry->ebx, entry->ecx);
+    port_set32(&port, ebp, -0x18u, 1);
+    port_set32(&port, object, 0x160, vertrix_lift_edx);
+    port_set16(&port, object, 0x164, entry->ebx);
+    port_set16(&port, object, 0x166, entry->ecx);
+    port_set32(&port, object, 0x168, port_u32(&port, ebp, 8));
+    port_set32(&port, object, 0x16c, port_u32(&port, ebp, 0xc));
+    label = port_u32(&port, object, 0x160);
+    if (label != 0)
+    {
+        /* The label's text drawn at the object's position plus the offsets (+0x164, +0x166), or
+         * against its far edges (+0xf4, +0xf8) when +0x168 or +0x16c is set (0x4b65d0). */
+        uint32_t x;
+        uint32_t y;
+        uint32_t left;
+        uint32_t top;
+        uint32_t arguments[3];
+        port_call(&port, 0x4ca370, text, port_u32(&port, label, 0x15c), entry->ebx, entry->ecx);
+        port_set8(&port, ebp, -0xcu, port_u8(&port, port_u32(&port, object, 0x160), 0x160));
+        if (port_u32(&port, object, 0x168) == 0)
+        {
+            x = port_u16(&port, object, 0xe) + port_u16(&port, object, 0x164);
+            left = x;
+        }
+        else
+        {
+            left = port_u16(&port, object, 0xe);
+            x = port_u16(&port, object, 0xf4) + left - 1;
+        }
+        if (port_u32(&port, object, 0x16c) == 0)
+        {
+            y = port_u16(&port, object, 0x16) + port_u16(&port, object, 0x166);
+            top = y;
+        }
+        else
+        {
+            top = port_u16(&port, object, 0x16);
+            y = port_u16(&port, object, 0xf8) + top - 1;
+        }
+        arguments[0] = (uint32_t)(int32_t)(int16_t)x;
+        arguments[1] = (uint32_t)(int32_t)(int16_t)top;
+        arguments[2] = (uint32_t)(int32_t)(int16_t)y;
+        ebx = (uint32_t)(int32_t)(int8_t)port_u8(&port, ebp, -0xcu);
+        ecx = (uint32_t)(int32_t)(int16_t)left;
+        port_call_stack(&port, 0x4b65d0, port_u32(&port, object, 0x160), port_u32(&port, text, 0),
+                        ebx, ecx, arguments, 3);
+    }
+    port_set32(&port, ebp, -0x18u, 0);
+    port_call(&port, 0x4ca210, text, 0, ebx, ecx);
+    port_set32(&port, ebp, -0x18u, 0);
+    return port_return(&port, port_u32(&port, ebp, -0x24u), vertrix_lift_edx);
+}

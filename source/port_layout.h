@@ -28,4 +28,14 @@ uint32_t vertrix_port_ui_slide_sideways(PORT_SIGNATURE);
  * values stay at 0x598dd8 to 0x598df8. */
 uint32_t vertrix_port_point_heading(PORT_SIGNATURE);
 
+/* Original 0x4b6350(eax = object): construct a labeled box under a guard record: the base object
+ * (0x4abd70), its table 0x518404, its label string at +0x15c set to 0x5110b7, its fields cleared
+ * with +0x95 = 3 and +0x17a, +0x17c = -100. Returns the box; keeps edx. */
+uint32_t vertrix_port_object_construct_labeled_box(PORT_SIGNATURE);
+
+/* Original 0x4b3210(eax = object, edx = text, ebx = x offset, ecx = y offset; two stack arguments,
+ * the right and bottom alignment flags): keep the label settings (+0x160 to +0x16c) and draw the
+ * label's text at the object's position (0x4b65d0) under a guard record. */
+uint32_t vertrix_port_object_place_label(PORT_SIGNATURE);
+
 #endif

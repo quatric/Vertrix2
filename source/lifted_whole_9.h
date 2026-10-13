@@ -57,7 +57,6 @@ enum
     LIFTED_OBJECT_TEXT_INSERT_STACK = 236,
     LIFTED_OBJECT_TEXT_REMOVE_STACK = 216,
     LIFTED_OBJECT_TEXT_REBUILD_STACK = 216,
-    LIFTED_OBJECT_CONSTRUCT_LABELED_BOX_STACK = 136,
     LIFTED_F4B6A30_STACK = 136,
     LIFTED_F4B7120_STACK = 120,
     LIFTED_F4B71C0_STACK = 120,
@@ -297,11 +296,6 @@ uint32_t lifted_object_text_remove(const VertrixCalls *calls,
 uint32_t lifted_object_text_rebuild(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services,
                                     const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4b6350. */
-uint32_t lifted_object_construct_labeled_box(const VertrixCalls *calls,
-                                             const VertrixFactoryServices *services,
-                                             const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4b6a30. */
 uint32_t lifted_f4b6a30(const VertrixCalls *calls, const VertrixFactoryServices *services,

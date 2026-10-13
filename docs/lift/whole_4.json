@@ -4025,44 +4025,6 @@
   "virtual": [],
   "address": 4926864
  },
- "object_place_label": {
-  "callees": {
-   "0x4ca070": [
-    0,
-    false
-   ],
-   "0x4ca210": [
-    0,
-    false
-   ],
-   "0x4ca370": [
-    0,
-    false
-   ],
-   "0x4b65d0": [
-    3,
-    false
-   ]
-  },
-  "stack": 136,
-  "arguments": 2,
-  "pointer_callees": [],
-  "pointer_fields": [
-   352
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   27,
-   28,
-   29,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 4928016
- },
  "f4b34d0": {
   "callees": {
    "0x4b3100": [
