@@ -1779,4 +1779,18 @@ uint32_t vertrix_port_thread_slot(PORT_SIGNATURE);
  * 0x51c086 (leap). Returns the struct and, in edx, the weekday. */
 uint32_t vertrix_port_days_to_tm(PORT_SIGNATURE);
 
+/* Original 0x4e960c: the C runtime's tzset. With TZ set (getenv 0x4dac40) its standard and
+ * daylight names and offsets are parsed (0x4e969c) into 0x50afd0, 0x50b0dc, 0x50b051 and the
+ * daylight bias 0x50b0e4, and the daylight rules (0x4e97b4, 0x50af88 and 0x50afac, the end moved
+ * back by the bias). Otherwise, once (0x50b0e8 bit 1), GetTimeZoneInformation gives the bias,
+ * the daylight flag 0x50b0e0 and the names (0x4ea350). Keeps edx. */
+uint32_t vertrix_port_tzset(PORT_SIGNATURE);
+
+/* Original 0x4e91e0(eax = struct tm): the C runtime's daylight saving test, stored at +0x20 and
+ * returned. Without a daylight zone name ([0x50b0d8]) it is 0. The time must be past the start
+ * rule's day and before the end rule's (0x50af88 and 0x50afac, swapped for a southern zone that
+ * 0x4e9194 reports, whose answer is reversed); rules give the nth weekday of a month or a day of
+ * the year, and on the rule's day 0x4e949c compares the time of day. */
+uint32_t vertrix_port_is_dst(PORT_SIGNATURE);
+
 #endif

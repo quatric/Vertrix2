@@ -9443,3 +9443,274 @@ uint32_t vertrix_port_days_to_tm(PORT_SIGNATURE)
     port_set32(&port, tm, 0x18, (days + 1) % 7);
     return port_return(&port, tm, (days + 1) % 7);
 }
+
+uint32_t vertrix_port_tzset(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0xbc,
+        ZONE_SET = 0x50b0e8,
+        DAYLIGHT = 0x50b0e0,
+        DST_BIAS = 0x50b0e4,
+        TIMEZONE = 0x50b0dc,
+        STANDARD_NAME = 0x50afd0,
+        DAYLIGHT_NAME = 0x50b051,
+        WIDE_TO_NAME = 0x4ea350,
+        PARSE_OFFSET = 0x4e969c,
+        PARSE_RULE = 0x4e97b4,
+        DST_START = 0x50af88,
+        DST_END = 0x50afac
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t text;
+    uint32_t eax;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    text = port_call(&port, 0x4dac40, 0x513080, entry->edx, ebx, ecx); /* getenv("TZ") */
+    edx = vertrix_lift_edx;
+    if (text == 0)
+    {
+        /* From GetTimeZoneInformation (slot 0x4f1bfc), once. */
+        uint32_t zone = entry->esp - BELOW;
+        uint32_t flags = port_u8(&port, 0, ZONE_SET);
+        uint32_t argument = zone;
+        uint32_t result;
+        if ((flags & 1) && (flags & 2))
+        {
+            return port_return(&port, flags << 8, entry->edx);
+        }
+        flags |= 2;
+        edx = (edx & 0xffff00ffu) | (flags << 8);
+        port_set8(&port, 0, ZONE_SET, flags);
+        result = port_call_stack(&port, 0x4f1bfc, zone, edx, ebx, ecx, &argument, 1);
+        edx = vertrix_lift_edx;
+        if (result == 0 || result > 2)
+        {
+            return port_return(&port, result, entry->edx);
+        }
+        if (result == 1)
+        {
+            ecx = 0;
+            port_set32(&port, 0, DAYLIGHT, 0);
+        }
+        else
+        {
+            port_set32(&port, 0, DAYLIGHT, 1);
+            ebx = port_u32(&port, zone, 0xa8) * 60;
+            port_set32(&port, 0, DST_BIAS, ebx);
+            ebx = 0 - ebx;
+            port_set32(&port, 0, DST_BIAS, ebx);
+        }
+        port_set32(&port, 0, TIMEZONE,
+                   (port_u32(&port, zone, 0x54) + port_u32(&port, zone, 0)) * 60);
+        ebx = 0x80;
+        result = port_call(&port, WIDE_TO_NAME, STANDARD_NAME, zone + 4, ebx, ecx);
+        if (result == 0xffffffffu)
+        {
+            port_set8(&port, 0, STANDARD_NAME, 0);
+        }
+        else
+        {
+            ebx = 0;
+            port_set8(&port, 0, STANDARD_NAME + 0x80, 0);
+        }
+        ebx = 0x80;
+        result = port_call(&port, WIDE_TO_NAME, DAYLIGHT_NAME, zone + 0x58, ebx, ecx);
+        if (result == 0xffffffffu)
+        {
+            port_set8(&port, 0, DAYLIGHT_NAME, 0);
+        }
+        else
+        {
+            port_set8(&port, 0, DAYLIGHT_NAME + 0x80, 0);
+        }
+        return port_return(&port, result, entry->edx);
+    }
+    {
+        /* From TZ: the standard name and offset, then an optional daylight name, offset and
+         * the two rules. */
+        uint32_t local = entry->esp - 0x1c;
+        uint32_t rest;
+        uint32_t bias;
+        port_set32(&port, 0, DAYLIGHT, 0);
+        rest = port_call(&port, PARSE_OFFSET, text, STANDARD_NAME, TIMEZONE, ecx);
+        ecx = rest;
+        if (port_u8(&port, rest, 0) == 0)
+        {
+            port_set8(&port, 0, DAYLIGHT_NAME, 0);
+            port_set32(&port, 0, DST_BIAS, port_u32(&port, 0, DST_BIAS));
+            return port_return(&port, rest & 0xffff00ffu, entry->edx);
+        }
+        port_set32(&port, 0, DAYLIGHT, 1);
+        port_set32(&port, local, 0, port_u32(&port, 0, TIMEZONE) - 3600);
+        eax = port_call(&port, PARSE_OFFSET, rest, DAYLIGHT_NAME, local, rest);
+        ecx = port_u32(&port, local, 0);
+        bias = port_u32(&port, 0, TIMEZONE) - ecx;
+        edx = eax;
+        ebx = (local & 0xffffff00u) | port_u8(&port, eax, 0);
+        port_set32(&port, 0, DST_BIAS, bias);
+        if ((ebx & 0xff) == ',')
+        {
+            eax = port_call(&port, PARSE_RULE, eax + 1, DST_START, ebx, ecx);
+            edx = eax;
+        }
+        ebx = (ebx & 0xffff00ffu) | (port_u8(&port, edx, 0) << 8);
+        bias = port_u32(&port, 0, DST_BIAS);
+        if (((ebx >> 8) & 0xff) == ',')
+        {
+            int32_t seconds;
+            port_call(&port, PARSE_RULE, edx + 1, DST_END, ebx, ecx);
+            bias = port_u32(&port, 0, DST_BIAS);
+            seconds = (int32_t)bias;
+            /* The end rule's time moves back by the daylight bias. */
+            port_set32(&port, 0, DST_END + 8,
+                       port_u32(&port, 0, DST_END + 8) - (uint32_t)(seconds / 3600));
+            port_set32(&port, 0, DST_END + 4,
+                       port_u32(&port, 0, DST_END + 4) - (uint32_t)((seconds / 60) % 60));
+            eax = port_u32(&port, 0, DST_END) - (uint32_t)(seconds % 60);
+            port_set32(&port, 0, DST_END, eax);
+        }
+        port_set32(&port, 0, DST_BIAS, bias);
+        return port_return(&port, eax, entry->edx);
+    }
+}
+
+/* The month table word for 0x4e91e0: the leap or common year's month starts. */
+static int32_t dst_month_start(Port *port, int leap, uint32_t month)
+{
+    return (int32_t)port_u32(port, 0, (leap ? 0x51c084 : 0x51c06a) + month * 2) >> 16;
+}
+
+/* Whether the time is past (`start`) or before the rule's day, as far as the day decides:
+ * 1 past it, 0 not, -1 on the day itself (the time of day decides). */
+static int dst_rule_day(Port *port, uint32_t tm, uint32_t rule, uint32_t month, int32_t length,
+                        uint32_t *edx, uint32_t second, int start)
+{
+    uint32_t kind = port_u32(port, rule, 0x20);
+    if (kind == 0)
+    {
+        /* The nth (5: last) given weekday of a month. */
+        int32_t rule_month = (int32_t)port_u32(port, rule, 0x10);
+        int32_t weekday = (int32_t)port_u32(port, tm, 0x18);
+        int32_t mday = (int32_t)port_u32(port, tm, 0xc);
+        int32_t rule_weekday = (int32_t)port_u32(port, rule, 0x18);
+        int32_t after;
+        int32_t before;
+        int32_t day;
+        if ((int32_t)month != rule_month)
+        {
+            return ((int32_t)month > rule_month) == start;
+        }
+        after = mday - (weekday + 7 - rule_weekday) % 7;
+        before = mday - 1 - (weekday + 6 - rule_weekday) % 7;
+        if (port_u32(port, rule, 0xc) == 5)
+        {
+            day = length - 7;
+            if (start)
+            {
+                return day >= after ? 0 : day < before ? 1 : -1;
+            }
+            return after <= day ? 1 : before > day ? 0 : -1;
+        }
+        day = (int32_t)(port_u32(port, rule, 0xc) - 1) * 7 + 1;
+        if (start)
+        {
+            return day > after ? 0 : day <= before ? 1 : -1;
+        }
+        return after < day ? 1 : before < day ? 0 : -1;
+    }
+    {
+        /* A day of the year; kind 1 counts February 29th only in leap years. */
+        int32_t day = (int32_t)port_u32(port, rule, 0x1c);
+        int32_t yday;
+        if (kind == 1)
+        {
+            if (start)
+            {
+                *edx = (uint32_t)day;
+            }
+            if (port_call(port, 0x4e9060, port_u32(port, tm, 0x14) + 1900, *edx, second, tm) != 0 &&
+                day > ((int32_t)port_u32(port, 0, 0x51c06e) >> 16))
+            {
+                day++;
+            }
+            day--;
+        }
+        yday = (int32_t)port_u32(port, tm, 0x1c);
+        if (start)
+        {
+            return day > yday ? 0 : day == yday ? -1 : 1;
+        }
+        return day > yday ? 1 : day == yday ? -1 : 0;
+    }
+}
+
+uint32_t vertrix_port_is_dst(PORT_SIGNATURE)
+{
+    enum
+    {
+        DST_START = 0x50af88,
+        DST_END = 0x50afac
+    };
+    Port port;
+    uint32_t tm = entry->eax;
+    uint32_t edx;
+    uint32_t south;
+    uint32_t first;
+    uint32_t second;
+    uint32_t month;
+    int32_t length;
+    int leap;
+    int day;
+    uint32_t result = 0;
+    port_open(&port, calls, services, globals, entry);
+    if (port_u8(&port, port_u32(&port, 0, 0x50b0d8), 0) == 0)
+    {
+        port_set32(&port, tm, 0x20, 0);
+        return port_return(&port, 0, entry->edx);
+    }
+    /* A southern zone (0x4e9194: the end before the start) checks the reverse period. */
+    south = port_call(&port, 0x4e9194, DST_START, DST_END, port_u32(&port, tm, 0x14), tm);
+    edx = vertrix_lift_edx;
+    first = south != 0 ? DST_END : DST_START;
+    second = south != 0 ? DST_START : DST_END;
+    month = port_u32(&port, tm, 0x10);
+    leap = port_call(&port, 0x4e9060, port_u32(&port, tm, 0x14) + 1900, edx, second, tm) != 0;
+    edx = vertrix_lift_edx;
+    length = dst_month_start(&port, leap, month + 1) - dst_month_start(&port, leap, month);
+    day = dst_rule_day(&port, tm, first, month, length, &edx, second, 1);
+    if (day < 0)
+    {
+        /* On the day: 0x4e949c compares the time with the rule's. */
+        result = port_call(&port, 0x4e949c, tm, first, second, tm) == 0;
+    }
+    else
+    {
+        result = (uint32_t)day;
+    }
+    if (result == 0)
+    {
+        result = south;
+        port_set32(&port, tm, 0x20, result);
+        return port_return(&port, result, entry->edx);
+    }
+    edx = 0;
+    day = dst_rule_day(&port, tm, second, month, length, &edx, second, 0);
+    if (day < 0)
+    {
+        result = port_call(&port, 0x4e949c, tm, second, second, tm);
+    }
+    else
+    {
+        result = (uint32_t)day;
+    }
+    if (south != 0)
+    {
+        result = south - result;
+    }
+    port_set32(&port, tm, 0x20, result);
+    return port_return(&port, result, entry->edx);
+}
