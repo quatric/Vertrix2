@@ -1046,3 +1046,140 @@ uint32_t vertrix_port_driver_call_78(PORT_SIGNATURE)
 {
     return driver_call(calls, services, globals, entry, 0x52f078);
 }
+
+/* The noninterpolated stereo kernels 0x401328 (PCM8) and 0x402c18 (PCM16, which reads each
+ * sample's high byte) share this code. */
+enum
+{
+    KERNEL_BLOCKS = 0x4f4010,
+    KERNEL_STEP_FRACTION = 0x4f4014,
+    KERNEL_STEP = 0x4f4018,
+    KERNEL_VOLUMES = 0x52f910
+};
+
+static uint32_t kernel_sample(Port *port, uint32_t index, int sixteen)
+{
+    return sixteen ? port_u8(port, 0, index * 2 + 1) : port_u8(port, index, 0);
+}
+
+/* A volume table entry: the table's address over four with its low byte the sample, times four
+ * (tables are 1 KiB aligned). */
+static uint32_t kernel_gain(Port *port, uint32_t table, uint32_t sample)
+{
+    return port_u32(port, 0, (((table >> 2) & 0xffffff00u) | sample) * 4);
+}
+
+static uint32_t mix_stereo_kernel(Port *port, const LiftEntry *entry, int sixteen)
+{
+    uint32_t ebp = entry->esp - 4;
+    uint32_t output = port_u32(port, ebp, 8);
+    uint32_t count = port_u32(port, ebp, 0xc);
+    uint32_t channel = port_u32(port, ebp, 0x10);
+    uint32_t volume = port_u8(port, channel, 0x14);
+    uint32_t pan = port_u8(port, channel, 0x15);
+    uint32_t base = sixteen ? port_u32(port, channel, 0) >> 1 : port_u32(port, channel, 0);
+    uint32_t position = port_u32(port, channel, 4);
+    uint32_t step = port_u32(port, channel, 8);
+    uint32_t fraction = position << 20;
+    uint32_t index = base + (uint32_t)((int32_t)position >> 12);
+    uint32_t step_fraction = step << 20;
+    uint32_t step_whole = (uint32_t)((int32_t)step >> 12);
+    uint32_t left;
+    uint32_t right = 0;
+    uint32_t sample;
+    uint32_t frames;
+    uint32_t blocks;
+    int both = 0;
+    int center = 0;
+    if (pan < 0x10 || pan >= 0xf0)
+    {
+        /* Hard left or right: one channel at the full volume. */
+        if (pan >= 0xf0)
+        {
+            output += 4;
+        }
+        left = (volume << 10) + port_u32(port, 0, KERNEL_VOLUMES);
+    }
+    else if (pan >= 0x78 && pan < 0x88)
+    {
+        /* Centre: half the volume to both. */
+        center = 1;
+        left = ((volume >> 1) << 10) + port_u32(port, 0, KERNEL_VOLUMES);
+    }
+    else
+    {
+        uint32_t share = (pan * volume) >> 8;
+        both = 1;
+        left = ((volume - share) << 10) + port_u32(port, 0, KERNEL_VOLUMES);
+        right = (share << 10) + port_u32(port, 0, KERNEL_VOLUMES);
+        port_set32(port, 0, KERNEL_STEP_FRACTION, step_fraction);
+    }
+    port_set32(port, 0, KERNEL_BLOCKS, count);
+    port_set32(port, 0, KERNEL_STEP, step_whole);
+    sample = kernel_sample(port, index, sixteen);
+    /* The position advances one sample ahead of the mix. */
+#define KERNEL_ADVANCE()                                                                           \
+    do                                                                                             \
+    {                                                                                              \
+        uint32_t sum = fraction + step_fraction;                                                   \
+        index += step_whole + (sum < fraction);                                                    \
+        fraction = sum;                                                                            \
+    } while (0)
+    KERNEL_ADVANCE();
+    blocks = count >> 4;
+    port_set32(port, 0, KERNEL_BLOCKS, blocks);
+    frames = (count & 15) + blocks * 16;
+    while (frames-- != 0)
+    {
+        if (both)
+        {
+            uint32_t value = kernel_gain(port, left, sample);
+            uint32_t next = port_u32(port, output, 4);
+            port_set32(port, output, 0, value + port_u32(port, output, 0));
+            value = kernel_gain(port, right, sample);
+            sample = kernel_sample(port, index, sixteen);
+            port_set32(port, output, 4, value + next);
+        }
+        else if (center)
+        {
+            uint32_t value = kernel_gain(port, left, sample);
+            uint32_t sum = port_u32(port, output, 0) + value;
+            sample = kernel_sample(port, index, sixteen);
+            port_set32(port, output, 0, sum);
+            port_set32(port, output, 4, port_u32(port, output, 4) + value);
+        }
+        else
+        {
+            uint32_t sum = port_u32(port, output, 0) + kernel_gain(port, left, sample);
+            sample = kernel_sample(port, index, sixteen);
+            port_set32(port, output, 0, sum);
+        }
+        KERNEL_ADVANCE();
+        output += 8;
+    }
+#undef KERNEL_ADVANCE
+    port_set32(port, 0, KERNEL_BLOCKS, 0xffffffffu);
+    /* Back to the sample last read, as a 20.12 position from the start. */
+    index -= step_whole + (fraction < step_fraction);
+    fraction -= step_fraction;
+    index -= base;
+    port_set32(port, channel, 4, (fraction >> 20) | (index << 12));
+    port_set8(port, channel, 0x17, sample);
+    return port_return(port, entry->eax, entry->edx);
+}
+
+uint32_t vertrix_port_mix_pcm8_stereo(PORT_SIGNATURE)
+{
+    Port port;
+    uint8_t stack[0x20 + 8 + 12];
+    port_open_arguments(&port, stack, calls, services, globals, entry, 0x20, 3);
+    return mix_stereo_kernel(&port, entry, 0);
+}
+
+uint32_t vertrix_port_mix_pcm16_stereo(PORT_SIGNATURE)
+{
+    Port port;
+    uint8_t stack[0x20 + 8 + 12];
+    port_open_arguments(&port, stack, calls, services, globals, entry, 0x20, 3);
+    return mix_stereo_kernel(&port, entry, 1);
+}

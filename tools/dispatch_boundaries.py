@@ -30,6 +30,8 @@ NATIVE_PORTS = {0x41c7b0: ('vertrix_native_title_frame', 0, 0),
 # original in Unicorn (eax, edx, calls, stores and pool objects, both register modes) and checks
 # that no caller reads the flags it leaves.
 PORTS = {0x401054: 'vertrix_port_mix_clamp',
+         0x401328: 'vertrix_port_mix_pcm8_stereo',
+         0x402c18: 'vertrix_port_mix_pcm16_stereo',
          0x404480: 'vertrix_port_mpeg_header_decode',
          0x404580: 'vertrix_port_nothing_404580',
          0x404610: 'vertrix_port_bits_get24',

@@ -103,8 +103,8 @@ void (*vertrix_lifted_after_hook)(uint32_t target, uint32_t eax);
 static const LiftedRoutine routines[] = {
     {0x401010, lifted_mixer_output, 92, 0},
     {0x401054, vertrix_port_mix_clamp, 0, 0},
-    {0x401328, lifted_mixer_pcm8_stereo, 116, 0},
-    {0x402c18, lifted_mixer_pcm16_stereo, 116, 0},
+    {0x401328, vertrix_port_mix_pcm8_stereo, 0, 0},
+    {0x402c18, vertrix_port_mix_pcm16_stereo, 0, 0},
     {0x404480, vertrix_port_mpeg_header_decode, 0, 0},
     {0x404580, vertrix_port_nothing_404580, 0, 0},
     {0x404610, vertrix_port_bits_get24, 0, 0},

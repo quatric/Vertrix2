@@ -135,4 +135,15 @@ uint32_t vertrix_port_channel_pan(PORT_SIGNATURE);
 /* Original 0x40ae10: the driver routine 0x52f078 with the channel from 0. */
 uint32_t vertrix_port_driver_call_78(PORT_SIGNATURE);
 
+/* Originals 0x401328 and 0x402c18 (stack: the 32-bit stereo mix, the frame count and the
+ * channel; ret 0): the noninterpolated stereo kernels for PCM8 and PCM16 samples (the high byte
+ * of each). The channel's sample data (+0), 20.12 position (+4) and step (+8) pick each sample,
+ * which the volume tables at [0x52f910] scale by the volume (+0x14) and pan (+0x15): one channel
+ * below 0x10 or from 0xf0, half the volume to both around the centre, else a left and a right
+ * share. The block count, whole step and (both channels only) fractional step go through
+ * 0x4f4010 to 0x4f4018; the position and the last sample read (+0x17) are stored back. Returns
+ * eax and edx unchanged. */
+uint32_t vertrix_port_mix_pcm8_stereo(PORT_SIGNATURE);
+uint32_t vertrix_port_mix_pcm16_stereo(PORT_SIGNATURE);
+
 #endif
