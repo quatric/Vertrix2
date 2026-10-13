@@ -54,4 +54,11 @@ uint32_t vertrix_port_draw_outline(PORT_SIGNATURE);
  * guard record's saved chain. */
 uint32_t vertrix_port_image_color_order(PORT_SIGNATURE);
 
+/* Original 0x485550(eax = display): present the back buffer. After the last flip ends, the
+ * front (+0x68) and back (+0x6c) surfaces are locked (status at 0x5b99c4), a lost one restored
+ * (0x487080) and locked again; the back is then copied to the front over the screen (+0x3e by
+ * +0x40) with BltFast, else Blt, and both unlocked once the copy ends. Returns 1, or 0 when a
+ * surface stays lost. Keeps edx. */
+uint32_t vertrix_port_display_present(PORT_SIGNATURE);
+
 #endif

@@ -387,3 +387,142 @@ uint32_t vertrix_port_image_color_order(PORT_SIGNATURE)
     port_set32(&port, ebp, -0x1cu, 0);
     return port_return(&port, chain, vertrix_lift_edx);
 }
+
+/* A DirectDraw surface method for 0x485550: eax the surface, edx its table, ebx the display. */
+static uint32_t display_method(Port *port, uint32_t surface, uint32_t offset, uint32_t display,
+                               uint32_t ecx, uint32_t *arguments, unsigned count)
+{
+    uint32_t table = port_u32(port, surface, 0);
+    arguments[0] = surface;
+    return port_call_stack(port, port_u32(port, table, offset), surface, table, display, ecx,
+                           arguments, count);
+}
+
+uint32_t vertrix_port_display_present(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x28,
+        STILL_DRAWING = 0x8876021cu,
+        SURFACE_LOST = 0x887601c2u,
+        STATUS = 0x5b99c4,
+        DESCRIPTION = 0x5b99c8,
+        RESTORE = 0x487080,
+        BLT = 0x14,
+        BLT_FAST = 0x1c,
+        GET_BLT_STATUS = 0x34,
+        GET_FLIP_STATUS = 0x48,
+        LOCK = 0x64,
+        IS_LOST = 0x6c,
+        UNLOCK = 0x80
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t display = entry->eax;
+    uint32_t ecx = entry->ecx;
+    uint32_t edx;
+    uint32_t result;
+    uint32_t front;
+    uint32_t back;
+    uint32_t rectangle = ebp - 0x24;
+    uint32_t arguments[6];
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    do
+    {
+        arguments[1] = 2;
+        result = display_method(&port, port_u32(&port, display, 0x68), GET_FLIP_STATUS, display,
+                                ecx, arguments, 2);
+    } while (result == STILL_DRAWING);
+    /* Lock both surfaces (as a test that neither is lost), restoring a lost one. */
+    for (;;)
+    {
+        arguments[1] = 0;
+        arguments[2] = DESCRIPTION;
+        arguments[3] = 0x21;
+        arguments[4] = 0;
+        result =
+            display_method(&port, port_u32(&port, display, 0x68), LOCK, display, ecx, arguments, 5);
+        port_set32(&port, 0, STATUS, result);
+        if (result != SURFACE_LOST)
+        {
+            break;
+        }
+        if (display_method(&port, port_u32(&port, display, 0x64), IS_LOST, display, ecx, arguments,
+                           1) != 0)
+        {
+            return port_return(&port, 0, entry->edx);
+        }
+        edx = vertrix_lift_edx;
+        result = port_call(&port, RESTORE, display, edx, display, ecx);
+        if (result == 0)
+        {
+            return port_return(&port, result, entry->edx);
+        }
+    }
+    for (;;)
+    {
+        arguments[1] = 0;
+        arguments[2] = DESCRIPTION;
+        arguments[3] = 0x11;
+        arguments[4] = 0;
+        result =
+            display_method(&port, port_u32(&port, display, 0x6c), LOCK, display, ecx, arguments, 5);
+        port_set32(&port, 0, STATUS, result);
+        if (result != SURFACE_LOST)
+        {
+            break;
+        }
+        if (display_method(&port, port_u32(&port, display, 0x6c), IS_LOST, display, ecx, arguments,
+                           1) != 0 ||
+            port_call(&port, RESTORE, display, vertrix_lift_edx, display, ecx) == 0)
+        {
+            arguments[1] = 0;
+            display_method(&port, port_u32(&port, display, 0x68), UNLOCK, display, ecx, arguments,
+                           2);
+            return port_return(&port, 0, entry->edx);
+        }
+    }
+    /* The back buffer copied to the front over the whole screen: BltFast, else Blt. */
+    port_set32(&port, rectangle, 0, 0);
+    port_set32(&port, rectangle, 4, 0);
+    port_set32(&port, rectangle, 8, port_u16(&port, display, 0x3e));
+    port_set32(&port, rectangle, 0xc, port_u16(&port, display, 0x40));
+    back = port_u32(&port, display, 0x6c);
+    front = port_u32(&port, display, 0x68);
+    ecx = rectangle;
+    arguments[1] = 0;
+    arguments[2] = 0;
+    arguments[3] = back;
+    arguments[4] = rectangle;
+    arguments[5] = 0x10;
+    result = display_method(&port, front, BLT_FAST, display, ecx, arguments, 6);
+    port_set32(&port, 0, STATUS, result);
+    if (result != 0)
+    {
+        uint32_t table;
+        back = port_u32(&port, display, 0x6c);
+        front = port_u32(&port, display, 0x68);
+        table = port_u32(&port, front, 0);
+        ecx = table;
+        arguments[0] = front;
+        arguments[1] = rectangle;
+        arguments[2] = back;
+        arguments[3] = rectangle;
+        arguments[4] = 0x1000000;
+        arguments[5] = 0;
+        port_call_stack(&port, port_u32(&port, table, BLT), front, rectangle, display, ecx,
+                        arguments, 6);
+    }
+    do
+    {
+        arguments[1] = 2;
+        result = display_method(&port, port_u32(&port, display, 0x68), GET_BLT_STATUS, display, ecx,
+                                arguments, 2);
+    } while (result == STILL_DRAWING);
+    arguments[1] = 0;
+    display_method(&port, port_u32(&port, display, 0x6c), UNLOCK, display, ecx, arguments, 2);
+    arguments[1] = 0;
+    display_method(&port, port_u32(&port, display, 0x68), UNLOCK, display, ecx, arguments, 2);
+    return port_return(&port, 1, entry->edx);
+}
