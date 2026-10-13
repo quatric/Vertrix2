@@ -1904,4 +1904,12 @@ uint32_t vertrix_port_pool_release(PORT_SIGNATURE);
  * a record of 1, edx, ebx and the object. Returns the object. */
 uint32_t vertrix_port_guarded_call_pair(PORT_SIGNATURE);
 
+/* Original 0x4ce9c0(eax = array record): destroy its elements (count +4, type +8 with the size at
+ * +0x10 and the destructor at +0xc, data +0xc) last first, then clear +0. Returns the data. */
+uint32_t vertrix_port_array_destroy_elements(PORT_SIGNATURE);
+
+/* Original 0x487280(eax, edx, ebx): a new 0x1c-byte record (0x4ec160) of the three with the byte
+ * at 0x5b9ca6. */
+uint32_t vertrix_port_object_record_new(PORT_SIGNATURE);
+
 #endif

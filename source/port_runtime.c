@@ -10425,3 +10425,41 @@ uint32_t vertrix_port_guarded_call_pair(PORT_SIGNATURE)
     port_set32(&port, esp, -0x1cu, 0);
     return port_return(&port, object, vertrix_lift_edx);
 }
+
+uint32_t vertrix_port_array_destroy_elements(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t array = entry->eax;
+    uint32_t type;
+    uint32_t size;
+    uint32_t destructor;
+    uint32_t element;
+    uint32_t left;
+    port_open(&port, calls, services, globals, entry);
+    type = port_u32(&port, array, 8);
+    size = port_u32(&port, type, 0x10);
+    element = port_u32(&port, array, 4) * size + port_u32(&port, array, 0xc);
+    destructor = port_u32(&port, type, 0xc);
+    /* The elements are destroyed last first, the count (+4) kept current. */
+    while ((left = port_u32(&port, array, 4)) != 0)
+    {
+        element -= size;
+        port_set32(&port, array, 4, left - 1);
+        port_call(&port, destructor, element, 0, element, array);
+    }
+    port_set32(&port, array, 0, 0);
+    return port_return(&port, port_u32(&port, array, 0xc), entry->edx);
+}
+
+uint32_t vertrix_port_object_record_new(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t record;
+    port_open(&port, calls, services, globals, entry);
+    record = port_call(&port, 0x4ec160, 1, 0x1c, entry->ebx, entry->eax);
+    port_set32(&port, record, 0, entry->eax);
+    port_set32(&port, record, 4, entry->edx);
+    port_set32(&port, record, 8, entry->ebx);
+    port_set8(&port, record, 0xc, port_u8(&port, 0, 0x5b9ca6));
+    return port_return(&port, record, vertrix_lift_edx);
+}
