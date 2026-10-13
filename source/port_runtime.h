@@ -1933,4 +1933,20 @@ uint32_t vertrix_port_runtime_version_init(PORT_SIGNATURE);
  * method +0xa4 of the stream's inner object (+0x38). */
 uint32_t vertrix_port_stream_flush_handle(PORT_SIGNATURE);
 
+/* Original 0x4cbf10(eax = object): under a guard record, construct the base stream (0x4cb460),
+ * set its table 0x518e24, clear +0x4c and +0x50 and finish it (0x4cbf90). Returns 0x4cbf90's
+ * edx; keeps edx. */
+uint32_t vertrix_port_stream_init_derived(PORT_SIGNATURE);
+
+/* Original 0x47f070(eax = object): clear +0xc and copy the 16 bytes 0x47fbb0 builds into +0xa4. */
+uint32_t vertrix_port_object_reset_block(PORT_SIGNATURE);
+
+/* Original 0x41a9a0: allocate and construct the 0x280-byte screen object (0x4ca000, 0x4413b0) at
+ * 0x544070, then 0x441530 with 13 and 0x441600. */
+uint32_t vertrix_port_game_screen_new(PORT_SIGNATURE);
+
+/* Original 0x4cda10: 0x4cd8b0 with eax 0, edx pointing at its three stack arguments (the address
+ * from 0x4e0f8b first) and ebx the guard chain. Keeps edx. */
+uint32_t vertrix_port_raise_at_caller(PORT_SIGNATURE);
+
 #endif
