@@ -11990,3 +11990,106 @@ uint32_t vertrix_port_sound_file_read(PORT_SIGNATURE)
     port_set32(&port, ebp, -0x30u, 0);
     return port_return(&port, port_u32(&port, ebp, -0x20u), vertrix_lift_edx);
 }
+
+uint32_t vertrix_port_heap_lock_enter(PORT_SIGNATURE)
+{
+    LiftEntry lock = *entry;
+    /* The heap's lock 0x5c8920: the original continues into 0x4e57ac. */
+    lock.eax = 0x5c8920;
+    return vertrix_port_lock_enter(calls, services, globals, &lock);
+}
+
+uint32_t vertrix_port_thread_runtime_init(PORT_SIGNATURE)
+{
+    static const uint32_t hooks[][2] = {
+        {0x507ca0, 0x4e5728}, {0x507ca4, 0x4e5738}, {0x507ca8, 0x4e5748}, {0x507cac, 0x4e5750},
+        {0x507cb0, 0x4e5710}, {0x507cb4, 0x4e571c}, {0x507cc8, 0x4e5794}, {0x507ccc, 0x4e579c},
+        {0x509748, 0x4e57ac}, {0x50974c, 0x4e5810}, {0x509750, 0x4e5700}, {0x507cb8, 0x4e576c},
+        {0x507cbc, 0x4e5780}, {0x507cc0, 0x4e5774}, {0x507cc4, 0x4e5788}};
+    Port port;
+    uint32_t eax;
+    uint32_t edx;
+    uint32_t tables;
+    uint32_t arguments[2];
+    unsigned index;
+    port_open_frame(&port, calls, services, globals, entry, 0x20);
+    /* When threads are available (0x4e58b8), install the runtime's locking hooks, create the
+     * global lock (0x4e55d4 at 0x5c8910), set up the thread's tables (0x4e8510) and store them
+     * in its TLS slot (import 0x4f1ce0). */
+    eax = port_call(&port, 0x4e58b8, entry->eax, entry->edx, entry->ebx, entry->ecx);
+    if (eax == 0)
+    {
+        return port_return(&port, eax, vertrix_lift_edx);
+    }
+    for (index = 0; index < sizeof hooks / sizeof hooks[0]; index++)
+    {
+        port_set32(&port, 0, hooks[index][0], hooks[index][1]);
+    }
+    eax = port_call(&port, 0x4e55d4, 0x4e5774, 0x4e5788, 1, 0x4e57a4);
+    tables = port_u32(&port, 0, 0x5c7b9c);
+    port_set32(&port, 0, 0x5c8910, eax);
+    port_set32(&port, 0, 0x5c8914, 1);
+    port_set32(&port, 0, 0x507cd0, 0x4e57a4);
+    port_set32(&port, 0, 0x507cd4, 0x4e5808);
+    eax = port_u32(&port, tables, 0xda);
+    port_set32(&port, 0, 0x507cd8, 0x4e59c4);
+    port_call(&port, 0x4e8510, eax, tables, 1, 0x4e57a4);
+    edx = vertrix_lift_edx;
+    arguments[0] = port_u32(&port, 0, 0x507c98);
+    arguments[1] = port_u32(&port, 0, 0x5c7b9c);
+    eax = port_call_stack(&port, 0x4f1ce0, arguments[0], edx, 1, 0x4e57a4, arguments, 2);
+    port_set32(&port, 0, 0x507c9c, 0x4e5838);
+    return port_return(&port, eax, entry->edx);
+}
+
+uint32_t vertrix_port_runtime_errors_init(PORT_SIGNATURE)
+{
+    static const uint32_t names[][2] = {
+        {0x5c7939, 0x506a90}, {0x5c793a, 0x506aa8}, {0x5c793b, 0x506ac0}, {0x5c793c, 0x506ad8},
+        {0x5c793d, 0x506af0}, {0x5c793e, 0x506b08}, {0x5c793f, 0x506b20}, {0x5c7940, 0x506b38},
+        {0x5c7941, 0x506b50}, {0x5c7942, 0x506b68}};
+    Port port;
+    uint8_t stack[0x30 + 8];
+    uint32_t esp = entry->esp;
+    unsigned index;
+    port_open_stack(&port, stack, calls, services, globals, entry, 0x30);
+    port_set32(&port, esp, -0x30u, port.env.chain);
+    port_set32(&port, esp, -0x2cu, 0x4ec1ec);
+    port_set32(&port, esp, -0x28u, 0x51afa0);
+    port_set32(&port, esp, -0x24u, 0);
+    /* The runtime's two static error objects (0x5c7804 with code 0xf022, 0x5c78a0 with 0xf024),
+     * each after its name (0x4d30f0) and registered for exit (0x4ec1f7), then the eleven
+     * exception names (0x4d30f0). */
+    port_call(&port, 0x4d30f0, 0x5c7800, 0x506a48, entry->ebx, entry->ecx);
+    port_set32(&port, esp, -0x10u, 0x5c7804);
+    port_set8(&port, esp, -0xcu, 0);
+    port_set32(&port, esp, -0x1cu, 0x5c7804);
+    port_set8(&port, esp, -0x18u, 0);
+    port_call(&port, 0x4d92f0, 0x5c7804, 0, entry->ebx, entry->ecx);
+    port_set32(&port, 0, 0x5c7810, 0);
+    port_set32(&port, 0, 0x5c7814, 0);
+    port_set32(&port, 0, 0x5c7804, 0x51b534);
+    port_set32(&port, 0, 0x5c7898, 0xf022);
+    port_set32(&port, esp, -0x24u, 0);
+    port_call(&port, 0x4ec1f7, 0x506730, 0x506a60, entry->ebx, entry->ecx);
+    port_call(&port, 0x4d30f0, 0x5c789c, vertrix_lift_edx, entry->ebx, entry->ecx);
+    port_set32(&port, esp, -0x10u, 0x5c78a0);
+    port_set8(&port, esp, -0xcu, 0);
+    port_set32(&port, esp, -0x1cu, 0x5c78a0);
+    port_set8(&port, esp, -0x18u, 0);
+    port_call(&port, 0x4d92f0, 0x5c78a0, 0, entry->ebx, entry->ecx);
+    port_set32(&port, 0, 0x5c78ac, 0);
+    port_set32(&port, 0, 0x5c78b0, 0);
+    port_set32(&port, esp, -0x24u, 5);
+    port_set32(&port, 0, 0x5c78a0, 0x51b554);
+    port_set32(&port, 0, 0x5c7934, 0xf024);
+    port_set32(&port, esp, -0x24u, 0);
+    port_call(&port, 0x4ec1f7, 0x506740, 0x506a78, entry->ebx, entry->ecx);
+    port_call(&port, 0x4d30f0, 0x5c7938, vertrix_lift_edx, entry->ebx, entry->ecx);
+    for (index = 0; index < sizeof names / sizeof names[0]; index++)
+    {
+        port_call(&port, 0x4d30f0, names[index][0], names[index][1], entry->ebx, entry->ecx);
+    }
+    /* The saved guard chain is returned. */
+    return port_return(&port, port_u32(&port, esp, -0x30u), entry->edx);
+}

@@ -2110,4 +2110,17 @@ uint32_t vertrix_port_object_construct_f(PORT_SIGNATURE);
  * (0x48a620, 0x48a710, 0x4b826f, 0x48a8c0); returns the reader's result or 10. */
 uint32_t vertrix_port_sound_file_read(PORT_SIGNATURE);
 
+/* Original 0x4e5794: enter the heap's lock 0x5c8920 (0x4e57ac). */
+uint32_t vertrix_port_heap_lock_enter(PORT_SIGNATURE);
+
+/* Original 0x4db8b0: when threads are available (0x4e58b8), install the runtime's locking hooks
+ * (0x507ca0 to 0x507ccc, 0x509748 to 0x509750), create the global lock 0x5c8910 (0x4e55d4), set
+ * up the thread's tables (0x4e8510) and store them in its TLS slot (import 0x4f1ce0). */
+uint32_t vertrix_port_thread_runtime_init(PORT_SIGNATURE);
+
+/* Original 0x4dd190: construct the runtime's two static error objects (0x5c7804 with 0xf022,
+ * 0x5c78a0 with 0xf024) and register them for exit (0x4ec1f7), then name the eleven exceptions
+ * at 0x5c7938 (0x4d30f0). Keeps edx. */
+uint32_t vertrix_port_runtime_errors_init(PORT_SIGNATURE);
+
 #endif

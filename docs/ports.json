@@ -3604,6 +3604,11 @@
   "lifted": "lifted_rtl_bracket_call",
   "chunk": "whole_6"
  },
+ "0x4db8b0": {
+  "port": "vertrix_port_thread_runtime_init",
+  "lifted": "lifted_f4db8b0",
+  "chunk": "whole_38"
+ },
  "0x4dba10": {
   "port": "vertrix_port_link_push",
   "lifted": "lifted_f4dba10",
@@ -3633,6 +3638,11 @@
   "port": "vertrix_port_handle_close_clear",
   "lifted": "lifted_f4dc400",
   "chunk": "whole_6"
+ },
+ "0x4dd190": {
+  "port": "vertrix_port_runtime_errors_init",
+  "lifted": "lifted_f4dd190",
+  "chunk": "whole_38"
  },
  "0x4de5a0": {
   "port": "vertrix_port_metrics_init",
@@ -3828,6 +3838,11 @@
   "port": "vertrix_port_lock_record_new",
   "lifted": "lifted_f4e55d4",
   "chunk": "whole_8"
+ },
+ "0x4e5794": {
+  "port": "vertrix_port_heap_lock_enter",
+  "lifted": "lifted_f4e5794",
+  "chunk": "whole_10"
  },
  "0x4e579c": {
   "port": "vertrix_port_lock_leave_5c8920",
