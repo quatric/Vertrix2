@@ -103,7 +103,6 @@ enum
     LIFTED_OBJECT_SET_464_STACK = 64,
     LIFTED_F472170_STACK = 128,
     LIFTED_F4723A0_STACK = 180,
-    LIFTED_SPECIAL_ACTOR_SPAWN_STACK = 128,
     LIFTED_SCENE_CLEAR_MARKER_STACK = 72,
     LIFTED_BANNER_ACTOR_SPAWN_STACK = 136,
     LIFTED_F4726D0_STACK = 428,
@@ -616,11 +615,6 @@ uint32_t lifted_f472170(const VertrixCalls *calls, const VertrixFactoryServices 
 /* Original 0x4723a0. */
 uint32_t lifted_f4723a0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x472570. */
-uint32_t lifted_special_actor_spawn(const VertrixCalls *calls,
-                                    const VertrixFactoryServices *services,
-                                    const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4725f0. */
 uint32_t lifted_scene_clear_marker(const VertrixCalls *calls,

@@ -650,6 +650,13 @@ uint32_t vertrix_port_key_construct(PORT_SIGNATURE);
 /* Original 0x476590(eax = keys): reset keys 0x7a and 0x7b (0x476140). */
 uint32_t vertrix_port_key_pair_reset(PORT_SIGNATURE);
 
+/* Originals 0x452a30, 0x452b00, 0x452bb0 and 0x452c60(eax = object): 0x43bad0 with 1, 2, 3 or 4,
+ * then 0x452960 with 0x452a50, 0x452b20, 0x452bd0 or 0x452c80. Keep edx. */
+uint32_t vertrix_port_board_mode_452a30(PORT_SIGNATURE);
+uint32_t vertrix_port_board_mode_452b00(PORT_SIGNATURE);
+uint32_t vertrix_port_board_mode_452bb0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_mode_452c60(PORT_SIGNATURE);
+
 /* Original 0x4760c0(eax = keys): release all 256 keys (0x476120). */
 uint32_t vertrix_port_key_all_release(PORT_SIGNATURE);
 
@@ -1189,6 +1196,10 @@ uint32_t vertrix_port_stream_length(PORT_SIGNATURE);
  * 0x4575b0 (0x4ac8f0). Then move it (0x4ac8a0). */
 uint32_t vertrix_port_actor_animate_drop(PORT_SIGNATURE);
 
+/* Original 0x45a3e0: the same stepping with 0x4ad530, the fade from 0 by 5, the update 0x45a440
+ * and the refresh 0x457890. */
+uint32_t vertrix_port_actor_animate_drop_45a3e0(PORT_SIGNATURE);
+
 /* Original 0x45e6b0: allocate bank 0x544a50 with 19 entries (0x487640) and fill each with entry i
  * of 0x544a34 combined with 0x546538 (0x4877f0, 0x4831b0, 0x487850), reporting progress (0x418270).
  */
@@ -1392,6 +1403,10 @@ uint32_t vertrix_port_sparkle_actor_add(PORT_SIGNATURE);
 
 /* Original 0x472470: 0x4724f0's code with the counter rate 0xf. */
 uint32_t vertrix_port_sparkle_actor_add_472470(PORT_SIGNATURE);
+
+/* Original 0x472570: the same actor of kind 9 at the rate 0xa, its value 0x1df stepping to 0 by 4,
+ * with the update 0x4597a0. */
+uint32_t vertrix_port_sparkle_actor_add_472570(PORT_SIGNATURE);
 
 /* Original 0x478d10(eax = width, edx = height, bl = bytes per pixel): allocate a 0x1c byte image
  * (0x4ec160) with its pixels, set its depth (0x478cd0) and pitch +0x14 and clear it (0x478da0). */

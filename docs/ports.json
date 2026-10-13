@@ -1284,6 +1284,26 @@
   "lifted": "lifted_return_unchanged_4523b0",
   "chunk": "whole_2"
  },
+ "0x452a30": {
+  "port": "vertrix_port_board_mode_452a30",
+  "lifted": "lifted_effect_arm_handler",
+  "chunk": "whole_2"
+ },
+ "0x452b00": {
+  "port": "vertrix_port_board_mode_452b00",
+  "lifted": "lifted_effect_arm_handler_452b00",
+  "chunk": "whole_2"
+ },
+ "0x452bb0": {
+  "port": "vertrix_port_board_mode_452bb0",
+  "lifted": "lifted_effect_arm_handler_452bb0",
+  "chunk": "whole_2"
+ },
+ "0x452c60": {
+  "port": "vertrix_port_board_mode_452c60",
+  "lifted": "lifted_effect_arm_handler_452c60",
+  "chunk": "whole_2"
+ },
  "0x453570": {
   "port": "vertrix_port_child_check_453570",
   "lifted": "lifted_effect_stone_clear",
@@ -1407,6 +1427,11 @@
  "0x459860": {
   "port": "vertrix_port_actor_play_then_459860",
   "lifted": "lifted_f459860",
+  "chunk": "whole_2"
+ },
+ "0x45a3e0": {
+  "port": "vertrix_port_actor_animate_drop_45a3e0",
+  "lifted": "lifted_title_letter_fight_settle_call",
   "chunk": "whole_2"
  },
  "0x45afe0": {
@@ -1977,6 +2002,11 @@
  "0x4724f0": {
   "port": "vertrix_port_sparkle_actor_add",
   "lifted": "lifted_f4724f0",
+  "chunk": "whole_3"
+ },
+ "0x472570": {
+  "port": "vertrix_port_sparkle_actor_add_472570",
+  "lifted": "lifted_special_actor_spawn",
   "chunk": "whole_3"
  },
  "0x472ad0": {

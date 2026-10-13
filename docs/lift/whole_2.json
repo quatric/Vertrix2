@@ -7383,27 +7383,6 @@
   ],
   "address": 4532448
  },
- "effect_arm_handler": {
-  "callees": {
-   "0x43bad0": [
-    0,
-    false
-   ],
-   "0x452960": [
-    0,
-    false
-   ]
-  },
-  "stack": 80,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4532784
- },
  "effect_armed_handler": {
   "callees": {
    "0x43a5f0": [
@@ -7443,27 +7422,6 @@
    ]
   ],
   "address": 4532816
- },
- "effect_arm_handler_452b00": {
-  "callees": {
-   "0x43bad0": [
-    0,
-    false
-   ],
-   "0x452960": [
-    0,
-    false
-   ]
-  },
-  "stack": 80,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4532992
  },
  "effect_armed_handler_452b20": {
   "callees": {
@@ -7507,27 +7465,6 @@
   ],
   "address": 4533024
  },
- "effect_arm_handler_452bb0": {
-  "callees": {
-   "0x43bad0": [
-    0,
-    false
-   ],
-   "0x452960": [
-    0,
-    false
-   ]
-  },
-  "stack": 80,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4533168
- },
  "effect_armed_handler_452bd0": {
   "callees": {
    "0x43a5f0": [
@@ -7569,27 +7506,6 @@
    ]
   ],
   "address": 4533200
- },
- "effect_arm_handler_452c60": {
-  "callees": {
-   "0x43bad0": [
-    0,
-    false
-   ],
-   "0x452960": [
-    0,
-    false
-   ]
-  },
-  "stack": 80,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4533344
  },
  "effect_armed_handler_452c80": {
   "callees": {
@@ -15887,51 +15803,6 @@
   ],
   "virtual": [],
   "address": 4563600
- },
- "title_letter_fight_settle_call": {
-  "callees": {
-   "0x4ac500": [
-    0,
-    false
-   ],
-   "0x4ac520": [
-    0,
-    false
-   ],
-   "0x457890": [
-    0,
-    false
-   ],
-   "0x4ac540": [
-    0,
-    false
-   ],
-   "0x4ac5b0": [
-    0,
-    false
-   ],
-   "0x4ad530": [
-    0,
-    false
-   ],
-   "0x4ac8f0": [
-    0,
-    false
-   ]
-  },
-  "stack": 104,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2
-  ],
-  "virtual": [],
-  "address": 4563936
  },
  "title_letter_fight_restart_call": {
   "callees": {

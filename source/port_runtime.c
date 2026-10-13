@@ -3399,14 +3399,42 @@ uint32_t vertrix_port_key_construct(PORT_SIGNATURE)
     return port_return(&port, key, entry->edx);
 }
 
-uint32_t vertrix_port_key_pair_reset(PORT_SIGNATURE)
+/* 0x476590's shape: `first` with edx `first_edx`, then `second` with edx `second_edx`, both on
+ * the object. */
+static uint32_t call_pair(PORT_SIGNATURE, uint32_t first, uint32_t first_edx, uint32_t second,
+                          uint32_t second_edx)
 {
     Port port;
     uint32_t result;
     port_open(&port, calls, services, globals, entry);
-    port_call(&port, 0x476140, entry->eax, 0x7a, entry->ebx, entry->eax);
-    result = port_call(&port, 0x476140, entry->eax, 0x7b, entry->ebx, entry->eax);
+    port_call(&port, first, entry->eax, first_edx, entry->ebx, entry->eax);
+    result = port_call(&port, second, entry->eax, second_edx, entry->ebx, entry->eax);
     return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_key_pair_reset(PORT_SIGNATURE)
+{
+    return call_pair(calls, services, globals, entry, 0x476140, 0x7a, 0x476140, 0x7b);
+}
+
+uint32_t vertrix_port_board_mode_452a30(PORT_SIGNATURE)
+{
+    return call_pair(calls, services, globals, entry, 0x43bad0, 1, 0x452960, 0x452a50);
+}
+
+uint32_t vertrix_port_board_mode_452b00(PORT_SIGNATURE)
+{
+    return call_pair(calls, services, globals, entry, 0x43bad0, 2, 0x452960, 0x452b20);
+}
+
+uint32_t vertrix_port_board_mode_452bb0(PORT_SIGNATURE)
+{
+    return call_pair(calls, services, globals, entry, 0x43bad0, 3, 0x452960, 0x452bd0);
+}
+
+uint32_t vertrix_port_board_mode_452c60(PORT_SIGNATURE)
+{
+    return call_pair(calls, services, globals, entry, 0x43bad0, 4, 0x452960, 0x452c80);
 }
 
 uint32_t vertrix_port_key_all_release(PORT_SIGNATURE)
@@ -5444,7 +5472,10 @@ uint32_t vertrix_port_stream_length(PORT_SIGNATURE)
     return port_return(&port, result, entry->edx);
 }
 
-uint32_t vertrix_port_actor_animate_drop(PORT_SIGNATURE)
+/* 0x457550's frame with the stepper `stepper`, the fade from `start` by `fade` and the update
+ * `next` once it is done, `refresh` in every case. */
+static uint32_t actor_drop_with(PORT_SIGNATURE, uint32_t stepper, uint32_t start, uint32_t fade,
+                                uint32_t next, uint32_t refresh)
 {
     Port port;
     uint32_t result;
@@ -5456,16 +5487,27 @@ uint32_t vertrix_port_actor_animate_drop(PORT_SIGNATURE)
     {
         result = port_call(&port, 0x4ac540, actor, vertrix_lift_edx, entry->ebx, actor);
         port_call(&port, 0x4ac5b0, actor, result, entry->ebx, actor);
-        result = port_call(&port, 0x4acc10, actor, vertrix_lift_edx, entry->ebx, actor);
+        result = port_call(&port, stepper, actor, vertrix_lift_edx, entry->ebx, actor);
         if (result == 0)
         {
-            port_set16(&port, actor, 0x4a, 0xff6a);
-            port_set16(&port, actor, 0x4c, 0xa);
-            port_call(&port, 0x4ac8f0, actor, 0x4575b0, entry->ebx, actor);
+            port_set16(&port, actor, 0x4a, start);
+            port_set16(&port, actor, 0x4c, fade);
+            port_call(&port, 0x4ac8f0, actor, next, entry->ebx, actor);
         }
     }
-    result = port_call(&port, 0x4ac8a0, actor, vertrix_lift_edx, entry->ebx, actor);
+    result = port_call(&port, refresh, actor, vertrix_lift_edx, entry->ebx, actor);
     return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_actor_animate_drop(PORT_SIGNATURE)
+{
+    return actor_drop_with(calls, services, globals, entry, 0x4acc10, 0xff6a, 0xa, 0x4575b0,
+                           0x4ac8a0);
+}
+
+uint32_t vertrix_port_actor_animate_drop_45a3e0(PORT_SIGNATURE)
+{
+    return actor_drop_with(calls, services, globals, entry, 0x4ad530, 0, 5, 0x45a440, 0x457890);
 }
 
 uint32_t vertrix_port_bank_build_544a50(PORT_SIGNATURE)
@@ -6461,8 +6503,10 @@ uint32_t vertrix_port_actor_animate_slide(PORT_SIGNATURE)
     return port_return(&port, result, entry->edx);
 }
 
-/* 0x4724f0's actor with the counter rate `rate`. */
-static uint32_t sparkle_actor_add_with(PORT_SIGNATURE, uint32_t rate)
+/* 0x4724f0's actor of the kind `kind` with the counter rate `rate`, the value, goal and speed
+ * (+0x58, +0x5c, +0x60) and the update `next`. */
+static uint32_t sparkle_actor_add_with(PORT_SIGNATURE, uint32_t kind, uint32_t rate, uint32_t value,
+                                       uint32_t goal, uint32_t speed, uint32_t next)
 {
     Port port;
     uint32_t result;
@@ -6474,12 +6518,12 @@ static uint32_t sparkle_actor_add_with(PORT_SIGNATURE, uint32_t rate)
         actor = port_call(&port, 0x4abd70, actor, vertrix_lift_edx, entry->ebx, entry->ecx);
     }
     port_call_stack(&port, 0x4adf20, actor, 0, 0, 0, place, 5);
-    port_set32(&port, actor, 0, 8);
+    port_set32(&port, actor, 0, kind);
     port_call(&port, 0x4ac7d0, actor, rate, 0, 0);
-    port_set32(&port, actor, 0x58, 0);
-    port_set32(&port, actor, 0x5c, 0x64);
-    port_set32(&port, actor, 0x60, 1);
-    port_call(&port, 0x4ac8f0, actor, 0x459760, 0, 0);
+    port_set32(&port, actor, 0x58, value);
+    port_set32(&port, actor, 0x5c, goal);
+    port_set32(&port, actor, 0x60, speed);
+    port_call(&port, 0x4ac8f0, actor, next, 0, 0);
     port_call(&port, 0x4ac910, actor, 0, 0, 0);
     result = port_call(&port, 0x4b5e70, 0x54676c, actor, 0, 0);
     return port_return(&port, result, entry->edx);
@@ -6487,12 +6531,17 @@ static uint32_t sparkle_actor_add_with(PORT_SIGNATURE, uint32_t rate)
 
 uint32_t vertrix_port_sparkle_actor_add(PORT_SIGNATURE)
 {
-    return sparkle_actor_add_with(calls, services, globals, entry, 0xa);
+    return sparkle_actor_add_with(calls, services, globals, entry, 8, 0xa, 0, 0x64, 1, 0x459760);
 }
 
 uint32_t vertrix_port_sparkle_actor_add_472470(PORT_SIGNATURE)
 {
-    return sparkle_actor_add_with(calls, services, globals, entry, 0xf);
+    return sparkle_actor_add_with(calls, services, globals, entry, 8, 0xf, 0, 0x64, 1, 0x459760);
+}
+
+uint32_t vertrix_port_sparkle_actor_add_472570(PORT_SIGNATURE)
+{
+    return sparkle_actor_add_with(calls, services, globals, entry, 9, 0xa, 0x1df, 0, 4, 0x4597a0);
 }
 
 uint32_t vertrix_port_image_create(PORT_SIGNATURE)

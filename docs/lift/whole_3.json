@@ -5007,49 +5007,6 @@
   "virtual": [],
   "address": 4662176
  },
- "special_actor_spawn": {
-  "callees": {
-   "0x4ca000": [
-    0,
-    false
-   ],
-   "0x4adf20": [
-    5,
-    false
-   ],
-   "0x4ac7d0": [
-    0,
-    false
-   ],
-   "0x4ac8f0": [
-    0,
-    false
-   ],
-   "0x4ac910": [
-    0,
-    false
-   ],
-   "0x4b5e70": [
-    0,
-    false
-   ],
-   "0x4abd70": [
-    0,
-    false
-   ]
-  },
-  "stack": 128,
-  "arguments": 0,
-  "pointer_callees": [
-   "0x4ca000"
-  ],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4662640
- },
  "scene_clear_marker": {
   "callees": {
    "0x4b5eb0": [

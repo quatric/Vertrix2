@@ -160,13 +160,9 @@ enum
     LIFTED_EFFECT_NEGATED_GATE_STACK = 100,
     LIFTED_EFFECT_VALUE_GATE_STACK = 104,
     LIFTED_EFFECT_PROGRESS_GATE_STACK = 112,
-    LIFTED_EFFECT_ARM_HANDLER_STACK = 80,
     LIFTED_EFFECT_ARMED_HANDLER_STACK = 128,
-    LIFTED_EFFECT_ARM_HANDLER_452B00_STACK = 80,
     LIFTED_EFFECT_ARMED_HANDLER_452B20_STACK = 116,
-    LIFTED_EFFECT_ARM_HANDLER_452BB0_STACK = 80,
     LIFTED_EFFECT_ARMED_HANDLER_452BD0_STACK = 116,
-    LIFTED_EFFECT_ARM_HANDLER_452C60_STACK = 80,
     LIFTED_EFFECT_ARMED_HANDLER_452C80_STACK = 116,
     LIFTED_EFFECT_PROGRESS_UPDATE_GATE_STACK = 104,
     LIFTED_EFFECT_PROGRESS_COMPARE_STACK = 128,
@@ -328,7 +324,6 @@ enum
     LIFTED_TITLE_LETTER_LAUNCH_CALL_STACK = 124,
     LIFTED_TITLE_LETTER_FLY_OUT_CALL_STACK = 140,
     LIFTED_TITLE_LETTER_FIGHT_COUNT_CALL_STACK = 144,
-    LIFTED_TITLE_LETTER_FIGHT_SETTLE_CALL_STACK = 104,
     LIFTED_TITLE_LETTER_FIGHT_RESTART_CALL_STACK = 124,
     LIFTED_TITLE_LETTER_FIGHT_FLY_CALL_STACK = 140,
     LIFTED_TITLE_LETTER_WAVE_COUNT_CALL_STACK = 136,
@@ -1096,40 +1091,20 @@ uint32_t lifted_effect_progress_gate(const VertrixCalls *calls,
                                      const VertrixFactoryServices *services,
                                      const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x452a30. */
-uint32_t lifted_effect_arm_handler(const VertrixCalls *calls,
-                                   const VertrixFactoryServices *services,
-                                   const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x452a50. */
 uint32_t lifted_effect_armed_handler(const VertrixCalls *calls,
                                      const VertrixFactoryServices *services,
                                      const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x452b00. */
-uint32_t lifted_effect_arm_handler_452b00(const VertrixCalls *calls,
-                                          const VertrixFactoryServices *services,
-                                          const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x452b20. */
 uint32_t lifted_effect_armed_handler_452b20(const VertrixCalls *calls,
                                             const VertrixFactoryServices *services,
                                             const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x452bb0. */
-uint32_t lifted_effect_arm_handler_452bb0(const VertrixCalls *calls,
-                                          const VertrixFactoryServices *services,
-                                          const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x452bd0. */
 uint32_t lifted_effect_armed_handler_452bd0(const VertrixCalls *calls,
                                             const VertrixFactoryServices *services,
                                             const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x452c60. */
-uint32_t lifted_effect_arm_handler_452c60(const VertrixCalls *calls,
-                                          const VertrixFactoryServices *services,
-                                          const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x452c80. */
 uint32_t lifted_effect_armed_handler_452c80(const VertrixCalls *calls,
@@ -1822,12 +1797,6 @@ uint32_t lifted_title_letter_fight_count_call(const VertrixCalls *calls,
                                               const VertrixFactoryServices *services,
                                               const VertrixGlobals *globals,
                                               const LiftEntry *entry);
-
-/* Original 0x45a3e0. */
-uint32_t lifted_title_letter_fight_settle_call(const VertrixCalls *calls,
-                                               const VertrixFactoryServices *services,
-                                               const VertrixGlobals *globals,
-                                               const LiftEntry *entry);
 
 /* Original 0x45a440. */
 uint32_t lifted_title_letter_fight_restart_call(const VertrixCalls *calls,
