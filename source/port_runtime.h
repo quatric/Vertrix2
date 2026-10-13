@@ -1891,4 +1891,17 @@ uint32_t vertrix_port_player_refresh(PORT_SIGNATURE);
  * (0x4c9ff0) and push it onto the chain. Returns the block. */
 uint32_t vertrix_port_block_chain_new(PORT_SIGNATURE);
 
+/* Original 0x4dbac0(eax = lock, edx = name): clear a lock's fields, open its named event (import
+ * 0x4f1cd4, failing to 0x4d9510) or mark it -1, and initialise its section at +0x20 (import
+ * 0x4f1c30). Returns the lock. */
+uint32_t vertrix_port_lock_construct(PORT_SIGNATURE);
+
+/* Original 0x4d84f0(eax = pool, edx = item): push the item on the pool's free list (+0x10) and,
+ * when no item is left in use (+0xc), release the pool (0x4d83c0). */
+uint32_t vertrix_port_pool_release(PORT_SIGNATURE);
+
+/* Original 0x4cea15(eax = object, edx, ebx): under a guard record, call 0x4ce9c0 and 0x4ce9fd on
+ * a record of 1, edx, ebx and the object. Returns the object. */
+uint32_t vertrix_port_guarded_call_pair(PORT_SIGNATURE);
+
 #endif

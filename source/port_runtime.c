@@ -10338,3 +10338,90 @@ uint32_t vertrix_port_block_chain_new(PORT_SIGNATURE)
     port_set32(&port, chain, 0, block);
     return port_return(&port, block, next);
 }
+
+uint32_t vertrix_port_lock_construct(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t lock = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t inner = lock + 0x20;
+    port_open_frame(&port, calls, services, globals, entry, 0x10);
+    port_set32(&port, lock + 0x18, 4, 4);
+    port_set32(&port, lock + 0x18, 0, 0);
+    port_set32(&port, lock, 8, 0);
+    port_set32(&port, lock, 0xc, 1);
+    port_set32(&port, lock, 0x10, 0);
+    port_set32(&port, lock, 0x14, 0);
+    port_set32(&port, lock, 4, 0);
+    if (edx != 0)
+    {
+        /* A named lock opens its event (import 0x4f1cd4); -1 is an error (0x4d9510). */
+        uint32_t handle = port_call(&port, 0x4f1cd4, lock + 0x18, edx, lock, entry->ecx);
+        edx = vertrix_lift_edx;
+        port_set32(&port, lock, 0, handle);
+        if (handle == 0xffffffffu)
+        {
+            port_call(&port, 0x4d9510, handle, edx, lock, entry->ecx);
+            edx = vertrix_lift_edx;
+        }
+    }
+    else
+    {
+        port_set32(&port, lock, 0, 0xffffffffu);
+    }
+    port_call_stack(&port, 0x4f1c30, inner, edx, lock, entry->ecx, &inner, 1);
+    return port_return(&port, lock, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_pool_release(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t pool = entry->eax;
+    uint32_t item = entry->edx;
+    uint32_t eax = pool;
+    uint32_t edx = item;
+    uint32_t used;
+    uint32_t head;
+    port_open(&port, calls, services, globals, entry);
+    /* The item goes back on the free list (+0x10); the last one in use frees the page. */
+    head = port_u32(&port, pool, 0x10);
+    port_set32(&port, item, 0, head);
+    port_set32(&port, pool, 0x10, item);
+    used = port_u32(&port, pool, 0xc) - 1;
+    port_set32(&port, pool, 0xc, used);
+    if (used == 0)
+    {
+        eax = port_call(&port, 0x4d83c0, pool, item, entry->ebx, head);
+        edx = vertrix_lift_edx;
+    }
+    return port_return(&port, eax, edx);
+}
+
+uint32_t vertrix_port_guarded_call_pair(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x28,
+        GUARD_HANDLER = 0x4ec1ec
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t esp = entry->esp;
+    uint32_t object = entry->eax;
+    uint32_t record = esp - 0x14;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    port_set32(&port, esp, -0x28u, port.env.chain);
+    port_set32(&port, esp, -0x24u, GUARD_HANDLER);
+    port_set32(&port, esp, -0x20u, 0x519460);
+    port_set32(&port, esp, -0x1cu, 0);
+    port_set32(&port, esp, -0x14u, 1);
+    port_set32(&port, esp, -0x10u, entry->edx);
+    port_set32(&port, esp, -0xcu, entry->ebx);
+    port_set32(&port, esp, -8u, object);
+    port_set32(&port, esp, -0x1cu, 1);
+    port_call(&port, 0x4ce9c0, record, entry->edx, entry->ebx, object);
+    port_set32(&port, esp, -0x1cu, 0);
+    port_call(&port, 0x4ce9fd, record, 0, entry->ebx, object);
+    port_set32(&port, esp, -0x1cu, 0);
+    return port_return(&port, object, vertrix_lift_edx);
+}
