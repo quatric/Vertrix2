@@ -240,7 +240,8 @@ uint32_t vertrix_port_blend_half_tint(PORT_SIGNATURE)
     return port_return(&port, colour, entry->edx);
 }
 
-uint32_t vertrix_port_render_row32(PORT_SIGNATURE)
+/* 0x492400's row with the target pixel at `target_pixel`, `step` bytes each. */
+static uint32_t render_row32_at(PORT_SIGNATURE, uint32_t target_pixel, uint32_t step)
 {
     Port port;
     uint32_t eax = entry->eax;
@@ -258,13 +259,28 @@ uint32_t vertrix_port_render_row32(PORT_SIGNATURE)
         edx = vertrix_lift_edx;
         count = port_u16(&port, 0, ROW_COUNT);
         ecx = port_u32(&port, 0, SOURCE_PIXEL) + PIXEL_SIZE;
-        ebx = port_u32(&port, 0, TARGET_PIXEL) + PIXEL_SIZE;
+        ebx = port_u32(&port, 0, target_pixel) + step;
         port_set32(&port, 0, SOURCE_PIXEL, ecx);
-        port_set32(&port, 0, TARGET_PIXEL, ebx);
+        port_set32(&port, 0, target_pixel, ebx);
         count = (count - 1) & 0xffff;
     }
     port_set16(&port, 0, ROW_COUNT, count);
     return port_return(&port, eax, entry->edx);
+}
+
+uint32_t vertrix_port_render_row32(PORT_SIGNATURE)
+{
+    return render_row32_at(calls, services, globals, entry, TARGET_PIXEL, PIXEL_SIZE);
+}
+
+uint32_t vertrix_port_render_row32_49a120(PORT_SIGNATURE)
+{
+    return render_row32_at(calls, services, globals, entry, 0x5bb780, 2);
+}
+
+uint32_t vertrix_port_render_row32_4a21e0(PORT_SIGNATURE)
+{
+    return render_row32_at(calls, services, globals, entry, 0x5bb780, 2);
 }
 
 /* The two-table sum of 0x490560 and 0x4902a0: each channel of the source looked up in the byte
@@ -337,7 +353,8 @@ uint32_t vertrix_port_blend_shade(PORT_SIGNATURE)
     return port_return(&port, target, entry->edx);
 }
 
-uint32_t vertrix_port_render_sampled_row32(PORT_SIGNATURE)
+/* 0x492550's row with the target pixel at `target_pixel`, `step` bytes each. */
+static uint32_t render_sampled_row32_at(PORT_SIGNATURE, uint32_t target_pixel, uint32_t step)
 {
     Port port;
     uint32_t eax = entry->eax;
@@ -361,10 +378,10 @@ uint32_t vertrix_port_render_sampled_row32(PORT_SIGNATURE)
         eax = port_u32(&port, 0, SAMPLE_STEPS);
         source = port_u32(&port, 0, SOURCE_PIXEL) + (port_u8(&port, eax, 0) << 2);
         count = port_u16(&port, 0, ROW_COUNT);
-        edx = port_u32(&port, 0, TARGET_PIXEL) + PIXEL_SIZE;
+        edx = port_u32(&port, 0, target_pixel) + step;
         eax++;
         port_set32(&port, 0, SAMPLE_STEPS, eax);
-        port_set32(&port, 0, TARGET_PIXEL, edx);
+        port_set32(&port, 0, target_pixel, edx);
         count = (count - 1) & 0xffff;
     } while (count != 0);
     port_set16(&port, 0, ROW_COUNT, count);
@@ -372,7 +389,23 @@ uint32_t vertrix_port_render_sampled_row32(PORT_SIGNATURE)
     return port_return(&port, eax, entry->edx);
 }
 
-uint32_t vertrix_port_render_keyed_row32(PORT_SIGNATURE)
+uint32_t vertrix_port_render_sampled_row32(PORT_SIGNATURE)
+{
+    return render_sampled_row32_at(calls, services, globals, entry, TARGET_PIXEL, PIXEL_SIZE);
+}
+
+uint32_t vertrix_port_render_sampled_row32_49a270(PORT_SIGNATURE)
+{
+    return render_sampled_row32_at(calls, services, globals, entry, 0x5bb780, 2);
+}
+
+uint32_t vertrix_port_render_sampled_row32_4a2330(PORT_SIGNATURE)
+{
+    return render_sampled_row32_at(calls, services, globals, entry, 0x5bb780, 2);
+}
+
+/* 0x492280's row with the target pixel at `target_pixel`, `step` bytes each. */
+static uint32_t render_keyed_row32_at(PORT_SIGNATURE, uint32_t target_pixel, uint32_t step)
 {
     Port port;
     uint32_t eax = entry->eax;
@@ -393,9 +426,9 @@ uint32_t vertrix_port_render_keyed_row32(PORT_SIGNATURE)
             eax = port_call(&port, port_u32(&port, 0, PIXEL_OPERATION), eax,
                             (edx & 0xffff0000u) | count, entry->ebx, source);
         }
-        edx = port_u32(&port, 0, TARGET_PIXEL) + PIXEL_SIZE;
+        edx = port_u32(&port, 0, target_pixel) + step;
         source = port_u32(&port, 0, SOURCE_PIXEL);
-        port_set32(&port, 0, TARGET_PIXEL, edx);
+        port_set32(&port, 0, target_pixel, edx);
         count = (port_u16(&port, 0, ROW_COUNT) - 1) & 0xffff;
         source += PIXEL_SIZE;
     }
@@ -404,13 +437,31 @@ uint32_t vertrix_port_render_keyed_row32(PORT_SIGNATURE)
     return port_return(&port, eax, entry->edx);
 }
 
+uint32_t vertrix_port_render_keyed_row32(PORT_SIGNATURE)
+{
+    return render_keyed_row32_at(calls, services, globals, entry, TARGET_PIXEL, PIXEL_SIZE);
+}
+
+uint32_t vertrix_port_render_keyed_row32_499fb0(PORT_SIGNATURE)
+{
+    return render_keyed_row32_at(calls, services, globals, entry, 0x5bb780, 2);
+}
+
+uint32_t vertrix_port_render_keyed_row32_4a2070(PORT_SIGNATURE)
+{
+    return render_keyed_row32_at(calls, services, globals, entry, 0x5bb780, 2);
+}
+
 /* The signed high word of a dword global: the original reads the dword and shifts it right. */
 static uint32_t high_word(Port *port, uint32_t address)
 {
     return (uint32_t)((int32_t)port_u32(port, 0, address) >> 16);
 }
 
-uint32_t vertrix_port_render_image_rows(PORT_SIGNATURE)
+/* 0x492980's rows with the target pixel and row at `target_pixel` and `row_global`, `step` bytes
+ * each. */
+static uint32_t render_image_rows_at(PORT_SIGNATURE, uint32_t target_pixel, uint32_t row_global,
+                                     uint32_t step)
 {
     Port port;
     uint32_t routine = entry->eax;
@@ -427,25 +478,25 @@ uint32_t vertrix_port_render_image_rows(PORT_SIGNATURE)
     source_step = high_word(&port, SOURCE_STRIDE) * last;
     eax = last * port_u32(&port, 0, TARGET_STRIDE);
     source_step = port_u32(&port, 0, SOURCE_ROW) + (source_step << 2);
-    target_row = port_u32(&port, 0, TARGET_ROW);
+    target_row = port_u32(&port, 0, row_global);
     port_set32(&port, 0, MASK_ROW, mask);
     port_set32(&port, 0, SOURCE_ROW, source_step);
-    port_set32(&port, 0, TARGET_ROW, target_row + eax);
+    port_set32(&port, 0, row_global, target_row + eax);
     rows = port_u16(&port, 0, ROWS);
     while (rows != 0)
     {
         uint32_t width = port_u16(&port, 0, WIDTH);
-        uint32_t target = port_u32(&port, 0, TARGET_ROW);
+        uint32_t target = port_u32(&port, 0, row_global);
         uint32_t source;
         port_set32(&port, 0, ROW_START, start);
         width -= port_u16(&port, start, 0);
-        port_set32(&port, 0, TARGET_PIXEL, target);
+        port_set32(&port, 0, target_pixel, target);
         port_set16(&port, 0, ROW_COUNT, width);
         mask = port_u32(&port, 0, MASK_ROW);
-        target += 4;
+        target += step;
         source = port_u32(&port, 0, SOURCE_ROW);
         port_set32(&port, 0, MASK_PIXEL, mask);
-        port_set32(&port, 0, TARGET_ROW, target);
+        port_set32(&port, 0, row_global, target);
         port_set32(&port, 0, SOURCE_PIXEL, source);
         mask++;
         source += 4;
@@ -458,6 +509,21 @@ uint32_t vertrix_port_render_image_rows(PORT_SIGNATURE)
     }
     port_set32(&port, 0, ROW_START, start);
     return port_return(&port, eax, entry->edx);
+}
+
+uint32_t vertrix_port_render_image_rows(PORT_SIGNATURE)
+{
+    return render_image_rows_at(calls, services, globals, entry, TARGET_PIXEL, TARGET_ROW, 4);
+}
+
+uint32_t vertrix_port_render_image_rows_49a690(PORT_SIGNATURE)
+{
+    return render_image_rows_at(calls, services, globals, entry, 0x5bb780, 0x5bb784, 2);
+}
+
+uint32_t vertrix_port_render_image_rows_4a2750(PORT_SIGNATURE)
+{
+    return render_image_rows_at(calls, services, globals, entry, 0x5bb780, 0x5bb784, 2);
 }
 
 /* 0x4928f0's rows with the target pixel and row at `target_pixel` and `target_row`. */

@@ -78,6 +78,11 @@ uint32_t vertrix_port_blend_shade(PORT_SIGNATURE);
  * Returns the step list address after the last step; edx is unchanged. */
 uint32_t vertrix_port_render_sampled_row32(PORT_SIGNATURE);
 
+/* Originals 0x49a270 and 0x4a2330: the same for 16-bit targets (the pixel at 0x5bb780, two bytes
+ * on). */
+uint32_t vertrix_port_render_sampled_row32_49a270(PORT_SIGNATURE);
+uint32_t vertrix_port_render_sampled_row32_4a2330(PORT_SIGNATURE);
+
 /* Original 0x492400: run the pixel operation at [0x5bb72c] for each of the 16-bit count at
  * 0x5bc016 pixels, advancing the source and target addresses by four after each. The count is
  * stored before each call and read back after it (as the low 16 bits of edx for the next call,
@@ -86,6 +91,11 @@ uint32_t vertrix_port_render_sampled_row32(PORT_SIGNATURE);
  * Returns the last call's eax (eax unchanged without pixels); edx is unchanged. */
 uint32_t vertrix_port_render_row32(PORT_SIGNATURE);
 
+/* Originals 0x49a120 and 0x4a21e0: the same for 16-bit targets (the pixel at 0x5bb780, two bytes
+ * on). */
+uint32_t vertrix_port_render_row32_49a120(PORT_SIGNATURE);
+uint32_t vertrix_port_render_row32_4a21e0(PORT_SIGNATURE);
+
 /* Original 0x492280: as 0x492400 for a source with an alpha byte: the pixel operation runs only
  * for the pixels whose top byte is not 0 (eax that byte, edx's low 16 bits the count with the
  * upper bits those of the last target address plus four, ecx the source address). The source
@@ -93,6 +103,11 @@ uint32_t vertrix_port_render_row32(PORT_SIGNATURE);
  * byte, or the operation's eax when it ran for it (eax unchanged without pixels); edx is
  * unchanged. */
 uint32_t vertrix_port_render_keyed_row32(PORT_SIGNATURE);
+
+/* Originals 0x499fb0 and 0x4a2070: the same for 16-bit targets (the pixel at 0x5bb780, two bytes
+ * on). */
+uint32_t vertrix_port_render_keyed_row32_499fb0(PORT_SIGNATURE);
+uint32_t vertrix_port_render_keyed_row32_4a2070(PORT_SIGNATURE);
 
 /* Original 0x492980 (eax = row routine): draw an image's rows. The globals are first moved to the
  * last row (the row count, the high word of 0x5bb750, less one, times the mask stride 0x5bb744,
@@ -104,6 +119,11 @@ uint32_t vertrix_port_render_keyed_row32(PORT_SIGNATURE);
  * target and mask one step on (those are stored too). Returns the last row's eax (the target
  * offset of the last row when there are none); edx is unchanged. */
 uint32_t vertrix_port_render_image_rows(PORT_SIGNATURE);
+
+/* Originals 0x49a690 and 0x4a2750: the same for 16-bit targets (the pixel and row at 0x5bb780 and
+ * 0x5bb784, two bytes on). */
+uint32_t vertrix_port_render_image_rows_49a690(PORT_SIGNATURE);
+uint32_t vertrix_port_render_image_rows_4a2750(PORT_SIGNATURE);
 
 /* Original 0x4928f0 (eax = row routine): draw rows picked through an index. For each of the 16-bit
  * count at 0x5bb752 rows (a count of 0 runs 65,536 times), the next byte at 0x5bb7d4 times

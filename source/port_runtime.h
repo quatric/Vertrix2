@@ -1138,6 +1138,11 @@ uint32_t vertrix_port_sound_stop(PORT_SIGNATURE);
  * row pointer 0x5bb7dc and the offsets 0x5bb764 and 0x5bb768. */
 uint32_t vertrix_port_music_rows_play(PORT_SIGNATURE);
 
+/* Originals 0x49a420 and 0x4a24e0: the same for 16-bit targets (the pixel at 0x5bb780, two bytes
+ * on). */
+uint32_t vertrix_port_music_rows_play_49a420(PORT_SIGNATURE);
+uint32_t vertrix_port_music_rows_play_4a24e0(PORT_SIGNATURE);
+
 /* Original 0x4b61c0(eax = list): call method +0x18 of the table +0x158 of every item. */
 uint32_t vertrix_port_layer_list_clear(PORT_SIGNATURE);
 

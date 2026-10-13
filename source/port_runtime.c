@@ -5200,7 +5200,8 @@ uint32_t vertrix_port_sound_stop(PORT_SIGNATURE)
     return port_return(&port, sound, entry->edx);
 }
 
-uint32_t vertrix_port_music_rows_play(PORT_SIGNATURE)
+/* 0x492710's rows with the target pixel at `target_pixel`, `step` bytes each. */
+static uint32_t music_rows_play_at(PORT_SIGNATURE, uint32_t target_pixel, uint32_t step)
 {
     Port port;
     port_open(&port, calls, services, globals, entry);
@@ -5219,13 +5220,28 @@ uint32_t vertrix_port_music_rows_play(PORT_SIGNATURE)
         edx = port_u8(&port, pointer, 0) << 2;
         eax = pointer + 1;
         port_set32(&port, 0x5bb7dc, 0, eax);
-        port_set32(&port, 0x5bb768, 0, port_u32(&port, 0x5bb768, 0) + 4);
+        port_set32(&port, target_pixel, 0, port_u32(&port, target_pixel, 0) + step);
         ecx = port_u32(&port, 0x5bb764, 0) + edx;
         port_set32(&port, 0x5bb764, 0, ecx);
         row = (row - 1) & 0xffff;
     } while (row != 0);
     port_set16(&port, 0x5bc016, 0, 0);
     return port_return(&port, eax, entry->edx);
+}
+
+uint32_t vertrix_port_music_rows_play(PORT_SIGNATURE)
+{
+    return music_rows_play_at(calls, services, globals, entry, 0x5bb768, 4);
+}
+
+uint32_t vertrix_port_music_rows_play_49a420(PORT_SIGNATURE)
+{
+    return music_rows_play_at(calls, services, globals, entry, 0x5bb780, 2);
+}
+
+uint32_t vertrix_port_music_rows_play_4a24e0(PORT_SIGNATURE)
+{
+    return music_rows_play_at(calls, services, globals, entry, 0x5bb780, 2);
 }
 
 uint32_t vertrix_port_layer_list_clear(PORT_SIGNATURE)
