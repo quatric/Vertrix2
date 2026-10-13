@@ -1894,6 +1894,11 @@
   "lifted": "lifted_object_table_517644",
   "chunk": "whole_4"
  },
+ "0x48a050": {
+  "port": "vertrix_port_settings_file_read",
+  "lifted": "lifted_f48a050",
+  "chunk": "whole_4"
+ },
  "0x48a2d0": {
   "port": "vertrix_port_call_4b7b00",
   "lifted": "lifted_f48a2d0",
@@ -1938,6 +1943,11 @@
   "port": "vertrix_port_list_parse_texts",
   "lifted": "lifted_list_parse_texts",
   "chunk": "whole_9"
+ },
+ "0x48a560": {
+  "port": "vertrix_port_list_parse_values",
+  "lifted": "lifted_list_parse_values",
+  "chunk": "whole_4"
  },
  "0x48a620": {
   "port": "vertrix_port_name_record_construct",

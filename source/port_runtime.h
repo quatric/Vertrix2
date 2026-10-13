@@ -1973,4 +1973,13 @@ uint32_t vertrix_port_list_file_read(PORT_SIGNATURE);
  * the index of the list's array with 0x483060. Returns it, edx the array. */
 uint32_t vertrix_port_array_list_make(PORT_SIGNATURE);
 
+/* Original 0x48a560(eax = list, edx = destination values, ebx = count, ecx = default; one stack
+ * argument, the limit): set each destination value to the list's text, when longer than the
+ * limit, converted by 0x4d6710, otherwise to the default. */
+uint32_t vertrix_port_list_parse_values(PORT_SIGNATURE);
+
+/* Original 0x48a050(eax, edx): open a file with a parser on the stack (0x48a620, 0x48a710 with
+ * 0x5466c8) and read it with 0x48a100, then 0x48a8c0; returns 0x48a100's result or 0. */
+uint32_t vertrix_port_settings_file_read(PORT_SIGNATURE);
+
 #endif

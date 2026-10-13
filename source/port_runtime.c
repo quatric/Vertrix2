@@ -10894,3 +10894,104 @@ uint32_t vertrix_port_array_list_make(PORT_SIGNATURE)
     port_set32(&port, array, slot, image);
     return port_return(&port, image, array);
 }
+
+uint32_t vertrix_port_list_parse_values(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x30,
+        GUARD_HANDLER = 0x4ec1ec,
+        PARSE_GUARD = 0x517608
+    };
+    Port port;
+    uint8_t stack[BELOW + 8 + 4];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t list = entry->eax;
+    uint32_t limit;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = PARSE_GUARD;
+    uint32_t ecx = GUARD_HANDLER;
+    uint32_t index;
+    port_open_arguments(&port, stack, calls, services, globals, entry, BELOW, 1);
+    port_set32(&port, ebp, -0xcu, entry->ebx);
+    port_set32(&port, ebp, -0x14u, entry->ecx);
+    port_set32(&port, ebp, -0x2cu, port.env.chain);
+    port_set32(&port, ebp, -0x10u, entry->edx);
+    port_set32(&port, ebp, -0x28u, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x24u, PARSE_GUARD);
+    port_set32(&port, ebp, -0x20u, 0);
+    limit = port_u32(&port, ebp, 8);
+    /* Each of the count (ebx, a word) destination values gets the list's text longer than the
+     * limit converted (0x48a300, 0x4d6710) or the default value (ecx). */
+    for (index = 0; index < port_u16(&port, ebp, -0xcu); index++)
+    {
+        uint32_t texts = port_call(&port, 0x48a2e0, list, edx, ebx, ecx);
+        uint32_t taken = 0;
+        edx = vertrix_lift_edx;
+        if (index < texts)
+        {
+            uint32_t length = port_call(&port, 0x48a2f0, list, index, ebx, ecx);
+            edx = limit;
+            if (length > limit)
+            {
+                uint32_t text;
+                uint32_t value;
+                ecx = limit;
+                ebx = index;
+                text = port_call(&port, 0x48a300, list, ebp - 0x18, ebx, ecx);
+                port_set32(&port, ebp, -0x20u, 1);
+                ebx = 0;
+                value = port_call(&port, 0x4d6710, port_u32(&port, text, 0),
+                                  port_u32(&port, ebp, -0x10u), ebx, ecx);
+                port_set32(&port, vertrix_lift_edx, 0, value);
+                port_set32(&port, ebp, -0x20u, 0);
+                port_call(&port, 0x4ca210, ebp - 0x18, 0, ebx, ecx);
+                port_set32(&port, ebp, -0x20u, 0);
+                taken = 1;
+            }
+        }
+        if (!taken)
+        {
+            port_set32(&port, port_u32(&port, ebp, -0x10u), 0, port_u32(&port, ebp, -0x14u));
+        }
+        edx = port_u32(&port, ebp, -0x10u) + 4;
+        port_set32(&port, ebp, -0x10u, edx);
+    }
+    return port_return(&port, port_u32(&port, ebp, -0x2cu), edx);
+}
+
+uint32_t vertrix_port_settings_file_read(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x13c,
+        GUARD_HANDLER = 0x4ec1ec,
+        READ_GUARD = 0x5175bc
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t parser = ebp - 0x138;
+    uint32_t mode;
+    uint32_t result = 0;
+    uint32_t edx;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    port_set32(&port, ebp, -0x24u, port.env.chain);
+    port_set32(&port, ebp, -0x20u, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x1cu, READ_GUARD);
+    port_set32(&port, ebp, -0x18u, 0);
+    /* As 0x4816f0, with the file given by the parser's own edx and read by 0x48a100. */
+    port_call(&port, 0x48a620, parser, entry->edx, READ_GUARD, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x18u, 1);
+    mode = port_u32(&port, 0, 0x5466c8);
+    if (port_call(&port, 0x48a710, parser, vertrix_lift_edx, mode, 0) == 1)
+    {
+        result = port_call(&port, 0x48a100, entry->eax, parser, mode, 0);
+        port_call(&port, 0x48a8c0, parser, vertrix_lift_edx, mode, result);
+    }
+    port_set32(&port, ebp, -0x18u, 0);
+    port_call(&port, 0x48a670, parser, 0, 0, result);
+    edx = vertrix_lift_edx;
+    port_set32(&port, ebp, -0x18u, 0);
+    return port_return(&port, result, edx);
+}
