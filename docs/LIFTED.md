@@ -877,9 +877,9 @@ The synthesis (0x405720, 491 instructions) is three windowed sums, written as lo
 single helpers. The port keeps the ebx and ecx its helpers see, which carry the loop counters and
 the last clamp's limit.
 
-687 routines run as clean ports. Counted by calls, 99.65% of the calls the dispatcher serves in the
-1,500-tick gameplay profile go to a port or a recovered native (202,169 of 57,234,341 still run
-lifted copies).
+688 routines run as clean ports. Counted by calls, 99.65% of the calls the dispatcher serves in the
+1,500-tick gameplay profile go to a port or a recovered native (202,169 of 57,234,341 still ran lifted
+copies before 0x4928f0 below).
 
 Some ports were checked in one register mode only, at a reduced number of cases, because their
 lifted copies fail or time out in the other mode:
@@ -919,6 +919,14 @@ from byte 4,828,149 of the 3,000-tick WAV, and the new baseline is `work/abase2/
 A scan of every lifted `lift_call(..., 0, esp)` site, over the callee's traced body (`lift.trace`),
 finds no other framed callee that returns with a plain `ret` and reads `[ebp + 8]` or above: 0x4db250
 was the only one. Frameless callees that read `[esp + n]` were not scanned.
+
+0x4928f0 (64 calls in the profile, a batch failure) calls a row routine through the pointer it
+gets in eax. The batch oracle drew that pointer at random, so the original never completed a case.
+`verify_one.py` now follows each `call <register>` back through register moves to an entry
+register (`code_registers`) and points that register at the leaf stub, so the original calls a
+stub whose registers are compared. The port passes 256 cases in both modes (a random 16-bit row
+count makes larger runs slow) and handing the routine a wrong ecx fails it; 0x492980, the other
+row loop taking a routine in eax, still passes.
 
 With the ports in, the host run matches the recorded baselines: the 1,500-tick frames (9 of 9
 identical) and the 3,000-tick audio (WAV byte-identical). Boundary calls fell from 62,764 to 3; the

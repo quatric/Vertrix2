@@ -105,6 +105,15 @@ uint32_t vertrix_port_render_keyed_row32(PORT_SIGNATURE);
  * offset of the last row when there are none); edx is unchanged. */
 uint32_t vertrix_port_render_image_rows(PORT_SIGNATURE);
 
+/* Original 0x4928f0 (eax = row routine): draw rows picked through an index. For each of the 16-bit
+ * count at 0x5bb752 rows (a count of 0 runs 65,536 times), the next byte at 0x5bb7d4 times
+ * 0x5bb7c0, in pixels, moves the source 0x5bb76c and the target 0x5bb770 moves one stride
+ * 0x5bb7c4; 0x5bb7d8 is copied to 0x5bb7dc and the pixel count 0x5bc016 is the low word of
+ * 0x5bb750. The routine gets eax (0x5bb7d8 with that low word), edx the source step, ebx the
+ * target, ecx itself, esi the source and edi the scale; the source and target are then stored at
+ * 0x5bb764 and 0x5bb768. Returns the last routine's eax; edx is unchanged. */
+uint32_t vertrix_port_render_indexed_rows(PORT_SIGNATURE);
+
 /* The registers a masked row hands its pixel operation: what the loop below left in them. */
 typedef struct MaskRegisters
 {

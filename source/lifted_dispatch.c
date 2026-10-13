@@ -4134,7 +4134,7 @@ static const LiftedRoutine unverified_routines[] = {
     {0x486e20, lifted_f486e20, 140, 0},
     {0x48ac10, lifted_f48ac10, 288, 0},
     {0x491050, lifted_f491050, 80, 0},
-    {0x4928f0, lifted_render_sample32, 88, 0},
+    {0x4928f0, vertrix_port_render_indexed_rows, 0, 0},
     {0x492a70, lifted_f492a70, 88, 0},
     {0x49a600, lifted_f49a600, 88, 0},
     {0x49a780, lifted_f49a780, 88, 0},

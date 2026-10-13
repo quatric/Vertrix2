@@ -182,6 +182,31 @@ def selector_registers(routine):
 
 
 SELECTORS = selector_registers(_routine)
+
+
+def code_registers(routine):
+    """The entry registers a routine calls through (0x4928f0 does `mov ecx, eax` and later
+    `call ecx` once per row): followed back through plain register moves, in address order. The
+    cases point them at the leaf stub, so the original calls a stub instead of a drawn address."""
+    names = ('eax', 'edx', 'ebx', 'ecx', 'esi', 'edi')
+    source = {n: n for n in names}
+    found = set()
+    for address in sorted(routine):
+        insn = routine[address]
+        ops = insn.op_str.replace(' ', '').split(',')
+        if insn.mnemonic == 'call' and len(ops) == 1 and ops[0] in names:
+            if source.get(ops[0]) in names[:4]:
+                found.add(source[ops[0]])
+        elif insn.mnemonic == 'mov' and len(ops) == 2 and ops[0] in names:
+            source[ops[0]] = source.get(ops[1]) if ops[1] in names else None
+        elif insn.mnemonic in ('push', 'call'):
+            continue
+        elif ops and ops[0] in names:
+            source[ops[0]] = None
+    return sorted(found)
+
+
+CODE_REGISTERS = code_registers(_routine)
 # Calls through a static table of routines (0x40dc50 calls [edx*4+0x4f7444]): the original reaches
 # the routines the table names, so each entry is stubbed like the call that reads it.
 for _match in re.finditer(r'lift_call\(&env, lift_load\(&env, 0u, \(\w+ \* 4u\) \+ 0x([0-9a-f]+)u, '
@@ -199,7 +224,8 @@ spec = dict(internal=internal, flag_targets=flag_targets, effects=com, fixed_ret
             # so the runtime's software floating point runs, in the original here as in the port.
             fixed_globals={0x5054a0: b'\0\0'},
             setup_case=lambda rng, pool, cpu, kwargs: (vtable_setup(cpu),
-                                                       kwargs.update({r: 0x10 for r in SELECTORS})),
+                                                       kwargs.update({r: 0x10 for r in SELECTORS}),
+                                                       kwargs.update({r: LEAF for r in CODE_REGISTERS})),
             setup=vtable_setup if virtual or slots or pointer_globals or imports else None)
 import os  # noqa: E402
 

@@ -31,6 +31,9 @@ enum
     SHADE_LEVELS = 0x5785f8,
     SHADE_STEPS = 0x5785fc,
     SAMPLE_STEPS = 0x5bb7dc,
+    ROW_INDEX = 0x5bb7d4,
+    ROW_SCALE = 0x5bb7c0,
+    NEXT_SAMPLE_STEPS = 0x5bb7d8,
     TARGET_LEVELS = 0x55f1f4,
     CHANNELS = 0xffffff,
     LOW_BITS_CLEAR = 0xfefeff,
@@ -454,6 +457,46 @@ uint32_t vertrix_port_render_image_rows(PORT_SIGNATURE)
         port_set16(&port, 0, ROWS, rows);
     }
     port_set32(&port, 0, ROW_START, start);
+    return port_return(&port, eax, entry->edx);
+}
+
+uint32_t vertrix_port_render_indexed_rows(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t routine = entry->eax;
+    uint32_t eax = entry->eax;
+    uint32_t edx;
+    uint32_t ebx;
+    uint32_t esi;
+    uint32_t edi;
+    uint32_t count;
+    port_open(&port, calls, services, globals, entry);
+    ebx = port_u32(&port, 0, TARGET_ROW);
+    esi = port_u32(&port, 0, SOURCE_ROW);
+    do
+    {
+        uint32_t index = port_u32(&port, 0, ROW_INDEX);
+        edi = port_u32(&port, 0, ROW_SCALE);
+        edx = port_u8(&port, index, 0) * edi;
+        port_set32(&port, 0, ROW_INDEX, index + 1);
+        ebx += port_u32(&port, 0, TARGET_STRIDE);
+        eax = port_u32(&port, 0, NEXT_SAMPLE_STEPS);
+        port_set32(&port, 0, TARGET_ROW, ebx);
+        port_set32(&port, 0, SAMPLE_STEPS, eax);
+        edx <<= 2;
+        eax = (eax & 0xffff0000u) | port_u16(&port, 0, ROWS);
+        esi += edx;
+        port_set16(&port, 0, ROW_COUNT, eax);
+        port_set32(&port, 0, SOURCE_ROW, esi);
+        eax = port_call_with(&port, routine, eax, edx, ebx, routine, esi, edi, entry->ebp);
+        esi = port_u32(&port, 0, SOURCE_ROW);
+        ebx = port_u32(&port, 0, TARGET_ROW);
+        count = port_u16(&port, 0, WIDTH);
+        port_set32(&port, 0, SOURCE_PIXEL, esi);
+        port_set32(&port, 0, TARGET_PIXEL, ebx);
+        count = (count - 1) & 0xffff;
+        port_set16(&port, 0, WIDTH, count);
+    } while (count != 0);
     return port_return(&port, eax, entry->edx);
 }
 
