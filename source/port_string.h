@@ -174,7 +174,7 @@ uint32_t vertrix_port_format_spec(PORT_SIGNATURE);
 uint32_t vertrix_port_copy_terminated(PORT_SIGNATURE);
 
 /* Original 0x4d7d70(stack: a path name, the string for the root; ret 0): the root of the path's
- * full name (GetFullPathNameA, slot 0x4f1d20, into the string's buffer from 0x4ca670): for a
+ * full name (copied by lstrcpynA, slot 0x4f1d20, into the string's buffer from 0x4ca670): for a
  * UNC name up to the separator after the share, else up to the first separator, which is kept;
  * the name is cut after it and the string's length fixed by 0x4ca6c0. Characters advance through
  * 0x4e1054. */

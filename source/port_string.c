@@ -917,13 +917,13 @@ uint32_t vertrix_port_path_root(PORT_SIGNATURE)
     name = port_u32(&port, entry->esp, 4);
     string = port_u32(&port, entry->esp, 8);
     buffer = port_call(&port, 0x4ca670, string, PATH_MAX_LENGTH, PATH_MAX_LENGTH, entry->ecx);
-    port_call(&port, 0x4eb5c0, buffer, 0, PATH_MAX_LENGTH, entry->ecx);
+    p = port_call(&port, 0x4eb5c0, buffer, 0, PATH_MAX_LENGTH, entry->ecx);
     edx = vertrix_lift_edx;
-    /* GetFullPathNameA(name, MAX_PATH, buffer, ...) through slot 0x4f1d20. */
+    /* lstrcpynA(buffer, name, MAX_PATH) through slot 0x4f1d20. */
     arguments[0] = buffer;
     arguments[1] = name;
     arguments[2] = PATH_MAX_LENGTH;
-    port_call_stack(&port, 0x4f1d20, buffer, edx, PATH_MAX_LENGTH, entry->ecx, arguments, 3);
+    port_call_stack(&port, 0x4f1d20, p, edx, PATH_MAX_LENGTH, entry->ecx, arguments, 3);
     edx = vertrix_lift_edx;
 #define NEXT()                                                                                     \
     do                                                                                             \

@@ -9781,3 +9781,133 @@ uint32_t vertrix_port_scratch_triple(PORT_SIGNATURE)
     port_call_stack(&port, 0x4e543c, scratch, pair, entry->ebx, entry->ecx, arguments, 3);
     return port_return(&port, port_u32(&port, pair, 0), port_u32(&port, pair, 4));
 }
+
+/* The Windows error after a failed call, recorded by 0x4d9930 (GetLastError, slot 0x4f1bbc). */
+static uint32_t file_error(Port *port, uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx)
+{
+    uint32_t arguments[2];
+    uint32_t error = port_call(port, 0x4f1bbc, eax, edx, ebx, ecx);
+    arguments[0] = error;
+    arguments[1] = 0;
+    return port_call_stack(port, 0x4d9930, error, vertrix_lift_edx, ebx, ecx, arguments, 2);
+}
+
+uint32_t vertrix_port_file_close(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t file = entry->eax;
+    uint32_t edx = 0;
+    uint32_t eax;
+    port_open(&port, calls, services, globals, entry);
+    if (port_u32(&port, file, 4) != 0xffffffffu)
+    {
+        /* CloseHandle (slot 0x4f1b2c); edx notes a failure. */
+        uint32_t argument = port_u32(&port, file, 4);
+        edx = port_call_stack(&port, 0x4f1b2c, file, 0, file, entry->ecx, &argument, 1) == 0;
+    }
+    port_set32(&port, file, 4, 0xffffffffu);
+    port_set32(&port, file, 8, 0);
+    eax = port_call(&port, 0x4ca180, file + 0xc, edx, file, entry->ecx);
+    if (vertrix_lift_edx != 0)
+    {
+        eax = file_error(&port, eax, vertrix_lift_edx, file, entry->ecx);
+    }
+    return port_return(&port, eax, entry->edx);
+}
+
+uint32_t vertrix_port_file_transfer(PORT_SIGNATURE)
+{
+    Port port;
+    uint8_t stack[8 + 8];
+    uint32_t done = entry->esp - 8;
+    uint32_t arguments[5];
+    uint32_t edx;
+    port_open_stack(&port, stack, calls, services, globals, entry, 8);
+    if (entry->ebx == 0)
+    {
+        return port_return(&port, 0, entry->edx);
+    }
+    /* ReadFile or WriteFile (slot 0x4f1c78) on the handle +4: the count done is returned. */
+    arguments[0] = port_u32(&port, entry->eax, 4);
+    arguments[1] = entry->edx;
+    arguments[2] = entry->ebx;
+    arguments[3] = done;
+    arguments[4] = 0;
+    if (port_call_stack(&port, 0x4f1c78, entry->eax, entry->edx, entry->ebx, done, arguments, 5) ==
+        0)
+    {
+        file_error(&port, 0, vertrix_lift_edx, entry->ebx, done);
+    }
+    edx = vertrix_lift_edx;
+    return port_return(&port, port_u32(&port, done, 0), edx);
+}
+
+uint32_t vertrix_port_thread_value(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t slots = entry->eax;
+    uint32_t index = entry->edx;
+    uint32_t array;
+    uint32_t eax;
+    uint32_t value = 0;
+    uint32_t argument;
+    port_open(&port, calls, services, globals, entry);
+    if (port_u32(&port, slots, 0) == 0xffffffffu)
+    {
+        /* Without a TLS index the array at +4 is shared, under the critical section +0x20. */
+        argument = slots + 0x20;
+        port_call_stack(&port, 0x4f1b48, slots + 0x20, index, slots, entry->ecx, &argument, 1);
+        array = port_u32(&port, slots, 4);
+    }
+    else
+    {
+        argument = port_u32(&port, slots, 0);
+        array = port_call_stack(&port, 0x4f1cdc, slots, index, slots, entry->ecx, &argument, 1);
+    }
+    eax = array;
+    if (array != 0 && (int32_t)index < (int32_t)port_u32(&port, array, 8))
+    {
+        eax = port_u32(&port, array, 0xc);
+        value = port_u32(&port, eax, index * 4);
+    }
+    if (port_u32(&port, slots, 0) == 0xffffffffu)
+    {
+        argument = slots + 0x20;
+        port_call_stack(&port, 0x4f1c40, eax, vertrix_lift_edx, slots + 0x20, entry->ecx, &argument,
+                        1);
+    }
+    return port_return(&port, value, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_object_construct_e(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x4c,
+        GUARD_HANDLER = 0x4ec1ec,
+        OBJECT_GUARD = 0x517008,
+        TEMPORARY = 0x30 /* below ebp */
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t object = entry->eax;
+    uint32_t constructed;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    port_set32(&port, ebp, -0x44u, port.env.chain);
+    port_set32(&port, ebp, -0x40u, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x3cu, OBJECT_GUARD);
+    port_set32(&port, ebp, -0x38u, 0);
+    port_set8(&port, ebp, -0x1cu, 0);
+    port_set32(&port, ebp, -0x20u, object);
+    /* The base constructor 0x4d7510, then the class's table; a temporary of the base class is
+     * made and destroyed (0x4d7630). */
+    constructed = port_call(&port, 0x4d7510, object, object, OBJECT_GUARD, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x38u, 1);
+    port_set32(&port, constructed, 0, 0x5174b4);
+    port_call(&port, 0x4d7510, ebp - TEMPORARY, 0, OBJECT_GUARD, constructed);
+    port_set32(&port, ebp, -0x38u, 1);
+    port_call(&port, 0x4d7630, ebp - TEMPORARY, vertrix_lift_edx, OBJECT_GUARD, constructed);
+    port_set32(&port, ebp, -0x38u, 1);
+    return port_return(&port, constructed, entry->edx);
+}

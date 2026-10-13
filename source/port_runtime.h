@@ -1807,4 +1807,23 @@ uint32_t vertrix_port_scene_refresh(PORT_SIGNATURE);
  * converts it back into the pushed pair, which is returned. */
 uint32_t vertrix_port_scratch_triple(PORT_SIGNATURE);
 
+/* Original 0x4d7aa0(eax = file): close the file's handle (+4, CloseHandle) and its buffer
+ * (+0xc, 0x4ca180); a failure is recorded by 0x4d9930. Keeps edx. */
+uint32_t vertrix_port_file_close(PORT_SIGNATURE);
+
+/* Original 0x4d7980(eax = file, edx = buffer, ebx = count): read or write through slot 0x4f1c78
+ * on the handle (+4); a failure is recorded by 0x4d9930. Returns the count done, 0 for none
+ * asked. */
+uint32_t vertrix_port_file_transfer(PORT_SIGNATURE);
+
+/* Original 0x4dbcd0(eax = slot table, edx = index): the calling thread's value at the index:
+ * from TlsGetValue's array, or without a TLS index (-1) the shared array at +4 under the critical
+ * section at +0x20. 0 past the array's count (+8, values at +0xc). */
+uint32_t vertrix_port_thread_value(PORT_SIGNATURE);
+
+/* Original 0x488b10(eax = object): construct an object of the class with table 0x5174b4 on the
+ * base 0x4d7510, under a guard record; a temporary base object is made and destroyed. Keeps
+ * edx. */
+uint32_t vertrix_port_object_construct_e(PORT_SIGNATURE);
+
 #endif

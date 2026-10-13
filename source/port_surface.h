@@ -66,4 +66,9 @@ uint32_t vertrix_port_display_present(PORT_SIGNATURE);
  * 0x4ec160, holding the arguments. */
 uint32_t vertrix_port_image_new(PORT_SIGNATURE);
 
+/* Original 0x482e10(eax = image, edx = target, ebx = x, ecx = y): blit a whole image through a
+ * local surface view of it (0x478cd0 with the depth in bits, 0x478da0 with the pitch) by
+ * 0x47ce10. */
+uint32_t vertrix_port_event_frame_draw_direct(PORT_SIGNATURE);
+
 #endif
