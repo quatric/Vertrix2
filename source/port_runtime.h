@@ -1855,4 +1855,15 @@ uint32_t vertrix_port_construct_array(PORT_SIGNATURE);
  * second key by 0x487850. Returns 0 when the first is missing. */
 uint32_t vertrix_port_object_pair_update(PORT_SIGNATURE);
 
+/* Original 0x48a670(eax = object, edx = mode): a destructor: mode 4 destroys an array (element
+ * destructor 0x513310, freed by 0x4ca040); otherwise the table at +0x110 is reset, the base
+ * destructor 0x48a8c0 runs under a guard record and, when its edx has bit 1, 0x4ca050 frees the
+ * object. Returns the object. */
+uint32_t vertrix_port_object_destroy_h(PORT_SIGNATURE);
+
+/* Original 0x475840(eax = owner): construct an effect object (0x4756d0, then 0x4d8340 with 10
+ * for its base at +0x20) under a guard record, with its tables 0x5165f4 and 0x5165d4, fields
+ * cleared and +0x3c, +0x40 from 0x553644. Returns the effect; keeps edx. */
+uint32_t vertrix_port_effect_construct(PORT_SIGNATURE);
+
 #endif

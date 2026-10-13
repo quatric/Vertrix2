@@ -10114,3 +10114,85 @@ uint32_t vertrix_port_object_pair_update(PORT_SIGNATURE)
     return port_return(&port, port_call(&port, 0x487850, object, entry->edx, value, object),
                        vertrix_lift_edx);
 }
+
+uint32_t vertrix_port_object_destroy_h(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x3c,
+        GUARD_HANDLER = 0x4ec1ec,
+        OBJECT_GUARD = 0x517650
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t object = entry->eax;
+    uint32_t mode = entry->edx;
+    uint32_t edx;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    if (mode & 4)
+    {
+        /* An array: element destructor 0x513310, freed by 0x4ca040. */
+        uint32_t result;
+        port_set32(&port, ebp, -0x34u, object);
+        port_set32(&port, ebp, -0x14u, 1);
+        result = port_call(&port, 0x4ccb9f, object, 0x513310, entry->ebx, object);
+        port_set32(&port, ebp, -0x14u, 0);
+        port_call(&port, 0x4ca040, result, 0, entry->ebx, object);
+        return port_return(&port, object, vertrix_lift_edx);
+    }
+    port_set32(&port, object, 0x110, 0x517684);
+    port_set32(&port, ebp, -0x20u, port.env.chain);
+    port_set32(&port, ebp, -0x1cu, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x18u, OBJECT_GUARD);
+    port_set32(&port, ebp, -0x14u, 0);
+    port_call(&port, 0x48a8c0, object, mode, GUARD_HANDLER, object);
+    edx = vertrix_lift_edx;
+    if (edx & 2)
+    {
+        port_call(&port, 0x4ca050, object, edx, GUARD_HANDLER, object);
+        edx = vertrix_lift_edx;
+    }
+    return port_return(&port, object, edx);
+}
+
+uint32_t vertrix_port_effect_construct(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x3c,
+        GUARD_HANDLER = 0x4ec1ec,
+        EFFECT_GUARD = 0x5164a8
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t owner = entry->eax;
+    uint32_t base;
+    uint32_t effect;
+    uint32_t offset;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    port_set32(&port, ebp, -0x34u, port.env.chain);
+    port_set32(&port, ebp, -0x30u, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x2cu, EFFECT_GUARD);
+    port_set32(&port, ebp, -0x20u, owner);
+    port_set8(&port, ebp, -0x1cu, 0);
+    port_set32(&port, ebp, -0x28u, 0);
+    base = port_call(&port, 0x4756d0, owner + 4, owner, EFFECT_GUARD, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x28u, 1);
+    base = port_call(&port, 0x4d8340, base + 0x1c, 0xa, EFFECT_GUARD, GUARD_HANDLER);
+    effect = base - 0x20;
+    port_set32(&port, base, 0, 0x5165f4);
+    port_set32(&port, ebp, -0x28u, 2);
+    port_set32(&port, effect, 0x5c, 0x5165d4);
+    port_set8(&port, effect, 0, 0);
+    port_set8(&port, effect, 0x5a, 0);
+    port_set16(&port, effect, 0x58, 0);
+    for (offset = 0x44; offset <= 0x54; offset += 4)
+    {
+        port_set32(&port, effect, offset, 0);
+    }
+    port_set32(&port, effect, 0x40, port_u32(&port, 0, 0x553644));
+    port_set32(&port, effect, 0x3c, port_u32(&port, 0, 0x553644));
+    return port_return(&port, effect, entry->edx);
+}
