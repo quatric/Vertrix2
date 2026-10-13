@@ -10463,3 +10463,70 @@ uint32_t vertrix_port_object_record_new(PORT_SIGNATURE)
     port_set8(&port, record, 0xc, port_u8(&port, 0, 0x5b9ca6));
     return port_return(&port, record, vertrix_lift_edx);
 }
+
+uint32_t vertrix_port_thread_set_flag(PORT_SIGNATURE)
+{
+    Port port;
+    uint8_t stack[8 + 2 * 4];
+    uint32_t data;
+    uint32_t flag;
+    uint32_t edx;
+    port_open_arguments(&port, stack, calls, services, globals, entry, 0, 2);
+    data = port_call(&port, 0x4ce740, entry->eax, entry->edx, entry->ebx, entry->ecx);
+    flag = port_u8(&port, entry->esp, 4);
+    edx = (vertrix_lift_edx & 0xffffff00u) | flag;
+    port_set8(&port, data, 0x14, flag);
+    if (port_u32(&port, entry->esp, 4) == 0)
+    {
+        port_call(&port, 0x4ecb50, 0xfffffffdu, edx, entry->ebx, entry->ecx);
+        edx = vertrix_lift_edx;
+    }
+    return port_return(&port, 1, edx);
+}
+
+uint32_t vertrix_port_exit_list_init(PORT_SIGNATURE)
+{
+    enum
+    {
+        LOCK = 0x50817e,
+        HEAD = 0x50818e,
+        ENTRY = 0x50b3c0
+    };
+    Port port;
+    uint32_t kept;
+    uint32_t link;
+    uint32_t eax;
+    port_open_frame(&port, calls, services, globals, entry, 8);
+    port_call(&port, 0x4ec940, 0x5c8ae0, entry->edx, entry->ebx, entry->ecx);
+    kept = vertrix_lift_edx;
+    /* The entry is pushed on the list at 0x50818e under its lock. */
+    port_call(&port, 0x4e14b0, LOCK, ENTRY, entry->ebx, entry->ecx);
+    link = vertrix_lift_edx;
+    port_set32(&port, link, 0, port_u32(&port, 0, HEAD));
+    port_set32(&port, 0, HEAD, link);
+    eax = port_call(&port, 0x4e14b7, LOCK, link, entry->ebx, entry->ecx);
+    return port_return(&port, eax, kept);
+}
+
+uint32_t vertrix_port_console_handles(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t which;
+    port_open_frame(&port, calls, services, globals, entry, 4);
+    if (port_u32(&port, 0, 0x5c79bc) != 0)
+    {
+        /* The output and error handles (import 0x4f19e4 with 2 and 3), each plus one. */
+        which = 2;
+        eax = port_call_stack(&port, 0x4f19e4, eax, edx, entry->ebx, entry->ecx, &which, 1) + 1;
+        edx = vertrix_lift_edx;
+        port_set32(&port, 0, 0x5c7944, eax);
+        which = 3;
+        eax = port_call_stack(&port, 0x4f19e4, eax, edx, entry->ebx, entry->ecx, &which, 1) + 1;
+        edx = vertrix_lift_edx;
+        port_set32(&port, 0, 0x5c79cc, 1);
+        port_set32(&port, 0, 0x5c7948, eax);
+    }
+    return port_return(&port, eax, edx);
+}

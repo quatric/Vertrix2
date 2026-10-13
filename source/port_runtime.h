@@ -1912,4 +1912,16 @@ uint32_t vertrix_port_array_destroy_elements(PORT_SIGNATURE);
  * at 0x5b9ca6. */
 uint32_t vertrix_port_object_record_new(PORT_SIGNATURE);
 
+/* Original 0x4ec910(flag; two stack arguments): store the flag's byte at +0x14 of the thread data
+ * (0x4ce740); a zero flag also calls 0x4ecb50 with -3. Returns 1. */
+uint32_t vertrix_port_thread_set_flag(PORT_SIGNATURE);
+
+/* Original 0x4ec8d0: 0x4ec940 on 0x5c8ae0, then push the entry 0x50b3c0 onto the list at
+ * 0x50818e under the lock 0x50817e (0x4e14b0, 0x4e14b7). */
+uint32_t vertrix_port_exit_list_init(PORT_SIGNATURE);
+
+/* Original 0x4de5c0: when 0x5c79bc is set, keep the handles 2 and 3 (import 0x4f19e4) plus one
+ * at 0x5c7944 and 0x5c7948 and set 0x5c79cc. */
+uint32_t vertrix_port_console_handles(PORT_SIGNATURE);
+
 #endif
