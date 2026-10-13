@@ -232,26 +232,30 @@ uint32_t vertrix_port_blend_tint_add(PORT_SIGNATURE)
     return port_return(&port, target, entry->edx);
 }
 
-uint32_t vertrix_port_blend_half_tint(PORT_SIGNATURE)
+/* A colour remapped half way to the fixed channels (described at 0x48d8c0 in port_blend.h). */
+static uint32_t half_tint(Port *port, uint32_t colour)
 {
-    Port port;
-    uint32_t colour;
     uint32_t entry_value;
     uint32_t map;
     uint32_t red;
     uint32_t green;
     uint32_t blue;
+    entry_value = port_u32(port, port_u32(port, 0, COLOUR_ENTRIES), entry_index(colour) * 4);
+    port_set32(port, 0, ENTRY, entry_value);
+    map = port_u32(port, port_u32(port, 0, CHANNEL_MAPS), (entry_value & 0xff) * 4);
+    port_set32(port, 0, MAP, map);
+    red = port_u8(port, map, ((entry_value >> 24) + port_u16(port, 0, TINT_RED)) >> 1);
+    green = port_u8(port, map, (((entry_value >> 16) & 0xff) + port_u16(port, 0, TINT_GREEN)) >> 1);
+    blue = port_u8(port, map, (((entry_value >> 8) & 0xff) + port_u16(port, 0, TINT_BLUE)) >> 1);
+    return (red << 16) | (green << 8) | blue;
+}
+
+uint32_t vertrix_port_blend_half_tint(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = source_colour(&port);
-    entry_value = port_u32(&port, port_u32(&port, 0, COLOUR_ENTRIES), entry_index(colour) * 4);
-    port_set32(&port, 0, ENTRY, entry_value);
-    map = port_u32(&port, port_u32(&port, 0, CHANNEL_MAPS), (entry_value & 0xff) * 4);
-    port_set32(&port, 0, MAP, map);
-    red = port_u8(&port, map, ((entry_value >> 24) + port_u16(&port, 0, TINT_RED)) >> 1);
-    green =
-        port_u8(&port, map, (((entry_value >> 16) & 0xff) + port_u16(&port, 0, TINT_GREEN)) >> 1);
-    blue = port_u8(&port, map, (((entry_value >> 8) & 0xff) + port_u16(&port, 0, TINT_BLUE)) >> 1);
-    colour = (red << 16) | (green << 8) | blue;
+    colour = half_tint(&port, source_colour(&port));
     port_set32(&port, port_u32(&port, 0, TARGET_PIXEL), 0, colour);
     return port_return(&port, colour, entry->edx);
 }
@@ -1383,4 +1387,340 @@ uint32_t vertrix_port_pixel16_subtract_from_493db0(PORT_SIGNATURE)
 uint32_t vertrix_port_pixel16_subtract_from_49be70(PORT_SIGNATURE)
 {
     return pixel16_subtract_from(calls, services, globals, entry, 1);
+}
+
+/* keep16_channels returning the narrowed pixel instead. */
+static uint32_t put16_channels(Port *port, uint32_t colour, int green6)
+{
+    port_set32(port, 0, WIDE_TARGET, colour & CHANNELS);
+    return put16(port, colour, green6);
+}
+
+static uint32_t pixel16_half_plus_add(PORT_SIGNATURE, int green6)
+{
+    Port port;
+    uint32_t colour;
+    uint32_t pixel;
+    port_open(&port, calls, services, globals, entry);
+    colour = half_plus(&port, source_colour(&port));
+    port_set32(&port, 0, REMAPPED, colour);
+    colour = add_saturated(&port, target16(&port, green6), colour);
+    pixel = put16_channels(&port, colour, green6);
+    return port_return(&port, pixel, entry->edx);
+}
+
+static uint32_t pixel16_half_plus_subtract(PORT_SIGNATURE, int green6)
+{
+    Port port;
+    uint32_t colour;
+    uint32_t pixel;
+    port_open(&port, calls, services, globals, entry);
+    colour = half_plus(&port, source_colour(&port));
+    port_set32(&port, 0, REMAPPED, colour);
+    colour = subtract_saturated(&port, target16(&port, green6), colour);
+    pixel = put16_channels(&port, colour, green6);
+    return port_return(&port, pixel, entry->edx);
+}
+
+static uint32_t pixel16_half_plus_subtract_from(PORT_SIGNATURE, int green6)
+{
+    Port port;
+    uint32_t colour;
+    uint32_t pixel;
+    port_open(&port, calls, services, globals, entry);
+    colour = half_plus(&port, source_colour(&port));
+    port_set32(&port, 0, REMAPPED, colour);
+    colour = subtract_saturated(&port, colour, target16(&port, green6));
+    pixel = put16_channels(&port, colour, green6);
+    return port_return(&port, pixel, entry->edx);
+}
+
+static uint32_t pixel16_remap(PORT_SIGNATURE, int green6)
+{
+    Port port;
+    uint32_t colour;
+    uint32_t pixel;
+    port_open(&port, calls, services, globals, entry);
+    colour = remap(&port, source_colour(&port));
+    port_set32(&port, 0, WIDE_TARGET, colour);
+    pixel = put16(&port, colour, green6);
+    return port_return(&port, pixel, entry->edx);
+}
+
+uint32_t vertrix_port_pixel16_half_plus_add_495060(PORT_SIGNATURE)
+{
+    return pixel16_half_plus_add(calls, services, globals, entry, 0);
+}
+
+uint32_t vertrix_port_pixel16_half_plus_add_49d120(PORT_SIGNATURE)
+{
+    return pixel16_half_plus_add(calls, services, globals, entry, 1);
+}
+
+uint32_t vertrix_port_pixel16_half_plus_subtract_4953f0(PORT_SIGNATURE)
+{
+    return pixel16_half_plus_subtract(calls, services, globals, entry, 0);
+}
+
+uint32_t vertrix_port_pixel16_half_plus_subtract_49d4b0(PORT_SIGNATURE)
+{
+    return pixel16_half_plus_subtract(calls, services, globals, entry, 1);
+}
+
+uint32_t vertrix_port_pixel16_half_plus_subtract_from_495780(PORT_SIGNATURE)
+{
+    return pixel16_half_plus_subtract_from(calls, services, globals, entry, 0);
+}
+
+uint32_t vertrix_port_pixel16_half_plus_subtract_from_49d840(PORT_SIGNATURE)
+{
+    return pixel16_half_plus_subtract_from(calls, services, globals, entry, 1);
+}
+
+uint32_t vertrix_port_pixel16_remap_493420(PORT_SIGNATURE)
+{
+    return pixel16_remap(calls, services, globals, entry, 0);
+}
+
+uint32_t vertrix_port_pixel16_remap_49b4e0(PORT_SIGNATURE)
+{
+    return pixel16_remap(calls, services, globals, entry, 1);
+}
+
+static uint32_t pixel16_invert_tint(PORT_SIGNATURE, int green6)
+{
+    Port port;
+    uint32_t colour;
+    port_open(&port, calls, services, globals, entry);
+    colour = ~source_colour(&port);
+    port_set32(&port, 0, REMAPPED, colour & CHANNELS);
+    return port_return(&port, keep16(&port, remap_tint(&port, colour), green6), entry->edx);
+}
+
+static uint32_t pixel16_half_plus_remap(PORT_SIGNATURE, int green6)
+{
+    Port port;
+    uint32_t colour;
+    uint32_t pixel;
+    port_open(&port, calls, services, globals, entry);
+    colour = remap(&port, half_plus(&port, source_colour(&port)));
+    port_set32(&port, 0, WIDE_TARGET, colour);
+    pixel = put16(&port, colour, green6);
+    return port_return(&port, pixel, entry->edx);
+}
+
+enum
+{
+    FIXED_ENTRIES = 0x54cdcc,
+    FIXED_ENTRY = 0x54d5f0
+};
+
+static uint32_t pixel16_fixed_entry(PORT_SIGNATURE, int green6)
+{
+    Port port;
+    uint32_t select;
+    uint32_t map;
+    uint32_t fixed;
+    uint32_t colour;
+    uint32_t pixel;
+    port_open(&port, calls, services, globals, entry);
+    select =
+        port_u8(&port, port_u32(&port, 0, COLOUR_ENTRIES), entry_index(source_colour(&port)) * 4);
+    map = port_u32(&port, port_u32(&port, 0, CHANNEL_MAPS), select * 4);
+    port_set32(&port, 0, MAP, map);
+    fixed = port_u32(&port, port_u32(&port, 0, FIXED_ENTRIES), port_u8(&port, 0, FIXED_ENTRY) * 4);
+    fixed = port_u32(&port, fixed, 0);
+    port_set32(&port, 0, ENTRY, fixed);
+    colour = port_u8(&port, map, fixed >> 24) << 16;
+    colour |= port_u8(&port, map, (fixed >> 16) & 0xff) << 8;
+    colour |= port_u8(&port, map, (fixed >> 8) & 0xff);
+    port_set32(&port, 0, WIDE_TARGET, colour);
+    pixel = put16(&port, colour, green6);
+    return port_return(&port, pixel, entry->edx);
+}
+
+uint32_t vertrix_port_pixel16_invert_tint_4959e0(PORT_SIGNATURE)
+{
+    return pixel16_invert_tint(calls, services, globals, entry, 0);
+}
+
+uint32_t vertrix_port_pixel16_invert_tint_49daa0(PORT_SIGNATURE)
+{
+    return pixel16_invert_tint(calls, services, globals, entry, 1);
+}
+
+uint32_t vertrix_port_pixel16_half_plus_remap_493720(PORT_SIGNATURE)
+{
+    return pixel16_half_plus_remap(calls, services, globals, entry, 0);
+}
+
+uint32_t vertrix_port_pixel16_half_plus_remap_49b7e0(PORT_SIGNATURE)
+{
+    return pixel16_half_plus_remap(calls, services, globals, entry, 1);
+}
+
+uint32_t vertrix_port_pixel16_fixed_entry_498570(PORT_SIGNATURE)
+{
+    return pixel16_fixed_entry(calls, services, globals, entry, 0);
+}
+
+uint32_t vertrix_port_pixel16_fixed_entry_4a0630(PORT_SIGNATURE)
+{
+    return pixel16_fixed_entry(calls, services, globals, entry, 1);
+}
+
+static uint32_t pixel16_remap_invert(PORT_SIGNATURE, int green6)
+{
+    Port port;
+    uint32_t colour;
+    port_open(&port, calls, services, globals, entry);
+    colour = remap(&port, source_colour(&port));
+    port_set32(&port, 0, WIDE_TARGET, ~colour & CHANNELS);
+    put16(&port, ~colour, green6);
+    port_set32(&port, 0, REMAPPED, colour);
+    return port_return(&port, port_u32(&port, 0, TARGET_PIXEL_16), entry->edx);
+}
+
+enum
+{
+    ENTRY_INDEX = 0x54d5e4,
+    FIXED_SELECTS = 0x54b804
+};
+
+/* A colour remapped through its entry index twice (described at 0x498470 in port_blend.h). */
+static uint32_t paired_remap(Port *port, uint32_t colour)
+{
+    uint32_t index = entry_index(colour);
+    uint32_t map;
+    uint32_t fixed;
+    port_set32(port, 0, ENTRY_INDEX, index);
+    map = port_u8(port, port_u32(port, 0, COLOUR_ENTRIES), index * 4);
+    map = port_u32(port, port_u32(port, 0, CHANNEL_MAPS), map * 4);
+    port_set32(port, 0, MAP, map);
+    fixed = port_u8(port, port_u32(port, 0, FIXED_SELECTS), index);
+    fixed = port_u32(port, port_u32(port, port_u32(port, 0, FIXED_ENTRIES), fixed * 4), 0);
+    port_set32(port, 0, ENTRY, fixed);
+    colour = port_u8(port, map, fixed >> 24) << 16;
+    colour |= port_u8(port, map, (fixed >> 16) & 0xff) << 8;
+    return colour | port_u8(port, map, (fixed >> 8) & 0xff);
+}
+
+static uint32_t pixel16_paired_entry(PORT_SIGNATURE, int green6)
+{
+    Port port;
+    uint32_t colour;
+    uint32_t pixel;
+    port_open(&port, calls, services, globals, entry);
+    colour = paired_remap(&port, source_colour(&port));
+    port_set32(&port, 0, WIDE_TARGET, colour);
+    pixel = put16(&port, colour, green6);
+    return port_return(&port, pixel, entry->edx);
+}
+
+static uint32_t pixel16_half_tint(PORT_SIGNATURE, int green6)
+{
+    Port port;
+    uint32_t colour;
+    uint32_t pixel;
+    port_open(&port, calls, services, globals, entry);
+    colour = half_tint(&port, source_colour(&port));
+    port_set32(&port, 0, WIDE_TARGET, colour);
+    pixel = put16(&port, colour, green6);
+    return port_return(&port, pixel, entry->edx);
+}
+
+uint32_t vertrix_port_pixel16_remap_invert_494840(PORT_SIGNATURE)
+{
+    return pixel16_remap_invert(calls, services, globals, entry, 0);
+}
+
+uint32_t vertrix_port_pixel16_remap_invert_49c900(PORT_SIGNATURE)
+{
+    return pixel16_remap_invert(calls, services, globals, entry, 1);
+}
+
+uint32_t vertrix_port_pixel16_paired_entry_498470(PORT_SIGNATURE)
+{
+    return pixel16_paired_entry(calls, services, globals, entry, 0);
+}
+
+uint32_t vertrix_port_pixel16_paired_entry_4a0530(PORT_SIGNATURE)
+{
+    return pixel16_paired_entry(calls, services, globals, entry, 1);
+}
+
+uint32_t vertrix_port_pixel16_half_tint_493610(PORT_SIGNATURE)
+{
+    return pixel16_half_tint(calls, services, globals, entry, 0);
+}
+
+uint32_t vertrix_port_pixel16_half_tint_49b6d0(PORT_SIGNATURE)
+{
+    return pixel16_half_tint(calls, services, globals, entry, 1);
+}
+
+static uint32_t pixel16_invert_target_tint(PORT_SIGNATURE, int green6)
+{
+    Port port;
+    uint32_t colour;
+    port_open(&port, calls, services, globals, entry);
+    colour = ~target16(&port, green6);
+    port_set32(&port, 0, REMAPPED, colour & CHANNELS);
+    return port_return(&port, keep16(&port, remap_tint(&port, colour), green6), entry->edx);
+}
+
+static uint32_t pixel16_half_plus_paired(PORT_SIGNATURE, int green6)
+{
+    Port port;
+    uint32_t colour;
+    uint32_t pixel;
+    port_open(&port, calls, services, globals, entry);
+    colour = half_plus(&port, source_colour(&port));
+    port_set32(&port, 0, REMAPPED, colour);
+    colour = paired_remap(&port, colour);
+    port_set32(&port, 0, WIDE_TARGET, colour);
+    pixel = put16(&port, colour, green6);
+    return port_return(&port, pixel, entry->edx);
+}
+
+static uint32_t pixel16_paired_invert(PORT_SIGNATURE, int green6)
+{
+    Port port;
+    uint32_t colour;
+    uint32_t pixel;
+    port_open(&port, calls, services, globals, entry);
+    colour = paired_remap(&port, source_colour(&port));
+    port_set32(&port, 0, REMAPPED, colour);
+    pixel = put16_channels(&port, ~colour, green6);
+    return port_return(&port, pixel, entry->edx);
+}
+
+uint32_t vertrix_port_pixel16_invert_target_tint_495c40(PORT_SIGNATURE)
+{
+    return pixel16_invert_target_tint(calls, services, globals, entry, 0);
+}
+
+uint32_t vertrix_port_pixel16_invert_target_tint_49dd00(PORT_SIGNATURE)
+{
+    return pixel16_invert_target_tint(calls, services, globals, entry, 1);
+}
+
+uint32_t vertrix_port_pixel16_half_plus_paired_498660(PORT_SIGNATURE)
+{
+    return pixel16_half_plus_paired(calls, services, globals, entry, 0);
+}
+
+uint32_t vertrix_port_pixel16_half_plus_paired_4a0720(PORT_SIGNATURE)
+{
+    return pixel16_half_plus_paired(calls, services, globals, entry, 1);
+}
+
+uint32_t vertrix_port_pixel16_paired_invert_499350(PORT_SIGNATURE)
+{
+    return pixel16_paired_invert(calls, services, globals, entry, 0);
+}
+
+uint32_t vertrix_port_pixel16_paired_invert_4a1410(PORT_SIGNATURE)
+{
+    return pixel16_paired_invert(calls, services, globals, entry, 1);
 }
