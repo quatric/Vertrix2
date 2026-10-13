@@ -1836,4 +1836,23 @@ uint32_t vertrix_port_grid_cell_call(PORT_SIGNATURE);
  * change. */
 uint32_t vertrix_port_point_distance(PORT_SIGNATURE);
 
+/* Original 0x4ec850(eax = struct tm): the local time (GetLocalTime) as a struct tm, isdst -1.
+ * Returns the milliseconds; keeps edx. */
+uint32_t vertrix_port_local_time(PORT_SIGNATURE);
+
+/* Original 0x4de9c0(stack: lock number; ret 0): the C runtime's _lock: enter the numbered
+ * critical section (0x5c79d8, 0x18 bytes each), made on first use under the guard lock 0x5c7b28;
+ * nothing for a single-threaded runtime (0x5c79d4). The locks are made by 0x4de970 first. */
+uint32_t vertrix_port_runtime_lock(PORT_SIGNATURE);
+
+/* Original 0x4ccf3b(eax = array, edx = count, ebx = type): construct each element of an array
+ * with the type's constructor (+4) and size (+0x10), under a guard record that 0x4ce9fd closes.
+ * Returns the array. */
+uint32_t vertrix_port_construct_array(PORT_SIGNATURE);
+
+/* Original 0x487790(eax = object, edx, ebx = keys): look both keys up (0x4877f0); with the
+ * second's entry found, 0x4830f0 runs on it; the first's (0x483110) is then stored under the
+ * second key by 0x487850. Returns 0 when the first is missing. */
+uint32_t vertrix_port_object_pair_update(PORT_SIGNATURE);
+
 #endif

@@ -395,3 +395,36 @@ done:
     port_set16(&port, 0, L_SAVED_BX, ebx);
     return port_return(&port, eax, entry->edx);
 }
+
+uint32_t vertrix_port_ui_slide_sideways(PORT_SIGNATURE)
+{
+    Port port;
+    uint8_t stack[8 + 8];
+    uint32_t panel = entry->eax;
+    uint32_t offset;
+    uint32_t edx;
+    uint32_t x;
+    port_open_arguments(&port, stack, calls, services, globals, entry, 0, 2);
+    offset = port_u32(&port, entry->esp, 4);
+    edx = (entry->edx & 0xffff0000u) | port_u16(&port, panel, 0x16);
+    port_set16(&port, panel, 0x18, edx);
+    port_set16(&port, panel, 0x1c, edx);
+    edx = (edx & 0xffff0000u) | port_u16(&port, panel, 0xe);
+    port_set16(&port, panel, 0x10, edx);
+    if (entry->edx == 1)
+    {
+        /* From the left: to -ebx - 4 + offset. */
+        x = 0 - entry->ebx - 4 + offset;
+    }
+    else
+    {
+        /* From the right: past the screen width (0x5b9c8e). */
+        x = ((edx & 0xffff0000u) | port_u16(&port, 0, 0x5b9c8e)) + 4 + offset;
+        edx = x;
+    }
+    port_set16(&port, panel, 0xe, x);
+    port_set16(&port, panel, 0x14, x);
+    port_set16(&port, panel, 0x12, 8);
+    port_set16(&port, panel, 0x1a, 8);
+    return port_return(&port, panel, edx);
+}

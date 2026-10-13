@@ -16,4 +16,10 @@
  * is unchanged. */
 uint32_t vertrix_port_actor_layout(PORT_SIGNATURE);
 
+/* Original 0x471820(eax = panel, edx = side, ebx = width; stack: an offset, a dword; ret 8): set
+ * a panel sliding in sideways: its x (+0xe) moves to +0x10 and its start (+0xe, +0x14) to the
+ * left of the screen for side 1, else past its right; +0x16 is copied to +0x18 and +0x1c and the
+ * steps (+0x12, +0x1a) are 8. */
+uint32_t vertrix_port_ui_slide_sideways(PORT_SIGNATURE);
+
 #endif
