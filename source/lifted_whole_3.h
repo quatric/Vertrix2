@@ -160,7 +160,6 @@ enum
     LIFTED_SLOT_CALL_STACK = 72,
     LIFTED_F4761D0_STACK = 96,
     LIFTED_LIST_FIND_CALL_STACK = 80,
-    LIFTED_F476280_STACK = 84,
     LIFTED_SLOT_SELECT_STACK = 80,
     LIFTED_INPUT_QUEUE_ACKNOWLEDGE_FULL_STACK = 80,
     LIFTED_F476440_STACK = 80,
@@ -899,10 +898,6 @@ uint32_t lifted_f4761d0(const VertrixCalls *calls, const VertrixFactoryServices 
 /* Original 0x476260. */
 uint32_t lifted_list_find_call(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x476280. */
-uint32_t lifted_f476280(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4762e0. */
 uint32_t lifted_slot_select(const VertrixCalls *calls, const VertrixFactoryServices *services,

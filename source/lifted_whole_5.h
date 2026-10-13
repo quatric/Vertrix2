@@ -129,7 +129,6 @@ enum
     LIFTED_RTL_STRING_SET_LENGTH_STACK = 76,
     LIFTED_F4CA730_STACK = 108,
     LIFTED_F4CA770_STACK = 100,
-    LIFTED_F4CA970_STACK = 128,
     LIFTED_RETURN_CONSTANT_4CC7A0_STACK = 64,
     LIFTED_RETURN_CONSTANT_4CCAF0_STACK = 64,
     LIFTED_RETURN_CONSTANT_4CCB40_STACK = 64,
@@ -825,10 +824,6 @@ uint32_t lifted_f4ca730(const VertrixCalls *calls, const VertrixFactoryServices 
 
 /* Original 0x4ca770. */
 uint32_t lifted_f4ca770(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4ca970. */
-uint32_t lifted_f4ca970(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4cb390. */

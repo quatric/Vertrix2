@@ -2063,4 +2063,24 @@ uint32_t vertrix_port_player_reset(PORT_SIGNATURE);
  * object; its id at 0x598db0, the callback stored in the object. */
 uint32_t vertrix_port_timer_start(PORT_SIGNATURE);
 
+/* Original 0x4e7200: on a processor of class 3 or above (0x5054a1), the Pentium division check
+ * (0x4eb652, 0x4db507, 0x4db34a, 0x4eb57c); a faulty divider sets bit 0 of 0x508798. */
+uint32_t vertrix_port_fdiv_check(PORT_SIGNATURE);
+
+/* Original 0x4e6630(eax = bottom, edx = top): the current stack's region (import 0x4f1cf4): its
+ * top, and its usable bottom above the guard pages by the system version (0x509731, 0x50972f),
+ * stored through the pointers given. */
+uint32_t vertrix_port_stack_limits(PORT_SIGNATURE);
+
+/* Original 0x4ca970(eax = object, edx): construct a thread stream under a guard record: the
+ * derived stream (0x4cbf10) with the table 0x518a94, tied to the thread data (0x4ce780,
+ * 0x4ce740) and the current process and thread (imports 0x4f1b9c, 0x4f1ba0), fields cleared and
+ * +0xb0 = 0x200. */
+uint32_t vertrix_port_thread_stream_init(PORT_SIGNATURE);
+
+/* Original 0x476280(eax = slots, edx = index, ebx, ecx; one stack argument): make the slot
+ * (0x60 bytes each) current (0x54d62c) and, unless sound is off (0x553648), open it (0x475b00)
+ * or set it up and start it (0x475be0, 0x475af0). */
+uint32_t vertrix_port_sound_slot_select(PORT_SIGNATURE);
+
 #endif

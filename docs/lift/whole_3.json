@@ -6960,31 +6960,6 @@
   "virtual": [],
   "address": 4678240
  },
- "f476280": {
-  "callees": {
-   "0x475b00": [
-    0,
-    false
-   ],
-   "0x475be0": [
-    0,
-    false
-   ],
-   "0x475af0": [
-    0,
-    false
-   ]
-  },
-  "stack": 84,
-  "arguments": 1,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4678272
- },
  "slot_select": {
   "callees": {
    "0x475790": [

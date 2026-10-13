@@ -11643,3 +11643,153 @@ uint32_t vertrix_port_timer_start(PORT_SIGNATURE)
     port_set32(&port, entry->eax, 0, entry->edx);
     return port_return(&port, eax, vertrix_lift_edx);
 }
+
+uint32_t vertrix_port_fdiv_check(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t local = entry->esp - 0x1c;
+    uint32_t eax = entry->eax;
+    uint32_t edx;
+    uint32_t quotient;
+    port_open_frame(&port, calls, services, globals, entry, 0x1c);
+    /* The Pentium division check: 4195835 - (4195835 / 3145727) * 3145727 compared with a small
+     * epsilon (0x4eb652, 0x4db507, 0x4db34a, 0x4eb57c); a faulty divider sets 0x508798 bit 0. */
+    port_set32(&port, local, 8, 0xc0000000u);
+    port_set32(&port, local, 0xc, 0x4150017eu);
+    port_set32(&port, local, 0, 0x80000000u);
+    port_set32(&port, local, 4, 0x4147ffffu);
+    if (port_u8(&port, 0, 0x5054a1) < 3)
+    {
+        return port_return(&port, eax, entry->edx);
+    }
+    eax = port_call(&port, 0x4eb652, 0xc0000000u, 0x4150017eu, 0x80000000u, 0x4147ffffu);
+    quotient = port_call(&port, 0x4db507, eax, vertrix_lift_edx, 0x80000000u, 0x4147ffffu);
+    edx = vertrix_lift_edx;
+    eax = port_call(&port, 0x4db34a, 0xc0000000u, 0x4150017eu, quotient, edx);
+    eax = port_call(&port, 0x4eb57c, eax, vertrix_lift_edx, 0xe2308c3au, 0x3e45798eu);
+    if (!(vertrix_lift_fl.zf || vertrix_lift_fl.sf != vertrix_lift_fl.of))
+    {
+        port_set8(&port, 0, 0x508798, port_u8(&port, 0, 0x508798) | 1);
+    }
+    return port_return(&port, eax, entry->edx);
+}
+
+uint32_t vertrix_port_stack_limits(PORT_SIGNATURE)
+{
+    Port port;
+    uint8_t stack[0x2c + 8];
+    uint32_t buffer = entry->esp - 0x2c;
+    uint32_t arguments[3];
+    uint32_t eax;
+    uint32_t edx;
+    port_open_stack(&port, stack, calls, services, globals, entry, 0x2c);
+    /* The stack's region (import 0x4f1cf4, VirtualQuery of a local): its top, and its bottom
+     * above the guard pages, by the system version (0x509731, 0x50972f). */
+    arguments[0] = entry->esp - 0x10;
+    arguments[1] = buffer;
+    arguments[2] = 0x1c;
+    port_call_stack(&port, 0x4f1cf4, entry->esp - 0x10, entry->edx, entry->eax, entry->ecx,
+                    arguments, 3);
+    edx = port_u32(&port, buffer, 0) + port_u32(&port, buffer, 0xc);
+    eax = port_u32(&port, buffer, 4);
+    if (port_u16(&port, 0, 0x509731) < 0x8000)
+    {
+        eax += 0x3000;
+    }
+    else if (port_u8(&port, 0, 0x50972f) < 4)
+    {
+        eax += 0x12000;
+    }
+    else
+    {
+        eax += 0x13000;
+    }
+    if (entry->eax != 0)
+    {
+        port_set32(&port, entry->eax, 0, eax);
+    }
+    if (entry->edx != 0)
+    {
+        port_set32(&port, entry->edx, 0, edx);
+    }
+    return port_return(&port, eax, edx);
+}
+
+uint32_t vertrix_port_thread_stream_init(PORT_SIGNATURE)
+{
+    Port port;
+    uint8_t stack[0x28 + 8];
+    uint32_t esp = entry->esp;
+    uint32_t object = entry->eax;
+    uint32_t stream;
+    uint32_t data;
+    uint32_t edx;
+    uint32_t value;
+    static const uint8_t cleared[] = {0x60, 0x84, 0x88, 0x74, 0x80, 0xa0, 0x78};
+    static const uint8_t cleared_after[] = {0x68, 0xa4, 0x98, 0x9c, 0x8c, 0x90,
+                                            0xac, 0xb8, 0xbc, 0xb4, 0x7c};
+    unsigned index;
+    port_open_stack(&port, stack, calls, services, globals, entry, 0x28);
+    port_set32(&port, esp, -0x28u, port.env.chain);
+    port_set32(&port, esp, -0x24u, 0x4ec1ec);
+    port_set32(&port, esp, -0x20u, 0x5188d0);
+    port_set32(&port, esp, -0x1cu, 0);
+    port_set8(&port, esp, -0x10u, 0);
+    port_set32(&port, esp, -0x14u, object);
+    /* The derived stream (0x4cbf10) with the table 0x518a94, tied to the thread data (0x4ce780,
+     * 0x4ce740) and the current process and thread (imports 0x4f1b9c, 0x4f1ba0). */
+    stream = port_call(&port, 0x4cbf10, object, entry->edx, object, entry->ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, esp, -0x1cu, 1);
+    port_set32(&port, stream, 0, 0x518a94);
+    port_set32(&port, stream, 0x70, edx);
+    data = port_call(&port, 0x4ce780, stream, edx, stream, entry->ecx);
+    port_set32(&port, data, 4, stream);
+    value = port_call(&port, 0x4f1b9c, data, vertrix_lift_edx, stream, entry->ecx);
+    port_set32(&port, stream, 0x28, value);
+    value = port_call(&port, 0x4f1ba0, value, vertrix_lift_edx, stream, entry->ecx);
+    port_set32(&port, stream, 0x2c, value);
+    data = port_call(&port, 0x4ce740, value, vertrix_lift_edx, stream, entry->ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, data, 4, stream);
+    for (index = 0; index < sizeof cleared; index++)
+    {
+        port_set32(&port, stream, cleared[index], 0);
+    }
+    port_set16(&port, stream, 0xaa, 0);
+    for (index = 0; index < sizeof cleared_after; index++)
+    {
+        port_set32(&port, stream, cleared_after[index], 0);
+    }
+    port_set32(&port, stream, 0xb0, 0x200);
+    port_set16(&port, stream, 0xa8, port_u16(&port, stream, 0xaa));
+    return port_return(&port, stream, edx);
+}
+
+uint32_t vertrix_port_sound_slot_select(PORT_SIGNATURE)
+{
+    Port port;
+    uint8_t stack[8 + 8 + 4];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t offset = (entry->edx & 0xffff) * 0x60;
+    uint32_t slot = entry->eax + offset;
+    uint32_t eax;
+    port_open_arguments(&port, stack, calls, services, globals, entry, 8, 1);
+    /* The slot (0x60 bytes each) becomes current (0x54d62c); unless sound is off (0x553648) it
+     * is opened (0x475b00) and, when that fails, set up (0x475be0) and started (0x475af0). */
+    port_set32(&port, 0, 0x54d62c, slot);
+    if (port_u32(&port, 0, 0x553648) != 0)
+    {
+        return port_return(&port, offset, entry->ebx);
+    }
+    eax = port_call(&port, 0x475b00, slot, entry->ebx, entry->ecx, 0);
+    if (eax != 0)
+    {
+        return port_return(&port, eax, vertrix_lift_edx);
+    }
+    port_call(&port, 0x475be0, port_u32(&port, 0, 0x54d62c), vertrix_lift_edx, entry->ecx,
+              port_u32(&port, ebp, 8));
+    eax = port_call(&port, 0x475af0, port_u32(&port, 0, 0x54d62c), vertrix_lift_edx, entry->ecx,
+                    port_u32(&port, ebp, 8));
+    return port_return(&port, eax, vertrix_lift_edx);
+}
