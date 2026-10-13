@@ -1955,4 +1955,14 @@ uint32_t vertrix_port_raise_at_caller(PORT_SIGNATURE);
  * (0x4ca050). */
 uint32_t vertrix_port_object_destroy_e(PORT_SIGNATURE);
 
+/* Original 0x4e57ac(eax = lock): enter a recursive lock: unless the current thread (import
+ * 0x4f1ba0) owns it (+8), create its section once under 0x5c8910 (0x4e55d4) and enter it (import
+ * 0x4f1b48); count the entry (+0xc). Keeps edx. */
+uint32_t vertrix_port_lock_enter(PORT_SIGNATURE);
+
+/* Original 0x48a4a0(eax = list, edx = destination strings, ebx = count, ecx = default text; one
+ * stack argument, the limit): set each destination string to the list's text when it is longer
+ * than the limit, otherwise to the default. */
+uint32_t vertrix_port_list_parse_texts(PORT_SIGNATURE);
+
 #endif

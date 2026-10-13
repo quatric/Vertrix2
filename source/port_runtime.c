@@ -10722,3 +10722,109 @@ uint32_t vertrix_port_object_destroy_e(PORT_SIGNATURE)
     }
     return port_return(&port, result, edx);
 }
+
+uint32_t vertrix_port_lock_enter(PORT_SIGNATURE)
+{
+    enum
+    {
+        GLOBAL_LOCK = 0x5c8910
+    };
+    Port port;
+    uint32_t lock = entry->eax;
+    uint32_t thread;
+    uint32_t eax;
+    uint32_t edx;
+    port_open_frame(&port, calls, services, globals, entry, 0x18);
+    /* The current thread (import 0x4f1ba0) owns the lock already, or waits for its section. */
+    thread = port_call(&port, 0x4f1ba0, lock, entry->edx, lock, entry->ecx);
+    edx = port_u32(&port, lock, 8);
+    eax = thread;
+    if (thread != edx)
+    {
+        uint32_t section;
+        if (port_u32(&port, lock, 4) == 0)
+        {
+            /* The section is created once, under the global lock. */
+            eax = port_call(&port, 0x4e57ac, GLOBAL_LOCK, edx, lock, entry->ecx);
+            edx = vertrix_lift_edx;
+            if (port_u32(&port, lock, 4) == 0)
+            {
+                eax = port_call(&port, 0x4e55d4, eax, edx, lock, entry->ecx);
+                edx = vertrix_lift_edx;
+                port_set32(&port, lock, 4, 1);
+                port_set32(&port, lock, 0, eax);
+            }
+            eax = port_call(&port, 0x4e5810, GLOBAL_LOCK, edx, lock, entry->ecx);
+            edx = vertrix_lift_edx;
+        }
+        section = port_u32(&port, lock, 0);
+        eax = port_call_stack(&port, 0x4f1b48, eax, edx, lock, entry->ecx, &section, 1);
+        port_set32(&port, lock, 8, thread);
+    }
+    port_set32(&port, lock, 0xc, port_u32(&port, lock, 0xc) + 1);
+    return port_return(&port, eax, entry->edx);
+}
+
+uint32_t vertrix_port_list_parse_texts(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x30,
+        GUARD_HANDLER = 0x4ec1ec,
+        PARSE_GUARD = 0x5175fc
+    };
+    Port port;
+    uint8_t stack[BELOW + 8 + 4];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t list = entry->eax;
+    uint32_t limit;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = PARSE_GUARD;
+    uint32_t ecx = GUARD_HANDLER;
+    uint32_t index;
+    port_open_arguments(&port, stack, calls, services, globals, entry, BELOW, 1);
+    port_set32(&port, ebp, -0xcu, entry->ebx);
+    port_set32(&port, ebp, -0x14u, entry->ecx);
+    port_set32(&port, ebp, -0x2cu, port.env.chain);
+    port_set32(&port, ebp, -0x10u, entry->edx);
+    port_set32(&port, ebp, -0x28u, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x24u, PARSE_GUARD);
+    port_set32(&port, ebp, -0x20u, 0);
+    limit = port_u32(&port, ebp, 8);
+    /* Each of the count (ebx, a word) destination strings gets the list's text longer than the
+     * limit (0x48a300 into a temporary, 0x4ca310) or the default text (ecx, 0x4ca370). */
+    for (index = 0; index < port_u16(&port, ebp, -0xcu); index++)
+    {
+        uint32_t texts = port_call(&port, 0x48a2e0, list, edx, ebx, ecx);
+        edx = vertrix_lift_edx;
+        uint32_t taken = 0;
+        if (index < texts)
+        {
+            uint32_t length = port_call(&port, 0x48a2f0, list, index, ebx, ecx);
+            edx = limit;
+            if (length > limit)
+            {
+                uint32_t text;
+                ecx = limit;
+                ebx = index;
+                text = port_call(&port, 0x48a300, list, ebp - 0x18, ebx, ecx);
+                ecx = 1;
+                ebx = 0;
+                port_set32(&port, ebp, -0x20u, 1);
+                port_call(&port, 0x4ca310, port_u32(&port, ebp, -0x10u), text, ebx, ecx);
+                port_set32(&port, ebp, -0x20u, 0);
+                port_call(&port, 0x4ca210, ebp - 0x18, 0, ebx, ecx);
+                port_set32(&port, ebp, -0x20u, 0);
+                taken = 1;
+            }
+        }
+        if (!taken)
+        {
+            port_call(&port, 0x4ca370, port_u32(&port, ebp, -0x10u), port_u32(&port, ebp, -0x14u),
+                      ebx, ecx);
+        }
+        edx = port_u32(&port, ebp, -0x10u) + 4;
+        port_set32(&port, ebp, -0x10u, edx);
+    }
+    return port_return(&port, port_u32(&port, ebp, -0x2cu), edx);
+}
