@@ -13873,3 +13873,104 @@ uint32_t vertrix_port_actor_swing_frame_44f630(PORT_SIGNATURE)
 {
     return actor_swing_frame(calls, services, globals, entry, 0xff9c, 0x44f5d0);
 }
+
+uint32_t vertrix_port_child_check_453570(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t object = entry->eax;
+    uint32_t child;
+    uint32_t table;
+    uint32_t result;
+    int passed = 0;
+    port_open(&port, calls, services, globals, entry);
+    /* The child (+0x15c) is tested by 0x42eca0 and 0x42ecc0 against 0x44c860; when both pass,
+     * 0x42ebe0 runs and afterwards 0x43bbf0. Its method +4 (table +0x158) runs in every case. */
+    child = port_u32(&port, object, 0x15c);
+    if (port_call(&port, 0x42eca0, child, 0x44c860, object, child) != 0 &&
+        port_call(&port, 0x42ecc0, child, 0x44c860, object, child) != 0)
+    {
+        passed = 1;
+        port_call(&port, 0x42ebe0, child, vertrix_lift_edx, object, child);
+    }
+    table = port_u32(&port, child, 0x158);
+    result = port_call(&port, port_u32(&port, table, 4), child, table, object, child);
+    if (passed)
+    {
+        result = port_call(&port, 0x43bbf0, object, vertrix_lift_edx, object, child);
+    }
+    return port_return(&port, result, entry->edx);
+}
+
+/* The actor frame shape of 0x44c3e0 and its copies: `first` and 0x4ac500, then, when the counter is
+ * due (0x4ac520), its steps consumed (0x4ac540, 0x4ac5b0), the value's goal (+0x5c) and speed
+ * (+0x60) set, the value stepped (0x4ad6e0) and, once it arrives, the update `next` set (0x4ac8f0);
+ * the image is refreshed (0x4ac8a0) in every case. */
+static uint32_t actor_value_frame(PORT_SIGNATURE, uint32_t first, uint32_t goal, uint32_t speed,
+                                  uint32_t next)
+{
+    Port port;
+    uint32_t actor = entry->eax;
+    uint32_t ebx = entry->ebx;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    port_call(&port, first, actor, entry->edx, ebx, actor);
+    port_call(&port, 0x4ac500, actor, vertrix_lift_edx, ebx, actor);
+    if (port_call(&port, 0x4ac520, actor, vertrix_lift_edx, ebx, actor) == 1)
+    {
+        result = port_call(&port, 0x4ac540, actor, vertrix_lift_edx, ebx, actor);
+        port_call(&port, 0x4ac5b0, actor, result, ebx, actor);
+        port_set32(&port, actor, 0x5c, goal);
+        port_set32(&port, actor, 0x60, speed);
+        if (port_call(&port, 0x4ad6e0, actor, vertrix_lift_edx, ebx, actor) == 0)
+        {
+            port_call(&port, 0x4ac8f0, actor, next, ebx, actor);
+        }
+    }
+    result = port_call(&port, 0x4ac8a0, actor, vertrix_lift_edx, ebx, actor);
+    return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_actor_fade_frame_44c9d0(PORT_SIGNATURE)
+{
+    return actor_fade_frame_with(calls, services, globals, entry, 0x4ac1f0, 0x44ca40, 0xc8, 4);
+}
+
+uint32_t vertrix_port_actor_fade_frame_44ca40(PORT_SIGNATURE)
+{
+    return actor_fade_frame_with(calls, services, globals, entry, 0x4ac1f0, 0x44c9d0, 0xff38, 4);
+}
+
+uint32_t vertrix_port_actor_fade_frame_45b7f0(PORT_SIGNATURE)
+{
+    return actor_fade_frame_with(calls, services, globals, entry, 0x4ac1f0, 0x44c860, 0xffb0, 4);
+}
+
+uint32_t vertrix_port_actor_fade_frame_45bd60(PORT_SIGNATURE)
+{
+    return actor_fade_frame_with(calls, services, globals, entry, 0x4ac1f0, 0x44c860, 0xffb0, 4);
+}
+
+uint32_t vertrix_port_actor_fade_frame_45bf80(PORT_SIGNATURE)
+{
+    return actor_fade_frame_with(calls, services, globals, entry, 0x4ac1f0, 0x44c860, 0xffb0, 4);
+}
+
+uint32_t vertrix_port_actor_value_frame_44c3e0(PORT_SIGNATURE)
+{
+    return actor_value_frame(calls, services, globals, entry, 0x44c2a0, 0x28, 0xa, 0x44c4c0);
+}
+
+uint32_t vertrix_port_actor_value_frame_44c450(PORT_SIGNATURE)
+{
+    return actor_value_frame(calls, services, globals, entry, 0x44c2a0, 0x50, 0xa, 0x44c4c0);
+}
+
+uint32_t vertrix_port_actor_value_frame_44d3a0(PORT_SIGNATURE)
+{
+    return actor_value_frame(calls, services, globals, entry, 0x4ac1f0, 0x64, 0x14, 0x44d410);
+}
+
+uint32_t vertrix_port_actor_value_frame_44d5f0(PORT_SIGNATURE)
+{
+    return actor_value_frame(calls, services, globals, entry, 0x4ac1f0, 0xffffff9c, 0x14, 0x44d660);
+}

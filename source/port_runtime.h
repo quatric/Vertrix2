@@ -2415,4 +2415,27 @@ uint32_t vertrix_port_actor_swing_frame_44f500(PORT_SIGNATURE);
 uint32_t vertrix_port_actor_swing_frame_44f5d0(PORT_SIGNATURE);
 uint32_t vertrix_port_actor_swing_frame_44f630(PORT_SIGNATURE);
 
+/* Originals 0x453570, 0x454970, 0x454bd0, 0x454e30 and 0x454fc0(eax = object): the child's (+0x15c)
+ * tests 0x42eca0 and 0x42ecc0 against 0x44c860, 0x42ebe0 when both pass, its method +4, and
+ * 0x43bbf0 after a pass. Keep edx. */
+uint32_t vertrix_port_child_check_453570(PORT_SIGNATURE);
+
+/* Originals 0x44c9d0, 0x44ca40, 0x45b7f0, 0x45bd60 and 0x45bf80: the fade frame of 0x44d250
+ * starting at 0xc8, -0xc8 or -0x50 (three) by 4, into the updates 0x44ca40, 0x44c9d0 and 0x44c860.
+ */
+uint32_t vertrix_port_actor_fade_frame_44c9d0(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_fade_frame_44ca40(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_fade_frame_45b7f0(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_fade_frame_45bd60(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_fade_frame_45bf80(PORT_SIGNATURE);
+
+/* Originals 0x44c3e0, 0x44c450, 0x44d3a0 and 0x44d5f0(eax = actor): when the counter is due, step
+ * the value (+0x58) to 0x28, 0x50, 0x64 or -0x64 at 0xa, 0xa, 0x14 and 0x14 and on arrival set the
+ * update 0x44c4c0 (two), 0x44d410 or 0x44d660; the first two run 0x44c2a0 first, the rest 0x4ac1f0.
+ * Keep edx. */
+uint32_t vertrix_port_actor_value_frame_44c3e0(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_value_frame_44c450(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_value_frame_44d3a0(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_value_frame_44d5f0(PORT_SIGNATURE);
+
 #endif
