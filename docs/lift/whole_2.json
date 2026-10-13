@@ -14490,66 +14490,6 @@
   "virtual": [],
   "address": 4558144
  },
- "f458e30": {
-  "callees": {
-   "0x4ac500": [
-    0,
-    false
-   ],
-   "0x4ac520": [
-    0,
-    false
-   ],
-   "0x4ac540": [
-    0,
-    false
-   ],
-   "0x4ac5b0": [
-    0,
-    false
-   ],
-   "0x4ad060": [
-    0,
-    false
-   ],
-   "0x4ad260": [
-    0,
-    false
-   ],
-   "0x4b14c0": [
-    0,
-    false
-   ],
-   "0x4ad750": [
-    0,
-    false
-   ],
-   "0x4ad5e0": [
-    0,
-    false
-   ],
-   "0x4ac8f0": [
-    0,
-    false
-   ]
-  },
-  "stack": 140,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2,
-   15,
-   16,
-   17
-  ],
-  "virtual": [],
-  "address": 4558384
- },
  "f458f00": {
   "callees": {
    "0x484680": [
@@ -14590,66 +14530,6 @@
   ],
   "virtual": [],
   "address": 4558592
- },
- "f458fd0": {
-  "callees": {
-   "0x4ac500": [
-    0,
-    false
-   ],
-   "0x4ac520": [
-    0,
-    false
-   ],
-   "0x4ac540": [
-    0,
-    false
-   ],
-   "0x4ac5b0": [
-    0,
-    false
-   ],
-   "0x4ad060": [
-    0,
-    false
-   ],
-   "0x4ad260": [
-    0,
-    false
-   ],
-   "0x4b14c0": [
-    0,
-    false
-   ],
-   "0x4ad750": [
-    0,
-    false
-   ],
-   "0x4ad5e0": [
-    0,
-    false
-   ],
-   "0x4ac8f0": [
-    0,
-    false
-   ]
-  },
-  "stack": 140,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2,
-   15,
-   16,
-   17
-  ],
-  "virtual": [],
-  "address": 4558800
  },
  "f4590a0": {
   "callees": {
@@ -15505,66 +15385,6 @@
   ],
   "virtual": [],
   "address": 4563136
- },
- "title_letter_fly_out_call": {
-  "callees": {
-   "0x4ac500": [
-    0,
-    false
-   ],
-   "0x4ac520": [
-    0,
-    false
-   ],
-   "0x4ac540": [
-    0,
-    false
-   ],
-   "0x4ac5b0": [
-    0,
-    false
-   ],
-   "0x4ad060": [
-    0,
-    false
-   ],
-   "0x4ad260": [
-    0,
-    false
-   ],
-   "0x4b14c0": [
-    0,
-    false
-   ],
-   "0x4ad750": [
-    0,
-    false
-   ],
-   "0x4ad5e0": [
-    0,
-    false
-   ],
-   "0x4ac8f0": [
-    0,
-    false
-   ]
-  },
-  "stack": 140,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2,
-   15,
-   16,
-   17
-  ],
-  "virtual": [],
-  "address": 4563392
  },
  "title_letter_fight_count_call": {
   "callees": {

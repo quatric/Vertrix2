@@ -298,9 +298,7 @@ enum
     LIFTED_F458A70_STACK = 140,
     LIFTED_F458C20_STACK = 144,
     LIFTED_F458D40_STACK = 124,
-    LIFTED_F458E30_STACK = 140,
     LIFTED_F458F00_STACK = 116,
-    LIFTED_F458FD0_STACK = 140,
     LIFTED_F4590A0_STACK = 92,
     LIFTED_F459100_STACK = 144,
     LIFTED_F459200_STACK = 84,
@@ -319,7 +317,6 @@ enum
     LIFTED_TITLE_LETTER_COUNT_CALL_STACK = 168,
     LIFTED_TITLE_LETTER_RESTART_CALL_STACK = 144,
     LIFTED_TITLE_LETTER_LAUNCH_CALL_STACK = 124,
-    LIFTED_TITLE_LETTER_FLY_OUT_CALL_STACK = 140,
     LIFTED_TITLE_LETTER_FIGHT_COUNT_CALL_STACK = 144,
     LIFTED_TITLE_LETTER_FIGHT_RESTART_CALL_STACK = 124,
     LIFTED_TITLE_LETTER_FIGHT_FLY_CALL_STACK = 140,
@@ -1685,16 +1682,8 @@ uint32_t lifted_f458c20(const VertrixCalls *calls, const VertrixFactoryServices 
 uint32_t lifted_f458d40(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x458e30. */
-uint32_t lifted_f458e30(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x458f00. */
 uint32_t lifted_f458f00(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x458fd0. */
-uint32_t lifted_f458fd0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4590a0. */
@@ -1771,11 +1760,6 @@ uint32_t lifted_title_letter_restart_call(const VertrixCalls *calls,
 uint32_t lifted_title_letter_launch_call(const VertrixCalls *calls,
                                          const VertrixFactoryServices *services,
                                          const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x45a1c0. */
-uint32_t lifted_title_letter_fly_out_call(const VertrixCalls *calls,
-                                          const VertrixFactoryServices *services,
-                                          const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x45a290. */
 uint32_t lifted_title_letter_fight_count_call(const VertrixCalls *calls,

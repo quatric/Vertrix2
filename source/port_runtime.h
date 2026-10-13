@@ -2490,4 +2490,10 @@ uint32_t vertrix_port_button_frame_456390(PORT_SIGNATURE);
 uint32_t vertrix_port_button_frame_456570(PORT_SIGNATURE);
 uint32_t vertrix_port_button_frame_456760(PORT_SIGNATURE);
 
+/* Originals 0x458e30, 0x458fd0 and 0x45a1c0(eax = actor): when the counter is due, turn it, centre
+ * it on its polar offset by its drawn size (0x4ad060, 0x4ad260, 0x4b14c0), advance +0x32 by the
+ * steps and step the value +0x64 (0x4ad750) and the axis at +0x28 (0x4ad5e0); when both arrive the
+ * update is cleared (0x4ac8f0 with 0). Keep edx. */
+uint32_t vertrix_port_actor_orbit_frame(PORT_SIGNATURE);
+
 #endif

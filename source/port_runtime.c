@@ -14236,3 +14236,62 @@ uint32_t vertrix_port_button_frame_456760(PORT_SIGNATURE)
 {
     return button_frame(calls, services, globals, entry, 0x456860);
 }
+
+uint32_t vertrix_port_actor_orbit_frame(PORT_SIGNATURE)
+{
+    /* push ebp, ebx, ecx, edx, esi, then 0x10 bytes: the polar offset and the drawn size. */
+    enum
+    {
+        BELOW = 0x24
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t actor = entry->eax;
+    uint32_t steps;
+    uint32_t half;
+    uint32_t result;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    port_set32(&port, ebp, 0, entry->ebp);
+    port_set32(&port, ebp, -4u, entry->ebx);
+    port_set32(&port, ebp, -8u, entry->ecx);
+    port_set32(&port, ebp, -0xcu, entry->edx);
+    port_set32(&port, ebp, -0x10u, entry->esi);
+    port_call(&port, 0x4ac500, actor, entry->edx, entry->ebx, actor);
+    result = port_call(&port, 0x4ac520, actor, vertrix_lift_edx, entry->ebx, actor);
+    if (result != 1)
+    {
+        return port_return(&port, result, entry->edx);
+    }
+    /* When the counter is due: turn by the steps (0x4ad060), take the polar offset (0x4ad260) and
+     * the drawn size (0x4b14c0) and centre the actor on the offset (+0xe, +0x16); the angle field
+     * +0x32 advances by the steps, the value at +0x64 steps (0x4ad750) and, once it arrives, is
+     * cleared and the axis at +0x28 approached by one (0x4ad5e0); on arrival the update ends. */
+    steps = port_call(&port, 0x4ac540, actor, vertrix_lift_edx, entry->ebx, actor);
+    port_call(&port, 0x4ac5b0, actor, vertrix_lift_edx, entry->ebx, actor);
+    port_call(&port, 0x4ad060, actor, steps, ebp - 0x18, actor);
+    port_call(&port, 0x4ad260, actor, ebp - 0x14, ebp - 0x18, actor);
+    port_set32(&port, ebp, -0x20u, 0);
+    port_set32(&port, ebp, -0x1cu, 0);
+    port_call(&port, 0x4b14c0, actor, ebp - 0x20, ebp - 0x1c, actor);
+    half = port_u32(&port, ebp, -0x20u) >> 1;
+    port_set16(&port, actor, 0xe, (uint32_t)(int32_t)(int16_t)port_u16(&port, ebp, -0x18u) - half);
+    half = port_u32(&port, ebp, -0x1cu) >> 1;
+    result = (uint32_t)(int32_t)(int16_t)port_u16(&port, ebp, -0x14u) - half;
+    half = port_u16(&port, actor, 0x32);
+    port_set16(&port, actor, 0x16, result);
+    port_set16(&port, actor, 0x32, half + steps);
+    result = port_call(&port, 0x4ad750, actor, steps, ebp - 0x1c, actor);
+    if (result != 0)
+    {
+        return port_return(&port, result, entry->edx);
+    }
+    port_set32(&port, actor, 0x64, 0);
+    result = port_call(&port, 0x4ad5e0, actor, 1, ebp - 0x1c, actor);
+    if (result != 0)
+    {
+        return port_return(&port, result, entry->edx);
+    }
+    result = port_call(&port, 0x4ac8f0, actor, 0, ebp - 0x1c, actor);
+    return port_return(&port, result, entry->edx);
+}
