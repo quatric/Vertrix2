@@ -210,4 +210,82 @@ uint32_t vertrix_port_rectangle_half32(PORT_SIGNATURE);
  * 0x5bb79c pixels) whose alpha is not 0, by setting bit 0 of its byte. */
 uint32_t vertrix_port_surface_mask32(PORT_SIGNATURE);
 
+/* Originals 0x4974c0 and 0x4977c0 (5-5-5) and 0x49f580 and 0x49f880 (5-6-5): 0x4902a0 for a
+ * 16-bit target at 0x5bb780, widened into 0x5bb774 and narrowed back after the mix. Returns the
+ * target pointer; edx is unchanged. */
+uint32_t vertrix_port_blend_levels16_4974c0(PORT_SIGNATURE);
+uint32_t vertrix_port_blend_levels16_4977c0(PORT_SIGNATURE);
+uint32_t vertrix_port_blend_levels16_49f580(PORT_SIGNATURE);
+uint32_t vertrix_port_blend_levels16_49f880(PORT_SIGNATURE);
+
+/* Originals 0x4933e0 (5-5-5) and 0x49b4a0 (5-6-5): the 16-bit target pixel at [0x5bb780] becomes
+ * the source colour narrowed. Returns the pixel; edx is unchanged. */
+uint32_t vertrix_port_pixel16_copy_4933e0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel16_copy_49b4a0(PORT_SIGNATURE);
+
+/* Originals 0x4935c0 (5-5-5) and 0x49b680 (5-6-5): the target becomes the source halved (masked to
+ * 0x7f7f7f) plus the colour at 0x54d5ec, kept at 0x5bb774. Returns the pixel; edx is unchanged. */
+uint32_t vertrix_port_pixel16_half_plus_4935c0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel16_half_plus_49b680(PORT_SIGNATURE);
+
+/* Originals 0x493e70 (5-5-5) and 0x49bf30 (5-6-5): the target becomes the inverted source (its low
+ * 24 bits kept at 0x5bb774). Returns the pixel; edx is unchanged. */
+uint32_t vertrix_port_pixel16_invert_493e70(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel16_invert_49bf30(PORT_SIGNATURE);
+
+/* Originals 0x495ac0 (5-5-5) and 0x49db80 (5-6-5): the inverted source (low 24 bits, kept at
+ * 0x5bc018) halved plus the colour at 0x54d5ec, kept at 0x5bb774. Returns the pixel; edx is
+ * unchanged. */
+uint32_t vertrix_port_pixel16_invert_half_plus_495ac0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel16_invert_half_plus_49db80(PORT_SIGNATURE);
+
+/* Originals 0x493970 (5-5-5) and 0x49ba30 (5-6-5): the target becomes the average of the widened
+ * target and the source (each halved and masked to 0x7f7f7f), kept at 0x5bb774. Returns the target
+ * address; edx is unchanged. */
+uint32_t vertrix_port_pixel16_average_493970(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel16_average_49ba30(PORT_SIGNATURE);
+
+/* Originals 0x493ba0 (5-5-5) and 0x49bc60 (5-6-5): the same code as 0x493970. */
+uint32_t vertrix_port_pixel16_average_493ba0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel16_average_49bc60(PORT_SIGNATURE);
+
+/* Originals 0x493ec0 (5-5-5) and 0x49bf80 (5-6-5): the target becomes its widened colour inverted
+ * (the low 24 bits kept at 0x5bb774). Returns the pixel; edx is unchanged. */
+uint32_t vertrix_port_pixel16_invert_target_493ec0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel16_invert_target_49bf80(PORT_SIGNATURE);
+
+/* Originals 0x494bc0 (5-5-5) and 0x49cc80 (5-6-5): the target becomes the sum of the source's and
+ * its own quarters (masked to 0x3f3f3f) and the colour at 0x54d5ec, kept at 0x5bb774. Returns the
+ * target address; edx is unchanged. */
+uint32_t vertrix_port_pixel16_quarters_plus_494bc0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel16_quarters_plus_49cc80(PORT_SIGNATURE);
+
+/* Originals 0x495d50 (5-5-5) and 0x49de10 (5-6-5): the inverted widened target (low 24 bits, kept
+ * at 0x5bc018) halved plus the colour at 0x54d5ec, kept at 0x5bb774. Returns the target address;
+ * edx is unchanged. */
+uint32_t vertrix_port_pixel16_invert_target_half_plus_495d50(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel16_invert_target_half_plus_49de10(PORT_SIGNATURE);
+
+/* Originals 0x493500 (5-5-5) and 0x49b5c0 (5-6-5): the target becomes the source remapped through
+ * fixed channels (as 0x48e900 does), kept at 0x5bb774. Returns the pixel; edx is unchanged. */
+uint32_t vertrix_port_pixel16_tint_493500(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel16_tint_49b5c0(PORT_SIGNATURE);
+
+/* Originals 0x493c30 (5-5-5) and 0x49bcf0 (5-6-5): saturating add of the source to the widened
+ * target (the low 24 bits kept at 0x5bb774). Returns the target address; edx is unchanged. */
+uint32_t vertrix_port_pixel16_add_493c30(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel16_add_49bcf0(PORT_SIGNATURE);
+
+/* Originals 0x493cf0 (5-5-5) and 0x49bdb0 (5-6-5): saturating subtract of the source from the
+ * widened target (the low 24 bits kept at 0x5bb774). Returns the target address; edx is unchanged.
+ */
+uint32_t vertrix_port_pixel16_subtract_493cf0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel16_subtract_49bdb0(PORT_SIGNATURE);
+
+/* Originals 0x493db0 (5-5-5) and 0x49be70 (5-6-5): the target becomes the source less the widened
+ * target, each channel stopping at 0 (the low 24 bits kept at 0x5bb774). Returns the target
+ * address; edx is unchanged. */
+uint32_t vertrix_port_pixel16_subtract_from_493db0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel16_subtract_from_49be70(PORT_SIGNATURE);
+
 #endif
