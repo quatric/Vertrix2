@@ -1982,4 +1982,14 @@ uint32_t vertrix_port_list_parse_values(PORT_SIGNATURE);
  * 0x5466c8) and read it with 0x48a100, then 0x48a8c0; returns 0x48a100's result or 0. */
 uint32_t vertrix_port_settings_file_read(PORT_SIGNATURE);
 
+/* Original 0x48b240(eax = name, edx): open the named file with a parser on the stack (0x48a620,
+ * 0x48a710 with 0x5466c8 and 10) and read it with 0x48b2f0, then 0x48a8c0; returns its result or
+ * 10. */
+uint32_t vertrix_port_table_file_read(PORT_SIGNATURE);
+
+/* Original 0x482aa0(eax = name): load an image from the open archive (0x5589e0) by its extension
+ * (0x4b7dd0 or 0x48b240). Returns the image they store, 0 when none or when the loader fails;
+ * keeps edx. */
+uint32_t vertrix_port_image_file_load(PORT_SIGNATURE);
+
 #endif
