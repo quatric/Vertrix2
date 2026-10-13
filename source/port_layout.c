@@ -772,3 +772,35 @@ uint32_t vertrix_port_screen_panel_destroy(PORT_SIGNATURE)
     port_set32(&port, ebp, -0x24u, 0);
     return box_destroy_free(&port, result, vertrix_lift_edx, mode);
 }
+
+uint32_t vertrix_port_label_box_place(PORT_SIGNATURE)
+{
+    Port port;
+    uint8_t stack[0x10 + 8 + 5 * 4];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t box;
+    uint32_t ecx;
+    uint32_t arguments[2];
+    port_open_arguments(&port, stack, calls, services, globals, entry, 0x10, 5);
+    port_set16(&port, ebp, -0xcu, entry->ecx);
+    /* A label box (0x45fe10) with the handlers 0x443460 and 0x4486f0 (0x4ac8f0, 0x4ac930,
+     * 0x4ac910), laid out (0x471820) and added to the list 0x54671c (0x4b5e70). */
+    box = port_call(&port, 0x45fe10, (uint32_t)(int32_t)(int16_t)entry->ebx,
+                    (uint32_t)(int32_t)(int16_t)port_u16(&port, ebp, -0xcu),
+                    (uint32_t)(int32_t)(int16_t)entry->eax, (uint32_t)(int32_t)(int16_t)entry->edx);
+    port_call(&port, 0x4ac8f0, box, 0x443460, (uint32_t)(int32_t)(int16_t)entry->eax,
+              (uint32_t)(int32_t)(int16_t)entry->edx);
+    port_call(&port, 0x4ac930, box, 0, port_u32(&port, ebp, 0x10),
+              (uint32_t)(int32_t)(int16_t)entry->edx);
+    ecx = port_u32(&port, ebp, 0xa);
+    port_call(&port, 0x4ac910, box, 0x4486f0, port_u32(&port, ebp, 0x10), ecx);
+    arguments[0] = (uint32_t)(int32_t)(int16_t)(entry->ebx - port_u32(&port, ebp, 0x10));
+    arguments[1] =
+        (uint32_t)(int32_t)(int16_t)(port_u32(&port, ebp, -0xcu) - port_u32(&port, ebp, 0x14));
+    port_call_stack(&port, 0x471820, box, port_u32(&port, ebp, 0x18),
+                    (uint32_t)((int32_t)port_u32(&port, ebp, 6) >> 16),
+                    (uint32_t)((int32_t)ecx >> 16), arguments, 2);
+    port_call(&port, 0x4b5e70, 0x54671c, box, (uint32_t)((int32_t)port_u32(&port, ebp, 6) >> 16),
+              (uint32_t)((int32_t)ecx >> 16));
+    return port_return(&port, box, vertrix_lift_edx);
+}

@@ -167,46 +167,6 @@
   "virtual": [],
   "address": 4948336
  },
- "f4b8187": {
-  "callees": {
-   "0x48a620": [
-    0,
-    false
-   ],
-   "0x48a710": [
-    0,
-    false
-   ],
-   "0x4b826f": [
-    0,
-    false
-   ],
-   "0x48a8c0": [
-    0,
-    false
-   ],
-   "0x48a670": [
-    0,
-    false
-   ]
-  },
-  "stack": 428,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2,
-   319,
-   320,
-   321
-  ],
-  "virtual": [],
-  "address": 4948359
- },
  "f4b826f": {
   "callees": {
    "0x4ec160": [

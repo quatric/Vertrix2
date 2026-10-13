@@ -11888,3 +11888,105 @@ uint32_t vertrix_port_sound_voice_play(PORT_SIGNATURE)
     }
     return port_return(&port, eax, vertrix_lift_edx);
 }
+
+uint32_t vertrix_port_sound_slot_play(PORT_SIGNATURE)
+{
+    Port port;
+    uint8_t stack[0x10 + 8 + 4];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t slot = entry->eax + (entry->edx & 0xffff) * 0x60;
+    uint32_t argument;
+    uint32_t eax;
+    port_open_arguments(&port, stack, calls, services, globals, entry, 0x10, 1);
+    port_set32(&port, ebp, -0xcu, entry->eax);
+    argument = port_u32(&port, ebp, 8);
+    /* The slot (0x60 bytes each) becomes the playing one (0x54d628); with sound on it is opened
+     * (0x475b00) and, when that succeeds, a voice played (0x475b20) and started (0x475ad0). */
+    port_set32(&port, 0, 0x54d628, slot);
+    if (port_u32(&port, 0, 0x553648) != 0)
+    {
+        eax = port_call(&port, 0x475b20, slot, entry->ebx, entry->ecx, argument);
+        return port_return(&port, eax, vertrix_lift_edx);
+    }
+    eax = port_call(&port, 0x475b00, slot, slot, entry->ebx, entry->ecx);
+    if (eax == 1)
+    {
+        port_call(&port, 0x475b20, port_u32(&port, 0, 0x54d628), entry->ebx, entry->ecx, argument);
+        eax = port_call(&port, 0x475ad0, port_u32(&port, 0, 0x54d628), entry->ebx, entry->ecx,
+                        argument);
+    }
+    return port_return(&port, eax, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_object_construct_f(PORT_SIGNATURE)
+{
+    Port port;
+    uint8_t stack[0x38 + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t object = entry->eax;
+    uint32_t mixer;
+    uint32_t index;
+    port_open_stack(&port, stack, calls, services, globals, entry, 0x38);
+    port_set32(&port, ebp, -0x34u, port.env.chain);
+    port_set32(&port, ebp, -0x30u, 0x4ec1ec);
+    port_set32(&port, ebp, -0x2cu, 0x5164e0);
+    port_set32(&port, ebp, -0x28u, 0);
+    port_set8(&port, ebp, -0x1cu, 0);
+    port_set32(&port, ebp, -0x20u, object);
+    /* The sound mixer: 256 slots of 0x60 bytes (0x4ccf3b with the slot table 0x516650), each
+     * numbered at +0x58, its table 0x5165e4 at +0x6000; then 0x476090, 0x4760f0 and 0x4766b0,
+     * with sound marked off (0x553648) before the last. */
+    mixer = port_call(&port, 0x4ccf3b, object, 0x100, 0x516650, object);
+    port_set32(&port, mixer, 0x6000, 0x5165e4);
+    for (index = 0; index < 0x100; index++)
+    {
+        port_set16(&port, mixer, index * 0x60 + 0x58, index);
+    }
+    port_call(&port, 0x476090, mixer, 0x100, 0x516650, mixer);
+    port_call(&port, 0x4760f0, mixer, 0, 0x516650, mixer);
+    port_set32(&port, 0, 0x553648, 1);
+    port_call(&port, 0x4766b0, mixer, vertrix_lift_edx, 0x516650, mixer);
+    return port_return(&port, mixer, entry->edx);
+}
+
+uint32_t vertrix_port_sound_file_read(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x154,
+        GUARD_HANDLER = 0x4ec1ec,
+        READ_GUARD = 0x518760
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t parser = ebp - 0x150;
+    uint32_t mode;
+    uint32_t value;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    port_set32(&port, ebp, -0x24u, entry->eax);
+    port_set32(&port, ebp, -0x28u, entry->edx);
+    port_set32(&port, ebp, -0x3cu, port.env.chain);
+    port_set32(&port, ebp, -0x38u, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x34u, READ_GUARD);
+    port_set32(&port, ebp, -0x30u, 0);
+    port_set32(&port, ebp, -0x20u, 0xa);
+    port_set8(&port, ebp, -0x2cu, port_u8(&port, ebp, -0x2cu));
+    /* As the other file reads, with the reader 0x4b826f; a file that does not open returns 10. */
+    value = port_call(&port, 0x48a620, parser, entry->edx, entry->ebx, entry->ecx);
+    port_set32(&port, ebp, -0x1cu, value);
+    port_set32(&port, ebp, -0x18u, value);
+    port_set32(&port, ebp, -0x30u, 1);
+    mode = port_u32(&port, 0, 0x5466c8);
+    port_set32(&port, ebp, -0x14u, mode);
+    if (port_call(&port, 0x48a710, parser, entry->eax, mode, entry->ecx) == 1)
+    {
+        value = port_call(&port, 0x4b826f, parser, entry->edx, mode, entry->ecx);
+        port_set32(&port, ebp, -0x20u, value);
+        port_call(&port, 0x48a8c0, parser, vertrix_lift_edx, mode, entry->ecx);
+    }
+    port_set32(&port, ebp, -0x30u, 0);
+    port_call(&port, 0x48a670, parser, 0, mode, entry->ecx);
+    port_set32(&port, ebp, -0x30u, 0);
+    return port_return(&port, port_u32(&port, ebp, -0x20u), vertrix_lift_edx);
+}

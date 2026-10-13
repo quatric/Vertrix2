@@ -11,7 +11,6 @@ enum
     LIFTED_F4B7DB0_STACK = 84,
     LIFTED_WAVE_LOAD_STACK = 164,
     LIFTED_TWO_STEP_CALL_STACK = 80,
-    LIFTED_F4B8187_STACK = 428,
     LIFTED_F4B826F_STACK = 436,
     LIFTED_F4B9170_STACK = 80,
     LIFTED_F4B91B0_STACK = 76,
@@ -341,10 +340,6 @@ uint32_t lifted_wave_load(const VertrixCalls *calls, const VertrixFactoryService
 /* Original 0x4b8170. */
 uint32_t lifted_two_step_call(const VertrixCalls *calls, const VertrixFactoryServices *services,
                               const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4b8187. */
-uint32_t lifted_f4b8187(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4b826f. */
 uint32_t lifted_f4b826f(const VertrixCalls *calls, const VertrixFactoryServices *services,

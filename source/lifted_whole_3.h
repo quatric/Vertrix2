@@ -66,7 +66,6 @@ enum
     LIFTED_F460440_STACK = 244,
     LIFTED_F460630_STACK = 260,
     LIFTED_F460840_STACK = 252,
-    LIFTED_F460A40_STACK = 112,
     LIFTED_F460AD0_STACK = 112,
     LIFTED_F460B60_STACK = 156,
     LIFTED_F460C50_STACK = 252,
@@ -154,9 +153,7 @@ enum
     LIFTED_PROGRESS_QUOTIENT_STACK = 72,
     LIFTED_INPUT_REPEAT_COUNTER_ADVANCE_FULL_STACK = 64,
     LIFTED_PROGRESS_SET_3C_STACK = 64,
-    LIFTED_OBJECT_CONSTRUCT_F_STACK = 140,
     LIFTED_SLOT_CALL_STACK = 72,
-    LIFTED_F4761D0_STACK = 96,
     LIFTED_LIST_FIND_CALL_STACK = 80,
     LIFTED_SLOT_SELECT_STACK = 80,
     LIFTED_INPUT_QUEUE_ACKNOWLEDGE_FULL_STACK = 80,
@@ -500,10 +497,6 @@ uint32_t lifted_f460630(const VertrixCalls *calls, const VertrixFactoryServices 
 
 /* Original 0x460840. */
 uint32_t lifted_f460840(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x460a40. */
-uint32_t lifted_f460a40(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x460ad0. */
@@ -872,18 +865,9 @@ uint32_t lifted_input_repeat_counter_advance_full(const VertrixCalls *calls,
 uint32_t lifted_progress_set_3c(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                 const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x475ec0. */
-uint32_t lifted_object_construct_f(const VertrixCalls *calls,
-                                   const VertrixFactoryServices *services,
-                                   const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x476010. */
 uint32_t lifted_slot_call(const VertrixCalls *calls, const VertrixFactoryServices *services,
                           const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4761d0. */
-uint32_t lifted_f4761d0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x476260. */
 uint32_t lifted_list_find_call(const VertrixCalls *calls, const VertrixFactoryServices *services,

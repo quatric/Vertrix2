@@ -2626,47 +2626,6 @@
   "virtual": [],
   "address": 4589632
  },
- "f460a40": {
-  "callees": {
-   "0x45fe10": [
-    0,
-    false
-   ],
-   "0x4ac8f0": [
-    0,
-    false
-   ],
-   "0x4ac930": [
-    0,
-    false
-   ],
-   "0x4ac910": [
-    0,
-    false
-   ],
-   "0x471820": [
-    2,
-    false
-   ],
-   "0x4b5e70": [
-    0,
-    false
-   ]
-  },
-  "stack": 112,
-  "arguments": 5,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   3,
-   4,
-   5
-  ],
-  "virtual": [],
-  "address": 4590144
- },
  "f460ad0": {
   "callees": {
    "0x45fee0": [
@@ -6793,44 +6752,6 @@
   "virtual": [],
   "address": 4677184
  },
- "object_construct_f": {
-  "callees": {
-   "0x4ccf3b": [
-    0,
-    false
-   ],
-   "0x476090": [
-    0,
-    false
-   ],
-   "0x4760f0": [
-    0,
-    false
-   ],
-   "0x4766b0": [
-    0,
-    false
-   ]
-  },
-  "stack": 140,
-  "arguments": 0,
-  "pointer_callees": [
-   "0x4ccf3b"
-  ],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   31,
-   32,
-   33,
-   255,
-   256,
-   257
-  ],
-  "virtual": [],
-  "address": 4677312
- },
  "slot_call": {
   "callees": {
    "0x4759e0": [
@@ -6847,39 +6768,6 @@
   "constants": [],
   "virtual": [],
   "address": 4677648
- },
- "f4761d0": {
-  "callees": {
-   "0x475b00": [
-    0,
-    false
-   ],
-   "0x475b20": [
-    0,
-    false
-   ],
-   "0x475ad0": [
-    0,
-    false
-   ]
-  },
-  "stack": 96,
-  "arguments": 1,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2,
-   3,
-   4,
-   5,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 4678096
  },
  "list_find_call": {
   "callees": {

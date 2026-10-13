@@ -2096,4 +2096,18 @@ uint32_t vertrix_port_sound_voice_add(PORT_SIGNATURE);
  * or with sound off call 0x475b80 on 0x55364c with the slot's word +0x58. */
 uint32_t vertrix_port_sound_voice_play(PORT_SIGNATURE);
 
+/* Original 0x4761d0(eax = slots, edx = index, ebx, ecx; one stack argument): make the slot the
+ * playing one (0x54d628) and play a voice on it (0x475b20), with sound on only once it opens
+ * (0x475b00) and then started (0x475ad0). */
+uint32_t vertrix_port_sound_slot_play(PORT_SIGNATURE);
+
+/* Original 0x475ec0(eax = object): construct the sound mixer under a guard record: 256 numbered
+ * slots of 0x60 bytes (0x4ccf3b with 0x516650), its table 0x5165e4 at +0x6000, then 0x476090,
+ * 0x4760f0 and 0x4766b0 with sound marked off (0x553648). Keeps edx. */
+uint32_t vertrix_port_object_construct_f(PORT_SIGNATURE);
+
+/* Original 0x4b8187(eax = name, edx = destination): read a sound file with a parser on the stack
+ * (0x48a620, 0x48a710, 0x4b826f, 0x48a8c0); returns the reader's result or 10. */
+uint32_t vertrix_port_sound_file_read(PORT_SIGNATURE);
+
 #endif

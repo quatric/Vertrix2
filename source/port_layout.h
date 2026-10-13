@@ -58,4 +58,9 @@ uint32_t vertrix_port_parser_destroy(PORT_SIGNATURE);
  * record, its three embedded objects are destroyed (0x4b5dc0), mode 2 freeing it. */
 uint32_t vertrix_port_screen_panel_destroy(PORT_SIGNATURE);
 
+/* Original 0x460a40(eax, edx, ebx, ecx; five stack arguments): a label box (0x45fe10) with the
+ * handlers 0x443460 and 0x4486f0, laid out (0x471820) and added to the list 0x54671c (0x4b5e70).
+ * Returns the box. */
+uint32_t vertrix_port_label_box_place(PORT_SIGNATURE);
+
 #endif
