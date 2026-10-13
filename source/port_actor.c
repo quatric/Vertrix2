@@ -477,7 +477,10 @@ uint32_t vertrix_port_actor_elapsed_done(PORT_SIGNATURE)
     return port_return(&port, elapsed >= port_u32(&port, entry->eax, ACTOR_TIME_SCALE), entry->edx);
 }
 
-uint32_t vertrix_port_actor_base_destroy(PORT_SIGNATURE)
+/* 0x4ac130's shape: the idle record value `value` at `field`, the type `type` and the guard
+ * record `guard`. */
+static uint32_t actor_base_destroy_with(PORT_SIGNATURE, uint32_t field, uint32_t value,
+                                        uint32_t type, uint32_t guard)
 {
     Port port;
     uint32_t actor = entry->eax;
@@ -490,16 +493,16 @@ uint32_t vertrix_port_actor_base_destroy(PORT_SIGNATURE)
     {
         port_set32(&port, ebp, -0x34u, actor);
         port_set32(&port, ebp, -0x14u, 1);
-        result = port_call(&port, FINALIZE_RECORD, actor, ACTOR_TYPE_INFO, entry->ebx, actor);
+        result = port_call(&port, FINALIZE_RECORD, actor, type, entry->ebx, actor);
         port_set32(&port, ebp, -0x14u, 0);
         port_call(&port, FREE_MEMORY_JUMP, result, 0, entry->ebx, actor);
         return port_return(&port, actor, vertrix_lift_edx);
     }
-    port_set32(&port, actor, ACTOR_IDLE_RECORD, ACTOR_IDLE_DEFAULT);
+    port_set32(&port, actor, field, value);
     /* The guard record the original links into fs:[0] for the free and unlinks after it. */
     port_set32(&port, ebp, -0x20u, port.env.chain);
     port_set32(&port, ebp, -0x1cu, GUARD_HANDLER);
-    port_set32(&port, ebp, -0x18u, GUARD_TABLE);
+    port_set32(&port, ebp, -0x18u, guard);
     port_set32(&port, ebp, -0x14u, 0);
     if ((mode & DESTROY_FREE) == 0)
     {
@@ -507,6 +510,18 @@ uint32_t vertrix_port_actor_base_destroy(PORT_SIGNATURE)
     }
     port_call(&port, FREE_MEMORY, actor, mode, GUARD_HANDLER, actor);
     return port_return(&port, actor, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_actor_base_destroy(PORT_SIGNATURE)
+{
+    return actor_base_destroy_with(calls, services, globals, entry, ACTOR_IDLE_RECORD,
+                                   ACTOR_IDLE_DEFAULT, ACTOR_TYPE_INFO, GUARD_TABLE);
+}
+
+uint32_t vertrix_port_actor_base_destroy_429350(PORT_SIGNATURE)
+{
+    return actor_base_destroy_with(calls, services, globals, entry, 0x228, 0x514554, 0x513f30,
+                                   0x514510);
 }
 
 uint32_t vertrix_port_actor_spot_draw(PORT_SIGNATURE)

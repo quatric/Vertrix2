@@ -442,44 +442,6 @@
   ],
   "address": 4434288
  },
- "f43d400": {
-  "callees": {
-   "0x4b5630": [
-    0,
-    false
-   ],
-   "0x4ca050": [
-    0,
-    false
-   ],
-   "0x4ccb9f": [
-    0,
-    false
-   ],
-   "0x4ca040": [
-    0,
-    false
-   ]
-  },
-  "stack": 156,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   1,
-   2,
-   3,
-   4,
-   5,
-   51,
-   52,
-   53
-  ],
-  "virtual": [],
-  "address": 4445184
- },
  "title_letter_first_call": {
   "callees": {
    "0x4ca070": [

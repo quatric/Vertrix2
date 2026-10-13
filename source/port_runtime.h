@@ -189,6 +189,10 @@ uint32_t vertrix_port_string_list_clear(PORT_SIGNATURE);
  * (0x4ca050), under a guard record. Returns the list. */
 uint32_t vertrix_port_string_list_destroy(PORT_SIGNATURE);
 
+/* Original 0x48d530: 0x4b7610's code with the table 0x517a94, the element destructor 0x517ab0,
+ * the guard record 0x517a50 and the clear routine 0x48d6c0. */
+uint32_t vertrix_port_string_list_destroy_48d530(PORT_SIGNATURE);
+
 /* Original 0x4e9194 (eax, edx = two times as struct tm, ebx passed on): whether the first is
  * later: by the year (+0x10) when neither has a day-of-year flag (+0x20), else by their day counts
  * (0x4e909c). */
@@ -2063,6 +2067,10 @@ uint32_t vertrix_port_sample_file_read(PORT_SIGNATURE);
  * destructor 0x516390, freed by 0x4ca040); otherwise the table 0x518344 is set and the base
  * destructor 0x4d86d0 runs under a guard record, mode 2 freeing it (0x4ca050). */
 uint32_t vertrix_port_object_destroy_a(PORT_SIGNATURE);
+
+/* Original 0x487930: 0x4b5dc0's code with the table 0x516e34, the element destructor 0x516e50 and
+ * the guard record 0x516df0. */
+uint32_t vertrix_port_object_destroy_a_487930(PORT_SIGNATURE);
 
 /* Original 0x489640(eax = path, edx = drive, ebx = directory, ecx = name; one stack argument, the
  * extension): copy the path to 0x5b9cd0, split it (0x4daae8 into 0x5b9dd8, 0x5b9de0, 0x5b9ee0

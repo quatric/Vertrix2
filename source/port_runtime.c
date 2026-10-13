@@ -1587,7 +1587,10 @@ uint32_t vertrix_port_string_list_clear(PORT_SIGNATURE)
     return port_return(&port, port_u32(&port, ebp, -0x24u), entry->edx);
 }
 
-uint32_t vertrix_port_string_list_destroy(PORT_SIGNATURE)
+/* 0x4b7610's shape: the table `table`, the element destructor `element`, the guard record `guard`
+ * and the clear routine `clear`. */
+static uint32_t string_list_destroy_with(PORT_SIGNATURE, uint32_t table, uint32_t element,
+                                         uint32_t guard, uint32_t clear)
 {
     /* push ebp, ebx, ecx, esi, edi, then 0x40 bytes: the guard record and its state. */
     enum
@@ -1606,21 +1609,21 @@ uint32_t vertrix_port_string_list_destroy(PORT_SIGNATURE)
     {
         port_set32(&port, ebp, -0x50u, list);
         port_set32(&port, ebp, -0x30u, 1);
-        result = port_call(&port, ARRAY_DESTROY, list, STRING_LIST_DESTRUCTOR, 1, list);
+        result = port_call(&port, ARRAY_DESTROY, list, element, 1, list);
         port_set32(&port, ebp, -0x30u, 0);
         port_call(&port, ARRAY_FREE, result, vertrix_lift_edx, 1, list);
         return port_return(&port, list, vertrix_lift_edx);
     }
-    port_set32(&port, list, 0, LIST_TABLE);
+    port_set32(&port, list, 0, table);
     port_set32(&port, ebp, -0x28u, list);
     port_set32(&port, ebp, -0x1cu, list);
     port_set8(&port, ebp, -0x24u, 1);
     port_set8(&port, ebp, -0x18u, flags);
     port_set32(&port, ebp, -0x3cu, port.env.chain);
     port_set32(&port, ebp, -0x38u, GUARD_HANDLER);
-    port_set32(&port, ebp, -0x34u, STRING_LIST_DESTROY_GUARD);
+    port_set32(&port, ebp, -0x34u, guard);
     port_set32(&port, ebp, -0x30u, 3);
-    port_call(&port, STRING_LIST_CLEAR, list, GUARD_HANDLER, flags, list);
+    port_call(&port, clear, list, GUARD_HANDLER, flags, list);
     port_set32(&port, ebp, -0x30u, 0);
     result = port_call(&port, LIST_DESTROY, list, 1, flags, list);
     port_set32(&port, ebp, -0x30u, 0);
@@ -1631,6 +1634,19 @@ uint32_t vertrix_port_string_list_destroy(PORT_SIGNATURE)
         edx = vertrix_lift_edx;
     }
     return port_return(&port, result, edx);
+}
+
+uint32_t vertrix_port_string_list_destroy(PORT_SIGNATURE)
+{
+    return string_list_destroy_with(calls, services, globals, entry, LIST_TABLE,
+                                    STRING_LIST_DESTRUCTOR, STRING_LIST_DESTROY_GUARD,
+                                    STRING_LIST_CLEAR);
+}
+
+uint32_t vertrix_port_string_list_destroy_48d530(PORT_SIGNATURE)
+{
+    return string_list_destroy_with(calls, services, globals, entry, 0x517a94, 0x517ab0, 0x517a50,
+                                    0x48d6c0);
 }
 
 uint32_t vertrix_port_time_later(PORT_SIGNATURE)
@@ -11474,7 +11490,10 @@ uint32_t vertrix_port_sample_file_read(PORT_SIGNATURE)
     return port_return(&port, result, edx);
 }
 
-uint32_t vertrix_port_object_destroy_a(PORT_SIGNATURE)
+/* 0x4b5dc0's shape: the method table `table`, the element destructor `element` and the guard
+ * record `guard`. */
+static uint32_t object_destroy_a_with(PORT_SIGNATURE, uint32_t table, uint32_t element,
+                                      uint32_t guard)
 {
     enum
     {
@@ -11494,19 +11513,19 @@ uint32_t vertrix_port_object_destroy_a(PORT_SIGNATURE)
         /* An array: element destructor 0x516390, freed by 0x4ca040. */
         port_set32(&port, ebp, -0x50u, object);
         port_set32(&port, ebp, -0x30u, 1);
-        result = port_call(&port, 0x4ccb9f, object, 0x516390, 1, object);
+        result = port_call(&port, 0x4ccb9f, object, element, 1, object);
         port_set32(&port, ebp, -0x30u, 0);
         port_call(&port, 0x4ca040, result, vertrix_lift_edx, 1, object);
         return port_return(&port, object, vertrix_lift_edx);
     }
-    port_set32(&port, object, 0, 0x518344);
+    port_set32(&port, object, 0, table);
     port_set32(&port, ebp, -0x28u, object);
     port_set32(&port, ebp, -0x1cu, object);
     port_set8(&port, ebp, -0x24u, 1);
     port_set8(&port, ebp, -0x18u, mode);
     port_set32(&port, ebp, -0x3cu, port.env.chain);
     port_set32(&port, ebp, -0x38u, GUARD_HANDLER);
-    port_set32(&port, ebp, -0x34u, 0x518300);
+    port_set32(&port, ebp, -0x34u, guard);
     port_set32(&port, ebp, -0x30u, 0);
     /* The base destructor (0x4d86d0 with 1), mode 2 freeing it (0x4ca050). */
     result = port_call(&port, 0x4d86d0, object, 1, mode, object);
@@ -11518,6 +11537,16 @@ uint32_t vertrix_port_object_destroy_a(PORT_SIGNATURE)
         edx = vertrix_lift_edx;
     }
     return port_return(&port, result, edx);
+}
+
+uint32_t vertrix_port_object_destroy_a(PORT_SIGNATURE)
+{
+    return object_destroy_a_with(calls, services, globals, entry, 0x518344, 0x516390, 0x518300);
+}
+
+uint32_t vertrix_port_object_destroy_a_487930(PORT_SIGNATURE)
+{
+    return object_destroy_a_with(calls, services, globals, entry, 0x516e34, 0x516e50, 0x516df0);
 }
 
 uint32_t vertrix_port_path_split_strings(PORT_SIGNATURE)

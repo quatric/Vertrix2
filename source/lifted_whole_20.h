@@ -8,8 +8,7 @@ enum
 {
     LIFTED_PIECE_ACTOR_DESTROY_FULL_STACK = 164,
     LIFTED_PIECE_ACTOR_FORWARD_SLOT2_STACK = 84,
-    LIFTED_PIECE_ACTOR_UPDATE_STACK = 108,
-    LIFTED_F42B600_STACK = 156
+    LIFTED_PIECE_ACTOR_UPDATE_STACK = 108
 };
 
 /* Original 0x42ab10. */
@@ -27,7 +26,4 @@ uint32_t lifted_piece_actor_update(const VertrixCalls *calls,
                                    const VertrixFactoryServices *services,
                                    const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x42b600. */
-uint32_t lifted_f42b600(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
 #endif

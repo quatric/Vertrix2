@@ -87,6 +87,10 @@ uint32_t vertrix_port_actor_elapsed_done(PORT_SIGNATURE);
  * and the last call's edx (the mode when nothing is called). */
 uint32_t vertrix_port_actor_base_destroy(PORT_SIGNATURE);
 
+/* Original 0x429350: 0x4ac130's code with the table 0x514554 at +0x228, the type 0x513f30 and the
+ * guard record 0x514510. */
+uint32_t vertrix_port_actor_base_destroy_429350(PORT_SIGNATURE);
+
 /* Original 0x4ae010 (eax = actor, edx = surface): when the actor's +0x124 and its value (0x4adfb0)
  * are both 1, its +0x138 is 1 and its spot size (+0x12c by +0x130) is not empty, 0x47ce10 draws
  * the spot on the surface (edx 0x4adfb0's edx, ebx and ecx the spot's x and y: the high words of

@@ -666,7 +666,10 @@ static uint32_t box_destroy_free(Port *port, uint32_t result, uint32_t edx, uint
     return port_return(port, result, edx);
 }
 
-uint32_t vertrix_port_object_destroy_call(PORT_SIGNATURE)
+/* 0x4b5420's shape: the method table `table`, the element destructor `element`, the guard
+ * record `guard` and the base destructor `base`. */
+static uint32_t box_destroy_with(PORT_SIGNATURE, uint32_t table, uint32_t element, uint32_t guard,
+                                 uint32_t base)
 {
     Port port;
     uint8_t stack[0x48 + 8];
@@ -677,15 +680,66 @@ uint32_t vertrix_port_object_destroy_call(PORT_SIGNATURE)
     port_open_stack(&port, stack, calls, services, globals, entry, 0x48);
     if (mode & 4)
     {
-        return box_destroy_array(&port, ebp, object, 0x518190, 0);
+        return box_destroy_array(&port, ebp, object, element, 0);
     }
-    box_destroy_enter(&port, ebp, object, mode, 0x518174, 0x518130, 0);
-    result = port_call(&port, 0x4ac130, object, 1, mode, object);
+    box_destroy_enter(&port, ebp, object, mode, table, guard, 0);
+    result = port_call(&port, base, object, 1, mode, object);
     port_set32(&port, ebp, -0x24u, 0);
     return box_destroy_free(&port, result, vertrix_lift_edx, mode);
 }
 
-uint32_t vertrix_port_object_destroy_d(PORT_SIGNATURE)
+uint32_t vertrix_port_object_destroy_call(PORT_SIGNATURE)
+{
+    return box_destroy_with(calls, services, globals, entry, 0x518174, 0x518190, 0x518130,
+                            0x4ac130);
+}
+
+uint32_t vertrix_port_object_destroy_call_425e40(PORT_SIGNATURE)
+{
+    return box_destroy_with(calls, services, globals, entry, 0x5144d4, 0x5144f0, 0x514490,
+                            0x4ac130);
+}
+
+uint32_t vertrix_port_object_destroy_call_4296a0(PORT_SIGNATURE)
+{
+    return box_destroy_with(calls, services, globals, entry, 0x5145a4, 0x5145c0, 0x514560,
+                            0x4ac130);
+}
+
+uint32_t vertrix_port_object_destroy_call_42b600(PORT_SIGNATURE)
+{
+    return box_destroy_with(calls, services, globals, entry, 0x514894, 0x5148b0, 0x514850,
+                            0x4ac130);
+}
+
+uint32_t vertrix_port_object_destroy_call_42bb20(PORT_SIGNATURE)
+{
+    return box_destroy_with(calls, services, globals, entry, 0x514914, 0x514930, 0x5148d0,
+                            0x4ac130);
+}
+
+uint32_t vertrix_port_object_destroy_call_43a0b0(PORT_SIGNATURE)
+{
+    return box_destroy_with(calls, services, globals, entry, 0x514b14, 0x514b30, 0x514ad0,
+                            0x4ac130);
+}
+
+uint32_t vertrix_port_object_destroy_call_43d400(PORT_SIGNATURE)
+{
+    return box_destroy_with(calls, services, globals, entry, 0x514d54, 0x514d70, 0x514d00,
+                            0x4b5630);
+}
+
+uint32_t vertrix_port_object_destroy_call_4b3500(PORT_SIGNATURE)
+{
+    return box_destroy_with(calls, services, globals, entry, 0x517cf4, 0x517d10, 0x517ca0,
+                            0x4b3140);
+}
+
+/* 0x4b6460's shape: the method table `table`, the element destructor `element` and the guard
+ * record `guard`. */
+static uint32_t box_destroy_label_with(PORT_SIGNATURE, uint32_t table, uint32_t element,
+                                       uint32_t guard)
 {
     Port port;
     uint8_t stack[0x48 + 8];
@@ -697,15 +751,25 @@ uint32_t vertrix_port_object_destroy_d(PORT_SIGNATURE)
     port_open_stack(&port, stack, calls, services, globals, entry, 0x48);
     if (mode & 4)
     {
-        return box_destroy_array(&port, ebp, object, 0x518420, 0);
+        return box_destroy_array(&port, ebp, object, element, 0);
     }
-    box_destroy_enter(&port, ebp, object, mode, 0x518404, 0x518374, 3);
+    box_destroy_enter(&port, ebp, object, mode, table, guard, 3);
     /* The label string (+0x15c) first. */
     box = port_call(&port, 0x4ca210, object + 0x15c, 0, mode, object) - 0x15c;
     port_set32(&port, ebp, -0x24u, 0);
     result = port_call(&port, 0x4ac130, box, 1, mode, box);
     port_set32(&port, ebp, -0x24u, 0);
     return box_destroy_free(&port, result, 0, mode);
+}
+
+uint32_t vertrix_port_object_destroy_d(PORT_SIGNATURE)
+{
+    return box_destroy_label_with(calls, services, globals, entry, 0x518404, 0x518420, 0x518374);
+}
+
+uint32_t vertrix_port_object_destroy_d_4b24e0(PORT_SIGNATURE)
+{
+    return box_destroy_label_with(calls, services, globals, entry, 0x517bd4, 0x517bf0, 0x517b44);
 }
 
 uint32_t vertrix_port_parser_destroy(PORT_SIGNATURE)

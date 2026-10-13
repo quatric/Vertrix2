@@ -121,43 +121,5 @@
    ]
   ],
   "address": 4369472
- },
- "f42b600": {
-  "callees": {
-   "0x4ac130": [
-    0,
-    false
-   ],
-   "0x4ca050": [
-    0,
-    false
-   ],
-   "0x4ccb9f": [
-    0,
-    false
-   ],
-   "0x4ca040": [
-    0,
-    false
-   ]
-  },
-  "stack": 156,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   1,
-   2,
-   3,
-   4,
-   5,
-   51,
-   52,
-   53
-  ],
-  "virtual": [],
-  "address": 4371968
  }
 }

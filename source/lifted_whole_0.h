@@ -216,7 +216,6 @@ enum
     LIFTED_AI_FIND_BEST_SLOT_STACK = 104,
     LIFTED_AI_CHOOSE_PIECE_ROTATION_STACK = 76,
     LIFTED_SETTINGS_DEFAULTS_STACK = 116,
-    LIFTED_OBJECT_DESTROY_C_STACK = 136,
     LIFTED_SAVED_BLOCK_LOAD_STACK = 96,
     LIFTED_F429460_STACK = 148,
     LIFTED_F429530_STACK = 412,
@@ -1157,10 +1156,6 @@ uint32_t lifted_ai_choose_piece_rotation(const VertrixCalls *calls,
 /* Original 0x4290c0. */
 uint32_t lifted_settings_defaults(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x429350. */
-uint32_t lifted_object_destroy_c(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                 const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4293e0. */
 uint32_t lifted_saved_block_load(const VertrixCalls *calls, const VertrixFactoryServices *services,

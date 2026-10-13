@@ -7,14 +7,12 @@
 enum
 {
     LIFTED_F412130_STACK = 136,
-    LIFTED_F4296A0_STACK = 156,
     LIFTED_F429A10_STACK = 100,
     LIFTED_F429A80_STACK = 104,
     LIFTED_F429AF0_STACK = 100,
     LIFTED_F429B60_STACK = 88,
     LIFTED_F42B300_STACK = 68,
     LIFTED_F42B310_STACK = 92,
-    LIFTED_F42BB20_STACK = 156,
     LIFTED_F43A280_STACK = 84,
     LIFTED_F43A2D0_STACK = 80,
     LIFTED_F43B880_STACK = 72,
@@ -24,7 +22,6 @@ enum
     LIFTED_F43D4D0_STACK = 244,
     LIFTED_FORWARD_REGISTERS_46B800_STACK = 72,
     LIFTED_F487A40_STACK = 100,
-    LIFTED_F4B24E0_STACK = 160,
     LIFTED_F4B29D0_STACK = 68,
     LIFTED_F4B5A20_STACK = 84,
     LIFTED_F4B5A50_STACK = 68,
@@ -33,10 +30,6 @@ enum
 
 /* Original 0x412130. */
 uint32_t lifted_f412130(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4296a0. */
-uint32_t lifted_f4296a0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x429a10. */
@@ -61,10 +54,6 @@ uint32_t lifted_f42b300(const VertrixCalls *calls, const VertrixFactoryServices 
 
 /* Original 0x42b310. */
 uint32_t lifted_f42b310(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42bb20. */
-uint32_t lifted_f42bb20(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x43a280. */
@@ -102,10 +91,6 @@ uint32_t lifted_forward_registers_46b800(const VertrixCalls *calls,
 
 /* Original 0x487a40. */
 uint32_t lifted_f487a40(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4b24e0. */
-uint32_t lifted_f4b24e0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4b29d0. */

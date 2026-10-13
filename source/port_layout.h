@@ -43,10 +43,25 @@ uint32_t vertrix_port_object_place_label(PORT_SIGNATURE);
  * under a guard record, mode 2 freeing it (0x4ca050). */
 uint32_t vertrix_port_object_destroy_call(PORT_SIGNATURE);
 
+/* Originals 0x425e40, 0x4296a0, 0x42b600, 0x42bb20, 0x43a0b0, 0x43d400 and 0x4b3500: 0x4b5420's
+ * code with their own method table, element destructor and guard record; 0x43d400 and 0x4b3500
+ * call the base destructors 0x4b5630 and 0x4b3140. */
+uint32_t vertrix_port_object_destroy_call_425e40(PORT_SIGNATURE);
+uint32_t vertrix_port_object_destroy_call_4296a0(PORT_SIGNATURE);
+uint32_t vertrix_port_object_destroy_call_42b600(PORT_SIGNATURE);
+uint32_t vertrix_port_object_destroy_call_42bb20(PORT_SIGNATURE);
+uint32_t vertrix_port_object_destroy_call_43a0b0(PORT_SIGNATURE);
+uint32_t vertrix_port_object_destroy_call_43d400(PORT_SIGNATURE);
+uint32_t vertrix_port_object_destroy_call_4b3500(PORT_SIGNATURE);
+
 /* Original 0x4b6460(eax = box, edx = mode): the labeled box destructor: as 0x4b5420 with the table
  * 0x518404 and element destructor 0x518420, the label string (+0x15c) destroyed first
  * (0x4ca210). */
 uint32_t vertrix_port_object_destroy_d(PORT_SIGNATURE);
+
+/* Original 0x4b24e0: 0x4b6460's code with the method table 0x517bd4, the element destructor
+ * 0x517bf0 and the guard record 0x517b44. */
+uint32_t vertrix_port_object_destroy_d_4b24e0(PORT_SIGNATURE);
 
 /* Original 0x489fa0(eax = parser, edx = mode): the parser destructor: mode 4 destroys an array
  * (element destructor 0x513f10); otherwise the table 0x517644 (+0x14) is set and, under a guard
