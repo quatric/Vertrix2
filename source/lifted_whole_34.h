@@ -7,7 +7,6 @@
 enum
 {
     LIFTED_F40B680_STACK = 76,
-    LIFTED_F40B6A0_STACK = 88,
     LIFTED_F40B6E0_STACK = 332,
     LIFTED_F40B980_STACK = 92,
     LIFTED_F40BAC0_STACK = 64,
@@ -25,10 +24,6 @@ enum
 
 /* Original 0x40b680. */
 uint32_t lifted_f40b680(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x40b6a0. */
-uint32_t lifted_f40b6a0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x40b6e0. */

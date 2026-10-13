@@ -11531,3 +11531,115 @@ uint32_t vertrix_port_object_destroy_parser_base(PORT_SIGNATURE)
     }
     return port_return(&port, result, edx);
 }
+
+uint32_t vertrix_port_com_create(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t out = entry->edx;
+    uint32_t zero = 0;
+    uint32_t arguments[5];
+    uint32_t eax;
+    port_open_frame(&port, calls, services, globals, entry, 0x1c);
+    /* COM is initialised (import 0x4f1760), the object of class 0x40b010 and interface 0x40b020
+     * created into *edx (import 0x4f175c) and, on success, its method +0x28 called with 0. */
+    eax =
+        port_call_stack(&port, 0x4f1760, entry->eax, entry->edx, entry->ebx, entry->ecx, &zero, 1);
+    arguments[0] = 0x40b010;
+    arguments[1] = entry->ebx;
+    arguments[2] = 7;
+    arguments[3] = 0x40b020;
+    arguments[4] = out;
+    eax = port_call_stack(&port, 0x4f175c, eax, vertrix_lift_edx, entry->ebx, entry->ecx, arguments,
+                          5);
+    if ((int32_t)eax >= 0)
+    {
+        uint32_t object = port_u32(&port, out, 0);
+        uint32_t table = port_u32(&port, object, 0);
+        uint32_t method[2];
+        method[0] = object;
+        method[1] = 0;
+        eax = port_call_stack(&port, port_u32(&port, table, 0x28), object, table, entry->ebx,
+                              entry->ecx, method, 2);
+    }
+    return port_return(&port, eax, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_com_probe(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t ebp = entry->esp - 4;
+    port_open_frame(&port, calls, services, globals, entry, 0x10);
+    /* Create the object (0x40b620) into a local; release it (0x40b660) and return 0, or 5. */
+    if (port_call(&port, 0x40b620, 0, ebp - 0xc, 0, entry->ecx) != 0)
+    {
+        return port_return(&port, 5, entry->edx);
+    }
+    port_call(&port, 0x40b660, port_u32(&port, ebp, -0xcu), vertrix_lift_edx, 0, entry->ecx);
+    return port_return(&port, 0, entry->edx);
+}
+
+uint32_t vertrix_port_player_reset(PORT_SIGNATURE)
+{
+    Port port;
+    uint8_t stack[0x28 + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t player = entry->eax;
+    uint32_t record = ebp - 0x24;
+    uint32_t ebx = 0x513fe0;
+    uint32_t ecx = 0x4ec1ec;
+    uint32_t edx;
+    port_open_stack(&port, stack, calls, services, globals, entry, 0x28);
+    port_set32(&port, record, 0, port.env.chain);
+    port_set32(&port, ebp, -0x20u, ecx);
+    port_set32(&port, ebp, -0x1cu, ebx);
+    port_set32(&port, ebp, -0x18u, 0);
+    port_call(&port, 0x4b7cd0, record, entry->edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    /* A player other than 0x513c1e's is refreshed first (as 0x41a4e0). */
+    if (edx != port_u8(&port, 0, 0x513c1e))
+    {
+        ebx = port_call(&port, 0x4182c0, port_u8(&port, 0, 0x513c1e), edx, ebx, ecx);
+        ecx = port_u32(&port, 0, 0x540048);
+        port_call(&port, 0x41a2f0, player, port_u32(&port, port_u32(&port, 0, 0x544070), 0x268),
+                  ebx, ecx);
+        edx = vertrix_lift_edx;
+    }
+    port_call(&port, 0x41aa20, player, edx, ebx, ecx);
+    port_call(&port, 0x41aaa0, player, 0x423fb0, ebx, ecx);
+    port_set8(&port, player, 0xc8, 6);
+    port_call(&port, 0x418840, player, vertrix_lift_edx, ebx, ecx);
+    return port_return(&port, port_u32(&port, record, 0), vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_timer_start(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t rate = entry->ebx & 0xffff;
+    uint32_t period;
+    uint32_t resolution = 0x14;
+    uint32_t arguments[5];
+    uint32_t eax;
+    port_open_frame(&port, calls, services, globals, entry, 0x20);
+    if (rate == 0)
+    {
+        /* The original divides by zero here. */
+        return port_return(&port, 0, entry->edx);
+    }
+    /* A periodic multimedia timer (import 0x4f1734) of 1000 / rate ms calling 0x484530 with the
+     * object; its id kept at 0x598db0 and the callback stored in the object. */
+    period = (uint32_t)(1000 / (int32_t)rate);
+    if ((period & 0xffff) < resolution)
+    {
+        resolution = period;
+    }
+    arguments[0] = period & 0xffff;
+    arguments[1] = resolution & 0xffff;
+    arguments[2] = 0x484530;
+    arguments[3] = entry->eax;
+    arguments[4] = 1;
+    eax = port_call_stack(&port, 0x4f1734, period & 0xffff, resolution & 0xffff, rate, resolution,
+                          arguments, 5);
+    port_set32(&port, 0, 0x598db0, eax);
+    port_set32(&port, entry->eax, 0, entry->edx);
+    return port_return(&port, eax, vertrix_lift_edx);
+}

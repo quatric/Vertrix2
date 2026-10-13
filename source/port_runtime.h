@@ -2044,4 +2044,23 @@ uint32_t vertrix_port_archive_file_read(PORT_SIGNATURE);
  * contents (0x4b7b00) and base (0x4d86d0) are destroyed, mode 2 freeing it. */
 uint32_t vertrix_port_object_destroy_parser_base(PORT_SIGNATURE);
 
+/* Original 0x40b620(eax, edx = result pointer, ebx): initialise COM (import 0x4f1760), create the
+ * object of class 0x40b010 and interface 0x40b020 into *edx (import 0x4f175c) and, when that
+ * succeeds, call its method +0x28 with 0. */
+uint32_t vertrix_port_com_create(PORT_SIGNATURE);
+
+/* Original 0x40b6a0: create the object (0x40b620) and release it (0x40b660): 0 when it could be
+ * created, otherwise 5. Keeps edx. */
+uint32_t vertrix_port_com_probe(PORT_SIGNATURE);
+
+/* Original 0x41a440(eax = player, edx): under a guard record (0x4b7cd0), refresh a player other
+ * than 0x513c1e's (0x4182c0, 0x41a2f0), then 0x41aa20, 0x41aaa0 with 0x423fb0, state 6 (+0xc8)
+ * and 0x418840. */
+uint32_t vertrix_port_player_reset(PORT_SIGNATURE);
+
+/* Original 0x4844b0(eax = timer object, edx = callback, ebx = rate): start a periodic multimedia
+ * timer of 1000 / rate ms (import 0x4f1734, resolution at most 20) calling 0x484530 with the
+ * object; its id at 0x598db0, the callback stored in the object. */
+uint32_t vertrix_port_timer_start(PORT_SIGNATURE);
+
 #endif

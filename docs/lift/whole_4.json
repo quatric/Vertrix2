@@ -851,23 +851,6 @@
   "virtual": [],
   "address": 4731312
  },
- "f4844b0": {
-  "callees": {
-   "0x4f1734": [
-    5,
-    false
-   ]
-  },
-  "stack": 100,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4736176
- },
  "f484500": {
   "callees": {
    "0x4f1730": [
