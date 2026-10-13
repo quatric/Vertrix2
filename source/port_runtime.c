@@ -11176,3 +11176,38 @@ uint32_t vertrix_port_array_list_build(PORT_SIGNATURE)
     }
     return port_return(&port, image, edx);
 }
+
+uint32_t vertrix_port_bitmap_file_read(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x140,
+        GUARD_HANDLER = 0x4ec1ec,
+        READ_GUARD = 0x5163dc
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t parser = ebp - 0x13c;
+    uint32_t mode;
+    uint32_t result = 0;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    port_set32(&port, ebp, -0x28u, port.env.chain);
+    port_set32(&port, ebp, -0x24u, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x20u, READ_GUARD);
+    port_set32(&port, ebp, -0x1cu, 0);
+    /* A parser on the stack opens the named file (0x48a620, 0x48a710 with 0x5466c8) and the
+     * bitmap is read from it (0x473cf0, then 0x48a8c0). */
+    port_call(&port, 0x48a620, parser, entry->eax, READ_GUARD, GUARD_HANDLER);
+    mode = port_u32(&port, 0, 0x5466c8);
+    port_set32(&port, ebp, -0x1cu, 1);
+    if (port_call(&port, 0x48a710, parser, vertrix_lift_edx, mode, GUARD_HANDLER) == 1)
+    {
+        result = port_call(&port, 0x473cf0, parser, vertrix_lift_edx, mode, 0);
+        port_call(&port, 0x48a8c0, parser, vertrix_lift_edx, mode, result);
+    }
+    port_set32(&port, ebp, -0x1cu, 0);
+    port_call(&port, 0x48a670, parser, 0, mode, result);
+    port_set32(&port, ebp, -0x1cu, 0);
+    return port_return(&port, result, entry->edx);
+}

@@ -428,3 +428,85 @@ uint32_t vertrix_port_ui_slide_sideways(PORT_SIGNATURE)
     port_set16(&port, panel, 0x1a, 8);
     return port_return(&port, panel, edx);
 }
+
+uint32_t vertrix_port_point_heading(PORT_SIGNATURE)
+{
+    enum
+    {
+        DELTA_X = 0x598dd8,
+        DELTA_Y = 0x598dda,
+        HEADING = 0x598ddc,
+        GUESS = 0x598de0,
+        NEXT = 0x598de4,
+        CHANGE = 0x598de8,
+        SQUARE = 0x598dec,
+        FRACTION_X = 0x598df0,
+        FRACTION_LENGTH = 0x598df4,
+        RATIO = 0x598df8
+    };
+    Port port;
+    uint32_t ebx = entry->ebx - entry->eax;
+    uint32_t ecx = entry->ecx - entry->edx;
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    port_open(&port, calls, services, globals, entry);
+    port_set16(&port, 0, DELTA_X, ebx);
+    port_set16(&port, 0, DELTA_Y, ecx);
+    if ((ebx & 0xffff) == 0 && (ecx & 0xffff) == 0)
+    {
+        port_set16(&port, 0, HEADING, ebx);
+    }
+    else
+    {
+        int32_t dx = (int16_t)port_u16(&port, 0, DELTA_X);
+        int32_t dy = (int16_t)port_u16(&port, 0, DELTA_Y);
+        uint32_t guess = 1;
+        uint32_t next;
+        int32_t change;
+        uint32_t length;
+        /* The distance by Newton's method on dx * dx + dy * dy, to within one. */
+        port_set32(&port, 0, SQUARE, (uint32_t)(dx * dx) + (uint32_t)(dy * dy));
+        do
+        {
+            next = (port_u32(&port, 0, SQUARE) / guess + guess) >> 1;
+            port_set32(&port, 0, GUESS, guess);
+            port_set32(&port, 0, NEXT, next);
+            change = (int32_t)(next - guess);
+            change = change < 0 ? -change : change;
+            port_set32(&port, 0, CHANGE, (uint32_t)change);
+            guess = next;
+        } while (change > 1);
+        port_set32(&port, 0, GUESS, next);
+        length = next << 16;
+        /* The angle whose cosine is |dx| / length (0x4849f0, 0x4845d0), negated for negative dx
+         * and mirrored to 360 - angle for positive dy. */
+        if (dx < 0)
+        {
+            uint32_t ratio;
+            eax = (uint32_t)(-dx) << 16;
+            port_set32(&port, 0, FRACTION_LENGTH, length);
+            port_set32(&port, 0, FRACTION_X, eax);
+            ratio = port_call(&port, 0x4849f0, eax, length, ebx, ecx);
+            port_set32(&port, 0, RATIO, ratio);
+            edx = 0u - ratio;
+            port_set32(&port, 0, RATIO, edx);
+        }
+        else
+        {
+            eax = (uint32_t)dx << 16;
+            port_set32(&port, 0, FRACTION_LENGTH, length);
+            port_set32(&port, 0, FRACTION_X, eax);
+            port_set32(&port, 0, RATIO, port_call(&port, 0x4849f0, eax, length, ebx, ecx));
+            edx = vertrix_lift_edx;
+        }
+        eax = port_call(&port, 0x4845d0, port_u32(&port, 0, RATIO), edx, ebx, ecx);
+        edx = (uint32_t)(int32_t)(int16_t)port_u16(&port, 0, DELTA_Y);
+        port_set16(&port, 0, HEADING, eax);
+        if ((int32_t)edx > 0)
+        {
+            edx = 0x168 - eax;
+            port_set16(&port, 0, HEADING, edx);
+        }
+    }
+    return port_return(&port, (eax & 0xffff0000u) | port_u16(&port, 0, HEADING), edx);
+}

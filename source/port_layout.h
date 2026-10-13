@@ -22,4 +22,10 @@ uint32_t vertrix_port_actor_layout(PORT_SIGNATURE);
  * steps (+0x12, +0x1a) are 8. */
 uint32_t vertrix_port_ui_slide_sideways(PORT_SIGNATURE);
 
+/* Original 0x484700(eax = x0, edx = y0, ebx = x1, ecx = y1): the heading from the first point to
+ * the second in degrees: the distance by Newton's method, the angle from the table lookup of
+ * |dx| / distance (0x4849f0, 0x4845d0), mirrored for negative dx and positive dy. Its working
+ * values stay at 0x598dd8 to 0x598df8. */
+uint32_t vertrix_port_point_heading(PORT_SIGNATURE);
+
 #endif

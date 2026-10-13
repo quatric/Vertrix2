@@ -36,7 +36,6 @@
 #include "lifted_whole_3.h"
 #include "lifted_whole_30.h"
 #include "lifted_whole_31.h"
-#include "lifted_whole_32.h"
 #include "lifted_whole_33.h"
 #include "lifted_whole_34.h"
 #include "lifted_whole_35.h"
@@ -1832,7 +1831,7 @@ static const LiftedRoutine routines[] = {
     {0x473cd0, vertrix_port_stream_open_513e60, 0, 0},
     {0x473cf0, lifted_bitmap_load, 232, 0},
     {0x473e60, lifted_f473e60, 136, 0},
-    {0x473f10, lifted_f473f10, 408, 0},
+    {0x473f10, vertrix_port_bitmap_file_read, 320, 0},
     {0x473fc0, lifted_f473fc0, 308, 0},
     {0x4741a0, lifted_f4741a0, 348, 0},
     {0x474490, lifted_f474490, 404, 0},
@@ -2124,7 +2123,7 @@ static const LiftedRoutine routines[] = {
     {0x484550, vertrix_port_tables_load, 0, 0},
     {0x4845d0, vertrix_port_angle_lookup, 0, 0},
     {0x484680, vertrix_port_point_distance, 0, 0},
-    {0x484700, lifted_point_heading, 84, 0},
+    {0x484700, vertrix_port_point_heading, 0, 0},
     {0x4848f0, lifted_f4848f0, 672, 0},
     {0x4849e0, vertrix_port_fixed_multiply, 0, 0},
     {0x4849f0, vertrix_port_fixed_divide, 0, 0},

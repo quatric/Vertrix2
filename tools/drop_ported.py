@@ -47,7 +47,12 @@ def main():
                                         'chunk': chunk}
             del metas[name]
             dropped += 1
-        if names:
+        if names and not metas:
+            # Every routine of the chunk is ported: the chunk goes with them.
+            for emptied in (Path(path), ROOT / 'source' / ('lifted_%s.c' % chunk),
+                            ROOT / 'source' / ('lifted_%s.h' % chunk)):
+                emptied.unlink()
+        elif names:
             Path(path).write_text(json.dumps(metas, indent=1))
     record_path.write_text(json.dumps(dict(sorted(record.items())), indent=1) + '\n')
     print('dropped', dropped, 'lifted copies;', len(record), 'ports recorded')

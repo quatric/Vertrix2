@@ -2001,4 +2001,8 @@ uint32_t vertrix_port_image_list_file_read(PORT_SIGNATURE);
  * entries (+0, the count at +4), each built by 0x483060 from the arguments. */
 uint32_t vertrix_port_array_list_build(PORT_SIGNATURE);
 
+/* Original 0x473f10(eax = name): read a bitmap from the named file with a parser on the stack
+ * (0x48a620, 0x48a710 with 0x5466c8, 0x473cf0, 0x48a8c0). Returns it or 0; keeps edx. */
+uint32_t vertrix_port_bitmap_file_read(PORT_SIGNATURE);
+
 #endif

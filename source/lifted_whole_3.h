@@ -141,7 +141,6 @@ enum
     LIFTED_PAIR_WORDS_STACK = 148,
     LIFTED_BITMAP_LOAD_STACK = 232,
     LIFTED_F473E60_STACK = 136,
-    LIFTED_F473F10_STACK = 408,
     LIFTED_F473FC0_STACK = 308,
     LIFTED_F4741A0_STACK = 348,
     LIFTED_F474490_STACK = 404,
@@ -822,10 +821,6 @@ uint32_t lifted_bitmap_load(const VertrixCalls *calls, const VertrixFactoryServi
 
 /* Original 0x473e60. */
 uint32_t lifted_f473e60(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x473f10. */
-uint32_t lifted_f473f10(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x473fc0. */
