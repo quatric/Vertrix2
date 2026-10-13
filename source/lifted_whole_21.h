@@ -73,10 +73,6 @@ enum
     LIFTED_SLIDE_PAIR_STACK = 228,
     LIFTED_DELAY_ACTOR_SPAWN_STACK = 128,
     LIFTED_UI_SLIDE_FROM_BELOW_STACK = 68,
-    LIFTED_ACTOR_LIST_ALL_IDLE_STACK = 80,
-    LIFTED_ACTOR_LIST_ALL_IDLE_471D50_STACK = 80,
-    LIFTED_F471D90_STACK = 80,
-    LIFTED_F471DD0_STACK = 80,
     LIFTED_SCENE_LOOKUP_PAIR_STACK = 92,
     LIFTED_OBJECT_FLIP_454_STACK = 72,
     LIFTED_OBJECT_FLIP_454_471E80_STACK = 72,
@@ -815,24 +811,6 @@ uint32_t lifted_delay_actor_spawn(const VertrixCalls *calls, const VertrixFactor
 uint32_t lifted_ui_slide_from_below(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services,
                                     const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x471c90. */
-uint32_t lifted_actor_list_all_idle(const VertrixCalls *calls,
-                                    const VertrixFactoryServices *services,
-                                    const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x471d50. */
-uint32_t lifted_actor_list_all_idle_471d50(const VertrixCalls *calls,
-                                           const VertrixFactoryServices *services,
-                                           const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x471d90. */
-uint32_t lifted_f471d90(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x471dd0. */
-uint32_t lifted_f471dd0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x471e10. */
 uint32_t lifted_scene_lookup_pair(const VertrixCalls *calls, const VertrixFactoryServices *services,

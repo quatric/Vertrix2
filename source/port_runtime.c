@@ -523,7 +523,10 @@ uint32_t vertrix_port_sine(PORT_SIGNATURE)
     return port_return(&port, result, vertrix_lift_edx);
 }
 
-uint32_t vertrix_port_object_destroy(PORT_SIGNATURE)
+/* The destructor shape 0x481b30 and its copies share: the method table `table_value` at `table`,
+ * the finalizer type `type` and the guard record `guard`. */
+static uint32_t object_destroy_with(PORT_SIGNATURE, uint32_t table, uint32_t table_value,
+                                    uint32_t type, uint32_t guard)
 {
     Port port;
     uint32_t object = entry->eax;
@@ -536,16 +539,16 @@ uint32_t vertrix_port_object_destroy(PORT_SIGNATURE)
     {
         port_set32(&port, ebp, -0x34u, object);
         port_set32(&port, ebp, -0x14u, 1);
-        result = port_call(&port, OBJECT_FINALIZE, object, OBJECT_TYPE, entry->ebx, object);
+        result = port_call(&port, OBJECT_FINALIZE, object, type, entry->ebx, object);
         port_set32(&port, ebp, -0x14u, 0);
         port_call(&port, FREE_RECORD, result, 0, entry->ebx, object);
         return port_return(&port, object, vertrix_lift_edx);
     }
-    port_set32(&port, object, OBJECT_TABLE, OBJECT_TABLE_VALUE);
+    port_set32(&port, object, table, table_value);
     /* The guard record the original links into fs:[0] and unlinks after the free. */
     port_set32(&port, ebp, -0x20u, port.env.chain);
     port_set32(&port, ebp, -0x1cu, GUARD_HANDLER);
-    port_set32(&port, ebp, -0x18u, OBJECT_GUARD);
+    port_set32(&port, ebp, -0x18u, guard);
     port_set32(&port, ebp, -0x14u, 0);
     if ((mode & DESTROY_FREE) == 0)
     {
@@ -553,6 +556,32 @@ uint32_t vertrix_port_object_destroy(PORT_SIGNATURE)
     }
     port_call(&port, FREE_OBJECT, object, mode, GUARD_HANDLER, object);
     return port_return(&port, object, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_object_destroy(PORT_SIGNATURE)
+{
+    return object_destroy_with(calls, services, globals, entry, OBJECT_TABLE, OBJECT_TABLE_VALUE,
+                               OBJECT_TYPE, OBJECT_GUARD);
+}
+
+uint32_t vertrix_port_object_destroy_425d50(PORT_SIGNATURE)
+{
+    return object_destroy_with(calls, services, globals, entry, 0x1c, 0x514464, 0x514470, 0x514440);
+}
+
+uint32_t vertrix_port_object_destroy_475700(PORT_SIGNATURE)
+{
+    return object_destroy_with(calls, services, globals, entry, 0x18, 0x5165c4, 0x516630, 0x51649c);
+}
+
+uint32_t vertrix_port_object_destroy_482320(PORT_SIGNATURE)
+{
+    return object_destroy_with(calls, services, globals, entry, 0x30, 0x516b94, 0x516ba0, 0x516b40);
+}
+
+uint32_t vertrix_port_object_destroy_487890(PORT_SIGNATURE)
+{
+    return object_destroy_with(calls, services, globals, entry, 0xc, 0x516dc4, 0x516dd0, 0x516da0);
 }
 
 uint32_t vertrix_port_list_text(PORT_SIGNATURE)
@@ -3789,6 +3818,72 @@ uint32_t vertrix_port_layer_add_546730(PORT_SIGNATURE)
     return port_return(&port, result, entry->edx);
 }
 
+/* push edx; mov edx, eax; mov eax, `global`; call `routine`; pop edx: the shape of the copies
+ * below. */
+static uint32_t global_call(PORT_SIGNATURE, uint32_t routine, uint32_t global)
+{
+    Port port;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    result = port_call(&port, routine, global, entry->eax, entry->ebx, entry->ecx);
+    return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_layer_add_546758(PORT_SIGNATURE)
+{
+    return global_call(calls, services, globals, entry, 0x4b6070, 0x546758);
+}
+
+uint32_t vertrix_port_layer_add_546780(PORT_SIGNATURE)
+{
+    return global_call(calls, services, globals, entry, 0x4b6070, 0x546780);
+}
+
+uint32_t vertrix_port_string_set_532be8(PORT_SIGNATURE)
+{
+    return global_call(calls, services, globals, entry, 0x4ca370, 0x532be8);
+}
+
+uint32_t vertrix_port_string_set_532bec(PORT_SIGNATURE)
+{
+    return global_call(calls, services, globals, entry, 0x4ca370, 0x532bec);
+}
+
+uint32_t vertrix_port_string_set_532bf0(PORT_SIGNATURE)
+{
+    return global_call(calls, services, globals, entry, 0x4ca370, 0x532bf0);
+}
+
+uint32_t vertrix_port_string_set_532bf4(PORT_SIGNATURE)
+{
+    return global_call(calls, services, globals, entry, 0x4ca370, 0x532bf4);
+}
+
+uint32_t vertrix_port_string_set_5332a8(PORT_SIGNATURE)
+{
+    return global_call(calls, services, globals, entry, 0x4ca370, 0x5332a8);
+}
+
+uint32_t vertrix_port_string_set_5332ac(PORT_SIGNATURE)
+{
+    return global_call(calls, services, globals, entry, 0x4ca370, 0x5332ac);
+}
+
+uint32_t vertrix_port_string_set_5332b0(PORT_SIGNATURE)
+{
+    return global_call(calls, services, globals, entry, 0x4ca370, 0x5332b0);
+}
+
+uint32_t vertrix_port_string_set_5332b4(PORT_SIGNATURE)
+{
+    return global_call(calls, services, globals, entry, 0x4ca370, 0x5332b4);
+}
+
+uint32_t vertrix_port_string_set_5332b8(PORT_SIGNATURE)
+{
+    return global_call(calls, services, globals, entry, 0x4ca370, 0x5332b8);
+}
+
 uint32_t vertrix_port_scale_reset(PORT_SIGNATURE)
 {
     Port port;
@@ -4443,21 +4538,36 @@ uint32_t vertrix_port_scene_reload(PORT_SIGNATURE)
     return port_return(&port, result, entry->edx);
 }
 
-uint32_t vertrix_port_actors_take_next(PORT_SIGNATURE)
+/* Advance every actor of the list `list` (count at list + 4) to its next update (0x4ac920). */
+static uint32_t actors_take_next_in(PORT_SIGNATURE, uint32_t list)
 {
     Port port;
     uint32_t result;
     port_open(&port, calls, services, globals, entry);
-    uint32_t count = port_u32(&port, 0x546724, 0);
+    uint32_t count = port_u32(&port, list + 4, 0);
     uint32_t index;
     result = count;
     for (index = 0; index < count; index++)
     {
-        result =
-            port_call(&port, 0x4ac920, port_u32(&port, port_u32(&port, 0x546720, 0), index * 4),
-                      (index + 1) * 4, count, index + 1);
+        result = port_call(&port, 0x4ac920, port_u32(&port, port_u32(&port, list, 0), index * 4),
+                           (index + 1) * 4, count, index + 1);
     }
     return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_actors_take_next(PORT_SIGNATURE)
+{
+    return actors_take_next_in(calls, services, globals, entry, 0x546720);
+}
+
+uint32_t vertrix_port_actors_take_next_546748(PORT_SIGNATURE)
+{
+    return actors_take_next_in(calls, services, globals, entry, 0x546748);
+}
+
+uint32_t vertrix_port_actors_take_next_546734(PORT_SIGNATURE)
+{
+    return actors_take_next_in(calls, services, globals, entry, 0x546734);
 }
 
 uint32_t vertrix_port_sounds_volume_set(PORT_SIGNATURE)
@@ -4794,24 +4904,49 @@ uint32_t vertrix_port_file_exists(PORT_SIGNATURE)
     return port_return(&port, result != 0xffffffff, entry->edx);
 }
 
-uint32_t vertrix_port_actors_all_idle(PORT_SIGNATURE)
+/* 1 when no actor of the list `list` (count at list + 4) is busy (0x4ac900). */
+static uint32_t actors_all_idle_in(PORT_SIGNATURE, uint32_t list)
 {
     Port port;
     uint32_t result;
     port_open(&port, calls, services, globals, entry);
-    uint32_t count = port_u32(&port, 0x546774, 0);
+    uint32_t count = port_u32(&port, list + 4, 0);
     uint32_t index;
     for (index = 0; index < count; index++)
     {
-        result =
-            port_call(&port, 0x4ac900, port_u32(&port, port_u32(&port, 0x546770, 0), index * 4),
-                      index, count, index * 4);
+        result = port_call(&port, 0x4ac900, port_u32(&port, port_u32(&port, list, 0), index * 4),
+                           index, count, index * 4);
         if (result != 0)
         {
             return port_return(&port, 0, entry->edx);
         }
     }
     return port_return(&port, 1, entry->edx);
+}
+
+uint32_t vertrix_port_actors_all_idle(PORT_SIGNATURE)
+{
+    return actors_all_idle_in(calls, services, globals, entry, 0x546770);
+}
+
+uint32_t vertrix_port_actors_all_idle_546720(PORT_SIGNATURE)
+{
+    return actors_all_idle_in(calls, services, globals, entry, 0x546720);
+}
+
+uint32_t vertrix_port_actors_all_idle_54675c(PORT_SIGNATURE)
+{
+    return actors_all_idle_in(calls, services, globals, entry, 0x54675c);
+}
+
+uint32_t vertrix_port_actors_all_idle_546748(PORT_SIGNATURE)
+{
+    return actors_all_idle_in(calls, services, globals, entry, 0x546748);
+}
+
+uint32_t vertrix_port_actors_all_idle_546734(PORT_SIGNATURE)
+{
+    return actors_all_idle_in(calls, services, globals, entry, 0x546734);
 }
 
 uint32_t vertrix_port_static_init_55608c(PORT_SIGNATURE)

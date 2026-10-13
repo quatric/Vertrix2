@@ -5274,23 +5274,6 @@
   "virtual": [],
   "address": 4660112
  },
- "f471ba0": {
-  "callees": {
-   "0x4b6070": [
-    0,
-    false
-   ]
-  },
-  "stack": 72,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4660128
- },
  "actors_handler_from_ec_unlinked": {
   "callees": {
    "0x4ac920": [
@@ -5307,40 +5290,6 @@
   "constants": [],
   "virtual": [],
   "address": 4660208
- },
- "actor_list_all_idle_471cd0": {
-  "callees": {
-   "0x4ac900": [
-    0,
-    false
-   ]
-  },
-  "stack": 80,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4660432
- },
- "actor_list_all_idle_471d10": {
-  "callees": {
-   "0x4ac900": [
-    0,
-    false
-   ]
-  },
-  "stack": 80,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4660496
  },
  "object_set_464": {
   "callees": {},
@@ -5677,23 +5626,6 @@
   "constants": [],
   "virtual": [],
   "address": 4662336
- },
- "f472460": {
-  "callees": {
-   "0x4b6070": [
-    0,
-    false
-   ]
-  },
-  "stack": 72,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4662368
  },
  "actor_spawn": {
   "callees": {
@@ -6577,40 +6509,6 @@
   ],
   "virtual": [],
   "address": 4674832
- },
- "object_destroy_flags": {
-  "callees": {
-   "0x4ca050": [
-    0,
-    false
-   ],
-   "0x4ccb9f": [
-    0,
-    false
-   ],
-   "0x4ca040": [
-    0,
-    false
-   ]
-  },
-  "stack": 136,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   1,
-   2,
-   3,
-   4,
-   5,
-   35,
-   36,
-   37
-  ],
-  "virtual": [],
-  "address": 4675328
  },
  "f475b80": {
   "callees": {

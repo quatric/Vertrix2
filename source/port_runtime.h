@@ -86,6 +86,13 @@ uint32_t vertrix_port_sine(PORT_SIGNATURE);
  * 0x4ca050 frees it. Returns the object. */
 uint32_t vertrix_port_object_destroy(PORT_SIGNATURE);
 
+/* Originals 0x425d50, 0x475700, 0x482320 and 0x487890: 0x481b30's code with their own method
+ * table (at +0x1c, +0x18, +0x30 and +0xc), finalizer type and guard record. */
+uint32_t vertrix_port_object_destroy_425d50(PORT_SIGNATURE);
+uint32_t vertrix_port_object_destroy_475700(PORT_SIGNATURE);
+uint32_t vertrix_port_object_destroy_482320(PORT_SIGNATURE);
+uint32_t vertrix_port_object_destroy_487890(PORT_SIGNATURE);
+
 /* Original 0x4b79e0 (eax = list, edx = address of a string, ebx = index, ecx = argument): set the
  * string to the list item's text: it starts as 0x5110cb (0x4ca280); for an item (0x4b79c0),
  * 0x4b7710 makes the text into a local string, 0x4ca310 assigns it and 0x4ca210 releases the
@@ -779,6 +786,23 @@ uint32_t vertrix_port_layer_add_546744(PORT_SIGNATURE);
 /* Original 0x471b20(eax = item): add it to the layer list 0x546730 (0x4b6070). */
 uint32_t vertrix_port_layer_add_546730(PORT_SIGNATURE);
 
+/* Originals 0x471ba0 and 0x472460(eax = item): 0x4719f0's code for the layer lists 0x546758 and
+ * 0x546780 (0x4b6070). */
+uint32_t vertrix_port_layer_add_546758(PORT_SIGNATURE);
+uint32_t vertrix_port_layer_add_546780(PORT_SIGNATURE);
+
+/* Originals 0x415fb0, 0x415fc0, 0x415fd0, 0x415fe0 and 0x417880..0x4178c0 (every 0x10)(eax =
+ * text): the same code setting the strings 0x532be8..0x532bf4 and 0x5332a8..0x5332b8 (0x4ca370). */
+uint32_t vertrix_port_string_set_532be8(PORT_SIGNATURE);
+uint32_t vertrix_port_string_set_532bec(PORT_SIGNATURE);
+uint32_t vertrix_port_string_set_532bf0(PORT_SIGNATURE);
+uint32_t vertrix_port_string_set_532bf4(PORT_SIGNATURE);
+uint32_t vertrix_port_string_set_5332a8(PORT_SIGNATURE);
+uint32_t vertrix_port_string_set_5332ac(PORT_SIGNATURE);
+uint32_t vertrix_port_string_set_5332b0(PORT_SIGNATURE);
+uint32_t vertrix_port_string_set_5332b4(PORT_SIGNATURE);
+uint32_t vertrix_port_string_set_5332b8(PORT_SIGNATURE);
+
 /* Original 0x477910(eax = scale): clear +0 and +4 and set +8 to 0x1800000. */
 uint32_t vertrix_port_scale_reset(PORT_SIGNATURE);
 
@@ -954,6 +978,10 @@ uint32_t vertrix_port_scene_reload(PORT_SIGNATURE);
  * (0x4ac920). */
 uint32_t vertrix_port_actors_take_next(PORT_SIGNATURE);
 
+/* Originals 0x471d90 and 0x471dd0: 0x471bb0's code for the lists 0x546748 and 0x546734. */
+uint32_t vertrix_port_actors_take_next_546748(PORT_SIGNATURE);
+uint32_t vertrix_port_actors_take_next_546734(PORT_SIGNATURE);
+
 /* Original 0x4828f0(eax = volume): when sound is on (0x598d60) set all eight samples 0x598d88 to
  * the volume (0x40ae00), or to 0 when 0x598da8 is clear. */
 uint32_t vertrix_port_sounds_volume_set(PORT_SIGNATURE);
@@ -1031,6 +1059,13 @@ uint32_t vertrix_port_file_exists(PORT_SIGNATURE);
 /* Original 0x472360: 1 when no actor of the list 0x546770 (count 0x546774) is busy (0x4ac900),
  * otherwise 0. */
 uint32_t vertrix_port_actors_all_idle(PORT_SIGNATURE);
+
+/* Originals 0x471c90, 0x471cd0, 0x471d10 and 0x471d50: 0x472360's code for the lists 0x546720,
+ * 0x54675c, 0x546748 and 0x546734. */
+uint32_t vertrix_port_actors_all_idle_546720(PORT_SIGNATURE);
+uint32_t vertrix_port_actors_all_idle_54675c(PORT_SIGNATURE);
+uint32_t vertrix_port_actors_all_idle_546748(PORT_SIGNATURE);
+uint32_t vertrix_port_actors_all_idle_546734(PORT_SIGNATURE);
 
 /* Original 0x4771e0: construct 0x55608c (0x477240) and register its exit routine 0x4fea9d
  * (0x4ec1f7). Returns the handler chain. */
