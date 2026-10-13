@@ -48,4 +48,10 @@ uint32_t vertrix_port_surface_fill(PORT_SIGNATURE);
  * saved chain. */
 uint32_t vertrix_port_draw_outline(PORT_SIGNATURE);
 
+/* Original 0x483ed0(eax = image, edx = source pixel format): convert a 32-bit image's pixels
+ * (byte +0x27 == 4; width +4 by height +8 from +0) in place through a local ARGB pixel format
+ * (0x481b20, 0x481bc0) and 0x481e10, released by 0x481b30 under a guard record. Returns the
+ * guard record's saved chain. */
+uint32_t vertrix_port_image_color_order(PORT_SIGNATURE);
+
 #endif

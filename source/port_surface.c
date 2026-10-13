@@ -327,3 +327,63 @@ uint32_t vertrix_port_draw_outline(PORT_SIGNATURE)
     port_set32(&port, ebp, -0x28u, 0);
     return port_return(&port, chain, vertrix_lift_edx);
 }
+
+uint32_t vertrix_port_image_color_order(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x58,
+        GUARD_HANDLER = 0x4ec1ec,
+        ORDER_GUARD = 0x516c50,
+        FORMAT = 0x54, /* below ebp: the pixel format */
+        FORMAT_INIT = 0x481b20,
+        FORMAT_FROM_MASKS = 0x481bc0,
+        FORMAT_RELEASE = 0x481b30,
+        FORMAT_COLOR = 0x481e10
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t image = entry->eax;
+    uint32_t source = entry->edx;
+    uint32_t chain;
+    uint32_t count;
+    uint32_t pixel;
+    uint32_t ebx = 0xff00;
+    uint32_t argument = 0xff000000u;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    chain = port.env.chain;
+    port_set32(&port, ebp, -0x14u, image);
+    /* The guard record the original links into fs:[0] for the pixel format. */
+    port_set32(&port, ebp, -0x28u, chain);
+    port_set32(&port, ebp, -0x24u, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x20u, ORDER_GUARD);
+    port_set32(&port, ebp, -0x1cu, 0);
+    port_call(&port, FORMAT_INIT, ebp - FORMAT, GUARD_HANDLER, 0, ORDER_GUARD);
+    port_set32(&port, ebp, -0x1cu, 1);
+    if (port_call_stack(&port, FORMAT_FROM_MASKS, ebp - FORMAT, 0xff0000, ebx, 0xff, &argument,
+                        1) == 0)
+    {
+        port_call(&port, FORMAT_RELEASE, ebp - FORMAT, 0, ebx, 0xff);
+        return port_return(&port, chain, vertrix_lift_edx);
+    }
+    count = port_u32(&port, image, 4) * port_u32(&port, image, 8);
+    if (port_u8(&port, image, 0x27) != 4)
+    {
+        port_call(&port, FORMAT_RELEASE, ebp - FORMAT, 0, ebx, port_u32(&port, image, 8));
+        return port_return(&port, chain, vertrix_lift_edx);
+    }
+    /* Each 32-bit pixel converted from the source format into the screen's order. */
+    pixel = port_u32(&port, image, 0);
+    for (; count != 0; count--)
+    {
+        ebx = port_u32(&port, pixel, 0);
+        pixel += 4;
+        port_set32(&port, pixel, -4u,
+                   port_call(&port, FORMAT_COLOR, ebp - FORMAT, source, ebx, pixel));
+    }
+    port_set32(&port, ebp, -0x1cu, 0);
+    port_call(&port, FORMAT_RELEASE, ebp - FORMAT, 0, ebx, pixel);
+    port_set32(&port, ebp, -0x1cu, 0);
+    return port_return(&port, chain, vertrix_lift_edx);
+}

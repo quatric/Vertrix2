@@ -1773,4 +1773,10 @@ uint32_t vertrix_port_file_stream_destroy(PORT_SIGNATURE);
  * thread's array from TlsGetValue (slot 0x4f1cdc). */
 uint32_t vertrix_port_thread_slot(PORT_SIGNATURE);
 
+/* Original 0x4e7a00(eax = days since 1900, edx = seconds, ebx = bias in seconds, ecx = struct
+ * tm): fill in the seconds, minutes, hours, day of the month, month, year since 1900, weekday
+ * and day of the year. Leap years come from 0x4e9060, month starts from the tables 0x51c06c and
+ * 0x51c086 (leap). Returns the struct and, in edx, the weekday. */
+uint32_t vertrix_port_days_to_tm(PORT_SIGNATURE);
+
 #endif

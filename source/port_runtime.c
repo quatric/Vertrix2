@@ -9376,3 +9376,70 @@ uint32_t vertrix_port_thread_slot(PORT_SIGNATURE)
     port_call(&port, 0x4dbd20, port_u32(&port, 0, SLOTS), port_u32(&port, key, 0), value, value);
     return port_return(&port, value, vertrix_lift_edx);
 }
+
+uint32_t vertrix_port_days_to_tm(PORT_SIGNATURE)
+{
+    enum
+    {
+        DAY = 86400,
+        LEAP_YEAR = 0x4e9060,
+        MONTH_STARTS = 0x51c06c,
+        LEAP_MONTH_STARTS = 0x51c086
+    };
+    Port port;
+    uint32_t days = entry->eax;
+    uint32_t seconds = entry->edx;
+    uint32_t bias = entry->ebx;
+    uint32_t tm = entry->ecx;
+    uint32_t rest;
+    uint32_t years;
+    uint32_t yday;
+    uint32_t length;
+    uint32_t month;
+    uint32_t table;
+    port_open(&port, calls, services, globals, entry);
+    /* The bias (a time zone) may move the time into the previous day. */
+    if (seconds < 0xa8c0 && (int32_t)bias > 0)
+    {
+        seconds = seconds + DAY - bias;
+        days += seconds / DAY - 1;
+    }
+    else
+    {
+        seconds -= bias;
+        days += seconds / DAY;
+    }
+    rest = seconds % DAY;
+    port_set32(&port, tm, 8, rest / 3600);
+    rest %= 3600;
+    port_set32(&port, tm, 4, rest / 60);
+    port_set32(&port, tm, 0, rest % 60);
+    /* Years from 1900: a first guess of 366-day years, then whole years of the guessed year's
+     * length taken off. */
+    years = days / 366;
+    yday = days - years * 365;
+    if (years != 0)
+    {
+        yday -= (years - 1) >> 2;
+    }
+    length = port_call(&port, LEAP_YEAR, years + 1900, years, yday, tm) + 365;
+    while (yday >= length)
+    {
+        yday -= length;
+        years++;
+    }
+    port_set32(&port, tm, 0x14, years);
+    port_set32(&port, tm, 0x1c, yday);
+    table = port_call(&port, LEAP_YEAR, years + 1900, years, yday, tm) != 0 ? LEAP_MONTH_STARTS
+                                                                            : MONTH_STARTS;
+    month = yday / 31;
+    if (yday >= (uint32_t)((int32_t)port_u32(&port, table, month * 2) >> 16))
+    {
+        month++;
+    }
+    port_set32(&port, tm, 0x10, month);
+    port_set32(&port, tm, 0xc,
+               yday - (uint32_t)(int32_t)(int16_t)port_u16(&port, table, month * 2) + 1);
+    port_set32(&port, tm, 0x18, (days + 1) % 7);
+    return port_return(&port, tm, (days + 1) % 7);
+}

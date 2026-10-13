@@ -158,4 +158,10 @@ uint32_t vertrix_port_blend_remap_levels(PORT_SIGNATURE);
  * applied to the tint at 0x54d5dc) instead of remapped. */
 uint32_t vertrix_port_blend_tint_levels(PORT_SIGNATURE);
 
+/* Original 0x492dc0: the 32-bit half-blend rectangle of the renderer's state: each pixel of the
+ * width (0x5bb750) by height (0x5bb752) rectangle from 0x5bb768 (rows 0x5bb7c8 bytes apart past
+ * the width) becomes its half, masked to 0x7f7f7f, plus the colour at 0x54d5ec. The state is
+ * stored back as the loops leave it. Returns the row skip after a row, else eax unchanged. */
+uint32_t vertrix_port_rectangle_half32(PORT_SIGNATURE);
+
 #endif

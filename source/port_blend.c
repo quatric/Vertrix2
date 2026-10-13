@@ -718,3 +718,47 @@ uint32_t vertrix_port_blend_tint_levels(PORT_SIGNATURE)
     port_set32(&port, target, 0, levels_mix_colour(&port, port_u32(&port, 0, REMAPPED), target));
     return port_return(&port, target, entry->edx);
 }
+
+uint32_t vertrix_port_rectangle_half32(PORT_SIGNATURE)
+{
+    enum
+    {
+        COUNT = 0x5bc016,
+        PIXEL = 0x5bb768,
+        COLOR = 0x54d5ec,
+        WIDTH = 0x5bb750,
+        HEIGHT = 0x5bb752,
+        PITCH_SKIP = 0x5bb7c8
+    };
+    Port port;
+    uint32_t eax = entry->eax;
+    uint32_t count;
+    uint32_t pixel;
+    uint32_t color;
+    uint32_t width;
+    uint32_t rows;
+    port_open(&port, calls, services, globals, entry);
+    count = port_u16(&port, 0, COUNT);
+    pixel = port_u32(&port, 0, PIXEL);
+    color = port_u32(&port, 0, COLOR);
+    width = port_u16(&port, 0, WIDTH);
+    rows = port_u16(&port, 0, HEIGHT);
+    /* Each pixel becomes half itself plus the colour (already halved). */
+    for (; rows != 0; rows = (rows - 1) & 0xffff)
+    {
+        for (count = width; count != 0; count = (count - 1) & 0xffff)
+        {
+            eax = pixel;
+            port_set32(&port, pixel, 0, ((port_u32(&port, pixel, 0) >> 1) & 0x7f7f7f) + color);
+            pixel += 4;
+        }
+        eax = port_u32(&port, 0, PITCH_SKIP);
+        pixel += eax;
+    }
+    port_set16(&port, 0, WIDTH, width);
+    port_set16(&port, 0, HEIGHT, rows);
+    port_set32(&port, 0, COLOR, color);
+    port_set32(&port, 0, PIXEL, pixel);
+    port_set16(&port, 0, COUNT, count);
+    return port_return(&port, eax, entry->edx);
+}
