@@ -3119,6 +3119,16 @@
   "lifted": "lifted_byte_transition_4ad580",
   "chunk": "whole_4"
  },
+ "0x4ad5e0": {
+  "port": "vertrix_port_actor_approach_x_4ad5e0",
+  "lifted": "lifted_word_transition_4ad5e0",
+  "chunk": "whole_4"
+ },
+ "0x4ad630": {
+  "port": "vertrix_port_actor_approach_x_4ad630",
+  "lifted": "lifted_word_transition_4ad630",
+  "chunk": "whole_4"
+ },
  "0x4ad6e0": {
   "port": "vertrix_port_actor_step_value",
   "lifted": "lifted_actor_dword_transition",

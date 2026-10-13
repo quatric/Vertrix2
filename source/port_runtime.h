@@ -1248,6 +1248,11 @@ uint32_t vertrix_port_actor_respawn_wait(PORT_SIGNATURE);
  * +0x12, not past it. 1 while it has not arrived; the target word in dx. */
 uint32_t vertrix_port_actor_approach_x(PORT_SIGNATURE);
 
+/* Originals 0x4ad5e0 and 0x4ad630: 0x4aca60's approach for the coordinate, target and speed at
+ * +0x28, +0x2e and +0x30, and at +0x38, +0x3e and +0x40. */
+uint32_t vertrix_port_actor_approach_x_4ad5e0(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_approach_x_4ad630(PORT_SIGNATURE);
+
 /* Original 0x4acab0(eax = actor, edx = steps): move the y word +0x16 towards +0x18 by steps * speed
  * +0x1a, not past it. 1 while it has not arrived; the target word in dx. */
 uint32_t vertrix_port_actor_approach_y(PORT_SIGNATURE);

@@ -5717,14 +5717,16 @@ uint32_t vertrix_port_actor_respawn_wait(PORT_SIGNATURE)
     return port_return(&port, result, entry->edx);
 }
 
-/* Move the 16.16 coordinate at +position + 2 towards the word at +position + 4 by steps times the
- * speed word at +position + 6, not past it (0x4aca60, 0x4acab0, 0x4acb00). Returns 1 while it has
- * not arrived, with the target word in the low half of vertrix_lift_edx. */
-static uint32_t actor_axis_approach(Port *port, uint32_t actor, uint32_t position, uint32_t steps)
+/* Move the 16.16 coordinate's whole word (+current_field + 2) towards the target's (+target_field +
+ * 2) by steps times the speed word (+speed_field + 2), not past it (0x4aca60, 0x4acab0, 0x4acb00,
+ * 0x4ad5e0, 0x4ad630). Returns 1 while it has not arrived, with the target word in the low half of
+ * vertrix_lift_edx. */
+static uint32_t actor_axis_approach_at(Port *port, uint32_t actor, uint32_t current_field,
+                                       uint32_t target_field, uint32_t speed_field, uint32_t steps)
 {
-    int32_t step = (int32_t)steps * ((int32_t)port_u32(port, actor, position + 4) >> 16);
-    int32_t current = (int32_t)port_u32(port, actor, position) >> 16;
-    int32_t target = (int32_t)port_u32(port, actor, position + 2) >> 16;
+    int32_t step = (int32_t)steps * ((int32_t)port_u32(port, actor, speed_field) >> 16);
+    int32_t current = (int32_t)port_u32(port, actor, current_field) >> 16;
+    int32_t target = (int32_t)port_u32(port, actor, target_field) >> 16;
     int32_t next = current;
     uint32_t stored;
     if (current > target)
@@ -5743,10 +5745,17 @@ static uint32_t actor_axis_approach(Port *port, uint32_t actor, uint32_t positio
             next = target;
         }
     }
-    port_set16(port, actor, position + 2, (uint32_t)next);
-    stored = port_u16(port, actor, position + 4);
+    port_set16(port, actor, current_field + 2, (uint32_t)next);
+    stored = port_u16(port, actor, target_field + 2);
     vertrix_lift_edx = ((uint32_t)target & 0xffff0000u) | stored;
     return ((uint32_t)next & 0xffff) != stored;
+}
+
+/* The fields' common layout: the coordinate at +position, the target at +position + 2 and the
+ * speed at +position + 4. */
+static uint32_t actor_axis_approach(Port *port, uint32_t actor, uint32_t position, uint32_t steps)
+{
+    return actor_axis_approach_at(port, actor, position, position + 2, position + 4, steps);
 }
 
 uint32_t vertrix_port_actor_approach_x(PORT_SIGNATURE)
@@ -5754,6 +5763,24 @@ uint32_t vertrix_port_actor_approach_x(PORT_SIGNATURE)
     Port port;
     port_open(&port, calls, services, globals, entry);
     return port_return(&port, actor_axis_approach(&port, entry->eax, 0xc, entry->edx),
+                       vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_actor_approach_x_4ad5e0(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    return port_return(&port,
+                       actor_axis_approach_at(&port, entry->eax, 0x28, 0x2e, 0x30, entry->edx),
+                       vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_actor_approach_x_4ad630(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    return port_return(&port,
+                       actor_axis_approach_at(&port, entry->eax, 0x38, 0x3e, 0x40, entry->edx),
                        vertrix_lift_edx);
 }
 

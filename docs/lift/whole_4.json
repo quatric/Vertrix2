@@ -3331,30 +3331,6 @@
   "virtual": [],
   "address": 4904208
  },
- "word_transition_4ad5e0": {
-  "callees": {},
-  "stack": 80,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4904416
- },
- "word_transition_4ad630": {
-  "callees": {},
-  "stack": 80,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4904496
- },
  "f4adfa0": {
   "callees": {},
   "stack": 64,

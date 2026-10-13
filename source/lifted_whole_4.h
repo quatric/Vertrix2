@@ -117,8 +117,6 @@ enum
     LIFTED_F4AD2C0_STACK = 100,
     LIFTED_ACTOR_CHAIN_ORBIT_POINT_STACK = 108,
     LIFTED_ACTOR_SET_WORDS_2A_FULL_STACK = 64,
-    LIFTED_WORD_TRANSITION_4AD5E0_STACK = 80,
-    LIFTED_WORD_TRANSITION_4AD630_STACK = 80,
     LIFTED_F4ADFA0_STACK = 64,
     LIFTED_F4B0B70_STACK = 136,
     LIFTED_OBJECT_RELEASE_SLOTS_FULL_STACK = 80,
@@ -637,16 +635,6 @@ uint32_t lifted_actor_chain_orbit_point(const VertrixCalls *calls,
 uint32_t lifted_actor_set_words_2a_full(const VertrixCalls *calls,
                                         const VertrixFactoryServices *services,
                                         const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4ad5e0. */
-uint32_t lifted_word_transition_4ad5e0(const VertrixCalls *calls,
-                                       const VertrixFactoryServices *services,
-                                       const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4ad630. */
-uint32_t lifted_word_transition_4ad630(const VertrixCalls *calls,
-                                       const VertrixFactoryServices *services,
-                                       const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4adfa0. */
 uint32_t lifted_f4adfa0(const VertrixCalls *calls, const VertrixFactoryServices *services,
