@@ -915,6 +915,10 @@ answers match the C library's sin, cos and tan to 1e-12 except tan(pi/2), which 
 into infinity (a zero denominator, 0x4dae94). The host frames are unchanged; the audio differs
 from byte 4,828,149 of the 3,000-tick WAV, and the new baseline is `work/abase2/a.wav`.
 
+A scan of every lifted `lift_call(..., 0, esp)` site, over the callee's traced body (`lift.trace`),
+finds no other framed callee that returns with a plain `ret` and reads `[ebp + 8]` or above: 0x4db250
+was the only one. Frameless callees that read `[esp + n]` were not scanned.
+
 With the ports in, the host run matches the recorded baselines: the 1,500-tick frames (9 of 9
 identical) and the 3,000-tick audio (WAV byte-identical). Boundary calls fell from 62,764 to 3; the
 difference was the slot-loading string release.
