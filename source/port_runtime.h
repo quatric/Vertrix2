@@ -1826,4 +1826,14 @@ uint32_t vertrix_port_thread_value(PORT_SIGNATURE);
  * edx. */
 uint32_t vertrix_port_object_construct_e(PORT_SIGNATURE);
 
+/* Original 0x45e990(eax = row, edx = column, ebx, ecx; stack: two dwords; ret 8): call 0x487750
+ * on the grid cell (0x544f90, rows of 0x118 bytes, cells of 0x1c) with edx = ebx, ebx = ecx,
+ * ecx = the first stack dword and the second passed on. */
+uint32_t vertrix_port_grid_cell_call(PORT_SIGNATURE);
+
+/* Original 0x484680(ax, dx = one point, bx, cx = the other): the integer distance between the
+ * points, by Newton's method from 1 (state in 0x598dc0 to 0x598dd4). edx is the sign of the last
+ * change. */
+uint32_t vertrix_port_point_distance(PORT_SIGNATURE);
+
 #endif

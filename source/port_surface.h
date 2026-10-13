@@ -76,4 +76,9 @@ uint32_t vertrix_port_event_frame_draw_direct(PORT_SIGNATURE);
  * its pixels copied from the source at (x, y) by 0x47ce10 through a view of it. */
 uint32_t vertrix_port_image_new_drawn(PORT_SIGNATURE);
 
+/* Original 0x480ec0(eax = stream, edx = position): read an image: its 0x80-byte header (through
+ * 0x48a930, the stream's position kept by 0x48aad0 and restored by 0x48aaf0) sizes a new surface
+ * (0x478d10), whose pixels 0x480d60 reads. Returns the surface. */
+uint32_t vertrix_port_image_read(PORT_SIGNATURE);
+
 #endif

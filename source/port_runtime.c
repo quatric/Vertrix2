@@ -9911,3 +9911,61 @@ uint32_t vertrix_port_object_construct_e(PORT_SIGNATURE)
     port_set32(&port, ebp, -0x38u, 1);
     return port_return(&port, constructed, entry->edx);
 }
+
+uint32_t vertrix_port_grid_cell_call(PORT_SIGNATURE)
+{
+    enum
+    {
+        GRID = 0x544f90
+    };
+    Port port;
+    uint8_t stack[0xc + 8 + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t cell;
+    uint32_t argument;
+    port_open_arguments(&port, stack, calls, services, globals, entry, 0xc, 2);
+    /* Rows of 0x118 bytes, cells of 0x1c. */
+    cell = GRID + entry->eax * 0x118 + entry->edx * 0x1c;
+    argument = port_u32(&port, ebp, 0xc);
+    return port_return(&port,
+                       port_call_stack(&port, 0x487750, cell, entry->ebx, entry->ecx,
+                                       port_u32(&port, ebp, 8), &argument, 1),
+                       vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_point_distance(PORT_SIGNATURE)
+{
+    enum
+    {
+        DX = 0x598dc0,
+        DY = 0x598dc4,
+        GUESS = 0x598dc8,
+        NEXT = 0x598dcc,
+        CHANGE = 0x598dd0,
+        SQUARE = 0x598dd4
+    };
+    Port port;
+    int32_t dx = (int16_t)entry->ebx - (int16_t)entry->eax;
+    int32_t dy = (int16_t)entry->ecx - (int16_t)entry->edx;
+    uint32_t square;
+    uint32_t guess = 1;
+    uint32_t next;
+    int32_t change;
+    port_open(&port, calls, services, globals, entry);
+    port_set32(&port, 0, DY, (uint32_t)dy);
+    square = (uint32_t)dx * (uint32_t)dx + (uint32_t)dy * (uint32_t)dy;
+    port_set32(&port, 0, DX, (uint32_t)dx);
+    port_set32(&port, 0, SQUARE, square);
+    /* Newton's method for the integer square root, from 1. */
+    do
+    {
+        next = (port_u32(&port, 0, SQUARE) / guess + guess) >> 1;
+        port_set32(&port, 0, GUESS, guess);
+        change = (int32_t)(next - guess);
+        port_set32(&port, 0, NEXT, next);
+        port_set32(&port, 0, CHANGE, (uint32_t)(change < 0 ? -change : change));
+        guess = next;
+    } while ((int32_t)port_u32(&port, 0, CHANGE) > 1);
+    port_set32(&port, 0, GUESS, next);
+    return port_return(&port, next, change < 0 ? 0xffffffffu : 0);
+}

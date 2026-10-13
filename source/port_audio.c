@@ -1218,3 +1218,31 @@ uint32_t vertrix_port_mix_render(PORT_SIGNATURE)
     }
     return port_return(&port, eax, edx);
 }
+
+uint32_t vertrix_port_audio_sample_guard(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t sample = entry->eax;
+    uint32_t edx;
+    port_open(&port, calls, services, globals, entry);
+    if (sample == 0 || port_u32(&port, sample, 4) == 0)
+    {
+        return port_return(&port, 1, entry->edx);
+    }
+    if (port_u8(&port, sample, 0x16) & 0x10)
+    {
+        /* A looped sample: the dword after the loop end repeats the loop start's. */
+        edx = port_u32(&port, sample, 4) + port_u32(&port, sample, 0x10);
+        port_set32(&port, edx, 0,
+                   port_u32(&port, port_u32(&port, sample, 4) + port_u32(&port, sample, 0xc), 0));
+        return port_return(&port, 0, edx);
+    }
+    /* Otherwise a silent dword after the data, once the read reaches its length (+8). */
+    edx = entry->edx + entry->ebx;
+    if (edx >= port_u32(&port, sample, 8))
+    {
+        edx = port_u32(&port, sample, 4) + port_u32(&port, sample, 8);
+        port_set32(&port, edx, 0, 0);
+    }
+    return port_return(&port, 0, edx);
+}

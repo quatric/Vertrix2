@@ -652,3 +652,32 @@ uint32_t vertrix_port_image_new_drawn(PORT_SIGNATURE)
     port_call_stack(&port, 0x47ce10, view, entry->eax, 0, 0, arguments, 4);
     return port_return(&port, image, vertrix_lift_edx);
 }
+
+uint32_t vertrix_port_image_read(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0xa0,
+        HEADER = 0x98 /* below ebp: 0x80 bytes read from the stream */
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t stream = entry->eax;
+    uint32_t position;
+    uint32_t surface;
+    uint32_t pixels;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    port_set32(&port, ebp, -0x18u, entry->edx);
+    position = port_call(&port, 0x48aad0, stream, entry->edx, entry->ebx, entry->ecx);
+    port_call(&port, 0x48a930, stream, ebp - HEADER, 1, 0x80);
+    /* The header's last column and row (words at +8 and +0xa): a surface one larger. */
+    surface =
+        port_call(&port, 0x478d10, (uint32_t)((int32_t)port_u32(&port, ebp, -0x92u) >> 16) + 1,
+                  (uint32_t)((int32_t)port_u32(&port, ebp, -0x90u) >> 16) + 1, 1, 0x80);
+    pixels = port_u32(&port, surface, 0);
+    port_set32(&port, ebp, -0x14u, pixels);
+    port_call(&port, 0x48aaf0, stream, position, entry->edx, surface);
+    port_call(&port, 0x480d60, pixels, stream, entry->edx, surface);
+    return port_return(&port, surface, vertrix_lift_edx);
+}

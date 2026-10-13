@@ -31,7 +31,7 @@ SLOW = {'0x48a930': 64, '0x492980': 256, '0x4ec307': 256, '0x492460': 256, '0x49
         '0x4db6a4': 256, '0x405720': 512, '0x4af560': 256, '0x4b1fa0': 256, '0x4db250': 512, '0x4928f0': 256, '0x4408e0': 1024, '0x48a3c0': 1024, '0x4b3390': 1024, '0x4ae3e0': 1024, '0x408800': 64, '0x409f00': 256, '0x407280': 128, '0x4095d0': 128, '0x40a190': 512, '0x4d7d70': 128, '0x4ab200': 256, '0x40cda0': 256, '0x4d9060': 512, '0x4daae8': 512, '0x482f80': 512, '0x477f10': 512, '0x485550': 512, '0x4774e0': 512, '0x4d7c40': 512, '0x483ed0': 512, '0x47c520': 512, '0x476d70': 512,
         # Copies whose random pointers overrun a pool page past these counts, for the lifted copy
         # as well.
-        '0x4ab310': 64, '0x4ab2a0': 128, '0x492dc0': 64}
+        '0x4ab310': 64, '0x4ab2a0': 128, '0x492dc0': 64, '0x40c990': 48}
 # The native sources the batch harness links with every routine (verify_one.py).
 HARNESS = {'call_glue', 'actor_storage', 'block_factory', 'actor_fields', 'board_cells'}
 sys.path.insert(0, str(ROOT / 'tools'))

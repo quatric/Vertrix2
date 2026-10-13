@@ -151,4 +151,10 @@ uint32_t vertrix_port_mix_pcm16_stereo(PORT_SIGNATURE);
  * output (0x40c430). Stereo (0x52fc1c bit 0) halves the count into frames. */
 uint32_t vertrix_port_mix_render(PORT_SIGNATURE);
 
+/* Original 0x40c990(eax = sample, edx = position, ebx = count): the guard dword past a sample's
+ * data for the interpolating kernels: a looped sample (+0x16 bit 4) copies its loop start (+0xc)
+ * to its loop end (+0x10); otherwise, once position + count reaches the length (+8), the dword
+ * there is cleared. Returns 0, or 1 for no sample or data (+4). */
+uint32_t vertrix_port_audio_sample_guard(PORT_SIGNATURE);
+
 #endif
