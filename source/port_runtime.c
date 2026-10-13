@@ -10676,3 +10676,49 @@ uint32_t vertrix_port_raise_at_caller(PORT_SIGNATURE)
     eax = port_call_stack(&port, 0x4cd8b0, 0, record, port.env.chain, 0, arguments, 3);
     return port_return(&port, eax, entry->edx);
 }
+
+uint32_t vertrix_port_object_destroy_e(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x48,
+        GUARD_HANDLER = 0x4ec1ec
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t object = entry->eax;
+    uint32_t mode = entry->edx;
+    uint32_t result;
+    uint32_t edx;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    if (mode & 4)
+    {
+        /* An array: element destructor 0x514ef0, freed by 0x4ca040. */
+        port_set32(&port, ebp, -0x44u, object);
+        port_set32(&port, ebp, -0x24u, 1);
+        result = port_call(&port, 0x4ccb9f, object, 0x514ef0, 1, object);
+        port_set32(&port, ebp, -0x24u, 0);
+        port_call(&port, 0x4ca040, result, vertrix_lift_edx, 1, object);
+        return port_return(&port, object, vertrix_lift_edx);
+    }
+    port_set32(&port, object, 0, 0x5174b4);
+    port_set32(&port, ebp, -0x1cu, object);
+    port_set8(&port, ebp, -0x18u, mode);
+    port_set32(&port, ebp, -0x30u, port.env.chain);
+    port_set32(&port, ebp, -0x2cu, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x28u, 0x51701c);
+    port_set32(&port, ebp, -0x24u, 3);
+    /* The two strings (0x4d7630 with 0 and 1); the second returns the object. */
+    port_call(&port, 0x4d7630, object, 0, mode, object);
+    port_set32(&port, ebp, -0x24u, 0);
+    result = port_call(&port, 0x4d7630, object, 1, mode, object);
+    edx = 0;
+    port_set32(&port, ebp, -0x24u, 0);
+    if (mode & 2)
+    {
+        port_call(&port, 0x4ca050, result, edx, mode, result);
+        edx = vertrix_lift_edx;
+    }
+    return port_return(&port, result, edx);
+}

@@ -1949,4 +1949,10 @@ uint32_t vertrix_port_game_screen_new(PORT_SIGNATURE);
  * from 0x4e0f8b first) and ebx the guard chain. Keeps edx. */
 uint32_t vertrix_port_raise_at_caller(PORT_SIGNATURE);
 
+/* Original 0x488b90(eax = object, edx = mode): a destructor: mode 4 destroys an array (element
+ * destructor 0x514ef0, freed by 0x4ca040); otherwise the table 0x5174b4 is set and, under a guard
+ * record, its two strings are destroyed (0x4d7630 with 0 and 1), with mode 2 freeing it
+ * (0x4ca050). */
+uint32_t vertrix_port_object_destroy_e(PORT_SIGNATURE);
+
 #endif

@@ -157,4 +157,8 @@ uint32_t vertrix_port_mix_render(PORT_SIGNATURE);
  * there is cleared. Returns 0, or 1 for no sample or data (+4). */
 uint32_t vertrix_port_audio_sample_guard(PORT_SIGNATURE);
 
+/* Original 0x40ce80(eax = note, edx = octave, ebx = fine tune): the period of a note, 0 outside
+ * the 0x1e00 steps: linear (0x531b46 bit 0) or from the Amiga table 0x4f7184. */
+uint32_t vertrix_port_mixer_note_period(PORT_SIGNATURE);
+
 #endif

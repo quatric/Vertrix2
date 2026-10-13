@@ -1246,3 +1246,28 @@ uint32_t vertrix_port_audio_sample_guard(PORT_SIGNATURE)
     }
     return port_return(&port, 0, edx);
 }
+
+uint32_t vertrix_port_mixer_note_period(PORT_SIGNATURE)
+{
+    Port port;
+    int32_t position;
+    uint32_t octave;
+    uint32_t step;
+    port_open(&port, calls, services, globals, entry);
+    /* 64 steps a note, the fine tune (ebx) halved; 0x1e00 steps in all. */
+    position = (int32_t)(((entry->eax + entry->edx) << 6) - 0x40) + ((int32_t)entry->ebx >> 1);
+    if (position < 0 || position >= 0x1e00)
+    {
+        return port_return(&port, 0, entry->edx);
+    }
+    if (port_u8(&port, 0, 0x531b46) & 1)
+    {
+        /* Linear periods. */
+        return port_return(&port, 0x1e00 - (uint32_t)position, entry->edx);
+    }
+    /* Amiga periods: the octave's table entry (0x4f7184, 0x300 steps an octave) shifted down. */
+    octave = (uint32_t)(position / 0x300);
+    step = (uint32_t)(position % 0x300);
+    return port_return(&port, port_u16(&port, (step >> 2) * 2, 0x4f7184) >> ((octave & 0xff) & 31),
+                       step);
+}
