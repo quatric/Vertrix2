@@ -198,3 +198,132 @@ uint32_t vertrix_port_surface_fill(PORT_SIGNATURE)
     port_set32(&port, 0, FILL_LEFT, left);
     return port_return(&port, eax, edx);
 }
+
+uint32_t vertrix_port_draw_outline(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x64,
+        ARGUMENTS = 7,
+        GUARD_HANDLER = 0x4ec1ec,
+        OUTLINE_GUARD = 0x51684c,
+        FORMAT = 0x60, /* below ebp: the pixel format */
+        CLIPPED = 0x558b82,
+        FORMAT_INIT = 0x481b20,
+        FORMAT_FROM_MASKS = 0x481bc0,
+        FORMAT_RELEASE = 0x481b30,
+        FORMAT_COLOR = 0x481e10,
+        DRAW_LINE = 0x47c3b0
+    };
+    Port port;
+    uint8_t stack[BELOW + 8 + 4 * ARGUMENTS];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t surface = entry->eax;
+    uint32_t left = entry->ebx;
+    uint32_t top = entry->ecx;
+    uint32_t right;
+    uint32_t bottom;
+    uint32_t clip_left;
+    uint32_t clip_top;
+    uint32_t clip_right;
+    uint32_t clip_bottom;
+    uint32_t color;
+    uint32_t chain;
+    uint32_t x;
+    uint32_t y;
+    uint32_t ebx;
+    uint32_t ecx;
+    uint32_t edx;
+    uint32_t pair[2];
+    port_open_arguments(&port, stack, calls, services, globals, entry, BELOW, ARGUMENTS);
+    right = port_u32(&port, ebp, 8);
+    bottom = port_u32(&port, ebp, 0xc);
+    clip_left = port_u32(&port, ebp, 0x10);
+    clip_top = port_u32(&port, ebp, 0x14);
+    clip_right = port_u32(&port, ebp, 0x18);
+    clip_bottom = port_u32(&port, ebp, 0x1c);
+    color = port_u32(&port, ebp, 0x20);
+    chain = port.env.chain;
+    /* The guard record the original links into fs:[0] for the pixel format. */
+    port_set32(&port, ebp, -0x34u, chain);
+    port_set32(&port, ebp, -0x30u, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x2cu, OUTLINE_GUARD);
+    port_set32(&port, ebp, -0x28u, 0);
+    edx = clip_left;
+    if (color == 0xff000000u || (int32_t)left > (int32_t)clip_right ||
+        (int32_t)clip_left > (int32_t)right || (int32_t)top > (int32_t)clip_bottom ||
+        (int32_t)clip_top > (int32_t)bottom)
+    {
+        return port_return(&port, chain, edx);
+    }
+    y = (int32_t)top < (int32_t)clip_top ? clip_top : top;
+    x = (int32_t)left < (int32_t)clip_left ? clip_left : left;
+    edx = clip_bottom;
+    if ((int32_t)bottom > (int32_t)clip_bottom)
+    {
+        port_set32(&port, ebp, 0xc, clip_bottom);
+    }
+    if ((int32_t)clip_right < (int32_t)right)
+    {
+        port_set32(&port, ebp, 8, clip_right);
+    }
+    /* The clipped size, as two words at 0x558b84. */
+    port_set16(&port, 0, CLIPPED + 2, port_u32(&port, ebp, 8) - x + 1);
+    port_set16(&port, 0, CLIPPED + 4, port_u32(&port, ebp, 0xc) - y + 1);
+    if ((int32_t)port_u32(&port, 0, CLIPPED) >> 16 <= 0 ||
+        (int32_t)port_u32(&port, 0, CLIPPED + 2) >> 16 <= 0)
+    {
+        return port_return(&port, chain, edx);
+    }
+    ebx = 0xff00;
+    ecx = 0xff;
+    port_call(&port, FORMAT_INIT, ebp - FORMAT, 0xff0000, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, ebp, -0x28u, 1);
+    pair[0] = 0xff000000u;
+    if (port_call_stack(&port, FORMAT_FROM_MASKS, ebp - FORMAT, edx, ebx, ecx, pair, 1) == 0)
+    {
+        port_call(&port, FORMAT_RELEASE, ebp - FORMAT, 0, ebx, ecx);
+        return port_return(&port, chain, vertrix_lift_edx);
+    }
+    ebx = color;
+    color = port_call(&port, FORMAT_COLOR, ebp - FORMAT, entry->edx, ebx, ecx);
+    port_set32(&port, ebp, 0x20, color);
+    /* The edges left whole by the clip: top, bottom, left and right. */
+    if (y == top)
+    {
+        pair[0] = 1;
+        pair[1] = color;
+        ebx = top;
+        ecx = (uint32_t)((int32_t)port_u32(&port, 0, CLIPPED) >> 16);
+        port_call_stack(&port, DRAW_LINE, surface, x, ebx, ecx, pair, 2);
+    }
+    if (port_u32(&port, ebp, 0xc) == bottom)
+    {
+        pair[0] = 1;
+        pair[1] = color;
+        ecx = (uint32_t)((int32_t)port_u32(&port, 0, CLIPPED) >> 16);
+        ebx = port_u32(&port, ebp, 0xc);
+        port_call_stack(&port, DRAW_LINE, surface, x, ebx, ecx, pair, 2);
+    }
+    if (x == left)
+    {
+        pair[0] = (uint32_t)((int32_t)port_u32(&port, 0, CLIPPED + 2) >> 16);
+        pair[1] = color;
+        ecx = 1;
+        ebx = y;
+        port_call_stack(&port, DRAW_LINE, surface, x, ebx, ecx, pair, 2);
+    }
+    if (port_u32(&port, ebp, 8) == right)
+    {
+        pair[0] = (uint32_t)((int32_t)port_u32(&port, 0, CLIPPED + 2) >> 16);
+        pair[1] = color;
+        ecx = 1;
+        ebx = y;
+        port_call_stack(&port, DRAW_LINE, surface, port_u32(&port, ebp, 8), ebx, ecx, pair, 2);
+    }
+    port_set32(&port, ebp, -0x28u, 0);
+    port_call(&port, FORMAT_RELEASE, ebp - FORMAT, 0, ebx, ecx);
+    port_set32(&port, ebp, -0x28u, 0);
+    return port_return(&port, chain, vertrix_lift_edx);
+}

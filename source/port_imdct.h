@@ -33,4 +33,21 @@ uint32_t vertrix_port_mpeg_scale_factors(PORT_SIGNATURE);
  * +0x30 is set, the frame decoded by 0x40a190 and its size moved to +0x10. Returns 0. */
 uint32_t vertrix_port_mpeg_decode_frame(PORT_SIGNATURE);
 
+/* Original 0x409f00(eax = dequantised samples, edx = output, ebx = channel, ecx = granule): the
+ * MPEG layer III hybrid synthesis of one channel. The channel's two overlap buffers (0x900 bytes
+ * at the decoder's +0x125c, the side flag at +0x365c) swap; mixed blocks (+0x14) run their two
+ * lowest subbands through the long IMDCT 0x4088e0, then every subband pair below +0x40 goes
+ * through the short IMDCT 0x4095d0 (block type +0x10 == 2) or the long one with the block type's
+ * windows. The remaining subbands up to 32 copy the previous overlap to the output (a stride of
+ * 0x80) and clear the other buffer. */
+uint32_t vertrix_port_mpeg_hybrid(PORT_SIGNATURE);
+
+/* Original 0x407280(eax = side info, edx = channels, ebx = the stereo gain shift, ecx = sample
+ * rate index; stack: the mode, 3 for mono; ret 4): read the MPEG layer III side info of one
+ * granule through the bit readers 0x404610, 0x404680 and 0x4046e0. Each channel's 0xd0-byte
+ * record gets the part sizes, big values (at most 0x120), the global gain as a pointer into the
+ * table 0x523698, the scale factor compression, the window switching fields or the region
+ * bounds (the band table 0x4f5918), the preflag and the scale factor scale. */
+uint32_t vertrix_port_mpeg_side_info(PORT_SIGNATURE);
+
 #endif

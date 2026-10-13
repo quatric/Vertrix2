@@ -62,4 +62,12 @@ uint32_t vertrix_port_keys_age(PORT_SIGNATURE);
  * state (0x475790 with zeros) and pending events (0x4759e0). Registers but eax are unchanged. */
 uint32_t vertrix_port_key_record_reset(PORT_SIGNATURE);
 
+/* Original 0x476d70(eax = joystick): poll a DirectInput joystick unless it is disabled (+8),
+ * publishing +0x14 and +0x18 at 0x5536b4. The device (+0x10) is polled and its 0x50-byte state
+ * read into a local, a lost device reacquired by 0x476c80 and read again. Each direction of the
+ * two axes runs its press routine when it comes on and its release routine when it goes off
+ * (states at +0xa4 to +0xb0), and so does each of the 32 buttons (0x476fb0 and 0x476fe0, states
+ * at +0x24). Keeps edx. */
+uint32_t vertrix_port_joystick_poll(PORT_SIGNATURE);
+
 #endif

@@ -28,7 +28,7 @@ ROOT = Path(__file__).resolve().parents[1]
 # many, so stores through pointer arguments are compared.
 STACK_ARGUMENTS = {0x4db250: 6}
 SLOW = {'0x48a930': 64, '0x492980': 256, '0x4ec307': 256, '0x492460': 256, '0x4922f0': 256,
-        '0x4db6a4': 256, '0x405720': 512, '0x4af560': 256, '0x4b1fa0': 256, '0x4db250': 512, '0x4928f0': 256, '0x4408e0': 1024, '0x48a3c0': 1024, '0x4b3390': 1024, '0x4ae3e0': 1024, '0x408800': 64,
+        '0x4db6a4': 256, '0x405720': 512, '0x4af560': 256, '0x4b1fa0': 256, '0x4db250': 512, '0x4928f0': 256, '0x4408e0': 1024, '0x48a3c0': 1024, '0x4b3390': 1024, '0x4ae3e0': 1024, '0x408800': 64, '0x409f00': 256, '0x407280': 128,
         # Copies whose random pointers overrun a pool page past these counts, for the lifted copy
         # as well.
         '0x4ab310': 64, '0x4ab2a0': 128}

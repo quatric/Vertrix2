@@ -39,4 +39,13 @@ uint32_t vertrix_port_surface_read(PORT_SIGNATURE);
  * pixels) for no rows, and the address with the size in edx's low byte for other sizes. */
 uint32_t vertrix_port_surface_fill(PORT_SIGNATURE);
 
+/* Original 0x47c520(eax = surface, edx = pixel format source, ebx = left, ecx = top; stack: right,
+ * bottom, the clip's left, top, right and bottom, colour; ret 0x1c): draw a rectangle's outline
+ * clipped to the clip rectangle. Nothing is drawn for the colour 0xff000000 or a rectangle
+ * outside the clip. The clipped size goes to the words at 0x558b84; the colour is converted
+ * through a local pixel format (0x481b20, 0x481bc0, 0x481e10, released by 0x481b30, under a guard
+ * record) and each edge the clip leaves whole is drawn by 0x47c3b0. Returns the guard record's
+ * saved chain. */
+uint32_t vertrix_port_draw_outline(PORT_SIGNATURE);
+
 #endif

@@ -455,3 +455,257 @@ uint32_t vertrix_port_mpeg_decode_frame(PORT_SIGNATURE)
     port_set32(&port, decoder, 0xc, 0);
     return port_return(&port, 0, edx);
 }
+
+/* One pair of IMDCTs (two 18-sample subbands) for 0x409f00. */
+static void hybrid_pair(Port *port, uint32_t target, uint32_t samples, uint32_t previous,
+                        uint32_t overlap, uint32_t window, uint32_t second_window, uint32_t output)
+{
+    uint32_t argument = output;
+    port_call_stack(port, target, samples, previous, overlap, window, &argument, 1);
+    argument = output + 4;
+    port_call_stack(port, target, samples + 0x48, previous + 0x48, overlap + 0x48, second_window,
+                    &argument, 1);
+}
+
+uint32_t vertrix_port_mpeg_hybrid(PORT_SIGNATURE)
+{
+    enum
+    {
+        DECODER = 0x51f01c,
+        IMDCT_LONG = 0x4088e0,
+        IMDCT_SHORT = 0x4095d0,
+        LONG_WINDOWS = 0x523b00,
+        LONG_WINDOWS_ODD = 0x5238c0,
+        SHORT_WINDOW = 0x523c20,
+        SHORT_WINDOW_ODD = 0x5239e0
+    };
+    Port port;
+    uint32_t samples = entry->eax;
+    uint32_t output = entry->edx;
+    uint32_t granule = entry->ecx;
+    uint32_t channel = entry->ebx;
+    uint32_t decoder;
+    uint32_t base;
+    uint32_t slot;
+    uint32_t side;
+    uint32_t previous;
+    uint32_t overlap;
+    uint32_t count = 0;
+    uint32_t block;
+    uint32_t eax;
+    uint32_t edx;
+    uint32_t end;
+    port_open(&port, calls, services, globals, entry);
+    decoder = port_u32(&port, 0, DECODER);
+    base = decoder + 0x125c;
+    slot = decoder + 0x365c + channel * 4;
+    side = port_u32(&port, slot, 0);
+    /* The two overlap buffers of the channel swap roles every granule. */
+    previous = base + side * 0x1200 + channel * 0x900;
+    overlap = channel * 0x900 + base + (1 - side) * 0x1200;
+    port_set32(&port, slot, 0, 1 - side);
+    if (port_u32(&port, granule, 0x14) != 0)
+    {
+        /* Mixed blocks: the two lowest subbands use the long windows. */
+        count = 2;
+        hybrid_pair(&port, IMDCT_LONG, samples, previous, overlap, LONG_WINDOWS, LONG_WINDOWS_ODD,
+                    output);
+        previous += 0x90;
+        overlap += 0x90;
+        output += 8;
+    }
+    block = port_u32(&port, granule, 0x10);
+    while (count < port_u32(&port, granule, 0x40))
+    {
+        if (block == 2)
+        {
+            hybrid_pair(&port, IMDCT_SHORT, samples + count * 0x48, previous, overlap, SHORT_WINDOW,
+                        SHORT_WINDOW_ODD, output);
+        }
+        else
+        {
+            hybrid_pair(&port, IMDCT_LONG, samples + count * 0x48, previous, overlap,
+                        LONG_WINDOWS + block * 0x90, LONG_WINDOWS_ODD + block * 0x90, output);
+        }
+        count += 2;
+        output += 8;
+        previous += 0x90;
+        overlap += 0x90;
+    }
+    /* The subbands left over take the previous overlap alone, which is then cleared. */
+    edx = granule;
+    end = output + 0x900;
+    eax = end;
+    while ((int32_t)count < 0x20)
+    {
+        eax = output;
+        do
+        {
+            edx = port_u32(&port, previous, 0);
+            previous += 4;
+            port_set32(&port, eax, 0, edx);
+            port_set32(&port, overlap, 0, 0);
+            overlap += 4;
+            eax += 0x80;
+        } while (eax != end);
+        count++;
+        end += 4;
+        output += 4;
+    }
+    return port_return(&port, eax, edx);
+}
+
+/* The registers 0x407280 carries across its bit reads: each read takes the count in eax and
+ * hands on edx, ebx and ecx as they are. */
+typedef struct SideRegisters
+{
+    uint32_t edx;
+    uint32_t ebx;
+    uint32_t ecx;
+} SideRegisters;
+
+static uint32_t side_read(Port *port, SideRegisters *r, uint32_t target, uint32_t eax)
+{
+    eax = port_call(port, target, eax, r->edx, r->ebx, r->ecx);
+    r->edx = vertrix_lift_edx;
+    return eax;
+}
+
+uint32_t vertrix_port_mpeg_side_info(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x18,
+        ARGUMENTS = 1,
+        READ_BITS = 0x404610,
+        READ_SMALL = 0x404680,
+        READ_BIT = 0x4046e0,
+        GAIN_TABLE = 0x523698,
+        BAND_BOUNDS = 0x4f5918
+    };
+    Port port;
+    uint8_t stack[BELOW + 8 + 4 * ARGUMENTS];
+    SideRegisters r;
+    uint32_t ebp = entry->esp - 4;
+    uint32_t info = entry->eax;
+    int32_t channels = (int32_t)entry->edx;
+    uint32_t stereo = entry->ebx;
+    uint32_t rate = entry->ecx;
+    uint32_t table;
+    uint32_t gain_bias;
+    uint32_t channel;
+    uint32_t end;
+    uint32_t eax;
+    int32_t index;
+    port_open_arguments(&port, stack, calls, services, globals, entry, BELOW, ARGUMENTS);
+    r.edx = entry->edx;
+    r.ebx = entry->ebx;
+    eax = port_u32(&port, ebp, 8) == 3 ? 4 : 0;
+    r.ecx = eax;
+    port_set32(&port, info, 0, side_read(&port, &r, READ_BITS, 8));
+    if (channels == 1)
+    {
+        eax = side_read(&port, &r, READ_BIT, port_u32(&port, info, 0));
+    }
+    else
+    {
+        eax = side_read(&port, &r, READ_SMALL, 2);
+    }
+    port_set32(&port, info, 4, eax);
+    if (channels <= 0)
+    {
+        return port_return(&port, eax, r.edx);
+    }
+    r.edx = rate;
+    table = rate * 0x90;
+    gain_bias = r.ecx << 2;
+    r.ecx = gain_bias;
+    channel = info + 8;
+    for (index = 0; index < channels; index++)
+    {
+        uint32_t edx;
+        r.ecx = channel;
+        port_set32(&port, channel, 4, side_read(&port, &r, READ_BITS, 0xc));
+        eax = side_read(&port, &r, READ_SMALL, 9);
+        port_set32(&port, channel, 8, eax);
+        if (eax > 0x120)
+        {
+            port_set32(&port, channel, 8, 0x120);
+        }
+        eax = side_read(&port, &r, READ_SMALL, 8);
+        r.edx = GAIN_TABLE - (eax << 2) + gain_bias;
+        port_set32(&port, channel, 0x64, r.edx);
+        if (stereo != 0)
+        {
+            port_set32(&port, channel, 0x64, r.edx + 8);
+        }
+        eax = side_read(&port, &r, READ_BITS, 9);
+        port_set32(&port, channel, 0xc, eax);
+        eax = side_read(&port, &r, READ_BIT, eax);
+        end = channel + 0xc;
+        if (eax == 0)
+        {
+            /* Long blocks: three table selects, then the region counts as band bounds. */
+            uint32_t first;
+            r.edx = channel;
+            r.ebx = 5;
+            do
+            {
+                eax = side_read(&port, &r, READ_SMALL, r.ebx);
+                port_set32(&port, r.edx, 0x18, eax);
+                r.edx += 4;
+            } while (r.edx != end);
+            r.edx = side_read(&port, &r, READ_SMALL, 4);
+            eax = side_read(&port, &r, READ_SMALL, 3);
+            first = port_u32(&port, r.edx * 2 + table, BAND_BOUNDS);
+            r.ebx = (uint32_t)((int32_t)first >> 17);
+            port_set32(&port, channel, 0x44, r.ebx);
+            eax = (uint32_t)((int32_t)port_u32(&port, (eax + r.edx) * 2 + table, BAND_BOUNDS + 2) >>
+                             17);
+            port_set32(&port, channel, 0x48, eax);
+            port_set32(&port, channel, 0x10, 0);
+            port_set32(&port, channel, 0x14, 0);
+        }
+        else
+        {
+            /* Window switching: block type, mixed flag, two table selects, three subblock
+             * gains. */
+            port_set32(&port, channel, 0x10, side_read(&port, &r, READ_SMALL, 2));
+            eax = side_read(&port, &r, READ_BIT, port_u32(&port, channel, 0x10));
+            port_set32(&port, channel, 0x14, eax);
+            port_set32(&port, channel, 0x18, side_read(&port, &r, READ_SMALL, 5));
+            port_set32(&port, channel, 0x1c, side_read(&port, &r, READ_SMALL, 5));
+            port_set32(&port, channel, 0x20, 0);
+            r.edx = channel;
+            do
+            {
+                eax = side_read(&port, &r, READ_SMALL, 3);
+                r.ebx = port_u32(&port, channel, 0x64);
+                eax = (eax << 5) + r.ebx;
+                port_set32(&port, r.edx, 0x58, eax);
+                r.edx += 4;
+            } while (r.edx != end);
+            if (port_u32(&port, channel, 0x10) == 0)
+            {
+                eax = side_read(&port, &r, 0x4eb4d4, 1);
+            }
+            if (port_u32(&port, channel, 0x10) == 2)
+            {
+                port_set32(&port, channel, 0x44, 0x12);
+            }
+            else
+            {
+                port_set32(&port, channel, 0x44, rate == 8 ? 0x36 : 0x1b);
+            }
+            port_set32(&port, channel, 0x48, 0x120);
+        }
+        eax = side_read(&port, &r, READ_BIT, eax);
+        port_set32(&port, channel, 0x50, eax);
+        eax = side_read(&port, &r, READ_BIT, eax);
+        port_set32(&port, channel, 0x54, eax);
+        channel += 0xd0;
+        edx = (uint32_t)index + 1;
+        r.edx = edx;
+    }
+    return port_return(&port, eax, r.edx);
+}

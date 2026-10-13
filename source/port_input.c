@@ -291,3 +291,112 @@ uint32_t vertrix_port_key_record_reset(PORT_SIGNATURE)
     result = port_call(&port, KEY_EVENTS_CLEAR, record, vertrix_lift_edx, 0, 0);
     return port_return(&port, result, entry->edx);
 }
+
+/* One joystick direction for 0x476d70: the press routine runs when the direction comes on, the
+ * release routine when it goes off; the state is kept at `field`. */
+static uint32_t joystick_direction(Port *port, uint32_t stick, uint32_t field, uint32_t on,
+                                   uint32_t press, uint32_t release, uint32_t *edx)
+{
+    uint32_t eax = on;
+    uint32_t state = port_u32(port, stick, field);
+    *edx = state;
+    if (state == 0 && on == 1)
+    {
+        eax = port_call(port, press, stick, *edx, stick, on);
+        *edx = vertrix_lift_edx;
+        port_set32(port, stick, field, on);
+    }
+    else if (state == 1 && on == 0)
+    {
+        eax = port_call(port, release, stick, *edx, stick, on);
+        *edx = vertrix_lift_edx;
+        port_set32(port, stick, field, on);
+    }
+    return eax;
+}
+
+uint32_t vertrix_port_joystick_poll(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x68,
+        STATE = 0x64, /* below ebp: the device state, x and y then the buttons at +0x30 */
+        BUTTONS = 0x34
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t stick = entry->eax;
+    uint32_t device;
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t button;
+    uint32_t result;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    if (port_u8(&port, stick, 8) != 0)
+    {
+        return port_return(&port, eax, entry->edx);
+    }
+    port_set32(&port, 0, 0x5536b4, port_u32(&port, stick, 0x14));
+    eax = port_u32(&port, stick, 0x18);
+    port_set32(&port, 0, 0x5536b8, eax);
+    device = port_u32(&port, stick, 0x10);
+    if (device == 0)
+    {
+        return port_return(&port, eax, entry->edx);
+    }
+    /* Poll, then read the state; a lost device is reacquired (0x476c80) and read again. */
+    {
+        uint32_t argument = device;
+        eax = port_call_stack(&port, port_u32(&port, port_u32(&port, device, 0), 0x64), eax, device,
+                              stick, port_u32(&port, device, 0), &argument, 1);
+        edx = vertrix_lift_edx;
+    }
+    do
+    {
+        uint32_t arguments[3];
+        device = port_u32(&port, stick, 0x10);
+        arguments[0] = device;
+        arguments[1] = 0x50;
+        arguments[2] = ebp - STATE;
+        result = port_call_stack(&port, port_u32(&port, port_u32(&port, device, 0), 0x24), device,
+                                 edx, stick, port_u32(&port, device, 0), arguments, 3);
+        edx = vertrix_lift_edx;
+        if (result != 0)
+        {
+            port_set32(&port, stick, 4, 0);
+            eax = port_call(&port, 0x476c80, stick, edx, stick, result);
+            edx = vertrix_lift_edx;
+            if (port_u32(&port, stick, 4) == 0)
+            {
+                return port_return(&port, eax, entry->edx);
+            }
+        }
+    } while (result != 0);
+    eax = joystick_direction(&port, stick, 0xa4, (int32_t)port_u32(&port, ebp, -STATE) < 0,
+                             0x477010, 0x477040, &edx);
+    eax = joystick_direction(&port, stick, 0xa8, (int32_t)port_u32(&port, ebp, -STATE) > 0,
+                             0x477070, 0x4770a0, &edx);
+    eax = joystick_direction(&port, stick, 0xac, (int32_t)port_u32(&port, ebp, -STATE + 4) < 0,
+                             0x4770d0, 0x477100, &edx);
+    eax = joystick_direction(&port, stick, 0xb0, (int32_t)port_u32(&port, ebp, -STATE + 4) > 0,
+                             0x477130, 0x477160, &edx);
+    for (button = 0; button < 0x20; button++)
+    {
+        uint32_t held = port_u32(&port, stick, 0x24 + button * 4);
+        if (port_u8(&port, button, ebp - BUTTONS) & 0x80)
+        {
+            if (held == 0)
+            {
+                eax = port_call(&port, 0x476fb0, stick, button, stick, button);
+                port_set32(&port, stick, 0x24 + button * 4, 1);
+            }
+        }
+        else if (held == 1)
+        {
+            eax = port_call(&port, 0x476fe0, stick, button, stick, button);
+            port_set32(&port, stick, 0x24 + button * 4, 0);
+        }
+    }
+    return port_return(&port, eax, entry->edx);
+}
