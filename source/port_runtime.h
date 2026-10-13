@@ -1750,4 +1750,27 @@ uint32_t vertrix_port_animation_tick(PORT_SIGNATURE);
  * freed (0x4ca050). Returns the object. */
 uint32_t vertrix_port_exception_destroy(PORT_SIGNATURE);
 
+/* Original 0x4d7a10(eax = file, edx = distance, ebx = method): move the file's pointer through
+ * the SetFilePointer import (slot 0x4f1ca8, handle +4); on failure the error (slot 0x4f1bbc) is
+ * recorded by 0x4d9930. Returns the new position or -1. */
+uint32_t vertrix_port_file_seek(PORT_SIGNATURE);
+
+/* Original 0x478480(eax = object, edx = x, ebx = y): clamp the position into the object's
+ * bounds (the words +0x3c to +0x42: left, top, right, bottom) and store it at +0x48 and +0x4a.
+ * Returns the object and, in edx, the clamped x. */
+uint32_t vertrix_port_object_clamp_position(PORT_SIGNATURE);
+
+/* Original 0x4d7630(eax = file stream, edx = mode): the file stream's destructor. Mode 4
+ * destroys an array (0x4ccb9f with the element destructor 0x519f70, freed by 0x4ca040).
+ * Otherwise, under a guard record, an open file with a buffer is flushed (0x4d7aa0), the buffer
+ * member (+0xc) destroyed by 0x4ca210, the base class's table restored and, with mode 2, the
+ * object freed (0x4ca050). Returns the object. */
+uint32_t vertrix_port_file_stream_destroy(PORT_SIGNATURE);
+
+/* Original 0x4dbf80(eax = slot key, edx = constructor): the calling thread's value for a slot,
+ * made by the constructor and stored (0x4dbd20) when it has none. The key is allocated on first
+ * use (0x4dbb30, the slot table at 0x5c77a8 made by 0x4dbac0); the value is looked up in the
+ * thread's array from TlsGetValue (slot 0x4f1cdc). */
+uint32_t vertrix_port_thread_slot(PORT_SIGNATURE);
+
 #endif

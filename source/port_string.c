@@ -861,3 +861,27 @@ uint32_t vertrix_port_format_spec(PORT_SIGNATURE)
     }
     return port_return(&port, at, edx);
 }
+
+uint32_t vertrix_port_copy_terminated(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t destination = entry->eax;
+    uint32_t source = entry->edx;
+    uint32_t edx = entry->ebx;
+    uint32_t length;
+    uint32_t end;
+    port_open(&port, calls, services, globals, entry);
+    if (destination == 0)
+    {
+        return port_return(&port, destination, edx);
+    }
+    if ((int32_t)entry->ebx > (int32_t)entry->ecx)
+    {
+        edx = entry->ecx;
+    }
+    length = port_call(&port, 0x4e39a0, source, edx, entry->ebx, entry->ecx);
+    port_call(&port, 0x4e39d0, destination, source, length, length);
+    end = port_call(&port, 0x4e39f0, destination, length, length, length);
+    port_set8(&port, destination, end, 0);
+    return port_return(&port, end, vertrix_lift_edx);
+}

@@ -9212,3 +9212,167 @@ uint32_t vertrix_port_time_from_tm(PORT_SIGNATURE)
     }
     return port_return(&port, seconds + (days - 0x63df) * 0x15180, entry->edx);
 }
+
+uint32_t vertrix_port_file_seek(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t arguments[4];
+    uint32_t result;
+    uint32_t edx;
+    port_open(&port, calls, services, globals, entry);
+    arguments[0] = port_u32(&port, entry->eax, 4);
+    arguments[1] = entry->edx;
+    arguments[2] = 0;
+    arguments[3] = entry->ebx;
+    result = port_call_stack(&port, 0x4f1ca8, entry->eax, entry->edx, entry->ebx, entry->ecx,
+                             arguments, 4);
+    edx = vertrix_lift_edx;
+    if (result == 0xffffffffu)
+    {
+        uint32_t error = port_call(&port, 0x4f1bbc, result, edx, result, entry->ecx);
+        edx = vertrix_lift_edx;
+        arguments[0] = error;
+        arguments[1] = 0;
+        port_call_stack(&port, 0x4d9930, error, edx, result, entry->ecx, arguments, 2);
+        edx = vertrix_lift_edx;
+    }
+    return port_return(&port, result, edx);
+}
+
+uint32_t vertrix_port_object_clamp_position(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t object = entry->eax;
+    int32_t x = (int32_t)entry->edx;
+    int32_t y = (int32_t)entry->ebx;
+    int32_t left;
+    int32_t top;
+    int32_t right;
+    int32_t bottom;
+    port_open(&port, calls, services, globals, entry);
+    left = (int32_t)port_u16(&port, object, 0x3c);
+    top = (int32_t)port_u16(&port, object, 0x3e);
+    right = (int32_t)port_u16(&port, object, 0x40);
+    bottom = (int32_t)port_u16(&port, object, 0x42);
+    if (x < left)
+    {
+        x = left;
+    }
+    else if (x > right)
+    {
+        x = right;
+    }
+    if (y < top)
+    {
+        y = top;
+    }
+    else if (y > bottom)
+    {
+        y = bottom;
+    }
+    port_set16(&port, object, 0x48, (uint32_t)x);
+    port_set16(&port, object, 0x4a, (uint32_t)y);
+    return port_return(&port, object, (uint32_t)x);
+}
+
+uint32_t vertrix_port_file_stream_destroy(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x38,
+        GUARD_HANDLER = 0x4ec1ec,
+        STREAM_GUARD = 0x519ce0,
+        STREAM_TABLE = 0x519f14,
+        BASE_TABLE = 0x517454
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t top = entry->esp - BELOW;
+    uint32_t object = entry->eax;
+    uint32_t mode = entry->edx;
+    uint32_t edx = entry->edx;
+    uint32_t base;
+    uint32_t result;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    if (mode & 4)
+    {
+        /* An array: destroyed element by element (0x4ccb9f with the element destructor). */
+        port_set32(&port, top, 0x20, 1);
+        port_set32(&port, top, 0, object);
+        result = port_call(&port, 0x4ccb9f, object, 0x519f70, mode, object);
+        port_set32(&port, top, 0x20, 0);
+        port_call(&port, 0x4ca040, result, vertrix_lift_edx, mode, object);
+        return port_return(&port, object, vertrix_lift_edx);
+    }
+    port_set32(&port, object, 0, STREAM_TABLE);
+    port_set32(&port, top, 0x24, object);
+    port_set8(&port, top, 0x28, mode);
+    /* The guard record the original links into fs:[0]. */
+    port_set32(&port, top, 0x14, port.env.chain);
+    port_set32(&port, top, 0x18, GUARD_HANDLER);
+    port_set32(&port, top, 0x1c, STREAM_GUARD);
+    port_set32(&port, top, 0x20, 4);
+    if (port_u32(&port, object, 4) != 0xffffffffu && port_u32(&port, object, 8) != 0)
+    {
+        port_call(&port, 0x4d7aa0, object, edx, mode, object);
+        edx = vertrix_lift_edx;
+    }
+    port_set32(&port, top, 0x20, 3);
+    base = port_call(&port, 0x4ca210, object + 0xc, 0, mode, object) - 0xc;
+    edx = vertrix_lift_edx;
+    port_set32(&port, top, 0x20, 0);
+    port_set32(&port, base, 0, BASE_TABLE);
+    if (mode & 2)
+    {
+        port_call(&port, 0x4ca050, base, edx, mode, base);
+        edx = vertrix_lift_edx;
+    }
+    return port_return(&port, base, edx);
+}
+
+uint32_t vertrix_port_thread_slot(PORT_SIGNATURE)
+{
+    enum
+    {
+        SLOTS = 0x5c77a8,
+        SLOTS_STORAGE = 0x5c7770
+    };
+    Port port;
+    uint32_t key = entry->eax;
+    uint32_t make = entry->edx;
+    uint32_t edx = entry->edx;
+    uint32_t ecx = entry->ecx;
+    uint32_t table;
+    uint32_t index;
+    uint32_t value = 0;
+    uint32_t argument;
+    port_open(&port, calls, services, globals, entry);
+    if (port_u32(&port, key, 0) == 0)
+    {
+        if (port_u32(&port, 0, SLOTS) == 0)
+        {
+            port_set32(&port, 0, SLOTS, port_call(&port, 0x4dbac0, SLOTS_STORAGE, 1, key, ecx));
+            edx = vertrix_lift_edx;
+        }
+        port_set32(&port, key, 0,
+                   port_call(&port, 0x4dbb30, port_u32(&port, 0, SLOTS), edx, key, ecx));
+        edx = vertrix_lift_edx;
+    }
+    table = port_u32(&port, 0, SLOTS);
+    argument = port_u32(&port, table, 0);
+    index = port_u32(&port, key, 0);
+    /* The thread's slot array through TlsGetValue: its count at +8, the values at +0xc. */
+    table = port_call_stack(&port, 0x4f1cdc, table, edx, key, ecx, &argument, 1);
+    edx = vertrix_lift_edx;
+    if (table != 0 && (int32_t)index < (int32_t)port_u32(&port, table, 8))
+    {
+        value = port_u32(&port, port_u32(&port, table, 0xc), index * 4);
+    }
+    if (value != 0)
+    {
+        return port_return(&port, value, edx);
+    }
+    value = port_call(&port, make, 0, edx, key, 0);
+    port_call(&port, 0x4dbd20, port_u32(&port, 0, SLOTS), port_u32(&port, key, 0), value, value);
+    return port_return(&port, value, vertrix_lift_edx);
+}

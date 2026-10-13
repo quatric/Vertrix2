@@ -168,4 +168,9 @@ uint32_t vertrix_port_format_zero_pad(PORT_SIGNATURE);
  * read. */
 uint32_t vertrix_port_format_spec(PORT_SIGNATURE);
 
+/* Original 0x4daab0(eax = destination, edx = source, ebx = length, ecx = limit): copy a string
+ * of at most the smaller of the two lengths (0x4e39a0 measures it, 0x4e39d0 copies) and
+ * terminate it where 0x4e39f0 says. Nothing for a null destination. */
+uint32_t vertrix_port_copy_terminated(PORT_SIGNATURE);
+
 #endif
