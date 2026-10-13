@@ -1866,4 +1866,17 @@ uint32_t vertrix_port_object_destroy_h(PORT_SIGNATURE);
  * cleared and +0x3c, +0x40 from 0x553644. Returns the effect; keeps edx. */
 uint32_t vertrix_port_effect_construct(PORT_SIGNATURE);
 
+/* Original 0x43f110(eax = index, edx = first, ebx = count, ecx = file; one stack argument): open
+ * the bank (0x4877f0 on 0x546538) and, when it opens, load `count` sprites by the names at
+ * 0x5410f8 (0x4831b0) into 0x5410f8 from the index, calling 0x418270 with 2 after each. */
+uint32_t vertrix_port_sprite_bank_load(PORT_SIGNATURE);
+
+/* Original 0x4d92f0(eax = object, edx = code): construct an error object (tables 0x517454, then
+ * 0x517474) holding the code at +4, under a guard record. */
+uint32_t vertrix_port_error_construct(PORT_SIGNATURE);
+
+/* Original 0x4b2290(eax = start, edx = count): clear `count` dwords; returns the end in eax and
+ * edx (eax and 0 for none). */
+uint32_t vertrix_port_zero_dwords(PORT_SIGNATURE);
+
 #endif

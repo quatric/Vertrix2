@@ -10196,3 +10196,94 @@ uint32_t vertrix_port_effect_construct(PORT_SIGNATURE)
     port_set32(&port, effect, 0x3c, port_u32(&port, 0, 0x553644));
     return port_return(&port, effect, entry->edx);
 }
+
+uint32_t vertrix_port_sprite_bank_load(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x18,
+        NAMES = 0x5410f8,
+        SPRITES = 0x5410f4
+    };
+    Port port;
+    uint8_t stack[BELOW + 8 + 4];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t count = entry->ebx;
+    uint32_t loaded;
+    uint32_t eax;
+    uint32_t edx;
+    uint32_t done;
+    uint32_t slot;
+    uint32_t name;
+    port_open_arguments(&port, stack, calls, services, globals, entry, BELOW, 1);
+    port_set32(&port, ebp, -0x14u, entry->edx);
+    port_set32(&port, ebp, -0xcu, count);
+    loaded = port_call(&port, 0x4877f0, 0x546538, entry->ecx, count, entry->ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, ebp, -0x10u, loaded);
+    eax = loaded;
+    if (loaded == 0 || count == 0)
+    {
+        return port_return(&port, eax, edx);
+    }
+    /* Each name from 0x5410f8 (from the first) gives the sprite stored at 0x5410f8 (from the
+     * index), with 0x418270 between them. */
+    slot = entry->eax * 4;
+    name = entry->edx * 4;
+    for (done = 0; done < count; done++)
+    {
+        eax = port_call(&port, 0x4831b0, port_u32(&port, name, NAMES), loaded,
+                        port_u32(&port, ebp, 8), slot);
+        edx = vertrix_lift_edx;
+        slot += 4;
+        name += 4;
+        port_set32(&port, slot, SPRITES, eax);
+        eax = port_call(&port, 0x418270, 2, edx, count, slot);
+        edx = vertrix_lift_edx;
+    }
+    return port_return(&port, eax, edx);
+}
+
+uint32_t vertrix_port_error_construct(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x24,
+        GUARD_HANDLER = 0x4ec1ec
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t esp = entry->esp;
+    uint32_t object = entry->eax;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    port_set32(&port, esp, -0x24u, port.env.chain);
+    port_set32(&port, esp, -0x20u, GUARD_HANDLER);
+    port_set32(&port, esp, -0x1cu, 0x51a350);
+    port_set32(&port, esp, -0x18u, 0);
+    port_set8(&port, esp, -0xcu, 0);
+    port_set32(&port, esp, -0x10u, object);
+    port_set32(&port, object, 0, 0x517454);
+    port_set32(&port, esp, -0x18u, 1);
+    port_set32(&port, object, 0, 0x517474);
+    port_set32(&port, object, 4, entry->edx);
+    return port_return(&port, object, entry->edx);
+}
+
+uint32_t vertrix_port_zero_dwords(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t at = entry->eax;
+    uint32_t end;
+    port_open(&port, calls, services, globals, entry);
+    if (entry->edx == 0)
+    {
+        return port_return(&port, at, 0);
+    }
+    end = entry->edx * 4 + at;
+    do
+    {
+        port_set32(&port, at, 0, 0);
+        at += 4;
+    } while (at < end);
+    return port_return(&port, at, end);
+}
