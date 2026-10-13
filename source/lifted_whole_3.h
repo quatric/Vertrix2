@@ -43,14 +43,11 @@ enum
     LIFTED_TABLE_BUILD_BY_FLAG_STACK = 116,
     LIFTED_TABLE_RELEASE_BY_FLAG_STACK = 72,
     LIFTED_TABLE_RELEASE_ONE_STACK = 68,
-    LIFTED_TABLE_FILL_SLOT_45E7B0_STACK = 128,
     LIFTED_TABLE_RELEASE_ONE_45E810_STACK = 68,
     LIFTED_TABLE_RELEASE_ONE_45E820_STACK = 68,
     LIFTED_TABLE_RELEASE_RUN_STACK = 76,
-    LIFTED_TABLE_FILL_INDEXED_STACK = 136,
     LIFTED_TABLE_RELEASE_RUN_45E8F0_STACK = 76,
     LIFTED_TABLE_RELEASE_ROWS_STACK = 84,
-    LIFTED_TABLE_FILL_INDEXED_45E9E0_STACK = 136,
     LIFTED_TABLE_RELEASE_PAIR_STACK = 80,
     LIFTED_RESOURCE_PAIR_CALL_STACK = 88,
     LIFTED_SEVEN_STEPS_STACK = 84,
@@ -407,11 +404,6 @@ uint32_t lifted_table_release_by_flag(const VertrixCalls *calls,
 uint32_t lifted_table_release_one(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x45e7b0. */
-uint32_t lifted_table_fill_slot_45e7b0(const VertrixCalls *calls,
-                                       const VertrixFactoryServices *services,
-                                       const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x45e810. */
 uint32_t lifted_table_release_one_45e810(const VertrixCalls *calls,
                                          const VertrixFactoryServices *services,
@@ -426,11 +418,6 @@ uint32_t lifted_table_release_one_45e820(const VertrixCalls *calls,
 uint32_t lifted_table_release_run(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x45e850. */
-uint32_t lifted_table_fill_indexed(const VertrixCalls *calls,
-                                   const VertrixFactoryServices *services,
-                                   const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x45e8f0. */
 uint32_t lifted_table_release_run_45e8f0(const VertrixCalls *calls,
                                          const VertrixFactoryServices *services,
@@ -440,11 +427,6 @@ uint32_t lifted_table_release_run_45e8f0(const VertrixCalls *calls,
 uint32_t lifted_table_release_rows(const VertrixCalls *calls,
                                    const VertrixFactoryServices *services,
                                    const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x45e9e0. */
-uint32_t lifted_table_fill_indexed_45e9e0(const VertrixCalls *calls,
-                                          const VertrixFactoryServices *services,
-                                          const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x45ea80. */
 uint32_t lifted_table_release_pair(const VertrixCalls *calls,

@@ -969,6 +969,16 @@
   "lifted": "lifted_resource_column_build",
   "chunk": "whole_3"
  },
+ "0x45e7b0": {
+  "port": "vertrix_port_table_fill_slot",
+  "lifted": "lifted_table_fill_slot_45e7b0",
+  "chunk": "whole_3"
+ },
+ "0x45e850": {
+  "port": "vertrix_port_table_fill_indexed",
+  "lifted": "lifted_table_fill_indexed",
+  "chunk": "whole_3"
+ },
  "0x45e8d0": {
   "port": "vertrix_port_bank_list_allocate",
   "lifted": "lifted_indexed_resource_call",
@@ -982,6 +992,11 @@
  "0x45e990": {
   "port": "vertrix_port_grid_cell_call",
   "lifted": "lifted_grid_cell_call",
+  "chunk": "whole_3"
+ },
+ "0x45e9e0": {
+  "port": "vertrix_port_table_fill_indexed_b",
+  "lifted": "lifted_table_fill_indexed_45e9e0",
   "chunk": "whole_3"
  },
  "0x45ea60": {
@@ -1682,6 +1697,16 @@
  "0x482e10": {
   "port": "vertrix_port_event_frame_draw_direct",
   "lifted": "lifted_event_frame_draw_direct",
+  "chunk": "whole_4"
+ },
+ "0x482e80": {
+  "port": "vertrix_port_event_frame_draw_blend",
+  "lifted": "lifted_event_frame_draw_blend",
+  "chunk": "whole_4"
+ },
+ "0x482f00": {
+  "port": "vertrix_port_event_frame_draw_scaled",
+  "lifted": "lifted_event_frame_draw_scaled",
   "chunk": "whole_4"
  },
  "0x482f80": {

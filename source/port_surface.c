@@ -744,3 +744,65 @@ uint32_t vertrix_port_image_read_tga(PORT_SIGNATURE)
     }
     return port_return(&port, image, entry->edx);
 }
+
+/* The source record of an image for the blends: pixels, width, height and depth (0x478cd0), its
+ * row bytes (+0x10) and its stack position (0x478da0). */
+static void frame_source(Port *port, uint32_t ebp, uint32_t image, uint32_t ecx, uint32_t position,
+                         uint32_t *ebx)
+{
+    uint32_t record = ebp - 0x2c;
+    uint32_t width = port_u32(port, image, 4);
+    uint32_t height = port_u32(port, image, 8);
+    uint32_t depth = port_u8(port, image, 0x27);
+    port_set32(port, ebp, -0x10u, height);
+    port_set32(port, record, 0, port_u32(port, image, 0));
+    port_set32(port, record, 8, height);
+    port_set32(port, record, 4, width);
+    port_set8(port, record, 0xc, depth);
+    *ebx = (height & 0xffffff00u) | depth;
+    port_call(port, 0x478cd0, record, (depth << 3) & 0xff, *ebx, ecx);
+    port_set32(port, record, 0x14, width * depth);
+    port_call(port, 0x478da0, record, position, *ebx, ecx);
+}
+
+uint32_t vertrix_port_event_frame_draw_blend(PORT_SIGNATURE)
+{
+    Port port;
+    uint8_t stack[0x30 + 8 + 4];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t ebx;
+    uint32_t arguments[5];
+    uint32_t eax;
+    port_open_arguments(&port, stack, calls, services, globals, entry, 0x30, 1);
+    port_set32(&port, ebp, -0xcu, entry->ecx);
+    frame_source(&port, ebp, entry->eax, port_u32(&port, entry->eax, 4), port_u32(&port, ebp, 8),
+                 &ebx);
+    arguments[0] = entry->ebx;
+    arguments[1] = port_u32(&port, ebp, -0xcu);
+    arguments[2] = port_u32(&port, entry->eax, 4);
+    arguments[3] = port_u32(&port, ebp, -0x10u);
+    arguments[4] = vertrix_lift_edx;
+    eax = port_call_stack(&port, 0x47c930, ebp - 0x2c, entry->edx, 0, 0, arguments, 5);
+    return port_return(&port, eax, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_event_frame_draw_scaled(PORT_SIGNATURE)
+{
+    Port port;
+    uint8_t stack[0x30 + 8 + 5 * 4];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t ebx;
+    uint32_t arguments[5];
+    uint32_t eax;
+    port_open_arguments(&port, stack, calls, services, globals, entry, 0x30, 5);
+    port_set32(&port, ebp, -0xcu, entry->ebx);
+    frame_source(&port, ebp, entry->eax, entry->ecx, port_u32(&port, ebp, 0x18), &ebx);
+    arguments[0] = port_u32(&port, ebp, -0xcu);
+    arguments[1] = entry->ecx;
+    arguments[2] = port_u32(&port, ebp, 0x10);
+    arguments[3] = port_u32(&port, ebp, 0x14);
+    arguments[4] = vertrix_lift_edx;
+    eax = port_call_stack(&port, 0x47cb40, ebp - 0x2c, entry->edx, port_u32(&port, ebp, 8),
+                          port_u32(&port, ebp, 0xc), arguments, 5);
+    return port_return(&port, eax, vertrix_lift_edx);
+}

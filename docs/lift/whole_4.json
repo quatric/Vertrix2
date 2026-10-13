@@ -818,68 +818,6 @@
   "virtual": [],
   "address": 4729648
  },
- "event_frame_draw_blend": {
-  "callees": {
-   "0x478cd0": [
-    0,
-    false
-   ],
-   "0x478da0": [
-    0,
-    false
-   ],
-   "0x47c930": [
-    5,
-    false
-   ]
-  },
-  "stack": 144,
-  "arguments": 1,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [
-   8
-  ],
-  "constants": [
-   35,
-   36,
-   37
-  ],
-  "virtual": [],
-  "address": 4730496
- },
- "event_frame_draw_scaled": {
-  "callees": {
-   "0x478cd0": [
-    0,
-    false
-   ],
-   "0x478da0": [
-    0,
-    false
-   ],
-   "0x47cb40": [
-    5,
-    false
-   ]
-  },
-  "stack": 144,
-  "arguments": 5,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [
-   8
-  ],
-  "constants": [
-   35,
-   36,
-   37
-  ],
-  "virtual": [],
-  "address": 4730624
- },
  "f4831b0": {
   "callees": {
    "0x483060": [

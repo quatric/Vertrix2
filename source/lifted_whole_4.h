@@ -38,8 +38,6 @@ enum
     LIFTED_F4828A0_STACK = 84,
     LIFTED_F4829C0_STACK = 84,
     LIFTED_CALL_UNLESS_ZERO_STACK = 68,
-    LIFTED_EVENT_FRAME_DRAW_BLEND_STACK = 144,
-    LIFTED_EVENT_FRAME_DRAW_SCALED_STACK = 144,
     LIFTED_F4831B0_STACK = 204,
     LIFTED_F483CE0_STACK = 92,
     LIFTED_F4844B0_STACK = 100,
@@ -331,16 +329,6 @@ uint32_t lifted_f4829c0(const VertrixCalls *calls, const VertrixFactoryServices 
 /* Original 0x482b30. */
 uint32_t lifted_call_unless_zero(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                  const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x482e80. */
-uint32_t lifted_event_frame_draw_blend(const VertrixCalls *calls,
-                                       const VertrixFactoryServices *services,
-                                       const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x482f00. */
-uint32_t lifted_event_frame_draw_scaled(const VertrixCalls *calls,
-                                        const VertrixFactoryServices *services,
-                                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4831b0. */
 uint32_t lifted_f4831b0(const VertrixCalls *calls, const VertrixFactoryServices *services,

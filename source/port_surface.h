@@ -87,4 +87,12 @@ uint32_t vertrix_port_image_read(PORT_SIGNATURE);
  * (0x483ed0). Returns the image; keeps edx. */
 uint32_t vertrix_port_image_read_tga(PORT_SIGNATURE);
 
+/* Original 0x482e80(eax = image, edx, ebx, ecx; one stack argument, the position): blend the
+ * image (0x47c930) from its source record (0x478cd0, 0x478da0). */
+uint32_t vertrix_port_event_frame_draw_blend(PORT_SIGNATURE);
+
+/* Original 0x482f00(eax = image, edx, ebx, ecx; five stack arguments): as 0x482e80, scaled
+ * (0x47cb40), the position the fifth argument. */
+uint32_t vertrix_port_event_frame_draw_scaled(PORT_SIGNATURE);
+
 #endif

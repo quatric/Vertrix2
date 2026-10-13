@@ -11211,3 +11211,50 @@ uint32_t vertrix_port_bitmap_file_read(PORT_SIGNATURE)
     port_set32(&port, ebp, -0x1cu, 0);
     return port_return(&port, result, entry->edx);
 }
+
+/* The table fills: the entry built by 0x487660 with the rectangle's size, then the image looked up
+ * (0x4877f0), framed by the rectangle (0x482e10) and added to 0x5b9c60 (0x483ed0). */
+static uint32_t table_fill(Port *port, uint32_t table, uint32_t slot, uint32_t rectangle,
+                           uint32_t first, uint32_t second)
+{
+    uint32_t width = port_u32(port, rectangle, 4);
+    uint32_t height = port_u32(port, rectangle, 8);
+    uint32_t arguments[10] = {first, second, 0, 0, width, height, 0, 0, 1, 4};
+    uint32_t image;
+    port_call_stack(port, 0x487660, table, slot, width, height, arguments, 10);
+    image = port_call(port, 0x4877f0, table, slot, width, height);
+    port_call(port, 0x482e10, image, rectangle, 0, 0);
+    return port_call(port, 0x483ed0, image, 0x5b9c60, 0, 0);
+}
+
+uint32_t vertrix_port_table_fill_slot(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t eax;
+    port_open_frame(&port, calls, services, globals, entry, 0x30);
+    eax = table_fill(&port, 0x544a34, entry->eax, entry->edx, entry->ebx, entry->ecx);
+    return port_return(&port, eax, vertrix_lift_edx);
+}
+
+static uint32_t table_fill_indexed(PORT_SIGNATURE, uint32_t base)
+{
+    Port port;
+    uint8_t stack[0x10 + 8 + 4];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t table = base + entry->eax * 0x1c;
+    uint32_t eax;
+    port_open_arguments(&port, stack, calls, services, globals, entry, 0x10, 1);
+    port_set32(&port, ebp, -0xcu, table);
+    eax = table_fill(&port, table, entry->edx, entry->ebx, entry->ecx, port_u32(&port, ebp, 8));
+    return port_return(&port, eax, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_table_fill_indexed(PORT_SIGNATURE)
+{
+    return table_fill_indexed(calls, services, globals, entry, 0x546458);
+}
+
+uint32_t vertrix_port_table_fill_indexed_b(PORT_SIGNATURE)
+{
+    return table_fill_indexed(calls, services, globals, entry, 0x544d7c);
+}

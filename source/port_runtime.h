@@ -2005,4 +2005,16 @@ uint32_t vertrix_port_array_list_build(PORT_SIGNATURE);
  * (0x48a620, 0x48a710 with 0x5466c8, 0x473cf0, 0x48a8c0). Returns it or 0; keeps edx. */
 uint32_t vertrix_port_bitmap_file_read(PORT_SIGNATURE);
 
+/* Original 0x45e7b0(eax = slot, edx = rectangle, ebx, ecx): fill the slot of the table 0x544a34:
+ * an entry of the rectangle's size (0x487660 with ebx, ecx, 1 and 4), its image framed by the
+ * rectangle (0x4877f0, 0x482e10) and added to 0x5b9c60 (0x483ed0). */
+uint32_t vertrix_port_table_fill_slot(PORT_SIGNATURE);
+
+/* Original 0x45e850(eax = table index, edx = slot, ebx = rectangle, ecx; one stack argument): as
+ * 0x45e7b0 for the 0x1c-byte table at 0x546458 plus the index, with ecx and the stack argument. */
+uint32_t vertrix_port_table_fill_indexed(PORT_SIGNATURE);
+
+/* Original 0x45e9e0: 0x45e850 for the tables at 0x544d7c. */
+uint32_t vertrix_port_table_fill_indexed_b(PORT_SIGNATURE);
+
 #endif
