@@ -2367,4 +2367,52 @@ uint32_t vertrix_port_scene_step_41c2b0(PORT_SIGNATURE);
 uint32_t vertrix_port_scene_step_41c6d0(PORT_SIGNATURE);
 uint32_t vertrix_port_scene_step_41c740(PORT_SIGNATURE);
 
+/* Originals 0x44c880, 0x44c8e0, 0x44ebe0, 0x4582d0, 0x45b790, 0x45bd00 and 0x45bf20(eax = actor):
+ * when the counter is due, step the movement (0x4acab0, 0x4ad6e0 or for 0x4582d0 0x4ad530) and on
+ * arrival set the update 0x44c860, 0x44c860, 0x44ec40, 0x458330, 0x45b7f0, 0x45bd60 or 0x45bf80;
+ * 0x4582d0 runs 0x457810 first and 0x457890 last, the rest 0x4ac1f0 and 0x4ac8a0. Keep edx. */
+uint32_t vertrix_port_actor_step_frame_44c880(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_step_frame_44c8e0(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_step_frame_44ebe0(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_step_frame_4582d0(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_step_frame_45b790(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_step_frame_45bd00(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_step_frame_45bf20(PORT_SIGNATURE);
+
+/* Originals 0x478570..0x4787a0 (every 0x50)(eax = object): play the sound slot 0x72, 0x73, 0x70 or
+ * 0x71 of 0x54d640 (two each, by 0x4761d0 then 0x476280) at the object's pitch and volume (+0x48,
+ * +0x4a), or 0x7d00 when +0x60 is set. Keep edx. */
+uint32_t vertrix_port_sound_cue_478570(PORT_SIGNATURE);
+uint32_t vertrix_port_sound_cue_4785c0(PORT_SIGNATURE);
+uint32_t vertrix_port_sound_cue_478610(PORT_SIGNATURE);
+uint32_t vertrix_port_sound_cue_478660(PORT_SIGNATURE);
+uint32_t vertrix_port_sound_cue_4786b0(PORT_SIGNATURE);
+uint32_t vertrix_port_sound_cue_478700(PORT_SIGNATURE);
+uint32_t vertrix_port_sound_cue_478750(PORT_SIGNATURE);
+uint32_t vertrix_port_sound_cue_4787a0(PORT_SIGNATURE);
+
+/* Originals 0x4535d0, 0x4537b0, 0x453800, 0x453850, 0x4538a0, 0x453990, 0x4539e0 and
+ * 0x453a80(eax = object): when the board's action is 0x23, 0x2f, 0x31, 0x24, 0x28, 0x2d, 0x2e or
+ * 0x2c run 0x43acd0, otherwise 0x43ac00 and 0x43cf30, 0x43ceb0, 0x43cef0, 0x43cfb0, 0x43cff0,
+ * 0x43d0b0, 0x43d0f0 or 0x43cda0; then the method +4 of the object left in edx and 0x43bbf0. Keep
+ * edx. */
+uint32_t vertrix_port_board_action_4535d0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_action_4537b0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_action_453800(PORT_SIGNATURE);
+uint32_t vertrix_port_board_action_453850(PORT_SIGNATURE);
+uint32_t vertrix_port_board_action_4538a0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_action_453990(PORT_SIGNATURE);
+uint32_t vertrix_port_board_action_4539e0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_action_453a80(PORT_SIGNATURE);
+
+/* Originals 0x44f120, 0x44f180, 0x44f4a0, 0x44f500, 0x44f5d0 and 0x44f630(eax = actor): pairs
+ * swinging into each other, starting the fade at 0x64 or -0x64 (+0x4a) when the counter is due.
+ * Keep edx. */
+uint32_t vertrix_port_actor_swing_frame_44f120(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_swing_frame_44f180(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_swing_frame_44f4a0(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_swing_frame_44f500(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_swing_frame_44f5d0(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_swing_frame_44f630(PORT_SIGNATURE);
+
 #endif

@@ -9,10 +9,8 @@ enum
     LIFTED_F45BB80_STACK = 108,
     LIFTED_F45BC00_STACK = 108,
     LIFTED_F45BC80_STACK = 108,
-    LIFTED_F45BD00_STACK = 108,
     LIFTED_F45BD60_STACK = 108,
     LIFTED_F45BEB0_STACK = 108,
-    LIFTED_F45BF20_STACK = 108,
     LIFTED_F45BF80_STACK = 108,
     LIFTED_F45BFF0_STACK = 108,
     LIFTED_F45C060_STACK = 116,
@@ -171,14 +169,6 @@ enum
     LIFTED_SOUND_RELEASE_LOOPED_STACK = 104,
     LIFTED_OBJECT_CENTER_PLACE_STACK = 84,
     LIFTED_OBJECT_RESET_CENTER_STACK = 88,
-    LIFTED_SOUND_CUE_POSITION_478570_STACK = 92,
-    LIFTED_SOUND_CUE_POSITION_4785C0_STACK = 92,
-    LIFTED_SOUND_CUE_POSITION_478610_STACK = 92,
-    LIFTED_SOUND_CUE_POSITION_478660_STACK = 92,
-    LIFTED_SOUND_CUE_POSITION_4786B0_STACK = 92,
-    LIFTED_SOUND_CUE_POSITION_478700_STACK = 92,
-    LIFTED_SOUND_CUE_POSITION_478750_STACK = 92,
-    LIFTED_SOUND_CUE_POSITION_4787A0_STACK = 92,
     LIFTED_F478910_STACK = 180,
     LIFTED_WHEN_FLAG_CALL_STACK = 72,
     LIFTED_OFFSET_PAIR_CALL_STACK = 92,
@@ -241,20 +231,12 @@ uint32_t lifted_f45bc00(const VertrixCalls *calls, const VertrixFactoryServices 
 uint32_t lifted_f45bc80(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x45bd00. */
-uint32_t lifted_f45bd00(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x45bd60. */
 uint32_t lifted_f45bd60(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x45beb0. */
 uint32_t lifted_f45beb0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x45bf20. */
-uint32_t lifted_f45bf20(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x45bf80. */
@@ -934,46 +916,6 @@ uint32_t lifted_object_center_place(const VertrixCalls *calls,
 uint32_t lifted_object_reset_center(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services,
                                     const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x478570. */
-uint32_t lifted_sound_cue_position_478570(const VertrixCalls *calls,
-                                          const VertrixFactoryServices *services,
-                                          const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4785c0. */
-uint32_t lifted_sound_cue_position_4785c0(const VertrixCalls *calls,
-                                          const VertrixFactoryServices *services,
-                                          const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x478610. */
-uint32_t lifted_sound_cue_position_478610(const VertrixCalls *calls,
-                                          const VertrixFactoryServices *services,
-                                          const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x478660. */
-uint32_t lifted_sound_cue_position_478660(const VertrixCalls *calls,
-                                          const VertrixFactoryServices *services,
-                                          const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4786b0. */
-uint32_t lifted_sound_cue_position_4786b0(const VertrixCalls *calls,
-                                          const VertrixFactoryServices *services,
-                                          const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x478700. */
-uint32_t lifted_sound_cue_position_478700(const VertrixCalls *calls,
-                                          const VertrixFactoryServices *services,
-                                          const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x478750. */
-uint32_t lifted_sound_cue_position_478750(const VertrixCalls *calls,
-                                          const VertrixFactoryServices *services,
-                                          const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4787a0. */
-uint32_t lifted_sound_cue_position_4787a0(const VertrixCalls *calls,
-                                          const VertrixFactoryServices *services,
-                                          const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x478910. */
 uint32_t lifted_f478910(const VertrixCalls *calls, const VertrixFactoryServices *services,

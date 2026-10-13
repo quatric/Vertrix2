@@ -13617,3 +13617,259 @@ uint32_t vertrix_port_scene_step_41c740(PORT_SIGNATURE)
 {
     return scene_step_with(calls, services, globals, entry, 0x41c410, 0x423960, 0x41c7b0, 0x514048);
 }
+
+/* The actor frame shape of 0x44c880 and its copies: `first` and 0x4ac500, then, when the counter is
+ * due (0x4ac520), its steps consumed (0x4ac540, 0x4ac5b0), the movement stepped by `stepper` and,
+ * once it arrives, the update `next` set (0x4ac8f0); `refresh` runs in every case. */
+static uint32_t actor_step_frame(PORT_SIGNATURE, uint32_t first, uint32_t stepper, uint32_t next,
+                                 uint32_t refresh)
+{
+    Port port;
+    uint32_t actor = entry->eax;
+    uint32_t ebx = entry->ebx;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    port_call(&port, first, actor, entry->edx, ebx, actor);
+    port_call(&port, 0x4ac500, actor, vertrix_lift_edx, ebx, actor);
+    if (port_call(&port, 0x4ac520, actor, vertrix_lift_edx, ebx, actor) == 1)
+    {
+        result = port_call(&port, 0x4ac540, actor, vertrix_lift_edx, ebx, actor);
+        port_call(&port, 0x4ac5b0, actor, result, ebx, actor);
+        if (port_call(&port, stepper, actor, vertrix_lift_edx, ebx, actor) == 0)
+        {
+            port_call(&port, 0x4ac8f0, actor, next, ebx, actor);
+        }
+    }
+    result = port_call(&port, refresh, actor, vertrix_lift_edx, ebx, actor);
+    return port_return(&port, result, entry->edx);
+}
+
+/* The sound cue shape of 0x478570 and its copies: the slot `slot` of 0x54d640 played by `play`
+ * (0x4761d0 or 0x476280) at the object's pitch and volume words (+0x48, +0x4a), or at 0x7d00 for
+ * both when +0x60 is set. */
+static uint32_t sound_cue(PORT_SIGNATURE, uint32_t play, uint32_t slot)
+{
+    Port port;
+    uint32_t object = entry->eax;
+    uint32_t zero = 0;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    if (port_u32(&port, object, 0x60) == 0)
+    {
+        result = port_call_stack(&port, play, 0x54d640, slot, port_u16(&port, object, 0x48),
+                                 port_u16(&port, object, 0x4a), &zero, 1);
+    }
+    else
+    {
+        result = port_call_stack(&port, play, 0x54d640, slot, 0x7d00, 0x7d00, &zero, 1);
+    }
+    return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_actor_step_frame_44c880(PORT_SIGNATURE)
+{
+    return actor_step_frame(calls, services, globals, entry, 0x4ac1f0, 0x4acab0, 0x44c860,
+                            0x4ac8a0);
+}
+
+uint32_t vertrix_port_actor_step_frame_44c8e0(PORT_SIGNATURE)
+{
+    return actor_step_frame(calls, services, globals, entry, 0x4ac1f0, 0x4acab0, 0x44c860,
+                            0x4ac8a0);
+}
+
+uint32_t vertrix_port_actor_step_frame_44ebe0(PORT_SIGNATURE)
+{
+    return actor_step_frame(calls, services, globals, entry, 0x4ac1f0, 0x4ad6e0, 0x44ec40,
+                            0x4ac8a0);
+}
+
+uint32_t vertrix_port_actor_step_frame_4582d0(PORT_SIGNATURE)
+{
+    return actor_step_frame(calls, services, globals, entry, 0x457810, 0x4ad530, 0x458330,
+                            0x457890);
+}
+
+uint32_t vertrix_port_actor_step_frame_45b790(PORT_SIGNATURE)
+{
+    return actor_step_frame(calls, services, globals, entry, 0x4ac1f0, 0x4ad6e0, 0x45b7f0,
+                            0x4ac8a0);
+}
+
+uint32_t vertrix_port_actor_step_frame_45bd00(PORT_SIGNATURE)
+{
+    return actor_step_frame(calls, services, globals, entry, 0x4ac1f0, 0x4ad6e0, 0x45bd60,
+                            0x4ac8a0);
+}
+
+uint32_t vertrix_port_actor_step_frame_45bf20(PORT_SIGNATURE)
+{
+    return actor_step_frame(calls, services, globals, entry, 0x4ac1f0, 0x4ad6e0, 0x45bf80,
+                            0x4ac8a0);
+}
+
+uint32_t vertrix_port_sound_cue_478570(PORT_SIGNATURE)
+{
+    return sound_cue(calls, services, globals, entry, 0x4761d0, 0x72);
+}
+
+uint32_t vertrix_port_sound_cue_4785c0(PORT_SIGNATURE)
+{
+    return sound_cue(calls, services, globals, entry, 0x476280, 0x72);
+}
+
+uint32_t vertrix_port_sound_cue_478610(PORT_SIGNATURE)
+{
+    return sound_cue(calls, services, globals, entry, 0x4761d0, 0x73);
+}
+
+uint32_t vertrix_port_sound_cue_478660(PORT_SIGNATURE)
+{
+    return sound_cue(calls, services, globals, entry, 0x476280, 0x73);
+}
+
+uint32_t vertrix_port_sound_cue_4786b0(PORT_SIGNATURE)
+{
+    return sound_cue(calls, services, globals, entry, 0x4761d0, 0x70);
+}
+
+uint32_t vertrix_port_sound_cue_478700(PORT_SIGNATURE)
+{
+    return sound_cue(calls, services, globals, entry, 0x476280, 0x70);
+}
+
+uint32_t vertrix_port_sound_cue_478750(PORT_SIGNATURE)
+{
+    return sound_cue(calls, services, globals, entry, 0x4761d0, 0x71);
+}
+
+uint32_t vertrix_port_sound_cue_4787a0(PORT_SIGNATURE)
+{
+    return sound_cue(calls, services, globals, entry, 0x476280, 0x71);
+}
+
+/* The board action shape of 0x4535d0 and its copies: when the board's (+0x3b0) current action
+ * (+0x4c8) is `action`, 0x43acd0; otherwise 0x43ac00 and `apply` on the board. The object left in
+ * edx then gets its method +4 (table +0x158), and 0x43bbf0 runs. */
+static uint32_t board_action(PORT_SIGNATURE, uint32_t action, uint32_t apply)
+{
+    Port port;
+    uint32_t object = entry->eax;
+    uint32_t board;
+    uint32_t target;
+    uint32_t table;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    board = port_u32(&port, object, 0x3b0);
+    if (port_u32(&port, board, 0x4c8) == action)
+    {
+        port_call(&port, 0x43acd0, object, port_u32(&port, object, 0x15c), object, board);
+    }
+    else
+    {
+        port_call(&port, 0x43ac00, object, port_u32(&port, object, 0x15c), object, board);
+        port_call(&port, apply, board, vertrix_lift_edx, object, board);
+    }
+    target = vertrix_lift_edx;
+    table = port_u32(&port, target, 0x158);
+    port_call(&port, port_u32(&port, table, 4), target, target, object, table);
+    result = port_call(&port, 0x43bbf0, object, vertrix_lift_edx, object, table);
+    return port_return(&port, result, entry->edx);
+}
+
+/* The actor frame shape of 0x44f120 and its copies: 0x4ac1f0 and 0x4ac500, then, when the counter
+ * is due (0x4ac520), its steps consumed (0x4ac540, 0x4ac5b0), +0x4a set to `start`, the fade
+ * stepped (0x4ad530) and, once it is done, the update `next` set (0x4ac8f0); the image is refreshed
+ * (0x4ac8a0) in every case. */
+static uint32_t actor_swing_frame(PORT_SIGNATURE, uint32_t start, uint32_t next)
+{
+    Port port;
+    uint32_t actor = entry->eax;
+    uint32_t ebx = entry->ebx;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    port_call(&port, 0x4ac1f0, actor, entry->edx, ebx, actor);
+    port_call(&port, 0x4ac500, actor, vertrix_lift_edx, ebx, actor);
+    if (port_call(&port, 0x4ac520, actor, vertrix_lift_edx, ebx, actor) == 1)
+    {
+        result = port_call(&port, 0x4ac540, actor, vertrix_lift_edx, ebx, actor);
+        port_call(&port, 0x4ac5b0, actor, result, ebx, actor);
+        port_set16(&port, actor, 0x4a, start);
+        if (port_call(&port, 0x4ad530, actor, vertrix_lift_edx, ebx, actor) == 0)
+        {
+            port_call(&port, 0x4ac8f0, actor, next, ebx, actor);
+        }
+    }
+    result = port_call(&port, 0x4ac8a0, actor, vertrix_lift_edx, ebx, actor);
+    return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_board_action_4535d0(PORT_SIGNATURE)
+{
+    return board_action(calls, services, globals, entry, 0x23, 0x43cf30);
+}
+
+uint32_t vertrix_port_board_action_4537b0(PORT_SIGNATURE)
+{
+    return board_action(calls, services, globals, entry, 0x2f, 0x43ceb0);
+}
+
+uint32_t vertrix_port_board_action_453800(PORT_SIGNATURE)
+{
+    return board_action(calls, services, globals, entry, 0x31, 0x43cef0);
+}
+
+uint32_t vertrix_port_board_action_453850(PORT_SIGNATURE)
+{
+    return board_action(calls, services, globals, entry, 0x24, 0x43cfb0);
+}
+
+uint32_t vertrix_port_board_action_4538a0(PORT_SIGNATURE)
+{
+    return board_action(calls, services, globals, entry, 0x28, 0x43cff0);
+}
+
+uint32_t vertrix_port_board_action_453990(PORT_SIGNATURE)
+{
+    return board_action(calls, services, globals, entry, 0x2d, 0x43d0b0);
+}
+
+uint32_t vertrix_port_board_action_4539e0(PORT_SIGNATURE)
+{
+    return board_action(calls, services, globals, entry, 0x2e, 0x43d0f0);
+}
+
+uint32_t vertrix_port_board_action_453a80(PORT_SIGNATURE)
+{
+    return board_action(calls, services, globals, entry, 0x2c, 0x43cda0);
+}
+
+uint32_t vertrix_port_actor_swing_frame_44f120(PORT_SIGNATURE)
+{
+    return actor_swing_frame(calls, services, globals, entry, 0x64, 0x44f180);
+}
+
+uint32_t vertrix_port_actor_swing_frame_44f180(PORT_SIGNATURE)
+{
+    return actor_swing_frame(calls, services, globals, entry, 0xff9c, 0x44f120);
+}
+
+uint32_t vertrix_port_actor_swing_frame_44f4a0(PORT_SIGNATURE)
+{
+    return actor_swing_frame(calls, services, globals, entry, 0x64, 0x44f500);
+}
+
+uint32_t vertrix_port_actor_swing_frame_44f500(PORT_SIGNATURE)
+{
+    return actor_swing_frame(calls, services, globals, entry, 0xff9c, 0x44f4a0);
+}
+
+uint32_t vertrix_port_actor_swing_frame_44f5d0(PORT_SIGNATURE)
+{
+    return actor_swing_frame(calls, services, globals, entry, 0x64, 0x44f630);
+}
+
+uint32_t vertrix_port_actor_swing_frame_44f630(PORT_SIGNATURE)
+{
+    return actor_swing_frame(calls, services, globals, entry, 0xff9c, 0x44f5d0);
+}
