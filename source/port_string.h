@@ -173,4 +173,18 @@ uint32_t vertrix_port_format_spec(PORT_SIGNATURE);
  * terminate it where 0x4e39f0 says. Nothing for a null destination. */
 uint32_t vertrix_port_copy_terminated(PORT_SIGNATURE);
 
+/* Original 0x4d7d70(stack: a path name, the string for the root; ret 0): the root of the path's
+ * full name (GetFullPathNameA, slot 0x4f1d20, into the string's buffer from 0x4ca670): for a
+ * UNC name up to the separator after the share, else up to the first separator, which is kept;
+ * the name is cut after it and the string's length fixed by 0x4ca6c0. Characters advance through
+ * 0x4e1054. */
+uint32_t vertrix_port_path_root(PORT_SIGNATURE);
+
+/* Original 0x4d7c40(stack: a file name, a MAX_PATH buffer; ret 0): the name's full path into the
+ * buffer (GetFullPathNameA, else the name copied and 0 returned). The root's volume information
+ * then decides the case: upper case on a volume that does not preserve it, and the file part as
+ * FindFirstFileA spells it without Unicode names on disk. Returns 1, or 0 when the volume cannot
+ * be read. */
+uint32_t vertrix_port_full_path(PORT_SIGNATURE);
+
 #endif

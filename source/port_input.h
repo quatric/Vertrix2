@@ -70,4 +70,11 @@ uint32_t vertrix_port_key_record_reset(PORT_SIGNATURE);
  * at +0x24). Keeps edx. */
 uint32_t vertrix_port_joystick_poll(PORT_SIGNATURE);
 
+/* Original 0x4774e0(eax = keyboard): read the keyboard's buffered DirectInput events (+0xc the
+ * device; GetDeviceData into 0x553878, count 0x556078, status 0x553870), reacquiring a lost
+ * device (+0x10 the acquired flag). Each event's scan code maps through 0x4fe600 to a key
+ * (0x553874, 0x553876 the last), which goes to the key table 0x54d640 as pressed (0x4761d0) or
+ * released (0x476280); key 0x6b is skipped. Keeps edx. */
+uint32_t vertrix_port_keyboard_poll(PORT_SIGNATURE);
+
 #endif

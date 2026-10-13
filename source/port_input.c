@@ -400,3 +400,89 @@ uint32_t vertrix_port_joystick_poll(PORT_SIGNATURE)
     }
     return port_return(&port, eax, entry->edx);
 }
+
+uint32_t vertrix_port_keyboard_poll(PORT_SIGNATURE)
+{
+    enum
+    {
+        STATUS = 0x553870,
+        LAST_SCAN = 0x553874,
+        LAST_KEY = 0x553876,
+        EVENTS = 0x553878, /* DIDEVICEOBJECTDATA, 0x14 bytes each */
+        EVENT_COUNT = 0x556078,
+        EVENT_INDEX = 0x55607c,
+        KEY_MAP = 0x4fe600,
+        KEYS = 0x54d640,
+        IGNORED_KEY = 0x6b
+    };
+    Port port;
+    uint32_t keyboard = entry->eax;
+    uint32_t eax = entry->eax;
+    uint32_t ecx = entry->ecx;
+    port_open(&port, calls, services, globals, entry);
+    if (port_u32(&port, keyboard, 0xc) == 0)
+    {
+        return port_return(&port, eax, entry->edx);
+    }
+    port_set32(&port, 0, STATUS, 0x8007001eu);
+    /* GetDeviceData for up to 0x200 events; a lost device is reacquired and read again. */
+    do
+    {
+        uint32_t arguments[5];
+        uint32_t device = port_u32(&port, keyboard, 0xc);
+        uint32_t table = port_u32(&port, device, 0);
+        port_set32(&port, 0, EVENT_COUNT, 0x200);
+        arguments[0] = device;
+        arguments[1] = 0x14;
+        arguments[2] = EVENTS;
+        arguments[3] = EVENT_COUNT;
+        arguments[4] = 0;
+        eax = port_call_stack(&port, port_u32(&port, table, 0x28), device, table, keyboard, ecx,
+                              arguments, 5);
+        port_set32(&port, 0, STATUS, eax);
+        if (eax != 0)
+        {
+            device = port_u32(&port, keyboard, 0xc);
+            port_set32(&port, keyboard, 0x10, 0);
+            table = port_u32(&port, device, 0);
+            arguments[0] = device;
+            eax = port_call_stack(&port, port_u32(&port, table, 0x1c), device, table, keyboard, ecx,
+                                  arguments, 1);
+            if ((int32_t)eax >= 0)
+            {
+                port_set32(&port, keyboard, 0x10, 1);
+            }
+            else if (port_u32(&port, keyboard, 0x10) == 0)
+            {
+                return port_return(&port, eax, entry->edx);
+            }
+        }
+        ecx = port_u32(&port, 0, STATUS);
+    } while (ecx != 0);
+    eax = port_u32(&port, 0, EVENT_COUNT);
+    port_set32(&port, 0, EVENT_INDEX, 0);
+    if (eax == 0)
+    {
+        return port_return(&port, eax, entry->edx);
+    }
+    do
+    {
+        uint32_t scan;
+        uint32_t key;
+        eax = port_u32(&port, 0, EVENT_INDEX) * 0x14;
+        scan = port_u16(&port, eax, EVENTS);
+        key = port_u16(&port, 0, scan * 2 + KEY_MAP);
+        port_set16(&port, 0, LAST_SCAN, scan);
+        port_set16(&port, 0, LAST_KEY, key);
+        if (key != IGNORED_KEY)
+        {
+            /* Key down (data bit 7) or up. */
+            uint32_t argument = 0;
+            uint32_t target = (port_u8(&port, eax, EVENTS + 4) & 0x80) ? 0x4761d0 : 0x476280;
+            eax = port_call_stack(&port, target, KEYS, port_u16(&port, 0, LAST_KEY), 0, 0,
+                                  &argument, 1);
+        }
+        port_set32(&port, 0, EVENT_INDEX, port_u32(&port, 0, EVENT_INDEX) + 1);
+    } while (port_u32(&port, 0, EVENT_INDEX) < port_u32(&port, 0, EVENT_COUNT));
+    return port_return(&port, eax, entry->edx);
+}

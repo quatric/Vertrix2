@@ -303,6 +303,7 @@ PORTS = {0x401054: 'vertrix_port_mix_clamp',
          0x4771e0: 'vertrix_port_static_init_55608c',
          0x477240: 'vertrix_port_reader_construct_516744',
          0x4772f0: 'vertrix_port_handle_open_flag',
+         0x4774e0: 'vertrix_port_keyboard_poll',
          0x477810: 'vertrix_port_static_init_5560bc',
          0x477870: 'vertrix_port_table_set_5167a4',
          0x477910: 'vertrix_port_scale_reset',
@@ -634,6 +635,7 @@ PORTS = {0x401054: 'vertrix_port_mix_clamp',
          0x4d7630: 'vertrix_port_file_stream_destroy',
          0x4d7a10: 'vertrix_port_file_seek',
          0x4d7bb0: 'vertrix_port_stream_length',
+         0x4d7c40: 'vertrix_port_full_path',
          0x4d8320: 'vertrix_port_lock_init_5c7604',
          0x4d8340: 'vertrix_port_pool_construct',
          0x4d83c0: 'vertrix_port_pool_reset',
@@ -749,4 +751,4 @@ PORTS = {0x401054: 'vertrix_port_mix_clamp',
 # The frames (bytes below the return slot) of the ports that pass their callees locals by address:
 # the dispatcher places a callee's frame below them. Without an entry a port's frame must lie
 # within LIFTED_ARENA_GAP (0x100 bytes).
-PORT_FRAMES = {0x405680: 0x10c, 0x4056c0: 0x98, 0x40a190: 0x2a0}
+PORT_FRAMES = {0x405680: 0x10c, 0x4056c0: 0x98, 0x40a190: 0x2a0, 0x4d7c40: 0x168}

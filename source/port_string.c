@@ -885,3 +885,194 @@ uint32_t vertrix_port_copy_terminated(PORT_SIGNATURE)
     port_set8(&port, destination, end, 0);
     return port_return(&port, end, vertrix_lift_edx);
 }
+
+/* The character at p into edx's low byte, as the original's mov dl, [eax] does. */
+static uint32_t root_char(Port *port, uint32_t p, uint32_t *edx)
+{
+    *edx = (*edx & 0xffffff00u) | port_u8(port, p, 0);
+    return *edx & 0xff;
+}
+
+static int root_separator(uint32_t c)
+{
+    return c == '\\' || c == '/';
+}
+
+uint32_t vertrix_port_path_root(PORT_SIGNATURE)
+{
+    enum
+    {
+        CHAR_NEXT = 0x4e1054,
+        PATH_MAX_LENGTH = 0x104
+    };
+    Port port;
+    uint8_t stack[0xc + 8 + 8];
+    uint32_t name;
+    uint32_t string;
+    uint32_t buffer;
+    uint32_t p;
+    uint32_t edx;
+    uint32_t arguments[3];
+    port_open_arguments(&port, stack, calls, services, globals, entry, 0xc, 2);
+    name = port_u32(&port, entry->esp, 4);
+    string = port_u32(&port, entry->esp, 8);
+    buffer = port_call(&port, 0x4ca670, string, PATH_MAX_LENGTH, PATH_MAX_LENGTH, entry->ecx);
+    port_call(&port, 0x4eb5c0, buffer, 0, PATH_MAX_LENGTH, entry->ecx);
+    edx = vertrix_lift_edx;
+    /* GetFullPathNameA(name, MAX_PATH, buffer, ...) through slot 0x4f1d20. */
+    arguments[0] = buffer;
+    arguments[1] = name;
+    arguments[2] = PATH_MAX_LENGTH;
+    port_call_stack(&port, 0x4f1d20, buffer, edx, PATH_MAX_LENGTH, entry->ecx, arguments, 3);
+    edx = vertrix_lift_edx;
+#define NEXT()                                                                                     \
+    do                                                                                             \
+    {                                                                                              \
+        p = port_call(&port, CHAR_NEXT, p, edx, PATH_MAX_LENGTH, entry->ecx);                      \
+        edx = vertrix_lift_edx;                                                                    \
+    } while (0)
+    /* A UNC name: two separators somewhere. */
+    p = buffer;
+    while (port_u8(&port, p, 0) != 0)
+    {
+        if (root_separator(root_char(&port, p, &edx)) &&
+            root_separator(root_char(&port, p + 1, &edx)))
+        {
+            break;
+        }
+        NEXT();
+    }
+    if (port_u8(&port, p, 0) != 0)
+    {
+        /* \\server\share: past the server and the share. */
+        p += 2;
+        while (port_u8(&port, p, 0) != 0 && !root_separator(root_char(&port, p, &edx)))
+        {
+            NEXT();
+        }
+        if (port_u8(&port, p, 0) != 0)
+        {
+            do
+            {
+                NEXT();
+            } while (port_u8(&port, p, 0) != 0 && !root_separator(root_char(&port, p, &edx)));
+        }
+    }
+    else
+    {
+        /* A drive: up to the first separator. */
+        p = buffer;
+        while (port_u8(&port, p, 0) != 0 && !root_separator(root_char(&port, p, &edx)))
+        {
+            NEXT();
+        }
+    }
+#undef NEXT
+    if (port_u8(&port, p, 0) != 0)
+    {
+        port_set8(&port, p, 1, 0);
+    }
+    p = port_call(&port, 0x4ca6c0, string, 0xffffffffu, PATH_MAX_LENGTH, entry->ecx);
+    return port_return(&port, p, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_full_path(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x168,
+        GUARD_HANDLER = 0x4ec1ec,
+        PATH_GUARD = 0x519d30,
+        PATH_MAX_LENGTH = 0x104,
+        ROOT = 0xc,        /* below ebp: the root string */
+        FILE_PART = 0x10,  /* below ebp: the file part pointer */
+        FLAGS = 8,         /* below ebp: the volume's flags */
+        FIND_DATA = 0x164, /* below ebp: WIN32_FIND_DATAA */
+        FOUND_NAME = 0x138 /* its cFileName */
+    };
+    Port port;
+    uint8_t stack[BELOW + 8 + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t name;
+    uint32_t buffer;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t result;
+    uint32_t arguments[8];
+    port_open_arguments(&port, stack, calls, services, globals, entry, BELOW, 2);
+    name = port_u32(&port, ebp, 8);
+    buffer = port_u32(&port, ebp, 0xc);
+    port_set32(&port, ebp, -0x24u, port.env.chain);
+    port_set32(&port, ebp, -0x20u, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x1cu, PATH_GUARD);
+    port_set32(&port, ebp, -0x18u, 0);
+    /* GetFullPathNameA (slot 0x4f1bb8). */
+    arguments[0] = buffer;
+    arguments[1] = PATH_MAX_LENGTH;
+    arguments[2] = name;
+    arguments[3] = ebp - FILE_PART;
+    result = port_call_stack(&port, 0x4f1bb8, ebp - FILE_PART, edx, ebx, ecx, arguments, 4);
+    edx = vertrix_lift_edx;
+    if (result == 0)
+    {
+        /* Failed: the name copied as it is (lstrcpynA, slot 0x4f1d20). */
+        arguments[0] = name;
+        arguments[1] = buffer;
+        arguments[2] = PATH_MAX_LENGTH;
+        port_call_stack(&port, 0x4f1d20, result, edx, ebx, ecx, arguments, 3);
+        return port_return(&port, 0, vertrix_lift_edx);
+    }
+    port_call(&port, 0x4ca070, ebp - ROOT, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, ebp, -0x18u, 1);
+    arguments[0] = name;
+    arguments[1] = ebp - ROOT;
+    port_call_stack(&port, 0x4d7d70, ebp - ROOT, edx, ebx, ecx, arguments, 2);
+    edx = vertrix_lift_edx;
+    /* GetVolumeInformationA(root, ..., &serial, &flags, ...) (slot 0x4f1c04). */
+    arguments[0] = port_u32(&port, ebp, -ROOT);
+    arguments[1] = 0;
+    arguments[2] = 0;
+    arguments[3] = 0;
+    arguments[4] = ebp - 4;
+    arguments[5] = ebp - FLAGS;
+    arguments[6] = 0;
+    arguments[7] = 0;
+    result = port_call_stack(&port, 0x4f1c04, ebp - 4, edx, ebx, ecx, arguments, 8);
+    edx = vertrix_lift_edx;
+    if (result == 0)
+    {
+        port_call(&port, 0x4ca210, ebp - ROOT, 0, ebx, ecx);
+        return port_return(&port, 0, vertrix_lift_edx);
+    }
+    if ((port_u8(&port, ebp, -FLAGS) & 2) == 0)
+    {
+        /* A volume without case-preserved names: CharUpperA (slot 0x4f1904). */
+        arguments[0] = name;
+        result = port_call_stack(&port, 0x4f1904, result, edx, ebx, ecx, arguments, 1);
+        edx = vertrix_lift_edx;
+    }
+    if ((port_u8(&port, ebp, -FLAGS) & 4) == 0)
+    {
+        /* Without Unicode names on disk: the file part from FindFirstFileA (slots 0x4f1b60,
+         * 0x4f1b5c FindClose, 0x4f1d1c lstrcpyA). */
+        arguments[0] = buffer;
+        arguments[1] = ebp - FIND_DATA;
+        result = port_call_stack(&port, 0x4f1b60, ebp - FIND_DATA, edx, ebx, ecx, arguments, 2);
+        edx = vertrix_lift_edx;
+        if (result != 0xffffffffu)
+        {
+            arguments[0] = result;
+            port_call_stack(&port, 0x4f1b5c, result, edx, ebx, ecx, arguments, 1);
+            edx = vertrix_lift_edx;
+            arguments[0] = port_u32(&port, ebp, -FILE_PART);
+            arguments[1] = ebp - FOUND_NAME;
+            port_call_stack(&port, 0x4f1d1c, ebp - FOUND_NAME, edx, ebx, ecx, arguments, 2);
+            edx = vertrix_lift_edx;
+        }
+    }
+    port_set32(&port, ebp, -0x18u, 0);
+    port_call(&port, 0x4ca210, ebp - ROOT, 0, ebx, 1);
+    return port_return(&port, 1, vertrix_lift_edx);
+}
