@@ -709,3 +709,1041 @@ uint32_t vertrix_port_mpeg_side_info(PORT_SIGNATURE)
     }
     return port_return(&port, eax, r.edx);
 }
+
+uint32_t vertrix_port_mpeg_imdct_short(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x68,
+        FIXED_MULTIPLY = 0x4d8177,
+        FIXED_SUBTRACT = 0x4d809c,
+        FIXED_ADD = 0x4d80a6
+    };
+    Port port;
+    uint8_t stack[BELOW + 8 + 4];
+    /* The original's 0x5c bytes of locals: the butterfly's intermediate values, then the saved
+     * edx (21) and eax (22). None is passed by address. */
+    uint32_t local[23] = {0};
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi = 0;
+    uint32_t edi = 0;
+    uint32_t ebp = 0;
+    uint32_t output;
+    port_open_arguments(&port, stack, calls, services, globals, entry, BELOW, 1);
+    output = port_u32(&port, entry->esp, 4);
+    local[22] = eax;
+    local[21] = edx;
+    esi = output;
+    eax = port_u32(&port, edx, 0x0);
+    port_set32(&port, esi, 0x0, eax);
+    eax = port_u32(&port, edx, 0x4);
+    port_set32(&port, esi, 0x80, eax);
+    eax = port_u32(&port, edx, 0x8);
+    port_set32(&port, esi, 0x100, eax);
+    eax = port_u32(&port, edx, 0xc);
+    port_set32(&port, esi, 0x180, eax);
+    eax = port_u32(&port, edx, 0x10);
+    port_set32(&port, esi, 0x200, eax);
+    eax = port_u32(&port, edx, 0x14);
+    port_set32(&port, esi, 0x280, eax);
+    eax = local[22];
+    eax = port_u32(&port, eax, 0x3c);
+    local[3] = eax;
+    eax = local[22];
+    eax = port_u32(&port, eax, 0x30);
+    local[2] = eax;
+    eax = local[3];
+    edx = local[2];
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[3] = eax;
+    edi = local[22];
+    edi = port_u32(&port, edi, 0x24);
+    eax = local[2];
+    edx = edi;
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[2] = eax;
+    eax = local[22];
+    eax = port_u32(&port, eax, 0x18);
+    local[1] = eax;
+    eax = edi;
+    edx = local[1];
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edi = eax;
+    ebp = local[22];
+    ebp = port_u32(&port, ebp, 0xc);
+    eax = local[1];
+    edx = ebp;
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[1] = eax;
+    eax = local[22];
+    eax = port_u32(&port, eax, 0x0);
+    local[0] = eax;
+    eax = ebp;
+    edx = local[0];
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    ebp = eax;
+    eax = local[3];
+    edx = edi;
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[3] = eax;
+    eax = edi;
+    edx = ebp;
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edi = eax;
+    eax = local[1];
+    edx = port_u32(&port, 0u, 0x524284);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[1] = eax;
+    eax = edi;
+    edx = port_u32(&port, 0u, 0x524284);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edi = eax;
+    eax = local[0];
+    edx = local[2];
+    eax = port_call(&port, FIXED_SUBTRACT, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[5] = eax;
+    eax = ebp;
+    edx = local[3];
+    eax = port_call(&port, FIXED_SUBTRACT, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = port_u32(&port, 0u, 0x524278);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[6] = eax;
+    eax = local[5];
+    edx = local[6];
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[4] = eax;
+    eax = local[5];
+    edx = local[6];
+    eax = port_call(&port, FIXED_SUBTRACT, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[5] = eax;
+    eax = local[4];
+    edx = port_u32(&port, ecx, 0x28);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[7] = eax;
+    eax = local[21];
+    eax = port_u32(&port, eax, 0x40);
+    edx = local[7];
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, esi, 0x800, eax);
+    eax = local[4];
+    edx = port_u32(&port, ecx, 0x1c);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[7] = eax;
+    eax = local[21];
+    eax = port_u32(&port, eax, 0x34);
+    edx = local[7];
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, esi, 0x680, eax);
+    eax = local[5];
+    edx = port_u32(&port, ecx, 0x4);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[7] = eax;
+    eax = local[21];
+    eax = port_u32(&port, eax, 0x1c);
+    edx = local[7];
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, esi, 0x380, eax);
+    eax = local[5];
+    edx = port_u32(&port, ecx, 0x10);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[7] = eax;
+    eax = local[21];
+    eax = port_u32(&port, eax, 0x28);
+    edx = local[7];
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, esi, 0x500, eax);
+    eax = local[2];
+    edx = port_u32(&port, 0u, 0x524280);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = eax;
+    eax = local[0];
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[0] = eax;
+    edx = local[1];
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[2] = eax;
+    eax = local[0];
+    edx = local[1];
+    eax = port_call(&port, FIXED_SUBTRACT, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[0] = eax;
+    eax = local[3];
+    edx = port_u32(&port, 0u, 0x524280);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = eax;
+    eax = ebp;
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    ebp = eax;
+    edx = edi;
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = port_u32(&port, 0u, 0x524274);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[3] = eax;
+    eax = ebp;
+    edx = edi;
+    eax = port_call(&port, FIXED_SUBTRACT, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = port_u32(&port, 0u, 0x52427c);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    ebp = eax;
+    eax = local[2];
+    edx = local[3];
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edi = eax;
+    eax = local[2];
+    edx = local[3];
+    eax = port_call(&port, FIXED_SUBTRACT, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[2] = eax;
+    eax = local[0];
+    edx = ebp;
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[1] = eax;
+    eax = local[0];
+    edx = ebp;
+    eax = port_call(&port, FIXED_SUBTRACT, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[0] = eax;
+    eax = local[1];
+    edx = port_u32(&port, ecx, 0x2c);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = eax;
+    eax = local[21];
+    eax = port_u32(&port, eax, 0x44);
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, esi, 0x880, eax);
+    eax = local[1];
+    edx = port_u32(&port, ecx, 0x18);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = eax;
+    eax = local[21];
+    eax = port_u32(&port, eax, 0x30);
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, esi, 0x600, eax);
+    eax = edi;
+    edx = port_u32(&port, ecx, 0x20);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = eax;
+    eax = local[21];
+    eax = port_u32(&port, eax, 0x38);
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, esi, 0x700, eax);
+    eax = edi;
+    edx = port_u32(&port, ecx, 0x24);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = eax;
+    eax = local[21];
+    eax = port_u32(&port, eax, 0x3c);
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, esi, 0x780, eax);
+    eax = local[0];
+    edx = port_u32(&port, ecx, 0x0);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = eax;
+    eax = local[21];
+    eax = port_u32(&port, eax, 0x18);
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, esi, 0x300, eax);
+    eax = local[0];
+    edx = port_u32(&port, ecx, 0x14);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = eax;
+    eax = local[21];
+    eax = port_u32(&port, eax, 0x2c);
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, esi, 0x580, eax);
+    eax = local[2];
+    edx = port_u32(&port, ecx, 0x8);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = eax;
+    eax = local[21];
+    eax = port_u32(&port, eax, 0x20);
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, esi, 0x400, eax);
+    eax = local[2];
+    edx = port_u32(&port, ecx, 0xc);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = eax;
+    eax = local[21];
+    eax = port_u32(&port, eax, 0x24);
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, esi, 0x480, eax);
+    edx = local[22];
+    edx = edx + 0x4;
+    local[22] = edx;
+    eax = port_u32(&port, edx, 0x3c);
+    local[17] = eax;
+    eax = port_u32(&port, edx, 0x30);
+    local[20] = eax;
+    eax = local[17];
+    edx = local[20];
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[17] = eax;
+    edi = local[22];
+    edi = port_u32(&port, edi, 0x24);
+    eax = local[20];
+    edx = edi;
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[20] = eax;
+    eax = local[22];
+    eax = port_u32(&port, eax, 0x18);
+    local[9] = eax;
+    eax = edi;
+    edx = local[9];
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edi = eax;
+    eax = local[22];
+    eax = port_u32(&port, eax, 0xc);
+    local[8] = eax;
+    eax = local[9];
+    edx = local[8];
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[9] = eax;
+    ebp = local[22];
+    ebp = port_u32(&port, ebp, 0x0);
+    eax = local[8];
+    edx = ebp;
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[8] = eax;
+    eax = local[17];
+    edx = edi;
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[17] = eax;
+    eax = edi;
+    edx = local[8];
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edi = eax;
+    eax = local[9];
+    edx = port_u32(&port, 0u, 0x524284);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[9] = eax;
+    eax = edi;
+    edx = port_u32(&port, 0u, 0x524284);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edi = eax;
+    eax = ebp;
+    edx = local[20];
+    eax = port_call(&port, FIXED_SUBTRACT, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[11] = eax;
+    eax = local[8];
+    edx = local[17];
+    eax = port_call(&port, FIXED_SUBTRACT, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = port_u32(&port, 0u, 0x524278);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[12] = eax;
+    eax = local[11];
+    edx = local[12];
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[10] = eax;
+    eax = local[11];
+    edx = local[12];
+    eax = port_call(&port, FIXED_SUBTRACT, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[11] = eax;
+    edx = port_u32(&port, ecx, 0x28);
+    eax = local[10];
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, ebx, 0x10, eax);
+    edx = port_u32(&port, ecx, 0x1c);
+    eax = local[10];
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, ebx, 0x4, eax);
+    eax = local[11];
+    edx = port_u32(&port, ecx, 0x4);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = eax;
+    eax = port_u32(&port, esi, 0x680);
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, esi, 0x680, eax);
+    eax = local[11];
+    edx = port_u32(&port, ecx, 0x10);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = eax;
+    eax = port_u32(&port, esi, 0x800);
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, esi, 0x800, eax);
+    eax = local[20];
+    edx = port_u32(&port, 0u, 0x524280);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = eax;
+    eax = ebp;
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    ebp = eax;
+    edx = local[9];
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[20] = eax;
+    eax = ebp;
+    edx = local[9];
+    eax = port_call(&port, FIXED_SUBTRACT, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    ebp = eax;
+    eax = local[17];
+    edx = port_u32(&port, 0u, 0x524280);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = eax;
+    eax = local[8];
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[8] = eax;
+    edx = edi;
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = port_u32(&port, 0u, 0x524274);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[17] = eax;
+    eax = local[8];
+    edx = edi;
+    eax = port_call(&port, FIXED_SUBTRACT, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = port_u32(&port, 0u, 0x52427c);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[8] = eax;
+    eax = local[20];
+    edx = local[17];
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edi = eax;
+    eax = local[20];
+    edx = local[17];
+    eax = port_call(&port, FIXED_SUBTRACT, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[20] = eax;
+    eax = ebp;
+    edx = local[8];
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[9] = eax;
+    eax = ebp;
+    edx = local[8];
+    eax = port_call(&port, FIXED_SUBTRACT, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    ebp = eax;
+    edx = port_u32(&port, ecx, 0x2c);
+    eax = local[9];
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, ebx, 0x14, eax);
+    edx = port_u32(&port, ecx, 0x18);
+    eax = local[9];
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, ebx, 0x0, eax);
+    edx = port_u32(&port, ecx, 0x20);
+    eax = edi;
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, ebx, 0x8, eax);
+    edx = port_u32(&port, ecx, 0x24);
+    eax = edi;
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, ebx, 0xc, eax);
+    eax = ebp;
+    edx = port_u32(&port, ecx, 0x0);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = eax;
+    eax = port_u32(&port, esi, 0x600);
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, esi, 0x600, eax);
+    eax = ebp;
+    edx = port_u32(&port, ecx, 0x14);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = eax;
+    eax = port_u32(&port, esi, 0x880);
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, esi, 0x880, eax);
+    eax = local[20];
+    edx = port_u32(&port, ecx, 0x8);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = eax;
+    eax = port_u32(&port, esi, 0x700);
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, esi, 0x700, eax);
+    eax = local[20];
+    edx = port_u32(&port, ecx, 0xc);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = eax;
+    eax = port_u32(&port, esi, 0x780);
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, esi, 0x780, eax);
+    port_set32(&port, ebx, 0x44, 0x0);
+    eax = port_u32(&port, ebx, 0x44);
+    port_set32(&port, ebx, 0x40, eax);
+    port_set32(&port, ebx, 0x3c, eax);
+    port_set32(&port, ebx, 0x38, eax);
+    port_set32(&port, ebx, 0x34, eax);
+    port_set32(&port, ebx, 0x30, eax);
+    esi = local[22];
+    esi = esi + 0x4;
+    local[22] = esi;
+    eax = port_u32(&port, esi, 0x3c);
+    local[16] = eax;
+    eax = port_u32(&port, esi, 0x30);
+    local[19] = eax;
+    eax = local[16];
+    edx = local[19];
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[16] = eax;
+    esi = port_u32(&port, esi, 0x24);
+    eax = local[19];
+    edx = esi;
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[19] = eax;
+    eax = local[22];
+    eax = port_u32(&port, eax, 0x18);
+    local[18] = eax;
+    eax = esi;
+    edx = local[18];
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    esi = eax;
+    edi = local[22];
+    edi = port_u32(&port, edi, 0xc);
+    eax = local[18];
+    edx = edi;
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[18] = eax;
+    ebp = local[22];
+    ebp = port_u32(&port, ebp, 0x0);
+    eax = edi;
+    edx = ebp;
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edi = eax;
+    eax = local[16];
+    edx = esi;
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[16] = eax;
+    eax = esi;
+    edx = edi;
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    esi = eax;
+    eax = local[18];
+    edx = port_u32(&port, 0u, 0x524284);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[18] = eax;
+    eax = esi;
+    edx = port_u32(&port, 0u, 0x524284);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    esi = eax;
+    eax = ebp;
+    edx = local[19];
+    eax = port_call(&port, FIXED_SUBTRACT, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[14] = eax;
+    eax = edi;
+    edx = local[16];
+    eax = port_call(&port, FIXED_SUBTRACT, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = port_u32(&port, 0u, 0x524278);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[15] = eax;
+    eax = local[14];
+    edx = local[15];
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[13] = eax;
+    eax = local[14];
+    edx = local[15];
+    eax = port_call(&port, FIXED_SUBTRACT, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[14] = eax;
+    edx = port_u32(&port, ecx, 0x28);
+    eax = local[13];
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, ebx, 0x28, eax);
+    edx = port_u32(&port, ecx, 0x1c);
+    eax = local[13];
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, ebx, 0x1c, eax);
+    eax = local[14];
+    edx = port_u32(&port, ecx, 0x4);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = eax;
+    eax = port_u32(&port, ebx, 0x4);
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, ebx, 0x4, eax);
+    eax = local[14];
+    edx = port_u32(&port, ecx, 0x10);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = eax;
+    eax = port_u32(&port, ebx, 0x10);
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, ebx, 0x10, eax);
+    eax = local[19];
+    edx = port_u32(&port, 0u, 0x524280);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = eax;
+    eax = ebp;
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    ebp = eax;
+    edx = local[18];
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[19] = eax;
+    eax = ebp;
+    edx = local[18];
+    eax = port_call(&port, FIXED_SUBTRACT, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    ebp = eax;
+    eax = local[16];
+    edx = port_u32(&port, 0u, 0x524280);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = eax;
+    eax = edi;
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edi = eax;
+    edx = esi;
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = port_u32(&port, 0u, 0x524274);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[16] = eax;
+    eax = edi;
+    edx = esi;
+    eax = port_call(&port, FIXED_SUBTRACT, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = port_u32(&port, 0u, 0x52427c);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edi = eax;
+    eax = local[19];
+    edx = local[16];
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    esi = eax;
+    eax = local[19];
+    edx = local[16];
+    eax = port_call(&port, FIXED_SUBTRACT, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[19] = eax;
+    eax = ebp;
+    edx = edi;
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    local[18] = eax;
+    eax = ebp;
+    edx = edi;
+    eax = port_call(&port, FIXED_SUBTRACT, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    ebp = eax;
+    edx = port_u32(&port, ecx, 0x2c);
+    eax = local[18];
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, ebx, 0x2c, eax);
+    edx = port_u32(&port, ecx, 0x18);
+    eax = local[18];
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, ebx, 0x18, eax);
+    edx = port_u32(&port, ecx, 0x20);
+    eax = esi;
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, ebx, 0x20, eax);
+    edx = port_u32(&port, ecx, 0x24);
+    eax = esi;
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, ebx, 0x24, eax);
+    eax = ebp;
+    edx = port_u32(&port, ecx, 0x0);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = eax;
+    eax = port_u32(&port, ebx, 0x0);
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, ebx, 0x0, eax);
+    eax = ebp;
+    edx = port_u32(&port, ecx, 0x14);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = eax;
+    eax = port_u32(&port, ebx, 0x14);
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, ebx, 0x14, eax);
+    eax = local[19];
+    edx = port_u32(&port, ecx, 0x8);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = eax;
+    eax = port_u32(&port, ebx, 0x8);
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, ebx, 0x8, eax);
+    eax = local[19];
+    edx = port_u32(&port, ecx, 0xc);
+    eax = port_call(&port, FIXED_MULTIPLY, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    edx = eax;
+    eax = port_u32(&port, ebx, 0xc);
+    eax = port_call(&port, FIXED_ADD, eax, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_set32(&port, ebx, 0xc, eax);
+    (void)edi;
+    (void)ebp;
+    (void)esi;
+    return port_return(&port, eax, edx);
+}
+
+uint32_t vertrix_port_mpeg_decode_granules(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x2a0,
+        SIDE = 0x29c, /* below ebp: the side info (two granules of two 0xd0-byte channels) */
+        GRANULE = 0x294,
+        SECOND = 0x1c4,
+        SCALES = 0xf4, /* below ebp: the scale factors */
+        SAMPLES = 0x52c30c,
+        SAMPLES_RIGHT = 0x52cc0c,
+        HYBRID = 0x52d50c,
+        HYBRID_RIGHT = 0x52de0c,
+        FIXED_SUBTRACT = 0x4d809c,
+        FIXED_ADD = 0x4d80a6
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t header = entry->eax;
+    uint32_t output = entry->edx;
+    uint32_t count = entry->ebx;
+    uint32_t eax;
+    uint32_t edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi;
+    uint32_t edi;
+    uint32_t mode;
+    int32_t single;
+    uint32_t rate;
+    int32_t channels;
+    uint32_t mid_side = 0;
+    uint32_t intensity = 0;
+    uint32_t granules;
+    uint32_t total = 0;
+    uint32_t first;
+    uint32_t second;
+    uint32_t offset;
+    uint32_t end;
+    uint32_t argument;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    mode = port_u32(&port, header, 0);
+    single = (int32_t)port_u32(&port, header, 8);
+    rate = port_u32(&port, header, 0x24);
+    if (mode == 1)
+    {
+        channels = 1;
+        single = 0;
+    }
+    else
+    {
+        channels = single < 0 ? 2 : 1;
+    }
+    ecx = port_u32(&port, header, 0x30);
+    if (ecx == 1)
+    {
+        mid_side = port_u32(&port, header, 0x34) & 2;
+        intensity = port_u32(&port, header, 0x34) & 1;
+    }
+    else
+    {
+        ebx = 0;
+    }
+    /* The side info: MPEG-1 (+0xc set) reads two granules, MPEG-2 one. */
+    argument = (uint32_t)single;
+    ecx = rate;
+    ebx = mid_side;
+    if (port_u32(&port, header, 0xc) != 0)
+    {
+        granules = 1;
+        eax = port_call_stack(&port, 0x407280, ebp - SIDE, mode, ebx, ecx, &argument, 1);
+    }
+    else
+    {
+        granules = 2;
+        eax = port_call_stack(&port, 0x407020, ebp - SIDE, mode, ebx, ecx, &argument, 1);
+    }
+    edx = vertrix_lift_edx;
+    eax = port_call(&port, 0x4060e0, port_u32(&port, ebp, -SIDE), edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    if (eax == 0xffffffffu)
+    {
+        return port_return(&port, 0, edx);
+    }
+    first = ebp - GRANULE;
+    second = ebp - SECOND;
+    end = granules * 0x68;
+    for (offset = 0; (int32_t)offset < (int32_t)end; offset += 0x68)
+    {
+        uint32_t channel;
+        uint32_t band;
+        esi = first;
+        if (port_u32(&port, header, 0xc) != 0)
+        {
+            ebx = 0;
+            eax = port_call(&port, 0x407720, ebp - SCALES, esi, ebx, ecx);
+        }
+        else
+        {
+            eax = port_call(&port, 0x4074a0, ebp - SCALES, esi, ebx, ecx);
+        }
+        argument = eax;
+        ecx = rate;
+        ebx = esi;
+        eax = port_call_stack(&port, 0x407830, SAMPLES, ebp - SCALES, ebx, ecx, &argument, 1);
+        edx = vertrix_lift_edx;
+        if (eax != 0)
+        {
+            return port_return(&port, total, edx);
+        }
+        if (mode == 2)
+        {
+            uint32_t right = second;
+            if (port_u32(&port, header, 0xc) != 0)
+            {
+                ebx = intensity;
+                eax = port_call(&port, 0x407720, ebp - SCALES, second, ebx, ecx);
+            }
+            else
+            {
+                eax = port_call(&port, 0x4074a0, ebp - SCALES, second, ebx, ecx);
+            }
+            argument = eax;
+            ecx = rate;
+            ebx = right;
+            eax = port_call_stack(&port, 0x407830, SAMPLES_RIGHT, ebp - SCALES, ebx, ecx, &argument,
+                                  1);
+            edx = vertrix_lift_edx;
+            if (eax != 0)
+            {
+                return port_return(&port, total, edx);
+            }
+            if (mid_side != 0)
+            {
+                /* Mid/side stereo: left = m + s, right = m - s. */
+                for (ecx = 0; ecx != 0x900; ecx += 4)
+                {
+                    edi = port_u32(&port, ecx, SAMPLES);
+                    esi = port_u32(&port, ecx, SAMPLES_RIGHT);
+                    port_set32(&port, ecx, SAMPLES_RIGHT,
+                               port_call(&port, FIXED_SUBTRACT, edi, esi, ebx, ecx));
+                    port_set32(&port, ecx, SAMPLES,
+                               port_call(&port, FIXED_ADD, edi, esi, ebx, ecx));
+                    edx = vertrix_lift_edx;
+                }
+            }
+            if (intensity != 0)
+            {
+                uint32_t pair[2];
+                pair[0] = mid_side;
+                pair[1] = port_u32(&port, header, 0xc);
+                ecx = rate;
+                ebx = right;
+                port_call_stack(&port, 0x4083a0, SAMPLES, ebp - SCALES, ebx, ecx, pair, 2);
+                edx = vertrix_lift_edx;
+            }
+            if (mid_side != 0 || intensity != 0 || (uint32_t)single == 3)
+            {
+                /* Both channels decode as many big values as the larger of the two. */
+                eax = port_u32(&port, right, 0x40);
+                edx = offset;
+                ecx = port_u32(&port, edx, ebp - GRANULE + 0x40);
+                if (eax > ecx)
+                {
+                    port_set32(&port, edx, ebp - GRANULE + 0x40, eax);
+                }
+                else
+                {
+                    edx = right;
+                    port_set32(&port, edx, 0x40, ecx);
+                }
+            }
+            ebx = (uint32_t)single;
+            if (ebx == 1)
+            {
+                /* The right channel alone: copied over the left. */
+                edx = SAMPLES;
+                esi = SAMPLES_RIGHT;
+                for (eax = 0;; eax++)
+                {
+                    ecx = port_u32(&port, right, 0x40) * 0x12;
+                    if (eax >= ecx)
+                    {
+                        break;
+                    }
+                    ecx = port_u32(&port, esi, 0);
+                    port_set32(&port, edx, 0, ecx);
+                    esi += 4;
+                    edx += 4;
+                }
+            }
+            else if (ebx == 3)
+            {
+                /* Both channels mixed into the left. */
+                ecx = SAMPLES;
+                edi = SAMPLES_RIGHT;
+                for (esi = 0;; esi++)
+                {
+                    eax = port_u32(&port, right, 0x40) * 0x12;
+                    if (esi >= eax)
+                    {
+                        break;
+                    }
+                    edx = port_u32(&port, edi, 0);
+                    edi += 4;
+                    port_set32(&port, ecx, 0,
+                               port_call(&port, FIXED_ADD, port_u32(&port, ecx, 0), edx, ebx, ecx));
+                    edx = vertrix_lift_edx;
+                    ecx += 4;
+                }
+            }
+        }
+        /* Alias reduction and the hybrid synthesis for each channel. */
+        esi = SAMPLES;
+        edi = first;
+        for (channel = 0; (int32_t)channel < channels; channel++)
+        {
+            port_call(&port, 0x408800, esi, edi, ebx, ecx);
+            ecx = edi;
+            ebx = channel;
+            port_call(&port, 0x409f00, esi, HYBRID + channel * 0x900, ebx, ecx);
+            esi += 0x900;
+            edi += 0xd0;
+            edx = channel + 1;
+        }
+        /* The polyphase synthesis of the 18 time slots. */
+        esi = HYBRID;
+        for (band = 0; band < 0x12; band++)
+        {
+            if (single < 0)
+            {
+                port_set32(&port, ebp, -0x54u, port_u32(&port, count, 0));
+                ecx = ebp - 0x54;
+                ebx = output;
+                eax = port_call(&port, 0x405720, esi, 0, ebx, ecx);
+                total += eax;
+                ecx = count;
+                ebx = output;
+                eax = port_call(&port, 0x405720, HYBRID_RIGHT + (band << 7), 1, ebx, ecx);
+            }
+            else
+            {
+                ebx = count;
+                eax = port_call(&port, 0x4056c0, esi, output, ebx, ecx);
+            }
+            edx = vertrix_lift_edx;
+            total += eax;
+            esi += 0x80;
+        }
+        first += 0x68;
+        second += 0x68;
+    }
+    return port_return(&port, total, edx);
+}

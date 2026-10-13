@@ -49,7 +49,9 @@ PORTS = {0x401054: 'vertrix_port_mix_clamp',
          0x407720: 'vertrix_port_mpeg_scale_factors',
          0x408800: 'vertrix_port_mpeg_antialias',
          0x4088e0: 'vertrix_port_imdct_long',
+         0x4095d0: 'vertrix_port_mpeg_imdct_short',
          0x409f00: 'vertrix_port_mpeg_hybrid',
+         0x40a190: 'vertrix_port_mpeg_decode_granules',
          0x40a800: 'vertrix_port_audio_reset',
          0x40a890: 'vertrix_port_audio_hook_add',
          0x40a8f0: 'vertrix_port_audio_driver_info',
@@ -737,4 +739,4 @@ PORTS = {0x401054: 'vertrix_port_mix_clamp',
 # The frames (bytes below the return slot) of the ports that pass their callees locals by address:
 # the dispatcher places a callee's frame below them. Without an entry a port's frame must lie
 # within LIFTED_ARENA_GAP (0x100 bytes).
-PORT_FRAMES = {0x405680: 0x10c, 0x4056c0: 0x98}
+PORT_FRAMES = {0x405680: 0x10c, 0x4056c0: 0x98, 0x40a190: 0x2a0}

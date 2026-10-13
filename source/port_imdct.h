@@ -50,4 +50,21 @@ uint32_t vertrix_port_mpeg_hybrid(PORT_SIGNATURE);
  * bounds (the band table 0x4f5918), the preflag and the scale factor scale. */
 uint32_t vertrix_port_mpeg_side_info(PORT_SIGNATURE);
 
+/* Original 0x4095d0(eax = samples, edx = previous block, ebx = overlap, ecx = window; stack:
+ * the output; ret 4): the MPEG layer III short-block IMDCT of one subband. The first six outputs
+ * (a stride of 0x80) copy the previous block; the three 6-point transforms are straight-line
+ * fixed-point arithmetic through the add 0x4d80a6, subtract 0x4d809c and multiply 0x4d8177,
+ * windowed by ecx and overlapped into the output and the overlap buffer. No branches. */
+uint32_t vertrix_port_mpeg_imdct_short(PORT_SIGNATURE);
+
+/* Original 0x40a190(eax = frame header, edx = output, ebx = the output count): decode the
+ * granules of one MPEG layer III frame. The side info is read (0x407280 for MPEG-1, 0x407020
+ * for MPEG-2) and the main data located (0x4060e0, -1 ends the frame with 0). For each granule
+ * the scale factors (0x407720 or 0x4074a0) and Huffman data (0x407830) of each channel are read
+ * into 0x52c30c and 0x52cc0c; stereo frames get mid/side (header +0x34 bit 1) and intensity
+ * (bit 0, 0x4083a0) processing, the larger big value count, and the single-channel copies.
+ * Each channel then goes through 0x408800 and 0x409f00 and each of the 18 time slots through
+ * the synthesis (0x4056c0, or 0x405720 for both channels). Returns the samples written. */
+uint32_t vertrix_port_mpeg_decode_granules(PORT_SIGNATURE);
+
 #endif
