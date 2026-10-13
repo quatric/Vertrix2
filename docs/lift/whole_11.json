@@ -298,35 +298,6 @@
   "virtual": [],
   "address": 4673024
  },
- "list_release_entries": {
-  "callees": {
-   "0x4ca210": [
-    0,
-    false
-   ],
-   "0x4ca050": [
-    0,
-    false
-   ],
-   "0x4d8770": [
-    0,
-    false
-   ]
-  },
-  "stack": 140,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   35,
-   36,
-   37
-  ],
-  "virtual": [],
-  "address": 4945968
- },
  "f4e6ae0": {
   "callees": {
    "slot_507c9c": [

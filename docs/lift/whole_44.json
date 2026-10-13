@@ -123,64 +123,6 @@
   "virtual": [],
   "address": 4891584
  },
- "f4d71d0": {
-  "callees": {
-   "0x4ce740": [
-    0,
-    false
-   ],
-   "0x4cbe80": [
-    0,
-    false
-   ],
-   "virtual_4d71f1": [
-    0,
-    false
-   ],
-   "virtual_4d7206": [
-    1,
-    false
-   ],
-   "virtual_4d722a": [
-    4,
-    true
-   ]
-  },
-  "stack": 124,
-  "arguments": 0,
-  "pointer_callees": [
-   "0x4cbe80",
-   "0x4ce740"
-  ],
-  "pointer_fields": [
-   4
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   15,
-   16,
-   17
-  ],
-  "virtual": [
-   [
-    0,
-    20,
-    1
-   ],
-   [
-    0,
-    20,
-    4
-   ],
-   [
-    0,
-    120,
-    0
-   ]
-  ],
-  "address": 5075408
- },
  "f4dae80": {
   "callees": {
    "slot_507c9c": [

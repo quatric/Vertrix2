@@ -1,0 +1,874 @@
+{
+ "0x40c260": {
+  "lifted": "lifted_file_read_byte",
+  "chunk": "whole_0"
+ },
+ "0x40c2e0": {
+  "lifted": "lifted_file_read_dword",
+  "chunk": "whole_0"
+ },
+ "0x40f780": {
+  "lifted": "lifted_f40f780",
+  "chunk": "whole_8"
+ },
+ "0x40f9e0": {
+  "lifted": "lifted_f40f9e0",
+  "chunk": "whole_0"
+ },
+ "0x410150": {
+  "lifted": "lifted_pitch_curve",
+  "chunk": "whole_0"
+ },
+ "0x410890": {
+  "lifted": "lifted_flip_high_bits",
+  "chunk": "whole_8"
+ },
+ "0x4108a0": {
+  "lifted": "lifted_f4108a0",
+  "chunk": "whole_0"
+ },
+ "0x4112d0": {
+  "lifted": "lifted_f4112d0",
+  "chunk": "whole_0"
+ },
+ "0x4138b0": {
+  "lifted": "lifted_f4138b0",
+  "chunk": "whole_0"
+ },
+ "0x413a40": {
+  "lifted": "lifted_f413a40",
+  "chunk": "whole_0"
+ },
+ "0x414b90": {
+  "lifted": "lifted_f414b90",
+  "chunk": "whole_0"
+ },
+ "0x416c30": {
+  "lifted": "lifted_f416c30",
+  "chunk": "whole_0"
+ },
+ "0x4171a0": {
+  "lifted": "lifted_f4171a0",
+  "chunk": "whole_8"
+ },
+ "0x417710": {
+  "lifted": "lifted_f417710",
+  "chunk": "whole_0"
+ },
+ "0x418850": {
+  "lifted": "lifted_object_invoke_callback",
+  "chunk": "whole_21"
+ },
+ "0x418880": {
+  "lifted": "lifted_f418880",
+  "chunk": "whole_0"
+ },
+ "0x442b00": {
+  "lifted": "lifted_text_width",
+  "chunk": "whole_21"
+ },
+ "0x45f500": {
+  "lifted": "lifted_f45f500",
+  "chunk": "whole_8"
+ },
+ "0x46c500": {
+  "lifted": "lifted_f46c500",
+  "chunk": "whole_3"
+ },
+ "0x47c250": {
+  "lifted": "lifted_f47c250",
+  "chunk": "whole_3"
+ },
+ "0x47f590": {
+  "lifted": "lifted_f47f590",
+  "chunk": "whole_3"
+ },
+ "0x480990": {
+  "lifted": "lifted_f480990",
+  "chunk": "whole_4"
+ },
+ "0x480b20": {
+  "lifted": "lifted_f480b20",
+  "chunk": "whole_4"
+ },
+ "0x480ff0": {
+  "lifted": "lifted_f480ff0",
+  "chunk": "whole_4"
+ },
+ "0x481340": {
+  "lifted": "lifted_f481340",
+  "chunk": "whole_4"
+ },
+ "0x481420": {
+  "lifted": "lifted_rle_encoded_length",
+  "chunk": "whole_21"
+ },
+ "0x481460": {
+  "lifted": "lifted_f481460",
+  "chunk": "whole_4"
+ },
+ "0x4817a0": {
+  "lifted": "lifted_f4817a0",
+  "chunk": "whole_4"
+ },
+ "0x481850": {
+  "lifted": "lifted_f481850",
+  "chunk": "whole_4"
+ },
+ "0x4827c0": {
+  "lifted": "lifted_f4827c0",
+  "chunk": "whole_4"
+ },
+ "0x482860": {
+  "lifted": "lifted_f482860",
+  "chunk": "whole_4"
+ },
+ "0x486e00": {
+  "lifted": "lifted_f486e00",
+  "chunk": "whole_10"
+ },
+ "0x487df0": {
+  "lifted": "lifted_f487df0",
+  "chunk": "whole_4"
+ },
+ "0x488320": {
+  "lifted": "lifted_f488320",
+  "chunk": "whole_10"
+ },
+ "0x488510": {
+  "lifted": "lifted_f488510",
+  "chunk": "whole_4"
+ },
+ "0x488560": {
+  "lifted": "lifted_f488560",
+  "chunk": "whole_4"
+ },
+ "0x4885c0": {
+  "lifted": "lifted_f4885c0",
+  "chunk": "whole_4"
+ },
+ "0x488620": {
+  "lifted": "lifted_f488620",
+  "chunk": "whole_4"
+ },
+ "0x4886f0": {
+  "lifted": "lifted_f4886f0",
+  "chunk": "whole_4"
+ },
+ "0x488850": {
+  "lifted": "lifted_f488850",
+  "chunk": "whole_4"
+ },
+ "0x4888c0": {
+  "lifted": "lifted_f4888c0",
+  "chunk": "whole_4"
+ },
+ "0x488960": {
+  "lifted": "lifted_f488960",
+  "chunk": "whole_4"
+ },
+ "0x4889a0": {
+  "lifted": "lifted_f4889a0",
+  "chunk": "whole_4"
+ },
+ "0x488a20": {
+  "lifted": "lifted_f488a20",
+  "chunk": "whole_4"
+ },
+ "0x489790": {
+  "lifted": "lifted_f489790",
+  "chunk": "whole_9"
+ },
+ "0x489950": {
+  "lifted": "lifted_f489950",
+  "chunk": "whole_4"
+ },
+ "0x48bb80": {
+  "lifted": "lifted_f48bb80",
+  "chunk": "whole_4"
+ },
+ "0x48bdf0": {
+  "lifted": "lifted_f48bdf0",
+  "chunk": "whole_4"
+ },
+ "0x4ad810": {
+  "lifted": "lifted_f4ad810",
+  "chunk": "whole_10"
+ },
+ "0x4ae170": {
+  "lifted": "lifted_cursor_clamp",
+  "chunk": "whole_8"
+ },
+ "0x4ae1f0": {
+  "lifted": "lifted_f4ae1f0",
+  "chunk": "whole_4"
+ },
+ "0x4b5150": {
+  "lifted": "lifted_f4b5150",
+  "chunk": "whole_4"
+ },
+ "0x4ca520": {
+  "lifted": "lifted_f4ca520",
+  "chunk": "whole_5"
+ },
+ "0x4cafd0": {
+  "lifted": "lifted_f4cafd0",
+  "chunk": "whole_5"
+ },
+ "0x4cb080": {
+  "lifted": "lifted_f4cb080",
+  "chunk": "whole_5"
+ },
+ "0x4cb950": {
+  "lifted": "lifted_f4cb950",
+  "chunk": "whole_5"
+ },
+ "0x4cb970": {
+  "lifted": "lifted_f4cb970",
+  "chunk": "whole_5"
+ },
+ "0x4cbd10": {
+  "lifted": "lifted_f4cbd10",
+  "chunk": "whole_5"
+ },
+ "0x4cbe90": {
+  "lifted": "lifted_f4cbe90",
+  "chunk": "whole_5"
+ },
+ "0x4cc4a0": {
+  "lifted": "lifted_f4cc4a0",
+  "chunk": "whole_5"
+ },
+ "0x4cc7c0": {
+  "lifted": "lifted_f4cc7c0",
+  "chunk": "whole_5"
+ },
+ "0x4cc870": {
+  "lifted": "lifted_f4cc870",
+  "chunk": "whole_5"
+ },
+ "0x4cc990": {
+  "lifted": "lifted_f4cc990",
+  "chunk": "whole_5"
+ },
+ "0x4cc9c0": {
+  "lifted": "lifted_f4cc9c0",
+  "chunk": "whole_5"
+ },
+ "0x4ccbc0": {
+  "lifted": "lifted_f4ccbc0",
+  "chunk": "whole_5"
+ },
+ "0x4ccc60": {
+  "lifted": "lifted_f4ccc60",
+  "chunk": "whole_5"
+ },
+ "0x4cccf0": {
+  "lifted": "lifted_f4cccf0",
+  "chunk": "whole_5"
+ },
+ "0x4ccd20": {
+  "lifted": "lifted_f4ccd20",
+  "chunk": "whole_5"
+ },
+ "0x4ccd50": {
+  "lifted": "lifted_f4ccd50",
+  "chunk": "whole_5"
+ },
+ "0x4cd0c0": {
+  "lifted": "lifted_f4cd0c0",
+  "chunk": "whole_5"
+ },
+ "0x4cda40": {
+  "lifted": "lifted_f4cda40",
+  "chunk": "whole_5"
+ },
+ "0x4cf420": {
+  "lifted": "lifted_f4cf420",
+  "chunk": "whole_5"
+ },
+ "0x4cf480": {
+  "lifted": "lifted_f4cf480",
+  "chunk": "whole_5"
+ },
+ "0x4cff80": {
+  "lifted": "lifted_f4cff80",
+  "chunk": "whole_5"
+ },
+ "0x4cffd0": {
+  "lifted": "lifted_f4cffd0",
+  "chunk": "whole_5"
+ },
+ "0x4d0030": {
+  "lifted": "lifted_f4d0030",
+  "chunk": "whole_5"
+ },
+ "0x4d07b0": {
+  "lifted": "lifted_f4d07b0",
+  "chunk": "whole_5"
+ },
+ "0x4d08d0": {
+  "lifted": "lifted_f4d08d0",
+  "chunk": "whole_5"
+ },
+ "0x4d1980": {
+  "lifted": "lifted_f4d1980",
+  "chunk": "whole_5"
+ },
+ "0x4d1b80": {
+  "lifted": "lifted_f4d1b80",
+  "chunk": "whole_13"
+ },
+ "0x4d1d20": {
+  "lifted": "lifted_f4d1d20",
+  "chunk": "whole_5"
+ },
+ "0x4d1e00": {
+  "lifted": "lifted_f4d1e00",
+  "chunk": "whole_5"
+ },
+ "0x4d25f0": {
+  "lifted": "lifted_f4d25f0",
+  "chunk": "whole_5"
+ },
+ "0x4d2700": {
+  "lifted": "lifted_object_reset_triple",
+  "chunk": "whole_5"
+ },
+ "0x4d28c0": {
+  "lifted": "lifted_f4d28c0",
+  "chunk": "whole_5"
+ },
+ "0x4d2910": {
+  "lifted": "lifted_f4d2910",
+  "chunk": "whole_5"
+ },
+ "0x4d29d0": {
+  "lifted": "lifted_f4d29d0",
+  "chunk": "whole_8"
+ },
+ "0x4d2a00": {
+  "lifted": "lifted_f4d2a00",
+  "chunk": "whole_5"
+ },
+ "0x4d2bb0": {
+  "lifted": "lifted_f4d2bb0",
+  "chunk": "whole_5"
+ },
+ "0x4d2c00": {
+  "lifted": "lifted_f4d2c00",
+  "chunk": "whole_5"
+ },
+ "0x4d4080": {
+  "lifted": "lifted_f4d4080",
+  "chunk": "whole_5"
+ },
+ "0x4d4570": {
+  "lifted": "lifted_f4d4570",
+  "chunk": "whole_5"
+ },
+ "0x4d4820": {
+  "lifted": "lifted_f4d4820",
+  "chunk": "whole_9"
+ },
+ "0x4d48e0": {
+  "lifted": "lifted_f4d48e0",
+  "chunk": "whole_5"
+ },
+ "0x4d49f0": {
+  "lifted": "lifted_f4d49f0",
+  "chunk": "whole_5"
+ },
+ "0x4d5d00": {
+  "lifted": "lifted_f4d5d00",
+  "chunk": "whole_13"
+ },
+ "0x4d6380": {
+  "lifted": "lifted_f4d6380",
+  "chunk": "whole_5"
+ },
+ "0x4d6cb0": {
+  "lifted": "lifted_f4d6cb0",
+  "chunk": "whole_6"
+ },
+ "0x4d6f10": {
+  "lifted": "lifted_f4d6f10",
+  "chunk": "whole_6"
+ },
+ "0x4d6f50": {
+  "lifted": "lifted_f4d6f50",
+  "chunk": "whole_6"
+ },
+ "0x4d71d0": {
+  "lifted": "lifted_f4d71d0",
+  "chunk": "whole_44"
+ },
+ "0x4d75a0": {
+  "lifted": "lifted_f4d75a0",
+  "chunk": "whole_6"
+ },
+ "0x4d7c00": {
+  "lifted": "lifted_f4d7c00",
+  "chunk": "whole_6"
+ },
+ "0x4d7e50": {
+  "lifted": "lifted_f4d7e50",
+  "chunk": "whole_6"
+ },
+ "0x4d8c90": {
+  "lifted": "lifted_f4d8c90",
+  "chunk": "whole_9"
+ },
+ "0x4d8f80": {
+  "lifted": "lifted_f4d8f80",
+  "chunk": "whole_8"
+ },
+ "0x4dbaa0": {
+  "lifted": "lifted_f4dbaa0",
+  "chunk": "whole_6"
+ },
+ "0x4dbe70": {
+  "lifted": "lifted_f4dbe70",
+  "chunk": "whole_13"
+ },
+ "0x4dc1c0": {
+  "lifted": "lifted_f4dc1c0",
+  "chunk": "whole_6"
+ },
+ "0x4dc390": {
+  "lifted": "lifted_f4dc390",
+  "chunk": "whole_13"
+ },
+ "0x4dc6c0": {
+  "lifted": "lifted_f4dc6c0",
+  "chunk": "whole_6"
+ },
+ "0x4dcc70": {
+  "lifted": "lifted_f4dcc70",
+  "chunk": "whole_6"
+ },
+ "0x4dcd80": {
+  "lifted": "lifted_f4dcd80",
+  "chunk": "whole_6"
+ },
+ "0x4dce40": {
+  "lifted": "lifted_f4dce40",
+  "chunk": "whole_6"
+ },
+ "0x4dd040": {
+  "lifted": "lifted_f4dd040",
+  "chunk": "whole_6"
+ },
+ "0x4dd0c0": {
+  "lifted": "lifted_f4dd0c0",
+  "chunk": "whole_6"
+ },
+ "0x4dd160": {
+  "lifted": "lifted_f4dd160",
+  "chunk": "whole_6"
+ },
+ "0x4dd180": {
+  "lifted": "lifted_f4dd180",
+  "chunk": "whole_6"
+ },
+ "0x4ddc90": {
+  "lifted": "lifted_f4ddc90",
+  "chunk": "whole_6"
+ },
+ "0x4dea78": {
+  "lifted": "lifted_f4dea78",
+  "chunk": "whole_6"
+ },
+ "0x4e08c1": {
+  "lifted": "lifted_f4e08c1",
+  "chunk": "whole_10"
+ },
+ "0x4e08e0": {
+  "lifted": "lifted_f4e08e0",
+  "chunk": "whole_6"
+ },
+ "0x4e104e": {
+  "lifted": "lifted_f4e104e",
+  "chunk": "whole_6"
+ },
+ "0x4e1260": {
+  "lifted": "lifted_f4e1260",
+  "chunk": "whole_6"
+ },
+ "0x4e1290": {
+  "lifted": "lifted_f4e1290",
+  "chunk": "whole_6"
+ },
+ "0x4e14f0": {
+  "lifted": "lifted_f4e14f0",
+  "chunk": "whole_6"
+ },
+ "0x4e1520": {
+  "lifted": "lifted_f4e1520",
+  "chunk": "whole_6"
+ },
+ "0x4e15b0": {
+  "lifted": "lifted_f4e15b0",
+  "chunk": "whole_6"
+ },
+ "0x4e15c0": {
+  "lifted": "lifted_f4e15c0",
+  "chunk": "whole_6"
+ },
+ "0x4e1620": {
+  "lifted": "lifted_f4e1620",
+  "chunk": "whole_6"
+ },
+ "0x4e1700": {
+  "lifted": "lifted_f4e1700",
+  "chunk": "whole_6"
+ },
+ "0x4e1780": {
+  "lifted": "lifted_f4e1780",
+  "chunk": "whole_8"
+ },
+ "0x4e18e0": {
+  "lifted": "lifted_f4e18e0",
+  "chunk": "whole_6"
+ },
+ "0x4e1982": {
+  "lifted": "lifted_f4e1982",
+  "chunk": "whole_6"
+ },
+ "0x4e1990": {
+  "lifted": "lifted_f4e1990",
+  "chunk": "whole_6"
+ },
+ "0x4e19f0": {
+  "lifted": "lifted_f4e19f0",
+  "chunk": "whole_6"
+ },
+ "0x4e1a20": {
+  "lifted": "lifted_f4e1a20",
+  "chunk": "whole_6"
+ },
+ "0x4e1bf0": {
+  "lifted": "lifted_f4e1bf0",
+  "chunk": "whole_6"
+ },
+ "0x4e2500": {
+  "lifted": "lifted_f4e2500",
+  "chunk": "whole_8"
+ },
+ "0x4e2610": {
+  "lifted": "lifted_f4e2610",
+  "chunk": "whole_8"
+ },
+ "0x4e26e0": {
+  "lifted": "lifted_f4e26e0",
+  "chunk": "whole_6"
+ },
+ "0x4e2780": {
+  "lifted": "lifted_f4e2780",
+  "chunk": "whole_8"
+ },
+ "0x4e2860": {
+  "lifted": "lifted_f4e2860",
+  "chunk": "whole_8"
+ },
+ "0x4e28e0": {
+  "lifted": "lifted_f4e28e0",
+  "chunk": "whole_6"
+ },
+ "0x4e2a30": {
+  "lifted": "lifted_f4e2a30",
+  "chunk": "whole_6"
+ },
+ "0x4e2ad0": {
+  "lifted": "lifted_f4e2ad0",
+  "chunk": "whole_6"
+ },
+ "0x4e2b60": {
+  "lifted": "lifted_f4e2b60",
+  "chunk": "whole_6"
+ },
+ "0x4e2c40": {
+  "lifted": "lifted_f4e2c40",
+  "chunk": "whole_6"
+ },
+ "0x4e2cc0": {
+  "lifted": "lifted_f4e2cc0",
+  "chunk": "whole_6"
+ },
+ "0x4e2d40": {
+  "lifted": "lifted_f4e2d40",
+  "chunk": "whole_6"
+ },
+ "0x4e2d60": {
+  "lifted": "lifted_f4e2d60",
+  "chunk": "whole_6"
+ },
+ "0x4e2e50": {
+  "lifted": "lifted_f4e2e50",
+  "chunk": "whole_6"
+ },
+ "0x4e2f10": {
+  "lifted": "lifted_f4e2f10",
+  "chunk": "whole_6"
+ },
+ "0x4e3060": {
+  "lifted": "lifted_f4e3060",
+  "chunk": "whole_6"
+ },
+ "0x4e3160": {
+  "lifted": "lifted_f4e3160",
+  "chunk": "whole_6"
+ },
+ "0x4e34c0": {
+  "lifted": "lifted_f4e34c0",
+  "chunk": "whole_6"
+ },
+ "0x4e34e0": {
+  "lifted": "lifted_f4e34e0",
+  "chunk": "whole_9"
+ },
+ "0x4e3530": {
+  "lifted": "lifted_f4e3530",
+  "chunk": "whole_6"
+ },
+ "0x4e3660": {
+  "lifted": "lifted_f4e3660",
+  "chunk": "whole_6"
+ },
+ "0x4e3681": {
+  "lifted": "lifted_f4e3681",
+  "chunk": "whole_6"
+ },
+ "0x4e3694": {
+  "lifted": "lifted_f4e3694",
+  "chunk": "whole_6"
+ },
+ "0x4e370f": {
+  "lifted": "lifted_f4e370f",
+  "chunk": "whole_6"
+ },
+ "0x4e371e": {
+  "lifted": "lifted_f4e371e",
+  "chunk": "whole_6"
+ },
+ "0x4e3814": {
+  "lifted": "lifted_f4e3814",
+  "chunk": "whole_6"
+ },
+ "0x4e3846": {
+  "lifted": "lifted_f4e3846",
+  "chunk": "whole_6"
+ },
+ "0x4e4024": {
+  "lifted": "lifted_f4e4024",
+  "chunk": "whole_6"
+ },
+ "0x4e47a8": {
+  "lifted": "lifted_f4e47a8",
+  "chunk": "whole_6"
+ },
+ "0x4e4fd0": {
+  "lifted": "lifted_f4e4fd0",
+  "chunk": "whole_6"
+ },
+ "0x4e4ff8": {
+  "lifted": "lifted_f4e4ff8",
+  "chunk": "whole_6"
+ },
+ "0x4e532c": {
+  "lifted": "lifted_f4e532c",
+  "chunk": "whole_6"
+ },
+ "0x4e59f4": {
+  "lifted": "lifted_f4e59f4",
+  "chunk": "whole_6"
+ },
+ "0x4e5b90": {
+  "lifted": "lifted_f4e5b90",
+  "chunk": "whole_6"
+ },
+ "0x4e5cd1": {
+  "lifted": "lifted_f4e5cd1",
+  "chunk": "whole_6"
+ },
+ "0x4e5d26": {
+  "lifted": "lifted_f4e5d26",
+  "chunk": "whole_8"
+ },
+ "0x4e5ef8": {
+  "lifted": "lifted_f4e5ef8",
+  "chunk": "whole_13"
+ },
+ "0x4e5fe4": {
+  "lifted": "lifted_f4e5fe4",
+  "chunk": "whole_6"
+ },
+ "0x4e7370": {
+  "lifted": "lifted_f4e7370",
+  "chunk": "whole_9"
+ },
+ "0x4e7660": {
+  "lifted": "lifted_f4e7660",
+  "chunk": "whole_6"
+ },
+ "0x4e7790": {
+  "lifted": "lifted_f4e7790",
+  "chunk": "whole_8"
+ },
+ "0x4e7b18": {
+  "lifted": "lifted_f4e7b18",
+  "chunk": "whole_6"
+ },
+ "0x4e8230": {
+  "lifted": "lifted_f4e8230",
+  "chunk": "whole_6"
+ },
+ "0x4e82d0": {
+  "lifted": "lifted_f4e82d0",
+  "chunk": "whole_6"
+ },
+ "0x4e8b5c": {
+  "lifted": "lifted_f4e8b5c",
+  "chunk": "whole_8"
+ },
+ "0x4e8dcb": {
+  "lifted": "lifted_f4e8dcb",
+  "chunk": "whole_6"
+ },
+ "0x4e8e69": {
+  "lifted": "lifted_f4e8e69",
+  "chunk": "whole_6"
+ },
+ "0x4e8ea0": {
+  "lifted": "lifted_f4e8ea0",
+  "chunk": "whole_6"
+ },
+ "0x4e8ff0": {
+  "lifted": "lifted_f4e8ff0",
+  "chunk": "whole_6"
+ },
+ "0x4e9980": {
+  "lifted": "lifted_f4e9980",
+  "chunk": "whole_6"
+ },
+ "0x4e9b60": {
+  "lifted": "lifted_f4e9b60",
+  "chunk": "whole_8"
+ },
+ "0x4e9bd8": {
+  "lifted": "lifted_f4e9bd8",
+  "chunk": "whole_8"
+ },
+ "0x4e9c94": {
+  "lifted": "lifted_f4e9c94",
+  "chunk": "whole_6"
+ },
+ "0x4e9ca8": {
+  "lifted": "lifted_f4e9ca8",
+  "chunk": "whole_6"
+ },
+ "0x4ea030": {
+  "lifted": "lifted_f4ea030",
+  "chunk": "whole_8"
+ },
+ "0x4ea13c": {
+  "lifted": "lifted_f4ea13c",
+  "chunk": "whole_6"
+ },
+ "0x4ea410": {
+  "lifted": "lifted_f4ea410",
+  "chunk": "whole_6"
+ },
+ "0x4ea450": {
+  "lifted": "lifted_f4ea450",
+  "chunk": "whole_6"
+ },
+ "0x4ea8cc": {
+  "lifted": "lifted_f4ea8cc",
+  "chunk": "whole_6"
+ },
+ "0x4eaa7c": {
+  "lifted": "lifted_f4eaa7c",
+  "chunk": "whole_6"
+ },
+ "0x4eada0": {
+  "lifted": "lifted_f4eada0",
+  "chunk": "whole_6"
+ },
+ "0x4eafb8": {
+  "lifted": "lifted_f4eafb8",
+  "chunk": "whole_6"
+ },
+ "0x4eb140": {
+  "lifted": "lifted_f4eb140",
+  "chunk": "whole_6"
+ },
+ "0x4eb270": {
+  "lifted": "lifted_f4eb270",
+  "chunk": "whole_6"
+ },
+ "0x4eb2a0": {
+  "lifted": "lifted_f4eb2a0",
+  "chunk": "whole_6"
+ },
+ "0x4eb3a0": {
+  "lifted": "lifted_f4eb3a0",
+  "chunk": "whole_6"
+ },
+ "0x4eb400": {
+  "lifted": "lifted_f4eb400",
+  "chunk": "whole_6"
+ },
+ "0x4ebb84": {
+  "lifted": "lifted_f4ebb84",
+  "chunk": "whole_6"
+ },
+ "0x4ec548": {
+  "lifted": "lifted_f4ec548",
+  "chunk": "whole_7"
+ },
+ "0x4ec8f0": {
+  "lifted": "lifted_f4ec8f0",
+  "chunk": "whole_7"
+ },
+ "0x4ecad0": {
+  "lifted": "lifted_f4ecad0",
+  "chunk": "whole_7"
+ },
+ "0x4ee1e5": {
+  "lifted": "lifted_f4ee1e5",
+  "chunk": "whole_8"
+ },
+ "0x4ee670": {
+  "lifted": "lifted_f4ee670",
+  "chunk": "whole_7"
+ },
+ "0x4ee840": {
+  "lifted": "lifted_f4ee840",
+  "chunk": "whole_7"
+ },
+ "0x4ee8d0": {
+  "lifted": "lifted_f4ee8d0",
+  "chunk": "whole_7"
+ },
+ "0x4eea20": {
+  "lifted": "lifted_f4eea20",
+  "chunk": "whole_7"
+ },
+ "0x4eea90": {
+  "lifted": "lifted_f4eea90",
+  "chunk": "whole_7"
+ },
+ "0x4eeb00": {
+  "lifted": "lifted_f4eeb00",
+  "chunk": "whole_7"
+ },
+ "0x4eeb20": {
+  "lifted": "lifted_f4eeb20",
+  "chunk": "whole_7"
+ },
+ "0x4eeb40": {
+  "lifted": "lifted_f4eeb40",
+  "chunk": "whole_9"
+ }
+}

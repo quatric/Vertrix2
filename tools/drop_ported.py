@@ -27,8 +27,8 @@ def drop(chunk, name, address):
     source_path.write_text(source[:start] + source[end:])
     header = header_path.read_text()
     header = re.sub(r'\n    LIFTED_%s_STACK = \d+,?' % name.upper(), '', header)
-    header = re.sub(r'/\* Original 0x%x\. \*/\nuint32_t lifted_%s\([^;]*\);\n\n?' % (address, name),
-                    '', header)
+    header = re.sub(r'(/\* Original 0x%x\. \*/\n)?uint32_t lifted_%s\([^;]*\);\n\n?'
+                    % (address, name), '', header)
     header_path.write_text(re.sub(r',\n};', '\n};', header))
 
 

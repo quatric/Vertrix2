@@ -113,49 +113,5 @@
    ]
   ],
   "address": 4680352
- },
- "f4daae8": {
-  "callees": {
-   "0x4e3a50": [
-    0,
-    false
-   ],
-   "0x4e3a90": [
-    0,
-    false
-   ],
-   "0x4daab0": [
-    0,
-    false
-   ]
-  },
-  "stack": 108,
-  "arguments": 1,
-  "pointer_callees": [
-   "0x4e3a90"
-  ],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   11,
-   12,
-   13,
-   45,
-   46,
-   47,
-   48,
-   57,
-   58,
-   59,
-   91,
-   92,
-   93,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 5090024
  }
 }
