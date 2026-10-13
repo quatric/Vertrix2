@@ -2017,4 +2017,16 @@ uint32_t vertrix_port_table_fill_indexed(PORT_SIGNATURE);
 /* Original 0x45e9e0: 0x45e850 for the tables at 0x544d7c. */
 uint32_t vertrix_port_table_fill_indexed_b(PORT_SIGNATURE);
 
+/* Original 0x4b8fbc(eax = sample record): turn the samples (+0, +8 bytes; words when +0x16 bit 0
+ * is set) into running sums, in place. Keeps edx. */
+uint32_t vertrix_port_record_prefix_sum(PORT_SIGNATURE);
+
+/* Original 0x4b7dd0(eax = name, edx): as 0x48b240 with the reader 0x4b7e80. */
+uint32_t vertrix_port_sample_file_read(PORT_SIGNATURE);
+
+/* Original 0x4b5dc0(eax = object, edx = mode): a destructor: mode 4 destroys an array (element
+ * destructor 0x516390, freed by 0x4ca040); otherwise the table 0x518344 is set and the base
+ * destructor 0x4d86d0 runs under a guard record, mode 2 freeing it (0x4ca050). */
+uint32_t vertrix_port_object_destroy_a(PORT_SIGNATURE);
+
 #endif

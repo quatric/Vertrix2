@@ -11258,3 +11258,129 @@ uint32_t vertrix_port_table_fill_indexed_b(PORT_SIGNATURE)
 {
     return table_fill_indexed(calls, services, globals, entry, 0x544d7c);
 }
+
+uint32_t vertrix_port_record_prefix_sum(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x2c
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t record = entry->eax;
+    uint32_t count;
+    uint32_t sum = 0;
+    uint32_t at;
+    uint32_t eax;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    port_set32(&port, ebp, -0x28u, record);
+    port_set32(&port, ebp, -0x1cu, 0);
+    count = port_u32(&port, record, 8);
+    at = port_u32(&port, record, 0);
+    eax = at;
+    /* Each sample becomes the running sum (words when +0x16 bit 0 is set, else bytes). */
+    if (port_u8(&port, record, 0x16) & 1)
+    {
+        for (count >>= 1; count-- != 0; at += 2)
+        {
+            port_set16(&port, at, 0, port_u16(&port, at, 0) + sum);
+            sum = eax = port_u16(&port, at, 0);
+        }
+        port_set32(&port, ebp, -0x24u, at);
+    }
+    else
+    {
+        for (; count-- != 0; at++)
+        {
+            port_set8(&port, at, 0, port_u8(&port, at, 0) + sum);
+            sum = eax = port_u8(&port, at, 0);
+        }
+        port_set32(&port, ebp, -0x20u, at);
+    }
+    port_set32(&port, ebp, -0x1cu, sum);
+    port_set32(&port, ebp, -0x18u, 0xffffffffu);
+    return port_return(&port, eax, entry->edx);
+}
+
+uint32_t vertrix_port_sample_file_read(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x13c,
+        GUARD_HANDLER = 0x4ec1ec,
+        READ_GUARD = 0x518750
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t parser = ebp - 0x138;
+    uint32_t mode;
+    uint32_t result = 0xa;
+    uint32_t edx;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    port_set32(&port, ebp, -0x24u, port.env.chain);
+    port_set32(&port, ebp, -0x20u, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x1cu, READ_GUARD);
+    port_set32(&port, ebp, -0x18u, 0);
+    /* As 0x48b240, with the reader 0x4b7e80. */
+    port_call(&port, 0x48a620, parser, GUARD_HANDLER, 0, READ_GUARD);
+    port_set32(&port, ebp, -0x18u, 1);
+    mode = port_u32(&port, 0, 0x5466c8);
+    if (port_call(&port, 0x48a710, parser, entry->eax, mode, result) == 1)
+    {
+        result = port_call(&port, 0x4b7e80, parser, entry->edx, mode, result);
+        port_call(&port, 0x48a8c0, parser, vertrix_lift_edx, mode, result);
+    }
+    port_set32(&port, ebp, -0x18u, 0);
+    port_call(&port, 0x48a670, parser, 0, 0, result);
+    edx = vertrix_lift_edx;
+    port_set32(&port, ebp, -0x18u, 0);
+    return port_return(&port, result, edx);
+}
+
+uint32_t vertrix_port_object_destroy_a(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x54,
+        GUARD_HANDLER = 0x4ec1ec
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t object = entry->eax;
+    uint32_t mode = entry->edx;
+    uint32_t result;
+    uint32_t edx;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    if (mode & 4)
+    {
+        /* An array: element destructor 0x516390, freed by 0x4ca040. */
+        port_set32(&port, ebp, -0x50u, object);
+        port_set32(&port, ebp, -0x30u, 1);
+        result = port_call(&port, 0x4ccb9f, object, 0x516390, 1, object);
+        port_set32(&port, ebp, -0x30u, 0);
+        port_call(&port, 0x4ca040, result, vertrix_lift_edx, 1, object);
+        return port_return(&port, object, vertrix_lift_edx);
+    }
+    port_set32(&port, object, 0, 0x518344);
+    port_set32(&port, ebp, -0x28u, object);
+    port_set32(&port, ebp, -0x1cu, object);
+    port_set8(&port, ebp, -0x24u, 1);
+    port_set8(&port, ebp, -0x18u, mode);
+    port_set32(&port, ebp, -0x3cu, port.env.chain);
+    port_set32(&port, ebp, -0x38u, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x34u, 0x518300);
+    port_set32(&port, ebp, -0x30u, 0);
+    /* The base destructor (0x4d86d0 with 1), mode 2 freeing it (0x4ca050). */
+    result = port_call(&port, 0x4d86d0, object, 1, mode, object);
+    edx = vertrix_lift_edx;
+    port_set32(&port, ebp, -0x30u, 0);
+    if (mode & 2)
+    {
+        port_call(&port, 0x4ca050, result, edx, mode, result);
+        edx = vertrix_lift_edx;
+    }
+    return port_return(&port, result, edx);
+}

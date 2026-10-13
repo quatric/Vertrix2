@@ -95,4 +95,8 @@ uint32_t vertrix_port_event_frame_draw_blend(PORT_SIGNATURE);
  * (0x47cb40), the position the fifth argument. */
 uint32_t vertrix_port_event_frame_draw_scaled(PORT_SIGNATURE);
 
+/* Original 0x483ce0(eax = image): mirror each row of an 8-bit or 32-bit image (+0x27) left to
+ * right in place. Keeps edx. */
+uint32_t vertrix_port_image_mirror_rows(PORT_SIGNATURE);
+
 #endif

@@ -806,3 +806,65 @@ uint32_t vertrix_port_event_frame_draw_scaled(PORT_SIGNATURE)
                           port_u32(&port, ebp, 0xc), arguments, 5);
     return port_return(&port, eax, vertrix_lift_edx);
 }
+
+uint32_t vertrix_port_image_mirror_rows(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x1c
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t local = entry->esp - BELOW;
+    uint32_t image = entry->eax;
+    uint32_t eax = entry->eax;
+    uint32_t depth;
+    uint32_t rows;
+    uint32_t row;
+    int32_t width;
+    int32_t half;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    width = (int16_t)port_u16(&port, image, 4);
+    half = (width - (width >> 31)) >> 1;
+    port_set16(&port, local, 0, (uint32_t)width);
+    rows = (entry->edx & 0xffff0000u) | port_u16(&port, image, 8);
+    port_set32(&port, local, 4, rows);
+    depth = port_u8(&port, image, 0x27);
+    if (depth != 1 && depth != 4)
+    {
+        return port_return(&port, eax, entry->edx);
+    }
+    /* Each row of 8-bit or 32-bit pixels is mirrored in place, left to right. */
+    row = port_u32(&port, image, 0);
+    while ((rows & 0xffff) != 0)
+    {
+        uint32_t index = 0;
+        while ((int32_t)(eax = index & 0xffff) < half)
+        {
+            uint32_t other = (uint32_t)width - 1 - eax;
+            if (depth == 1)
+            {
+                uint32_t left = port_u8(&port, row + eax, 0);
+                uint32_t right = port_u8(&port, row, other);
+                port_set8(&port, row + eax, 0, right);
+                port_set8(&port, row, other, left);
+            }
+            else
+            {
+                uint32_t right = port_u32(&port, row, other * 4);
+                uint32_t left = port_u32(&port, eax * 4, row);
+                port_set32(&port, eax * 4, row, right);
+                port_set32(&port, row, other * 4, left);
+            }
+            index++;
+        }
+        row += depth == 1 ? (uint32_t)width : (uint32_t)width << 2;
+        rows = (rows & 0xffff0000u) | ((rows - 1) & 0xffff);
+        port_set32(&port, local, 4, rows);
+        if (depth == 1)
+        {
+            eax = rows;
+        }
+    }
+    return port_return(&port, eax, entry->edx);
+}

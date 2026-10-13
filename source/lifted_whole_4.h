@@ -39,7 +39,6 @@ enum
     LIFTED_F4829C0_STACK = 84,
     LIFTED_CALL_UNLESS_ZERO_STACK = 68,
     LIFTED_F4831B0_STACK = 204,
-    LIFTED_F483CE0_STACK = 92,
     LIFTED_F4844B0_STACK = 100,
     LIFTED_F484500_STACK = 80,
     LIFTED_F484530_STACK = 72,
@@ -181,7 +180,6 @@ enum
     LIFTED_F4B58A0_STACK = 196,
     LIFTED_OBJECT_START_5182C4_STACK = 68,
     LIFTED_OBJECT_SLOT_PRESENT_UNOWNED_STACK = 84,
-    LIFTED_OBJECT_DESTROY_A_STACK = 168,
     LIFTED_OBJECT_RELEASE_ITEMS_STACK = 88,
     LIFTED_OBJECT_DESTROY_D_STACK = 160,
     LIFTED_TIMER_RESET_STACK = 64,
@@ -332,10 +330,6 @@ uint32_t lifted_call_unless_zero(const VertrixCalls *calls, const VertrixFactory
 
 /* Original 0x4831b0. */
 uint32_t lifted_f4831b0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x483ce0. */
-uint32_t lifted_f483ce0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4844b0. */
@@ -951,10 +945,6 @@ uint32_t lifted_object_start_5182c4(const VertrixCalls *calls,
 uint32_t lifted_object_slot_present_unowned(const VertrixCalls *calls,
                                             const VertrixFactoryServices *services,
                                             const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4b5dc0. */
-uint32_t lifted_object_destroy_a(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                 const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4b6020. */
 uint32_t lifted_object_release_items(const VertrixCalls *calls,
