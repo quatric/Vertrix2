@@ -837,7 +837,8 @@ uint32_t vertrix_port_screen_panel_destroy(PORT_SIGNATURE)
     return box_destroy_free(&port, result, vertrix_lift_edx, mode);
 }
 
-uint32_t vertrix_port_label_box_place(PORT_SIGNATURE)
+/* 0x460a40's placement with the box constructor `construct`. */
+static uint32_t label_box_place_with(PORT_SIGNATURE, uint32_t construct)
 {
     Port port;
     uint8_t stack[0x10 + 8 + 5 * 4];
@@ -849,7 +850,7 @@ uint32_t vertrix_port_label_box_place(PORT_SIGNATURE)
     port_set16(&port, ebp, -0xcu, entry->ecx);
     /* A label box (0x45fe10) with the handlers 0x443460 and 0x4486f0 (0x4ac8f0, 0x4ac930,
      * 0x4ac910), laid out (0x471820) and added to the list 0x54671c (0x4b5e70). */
-    box = port_call(&port, 0x45fe10, (uint32_t)(int32_t)(int16_t)entry->ebx,
+    box = port_call(&port, construct, (uint32_t)(int32_t)(int16_t)entry->ebx,
                     (uint32_t)(int32_t)(int16_t)port_u16(&port, ebp, -0xcu),
                     (uint32_t)(int32_t)(int16_t)entry->eax, (uint32_t)(int32_t)(int16_t)entry->edx);
     port_call(&port, 0x4ac8f0, box, 0x443460, (uint32_t)(int32_t)(int16_t)entry->eax,
@@ -867,4 +868,14 @@ uint32_t vertrix_port_label_box_place(PORT_SIGNATURE)
     port_call(&port, 0x4b5e70, 0x54671c, box, (uint32_t)((int32_t)port_u32(&port, ebp, 6) >> 16),
               (uint32_t)((int32_t)ecx >> 16));
     return port_return(&port, box, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_label_box_place(PORT_SIGNATURE)
+{
+    return label_box_place_with(calls, services, globals, entry, 0x45fe10);
+}
+
+uint32_t vertrix_port_label_box_place_460ad0(PORT_SIGNATURE)
+{
+    return label_box_place_with(calls, services, globals, entry, 0x45fee0);
 }

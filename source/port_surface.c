@@ -398,15 +398,16 @@ static uint32_t display_method(Port *port, uint32_t surface, uint32_t offset, ui
                            arguments, count);
 }
 
-uint32_t vertrix_port_display_present(PORT_SIGNATURE)
+/* 0x485550's present with the status and description at `status` and `description` and the back
+ * surface at `back_field`. */
+static uint32_t display_present_with(PORT_SIGNATURE, uint32_t status, uint32_t description,
+                                     uint32_t back_field)
 {
     enum
     {
         BELOW = 0x28,
         STILL_DRAWING = 0x8876021cu,
         SURFACE_LOST = 0x887601c2u,
-        STATUS = 0x5b99c4,
-        DESCRIPTION = 0x5b99c8,
         RESTORE = 0x487080,
         BLT = 0x14,
         BLT_FAST = 0x1c,
@@ -438,12 +439,12 @@ uint32_t vertrix_port_display_present(PORT_SIGNATURE)
     for (;;)
     {
         arguments[1] = 0;
-        arguments[2] = DESCRIPTION;
+        arguments[2] = description;
         arguments[3] = 0x21;
         arguments[4] = 0;
         result =
             display_method(&port, port_u32(&port, display, 0x68), LOCK, display, ecx, arguments, 5);
-        port_set32(&port, 0, STATUS, result);
+        port_set32(&port, 0, status, result);
         if (result != SURFACE_LOST)
         {
             break;
@@ -463,18 +464,18 @@ uint32_t vertrix_port_display_present(PORT_SIGNATURE)
     for (;;)
     {
         arguments[1] = 0;
-        arguments[2] = DESCRIPTION;
+        arguments[2] = description;
         arguments[3] = 0x11;
         arguments[4] = 0;
-        result =
-            display_method(&port, port_u32(&port, display, 0x6c), LOCK, display, ecx, arguments, 5);
-        port_set32(&port, 0, STATUS, result);
+        result = display_method(&port, port_u32(&port, display, back_field), LOCK, display, ecx,
+                                arguments, 5);
+        port_set32(&port, 0, status, result);
         if (result != SURFACE_LOST)
         {
             break;
         }
-        if (display_method(&port, port_u32(&port, display, 0x6c), IS_LOST, display, ecx, arguments,
-                           1) != 0 ||
+        if (display_method(&port, port_u32(&port, display, back_field), IS_LOST, display, ecx,
+                           arguments, 1) != 0 ||
             port_call(&port, RESTORE, display, vertrix_lift_edx, display, ecx) == 0)
         {
             arguments[1] = 0;
@@ -488,7 +489,7 @@ uint32_t vertrix_port_display_present(PORT_SIGNATURE)
     port_set32(&port, rectangle, 4, 0);
     port_set32(&port, rectangle, 8, port_u16(&port, display, 0x3e));
     port_set32(&port, rectangle, 0xc, port_u16(&port, display, 0x40));
-    back = port_u32(&port, display, 0x6c);
+    back = port_u32(&port, display, back_field);
     front = port_u32(&port, display, 0x68);
     ecx = rectangle;
     arguments[1] = 0;
@@ -497,11 +498,11 @@ uint32_t vertrix_port_display_present(PORT_SIGNATURE)
     arguments[4] = rectangle;
     arguments[5] = 0x10;
     result = display_method(&port, front, BLT_FAST, display, ecx, arguments, 6);
-    port_set32(&port, 0, STATUS, result);
+    port_set32(&port, 0, status, result);
     if (result != 0)
     {
         uint32_t table;
-        back = port_u32(&port, display, 0x6c);
+        back = port_u32(&port, display, back_field);
         front = port_u32(&port, display, 0x68);
         table = port_u32(&port, front, 0);
         ecx = table;
@@ -521,10 +522,20 @@ uint32_t vertrix_port_display_present(PORT_SIGNATURE)
                                 arguments, 2);
     } while (result == STILL_DRAWING);
     arguments[1] = 0;
-    display_method(&port, port_u32(&port, display, 0x6c), UNLOCK, display, ecx, arguments, 2);
+    display_method(&port, port_u32(&port, display, back_field), UNLOCK, display, ecx, arguments, 2);
     arguments[1] = 0;
     display_method(&port, port_u32(&port, display, 0x68), UNLOCK, display, ecx, arguments, 2);
     return port_return(&port, 1, entry->edx);
+}
+
+uint32_t vertrix_port_display_present(PORT_SIGNATURE)
+{
+    return display_present_with(calls, services, globals, entry, 0x5b99c4, 0x5b99c8, 0x6c);
+}
+
+uint32_t vertrix_port_display_present_486ed0(PORT_SIGNATURE)
+{
+    return display_present_with(calls, services, globals, entry, 0x5b9bcc, 0x5b9bd0, 0x64);
 }
 
 uint32_t vertrix_port_image_new(PORT_SIGNATURE)

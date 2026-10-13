@@ -41,6 +41,9 @@ uint32_t vertrix_port_string_empty(PORT_SIGNATURE);
  * Returns the string's address, with edx the call's. */
 uint32_t vertrix_port_string_append_char(PORT_SIGNATURE);
 
+/* Original 0x4cdad0: 0x4ca630's code with the text routine 0x4ca2e0. */
+uint32_t vertrix_port_string_append_char_4cdad0(PORT_SIGNATURE);
+
 /* Original 0x4ca5a0 (eax = address of a string, edx = count, ebx = source): append `count` bytes.
  * Nothing for a count of 0 (returns the address, edx the source). A record held once with room
  * for them (reference count and new length compared signed) takes them in place: 0x4eb5e0 copies

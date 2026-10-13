@@ -402,15 +402,47 @@ uint32_t vertrix_port_actor_reset_marker(PORT_SIGNATURE)
     return port_return(&port, entry->eax, entry->edx);
 }
 
-uint32_t vertrix_port_actor_chain_update_call(PORT_SIGNATURE)
+/* 0x4ae150's shape: `reset`, then `update` on the edx it leaves. */
+static uint32_t actor_chain_update_with(PORT_SIGNATURE, uint32_t reset, uint32_t update)
 {
     Port port;
     uint32_t eax;
     port_open(&port, calls, services, globals, entry);
-    port_call(&port, ACTOR_RESET_MARKER, entry->eax, entry->eax, entry->ebx, entry->ecx);
+    port_call(&port, reset, entry->eax, entry->eax, entry->ebx, entry->ecx);
     eax = vertrix_lift_edx;
-    eax = port_call(&port, ACTOR_CHAIN_UPDATE, eax, eax, entry->ebx, entry->ecx);
+    eax = port_call(&port, update, eax, eax, entry->ebx, entry->ecx);
     return port_return(&port, eax, entry->edx);
+}
+
+uint32_t vertrix_port_actor_chain_update_call(PORT_SIGNATURE)
+{
+    return actor_chain_update_with(calls, services, globals, entry, ACTOR_RESET_MARKER,
+                                   ACTOR_CHAIN_UPDATE);
+}
+
+uint32_t vertrix_port_actor_chain_update_40e670(PORT_SIGNATURE)
+{
+    return actor_chain_update_with(calls, services, globals, entry, 0x40e580, 0x40df20);
+}
+
+uint32_t vertrix_port_actor_chain_update_44c860(PORT_SIGNATURE)
+{
+    return actor_chain_update_with(calls, services, globals, entry, 0x4ac1f0, 0x4ac8a0);
+}
+
+uint32_t vertrix_port_actor_chain_update_44c940(PORT_SIGNATURE)
+{
+    return actor_chain_update_with(calls, services, globals, entry, 0x4ac1f0, 0x4ac8a0);
+}
+
+uint32_t vertrix_port_actor_chain_update_450710(PORT_SIGNATURE)
+{
+    return actor_chain_update_with(calls, services, globals, entry, 0x4ac1f0, 0x4ac8a0);
+}
+
+uint32_t vertrix_port_actor_chain_update_450730(PORT_SIGNATURE)
+{
+    return actor_chain_update_with(calls, services, globals, entry, 0x4ac310, 0x4ac8a0);
 }
 
 uint32_t vertrix_port_actor_chain_update(PORT_SIGNATURE)
@@ -919,7 +951,8 @@ static uint32_t actor_angle(Port *port, uint32_t actor)
     return (uint32_t)((int32_t)port_u32(port, actor, ACTOR_ANGLE) >> 16);
 }
 
-uint32_t vertrix_port_actor_polar_offset(PORT_SIGNATURE)
+/* 0x4ad1c0's offset for the angle field `shift` bytes on. */
+static uint32_t actor_polar_offset_with(PORT_SIGNATURE, uint32_t shift)
 {
     Port port;
     uint32_t actor = entry->eax;
@@ -927,15 +960,25 @@ uint32_t vertrix_port_actor_polar_offset(PORT_SIGNATURE)
     uint32_t offset;
     port_open(&port, calls, services, globals, entry);
     offset = port_call(&port, FIXED_MULTIPLY,
-                       port_u32(&port, 0, COSINES + actor_angle(&port, actor) * 4),
+                       port_u32(&port, 0, COSINES + actor_angle(&port, actor + shift) * 4),
                        entry->edx << 16, entry->ebx, entry->ecx);
     port_set32(&port, entry->ecx, 0, (uint32_t)((int32_t)offset >> 16));
-    offset =
-        port_call(&port, FIXED_MULTIPLY, port_u32(&port, 0, SINES + actor_angle(&port, actor) * 4),
-                  entry->ebx << 16, entry->ebx, entry->ecx);
+    offset = port_call(&port, FIXED_MULTIPLY,
+                       port_u32(&port, 0, SINES + actor_angle(&port, actor + shift) * 4),
+                       entry->ebx << 16, entry->ebx, entry->ecx);
     offset = (uint32_t)((int32_t)offset >> 16);
     port_set32(&port, y_out, 0, offset);
     return port_return(&port, offset, y_out);
+}
+
+uint32_t vertrix_port_actor_polar_offset(PORT_SIGNATURE)
+{
+    return actor_polar_offset_with(calls, services, globals, entry, 0);
+}
+
+uint32_t vertrix_port_actor_polar_offset_4ad210(PORT_SIGNATURE)
+{
+    return actor_polar_offset_with(calls, services, globals, entry, 0x10);
 }
 
 uint32_t vertrix_port_actor_clear_frame_counter(PORT_SIGNATURE)
@@ -967,16 +1010,19 @@ uint32_t vertrix_port_actor_attach(PORT_SIGNATURE)
     return port_return(&port, result, vertrix_lift_edx);
 }
 
-uint32_t vertrix_port_actor_turn(PORT_SIGNATURE)
+/* 0x4ad060's turn for the angle fields `shift` bytes on, with the results at `whole_out` and
+ * `steps_out`. */
+static uint32_t actor_turn_with(PORT_SIGNATURE, uint32_t shift, uint32_t whole_out,
+                                uint32_t steps_out)
 {
     Port port;
-    uint32_t actor = entry->eax;
+    uint32_t actor = entry->eax + shift;
     uint32_t steps = entry->edx;
     uint32_t whole = 1;
     uint32_t taken;
     uint32_t edx;
     port_open(&port, calls, services, globals, entry);
-    taken = port_u32(&port, 0, TURN_STEPS);
+    taken = port_u32(&port, 0, steps_out);
     edx = (entry->edx & 0xffff0000u) | port_u16(&port, actor, ACTOR_TURN);
     if ((edx & 0xffff) != 0 && steps != 0)
     {
@@ -1001,9 +1047,19 @@ uint32_t vertrix_port_actor_turn(PORT_SIGNATURE)
             }
         }
     }
-    port_set32(&port, 0, TURN_WHOLE, whole);
-    port_set32(&port, 0, TURN_STEPS, taken);
+    port_set32(&port, 0, whole_out, whole);
+    port_set32(&port, 0, steps_out, taken);
     return port_return(&port, whole, edx);
+}
+
+uint32_t vertrix_port_actor_turn(PORT_SIGNATURE)
+{
+    return actor_turn_with(calls, services, globals, entry, 0, TURN_WHOLE, TURN_STEPS);
+}
+
+uint32_t vertrix_port_actor_turn_4ad110(PORT_SIGNATURE)
+{
+    return actor_turn_with(calls, services, globals, entry, 0x10, 0x5bb5fc, 0x5bb600);
 }
 
 /* The signed word at actor + offset (the original's `[offset - 2] >> 16`). */
@@ -1270,7 +1326,7 @@ uint32_t vertrix_port_actor_wander(PORT_SIGNATURE)
     /* push ebp, ebx, ecx, edx, esi, edi, then the old y and the polar results. */
     enum
     {
-        BELOW = 0x20
+        BELOW = 0x24
     };
     Port port;
     uint32_t actor = entry->eax;
@@ -1514,19 +1570,30 @@ uint32_t vertrix_port_actor_array_update(PORT_SIGNATURE)
     return port_return(&port, eax, at);
 }
 
-uint32_t vertrix_port_actor_key_pressed(PORT_SIGNATURE)
+/* 0x4b5500's test for the key word at `field`. */
+static uint32_t actor_key_pressed_at(PORT_SIGNATURE, uint32_t field)
 {
     Port port;
     uint32_t actor = entry->eax;
     uint32_t key;
     port_open(&port, calls, services, globals, entry);
-    key = port_u16(&port, actor, ACTOR_KEY);
+    key = port_u16(&port, actor, field);
     if (key == 0 || port_call(&port, INPUT_READY, INPUT, key, 0, actor) != 1)
     {
         return port_return(&port, 0, entry->edx);
     }
-    port_call(&port, INPUT_TAKE, INPUT, port_u16(&port, actor, ACTOR_KEY), 1, actor);
+    port_call(&port, INPUT_TAKE, INPUT, port_u16(&port, actor, field), 1, actor);
     return port_return(&port, 1, entry->edx);
+}
+
+uint32_t vertrix_port_actor_key_pressed(PORT_SIGNATURE)
+{
+    return actor_key_pressed_at(calls, services, globals, entry, ACTOR_KEY);
+}
+
+uint32_t vertrix_port_actor_key_pressed_4b6700(PORT_SIGNATURE)
+{
+    return actor_key_pressed_at(calls, services, globals, entry, 0x172);
 }
 
 uint32_t vertrix_port_actor_approach(PORT_SIGNATURE)
@@ -1582,7 +1649,7 @@ uint32_t vertrix_port_menu_button_input(PORT_SIGNATURE)
     /* push ebp, ebx, ecx, edx, esi, edi, then the click's three results. */
     enum
     {
-        BELOW = 0x20
+        BELOW = 0x24
     };
     Port port;
     uint32_t button = entry->eax;
@@ -1672,10 +1739,11 @@ uint32_t vertrix_port_actor_frames_done(PORT_SIGNATURE)
                        entry->edx);
 }
 
-uint32_t vertrix_port_actor_step_value(PORT_SIGNATURE)
+/* 0x4ad6e0's step for the value, goal and speed `shift` bytes on. */
+static uint32_t actor_step_value_with(PORT_SIGNATURE, uint32_t shift)
 {
     Port port;
-    uint32_t actor = entry->eax;
+    uint32_t actor = entry->eax + shift;
     uint32_t step;
     int32_t value;
     int32_t goal;
@@ -1706,6 +1774,21 @@ uint32_t vertrix_port_actor_step_value(PORT_SIGNATURE)
     return port_return(&port, next != goal, (uint32_t)goal);
 }
 
+uint32_t vertrix_port_actor_step_value(PORT_SIGNATURE)
+{
+    return actor_step_value_with(calls, services, globals, entry, 0);
+}
+
+uint32_t vertrix_port_actor_step_value_4ad750(PORT_SIGNATURE)
+{
+    return actor_step_value_with(calls, services, globals, entry, 0xc);
+}
+
+uint32_t vertrix_port_actor_step_value_4ad790(PORT_SIGNATURE)
+{
+    return actor_step_value_with(calls, services, globals, entry, 0x18);
+}
+
 uint32_t vertrix_port_actor_counter_consume(PORT_SIGNATURE)
 {
     Port port;
@@ -1725,13 +1808,14 @@ uint32_t vertrix_port_actor_counter_consume(PORT_SIGNATURE)
     return port_return(&port, taken, entry->edx);
 }
 
-uint32_t vertrix_port_wanderer_frame(PORT_SIGNATURE)
+/* 0x45d100's frame with the wander routine `wander` and the next update `next`. */
+static uint32_t wanderer_frame_with(PORT_SIGNATURE, uint32_t wander, uint32_t next)
 {
     Port port;
     uint32_t actor = entry->eax;
     uint32_t result;
     port_open(&port, calls, services, globals, entry);
-    port_call(&port, ACTOR_WANDER, actor, entry->edx, entry->ebx, actor);
+    port_call(&port, wander, actor, entry->edx, entry->ebx, actor);
     port_call(&port, ACTOR_COUNTER_ADVANCE, actor, vertrix_lift_edx, entry->ebx, actor);
     result = port_call(&port, ACTOR_COUNTER_DUE, actor, vertrix_lift_edx, entry->ebx, actor);
     if (result != 1)
@@ -1740,8 +1824,18 @@ uint32_t vertrix_port_wanderer_frame(PORT_SIGNATURE)
     }
     port_call(&port, ACTOR_COUNTER_RESET, actor, vertrix_lift_edx, entry->ebx, actor);
     port_set32(&port, actor, 0x64, port_u32(&port, actor, 0x68));
-    result = port_call(&port, ACTOR_SET_UPDATE, actor, WANDERER_NEXT, entry->ebx, actor);
+    result = port_call(&port, ACTOR_SET_UPDATE, actor, next, entry->ebx, actor);
     return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_wanderer_frame(PORT_SIGNATURE)
+{
+    return wanderer_frame_with(calls, services, globals, entry, ACTOR_WANDER, WANDERER_NEXT);
+}
+
+uint32_t vertrix_port_wanderer_frame_45b0f0(PORT_SIGNATURE)
+{
+    return wanderer_frame_with(calls, services, globals, entry, 0x45afe0, 0x45b190);
 }
 
 /* A layer list's actors through 0x4b6200, 0x4b6170, 0x4b6120 or 0x4b60c0. */
@@ -1901,7 +1995,8 @@ uint32_t vertrix_port_menu_choice(PORT_SIGNATURE)
     return port_return(&port, result, entry->edx);
 }
 
-uint32_t vertrix_port_actor_play_then(PORT_SIGNATURE)
+/* 0x457420's shape with the play-back update `back`. */
+static uint32_t actor_play_then_with(PORT_SIGNATURE, uint32_t back)
 {
     Port port;
     uint32_t actor = entry->eax;
@@ -1909,11 +2004,21 @@ uint32_t vertrix_port_actor_play_then(PORT_SIGNATURE)
     port_open(&port, calls, services, globals, entry);
     if (port_call(&port, ANIMATION_PLAY, actor, entry->edx, entry->ebx, actor) == 0)
     {
-        port_call(&port, ANIMATION_NEXT, actor, PLAY_BACK_STEP, entry->ebx, actor);
+        port_call(&port, ANIMATION_NEXT, actor, back, entry->ebx, actor);
         port_call(&port, ACTOR_SET_UPDATE, actor, vertrix_lift_edx, entry->ebx, actor);
     }
     result = port_call(&port, ACTOR_IMAGE_SET, actor, vertrix_lift_edx, entry->ebx, actor);
     return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_actor_play_then(PORT_SIGNATURE)
+{
+    return actor_play_then_with(calls, services, globals, entry, PLAY_BACK_STEP);
+}
+
+uint32_t vertrix_port_actor_play_then_459860(PORT_SIGNATURE)
+{
+    return actor_play_then_with(calls, services, globals, entry, 0x4598a0);
 }
 
 uint32_t vertrix_port_actor_play_back(PORT_SIGNATURE)
@@ -2007,6 +2112,11 @@ uint32_t vertrix_port_title_actor_wait(PORT_SIGNATURE)
                       TITLE_WAIT_NEXT);
 }
 
+uint32_t vertrix_port_title_actor_wait_45b150(PORT_SIGNATURE)
+{
+    return frame_then(calls, services, globals, entry, 0x45afe0, 0x4ac510, 0x45b190);
+}
+
 uint32_t vertrix_port_wanderer_wait(PORT_SIGNATURE)
 {
     return frame_then(calls, services, globals, entry, ACTOR_WANDER, ACTOR_COUNTER_RESET,
@@ -2089,6 +2199,14 @@ uint32_t vertrix_port_actor_set_counter_rate(PORT_SIGNATURE)
     Port port;
     port_open(&port, calls, services, globals, entry);
     port_set32(&port, entry->eax, ACTOR_COUNTER_LIMIT, entry->edx * 12);
+    return port_return(&port, entry->edx * 12, entry->edx);
+}
+
+uint32_t vertrix_port_actor_set_counter_rate_4ac840(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    port_set32(&port, entry->eax, 0xe0, entry->edx * 12);
     return port_return(&port, entry->edx * 12, entry->edx);
 }
 

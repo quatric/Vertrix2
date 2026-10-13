@@ -58,6 +58,9 @@ uint32_t vertrix_port_key_record_fields(PORT_SIGNATURE);
  * Returns 0x100. */
 uint32_t vertrix_port_keys_age(PORT_SIGNATURE);
 
+/* Original 0x476440: 0x476400's code with the age routine 0x475d20. */
+uint32_t vertrix_port_keys_age_476440(PORT_SIGNATURE);
+
 /* Original 0x475a20 (eax = key record): reset it: its flag (0x475af0), counters +0x3c to +0x54,
  * state (0x475790 with zeros) and pending events (0x4759e0). Registers but eax are unchanged. */
 uint32_t vertrix_port_key_record_reset(PORT_SIGNATURE);

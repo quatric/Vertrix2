@@ -754,41 +754,6 @@
   "virtual": [],
   "address": 4728992
  },
- "f4829c0": {
-  "callees": {
-   "0x482b40": [
-    0,
-    false
-   ],
-   "0x40adb0": [
-    0,
-    false
-   ],
-   "0x40adf0": [
-    0,
-    false
-   ],
-   "0x40ae00": [
-    0,
-    false
-   ]
-  },
-  "stack": 84,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   5868904
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 4729280
- },
  "call_unless_zero": {
   "callees": {
    "0x4b8170": [
@@ -949,116 +914,6 @@
   ],
   "virtual": [],
   "address": 4740864
- },
- "f486ed0": {
-  "callees": {
-   "virtual_486ee5": [
-    2,
-    false
-   ],
-   "virtual_486f00": [
-    5,
-    false
-   ],
-   "virtual_486f20": [
-    5,
-    false
-   ],
-   "virtual_486f35": [
-    1,
-    false
-   ],
-   "0x487080": [
-    0,
-    false
-   ],
-   "virtual_486f4f": [
-    2,
-    false
-   ],
-   "virtual_486f67": [
-    1,
-    false
-   ],
-   "virtual_486fad": [
-    6,
-    false
-   ],
-   "virtual_486fc1": [
-    2,
-    false
-   ],
-   "virtual_486fd3": [
-    2,
-    false
-   ],
-   "virtual_486fe1": [
-    2,
-    false
-   ],
-   "virtual_48700c": [
-    6,
-    false
-   ]
-  },
-  "stack": 292,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   100,
-   104
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   15,
-   16,
-   17,
-   2289435073,
-   2289435074,
-   2289435075,
-   2289435163,
-   2289435164,
-   2289435165
-  ],
-  "virtual": [
-   [
-    0,
-    20,
-    6
-   ],
-   [
-    0,
-    28,
-    6
-   ],
-   [
-    0,
-    52,
-    2
-   ],
-   [
-    0,
-    72,
-    2
-   ],
-   [
-    0,
-    100,
-    5
-   ],
-   [
-    0,
-    108,
-    1
-   ],
-   [
-    0,
-    128,
-    2
-   ]
-  ],
-  "address": 4746960
  },
  "f487060": {
   "callees": {
@@ -3393,39 +3248,6 @@
   "virtual": [],
   "address": 4902464
  },
- "actor_spin": {
-  "callees": {},
-  "stack": 80,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   359,
-   360,
-   361
-  ],
-  "virtual": [],
-  "address": 4903184
- },
- "actor_polar_offset_second": {
-  "callees": {
-   "0x4849e0": [
-    0,
-    false
-   ]
-  },
-  "stack": 80,
-  "arguments": 1,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4903440
- },
  "actor_orbit_point": {
   "callees": {
    "0x4ad1c0": [
@@ -3509,18 +3331,6 @@
   "virtual": [],
   "address": 4904208
  },
- "byte_transition_4ad580": {
-  "callees": {},
-  "stack": 80,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4904320
- },
  "word_transition_4ad5e0": {
   "callees": {},
   "stack": 80,
@@ -3544,30 +3354,6 @@
   "constants": [],
   "virtual": [],
   "address": 4904496
- },
- "object_step_dword": {
-  "callees": {},
-  "stack": 76,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4904784
- },
- "actor_dword_transition_4ad790": {
-  "callees": {},
-  "stack": 76,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4904848
  },
  "f4adfa0": {
   "callees": {},
@@ -4684,31 +4470,6 @@
   "constants": [],
   "virtual": [],
   "address": 4941504
- },
- "object_slot_present_4b6700": {
-  "callees": {
-   "0x476480": [
-    0,
-    false
-   ],
-   "0x4762e0": [
-    0,
-    false
-   ]
-  },
-  "stack": 84,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2
-  ],
-  "virtual": [],
-  "address": 4941568
  },
  "object_text_value": {
   "callees": {

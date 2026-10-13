@@ -114,6 +114,12 @@ uint32_t vertrix_port_render_image_rows(PORT_SIGNATURE);
  * 0x5bb764 and 0x5bb768. Returns the last routine's eax; edx is unchanged. */
 uint32_t vertrix_port_render_indexed_rows(PORT_SIGNATURE);
 
+/* Originals 0x49a600, 0x4a26c0 and 0x4aa3c0: 0x4928f0's code with the target pixel and row at
+ * 0x5bb780 and 0x5bb784, 0x5bb780 and 0x5bb784, and 0x5bb778 and 0x5bb77c. */
+uint32_t vertrix_port_render_indexed_rows_49a600(PORT_SIGNATURE);
+uint32_t vertrix_port_render_indexed_rows_4a26c0(PORT_SIGNATURE);
+uint32_t vertrix_port_render_indexed_rows_4aa3c0(PORT_SIGNATURE);
+
 /* The registers a masked row hands its pixel operation: what the loop below left in them. */
 typedef struct MaskRegisters
 {
@@ -131,6 +137,12 @@ typedef struct MaskRegisters
  * as the loop left them (edx the mask address). Returns the eax left at the end; edx is
  * unchanged. */
 uint32_t vertrix_port_render_mask_row(PORT_SIGNATURE);
+
+/* Originals 0x49a180, 0x4a2240 and 0x4a9f40: 0x492460's code with the target pixel at 0x5bb780,
+ * 0x5bb780 and 0x5bb778. */
+uint32_t vertrix_port_render_mask_row_49a180(PORT_SIGNATURE);
+uint32_t vertrix_port_render_mask_row_4a2240(PORT_SIGNATURE);
+uint32_t vertrix_port_render_mask_row_4a9f40(PORT_SIGNATURE);
 
 /* Original 0x4922f0: as 0x492460 for a source with an alpha byte: the pixel operation runs only
  * for pixels whose top byte is not 0 (eax that byte). */

@@ -62,6 +62,14 @@ uint32_t vertrix_port_actor_reset_marker(PORT_SIGNATURE);
  * reset's edx. Returns the walk's eax; edx is unchanged. */
 uint32_t vertrix_port_actor_chain_update_call(PORT_SIGNATURE);
 
+/* Originals 0x40e670, 0x44c860, 0x44c940, 0x450710 and 0x450730: 0x4ae150's code calling 0x40e580
+ * then 0x40df20, 0x4ac1f0 then 0x4ac8a0 (three copies), and 0x4ac310 then 0x4ac8a0. */
+uint32_t vertrix_port_actor_chain_update_40e670(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_chain_update_44c860(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_chain_update_44c940(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_chain_update_450710(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_chain_update_450730(PORT_SIGNATURE);
+
 /* Original 0x4ade20 (eax = first actor): for each actor of the chain, 0x4ad870 (eax and edx the
  * actor, ecx the first actor) and, when the FIRST actor has a hook at +0x154, that hook the same
  * way. The next actor is +0x108 of the edx the last call leaves. Returns the last call's eax (0
@@ -167,6 +175,9 @@ uint32_t vertrix_port_actor_progress_consume(PORT_SIGNATURE);
  * Returns the y offset, edx the y address. */
 uint32_t vertrix_port_actor_polar_offset(PORT_SIGNATURE);
 
+/* Original 0x4ad210: 0x4ad1c0's code for the angle at +0x34. */
+uint32_t vertrix_port_actor_polar_offset_4ad210(PORT_SIGNATURE);
+
 /* Original 0x4ac700: clear the actor's frame counter (+0xb8). Returns the actor; edx is
  * unchanged. */
 uint32_t vertrix_port_actor_clear_frame_counter(PORT_SIGNATURE);
@@ -184,6 +195,10 @@ uint32_t vertrix_port_actor_attach(PORT_SIGNATURE);
  * 360). Returns 1 when it never wrapped, else 0, also kept at 0x5bb5f4 with the steps taken at
  * 0x5bb5f8 (left when there is no turn). edx is the last angle read or remainder. */
 uint32_t vertrix_port_actor_turn(PORT_SIGNATURE);
+
+/* Original 0x4ad110: 0x4ad060's code for the angle fields 0x10 bytes on (+0x34 turned by +0x38),
+ * the results at 0x5bb5fc and 0x5bb600. */
+uint32_t vertrix_port_actor_turn_4ad110(PORT_SIGNATURE);
 
 /* Original 0x4b68a0 (eax = text actor): lay its text out: 0x4ae150, then 0x4408e0 with the layout
  * fields (+0x15c to +0x168), the scale byte (+0x44) and four locals for the results, which become
@@ -290,6 +305,9 @@ uint32_t vertrix_port_actor_array_update(PORT_SIGNATURE);
  * is unchanged. */
 uint32_t vertrix_port_actor_key_pressed(PORT_SIGNATURE);
 
+/* Original 0x4b6700: 0x4b5500's code for the key word at +0x172. */
+uint32_t vertrix_port_actor_key_pressed_4b6700(PORT_SIGNATURE);
+
 /* Original 0x4ad530 (eax = actor, edx = steps): move the value (word +0x48) towards the target
  * (+0x4a) by the steps times the speed (+0x4c), stopping at it. Returns whether it is not there
  * yet; edx is the target word over the sign of the target. */
@@ -319,6 +337,10 @@ uint32_t vertrix_port_actor_frames_done(PORT_SIGNATURE);
  * is the goal. */
 uint32_t vertrix_port_actor_step_value(PORT_SIGNATURE);
 
+/* Originals 0x4ad750 and 0x4ad790: 0x4ad6e0's code for the value at +0x64 and +0x70. */
+uint32_t vertrix_port_actor_step_value_4ad750(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_step_value_4ad790(PORT_SIGNATURE);
+
 /* Original 0x4ac420 (eax = actor): take the whole counter steps (0x4ac3b0) out of its counter
  * (+0xcc), clearing it when they are not below it. Returns the steps times the limit; edx is
  * unchanged. */
@@ -328,6 +350,9 @@ uint32_t vertrix_port_actor_counter_consume(PORT_SIGNATURE);
  * due (0x4ac500, 0x4ac520), resets it (0x4ac510), restores +0x64 from +0x68 and sets its update to
  * 0x45d1a0 (0x4ac8f0). Registers but eax are unchanged. */
 uint32_t vertrix_port_wanderer_frame(PORT_SIGNATURE);
+
+/* Original 0x45b0f0: 0x45d100's code with the wander routine 0x45afe0 and next update 0x45b190. */
+uint32_t vertrix_port_wanderer_frame_45b0f0(PORT_SIGNATURE);
 
 /* The layer lists 0x54671c (back), 0x546730 (middle) and 0x546744 (front): update every actor
  * (0x4b6200), or call each one's table entry +0x14 (0x4b6170) or +0x10 (0x4b6120) with eax, or
@@ -382,6 +407,9 @@ uint32_t vertrix_port_menu_choice(PORT_SIGNATURE);
  * unchanged. */
 uint32_t vertrix_port_actor_play_then(PORT_SIGNATURE);
 
+/* Original 0x459860: 0x457420's code with the play-back update 0x4598a0. */
+uint32_t vertrix_port_actor_play_then_459860(PORT_SIGNATURE);
+
 /* Original 0x457460 (eax = actor): play its animation backwards (0x4ac2b0); when it ends restart
  * it (0x4ac710 with 0), set its update to 0x457330 and clear +0x4e. Then pick its image
  * (0x4ac8a0). edx is unchanged. */
@@ -405,6 +433,10 @@ uint32_t vertrix_port_layer_top_update(PORT_SIGNATURE);
  * (0x4ac500, 0x4ac520), consumes it (0x4ac5b0) and sets its update to 0x45cf70 (0x4ac8f0). edx is
  * unchanged. */
 uint32_t vertrix_port_title_actor_wait(PORT_SIGNATURE);
+
+/* Original 0x45b150: 0x45cf30's code running 0x45afe0, consuming steps by 0x4ac510 and next
+ * updating 0x45b190. */
+uint32_t vertrix_port_title_actor_wait_45b150(PORT_SIGNATURE);
 
 /* Original 0x45d160 (eax = actor): as 0x45d100 without restoring +0x64. */
 uint32_t vertrix_port_wanderer_wait(PORT_SIGNATURE);
@@ -434,6 +466,9 @@ uint32_t vertrix_port_actor_set_next(PORT_SIGNATURE);
 /* Original 0x4ac470 (eax = actor, edx = rate): set its counter limit (+0xd0) to the rate times
  * 12. Returns that; edx is unchanged. */
 uint32_t vertrix_port_actor_set_counter_rate(PORT_SIGNATURE);
+
+/* Original 0x4ac840: 0x4ac470's code for the limit at +0xe0. */
+uint32_t vertrix_port_actor_set_counter_rate_4ac840(PORT_SIGNATURE);
 
 /* Original 0x4adf90: calls 0x4adfe0 with the same registers. */
 uint32_t vertrix_port_actor_replace_call(PORT_SIGNATURE);

@@ -127,7 +127,8 @@ uint32_t vertrix_port_string_empty(PORT_SIGNATURE)
     return port_return(&port, EMPTY_TEXT_ADDRESS, entry->edx);
 }
 
-uint32_t vertrix_port_string_append_char(PORT_SIGNATURE)
+/* 0x4ca630's append with the text routine `append`. */
+static uint32_t string_append_char_with(PORT_SIGNATURE, uint32_t append)
 {
     Port port;
     uint32_t local = entry->esp - 12;
@@ -135,8 +136,18 @@ uint32_t vertrix_port_string_append_char(PORT_SIGNATURE)
     port_set32(&port, entry->esp, (uint32_t)-4, entry->ebx);
     port_set32(&port, entry->esp, (uint32_t)-8, entry->ecx);
     port_set8(&port, local, 0, entry->edx);
-    port_call(&port, APPEND_TEXT, entry->eax, 1, local, entry->eax);
+    port_call(&port, append, entry->eax, 1, local, entry->eax);
     return port_return(&port, entry->eax, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_string_append_char(PORT_SIGNATURE)
+{
+    return string_append_char_with(calls, services, globals, entry, APPEND_TEXT);
+}
+
+uint32_t vertrix_port_string_append_char_4cdad0(PORT_SIGNATURE)
+{
+    return string_append_char_with(calls, services, globals, entry, 0x4ca2e0);
 }
 
 uint32_t vertrix_port_string_append(PORT_SIGNATURE)

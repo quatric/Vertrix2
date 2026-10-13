@@ -35,13 +35,11 @@ enum
     LIFTED_FORWARD_FIRST_DWORD_STACK = 68,
     LIFTED_F482770_STACK = 72,
     LIFTED_F4828A0_STACK = 84,
-    LIFTED_F4829C0_STACK = 84,
     LIFTED_CALL_UNLESS_ZERO_STACK = 68,
     LIFTED_F4831B0_STACK = 204,
     LIFTED_F484500_STACK = 80,
     LIFTED_F484530_STACK = 72,
     LIFTED_F485700_STACK = 476,
-    LIFTED_F486ED0_STACK = 292,
     LIFTED_F487060_STACK = 88,
     LIFTED_F487130_STACK = 256,
     LIFTED_F4871D0_STACK = 232,
@@ -115,17 +113,12 @@ enum
     LIFTED_F4ACCC0_STACK = 80,
     LIFTED_F4ACD30_STACK = 80,
     LIFTED_ACTOR_TURN_TOWARD_STACK = 84,
-    LIFTED_ACTOR_SPIN_STACK = 80,
-    LIFTED_ACTOR_POLAR_OFFSET_SECOND_STACK = 80,
     LIFTED_ACTOR_ORBIT_POINT_STACK = 92,
     LIFTED_F4AD2C0_STACK = 100,
     LIFTED_ACTOR_CHAIN_ORBIT_POINT_STACK = 108,
     LIFTED_ACTOR_SET_WORDS_2A_FULL_STACK = 64,
-    LIFTED_BYTE_TRANSITION_4AD580_STACK = 80,
     LIFTED_WORD_TRANSITION_4AD5E0_STACK = 80,
     LIFTED_WORD_TRANSITION_4AD630_STACK = 80,
-    LIFTED_OBJECT_STEP_DWORD_STACK = 76,
-    LIFTED_ACTOR_DWORD_TRANSITION_4AD790_STACK = 76,
     LIFTED_F4ADFA0_STACK = 64,
     LIFTED_F4B0B70_STACK = 136,
     LIFTED_OBJECT_RELEASE_SLOTS_FULL_STACK = 80,
@@ -177,7 +170,6 @@ enum
     LIFTED_OBJECT_SET_DWORD_4B65B0_STACK = 64,
     LIFTED_OBJECT_SET_FOUR_WORDS_STACK = 64,
     LIFTED_OBJECT_CONTAINS_STACK = 72,
-    LIFTED_OBJECT_SLOT_PRESENT_4B6700_STACK = 84,
     LIFTED_OBJECT_TEXT_VALUE_STACK = 140,
     LIFTED_OBJECT_GLYPH_PRESENT_STACK = 68
 };
@@ -301,10 +293,6 @@ uint32_t lifted_f482770(const VertrixCalls *calls, const VertrixFactoryServices 
 uint32_t lifted_f4828a0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x4829c0. */
-uint32_t lifted_f4829c0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x482b30. */
 uint32_t lifted_call_unless_zero(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                  const VertrixGlobals *globals, const LiftEntry *entry);
@@ -323,10 +311,6 @@ uint32_t lifted_f484530(const VertrixCalls *calls, const VertrixFactoryServices 
 
 /* Original 0x485700. */
 uint32_t lifted_f485700(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x486ed0. */
-uint32_t lifted_f486ed0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x487060. */
@@ -636,15 +620,6 @@ uint32_t lifted_f4acd30(const VertrixCalls *calls, const VertrixFactoryServices 
 uint32_t lifted_actor_turn_toward(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x4ad110. */
-uint32_t lifted_actor_spin(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                           const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4ad210. */
-uint32_t lifted_actor_polar_offset_second(const VertrixCalls *calls,
-                                          const VertrixFactoryServices *services,
-                                          const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x4ad260. */
 uint32_t lifted_actor_orbit_point(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   const VertrixGlobals *globals, const LiftEntry *entry);
@@ -663,11 +638,6 @@ uint32_t lifted_actor_set_words_2a_full(const VertrixCalls *calls,
                                         const VertrixFactoryServices *services,
                                         const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x4ad580. */
-uint32_t lifted_byte_transition_4ad580(const VertrixCalls *calls,
-                                       const VertrixFactoryServices *services,
-                                       const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x4ad5e0. */
 uint32_t lifted_word_transition_4ad5e0(const VertrixCalls *calls,
                                        const VertrixFactoryServices *services,
@@ -677,16 +647,6 @@ uint32_t lifted_word_transition_4ad5e0(const VertrixCalls *calls,
 uint32_t lifted_word_transition_4ad630(const VertrixCalls *calls,
                                        const VertrixFactoryServices *services,
                                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4ad750. */
-uint32_t lifted_object_step_dword(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                  const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4ad790. */
-uint32_t lifted_actor_dword_transition_4ad790(const VertrixCalls *calls,
-                                              const VertrixFactoryServices *services,
-                                              const VertrixGlobals *globals,
-                                              const LiftEntry *entry);
 
 /* Original 0x4adfa0. */
 uint32_t lifted_f4adfa0(const VertrixCalls *calls, const VertrixFactoryServices *services,
@@ -919,11 +879,6 @@ uint32_t lifted_object_set_four_words(const VertrixCalls *calls,
 /* Original 0x4b66c0. */
 uint32_t lifted_object_contains(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                 const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4b6700. */
-uint32_t lifted_object_slot_present_4b6700(const VertrixCalls *calls,
-                                           const VertrixFactoryServices *services,
-                                           const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4b6930. */
 uint32_t lifted_object_text_value(const VertrixCalls *calls, const VertrixFactoryServices *services,

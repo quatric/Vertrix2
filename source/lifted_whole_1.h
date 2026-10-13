@@ -259,7 +259,6 @@ enum
     LIFTED_F441600_STACK = 496,
     LIFTED_RECORD_DRAW_STACK = 100,
     LIFTED_F441B70_STACK = 408,
-    LIFTED_F441D60_STACK = 148,
     LIFTED_COLOR_TABLE_BUILD_FULL_STACK = 184,
     LIFTED_RELEASE_TABLE_B_STACK = 72,
     LIFTED_F4429A0_STACK = 92,
@@ -1561,10 +1560,6 @@ uint32_t lifted_record_draw(const VertrixCalls *calls, const VertrixFactoryServi
 
 /* Original 0x441b70. */
 uint32_t lifted_f441b70(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x441d60. */
-uint32_t lifted_f441d60(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x441e30. */

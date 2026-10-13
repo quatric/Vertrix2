@@ -252,7 +252,8 @@ uint32_t vertrix_port_key_record_fields(PORT_SIGNATURE)
     return port_return(&port, value, vertrix_lift_edx);
 }
 
-uint32_t vertrix_port_keys_age(PORT_SIGNATURE)
+/* 0x476400's loop with the age routine `age`. */
+static uint32_t keys_age_with(PORT_SIGNATURE, uint32_t age)
 {
     Port port;
     uint32_t key;
@@ -260,11 +261,20 @@ uint32_t vertrix_port_keys_age(PORT_SIGNATURE)
     port_open(&port, calls, services, globals, entry);
     for (key = 0; key < 0x100; key++)
     {
-        port_call(&port, KEY_RECORD_AGE, entry->eax + key * KEY_RECORD_SIZE, entry->edx, key + 1,
-                  entry->edx);
+        port_call(&port, age, entry->eax + key * KEY_RECORD_SIZE, entry->edx, key + 1, entry->edx);
         edx = vertrix_lift_edx;
     }
     return port_return(&port, 0x100, edx);
+}
+
+uint32_t vertrix_port_keys_age(PORT_SIGNATURE)
+{
+    return keys_age_with(calls, services, globals, entry, KEY_RECORD_AGE);
+}
+
+uint32_t vertrix_port_keys_age_476440(PORT_SIGNATURE)
+{
+    return keys_age_with(calls, services, globals, entry, 0x475d20);
 }
 
 enum

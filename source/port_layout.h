@@ -78,4 +78,7 @@ uint32_t vertrix_port_screen_panel_destroy(PORT_SIGNATURE);
  * Returns the box. */
 uint32_t vertrix_port_label_box_place(PORT_SIGNATURE);
 
+/* Original 0x460ad0: 0x460a40's code with the box constructor 0x45fee0. */
+uint32_t vertrix_port_label_box_place_460ad0(PORT_SIGNATURE);
+
 #endif

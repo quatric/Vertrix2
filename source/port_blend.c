@@ -460,7 +460,8 @@ uint32_t vertrix_port_render_image_rows(PORT_SIGNATURE)
     return port_return(&port, eax, entry->edx);
 }
 
-uint32_t vertrix_port_render_indexed_rows(PORT_SIGNATURE)
+/* 0x4928f0's rows with the target pixel and row at `target_pixel` and `target_row`. */
+static uint32_t render_indexed_rows_at(PORT_SIGNATURE, uint32_t target_pixel, uint32_t target_row)
 {
     Port port;
     uint32_t routine = entry->eax;
@@ -471,7 +472,7 @@ uint32_t vertrix_port_render_indexed_rows(PORT_SIGNATURE)
     uint32_t edi;
     uint32_t count;
     port_open(&port, calls, services, globals, entry);
-    ebx = port_u32(&port, 0, TARGET_ROW);
+    ebx = port_u32(&port, 0, target_row);
     esi = port_u32(&port, 0, SOURCE_ROW);
     do
     {
@@ -481,7 +482,7 @@ uint32_t vertrix_port_render_indexed_rows(PORT_SIGNATURE)
         port_set32(&port, 0, ROW_INDEX, index + 1);
         ebx += port_u32(&port, 0, TARGET_STRIDE);
         eax = port_u32(&port, 0, NEXT_SAMPLE_STEPS);
-        port_set32(&port, 0, TARGET_ROW, ebx);
+        port_set32(&port, 0, target_row, ebx);
         port_set32(&port, 0, SAMPLE_STEPS, eax);
         edx <<= 2;
         eax = (eax & 0xffff0000u) | port_u16(&port, 0, ROWS);
@@ -490,46 +491,66 @@ uint32_t vertrix_port_render_indexed_rows(PORT_SIGNATURE)
         port_set32(&port, 0, SOURCE_ROW, esi);
         eax = port_call_with(&port, routine, eax, edx, ebx, routine, esi, edi, entry->ebp);
         esi = port_u32(&port, 0, SOURCE_ROW);
-        ebx = port_u32(&port, 0, TARGET_ROW);
+        ebx = port_u32(&port, 0, target_row);
         count = port_u16(&port, 0, WIDTH);
         port_set32(&port, 0, SOURCE_PIXEL, esi);
-        port_set32(&port, 0, TARGET_PIXEL, ebx);
+        port_set32(&port, 0, target_pixel, ebx);
         count = (count - 1) & 0xffff;
         port_set16(&port, 0, WIDTH, count);
     } while (count != 0);
     return port_return(&port, eax, entry->edx);
 }
 
+uint32_t vertrix_port_render_indexed_rows(PORT_SIGNATURE)
+{
+    return render_indexed_rows_at(calls, services, globals, entry, TARGET_PIXEL, TARGET_ROW);
+}
+
+uint32_t vertrix_port_render_indexed_rows_49a600(PORT_SIGNATURE)
+{
+    return render_indexed_rows_at(calls, services, globals, entry, 0x5bb780, 0x5bb784);
+}
+
+uint32_t vertrix_port_render_indexed_rows_4a26c0(PORT_SIGNATURE)
+{
+    return render_indexed_rows_at(calls, services, globals, entry, 0x5bb780, 0x5bb784);
+}
+
+uint32_t vertrix_port_render_indexed_rows_4aa3c0(PORT_SIGNATURE)
+{
+    return render_indexed_rows_at(calls, services, globals, entry, 0x5bb778, 0x5bb77c);
+}
+
 /* The step back of a masked row's skipped part (0x492499 and 0x492386): the source and target
  * pixel and the mask move back one pixel, and the start word at [0x5bbfec] counts down. */
-static void mask_skip_step(Port *port, MaskRegisters *r)
+static void mask_skip_step(Port *port, MaskRegisters *r, uint32_t target_pixel)
 {
     uint32_t start;
     r->edx = port_u32(port, 0, SOURCE_PIXEL) - (high_word(port, SOURCE_STRIDE) << 2);
-    r->ecx = port_u32(port, 0, TARGET_PIXEL);
+    r->ecx = port_u32(port, 0, target_pixel);
     port_set32(port, 0, SOURCE_PIXEL, r->edx);
     r->ecx -= port_u32(port, 0, TARGET_STRIDE);
     r->eax = high_word(port, MASK_STRIDE);
     r->edx = port_u32(port, 0, MASK_PIXEL) - r->eax;
     start = port_u32(port, 0, ROW_START);
-    port_set32(port, 0, TARGET_PIXEL, r->ecx);
+    port_set32(port, 0, target_pixel, r->ecx);
     port_set16(port, start, 0, port_u16(port, start, 0) - 1);
     r->eax = start;
 }
 
 /* The step back after a drawn pixel (0x4924f3 and 0x49232c): the same moves, with the pixel count
  * at 0x5bc016 counting down. */
-static void mask_draw_step(Port *port, MaskRegisters *r)
+static void mask_draw_step(Port *port, MaskRegisters *r, uint32_t target_pixel)
 {
     uint32_t target;
     r->edx = port_u32(port, 0, MASK_PIXEL);
     r->ebx = port_u32(port, 0, SOURCE_PIXEL) - (high_word(port, SOURCE_STRIDE) << 2);
-    target = port_u32(port, 0, TARGET_PIXEL);
+    target = port_u32(port, 0, target_pixel);
     port_set16(port, 0, ROW_COUNT, port_u16(port, 0, ROW_COUNT) - 1);
     target -= port_u32(port, 0, TARGET_STRIDE);
     r->eax = high_word(port, MASK_STRIDE);
     port_set32(port, 0, SOURCE_PIXEL, r->ebx);
-    port_set32(port, 0, TARGET_PIXEL, target);
+    port_set32(port, 0, target_pixel, target);
     r->edx -= r->eax;
 }
 
@@ -539,7 +560,7 @@ static uint32_t source_alpha(Port *port)
     return port_u32(port, port_u32(port, 0, SOURCE_PIXEL), 0) >> 24;
 }
 
-static uint32_t mask_row(Port *port, const LiftEntry *entry, int alpha)
+static uint32_t mask_row(Port *port, const LiftEntry *entry, int alpha, uint32_t target_pixel)
 {
     MaskRegisters r = {entry->eax, 0, entry->ebx, entry->ecx};
     r.edx = port_u32(port, 0, MASK_PIXEL);
@@ -564,7 +585,7 @@ static uint32_t mask_row(Port *port, const LiftEntry *entry, int alpha)
                     port_call(port, port_u32(port, 0, PIXEL_OPERATION), r.eax, r.edx, r.ebx, r.ecx);
             }
         }
-        mask_skip_step(port, &r);
+        mask_skip_step(port, &r, target_pixel);
     }
     while (port_u16(port, 0, ROW_COUNT) != 0)
     {
@@ -577,19 +598,40 @@ static uint32_t mask_row(Port *port, const LiftEntry *entry, int alpha)
         {
             r.eax = port_call(port, port_u32(port, 0, PIXEL_OPERATION), r.eax, r.edx, r.ebx, r.ecx);
         }
-        mask_draw_step(port, &r);
+        mask_draw_step(port, &r, target_pixel);
     }
     port_set32(port, 0, MASK_PIXEL, r.edx);
     return r.eax;
 }
 
-uint32_t vertrix_port_render_mask_row(PORT_SIGNATURE)
+/* 0x492460's row with the target pixel at `target_pixel`. */
+static uint32_t render_mask_row_at(PORT_SIGNATURE, uint32_t target_pixel)
 {
     Port port;
     uint32_t eax;
     port_open(&port, calls, services, globals, entry);
-    eax = mask_row(&port, entry, 0);
+    eax = mask_row(&port, entry, 0, target_pixel);
     return port_return(&port, eax, entry->edx);
+}
+
+uint32_t vertrix_port_render_mask_row(PORT_SIGNATURE)
+{
+    return render_mask_row_at(calls, services, globals, entry, TARGET_PIXEL);
+}
+
+uint32_t vertrix_port_render_mask_row_49a180(PORT_SIGNATURE)
+{
+    return render_mask_row_at(calls, services, globals, entry, 0x5bb780);
+}
+
+uint32_t vertrix_port_render_mask_row_4a2240(PORT_SIGNATURE)
+{
+    return render_mask_row_at(calls, services, globals, entry, 0x5bb780);
+}
+
+uint32_t vertrix_port_render_mask_row_4a9f40(PORT_SIGNATURE)
+{
+    return render_mask_row_at(calls, services, globals, entry, 0x5bb778);
 }
 
 uint32_t vertrix_port_render_mask_alpha_row(PORT_SIGNATURE)
@@ -597,7 +639,7 @@ uint32_t vertrix_port_render_mask_alpha_row(PORT_SIGNATURE)
     Port port;
     uint32_t eax;
     port_open(&port, calls, services, globals, entry);
-    eax = mask_row(&port, entry, 1);
+    eax = mask_row(&port, entry, 1, TARGET_PIXEL);
     return port_return(&port, eax, entry->edx);
 }
 

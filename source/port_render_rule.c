@@ -360,7 +360,8 @@ uint32_t vertrix_port_render_palette_pixel(PORT_SIGNATURE)
     return port_return(&port, colour, entry->edx);
 }
 
-uint32_t vertrix_port_render_rows(PORT_SIGNATURE)
+/* 0x492880's rows with the target pixel at `target`. */
+static uint32_t render_rows_at(PORT_SIGNATURE, uint32_t target)
 {
     Port port;
     uint32_t routine = entry->eax;
@@ -378,12 +379,32 @@ uint32_t vertrix_port_render_rows(PORT_SIGNATURE)
         port_set32(&port, 0, PALETTE_SOURCE,
                    port_u32(&port, 0, PALETTE_SOURCE) + (port_u32(&port, 0, ROW_SOURCE_SKIP) << 2));
         eax = port_u32(&port, 0, ROW_TARGET_SKIP);
-        edx = port_u32(&port, 0, PALETTE_TARGET) + eax;
-        port_set32(&port, 0, PALETTE_TARGET, edx);
+        edx = port_u32(&port, 0, target) + eax;
+        port_set32(&port, 0, target, edx);
         rows = (port_u16(&port, 0, ROWS) - 1) & 0xffff;
     }
     port_set16(&port, 0, ROWS, 0);
     return port_return(&port, eax, entry->edx);
+}
+
+uint32_t vertrix_port_render_rows(PORT_SIGNATURE)
+{
+    return render_rows_at(calls, services, globals, entry, PALETTE_TARGET);
+}
+
+uint32_t vertrix_port_render_rows_49a590(PORT_SIGNATURE)
+{
+    return render_rows_at(calls, services, globals, entry, 0x5bb780);
+}
+
+uint32_t vertrix_port_render_rows_4a2650(PORT_SIGNATURE)
+{
+    return render_rows_at(calls, services, globals, entry, 0x5bb780);
+}
+
+uint32_t vertrix_port_render_rows_4aa350(PORT_SIGNATURE)
+{
+    return render_rows_at(calls, services, globals, entry, 0x5bb778);
 }
 
 /* One channel of 0x490c60's blend: the two weights and the colour, halved. */
