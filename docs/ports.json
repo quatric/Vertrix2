@@ -1334,6 +1334,16 @@
   "lifted": "lifted_flags_idle",
   "chunk": "whole_3"
  },
+ "0x475b20": {
+  "port": "vertrix_port_sound_voice_play",
+  "lifted": "lifted_f475b20",
+  "chunk": "whole_3"
+ },
+ "0x475be0": {
+  "port": "vertrix_port_sound_voice_add",
+  "lifted": "lifted_f475be0",
+  "chunk": "whole_3"
+ },
  "0x475c30": {
   "port": "vertrix_port_key_queue_next",
   "lifted": "lifted_input_queue_consume_full",
@@ -2987,6 +2997,11 @@
  "0x4b7b80": {
   "port": "vertrix_port_input_poll_devices",
   "lifted": "lifted_f4b7b80",
+  "chunk": "whole_5"
+ },
+ "0x4b7c00": {
+  "port": "vertrix_port_timer_resolution",
+  "lifted": "lifted_f4b7c00",
   "chunk": "whole_5"
  },
  "0x4b7cd0": {

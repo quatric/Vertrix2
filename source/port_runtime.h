@@ -2083,4 +2083,17 @@ uint32_t vertrix_port_thread_stream_init(PORT_SIGNATURE);
  * or set it up and start it (0x475be0, 0x475af0). */
 uint32_t vertrix_port_sound_slot_select(PORT_SIGNATURE);
 
+/* Original 0x4b7c00: start the 70 Hz game timer (0x4844b0 on 0x5bd82c with 0x4b7b80), begin the
+ * finest timer period the device allows (imports 0x4f1728, 0x4f1720; kept at 0x5bd848) and create
+ * the frame event (import 0x4f1b30) at 0x5bd840. Keeps edx. */
+uint32_t vertrix_port_timer_resolution(PORT_SIGNATURE);
+
+/* Original 0x475be0(eax = slot, edx, ebx, ecx): unless sound is off (0x553648), add a new voice
+ * of kind 2 to the slot (0x4ca000, 0x4756d0, 0x475790, 0x4d8510). */
+uint32_t vertrix_port_sound_voice_add(PORT_SIGNATURE);
+
+/* Original 0x475b20(eax = slot, edx, ebx, ecx): add a voice of kind 1 to the slot as 0x475be0,
+ * or with sound off call 0x475b80 on 0x55364c with the slot's word +0x58. */
+uint32_t vertrix_port_sound_voice_play(PORT_SIGNATURE);
+
 #endif

@@ -11793,3 +11793,98 @@ uint32_t vertrix_port_sound_slot_select(PORT_SIGNATURE)
                     port_u32(&port, ebp, 8));
     return port_return(&port, eax, vertrix_lift_edx);
 }
+
+uint32_t vertrix_port_timer_resolution(PORT_SIGNATURE)
+{
+    Port port;
+    uint8_t stack[0x1c + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t caps = ebp - 0x18;
+    uint32_t ebx = 0x46;
+    uint32_t ecx = entry->ecx;
+    uint32_t minimum;
+    uint32_t period;
+    uint32_t eax;
+    uint32_t arguments[4];
+    port_open_stack(&port, stack, calls, services, globals, entry, 0x1c);
+    /* The 70 Hz game timer (0x4844b0), then the finest period the device allows, at least 1
+     * (import 0x4f1728), begun (import 0x4f1720) and kept at 0x5bd848, and an event (import
+     * 0x4f1b30) at 0x5bd840. */
+    port_call(&port, 0x4844b0, 0x5bd82c, 0x4b7b80, ebx, ecx);
+    arguments[0] = caps;
+    arguments[1] = 8;
+    port_call_stack(&port, 0x4f1728, caps, vertrix_lift_edx, ebx, ecx, arguments, 2);
+    minimum = port_u32(&port, caps, 0);
+    period = minimum > 1 ? minimum : 1;
+    ecx = port_u32(&port, ebp, -0x14u);
+    if (period < ecx)
+    {
+        ebx = port_u32(&port, caps, 0);
+        period = ebx > 1 ? ebx : 1;
+    }
+    else
+    {
+        period = ecx;
+    }
+    port_set32(&port, 0, 0x5bd848, period);
+    eax = port_call_stack(&port, 0x4f1720, period, minimum, ebx, ecx, &period, 1);
+    arguments[0] = 0;
+    arguments[1] = 1;
+    arguments[2] = 0;
+    arguments[3] = 0;
+    port_set32(&port, 0, 0x5bd83c, 1);
+    eax = port_call_stack(&port, 0x4f1b30, eax, vertrix_lift_edx, ebx, ecx, arguments, 4);
+    port_set32(&port, 0, 0x5bd840, eax);
+    return port_return(&port, eax, entry->edx);
+}
+
+/* The sound voice setups (0x475be0, 0x475b20): a new voice (0x4ca000, 0x4756d0) set up by
+ * 0x475790 with the kind and attached to the slot's list (0x4d8510). */
+static uint32_t voice_attach(Port *port, uint32_t slot, uint32_t kind, uint32_t ebx, uint32_t ecx,
+                             uint32_t edx)
+{
+    uint32_t voice = 0;
+    uint32_t memory = port_call(port, 0x4ca000, 0x1c, edx, ebx, ecx);
+    edx = vertrix_lift_edx;
+    if (memory != 0)
+    {
+        voice = port_call(port, 0x4756d0, memory, edx, ebx, ecx);
+        edx = vertrix_lift_edx;
+    }
+    port_call_stack(port, 0x475790, voice, kind, edx, ebx, &ecx, 1);
+    return port_call(port, 0x4d8510, slot + 0x20, voice, edx, ebx);
+}
+
+uint32_t vertrix_port_sound_voice_add(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t eax = entry->eax;
+    port_open_frame(&port, calls, services, globals, entry, 0x10);
+    if (port_u32(&port, 0, 0x553648) == 0)
+    {
+        eax = voice_attach(&port, entry->eax, 2, entry->ebx, entry->ecx, entry->edx);
+        return port_return(&port, eax, vertrix_lift_edx);
+    }
+    return port_return(&port, eax, entry->edx);
+}
+
+uint32_t vertrix_port_sound_voice_play(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t eax;
+    port_open_frame(&port, calls, services, globals, entry, 0x10);
+    if (port_u32(&port, 0, 0x553648) == 0)
+    {
+        eax = voice_attach(&port, entry->eax, 1, entry->ebx, entry->ecx, entry->edx);
+    }
+    else
+    {
+        /* Sound off: 0x475b80 on 0x55364c with the slot's word +0x58. */
+        uint32_t arguments[2];
+        arguments[0] = entry->ebx;
+        arguments[1] = entry->ecx;
+        eax = port_call_stack(&port, 0x475b80, 0x55364c, port_u16(&port, entry->eax, 0x58), 0,
+                              entry->edx, arguments, 2);
+    }
+    return port_return(&port, eax, vertrix_lift_edx);
+}

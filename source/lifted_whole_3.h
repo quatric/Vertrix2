@@ -146,9 +146,7 @@ enum
     LIFTED_PALETTE_TABLES_CYCLE_STACK = 72,
     LIFTED_RELEASE_PAIR_STACK = 112,
     LIFTED_OBJECT_DESTROY_FLAGS_STACK = 136,
-    LIFTED_F475B20_STACK = 104,
     LIFTED_F475B80_STACK = 104,
-    LIFTED_F475BE0_STACK = 92,
     LIFTED_QUEUE_NEXT_STACK = 84,
     LIFTED_PROGRESS_SET_40_STACK = 64,
     LIFTED_INPUT_REPEAT_COUNTER_CLEAR_FULL_STACK = 64,
@@ -838,16 +836,8 @@ uint32_t lifted_object_destroy_flags(const VertrixCalls *calls,
                                      const VertrixFactoryServices *services,
                                      const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x475b20. */
-uint32_t lifted_f475b20(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x475b80. */
 uint32_t lifted_f475b80(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x475be0. */
-uint32_t lifted_f475be0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x475c80. */
