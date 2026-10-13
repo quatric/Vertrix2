@@ -14411,3 +14411,166 @@ uint32_t vertrix_port_pool_destroy_4ee980(PORT_SIGNATURE)
 {
     return pool_destroy(calls, services, globals, entry, 0x51c2d4, 0x51c2f0, 0x51c278, 0x4ee910);
 }
+
+/* The menu item click shape of 0x44a040 and its two copies, for the item whose settings word is at
+ * `setting` and whose chosen state is `chosen`: an item 0x449460 accepts returns 1; otherwise it is
+ * highlighted (0x4493d0 with 0x74) and chosen (0x4ac8f0) by a click inside it (the input 0x54d640's
+ * key 0x74 (0x476480), its position (0x4764a0) hit-tested by 0x4b0b70); then 0x449390 runs. */
+static uint32_t menu_item_click(PORT_SIGNATURE, uint32_t setting, uint32_t chosen)
+{
+    /* push ebp, ebx, ecx, edx, esi, then 0xc bytes: the click's three results. */
+    enum
+    {
+        BELOW = 0x20,
+        INPUT = 0x54d640,
+        CLICK = 0x74
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t item = entry->eax;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t result;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    port_set32(&port, ebp, 0, entry->ebp);
+    port_set32(&port, ebp, -4u, entry->ebx);
+    port_set32(&port, ebp, -8u, entry->ecx);
+    port_set32(&port, ebp, -0xcu, entry->edx);
+    port_set32(&port, ebp, -0x10u, entry->esi);
+    result = port_call(&port, 0x449460, item, port_u32(&port, 0, setting), ebx, ecx);
+    if (result == 1)
+    {
+        return port_return(&port, result, entry->edx);
+    }
+    port_call(&port, 0x4493d0, item, CLICK, ebx, ecx);
+    if (port_call(&port, 0x476480, INPUT, vertrix_lift_edx, ebx, ecx) == 1)
+    {
+        uint32_t out = ebp - 0x14;
+        ecx = ebp - 0x18;
+        port_call_stack(&port, 0x4764a0, INPUT, CLICK, ebp - 0x1c, ecx, &out, 1);
+        ebx = (uint32_t)(int32_t)(int16_t)port_u16(&port, ebp, -0x18u);
+        if ((port_call(&port, 0x4b0b70, item,
+                       (uint32_t)(int32_t)(int16_t)port_u16(&port, ebp, -0x1cu), ebx, ecx) &
+             0xff) != 0)
+        {
+            port_call(&port, 0x4ac8f0, item, chosen, ebx, ecx);
+        }
+    }
+    result = port_call(&port, 0x449390, item, port_u32(&port, 0, setting), ebx, ecx);
+    return port_return(&port, result, entry->edx);
+}
+
+/* The effect bind shape of 0x455670 and its two copies: the child (+0x15c) gets 0x4375a0; when its
+ * test `check` gives 1 the object gets the two bindings 0x43c0e0 ([0x4f8184], [0x4f81b0]) and the
+ * update `next` and the child +0xb8c is set, otherwise 0x43acd0 runs; the child's method +4 (table
+ * +0x158) follows, and 0x43bbf0 after the second case. */
+static uint32_t effect_bind(PORT_SIGNATURE, uint32_t check, uint32_t next)
+{
+    Port port;
+    uint32_t object = entry->eax;
+    uint32_t child;
+    uint32_t table;
+    uint32_t result;
+    int other = 0;
+    port_open(&port, calls, services, globals, entry);
+    child = port_u32(&port, object, 0x15c);
+    port_call(&port, 0x4375a0, child, entry->edx, child, object);
+    if (port_call(&port, check, child, vertrix_lift_edx, child, object) == 1)
+    {
+        port_call(&port, 0x43c0e0, object, port_u32(&port, 0, 0x4f8184), child, object);
+        port_call(&port, 0x43c0e0, object, port_u32(&port, 0, 0x4f81b0), child, object);
+        port_call(&port, 0x4ac8f0, object, next, child, object);
+        port_set32(&port, child, 0xb8c, 1);
+    }
+    else
+    {
+        other = 1;
+        port_call(&port, 0x43acd0, object, vertrix_lift_edx, child, object);
+    }
+    table = port_u32(&port, child, 0x158);
+    result = port_call(&port, port_u32(&port, table, 4), child, table, child, object);
+    if (other)
+    {
+        result = port_call(&port, 0x43bbf0, object, vertrix_lift_edx, child, object);
+    }
+    return port_return(&port, result, entry->edx);
+}
+
+/* The approach frame shape of 0x456300 and its two copies: rate 1 (0x4ac7b0), then, when the
+ * counter is due, the three axes approached by the steps (0x4aca60, 0x4acab0, 0x4acb00); once all
+ * arrive the update `next` and rate 2 are set. */
+static uint32_t approach_frame(PORT_SIGNATURE, uint32_t next)
+{
+    Port port;
+    uint32_t actor = entry->eax;
+    uint32_t steps;
+    uint32_t x;
+    uint32_t y;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    port_call(&port, 0x4ac7b0, actor, 1, entry->ebx, actor);
+    port_call(&port, 0x4ac500, actor, vertrix_lift_edx, entry->ebx, actor);
+    result = port_call(&port, 0x4ac520, actor, vertrix_lift_edx, entry->ebx, actor);
+    if (result != 1)
+    {
+        return port_return(&port, result, entry->edx);
+    }
+    steps = port_call(&port, 0x4ac540, actor, vertrix_lift_edx, entry->ebx, actor);
+    port_call(&port, 0x4ac5b0, actor, vertrix_lift_edx, steps, actor);
+    x = port_call(&port, 0x4aca60, actor, steps, steps, actor);
+    y = port_call(&port, 0x4acab0, actor, steps, steps, actor);
+    result = port_call(&port, 0x4acb00, actor, steps, steps, actor);
+    if (x != 0 || y != 0 || result != 0)
+    {
+        return port_return(&port, result, entry->edx);
+    }
+    port_call(&port, 0x4ac8f0, actor, next, steps, actor);
+    result = port_call(&port, 0x4ac7b0, actor, 2, steps, actor);
+    return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_menu_item_click_44a040(PORT_SIGNATURE)
+{
+    return menu_item_click(calls, services, globals, entry, 0x4fbf00, 0x44a0e0);
+}
+
+uint32_t vertrix_port_menu_item_click_44a170(PORT_SIGNATURE)
+{
+    return menu_item_click(calls, services, globals, entry, 0x4fbf10, 0x44a210);
+}
+
+uint32_t vertrix_port_menu_item_click_44a2a0(PORT_SIGNATURE)
+{
+    return menu_item_click(calls, services, globals, entry, 0x4fbf08, 0x44a340);
+}
+
+uint32_t vertrix_port_effect_bind_455670(PORT_SIGNATURE)
+{
+    return effect_bind(calls, services, globals, entry, 0x4375f0, 0x455700);
+}
+
+uint32_t vertrix_port_effect_bind_4558e0(PORT_SIGNATURE)
+{
+    return effect_bind(calls, services, globals, entry, 0x437be0, 0x455970);
+}
+
+uint32_t vertrix_port_effect_bind_455a00(PORT_SIGNATURE)
+{
+    return effect_bind(calls, services, globals, entry, 0x437d70, 0x455a90);
+}
+
+uint32_t vertrix_port_approach_frame_456300(PORT_SIGNATURE)
+{
+    return approach_frame(calls, services, globals, entry, 0x456390);
+}
+
+uint32_t vertrix_port_approach_frame_4564e0(PORT_SIGNATURE)
+{
+    return approach_frame(calls, services, globals, entry, 0x456570);
+}
+
+uint32_t vertrix_port_approach_frame_4566d0(PORT_SIGNATURE)
+{
+    return approach_frame(calls, services, globals, entry, 0x456760);
+}

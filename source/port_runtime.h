@@ -2513,4 +2513,22 @@ uint32_t vertrix_port_pool_destroy_4d8b80(PORT_SIGNATURE);
 uint32_t vertrix_port_pool_destroy_4defd0(PORT_SIGNATURE);
 uint32_t vertrix_port_pool_destroy_4ee980(PORT_SIGNATURE);
 
+/* Originals 0x44a040, 0x44a170 and 0x44a2a0(eax = item): one click-only menu item with the settings
+ * words 0x4fbf00, 0x4fbf10 and 0x4fbf08 and the chosen states 0x44a0e0, 0x44a210 and 0x44a340. */
+uint32_t vertrix_port_menu_item_click_44a040(PORT_SIGNATURE);
+uint32_t vertrix_port_menu_item_click_44a170(PORT_SIGNATURE);
+uint32_t vertrix_port_menu_item_click_44a2a0(PORT_SIGNATURE);
+
+/* Originals 0x455670, 0x4558e0 and 0x455a00(eax = object): bind the effect when the child's test
+ * 0x4375f0, 0x437be0 or 0x437d70 passes (update 0x455700, 0x455970 or 0x455a90). Keep edx. */
+uint32_t vertrix_port_effect_bind_455670(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_bind_4558e0(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_bind_455a00(PORT_SIGNATURE);
+
+/* Originals 0x456300, 0x4564e0 and 0x4566d0(eax = actor): approach on all three axes and then set
+ * the updates 0x456390, 0x456570 or 0x456760 at rate 2. Keep edx. */
+uint32_t vertrix_port_approach_frame_456300(PORT_SIGNATURE);
+uint32_t vertrix_port_approach_frame_4564e0(PORT_SIGNATURE);
+uint32_t vertrix_port_approach_frame_4566d0(PORT_SIGNATURE);
+
 #endif
