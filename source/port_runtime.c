@@ -13279,3 +13279,166 @@ uint32_t vertrix_port_noise_fill(PORT_SIGNATURE)
     eax = port_call(&port, 0x482540, reader, edx, ebx, reader);
     return port_return(&port, eax, entry->edx);
 }
+
+/* The option label shape of 0x445f00 and its six copies: the option's value ([0x532bfc] plus the
+ * menu's +0x70) formatted by `format` into a string (with 0x532c04) set as the label's (+0x160)
+ * text (+0x15c, 0x4ca370), drawn in colour 7 when it is [0x532c00] and 0xd otherwise. */
+static uint32_t option_label_set(PORT_SIGNATURE, uint32_t format, uint32_t guard)
+{
+    /* push ebp, ebx, ecx, edx, esi, edi, then 0x18 bytes: the guard record and the string. */
+    enum
+    {
+        BELOW = 0x30
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t menu = entry->eax;
+    uint32_t record = ebp - 0x2c;
+    uint32_t text = ebp - 0x18;
+    uint32_t value;
+    uint32_t label;
+    uint32_t result;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    port_set32(&port, ebp, 0, entry->ebp);
+    port_set32(&port, ebp, -4u, entry->ebx);
+    port_set32(&port, ebp, -8u, entry->ecx);
+    port_set32(&port, ebp, -0xcu, entry->edx);
+    port_set32(&port, ebp, -0x10u, entry->esi);
+    port_set32(&port, ebp, -0x14u, entry->edi);
+    port_set32(&port, record, 0, port.env.chain);
+    port_set32(&port, ebp, -0x28u, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x24u, guard);
+    port_set32(&port, ebp, -0x20u, 0);
+    value = port_u32(&port, 0, 0x532bfc) + port_u32(&port, menu, 0x70);
+    label = port_u32(&port, menu, 0x160);
+    result = port_call(&port, format, 0x532c04, text, value, value);
+    port_set32(&port, ebp, -0x20u, 1);
+    port_call(&port, 0x4ca370, label + 0x15c, port_u32(&port, result, 0), 0, value);
+    port_set32(&port, ebp, -0x20u, 0);
+    port_call(&port, 0x4ca210, text, 0, 0, value);
+    port_set32(&port, ebp, -0x20u, 0);
+    port_set8(&port, label, 0x52, value == port_u32(&port, 0, 0x532c00) ? 7 : 0xd);
+    return port_return(&port, port_u32(&port, record, 0), entry->edx);
+}
+
+uint32_t vertrix_port_option_label_445f00(PORT_SIGNATURE)
+{
+    return option_label_set(calls, services, globals, entry, 0x4b73a0, 0x5151bc);
+}
+
+uint32_t vertrix_port_option_label_445fc0(PORT_SIGNATURE)
+{
+    return option_label_set(calls, services, globals, entry, 0x4b7300, 0x5151c8);
+}
+
+uint32_t vertrix_port_option_label_446080(PORT_SIGNATURE)
+{
+    return option_label_set(calls, services, globals, entry, 0x4b7080, 0x5151d4);
+}
+
+uint32_t vertrix_port_option_label_446140(PORT_SIGNATURE)
+{
+    return option_label_set(calls, services, globals, entry, 0x4b7120, 0x5151e0);
+}
+
+uint32_t vertrix_port_option_label_446200(PORT_SIGNATURE)
+{
+    return option_label_set(calls, services, globals, entry, 0x4b71c0, 0x5151ec);
+}
+
+uint32_t vertrix_port_option_label_4462c0(PORT_SIGNATURE)
+{
+    return option_label_set(calls, services, globals, entry, 0x4b7260, 0x5151f8);
+}
+
+uint32_t vertrix_port_option_label_446380(PORT_SIGNATURE)
+{
+    return option_label_set(calls, services, globals, entry, 0x4b7420, 0x515204);
+}
+
+/* The menu item input shape of 0x449500 and its five copies, for the item whose settings word is at
+ * `setting` and whose chosen state is `chosen`: an item 0x449460 accepts returns 1; otherwise it is
+ * highlighted (0x4493d0 with 0x74) and chosen (0x4ac8f0) by a click inside it (the input 0x54d640's
+ * key 0x74 (0x476480), its position (0x4764a0) hit-tested by 0x4b0b70) or, for a keyed item
+ * (+0x70), its key (+0x64); then 0x449390 runs. */
+static uint32_t menu_item_input(PORT_SIGNATURE, uint32_t setting, uint32_t chosen)
+{
+    /* push ebp, ebx, ecx, edx, esi, then 0xc bytes: the click's three results. */
+    enum
+    {
+        BELOW = 0x20,
+        INPUT = 0x54d640,
+        CLICK = 0x74
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t item = entry->eax;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t result;
+    int choose = 0;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    port_set32(&port, ebp, 0, entry->ebp);
+    port_set32(&port, ebp, -4u, entry->ebx);
+    port_set32(&port, ebp, -8u, entry->ecx);
+    port_set32(&port, ebp, -0xcu, entry->edx);
+    port_set32(&port, ebp, -0x10u, entry->esi);
+    result = port_call(&port, 0x449460, item, port_u32(&port, 0, setting), ebx, ecx);
+    if (result == 1)
+    {
+        return port_return(&port, result, entry->edx);
+    }
+    port_call(&port, 0x4493d0, item, CLICK, ebx, ecx);
+    if (port_call(&port, 0x476480, INPUT, vertrix_lift_edx, ebx, ecx) == 1)
+    {
+        uint32_t out = ebp - 0x18;
+        ecx = ebp - 0x14;
+        port_call_stack(&port, 0x4764a0, INPUT, CLICK, ebp - 0x1c, ecx, &out, 1);
+        ebx = (uint32_t)(int32_t)(int16_t)port_u16(&port, ebp, -0x14u);
+        choose = (port_call(&port, 0x4b0b70, item,
+                            (uint32_t)(int32_t)(int16_t)port_u16(&port, ebp, -0x1cu), ebx, ecx) &
+                  0xff) != 0;
+    }
+    else if (port_u32(&port, item, 0x70) == 1)
+    {
+        choose = port_call(&port, 0x476480, INPUT, port_u16(&port, item, 0x64), ebx, ecx) == 1;
+    }
+    if (choose)
+    {
+        port_call(&port, 0x4ac8f0, item, chosen, ebx, ecx);
+    }
+    result = port_call(&port, 0x449390, item, port_u32(&port, 0, setting), ebx, ecx);
+    return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_menu_item_input_449500(PORT_SIGNATURE)
+{
+    return menu_item_input(calls, services, globals, entry, 0x4fbed0, 0x4495b0);
+}
+
+uint32_t vertrix_port_menu_item_input_449660(PORT_SIGNATURE)
+{
+    return menu_item_input(calls, services, globals, entry, 0x4fbee0, 0x449710);
+}
+
+uint32_t vertrix_port_menu_item_input_4497c0(PORT_SIGNATURE)
+{
+    return menu_item_input(calls, services, globals, entry, 0x4fbed8, 0x449870);
+}
+
+uint32_t vertrix_port_menu_item_input_449aa0(PORT_SIGNATURE)
+{
+    return menu_item_input(calls, services, globals, entry, 0x4fbee8, 0x449b50);
+}
+
+uint32_t vertrix_port_menu_item_input_449c00(PORT_SIGNATURE)
+{
+    return menu_item_input(calls, services, globals, entry, 0x4fbef8, 0x449cb0);
+}
+
+uint32_t vertrix_port_menu_item_input_449d60(PORT_SIGNATURE)
+{
+    return menu_item_input(calls, services, globals, entry, 0x4fbef0, 0x449e10);
+}

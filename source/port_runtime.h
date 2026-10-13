@@ -2306,4 +2306,27 @@ uint32_t vertrix_port_saved_file_load(PORT_SIGNATURE);
  * edx. */
 uint32_t vertrix_port_noise_fill(PORT_SIGNATURE);
 
+/* Originals 0x445f00, 0x445fc0, 0x446080, 0x446140, 0x446200, 0x4462c0 and 0x446380(eax = menu):
+ * set the option label's (+0x160) text to the value [0x532bfc] + menu +0x70 as formatted by
+ * 0x4b73a0, 0x4b7300, 0x4b7080, 0x4b7120, 0x4b71c0, 0x4b7260 and 0x4b7420 (guard records 0x5151bc
+ * on by 0xc), coloured 7 when it is [0x532c00] and 0xd otherwise. Return the saved chain. */
+uint32_t vertrix_port_option_label_445f00(PORT_SIGNATURE);
+uint32_t vertrix_port_option_label_445fc0(PORT_SIGNATURE);
+uint32_t vertrix_port_option_label_446080(PORT_SIGNATURE);
+uint32_t vertrix_port_option_label_446140(PORT_SIGNATURE);
+uint32_t vertrix_port_option_label_446200(PORT_SIGNATURE);
+uint32_t vertrix_port_option_label_4462c0(PORT_SIGNATURE);
+uint32_t vertrix_port_option_label_446380(PORT_SIGNATURE);
+
+/* Originals 0x449500, 0x449660, 0x4497c0, 0x449aa0, 0x449c00 and 0x449d60(eax = item): one menu
+ * item's input with the settings words 0x4fbed0, 0x4fbee0, 0x4fbed8, 0x4fbee8, 0x4fbef8 and
+ * 0x4fbef0 and the chosen states 0x4495b0, 0x449710, 0x449870, 0x449b50, 0x449cb0 and 0x449e10:
+ * 1 when 0x449460 accepts it, otherwise chosen by a click on it or its key, then 0x449390. */
+uint32_t vertrix_port_menu_item_input_449500(PORT_SIGNATURE);
+uint32_t vertrix_port_menu_item_input_449660(PORT_SIGNATURE);
+uint32_t vertrix_port_menu_item_input_4497c0(PORT_SIGNATURE);
+uint32_t vertrix_port_menu_item_input_449aa0(PORT_SIGNATURE);
+uint32_t vertrix_port_menu_item_input_449c00(PORT_SIGNATURE);
+uint32_t vertrix_port_menu_item_input_449d60(PORT_SIGNATURE);
+
 #endif
