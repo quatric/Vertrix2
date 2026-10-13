@@ -2531,4 +2531,23 @@ uint32_t vertrix_port_approach_frame_456300(PORT_SIGNATURE);
 uint32_t vertrix_port_approach_frame_4564e0(PORT_SIGNATURE);
 uint32_t vertrix_port_approach_frame_4566d0(PORT_SIGNATURE);
 
+/* Originals 0x44c960, 0x44cbf0, 0x44cc60, 0x44d2c0, 0x44d410 and 0x44d760(eax = block): fade the
+ * level to 0 or 0x64 at 8 or 5 per step and then set the updates 0x44c940, 0x44cc60, 0x44cbf0,
+ * 0x44c860 (two) and 0x44d7d0. Keep edx. */
+uint32_t vertrix_port_block_fade_frame_44c960(PORT_SIGNATURE);
+uint32_t vertrix_port_block_fade_frame_44cbf0(PORT_SIGNATURE);
+uint32_t vertrix_port_block_fade_frame_44cc60(PORT_SIGNATURE);
+uint32_t vertrix_port_block_fade_frame_44d2c0(PORT_SIGNATURE);
+uint32_t vertrix_port_block_fade_frame_44d410(PORT_SIGNATURE);
+uint32_t vertrix_port_block_fade_frame_44d760(PORT_SIGNATURE);
+
+/* Originals 0x4b7080, 0x4b7120, 0x4b71c0, 0x4b7260 and 0x4b7300(eax = options, edx = string, ebx =
+ * value): set the string to the name of the value's field +0, +4, +8, +0xc or +0x10 from the texts
+ * 0x532c44, 0x532c50, 0x532c78, 0x532c80 or 0x532c88 (3, 10, 2, 2 and 2 of them), or empty. */
+uint32_t vertrix_port_option_value_text_4b7080(PORT_SIGNATURE);
+uint32_t vertrix_port_option_value_text_4b7120(PORT_SIGNATURE);
+uint32_t vertrix_port_option_value_text_4b71c0(PORT_SIGNATURE);
+uint32_t vertrix_port_option_value_text_4b7260(PORT_SIGNATURE);
+uint32_t vertrix_port_option_value_text_4b7300(PORT_SIGNATURE);
+
 #endif

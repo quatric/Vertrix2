@@ -1149,6 +1149,11 @@
   "lifted": "lifted_f44c940",
   "chunk": "whole_2"
  },
+ "0x44c960": {
+  "port": "vertrix_port_block_fade_frame_44c960",
+  "lifted": "lifted_block_fade_update",
+  "chunk": "whole_2"
+ },
  "0x44c9d0": {
   "port": "vertrix_port_actor_fade_frame_44c9d0",
   "lifted": "lifted_block_pulse_update",
@@ -1157,6 +1162,16 @@
  "0x44ca40": {
   "port": "vertrix_port_actor_fade_frame_44ca40",
   "lifted": "lifted_f44ca40",
+  "chunk": "whole_2"
+ },
+ "0x44cbf0": {
+  "port": "vertrix_port_block_fade_frame_44cbf0",
+  "lifted": "lifted_block_byte_pulse_update",
+  "chunk": "whole_2"
+ },
+ "0x44cc60": {
+  "port": "vertrix_port_block_fade_frame_44cc60",
+  "lifted": "lifted_block_byte_pulse_update_44cc60",
   "chunk": "whole_2"
  },
  "0x44d1e0": {
@@ -1169,9 +1184,19 @@
   "lifted": "lifted_f44d250",
   "chunk": "whole_2"
  },
+ "0x44d2c0": {
+  "port": "vertrix_port_block_fade_frame_44d2c0",
+  "lifted": "lifted_f44d2c0",
+  "chunk": "whole_2"
+ },
  "0x44d3a0": {
   "port": "vertrix_port_actor_value_frame_44d3a0",
   "lifted": "lifted_f44d3a0",
+  "chunk": "whole_2"
+ },
+ "0x44d410": {
+  "port": "vertrix_port_block_fade_frame_44d410",
+  "lifted": "lifted_block_byte_pulse_update_44d410",
   "chunk": "whole_2"
  },
  "0x44d480": {
@@ -1192,6 +1217,11 @@
  "0x44d660": {
   "port": "vertrix_port_actor_value_frame_44d660",
   "lifted": "lifted_f44d660",
+  "chunk": "whole_2"
+ },
+ "0x44d760": {
+  "port": "vertrix_port_block_fade_frame_44d760",
+  "lifted": "lifted_block_byte_pulse_update_44d760",
   "chunk": "whole_2"
  },
  "0x44d7d0": {
@@ -4133,6 +4163,26 @@
   "port": "vertrix_port_list_delete_4b5e70",
   "lifted": "lifted_object_release_call_4b6f70",
   "chunk": "whole_4"
+ },
+ "0x4b7120": {
+  "port": "vertrix_port_option_value_text_4b7120",
+  "lifted": "lifted_f4b7120",
+  "chunk": "whole_9"
+ },
+ "0x4b71c0": {
+  "port": "vertrix_port_option_value_text_4b71c0",
+  "lifted": "lifted_f4b71c0",
+  "chunk": "whole_9"
+ },
+ "0x4b7260": {
+  "port": "vertrix_port_option_value_text_4b7260",
+  "lifted": "lifted_f4b7260",
+  "chunk": "whole_9"
+ },
+ "0x4b7300": {
+  "port": "vertrix_port_option_value_text_4b7300",
+  "lifted": "lifted_f4b7300",
+  "chunk": "whole_9"
  },
  "0x4b7600": {
   "port": "vertrix_port_list_construct",

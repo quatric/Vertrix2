@@ -14574,3 +14574,131 @@ uint32_t vertrix_port_approach_frame_4566d0(PORT_SIGNATURE)
 {
     return approach_frame(calls, services, globals, entry, 0x456760);
 }
+
+/* The block fade frame shape of 0x44c960 and its five copies: +0x93 set, 0x4ac1f0 and 0x4ac500,
+ * then, when the counter is due (0x4ac520), its steps consumed (0x4ac540, 0x4ac5b0), the level's
+ * target (+0x4f) and speed (+0x50) set, the level stepped (0x4ad580) and, once it arrives, the
+ * update `next` set (0x4ac8f0); the image is refreshed (0x4ac8a0) in every case. */
+static uint32_t block_fade_frame(PORT_SIGNATURE, uint32_t target, uint32_t speed, uint32_t next)
+{
+    Port port;
+    uint32_t block = entry->eax;
+    uint32_t ebx = entry->ebx;
+    uint32_t result;
+    port_open(&port, calls, services, globals, entry);
+    port_set8(&port, block, 0x93, 1);
+    port_call(&port, 0x4ac1f0, block, entry->edx, ebx, block);
+    port_call(&port, 0x4ac500, block, vertrix_lift_edx, ebx, block);
+    if (port_call(&port, 0x4ac520, block, vertrix_lift_edx, ebx, block) == 1)
+    {
+        result = port_call(&port, 0x4ac540, block, vertrix_lift_edx, ebx, block);
+        port_call(&port, 0x4ac5b0, block, result, ebx, block);
+        port_set8(&port, block, 0x4f, target);
+        port_set16(&port, block, 0x50, speed);
+        if (port_call(&port, 0x4ad580, block, vertrix_lift_edx, ebx, block) == 0)
+        {
+            port_call(&port, 0x4ac8f0, block, next, ebx, block);
+        }
+    }
+    result = port_call(&port, 0x4ac8a0, block, vertrix_lift_edx, ebx, block);
+    return port_return(&port, result, entry->edx);
+}
+
+uint32_t vertrix_port_block_fade_frame_44c960(PORT_SIGNATURE)
+{
+    return block_fade_frame(calls, services, globals, entry, 0x0, 8, 0x44c940);
+}
+
+uint32_t vertrix_port_block_fade_frame_44cbf0(PORT_SIGNATURE)
+{
+    return block_fade_frame(calls, services, globals, entry, 0x64, 5, 0x44cc60);
+}
+
+uint32_t vertrix_port_block_fade_frame_44cc60(PORT_SIGNATURE)
+{
+    return block_fade_frame(calls, services, globals, entry, 0x0, 5, 0x44cbf0);
+}
+
+uint32_t vertrix_port_block_fade_frame_44d2c0(PORT_SIGNATURE)
+{
+    return block_fade_frame(calls, services, globals, entry, 0x0, 8, 0x44c860);
+}
+
+uint32_t vertrix_port_block_fade_frame_44d410(PORT_SIGNATURE)
+{
+    return block_fade_frame(calls, services, globals, entry, 0x64, 8, 0x44c860);
+}
+
+uint32_t vertrix_port_block_fade_frame_44d760(PORT_SIGNATURE)
+{
+    return block_fade_frame(calls, services, globals, entry, 0x64, 8, 0x44d7d0);
+}
+
+/* The option value formatter shape of 0x4b7120 and its copies (eax = options, edx = string, ebx =
+ * value): under the guard record `guard` the value's entry (0x4b6fa0) is looked up and the string
+ * set empty (0x4ca280 with `empty`); with an entry, its field `field` names one of the `count`
+ * texts of `names` (0x415ed0 with `table`) that the string is set to (0x4ca370). Returns the
+ * string. */
+static uint32_t option_value_text(PORT_SIGNATURE, uint32_t guard, uint32_t empty, uint32_t field,
+                                  uint32_t names, uint32_t table, uint32_t count)
+{
+    /* push ebp, ecx, esi, edi, then 0x14 bytes holding the guard record. */
+    enum
+    {
+        BELOW = 0x24
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t options = entry->eax;
+    uint32_t text = entry->edx;
+    uint32_t value;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    port_set32(&port, ebp, 0, entry->ebp);
+    port_set32(&port, ebp, -4u, entry->ecx);
+    port_set32(&port, ebp, -8u, entry->esi);
+    port_set32(&port, ebp, -0xcu, entry->edi);
+    port_set32(&port, ebp, -0x20u, port.env.chain);
+    port_set32(&port, ebp, -0x1cu, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x14u, 0);
+    port_set32(&port, ebp, -0x18u, guard);
+    value = port_call(&port, 0x4b6fa0, options, entry->ebx, GUARD_HANDLER, options);
+    port_call(&port, 0x4ca280, text, empty, GUARD_HANDLER, value);
+    if (value != 0)
+    {
+        uint32_t name =
+            port_call(&port, 0x415ed0, port_u32(&port, value, field), names, table, count);
+        port_call(&port, 0x4ca370, text, name, table, count);
+    }
+    return port_return(&port, text, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_option_value_text_4b7080(PORT_SIGNATURE)
+{
+    return option_value_text(calls, services, globals, entry, 0x51852c, 0x5110bc, 0x0, 0x532c44,
+                             0x4f80e4, 3);
+}
+
+uint32_t vertrix_port_option_value_text_4b7120(PORT_SIGNATURE)
+{
+    return option_value_text(calls, services, globals, entry, 0x518530, 0x5110bd, 0x4, 0x532c50,
+                             0x4f80f0, 10);
+}
+
+uint32_t vertrix_port_option_value_text_4b71c0(PORT_SIGNATURE)
+{
+    return option_value_text(calls, services, globals, entry, 0x518534, 0x5110be, 0x8, 0x532c78,
+                             0x4f8118, 2);
+}
+
+uint32_t vertrix_port_option_value_text_4b7260(PORT_SIGNATURE)
+{
+    return option_value_text(calls, services, globals, entry, 0x518538, 0x5110bf, 0xc, 0x532c80,
+                             0x4f8120, 2);
+}
+
+uint32_t vertrix_port_option_value_text_4b7300(PORT_SIGNATURE)
+{
+    return option_value_text(calls, services, globals, entry, 0x51853c, 0x5110c0, 0x10, 0x532c88,
+                             0x4f8168, 2);
+}
