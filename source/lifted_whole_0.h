@@ -22,7 +22,6 @@ enum
     LIFTED_F40AE60_STACK = 68,
     LIFTED_F40AED0_STACK = 92,
     LIFTED_F40AF90_STACK = 96,
-    LIFTED_F40B040_STACK = 116,
     LIFTED_F40B080_STACK = 88,
     LIFTED_F40B660_STACK = 88,
     LIFTED_CURVE_TABLE_BUILD_STACK = 120,
@@ -136,7 +135,6 @@ enum
     LIFTED_RESOURCE_ENTRY_CALL_418550_STACK = 72,
     LIFTED_RESOURCE_ENTRY_CALL_418570_STACK = 72,
     LIFTED_RTL_CONSTRUCT_DERIVED_STREAM_STACK = 68,
-    LIFTED_OBJECT_CLEAR_COUNTER_FULL_STACK = 64,
     LIFTED_F418970_STACK = 120,
     LIFTED_F418AE0_STACK = 76,
     LIFTED_F418AF0_STACK = 488,
@@ -354,10 +352,6 @@ uint32_t lifted_f40aed0(const VertrixCalls *calls, const VertrixFactoryServices 
 
 /* Original 0x40af90. */
 uint32_t lifted_f40af90(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x40b040. */
-uint32_t lifted_f40b040(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x40b080. */
@@ -836,11 +830,6 @@ uint32_t lifted_resource_entry_call_418570(const VertrixCalls *calls,
 uint32_t lifted_rtl_construct_derived_stream(const VertrixCalls *calls,
                                              const VertrixFactoryServices *services,
                                              const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x418870. */
-uint32_t lifted_object_clear_counter_full(const VertrixCalls *calls,
-                                          const VertrixFactoryServices *services,
-                                          const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x418970. */
 uint32_t lifted_f418970(const VertrixCalls *calls, const VertrixFactoryServices *services,

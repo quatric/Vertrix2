@@ -5093,31 +5093,6 @@
   "virtual": [],
   "address": 4548704
  },
- "f45c730": {
-  "callees": {
-   "0x471bb0": [
-    0,
-    false
-   ],
-   "0x4ac8f0": [
-    0,
-    false
-   ]
-  },
-  "stack": 84,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2
-  ],
-  "virtual": [],
-  "address": 4572976
- },
  "f472f80": {
   "callees": {
    "0x4826c0": [

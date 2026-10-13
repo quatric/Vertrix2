@@ -2858,18 +2858,6 @@
   "virtual": [],
   "address": 4657984
  },
- "return_unchanged_4713c0": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4658112
- },
  "ui_slide_from_below": {
   "callees": {},
   "stack": 68,
@@ -3036,18 +3024,6 @@
   "constants": [],
   "virtual": [],
   "address": 4660944
- },
- "return_unchanged_471ee0": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4660960
  },
  "point_list_when_one": {
   "callees": {
@@ -3291,18 +3267,6 @@
    ]
   ],
   "address": 4682640
- },
- "return_unchanged_477930": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4684080
  },
  "f477b10": {
   "callees": {
@@ -3828,21 +3792,6 @@
   "constants": [],
   "virtual": [],
   "address": 4774304
- },
- "f48dcd0": {
-  "callees": {},
-  "stack": 72,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [
-   6010724,
-   6010728
-  ],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4775120
  },
  "f48dda0": {
   "callees": {},
@@ -12181,30 +12130,6 @@
   "virtual": [],
   "address": 5117148
  },
- "return_unchanged_4e3697": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 5125783
- },
- "f4e55d0": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 5133776
- },
  "f4e5b0c": {
   "callees": {
    "slot_509750": [
@@ -12241,29 +12166,5 @@
   "constants": [],
   "virtual": [],
   "address": 5135116
- },
- "return_zero_4e9d00": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 5152000
- },
- "return_unchanged_4ec8c0": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 5163200
  }
 }

@@ -493,39 +493,6 @@
   "virtual": [],
   "address": 4239248
  },
- "f40b040": {
-  "callees": {
-   "0x4f1760": [
-    1,
-    false
-   ],
-   "0x4f175c": [
-    5,
-    false
-   ],
-   "virtual_40b070": [
-    2,
-    false
-   ]
-  },
-  "stack": 116,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   0
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [
-   [
-    0,
-    40,
-    2
-   ]
-  ],
-  "address": 4239424
- },
  "f40b080": {
   "callees": {
    "virtual_40b086": [
@@ -3100,18 +3067,6 @@
   "constants": [],
   "virtual": [],
   "address": 4294496
- },
- "object_clear_counter_full": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4294768
  },
  "f418970": {
   "callees": {
