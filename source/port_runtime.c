@@ -9714,3 +9714,70 @@ uint32_t vertrix_port_is_dst(PORT_SIGNATURE)
     port_set32(&port, tm, 0x20, result);
     return port_return(&port, result, entry->edx);
 }
+
+uint32_t vertrix_port_find_succeeded(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x124,
+        FIND_DATA = 0x120 /* below ebp */
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t arguments[2];
+    uint32_t result;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    arguments[0] = entry->eax;
+    arguments[1] = ebp - FIND_DATA;
+    result = port_call_stack(&port, 0x4d9060, entry->eax, ebp - FIND_DATA, entry->ebx, entry->ecx,
+                             arguments, 2);
+    return port_return(&port, result == 1, entry->edx);
+}
+
+uint32_t vertrix_port_scene_refresh(PORT_SIGNATURE)
+{
+    enum
+    {
+        SCREEN = 0x5b9c50
+    };
+    Port port;
+    uint32_t scene = entry->eax;
+    uint32_t ecx = entry->ebx;
+    uint32_t ebx = entry->ebx;
+    uint32_t edx;
+    uint32_t eax;
+    port_open(&port, calls, services, globals, entry);
+    port_call(&port, 0x41aaf0, scene, entry->edx, ebx, ecx);
+    port_call(&port, 0x486d00, SCREEN, vertrix_lift_edx, ebx, ecx);
+    ebx = vertrix_lift_edx;
+    port_call(&port, 0x41a2f0, scene, port_u32(&port, 0, 0x558c7c), ebx, ecx);
+    edx = vertrix_lift_edx;
+    port_call(&port, 0x486da0, SCREEN, edx, ebx, ecx);
+    eax = port_call(&port, 0x487020, SCREEN, vertrix_lift_edx, ebx, ecx);
+    return port_return(&port, eax, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_scratch_triple(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x14
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t pair = entry->esp - 8;
+    uint32_t scratch = entry->esp - BELOW;
+    uint32_t arguments[3];
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    /* The argument pair is pushed, converted into a 12-byte temporary and back. */
+    port_set32(&port, pair, 4, entry->edx);
+    port_set32(&port, pair, 0, entry->eax);
+    port_call(&port, 0x4e53b4, pair, scratch, entry->ebx, entry->ecx);
+    port_call(&port, 0x4db131, scratch, vertrix_lift_edx, entry->ebx, entry->ecx);
+    arguments[0] = port_u32(&port, scratch, 0);
+    arguments[1] = port_u32(&port, scratch, 4);
+    arguments[2] = port_u32(&port, scratch, 8);
+    port_call_stack(&port, 0x4e543c, scratch, pair, entry->ebx, entry->ecx, arguments, 3);
+    return port_return(&port, port_u32(&port, pair, 0), port_u32(&port, pair, 4));
+}

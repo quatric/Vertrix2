@@ -526,3 +526,36 @@ uint32_t vertrix_port_display_present(PORT_SIGNATURE)
     display_method(&port, port_u32(&port, display, 0x68), UNLOCK, display, ecx, arguments, 2);
     return port_return(&port, 1, entry->edx);
 }
+
+uint32_t vertrix_port_image_new(PORT_SIGNATURE)
+{
+    enum
+    {
+        ALLOCATE = 0x4ec160
+    };
+    Port port;
+    uint8_t stack[0x10 + 8 + 4 * 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t width = entry->eax;
+    uint32_t height = entry->edx;
+    uint32_t image;
+    uint32_t pixels;
+    port_open_arguments(&port, stack, calls, services, globals, entry, 0x10, 8);
+    image = port_call(&port, ALLOCATE, 1, 0x28, entry->ecx, entry->ecx);
+    pixels = port_call(&port, ALLOCATE, width * height * port_u8(&port, ebp, 0x24), 1, entry->ecx,
+                       image);
+    port_set32(&port, image, 0, pixels);
+    port_set32(&port, image, 4, width);
+    port_set32(&port, image, 8, height);
+    port_set32(&port, image, 0x10, entry->ecx);
+    port_set32(&port, image, 0xc, entry->ebx);
+    port_set32(&port, image, 0x14, port_u32(&port, ebp, 8));
+    port_set32(&port, image, 0x18, port_u32(&port, ebp, 0xc));
+    port_set32(&port, image, 0x1c, port_u32(&port, ebp, 0x10));
+    port_set32(&port, image, 0x20, port_u32(&port, ebp, 0x14));
+    port_set8(&port, image, 0x24, port_u8(&port, ebp, 0x18));
+    port_set8(&port, image, 0x26, port_u8(&port, ebp, 0x20));
+    port_set8(&port, image, 0x25, port_u8(&port, ebp, 0x1c));
+    port_set8(&port, image, 0x27, port_u8(&port, ebp, 0x24));
+    return port_return(&port, image, vertrix_lift_edx);
+}

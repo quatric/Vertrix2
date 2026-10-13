@@ -1793,4 +1793,18 @@ uint32_t vertrix_port_tzset(PORT_SIGNATURE);
  * the year, and on the rule's day 0x4e949c compares the time of day. */
 uint32_t vertrix_port_is_dst(PORT_SIGNATURE);
 
+/* Original 0x4895e0(eax = path): whether a file is found (0x4d9060 with a local find record
+ * returns 1). */
+uint32_t vertrix_port_find_succeeded(PORT_SIGNATURE);
+
+/* Original 0x41a2b0(eax = scene, ebx = argument): refresh a scene: 0x41aaf0, the screen
+ * (0x5b9c50) opened by 0x486d00, the scene drawn by 0x41a2f0 with 0x558c7c, the screen closed and
+ * presented (0x486da0, 0x487020). */
+uint32_t vertrix_port_scene_refresh(PORT_SIGNATURE);
+
+/* Original 0x4db10a(edx:eax = a double): run the value through a 12-byte temporary: 0x4e53b4
+ * converts it, 0x4db131 works on it and 0x4e543c (the temporary also as its stack arguments)
+ * converts it back into the pushed pair, which is returned. */
+uint32_t vertrix_port_scratch_triple(PORT_SIGNATURE);
+
 #endif

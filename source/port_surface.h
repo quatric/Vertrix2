@@ -61,4 +61,9 @@ uint32_t vertrix_port_image_color_order(PORT_SIGNATURE);
  * surface stays lost. Keeps edx. */
 uint32_t vertrix_port_display_present(PORT_SIGNATURE);
 
+/* Original 0x483060(eax = width, edx = height, ebx, ecx; stack: four dwords and four bytes, the
+ * last the bytes per pixel; ret 0x20): a new 0x28-byte image record with its pixels, both from
+ * 0x4ec160, holding the arguments. */
+uint32_t vertrix_port_image_new(PORT_SIGNATURE);
+
 #endif
