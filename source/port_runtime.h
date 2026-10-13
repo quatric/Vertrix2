@@ -1733,4 +1733,21 @@ uint32_t vertrix_port_text_measure(PORT_SIGNATURE);
  * exception chain; edx is unchanged. */
 uint32_t vertrix_port_actor_label_refresh(PORT_SIGNATURE);
 
+/* Original 0x4826c0(eax = table, dx = limit): the next word of the random table (+8) modulo the
+ * limit. The draw count +0xc goes up and the pointer by 2; at 0x1001 draws the table is refilled
+ * (0x482550 when +4 is 1, else 0x482540), whose edx is then the result. Returns the result in eax
+ * and edx. */
+uint32_t vertrix_port_random_below(PORT_SIGNATURE);
+
+/* Original 0x4ac1f0(eax = animation): advance it (0x4ac370) and, when 0x4ac390 reports 1, run the
+ * frame steps 0x4ac3b0 counts: 0x4ac420 once, then per step 0x4ac740 and, when 0x4ac760 reports
+ * 1, 0x4ac700. Returns the last call's eax; edx is unchanged. */
+uint32_t vertrix_port_animation_tick(PORT_SIGNATURE);
+
+/* Original 0x4d86d0(eax = exception object, dl = flags): its destructor. With flag 4 the object
+ * is finalized (0x4ccb9f with 0x51a0f0) and freed (0x4ca040). Otherwise, under a guard record,
+ * its message (+4) is freed, its class pointer set back to 0x517454, and with flag 2 the object
+ * freed (0x4ca050). Returns the object. */
+uint32_t vertrix_port_exception_destroy(PORT_SIGNATURE);
+
 #endif
