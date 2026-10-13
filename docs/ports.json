@@ -1369,6 +1369,21 @@
   "lifted": "lifted_state_done_454fc0",
   "chunk": "whole_2"
  },
+ "0x456390": {
+  "port": "vertrix_port_button_frame_456390",
+  "lifted": "lifted_f456390",
+  "chunk": "whole_2"
+ },
+ "0x456570": {
+  "port": "vertrix_port_button_frame_456570",
+  "lifted": "lifted_f456570",
+  "chunk": "whole_2"
+ },
+ "0x456760": {
+  "port": "vertrix_port_button_frame_456760",
+  "lifted": "lifted_f456760",
+  "chunk": "whole_2"
+ },
  "0x456ea0": {
   "port": "vertrix_port_actor_animate_slide",
   "lifted": "lifted_f456ea0",

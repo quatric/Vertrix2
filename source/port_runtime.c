@@ -14136,3 +14136,103 @@ uint32_t vertrix_port_bank_allocate_5464e4(PORT_SIGNATURE)
     result = port_call(&port, 0x487640, 0x5464e4, 8, entry->ebx, entry->ecx);
     return port_return(&port, result, entry->edx);
 }
+
+/* The button frame shape of 0x456390 and its two copies: the counter stepped (0x4ac500) and, when
+ * due (0x4ac520), the fade from 0 by 5 (0x4ad530); then, when the cursor (0x558944, 0x558946, or
+ * 0x7d00 while 0x558958 is set) is over the button (0x4b0b70) it is lit (+0x48 = 0x23); a click
+ * inside it (the input 0x54d640's key 0x74, its position by 0x4764a0) sets the update `next` and
+ * +0x48 to 0x3c. */
+static uint32_t button_frame(PORT_SIGNATURE, uint32_t next)
+{
+    /* push ebp, ebx, ecx, edx, esi, then 0xc bytes: the click's three results. */
+    enum
+    {
+        BELOW = 0x20,
+        INPUT = 0x54d640,
+        CLICK = 0x74,
+        OFF_SCREEN = 0x7d00
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t button = entry->eax;
+    uint32_t eax;
+    uint32_t edx;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    port_set32(&port, ebp, 0, entry->ebp);
+    port_set32(&port, ebp, -4u, entry->ebx);
+    port_set32(&port, ebp, -8u, entry->ecx);
+    port_set32(&port, ebp, -0xcu, entry->edx);
+    port_set32(&port, ebp, -0x10u, entry->esi);
+    port_call(&port, 0x4ac500, button, entry->edx, ebx, button);
+    eax = port_call(&port, 0x4ac520, button, vertrix_lift_edx, ebx, button);
+    edx = vertrix_lift_edx;
+    if (eax == 1)
+    {
+        eax = port_call(&port, 0x4ac540, button, edx, ebx, button);
+        port_call(&port, 0x4ac5b0, button, eax, ebx, button);
+        port_set16(&port, button, 0x4a, 0);
+        port_set16(&port, button, 0x4c, 5);
+        eax = port_call(&port, 0x4ad530, button, vertrix_lift_edx, ebx, button);
+        edx = vertrix_lift_edx;
+    }
+    if (port_u32(&port, 0, 0x558958) != 0)
+    {
+        eax = OFF_SCREEN;
+    }
+    else
+    {
+        eax = (eax & 0xffff0000u) | port_u16(&port, 0, 0x558946);
+    }
+    ecx = port_u32(&port, 0, 0x558958);
+    ebx = (uint32_t)(int32_t)(int16_t)eax;
+    if (ecx != 0)
+    {
+        edx = OFF_SCREEN;
+    }
+    else
+    {
+        edx = (uint32_t)(int32_t)(int16_t)port_u16(&port, 0, 0x558944);
+    }
+    if ((port_call(&port, 0x4b0b70, button, edx, ebx, ecx) & 0xff) != 0)
+    {
+        port_set16(&port, button, 0x48, 0x23);
+    }
+    eax = port_call(&port, 0x476480, INPUT, CLICK, ebx, ecx);
+    if (eax != 1)
+    {
+        return port_return(&port, eax, entry->edx);
+    }
+    {
+        uint32_t out = ebp - 0x18;
+        ecx = ebp - 0x14;
+        port_call_stack(&port, 0x4764a0, INPUT, CLICK, ebp - 0x1c, ecx, &out, 1);
+    }
+    ebx = (uint32_t)(int32_t)(int16_t)port_u16(&port, ebp, -0x14u);
+    eax = port_call(&port, 0x4b0b70, button,
+                    (uint32_t)(int32_t)(int16_t)port_u16(&port, ebp, -0x1cu), ebx, ecx);
+    if ((eax & 0xff) == 0)
+    {
+        return port_return(&port, eax, entry->edx);
+    }
+    eax = port_call(&port, 0x4ac8f0, button, next, ebx, ecx);
+    port_set16(&port, button, 0x48, 0x3c);
+    return port_return(&port, eax, entry->edx);
+}
+
+uint32_t vertrix_port_button_frame_456390(PORT_SIGNATURE)
+{
+    return button_frame(calls, services, globals, entry, 0x456490);
+}
+
+uint32_t vertrix_port_button_frame_456570(PORT_SIGNATURE)
+{
+    return button_frame(calls, services, globals, entry, 0x456670);
+}
+
+uint32_t vertrix_port_button_frame_456760(PORT_SIGNATURE)
+{
+    return button_frame(calls, services, globals, entry, 0x456860);
+}

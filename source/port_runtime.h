@@ -2483,4 +2483,11 @@ uint32_t vertrix_port_actor_swing_frame_44f1e0(PORT_SIGNATURE);
 /* Original 0x45e720: allocate bank 0x5464e4 with 8 (0x487640). */
 uint32_t vertrix_port_bank_allocate_5464e4(PORT_SIGNATURE);
 
+/* Originals 0x456390, 0x456570 and 0x456760(eax = button): step its fade when due, light it (+0x48
+ * 0x23) while the cursor is over it and on a click inside it set the update 0x456490, 0x456670 or
+ * 0x456860 and +0x48 to 0x3c. Keep edx. */
+uint32_t vertrix_port_button_frame_456390(PORT_SIGNATURE);
+uint32_t vertrix_port_button_frame_456570(PORT_SIGNATURE);
+uint32_t vertrix_port_button_frame_456760(PORT_SIGNATURE);
+
 #endif
