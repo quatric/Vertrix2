@@ -1183,3 +1183,38 @@ uint32_t vertrix_port_mix_pcm16_stereo(PORT_SIGNATURE)
     port_open_arguments(&port, stack, calls, services, globals, entry, 0x20, 3);
     return mix_stereo_kernel(&port, entry, 1);
 }
+
+uint32_t vertrix_port_mix_render(PORT_SIGNATURE)
+{
+    enum
+    {
+        FLAGS = 0x52fc1c,
+        MIX = 0x52fc3c
+    };
+    Port port;
+    uint32_t output = entry->eax;
+    uint32_t count = entry->edx;
+    uint32_t eax = entry->eax;
+    uint32_t edx = entry->edx;
+    uint32_t ecx = entry->ecx;
+    port_open(&port, calls, services, globals, entry);
+    /* Stereo (flag bit 0) counts frames of two values. */
+    if (port_u8(&port, 0, FLAGS) & 1)
+    {
+        count >>= 1;
+    }
+    while (count != 0)
+    {
+        uint32_t part = count > 0x200 ? 0x200 : count;
+        uint32_t stereo;
+        port_call(&port, 0x4eb5c0, MIX, 0, part * 4, ecx);
+        port_call(&port, 0x40c5c0, MIX, part, part * 4, ecx);
+        eax = port_call(&port, 0x40c430, output, MIX, part, ecx);
+        edx = vertrix_lift_edx;
+        stereo = (port_u8(&port, 0, FLAGS) & 1) != 0;
+        ecx = (ecx & 0xffffff00u) | stereo;
+        output += part << stereo;
+        count -= part;
+    }
+    return port_return(&port, eax, edx);
+}

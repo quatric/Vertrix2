@@ -187,4 +187,15 @@ uint32_t vertrix_port_path_root(PORT_SIGNATURE);
  * be read. */
 uint32_t vertrix_port_full_path(PORT_SIGNATURE);
 
+/* Original 0x4d9060(stack: a path, a file record; ret 0): fill the record from the file: its
+ * full name (+0x12, 0x4d7c40), attributes (+0x10), size (+0xc) and creation, access and write
+ * stamps (+0, +8, +4) from FindFirstFileA through 0x4e3470. Returns 1, or 0 when the file is not
+ * found. */
+uint32_t vertrix_port_find_file(PORT_SIGNATURE);
+
+/* Original 0x4daae8(eax = path, edx = drive, ebx = directory, ecx = name; stack: extension;
+ * ret 0): the C runtime's splitpath. Each part is copied by 0x4daab0 (at most 0xff
+ * characters); characters are read through 0x4e3a50 and 0x4e3a90. */
+uint32_t vertrix_port_split_path(PORT_SIGNATURE);
+
 #endif

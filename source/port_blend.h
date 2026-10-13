@@ -164,4 +164,9 @@ uint32_t vertrix_port_blend_tint_levels(PORT_SIGNATURE);
  * stored back as the loops leave it. Returns the row skip after a row, else eax unchanged. */
 uint32_t vertrix_port_rectangle_half32(PORT_SIGNATURE);
 
+/* Original 0x4ab200(ax = x, dx = y, bx = width, cx = height): mark in the display's mask surface
+ * (+0x274 of 0x544070, located by 0x478eb0) each pixel of the 32-bit source at 0x5bb764 (pitch
+ * 0x5bb79c pixels) whose alpha is not 0, by setting bit 0 of its byte. */
+uint32_t vertrix_port_surface_mask32(PORT_SIGNATURE);
+
 #endif

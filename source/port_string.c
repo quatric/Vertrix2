@@ -1076,3 +1076,144 @@ uint32_t vertrix_port_full_path(PORT_SIGNATURE)
     port_call(&port, 0x4ca210, ebp - ROOT, 0, ebx, 1);
     return port_return(&port, 1, vertrix_lift_edx);
 }
+
+uint32_t vertrix_port_find_file(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x154,
+        TIME_TO_STAMP = 0x4e3470
+    };
+    Port port;
+    uint8_t stack[BELOW + 8 + 8];
+    uint32_t data = entry->esp - BELOW; /* WIN32_FIND_DATAA */
+    uint32_t path;
+    uint32_t record;
+    uint32_t arguments[2];
+    uint32_t handle;
+    uint32_t edx;
+    port_open_arguments(&port, stack, calls, services, globals, entry, BELOW, 2);
+    path = port_u32(&port, entry->esp, 4);
+    record = port_u32(&port, entry->esp, 8);
+    /* The record's full name (+0x12) from 0x4d7c40. */
+    arguments[0] = record + 0x12;
+    arguments[1] = path;
+    if (port_call_stack(&port, 0x4d7c40, record + 0x12, entry->edx, entry->ebx, entry->ecx,
+                        arguments, 2) == 0)
+    {
+        port_set8(&port, record, 0x12, 0);
+        return port_return(&port, 0, vertrix_lift_edx);
+    }
+    edx = vertrix_lift_edx;
+    arguments[0] = path;
+    arguments[1] = data;
+    handle = port_call_stack(&port, 0x4f1b60, data, edx, entry->ebx, entry->ecx, arguments, 2);
+    edx = vertrix_lift_edx;
+    if (handle == 0xffffffffu)
+    {
+        return port_return(&port, 0, edx);
+    }
+    arguments[0] = handle;
+    port_call_stack(&port, 0x4f1b5c, handle, edx, entry->ebx, entry->ecx, arguments, 1);
+    /* Attributes, size, and the creation, access and write times as time stamps (0x4e3470);
+     * missing ones are the write time. */
+    port_set8(&port, record, 0x10, port_u8(&port, data, 0) & 0x7f);
+    port_set32(&port, record, 0xc, port_u32(&port, data, 0x20));
+    port_set32(
+        &port, record, 0,
+        port_u32(&port,
+                 port_call(&port, TIME_TO_STAMP, data + 0x140, data + 4, 0xffffffffu, entry->ecx),
+                 0));
+    port_set32(
+        &port, record, 8,
+        port_u32(&port,
+                 port_call(&port, TIME_TO_STAMP, data + 0x144, data + 0xc, 0xffffffffu, entry->ecx),
+                 0));
+    port_set32(&port, record, 4,
+               port_u32(&port,
+                        port_call(&port, TIME_TO_STAMP, data + 0x148, data + 0x14, 0xffffffffu,
+                                  entry->ecx),
+                        0));
+    if (port_u32(&port, record, 0) == 0)
+    {
+        port_set32(&port, record, 0, port_u32(&port, record, 4));
+    }
+    if (port_u32(&port, record, 8) == 0)
+    {
+        port_set32(&port, record, 8, port_u32(&port, record, 4));
+    }
+    return port_return(&port, 1, port_u32(&port, record, 8));
+}
+
+uint32_t vertrix_port_split_path(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x18,
+        CHAR_CODE = 0x4e3a50,
+        CHAR_NEXT = 0x4e3a90,
+        COPY = 0x4daab0
+    };
+    Port port;
+    uint8_t stack[BELOW + 8 + 4];
+    uint32_t p = entry->eax;
+    uint32_t drive = entry->edx;
+    uint32_t directory = entry->ebx;
+    uint32_t name = entry->ecx;
+    uint32_t extension;
+    uint32_t start;
+    uint32_t part;
+    uint32_t dot = 0;
+    uint32_t ebx = entry->ebx;
+    uint32_t edx = entry->edx;
+    port_open_arguments(&port, stack, calls, services, globals, entry, BELOW, 1);
+    extension = port_u32(&port, entry->esp, 4);
+    port_set32(&port, entry->esp - BELOW, 4, directory);
+    port_set32(&port, entry->esp - BELOW, 0, name);
+    if (port_u8(&port, p, 0) != 0 && port_u8(&port, p, 1) == ':')
+    {
+        if (drive != 0)
+        {
+            ebx = (ebx & 0xffffff00u) | port_u8(&port, p, 0);
+            port_set8(&port, drive, 1, ':');
+            port_set8(&port, drive, 2, 0);
+            port_set8(&port, drive, 0, ebx);
+        }
+        p += 2;
+    }
+    else if (drive != 0)
+    {
+        port_set8(&port, drive, 0, 0);
+    }
+    start = p;
+    part = p;
+    port_set32(&port, entry->esp - BELOW, 8, p);
+    ebx = (ebx & 0xffff00ffu) | (port_u8(&port, p, 0) << 8);
+    /* The last separator ends the directory, the last dot after it starts the extension. */
+    while (port_u8(&port, p, 0) != 0)
+    {
+        uint32_t c = port_call(&port, CHAR_CODE, p, edx, ebx, name);
+        edx = c;
+        if (c == '.')
+        {
+            dot = p;
+            p++;
+            continue;
+        }
+        p = port_call(&port, CHAR_NEXT, p, c, ebx, name);
+        edx = vertrix_lift_edx;
+        if (edx == '\\' || edx == '/')
+        {
+            part = p;
+            dot = 0;
+        }
+    }
+    port_call(&port, COPY, directory, start, part - start, 0xff);
+    if (dot == 0)
+    {
+        dot = p;
+    }
+    port_call(&port, COPY, name, part, dot - part, 0xff);
+    return port_return(&port, port_call(&port, COPY, extension, dot, p - dot, 0xff),
+                       vertrix_lift_edx);
+}

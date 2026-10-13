@@ -600,3 +600,55 @@ uint32_t vertrix_port_event_frame_draw_direct(PORT_SIGNATURE)
                        port_call_stack(&port, 0x47ce10, view, entry->edx, 0, 0, arguments, 4),
                        vertrix_lift_edx);
 }
+
+uint32_t vertrix_port_image_new_drawn(PORT_SIGNATURE)
+{
+    enum
+    {
+        ALLOCATE = 0x4ec160,
+        BELOW = 0x30,
+        VIEW = 0x2c /* below ebp */
+    };
+    Port port;
+    uint8_t stack[BELOW + 8 + 4 * 11];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t width = entry->ecx;
+    uint32_t height;
+    uint32_t depth;
+    uint32_t image;
+    uint32_t pixels;
+    uint32_t view = ebp - VIEW;
+    uint32_t offset;
+    uint32_t arguments[4];
+    port_open_arguments(&port, stack, calls, services, globals, entry, BELOW, 11);
+    port_set32(&port, ebp, -0x10u, entry->edx);
+    port_set32(&port, ebp, -0xcu, entry->ebx);
+    height = port_u32(&port, ebp, 8);
+    depth = port_u8(&port, ebp, 0x30);
+    image = port_call(&port, ALLOCATE, 1, 0x28, entry->ebx, width);
+    pixels = port_call(&port, ALLOCATE, height * width * depth, 1, depth, width);
+    port_set32(&port, image, 0, pixels);
+    port_set32(&port, image, 4, width);
+    port_set8(&port, image, 0x27, depth);
+    for (offset = 8; offset <= 0x20; offset += 4)
+    {
+        port_set32(&port, image, offset, port_u32(&port, ebp, offset));
+    }
+    port_set8(&port, image, 0x24, port_u8(&port, ebp, 0x24));
+    port_set8(&port, image, 0x26, port_u8(&port, ebp, 0x2c));
+    port_set8(&port, image, 0x25, port_u8(&port, ebp, 0x28));
+    /* The pixels drawn from the source (eax) through a view of the new image. */
+    port_set32(&port, view, 0, pixels);
+    port_set32(&port, view, 8, height);
+    port_set32(&port, view, 4, width);
+    port_set8(&port, view, 0xc, depth);
+    port_call(&port, 0x478cd0, view, (depth << 3) & 0xff, depth, width);
+    port_set32(&port, view, 0x14, width * depth);
+    port_call(&port, 0x478da0, view, height, depth, width);
+    arguments[0] = entry->edx;
+    arguments[1] = entry->ebx;
+    arguments[2] = width;
+    arguments[3] = vertrix_lift_edx;
+    port_call_stack(&port, 0x47ce10, view, entry->eax, 0, 0, arguments, 4);
+    return port_return(&port, image, vertrix_lift_edx);
+}

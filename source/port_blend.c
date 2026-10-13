@@ -762,3 +762,63 @@ uint32_t vertrix_port_rectangle_half32(PORT_SIGNATURE)
     port_set16(&port, 0, COUNT, count);
     return port_return(&port, eax, entry->edx);
 }
+
+uint32_t vertrix_port_surface_mask32(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x1c,
+        DISPLAY = 0x544070,
+        SOURCE = 0x5bb764,
+        SOURCE_PITCH = 0x5bb79c
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t width = entry->ebx;
+    uint32_t rows = entry->ecx;
+    uint32_t mask;
+    uint32_t source;
+    uint32_t pitch;
+    uint32_t skip;
+    uint32_t edx;
+    uint32_t count;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    port_set32(&port, ebp, -0xcu, (uint32_t)(int32_t)(int16_t)entry->eax);
+    source = port_u32(&port, 0, SOURCE);
+    /* The mask bytes at the position (0x478eb0 on the display's mask surface +0x274). */
+    mask = port_call(&port, 0x478eb0, port_u32(&port, port_u32(&port, 0, DISPLAY), 0x274),
+                     (uint32_t)(int32_t)(int16_t)entry->eax, (uint32_t)(int32_t)(int16_t)entry->edx,
+                     source);
+    pitch = port_u32(&port, 0, SOURCE_PITCH);
+    port_set32(&port, ebp, -0x18u, pitch);
+    port_set32(&port, ebp, -0xcu, (uint32_t)(int32_t)(int16_t)width);
+    skip = port_u32(&port, port_u32(&port, port_u32(&port, 0, DISPLAY), 0x274), 4) -
+           (uint32_t)(int32_t)(int16_t)width;
+    port_set32(&port, ebp, -0x10u, skip);
+    edx = skip;
+    if ((rows & 0xffff) == 0)
+    {
+        return port_return(&port, mask, edx);
+    }
+    port_set32(&port, ebp, -0x14u, pitch << 2);
+    /* Each source pixel with alpha sets bit 0 of its mask byte. */
+    for (rows &= 0xffff; rows != 0; rows = (rows - 1) & 0xffff)
+    {
+        for (count = width & 0xffff; count != 0; count = (count - 1) & 0xffff)
+        {
+            uint32_t alpha = port_u32(&port, source, 0) >> 24;
+            port_set32(&port, ebp, -0xcu, alpha);
+            if (alpha != 0)
+            {
+                port_set8(&port, mask, 0, port_u8(&port, mask, 0) | 1);
+            }
+            source += 4;
+            mask++;
+        }
+        edx = port_u32(&port, ebp, -0x14u);
+        source += edx;
+        mask += port_u32(&port, ebp, -0x10u);
+    }
+    return port_return(&port, mask, edx);
+}

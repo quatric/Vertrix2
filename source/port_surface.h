@@ -71,4 +71,9 @@ uint32_t vertrix_port_image_new(PORT_SIGNATURE);
  * 0x47ce10. */
 uint32_t vertrix_port_event_frame_draw_direct(PORT_SIGNATURE);
 
+/* Original 0x482f80(eax = source, edx = x, ebx = y, ecx = width; stack: height, six dwords,
+ * three bytes, the bytes per pixel; ret 0x2c): a new image like 0x483060 holding the arguments,
+ * its pixels copied from the source at (x, y) by 0x47ce10 through a view of it. */
+uint32_t vertrix_port_image_new_drawn(PORT_SIGNATURE);
+
 #endif

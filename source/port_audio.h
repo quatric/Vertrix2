@@ -146,4 +146,9 @@ uint32_t vertrix_port_driver_call_78(PORT_SIGNATURE);
 uint32_t vertrix_port_mix_pcm8_stereo(PORT_SIGNATURE);
 uint32_t vertrix_port_mix_pcm16_stereo(PORT_SIGNATURE);
 
+/* Original 0x40cda0(eax = output, edx = count): render the mix in parts of at most 0x200 frames:
+ * the 32-bit mix buffer 0x52fc3c cleared (0x4eb5c0), mixed (0x40c5c0) and converted into the
+ * output (0x40c430). Stereo (0x52fc1c bit 0) halves the count into frames. */
+uint32_t vertrix_port_mix_render(PORT_SIGNATURE);
+
 #endif
