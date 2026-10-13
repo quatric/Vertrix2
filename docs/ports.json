@@ -1769,6 +1769,11 @@
   "lifted": "lifted_point_heading",
   "chunk": "whole_8"
  },
+ "0x4848f0": {
+  "port": "vertrix_port_archive_file_read",
+  "lifted": "lifted_f4848f0",
+  "chunk": "whole_4"
+ },
  "0x4849e0": {
   "port": "vertrix_port_fixed_multiply",
   "lifted": "lifted_fixed_multiply",
@@ -1934,6 +1939,11 @@
   "lifted": "lifted_find_succeeded",
   "chunk": "whole_4"
  },
+ "0x489640": {
+  "port": "vertrix_port_path_split_strings",
+  "lifted": "lifted_f489640",
+  "chunk": "whole_9"
+ },
  "0x489b40": {
   "port": "vertrix_port_file_extension_is",
   "lifted": "lifted_f489b40",
@@ -1947,6 +1957,11 @@
  "0x489f90": {
   "port": "vertrix_port_list_construct_517644",
   "lifted": "lifted_object_table_517644",
+  "chunk": "whole_4"
+ },
+ "0x489fa0": {
+  "port": "vertrix_port_parser_destroy",
+  "lifted": "lifted_f489fa0",
   "chunk": "whole_4"
  },
  "0x48a050": {

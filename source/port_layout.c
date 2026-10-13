@@ -707,3 +707,31 @@ uint32_t vertrix_port_object_destroy_d(PORT_SIGNATURE)
     port_set32(&port, ebp, -0x24u, 0);
     return box_destroy_free(&port, result, 0, mode);
 }
+
+uint32_t vertrix_port_parser_destroy(PORT_SIGNATURE)
+{
+    Port port;
+    uint8_t stack[0x48 + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t object = entry->eax;
+    uint32_t mode = entry->edx;
+    uint32_t result;
+    port_open_stack(&port, stack, calls, services, globals, entry, 0x48);
+    if (mode & 4)
+    {
+        return box_destroy_array(&port, ebp, object, 0x513f10, 0);
+    }
+    port_set32(&port, object, 0x14, 0x517644);
+    port_set32(&port, ebp, -0x1cu, object);
+    port_set8(&port, ebp, -0x18u, mode);
+    port_set32(&port, ebp, -0x30u, port.env.chain);
+    port_set32(&port, ebp, -0x2cu, 0x4ec1ec);
+    port_set32(&port, ebp, -0x28u, 0x5175a0);
+    port_set32(&port, ebp, -0x24u, 3);
+    /* Its list (0x48a2d0), then the base destructor 0x4b78e0. */
+    port_call(&port, 0x48a2d0, object, 0x4ec1ec, mode, object);
+    port_set32(&port, ebp, -0x24u, 0);
+    result = port_call(&port, 0x4b78e0, object, 0, mode, object);
+    port_set32(&port, ebp, -0x24u, 0);
+    return box_destroy_free(&port, result, 0, mode);
+}

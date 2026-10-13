@@ -11384,3 +11384,102 @@ uint32_t vertrix_port_object_destroy_a(PORT_SIGNATURE)
     }
     return port_return(&port, result, edx);
 }
+
+uint32_t vertrix_port_path_split_strings(PORT_SIGNATURE)
+{
+    enum
+    {
+        PATH = 0x5b9cd0,
+        DRIVE = 0x5b9dd8,
+        DIRECTORY = 0x5b9de0,
+        NAME = 0x5b9ee0,
+        EXTENSION = 0x5b9fe0
+    };
+    Port port;
+    uint8_t stack[0x18 + 8 + 4];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t from = entry->eax;
+    uint32_t to = PATH;
+    uint32_t byte;
+    uint32_t eax;
+    uint32_t ebx = DIRECTORY;
+    uint32_t ecx = NAME;
+    uint32_t target;
+    uint32_t extension = EXTENSION;
+    port_open_arguments(&port, stack, calls, services, globals, entry, 0x18, 1);
+    port_set32(&port, ebp, -0x14u, entry->edx);
+    port_set32(&port, ebp, -0xcu, entry->ebx);
+    port_set32(&port, ebp, -0x10u, entry->ecx);
+    /* The path is copied to 0x5b9cd0 and split there (0x4daae8); each part asked for (a string
+     * pointer, or the stack argument for the extension) is set from its buffer (0x4ca370). */
+    do
+    {
+        byte = port_u8(&port, from, 0);
+        port_set8(&port, to, 0, byte);
+        from++;
+        to++;
+    } while (byte != 0);
+    eax = port_call_stack(&port, 0x4daae8, PATH, DRIVE, ebx, ecx, &extension, 1);
+    if ((target = port_u32(&port, ebp, -0x14u)) != 0)
+    {
+        eax = port_call(&port, 0x4ca370, target, DRIVE, ebx, ecx);
+    }
+    ecx = port_u32(&port, ebp, -0xcu);
+    if (ecx != 0)
+    {
+        eax = port_call(&port, 0x4ca370, ecx, DIRECTORY, ebx, ecx);
+    }
+    ebx = port_u32(&port, ebp, -0x10u);
+    if (ebx != 0)
+    {
+        eax = port_call(&port, 0x4ca370, ebx, NAME, ebx, ecx);
+    }
+    if ((target = port_u32(&port, ebp, 8)) != 0)
+    {
+        eax = port_call(&port, 0x4ca370, target, EXTENSION, ebx, ecx);
+    }
+    return port_return(&port, eax, vertrix_lift_edx);
+}
+
+uint32_t vertrix_port_archive_file_read(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x23c,
+        GUARD_HANDLER = 0x4ec1ec,
+        READ_GUARD = 0x516cc0
+    };
+    Port port;
+    uint8_t stack[BELOW + 8];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t name = ebp - 0x124;
+    uint32_t parser = ebp - 0x238;
+    uint32_t ebx;
+    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
+    port_set32(&port, ebp, -0x20u, port.env.chain);
+    port_set32(&port, ebp, -0x1cu, GUARD_HANDLER);
+    port_set32(&port, ebp, -0x18u, READ_GUARD);
+    port_set32(&port, ebp, -0x14u, 0);
+    /* The archive name (0x45f540 with 0x4fd208) must be present (0x45f590); its contents are
+     * read into the destination (edx) by a parser on the stack. */
+    port_call(&port, 0x45f540, name, 0x4fd208, entry->eax, entry->ebx);
+    /* Both exits return the saved guard chain. */
+    if (port_call(&port, 0x45f590, name, vertrix_lift_edx, entry->eax, entry->ebx) != 1)
+    {
+        return port_return(&port, port_u32(&port, ebp, -0x20u), vertrix_lift_edx);
+    }
+    port_call(&port, 0x48a620, parser, 1, entry->eax, entry->ebx);
+    ebx = port_u32(&port, 0, 0x5466c8);
+    port_set32(&port, ebp, -0x14u, vertrix_lift_edx);
+    if (port_call(&port, 0x48a710, parser, name, ebx, entry->ebx) == 1)
+    {
+        ebx = 1;
+        port_call(&port, 0x48a8a0, parser, vertrix_lift_edx, ebx, entry->ebx);
+        port_call(&port, 0x48a930, parser, entry->edx, ebx, entry->ebx);
+        port_call(&port, 0x48a8c0, parser, vertrix_lift_edx, ebx, entry->ebx);
+    }
+    port_set32(&port, ebp, -0x14u, 0);
+    port_call(&port, 0x48a670, parser, 0, ebx, 0);
+    port_set32(&port, ebp, -0x14u, 0);
+    return port_return(&port, port_u32(&port, ebp, -0x20u), vertrix_lift_edx);
+}

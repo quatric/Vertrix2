@@ -2029,4 +2029,14 @@ uint32_t vertrix_port_sample_file_read(PORT_SIGNATURE);
  * destructor 0x4d86d0 runs under a guard record, mode 2 freeing it (0x4ca050). */
 uint32_t vertrix_port_object_destroy_a(PORT_SIGNATURE);
 
+/* Original 0x489640(eax = path, edx = drive, ebx = directory, ecx = name; one stack argument, the
+ * extension): copy the path to 0x5b9cd0, split it (0x4daae8 into 0x5b9dd8, 0x5b9de0, 0x5b9ee0
+ * and 0x5b9fe0) and set each string asked for (0x4ca370). */
+uint32_t vertrix_port_path_split_strings(PORT_SIGNATURE);
+
+/* Original 0x4848f0(eax, edx = destination, ebx): build the archive name (0x45f540 with
+ * 0x4fd208) and, when present (0x45f590), read the file into the destination with a parser on the
+ * stack (0x48a620, 0x48a710, 0x48a8a0, 0x48a930, 0x48a8c0). */
+uint32_t vertrix_port_archive_file_read(PORT_SIGNATURE);
+
 #endif

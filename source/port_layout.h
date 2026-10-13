@@ -48,4 +48,9 @@ uint32_t vertrix_port_object_destroy_call(PORT_SIGNATURE);
  * (0x4ca210). */
 uint32_t vertrix_port_object_destroy_d(PORT_SIGNATURE);
 
+/* Original 0x489fa0(eax = parser, edx = mode): the parser destructor: mode 4 destroys an array
+ * (element destructor 0x513f10); otherwise the table 0x517644 (+0x14) is set and, under a guard
+ * record, its list (0x48a2d0) and base (0x4b78e0) are destroyed, mode 2 freeing it. */
+uint32_t vertrix_port_parser_destroy(PORT_SIGNATURE);
+
 #endif

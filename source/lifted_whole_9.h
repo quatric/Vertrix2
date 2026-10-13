@@ -43,7 +43,6 @@ enum
     LIFTED_OFFSET_CALL_47F8D0_STACK = 68,
     LIFTED_F480080_STACK = 84,
     LIFTED_OBJECT_KIND_TEXT_STACK = 172,
-    LIFTED_F489640_STACK = 116,
     LIFTED_PATH_SPLIT_A_STACK = 108,
     LIFTED_STRING_APPEND_CALLS_STACK = 84,
     LIFTED_F489BA0_STACK = 120,
@@ -235,10 +234,6 @@ uint32_t lifted_f480080(const VertrixCalls *calls, const VertrixFactoryServices 
 /* Original 0x488d80. */
 uint32_t lifted_object_kind_text(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                  const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x489640. */
-uint32_t lifted_f489640(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4896f0. */
 uint32_t lifted_path_split_a(const VertrixCalls *calls, const VertrixFactoryServices *services,
