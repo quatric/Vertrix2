@@ -6238,52 +6238,6 @@
   ],
   "address": 5000480
  },
- "f4c4ea0": {
-  "callees": {
-   "virtual_4c4eec": [
-    0,
-    false
-   ],
-   "0x4c5bd0": [
-    0,
-    false
-   ],
-   "0x4c4d00": [
-    0,
-    false
-   ]
-  },
-  "stack": 100,
-  "arguments": 0,
-  "pointer_callees": [
-   "0x4c5bd0"
-  ],
-  "pointer_fields": [
-   0
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [
-   4
-  ],
-  "constants": [
-   1,
-   2,
-   3,
-   4,
-   5,
-   999999983,
-   999999984,
-   999999985
-  ],
-  "virtual": [
-   [
-    0,
-    0,
-    0
-   ]
-  ],
-  "address": 5000864
- },
  "f4c4f60": {
   "callees": {
    "0x4c4d20": [

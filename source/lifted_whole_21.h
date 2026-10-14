@@ -59,7 +59,6 @@ enum
     LIFTED_F4DA3BA_STACK = 1400,
     LIFTED_RTL_FLAGS_CALL_STACK = 80,
     LIFTED_F4DF320_STACK = 248,
-    LIFTED_F4E14DC_STACK = 72,
     LIFTED_F4E5B0C_STACK = 120
 };
 
@@ -285,10 +284,6 @@ uint32_t lifted_rtl_flags_call(const VertrixCalls *calls, const VertrixFactorySe
 
 /* Original 0x4df320. */
 uint32_t lifted_f4df320(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4e14dc. */
-uint32_t lifted_f4e14dc(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4e5b0c. */

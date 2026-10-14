@@ -544,31 +544,6 @@
   ],
   "address": 4747728
  },
- "array_list_release": {
-  "callees": {
-   "0x4830f0": [
-    0,
-    false
-   ],
-   "0x4ea190": [
-    0,
-    false
-   ]
-  },
-  "stack": 104,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 4748528
- },
  "object_construct_g": {
   "callees": {
    "0x488b10": [
@@ -786,40 +761,6 @@
   ],
   "virtual": [],
   "address": 4756016
- },
- "f4893c0": {
-  "callees": {
-   "0x489230": [
-    0,
-    false
-   ],
-   "0x4ec160": [
-    0,
-    false
-   ],
-   "0x4ea190": [
-    0,
-    false
-   ]
-  },
-  "stack": 136,
-  "arguments": 0,
-  "pointer_callees": [
-   "0x4ec160"
-  ],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2,
-   27,
-   28,
-   29
-  ],
-  "virtual": [],
-  "address": 4756416
  },
  "rtl_write_text_call": {
   "callees": {
@@ -2302,37 +2243,6 @@
   "virtual": [],
   "address": 4935888
  },
- "f4b5580": {
-  "callees": {
-   "0x4b6350": [
-    0,
-    false
-   ],
-   "0x4ca000": [
-    0,
-    false
-   ],
-   "0x4b5400": [
-    0,
-    false
-   ]
-  },
-  "stack": 136,
-  "arguments": 0,
-  "pointer_callees": [
-   "0x4b6350"
-  ],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   31,
-   32,
-   33
-  ],
-  "virtual": [],
-  "address": 4937088
- },
  "f4b5630": {
   "callees": {
    "virtual_4b5696": [
@@ -2507,37 +2417,5 @@
   "constants": [],
   "virtual": [],
   "address": 4938848
- },
- "object_text_value": {
-  "callees": {
-   "0x4cdb70": [
-    0,
-    false
-   ],
-   "0x4ca210": [
-    0,
-    false
-   ],
-   "0x440610": [
-    1,
-    false
-   ]
-  },
-  "stack": 140,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   11,
-   12,
-   13,
-   31,
-   32,
-   33
-  ],
-  "virtual": [],
-  "address": 4942128
  }
 }
