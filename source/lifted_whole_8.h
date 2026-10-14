@@ -38,7 +38,6 @@ enum
     LIFTED_F42A200_STACK = 120,
     LIFTED_PLAYER_PREVIEW_FRAMES_STACK = 84,
     LIFTED_SCENE_LAYOUT_STACK = 284,
-    LIFTED_SCENE_LOCK_STACK = 116,
     LIFTED_BOARD_TILE_CELL_STACK = 72,
     LIFTED_F434300_STACK = 396,
     LIFTED_F4344E0_STACK = 396,
@@ -258,10 +257,6 @@ uint32_t lifted_player_preview_frames(const VertrixCalls *calls,
 /* Original 0x430930. */
 uint32_t lifted_scene_layout(const VertrixCalls *calls, const VertrixFactoryServices *services,
                              const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x431c60. */
-uint32_t lifted_scene_lock(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                           const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x433180. */
 uint32_t lifted_board_tile_cell(const VertrixCalls *calls, const VertrixFactoryServices *services,

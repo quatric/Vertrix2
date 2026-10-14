@@ -2199,6 +2199,11 @@
   "lifted": "lifted_board_piece_touches_side",
   "chunk": "whole_1"
  },
+ "0x42f120": {
+  "port": "vertrix_port_board_piece_touches_side_42f120",
+  "lifted": "lifted_board_piece_touches_side_42f120",
+  "chunk": "whole_1"
+ },
  "0x42f210": {
   "port": "vertrix_port_board_mark_columns_42f210",
   "lifted": "lifted_board_mark_columns",
@@ -2369,6 +2374,11 @@
   "lifted": "lifted_block_spawn_full",
   "chunk": "whole_1"
  },
+ "0x430850": {
+  "port": "vertrix_port_bonus_marker_create_430850",
+  "lifted": "lifted_f430850",
+  "chunk": "whole_1"
+ },
  "0x431100": {
   "port": "vertrix_port_board_piece_try_left_431100",
   "lifted": "lifted_f431100",
@@ -2444,6 +2454,11 @@
   "lifted": "lifted_board_piece_child_kind",
   "chunk": "whole_1"
  },
+ "0x431c60": {
+  "port": "vertrix_port_board_piece_lock_431c60",
+  "lifted": "lifted_scene_lock",
+  "chunk": "whole_8"
+ },
  "0x431d60": {
   "port": "vertrix_port_board_row_not_below_431d60",
   "lifted": "lifted_f431d60",
@@ -2509,6 +2524,11 @@
   "lifted": "lifted_board_has_type_one",
   "chunk": "whole_1"
  },
+ "0x4322f0": {
+  "port": "vertrix_port_board_has_kind_six_4322f0",
+  "lifted": "lifted_board_has_kind_six",
+  "chunk": "whole_1"
+ },
  "0x4323d0": {
   "port": "vertrix_port_board_extras_start_4323d0",
   "lifted": "lifted_f4323d0",
@@ -2552,6 +2572,11 @@
  "0x4334b0": {
   "port": "vertrix_port_board_has_type_one_extra_4334b0",
   "lifted": "lifted_board_has_type_one_extra",
+  "chunk": "whole_1"
+ },
+ "0x433750": {
+  "port": "vertrix_port_board_make_stone_433750",
+  "lifted": "lifted_board_make_stone",
   "chunk": "whole_1"
  },
  "0x4342f0": {
@@ -2659,6 +2684,11 @@
   "lifted": "lifted_board_mark_stones",
   "chunk": "whole_1"
  },
+ "0x438470": {
+  "port": "vertrix_port_actor_start_slide_438470",
+  "lifted": "lifted_actor_start_slide",
+  "chunk": "whole_1"
+ },
  "0x4387b0": {
   "port": "vertrix_port_board_prepare_slots_4387b0",
   "lifted": "lifted_board_prepare_slots",
@@ -2677,6 +2707,11 @@
  "0x438910": {
   "port": "vertrix_port_board_any_bottom_438910",
   "lifted": "lifted_board_any_bottom",
+  "chunk": "whole_1"
+ },
+ "0x438b90": {
+  "port": "vertrix_port_board_assign_effect_438b90",
+  "lifted": "lifted_board_assign_effect",
   "chunk": "whole_1"
  },
  "0x438c60": {
@@ -2702,6 +2737,11 @@
  "0x439140": {
   "port": "vertrix_port_board_row_last_marker_439140",
   "lifted": "lifted_f439140",
+  "chunk": "whole_1"
+ },
+ "0x439190": {
+  "port": "vertrix_port_board_destroy_marked_439190",
+  "lifted": "lifted_board_destroy_marked",
   "chunk": "whole_1"
  },
  "0x439370": {
@@ -2738,6 +2778,11 @@
   "port": "vertrix_port_piece_children_update_43a2d0",
   "lifted": "lifted_f43a2d0",
   "chunk": "whole_14"
+ },
+ "0x43a310": {
+  "port": "vertrix_port_piece_frames_build_43a310",
+  "lifted": "lifted_piece_frames_build",
+  "chunk": "whole_1"
  },
  "0x43a4f0": {
   "port": "vertrix_port_player_write_bytes_168_43a4f0",

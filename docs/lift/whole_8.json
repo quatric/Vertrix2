@@ -3474,47 +3474,6 @@
   "virtual": [],
   "address": 4393264
  },
- "scene_lock": {
-  "callees": {
-   "0x431ae0": [
-    1,
-    false
-   ],
-   "virtual_431cd1": [
-    0,
-    false
-   ],
-   "virtual_431d51": [
-    0,
-    false
-   ]
-  },
-  "stack": 116,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   2656
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   2,
-   3,
-   4,
-   11,
-   12,
-   13,
-   14
-  ],
-  "virtual": [
-   [
-    344,
-    0,
-    0
-   ]
-  ],
-  "address": 4398176
- },
  "board_tile_cell": {
   "callees": {},
   "stack": 72,
