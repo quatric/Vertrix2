@@ -3394,6 +3394,91 @@
   "lifted": "lifted_f48eeb0",
   "chunk": "whole_21"
  },
+ "0x48efc0": {
+  "port": "vertrix_port_blend_invert_tint",
+  "lifted": "lifted_f48efc0",
+  "chunk": "whole_21"
+ },
+ "0x48f070": {
+  "port": "vertrix_port_blend_invert_half_plus",
+  "lifted": "lifted_f48f070",
+  "chunk": "whole_21"
+ },
+ "0x48f0a0": {
+  "port": "vertrix_port_blend_invert_half_tint",
+  "lifted": "lifted_f48f0a0",
+  "chunk": "whole_21"
+ },
+ "0x48f190": {
+  "port": "vertrix_port_blend_invert_target_tint",
+  "lifted": "lifted_f48f190",
+  "chunk": "whole_21"
+ },
+ "0x48f230": {
+  "port": "vertrix_port_blend_invert_target_half_plus",
+  "lifted": "lifted_f48f230",
+  "chunk": "whole_21"
+ },
+ "0x48f260": {
+  "port": "vertrix_port_blend_invert_target_half_tint",
+  "lifted": "lifted_f48f260",
+  "chunk": "whole_21"
+ },
+ "0x48f360": {
+  "port": "vertrix_port_blend_source_tint",
+  "lifted": "lifted_f48f360",
+  "chunk": "whole_21"
+ },
+ "0x48f430": {
+  "port": "vertrix_port_blend_cross_remap_half_plus",
+  "lifted": "lifted_f48f430",
+  "chunk": "whole_21"
+ },
+ "0x48f520": {
+  "port": "vertrix_port_blend_cross_half_tint",
+  "lifted": "lifted_f48f520",
+  "chunk": "whole_21"
+ },
+ "0x48f620": {
+  "port": "vertrix_port_blend_target_tint",
+  "lifted": "lifted_f48f620",
+  "chunk": "whole_21"
+ },
+ "0x48f6f0": {
+  "port": "vertrix_port_blend_target_cross_remap_half_plus",
+  "lifted": "lifted_f48f6f0",
+  "chunk": "whole_21"
+ },
+ "0x48f800": {
+  "port": "vertrix_port_blend_target_cross_half_tint",
+  "lifted": "lifted_f48f800",
+  "chunk": "whole_21"
+ },
+ "0x48f910": {
+  "port": "vertrix_port_blend_quarters_plus_remap",
+  "lifted": "lifted_f48f910",
+  "chunk": "whole_21"
+ },
+ "0x48f9f0": {
+  "port": "vertrix_port_blend_half_plus_remap_add",
+  "lifted": "lifted_f48f9f0",
+  "chunk": "whole_21"
+ },
+ "0x48faf0": {
+  "port": "vertrix_port_blend_half_plus_remap_subtract",
+  "lifted": "lifted_f48faf0",
+  "chunk": "whole_21"
+ },
+ "0x48fbe0": {
+  "port": "vertrix_port_blend_half_plus_remap_subtract_from",
+  "lifted": "lifted_f48fbe0",
+  "chunk": "whole_21"
+ },
+ "0x48fcd0": {
+  "port": "vertrix_port_blend_invert_half_plus_remap",
+  "lifted": "lifted_f48fcd0",
+  "chunk": "whole_21"
+ },
  "0x4901a0": {
   "port": "vertrix_port_blend_shade",
   "lifted": "lifted_f4901a0",

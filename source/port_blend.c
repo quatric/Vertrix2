@@ -3486,13 +3486,14 @@ enum
     COLOUR_HALF_PLUS,
     COLOUR_TINT,
     COLOUR_HALF_TINT,
-    COLOUR_REMAP
+    COLOUR_REMAP,
+    COLOUR_HALF_PLUS_REMAP
 };
 
-/* The source colour made as `kind` names. */
-static uint32_t source_made(Port *port, int kind)
+/* `colour` halved plus 0x54d5ec, remapped through fixed channels, remapped half way to them,
+ * remapped, or halved plus 0x54d5ec and remapped, as `kind` names. */
+static uint32_t made_from(Port *port, uint32_t colour, int kind)
 {
-    uint32_t colour = source_colour(port);
     if (kind == COLOUR_HALF_PLUS)
     {
         return half_plus(port, colour);
@@ -3505,6 +3506,10 @@ static uint32_t source_made(Port *port, int kind)
     {
         return half_tint(port, colour);
     }
+    if (kind == COLOUR_HALF_PLUS_REMAP)
+    {
+        return remap(port, half_plus(port, colour));
+    }
     return remap(port, colour);
 }
 
@@ -3516,7 +3521,7 @@ static uint32_t made_mix32(PORT_SIGNATURE, int kind, int mix)
     uint32_t colour;
     uint32_t target;
     port_open(&port, calls, services, globals, entry);
-    colour = source_made(&port, kind);
+    colour = made_from(&port, source_colour(&port), kind);
     port_set32(&port, 0, REMAPPED, colour);
     target = target32(&port);
     if (mix == MIX_ADD)
@@ -3562,4 +3567,153 @@ uint32_t vertrix_port_blend_half_plus_subtract_from(PORT_SIGNATURE)
 uint32_t vertrix_port_blend_half_tint_subtract_from(PORT_SIGNATURE)
 {
     return made_mix32(calls, services, globals, entry, COLOUR_HALF_TINT, MIX_SUBTRACT_FROM);
+}
+
+/* The 32-bit target becomes the inverted source or target (low 24 bits, kept at 0x5bc018) made as
+ * `kind` names; returns that colour or, with `address`, the target's address. */
+static uint32_t inverted_made32(PORT_SIGNATURE, int of_target, int kind, int address)
+{
+    Port port;
+    uint32_t colour;
+    uint32_t target;
+    port_open(&port, calls, services, globals, entry);
+    colour = ~(of_target ? target32(&port) : source_colour(&port)) & CHANNELS;
+    port_set32(&port, 0, REMAPPED, colour);
+    colour = made_from(&port, colour, kind);
+    target = put32(&port, colour);
+    return port_return(&port, address ? target : colour, entry->edx);
+}
+
+uint32_t vertrix_port_blend_invert_tint(PORT_SIGNATURE)
+{
+    return inverted_made32(calls, services, globals, entry, 0, COLOUR_TINT, 1);
+}
+
+uint32_t vertrix_port_blend_invert_half_plus(PORT_SIGNATURE)
+{
+    return inverted_made32(calls, services, globals, entry, 0, COLOUR_HALF_PLUS, 0);
+}
+
+uint32_t vertrix_port_blend_invert_half_tint(PORT_SIGNATURE)
+{
+    return inverted_made32(calls, services, globals, entry, 0, COLOUR_HALF_TINT, 0);
+}
+
+uint32_t vertrix_port_blend_invert_target_tint(PORT_SIGNATURE)
+{
+    return inverted_made32(calls, services, globals, entry, 1, COLOUR_TINT, 0);
+}
+
+uint32_t vertrix_port_blend_invert_target_half_plus(PORT_SIGNATURE)
+{
+    return inverted_made32(calls, services, globals, entry, 1, COLOUR_HALF_PLUS, 1);
+}
+
+uint32_t vertrix_port_blend_invert_target_half_tint(PORT_SIGNATURE)
+{
+    return inverted_made32(calls, services, globals, entry, 1, COLOUR_HALF_TINT, 0);
+}
+
+enum
+{
+    CROSS_TINT,
+    CROSS_REMAP_HALF_PLUS,
+    CROSS_HALF_TINT
+};
+
+/* The 32-bit target becomes the colour that the cross remap named by `kind` makes, with the map
+ * from the target (`target_map`) or the source and the entry from the other; the target's address.
+ */
+static uint32_t cross32(PORT_SIGNATURE, int kind, int target_map)
+{
+    Port port;
+    uint32_t map_colour;
+    uint32_t entry_colour;
+    uint32_t colour;
+    port_open(&port, calls, services, globals, entry);
+    map_colour = target_map ? target32(&port) : source_colour(&port);
+    entry_colour = target_map ? source_colour(&port) : target32(&port);
+    if (kind == CROSS_TINT)
+    {
+        colour = cross_tint(&port, map_colour, entry_colour);
+    }
+    else if (kind == CROSS_HALF_TINT)
+    {
+        colour = cross_half_tint(&port, map_colour, entry_colour);
+    }
+    else
+    {
+        colour = cross_remap(&port, map_colour, entry_colour);
+        port_set32(&port, 0, REMAPPED, colour);
+        colour = half_plus(&port, colour);
+    }
+    return port_return(&port, put32(&port, colour), entry->edx);
+}
+
+uint32_t vertrix_port_blend_source_tint(PORT_SIGNATURE)
+{
+    return cross32(calls, services, globals, entry, CROSS_TINT, 0);
+}
+
+uint32_t vertrix_port_blend_cross_remap_half_plus(PORT_SIGNATURE)
+{
+    return cross32(calls, services, globals, entry, CROSS_REMAP_HALF_PLUS, 0);
+}
+
+uint32_t vertrix_port_blend_cross_half_tint(PORT_SIGNATURE)
+{
+    return cross32(calls, services, globals, entry, CROSS_HALF_TINT, 0);
+}
+
+uint32_t vertrix_port_blend_target_tint(PORT_SIGNATURE)
+{
+    return cross32(calls, services, globals, entry, CROSS_TINT, 1);
+}
+
+uint32_t vertrix_port_blend_target_cross_remap_half_plus(PORT_SIGNATURE)
+{
+    return cross32(calls, services, globals, entry, CROSS_REMAP_HALF_PLUS, 1);
+}
+
+uint32_t vertrix_port_blend_target_cross_half_tint(PORT_SIGNATURE)
+{
+    return cross32(calls, services, globals, entry, CROSS_HALF_TINT, 1);
+}
+
+uint32_t vertrix_port_blend_quarters_plus_remap(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t colour;
+    port_open(&port, calls, services, globals, entry);
+    colour = ((source_colour(&port) >> 2) & 0x3f3f3f) + ((target32(&port) >> 2) & 0x3f3f3f);
+    put32(&port, colour + port_u32(&port, 0, ADDED_COLOUR));
+    colour = remap(&port, target32(&port));
+    return port_return(&port, put32(&port, colour), entry->edx);
+}
+
+uint32_t vertrix_port_blend_half_plus_remap_add(PORT_SIGNATURE)
+{
+    return made_mix32(calls, services, globals, entry, COLOUR_HALF_PLUS_REMAP, MIX_ADD);
+}
+
+uint32_t vertrix_port_blend_half_plus_remap_subtract(PORT_SIGNATURE)
+{
+    return made_mix32(calls, services, globals, entry, COLOUR_HALF_PLUS_REMAP, MIX_SUBTRACT);
+}
+
+uint32_t vertrix_port_blend_half_plus_remap_subtract_from(PORT_SIGNATURE)
+{
+    return made_mix32(calls, services, globals, entry, COLOUR_HALF_PLUS_REMAP, MIX_SUBTRACT_FROM);
+}
+
+uint32_t vertrix_port_blend_invert_half_plus_remap(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t colour;
+    port_open(&port, calls, services, globals, entry);
+    colour = half_plus(&port, ~source_colour(&port) & CHANNELS);
+    port_set32(&port, 0, REMAPPED, colour);
+    colour = remap(&port, colour);
+    put32(&port, colour);
+    return port_return(&port, colour, entry->edx);
 }

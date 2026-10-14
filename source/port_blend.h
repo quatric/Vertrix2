@@ -792,4 +792,75 @@ uint32_t vertrix_port_blend_half_plus_subtract_from(PORT_SIGNATURE);
  * at 0x5bc018) less the target, each channel stopping at 0. Returns the target address. */
 uint32_t vertrix_port_blend_half_tint_subtract_from(PORT_SIGNATURE);
 
+/* Original 0x48efc0: the target becomes the inverted source (low 24 bits kept at 0x5bc018)
+ * remapped through fixed channels. Returns the target address. */
+uint32_t vertrix_port_blend_invert_tint(PORT_SIGNATURE);
+
+/* Original 0x48f070: the target becomes the inverted source (low 24 bits, kept at 0x5bc018) halved
+ * plus the colour at 0x54d5ec. Returns the colour. */
+uint32_t vertrix_port_blend_invert_half_plus(PORT_SIGNATURE);
+
+/* Original 0x48f0a0: the target becomes the inverted source (low 24 bits kept at 0x5bc018)
+ * remapped half way to the fixed channels. Returns the colour. */
+uint32_t vertrix_port_blend_invert_half_tint(PORT_SIGNATURE);
+
+/* Original 0x48f190: the target becomes its inverted colour (low 24 bits kept at 0x5bc018)
+ * remapped through fixed channels. Returns the colour. */
+uint32_t vertrix_port_blend_invert_target_tint(PORT_SIGNATURE);
+
+/* Original 0x48f230: the target becomes its inverted colour (low 24 bits, kept at 0x5bc018) halved
+ * plus the colour at 0x54d5ec. Returns the target address. */
+uint32_t vertrix_port_blend_invert_target_half_plus(PORT_SIGNATURE);
+
+/* Original 0x48f260: the target becomes its inverted colour (low 24 bits kept at 0x5bc018)
+ * remapped half way to the fixed channels. Returns the colour. */
+uint32_t vertrix_port_blend_invert_target_half_tint(PORT_SIGNATURE);
+
+/* Original 0x48f360: the target becomes the fixed channels remapped through the map the source's
+ * entry selects (stored at 0x54d5d0); the target's entry is stored at 0x54d5d4. Returns the target
+ * address. */
+uint32_t vertrix_port_blend_source_tint(PORT_SIGNATURE);
+
+/* Original 0x48f430: the target's colour entry (stored at 0x54d5d4) remapped through the map the
+ * source's entry selects (stored at 0x54d5d0), kept at 0x5bc018, then halved plus the colour at
+ * 0x54d5ec. Returns the target address. */
+uint32_t vertrix_port_blend_cross_remap_half_plus(PORT_SIGNATURE);
+
+/* Original 0x48f520: the target's colour entry (stored at 0x54d5d4) remapped half way to the fixed
+ * channels through the map the source's entry selects (stored at 0x54d5d0). Returns the target
+ * address. */
+uint32_t vertrix_port_blend_cross_half_tint(PORT_SIGNATURE);
+
+/* Original 0x48f620: as 0x48f360 with the map from the target and the entry from the source.
+ * Returns the target address. */
+uint32_t vertrix_port_blend_target_tint(PORT_SIGNATURE);
+
+/* Original 0x48f6f0: as 0x48f430 with the map from the target and the entry from the source.
+ * Returns the target address. */
+uint32_t vertrix_port_blend_target_cross_remap_half_plus(PORT_SIGNATURE);
+
+/* Original 0x48f800: as 0x48f520 with the map from the target and the entry from the source.
+ * Returns the target address. */
+uint32_t vertrix_port_blend_target_cross_half_tint(PORT_SIGNATURE);
+
+/* Original 0x48f910: the target becomes the colour of 0x48e6c0, then the target is remapped.
+ * Returns the target address. */
+uint32_t vertrix_port_blend_quarters_plus_remap(PORT_SIGNATURE);
+
+/* Original 0x48f9f0: saturating add to the target of the source halved plus the colour at 0x54d5ec
+ * and remapped (kept at 0x5bc018). Returns the target address. */
+uint32_t vertrix_port_blend_half_plus_remap_add(PORT_SIGNATURE);
+
+/* Original 0x48faf0: saturating subtract of that colour from the target. Returns the target
+ * address. */
+uint32_t vertrix_port_blend_half_plus_remap_subtract(PORT_SIGNATURE);
+
+/* Original 0x48fbe0: the target becomes that colour less the target, each channel stopping at 0.
+ * Returns the target address. */
+uint32_t vertrix_port_blend_half_plus_remap_subtract_from(PORT_SIGNATURE);
+
+/* Original 0x48fcd0: the target becomes the inverted source (low 24 bits) halved plus the colour
+ * at 0x54d5ec (kept at 0x5bc018) and remapped. Returns the colour. */
+uint32_t vertrix_port_blend_invert_half_plus_remap(PORT_SIGNATURE);
+
 #endif
