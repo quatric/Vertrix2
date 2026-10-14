@@ -285,62 +285,6 @@
   "virtual": [],
   "address": 4575648
  },
- "f45d690": {
-  "callees": {
-   "0x4ac500": [
-    0,
-    false
-   ],
-   "0x4ac520": [
-    0,
-    false
-   ],
-   "0x4ac540": [
-    0,
-    false
-   ],
-   "0x4ac5b0": [
-    0,
-    false
-   ],
-   "0x4b65a0": [
-    0,
-    false
-   ],
-   "0x4ac980": [
-    1,
-    false
-   ],
-   "0x4b6540": [
-    0,
-    false
-   ],
-   "0x4ad580": [
-    0,
-    false
-   ],
-   "0x4ac8f0": [
-    0,
-    false
-   ]
-  },
-  "stack": 132,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2,
-   3,
-   4,
-   5
-  ],
-  "virtual": [],
-  "address": 4576912
- },
  "f45dca0": {
   "callees": {
    "0x45f540": [
@@ -3384,57 +3328,6 @@
   ],
   "virtual": [],
   "address": 4656416
- },
- "banner_actor_spawn": {
-  "callees": {
-   "0x4ca000": [
-    0,
-    false
-   ],
-   "0x4adf20": [
-    5,
-    false
-   ],
-   "0x4ac8d0": [
-    0,
-    false
-   ],
-   "0x4ac710": [
-    0,
-    false
-   ],
-   "0x4ac8a0": [
-    0,
-    false
-   ],
-   "0x4ac7b0": [
-    0,
-    false
-   ],
-   "0x4ac8f0": [
-    0,
-    false
-   ],
-   "0x4b5e70": [
-    0,
-    false
-   ],
-   "0x4abd70": [
-    0,
-    false
-   ]
-  },
-  "stack": 136,
-  "arguments": 0,
-  "pointer_callees": [
-   "0x4ca000"
-  ],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4662816
  },
  "f4726d0": {
   "callees": {

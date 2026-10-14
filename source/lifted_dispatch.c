@@ -41,7 +41,6 @@
 #include "lifted_whole_4.h"
 #include "lifted_whole_40.h"
 #include "lifted_whole_43.h"
-#include "lifted_whole_44.h"
 #include "lifted_whole_5.h"
 #include "lifted_whole_6.h"
 #include "lifted_whole_7.h"
@@ -100,6 +99,7 @@
 #include "port_small.h"
 #include "port_sound.h"
 #include "port_spawn.h"
+#include "port_spawners.h"
 #include "port_spawns.h"
 #include "port_states.h"
 #include "port_steps.h"
@@ -1182,8 +1182,8 @@ static const LiftedRoutine routines[] = {
     {0x44ab50, vertrix_port_actor_burst_start_44ab50, 0, 0},
     {0x44abe0, lifted_f44abe0, 148, 0},
     {0x44acd0, vertrix_port_actor_step_flash_44acd0, 0, 0},
-    {0x44ad20, lifted_f44ad20, 112, 0},
-    {0x44add0, lifted_f44add0, 112, 0},
+    {0x44ad20, vertrix_port_actor_bob_pick_44ad20, 0, 0},
+    {0x44add0, vertrix_port_actor_bob_pick_44add0, 0, 0},
     {0x44ae80, vertrix_port_actor_step_keep_44ae80, 0, 0},
     {0x44aec0, lifted_f44aec0, 204, 0},
     {0x44b050, lifted_f44b050, 176, 0},
@@ -1676,7 +1676,7 @@ static const LiftedRoutine routines[] = {
     {0x45d1a0, lifted_f45d1a0, 168, 0},
     {0x45d420, vertrix_port_actor_climb_step, 0, 0},
     {0x45d4d0, vertrix_port_actor_face_target, 0, 0},
-    {0x45d690, lifted_f45d690, 132, 0},
+    {0x45d690, vertrix_port_actor_path_turn_45d690, 0, 0},
     {0x45d740, vertrix_port_actor_bob_follow_45d740, 0, 0},
     {0x45d7b0, vertrix_port_actor_bob_follow_45d7b0, 0, 0},
     {0x45d820, vertrix_port_object_step_toggle_45d820, 0, 0},
@@ -1780,7 +1780,7 @@ static const LiftedRoutine routines[] = {
     {0x470960, lifted_f470960, 240, 4},
     {0x470b20, lifted_row_label, 240, 0},
     {0x470d20, lifted_panel_group, 368, 0},
-    {0x471020, lifted_panel_spawn, 168, 0},
+    {0x471020, vertrix_port_panel_spawn_471020, 0, 0},
     {0x4710d0, vertrix_port_ui_actor_place_4710d0, 0, 0},
     {0x471100, vertrix_port_ui_companion_spawn_471100, 0, 0},
     {0x4711a0, lifted_slide_pair, 228, 0},
@@ -1853,7 +1853,7 @@ static const LiftedRoutine routines[] = {
     {0x4724f0, vertrix_port_sparkle_actor_add, 0, 0},
     {0x472570, vertrix_port_sparkle_actor_add_472570, 0, 0},
     {0x4725f0, vertrix_port_scene_clear_marker_4725f0, 0, 0},
-    {0x472620, lifted_banner_actor_spawn, 136, 0},
+    {0x472620, vertrix_port_banner_actor_spawn_472620, 0, 0},
     {0x4726d0, lifted_f4726d0, 428, 0},
     {0x472ad0, vertrix_port_text_item_add, 0, 0},
     {0x472bd0, vertrix_port_scene_create_472bd0, 0, 0},
@@ -2107,7 +2107,7 @@ static const LiftedRoutine routines[] = {
     {0x480890, vertrix_port_palette_expand_vga_480890, 0, 0},
     {0x4808f0, vertrix_port_palette_create_4808f0, 0, 0},
     {0x480940, lifted_f480940, 92, 0},
-    {0x480ca0, lifted_palette_cube, 112, 0},
+    {0x480ca0, vertrix_port_palette_cube_480ca0, 0, 0},
     {0x480d60, lifted_f480d60, 280, 0},
     {0x480ec0, vertrix_port_image_read, 0, 0},
     {0x481480, lifted_rle_decode, 112, 0},
@@ -2121,7 +2121,7 @@ static const LiftedRoutine routines[] = {
     {0x481f30, lifted_object_create_with_class, 128, 0},
     {0x481fb0, vertrix_port_object_destroy_b_481fb0, 0, 0},
     {0x482050, vertrix_port_object_clear_208_482050, 0, 0},
-    {0x482060, lifted_event_stack_push, 72, 11},
+    {0x482060, vertrix_port_event_stack_push_482060, 0, 0},
     {0x482110, lifted_event_stack_pop, 76, 11},
     {0x482320, vertrix_port_object_destroy_482320, 0, 0},
     {0x4823b0, vertrix_port_resource_entry_10_4823b0, 0, 0},
@@ -2129,7 +2129,7 @@ static const LiftedRoutine routines[] = {
     {0x482480, vertrix_port_reader_construct, 0, 0},
     {0x482540, vertrix_port_reader_restart, 0, 0},
     {0x482550, vertrix_port_noise_fill, 0, 0},
-    {0x482610, lifted_scratch_pair_call, 88, 0},
+    {0x482610, vertrix_port_scratch_pair_call_482610, 0, 0},
     {0x4826c0, vertrix_port_random_below, 0, 0},
     {0x482720, vertrix_port_buffer_4k_allocate, 0, 0},
     {0x482740, vertrix_port_forward_first_dword_482740, 0, 0},

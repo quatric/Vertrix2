@@ -3654,6 +3654,16 @@
   "lifted": "lifted_f44acd0",
   "chunk": "whole_1"
  },
+ "0x44ad20": {
+  "port": "vertrix_port_actor_bob_pick_44ad20",
+  "lifted": "lifted_f44ad20",
+  "chunk": "whole_1"
+ },
+ "0x44add0": {
+  "port": "vertrix_port_actor_bob_pick_44add0",
+  "lifted": "lifted_f44add0",
+  "chunk": "whole_1"
+ },
  "0x44ae80": {
   "port": "vertrix_port_actor_step_keep_44ae80",
   "lifted": "lifted_f44ae80",
@@ -5664,6 +5674,11 @@
   "lifted": "lifted_f45d4d0",
   "chunk": "whole_21"
  },
+ "0x45d690": {
+  "port": "vertrix_port_actor_path_turn_45d690",
+  "lifted": "lifted_f45d690",
+  "chunk": "whole_3"
+ },
  "0x45d740": {
   "port": "vertrix_port_actor_bob_follow_45d740",
   "lifted": "lifted_f45d740",
@@ -5938,6 +5953,11 @@
   "port": "vertrix_port_forward_registers_46b800_46b800",
   "lifted": "lifted_forward_registers_46b800",
   "chunk": "whole_14"
+ },
+ "0x471020": {
+  "port": "vertrix_port_panel_spawn_471020",
+  "lifted": "lifted_panel_spawn",
+  "chunk": "whole_21"
  },
  "0x4710d0": {
   "port": "vertrix_port_ui_actor_place_4710d0",
@@ -6282,6 +6302,11 @@
  "0x4725f0": {
   "port": "vertrix_port_scene_clear_marker_4725f0",
   "lifted": "lifted_scene_clear_marker",
+  "chunk": "whole_3"
+ },
+ "0x472620": {
+  "port": "vertrix_port_banner_actor_spawn_472620",
+  "lifted": "lifted_banner_actor_spawn",
   "chunk": "whole_3"
  },
  "0x472ad0": {
@@ -7199,6 +7224,11 @@
   "lifted": "lifted_f4808f0",
   "chunk": "whole_4"
  },
+ "0x480ca0": {
+  "port": "vertrix_port_palette_cube_480ca0",
+  "lifted": "lifted_palette_cube",
+  "chunk": "whole_44"
+ },
  "0x480ec0": {
   "port": "vertrix_port_image_read",
   "lifted": "lifted_f480ec0",
@@ -7244,6 +7274,11 @@
   "lifted": "lifted_object_clear_208",
   "chunk": "whole_4"
  },
+ "0x482060": {
+  "port": "vertrix_port_event_stack_push_482060",
+  "lifted": "lifted_event_stack_push",
+  "chunk": "whole_4"
+ },
  "0x482320": {
   "port": "vertrix_port_object_destroy_482320",
   "lifted": "lifted_f482320",
@@ -7272,6 +7307,11 @@
  "0x482550": {
   "port": "vertrix_port_noise_fill",
   "lifted": "lifted_f482550",
+  "chunk": "whole_21"
+ },
+ "0x482610": {
+  "port": "vertrix_port_scratch_pair_call_482610",
+  "lifted": "lifted_scratch_pair_call",
   "chunk": "whole_21"
  },
  "0x4826c0": {

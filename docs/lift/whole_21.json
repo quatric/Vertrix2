@@ -2075,53 +2075,6 @@
   "virtual": [],
   "address": 4649504
  },
- "panel_spawn": {
-  "callees": {
-   "0x4ca000": [
-    0,
-    false
-   ],
-   "0x4adf20": [
-    5,
-    false
-   ],
-   "0x4b25b0": [
-    10,
-    false
-   ],
-   "0x4b2d90": [
-    0,
-    false
-   ],
-   "0x4b2400": [
-    0,
-    false
-   ],
-   "virtual_4710bd": [
-    0,
-    false
-   ]
-  },
-  "stack": 168,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   13,
-   14,
-   15
-  ],
-  "virtual": [
-   [
-    344,
-    0,
-    0
-   ]
-  ],
-  "address": 4657184
- },
  "slide_pair": {
   "callees": {
    "0x4ca000": [
@@ -2508,31 +2461,6 @@
   ],
   "virtual": [],
   "address": 4690640
- },
- "scratch_pair_call": {
-  "callees": {
-   "0x4ec1a0": [
-    0,
-    false
-   ],
-   "0x482640": [
-    0,
-    false
-   ]
-  },
-  "stack": 88,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   3,
-   4,
-   5
-  ],
-  "virtual": [],
-  "address": 4728336
  },
  "f484b60": {
   "callees": {

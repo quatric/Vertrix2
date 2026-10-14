@@ -17,7 +17,6 @@ enum
     LIFTED_RLE_DECODE_STACK = 112,
     LIFTED_RLE_DECODE_BITMAP_STACK = 108,
     LIFTED_OBJECT_CREATE_WITH_CLASS_STACK = 128,
-    LIFTED_EVENT_STACK_PUSH_STACK = 72,
     LIFTED_EVENT_STACK_POP_STACK = 76,
     LIFTED_F482770_STACK = 72,
     LIFTED_F4831B0_STACK = 204,
@@ -116,10 +115,6 @@ uint32_t lifted_rle_decode_bitmap(const VertrixCalls *calls, const VertrixFactor
 uint32_t lifted_object_create_with_class(const VertrixCalls *calls,
                                          const VertrixFactoryServices *services,
                                          const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x482060. */
-uint32_t lifted_event_stack_push(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                 const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x482110. */
 uint32_t lifted_event_stack_pop(const VertrixCalls *calls, const VertrixFactoryServices *services,

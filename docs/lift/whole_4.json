@@ -339,25 +339,6 @@
   "virtual": [],
   "address": 4726576
  },
- "event_stack_push": {
-  "callees": {},
-  "stack": 72,
-  "arguments": 11,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   3,
-   4,
-   5,
-   8,
-   9,
-   10
-  ],
-  "virtual": [],
-  "address": 4726880
- },
  "event_stack_pop": {
   "callees": {},
   "stack": 76,
