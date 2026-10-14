@@ -686,4 +686,33 @@ uint32_t vertrix_port_pixel16_target_cross_half_plus_remap_49f200(PORT_SIGNATURE
 uint32_t vertrix_port_pixel16_entry_levels_4975d0(PORT_SIGNATURE);
 uint32_t vertrix_port_pixel16_entry_levels_49f690(PORT_SIGNATURE);
 
+/* Originals 0x4999f0 (5-5-5) and 0x4a1ab0 (5-6-5): the widened target (stored at 0x5bb774) mixed
+ * with the source by the two level tables (stored there again), then remapped as 0x498470 does and
+ * kept at 0x5bb774. Returns the target address; edx is unchanged. */
+uint32_t vertrix_port_pixel16_levels_paired_4999f0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel16_levels_paired_4a1ab0(PORT_SIGNATURE);
+
+/* Originals 0x499dd0 (5-5-5) and 0x4a1e90 (5-6-5): the widened target (stored at 0x5bb774 first)
+ * mixed by the two level tables with the source remapped as 0x498470 does (kept at 0x5bc018), kept
+ * at 0x5bb774. Returns the target address; edx is unchanged. */
+uint32_t vertrix_port_pixel16_paired_levels_499dd0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel16_paired_levels_4a1e90(PORT_SIGNATURE);
+
+/* Originals 0x498280 (5-5-5) and 0x4a0340 (5-6-5): the colour of 0x497da0, remapped and kept at
+ * 0x5bb774. Returns the target address; edx is unchanged. */
+uint32_t vertrix_port_pixel16_levels_bias_remap_498280(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel16_levels_bias_remap_4a0340(PORT_SIGNATURE);
+
+/* Originals 0x497ee0 (5-5-5) and 0x49ffa0 (5-6-5): as 0x4975d0 with each level sum taken again
+ * with the fixed channel (0x54d5dc, 0x54d5de and 0x54d5e0) and halved before the map is applied.
+ * Returns the target address; edx is unchanged. */
+uint32_t vertrix_port_pixel16_entry_levels_tint_497ee0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel16_entry_levels_tint_49ffa0(PORT_SIGNATURE);
+
+/* Originals 0x499bc0 (5-5-5) and 0x4a1c80 (5-6-5): as 0x4975d0 with the source's entry replaced by
+ * the dword picked as 0x498470 picks it (the index stored at 0x54d5e4, the dword at 0x54d5d4); the
+ * map stays the one of the source's own entry. Returns the target address; edx is unchanged. */
+uint32_t vertrix_port_pixel16_fixed_entry_levels_499bc0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel16_fixed_entry_levels_4a1c80(PORT_SIGNATURE);
+
 #endif

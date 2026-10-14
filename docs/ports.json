@@ -3719,9 +3719,19 @@
   "lifted": "lifted_f497da0",
   "chunk": "whole_21"
  },
+ "0x497ee0": {
+  "port": "vertrix_port_pixel16_entry_levels_tint_497ee0",
+  "lifted": "lifted_f497ee0",
+  "chunk": "whole_21"
+ },
  "0x4980f0": {
   "port": "vertrix_port_pixel16_tint_levels_4980f0",
   "lifted": "lifted_f4980f0",
+  "chunk": "whole_21"
+ },
+ "0x498280": {
+  "port": "vertrix_port_pixel16_levels_bias_remap_498280",
+  "lifted": "lifted_f498280",
   "chunk": "whole_21"
  },
  "0x498470": {
@@ -3802,6 +3812,21 @@
  "0x499860": {
   "port": "vertrix_port_pixel16_shade_paired_499860",
   "lifted": "lifted_f499860",
+  "chunk": "whole_21"
+ },
+ "0x4999f0": {
+  "port": "vertrix_port_pixel16_levels_paired_4999f0",
+  "lifted": "lifted_f4999f0",
+  "chunk": "whole_21"
+ },
+ "0x499bc0": {
+  "port": "vertrix_port_pixel16_fixed_entry_levels_499bc0",
+  "lifted": "lifted_f499bc0",
+  "chunk": "whole_21"
+ },
+ "0x499dd0": {
+  "port": "vertrix_port_pixel16_paired_levels_499dd0",
+  "lifted": "lifted_f499dd0",
   "chunk": "whole_21"
  },
  "0x499fb0": {
@@ -4174,9 +4199,19 @@
   "lifted": "lifted_f49fe60",
   "chunk": "whole_21"
  },
+ "0x49ffa0": {
+  "port": "vertrix_port_pixel16_entry_levels_tint_49ffa0",
+  "lifted": "lifted_f49ffa0",
+  "chunk": "whole_21"
+ },
  "0x4a01b0": {
   "port": "vertrix_port_pixel16_tint_levels_4a01b0",
   "lifted": "lifted_f4a01b0",
+  "chunk": "whole_21"
+ },
+ "0x4a0340": {
+  "port": "vertrix_port_pixel16_levels_bias_remap_4a0340",
+  "lifted": "lifted_f4a0340",
   "chunk": "whole_21"
  },
  "0x4a0530": {
@@ -4257,6 +4292,21 @@
  "0x4a1920": {
   "port": "vertrix_port_pixel16_shade_paired_4a1920",
   "lifted": "lifted_f4a1920",
+  "chunk": "whole_21"
+ },
+ "0x4a1ab0": {
+  "port": "vertrix_port_pixel16_levels_paired_4a1ab0",
+  "lifted": "lifted_f4a1ab0",
+  "chunk": "whole_21"
+ },
+ "0x4a1c80": {
+  "port": "vertrix_port_pixel16_fixed_entry_levels_4a1c80",
+  "lifted": "lifted_f4a1c80",
+  "chunk": "whole_21"
+ },
+ "0x4a1e90": {
+  "port": "vertrix_port_pixel16_paired_levels_4a1e90",
+  "lifted": "lifted_f4a1e90",
   "chunk": "whole_21"
  },
  "0x4a2070": {
