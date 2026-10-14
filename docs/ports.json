@@ -429,6 +429,16 @@
   "lifted": "lifted_f411c70",
   "chunk": "whole_0"
  },
+ "0x4126d0": {
+  "port": "vertrix_port_object_toggle_flag_4126d0",
+  "lifted": "lifted_object_toggle_flag_full",
+  "chunk": "whole_8"
+ },
+ "0x4126f0": {
+  "port": "vertrix_port_object_flag_4126f0",
+  "lifted": "lifted_object_flag_full",
+  "chunk": "whole_0"
+ },
  "0x414a90": {
   "port": "vertrix_port_level_offsets_534888",
   "lifted": "lifted_anchor_offsets_update",
@@ -443,6 +453,26 @@
   "port": "vertrix_port_player_key_pickup",
   "lifted": "lifted_f4154b0",
   "chunk": "whole_8"
+ },
+ "0x415b30": {
+  "port": "vertrix_port_global_set_first_cell_415b30",
+  "lifted": "lifted_global_set_first_cell_full",
+  "chunk": "whole_0"
+ },
+ "0x415b40": {
+  "port": "vertrix_port_global_set_second_cell_415b40",
+  "lifted": "lifted_global_set_second_cell_full",
+  "chunk": "whole_0"
+ },
+ "0x415d40": {
+  "port": "vertrix_port_global_next_index_415d40",
+  "lifted": "lifted_global_next_index_full",
+  "chunk": "whole_8"
+ },
+ "0x415d90": {
+  "port": "vertrix_port_global_set_current_cell_415d90",
+  "lifted": "lifted_global_set_current_cell_full",
+  "chunk": "whole_0"
  },
  "0x415db0": {
   "port": "vertrix_port_sounds_load_all",
@@ -497,6 +527,11 @@
  "0x417c80": {
   "port": "vertrix_port_level_tables_build",
   "lifted": "lifted_f417c80",
+  "chunk": "whole_0"
+ },
+ "0x417cf0": {
+  "port": "vertrix_port_table_grid_value_417cf0",
+  "lifted": "lifted_table_grid_value",
   "chunk": "whole_0"
  },
  "0x417f40": {
@@ -794,6 +829,21 @@
   "lifted": "lifted_f423d70",
   "chunk": "whole_0"
  },
+ "0x4241d0": {
+  "port": "vertrix_port_constant_4241d0",
+  "lifted": "lifted_return_constant_419f60",
+  "chunk": "whole_0"
+ },
+ "0x4241e0": {
+  "port": "vertrix_port_constant_4241e0",
+  "lifted": "lifted_return_constant_419ea0",
+  "chunk": "whole_0"
+ },
+ "0x4241f0": {
+  "port": "vertrix_port_constant_4241f0",
+  "lifted": "lifted_return_constant_424160",
+  "chunk": "whole_0"
+ },
  "0x425d30": {
   "port": "vertrix_port_rule_set_construct_425d30",
   "lifted": "lifted_object_set_table",
@@ -839,6 +889,41 @@
   "lifted": "lifted_f429b10",
   "chunk": "whole_14"
  },
+ "0x42a940": {
+  "port": "vertrix_port_piece_clear_offset_x_42a940",
+  "lifted": "lifted_piece_clear_offset_x_full",
+  "chunk": "whole_0"
+ },
+ "0x42a950": {
+  "port": "vertrix_port_piece_clear_offset_y_42a950",
+  "lifted": "lifted_piece_clear_offset_y_full",
+  "chunk": "whole_0"
+ },
+ "0x42a960": {
+  "port": "vertrix_port_piece_set_offset_x_42a960",
+  "lifted": "lifted_piece_set_offset_x_full",
+  "chunk": "whole_21"
+ },
+ "0x42a970": {
+  "port": "vertrix_port_piece_set_offset_y_42a970",
+  "lifted": "lifted_piece_set_offset_y_full",
+  "chunk": "whole_21"
+ },
+ "0x42b050": {
+  "port": "vertrix_port_player_preview_below_limit_42b050",
+  "lifted": "lifted_player_preview_below_limit",
+  "chunk": "whole_0"
+ },
+ "0x42b070": {
+  "port": "vertrix_port_player_preview_frame_42b070",
+  "lifted": "lifted_player_preview_frame",
+  "chunk": "whole_0"
+ },
+ "0x42b0f0": {
+  "port": "vertrix_port_player_preview_toggle_42b0f0",
+  "lifted": "lifted_player_preview_toggle",
+  "chunk": "whole_21"
+ },
  "0x42b2f0": {
   "port": "vertrix_port_nothing_404580",
   "lifted": "lifted_f42b2f0",
@@ -853,6 +938,61 @@
   "port": "vertrix_port_object_destroy_call_42bb20",
   "lifted": "lifted_f42bb20",
   "chunk": "whole_14"
+ },
+ "0x42f890": {
+  "port": "vertrix_port_board_piece_set_offset_x_42f890",
+  "lifted": "lifted_board_piece_set_offset_x_full",
+  "chunk": "whole_1"
+ },
+ "0x42f8a0": {
+  "port": "vertrix_port_board_piece_set_offset_y_42f8a0",
+  "lifted": "lifted_board_piece_set_offset_y_full",
+  "chunk": "whole_1"
+ },
+ "0x431380": {
+  "port": "vertrix_port_board_object_field_431380",
+  "lifted": "lifted_board_object_field",
+  "chunk": "whole_1"
+ },
+ "0x431480": {
+  "port": "vertrix_port_board_object_field_431480",
+  "lifted": "lifted_board_object_field_431480",
+  "chunk": "whole_1"
+ },
+ "0x431490": {
+  "port": "vertrix_port_board_object_field_431490",
+  "lifted": "lifted_board_object_field_431490",
+  "chunk": "whole_1"
+ },
+ "0x431d60": {
+  "port": "vertrix_port_board_row_not_below_431d60",
+  "lifted": "lifted_f431d60",
+  "chunk": "whole_1"
+ },
+ "0x431d80": {
+  "port": "vertrix_port_board_set_a68_431d80",
+  "lifted": "lifted_board_set_a68",
+  "chunk": "whole_1"
+ },
+ "0x432000": {
+  "port": "vertrix_port_board_object_field_432000",
+  "lifted": "lifted_board_object_field_432000",
+  "chunk": "whole_1"
+ },
+ "0x4320c0": {
+  "port": "vertrix_port_player_test_a60_4320c0",
+  "lifted": "lifted_player_test_a60",
+  "chunk": "whole_1"
+ },
+ "0x4334a0": {
+  "port": "vertrix_port_board_reset_counter_4334a0",
+  "lifted": "lifted_board_reset_counter",
+  "chunk": "whole_1"
+ },
+ "0x4342f0": {
+  "port": "vertrix_port_board_bump_counter_4342f0",
+  "lifted": "lifted_board_bump_counter",
+  "chunk": "whole_1"
  },
  "0x43a0b0": {
   "port": "vertrix_port_object_destroy_call_43a0b0",
@@ -869,9 +1009,64 @@
   "lifted": "lifted_f43a2c0",
   "chunk": "whole_14"
  },
+ "0x43a4f0": {
+  "port": "vertrix_port_player_write_bytes_168_43a4f0",
+  "lifted": "lifted_player_write_bytes_168",
+  "chunk": "whole_1"
+ },
+ "0x43ad50": {
+  "port": "vertrix_port_player_reset_piece_progress_43ad50",
+  "lifted": "lifted_player_reset_piece_progress",
+  "chunk": "whole_1"
+ },
+ "0x43b860": {
+  "port": "vertrix_port_player_set_e0_43b860",
+  "lifted": "lifted_player_set_e0_full",
+  "chunk": "whole_1"
+ },
+ "0x43b870": {
+  "port": "vertrix_port_player_e0_43b870",
+  "lifted": "lifted_player_e0_full",
+  "chunk": "whole_1"
+ },
+ "0x43b970": {
+  "port": "vertrix_port_player_test_4e8_43b970",
+  "lifted": "lifted_player_test_4e8",
+  "chunk": "whole_1"
+ },
  "0x43ba70": {
   "port": "vertrix_port_actor_state_three",
   "lifted": "lifted_player_bonus_ready",
+  "chunk": "whole_1"
+ },
+ "0x43ba80": {
+  "port": "vertrix_port_player_clear_field_18c_43ba80",
+  "lifted": "lifted_player_clear_field_18c",
+  "chunk": "whole_1"
+ },
+ "0x43bad0": {
+  "port": "vertrix_port_player_set_cd_43bad0",
+  "lifted": "lifted_player_set_cd_full",
+  "chunk": "whole_1"
+ },
+ "0x43bae0": {
+  "port": "vertrix_port_player_set_cc_43bae0",
+  "lifted": "lifted_player_set_cc_full",
+  "chunk": "whole_1"
+ },
+ "0x43bd40": {
+  "port": "vertrix_port_player_test_4c4_43bd40",
+  "lifted": "lifted_player_test_4c4",
+  "chunk": "whole_1"
+ },
+ "0x43cc90": {
+  "port": "vertrix_port_player_partner_not_cc_one_43cc90",
+  "lifted": "lifted_player_partner_not_cc_one_full",
+  "chunk": "whole_1"
+ },
+ "0x43cde0": {
+  "port": "vertrix_port_player_enter_state_43cde0",
+  "lifted": "lifted_player_enter_state_full",
   "chunk": "whole_1"
  },
  "0x43d400": {
@@ -1053,6 +1248,16 @@
   "port": "vertrix_port_option_label_446380",
   "lifted": "lifted_f446380",
   "chunk": "whole_9"
+ },
+ "0x448670": {
+  "port": "vertrix_port_copy_global_532a4c_448670",
+  "lifted": "lifted_f448670",
+  "chunk": "whole_1"
+ },
+ "0x448680": {
+  "port": "vertrix_port_copy_global_532b68_448680",
+  "lifted": "lifted_f448680",
+  "chunk": "whole_1"
  },
  "0x4486f0": {
   "port": "vertrix_port_actor_square_setup",
@@ -2039,6 +2244,31 @@
   "lifted": "lifted_f471dd0",
   "chunk": "whole_21"
  },
+ "0x471e60": {
+  "port": "vertrix_port_object_flip_454_471e60",
+  "lifted": "lifted_object_flip_454",
+  "chunk": "whole_21"
+ },
+ "0x471e80": {
+  "port": "vertrix_port_object_flip_454_471e80",
+  "lifted": "lifted_object_flip_454_471e80",
+  "chunk": "whole_21"
+ },
+ "0x471ea0": {
+  "port": "vertrix_port_object_set_464_471ea0",
+  "lifted": "lifted_object_set_464",
+  "chunk": "whole_3"
+ },
+ "0x471eb0": {
+  "port": "vertrix_port_object_get_464_471eb0",
+  "lifted": "lifted_object_get_464",
+  "chunk": "whole_21"
+ },
+ "0x471ec0": {
+  "port": "vertrix_port_object_get_174_471ec0",
+  "lifted": "lifted_object_get_174",
+  "chunk": "whole_21"
+ },
  "0x471ee0": {
   "port": "vertrix_port_nothing_404580",
   "lifted": "lifted_return_unchanged_471ee0",
@@ -2264,9 +2494,29 @@
   "lifted": "lifted_object_triple",
   "chunk": "whole_3"
  },
+ "0x475dd0": {
+  "port": "vertrix_port_progress_set_40_475dd0",
+  "lifted": "lifted_progress_set_40",
+  "chunk": "whole_3"
+ },
+ "0x475de0": {
+  "port": "vertrix_port_input_repeat_counter_clear_475de0",
+  "lifted": "lifted_input_repeat_counter_clear_full",
+  "chunk": "whole_3"
+ },
  "0x475df0": {
   "port": "vertrix_port_stream_done_475df0",
   "lifted": "lifted_progress_done",
+  "chunk": "whole_3"
+ },
+ "0x475e30": {
+  "port": "vertrix_port_input_repeat_counter_advance_475e30",
+  "lifted": "lifted_input_repeat_counter_advance_full",
+  "chunk": "whole_3"
+ },
+ "0x475e40": {
+  "port": "vertrix_port_progress_set_3c_475e40",
+  "lifted": "lifted_progress_set_3c",
   "chunk": "whole_3"
  },
  "0x475e50": {
@@ -2589,6 +2839,11 @@
   "lifted": "lifted_pixel_pack",
   "chunk": "whole_3"
  },
+ "0x479b30": {
+  "port": "vertrix_port_surface_cell_address_479b30",
+  "lifted": "lifted_surface_cell_address",
+  "chunk": "whole_3"
+ },
  "0x479d70": {
   "port": "vertrix_port_surface_copy_pixel",
   "lifted": "lifted_surface_copy_pixel",
@@ -2604,6 +2859,36 @@
   "lifted": "lifted_f47c520",
   "chunk": "whole_3"
  },
+ "0x47e990": {
+  "port": "vertrix_port_dword_set_47e990",
+  "lifted": "lifted_dword_set",
+  "chunk": "whole_3"
+ },
+ "0x47e9a0": {
+  "port": "vertrix_port_object_dword_47e9a0",
+  "lifted": "lifted_object_dword",
+  "chunk": "whole_3"
+ },
+ "0x47ed60": {
+  "port": "vertrix_port_object_set_dword_47ed60",
+  "lifted": "lifted_object_set_dword",
+  "chunk": "whole_3"
+ },
+ "0x47ed70": {
+  "port": "vertrix_port_object_set_dword_47ed70",
+  "lifted": "lifted_object_set_dword_47ed70",
+  "chunk": "whole_3"
+ },
+ "0x47ed80": {
+  "port": "vertrix_port_object_set_dword_47ed80",
+  "lifted": "lifted_object_set_dword_47ed80",
+  "chunk": "whole_3"
+ },
+ "0x47ed90": {
+  "port": "vertrix_port_object_set_dword_47ed90",
+  "lifted": "lifted_object_set_dword_47ed90",
+  "chunk": "whole_3"
+ },
  "0x47f070": {
   "port": "vertrix_port_object_reset_block",
   "lifted": "lifted_object_reset_block",
@@ -2613,6 +2898,11 @@
   "port": "vertrix_port_nothing_404580",
   "lifted": "lifted_return_unchanged_47f8f0",
   "chunk": "whole_4"
+ },
+ "0x480070": {
+  "port": "vertrix_port_object_dword_480070",
+  "lifted": "lifted_object_dword_480070",
+  "chunk": "whole_21"
  },
  "0x480ec0": {
   "port": "vertrix_port_image_read",
@@ -2647,6 +2937,11 @@
  "0x481e10": {
   "port": "vertrix_port_pixel_repack",
   "lifted": "lifted_f481e10",
+  "chunk": "whole_4"
+ },
+ "0x482050": {
+  "port": "vertrix_port_object_clear_208_482050",
+  "lifted": "lifted_object_clear_208",
   "chunk": "whole_4"
  },
  "0x482320": {
@@ -2974,6 +3269,11 @@
   "lifted": "lifted_frame_resource_count_full",
   "chunk": "whole_4"
  },
+ "0x487870": {
+  "port": "vertrix_port_table_object_construct_487870",
+  "lifted": "lifted_table_object_construct",
+  "chunk": "whole_4"
+ },
  "0x487890": {
   "port": "vertrix_port_object_destroy_487890",
   "lifted": "lifted_f487890",
@@ -2984,9 +3284,24 @@
   "lifted": "lifted_f487930",
   "chunk": "whole_17"
  },
+ "0x4879e0": {
+  "port": "vertrix_port_list_empty_4879e0",
+  "lifted": "lifted_list_empty",
+  "chunk": "whole_4"
+ },
  "0x4879f0": {
   "port": "vertrix_port_list_delete_4b5e70",
   "lifted": "lifted_object_release_call",
+  "chunk": "whole_4"
+ },
+ "0x488030": {
+  "port": "vertrix_port_table_item_488030",
+  "lifted": "lifted_table_item",
+  "chunk": "whole_4"
+ },
+ "0x488040": {
+  "port": "vertrix_port_table_item_488040",
+  "lifted": "lifted_table_item_488040",
   "chunk": "whole_4"
  },
  "0x4884f0": {
@@ -3179,6 +3494,11 @@
   "lifted": "lifted_f48b550",
   "chunk": "whole_4"
  },
+ "0x48c370": {
+  "port": "vertrix_port_copy_dword_48c370",
+  "lifted": "lifted_copy_dword_full",
+  "chunk": "whole_21"
+ },
  "0x48c9f0": {
   "port": "vertrix_port_rules_refresh",
   "lifted": "lifted_f48c9f0",
@@ -3202,6 +3522,11 @@
  "0x48d530": {
   "port": "vertrix_port_string_list_destroy_48d530",
   "lifted": "lifted_f48d530",
+  "chunk": "whole_4"
+ },
+ "0x48d5f0": {
+  "port": "vertrix_port_list_empty_48d5f0",
+  "lifted": "lifted_list_empty_48d5f0",
   "chunk": "whole_4"
  },
  "0x48d600": {
@@ -3712,6 +4037,11 @@
  "0x492f90": {
   "port": "vertrix_port_rectangle_half_plus_remap32_492f90",
   "lifted": "lifted_render_rectangle_half_palette32",
+  "chunk": "whole_21"
+ },
+ "0x4930c0": {
+  "port": "vertrix_port_alpha_columns32_4930c0",
+  "lifted": "lifted_f4930c0",
   "chunk": "whole_21"
  },
  "0x4933e0": {
@@ -4229,6 +4559,11 @@
   "lifted": "lifted_f49ae50",
   "chunk": "whole_21"
  },
+ "0x49b000": {
+  "port": "vertrix_port_alpha_columns16_49b000",
+  "lifted": "lifted_f49b000",
+  "chunk": "whole_21"
+ },
  "0x49b4a0": {
   "port": "vertrix_port_pixel16_copy_49b4a0",
   "lifted": "lifted_f49b4a0",
@@ -4744,9 +5079,474 @@
   "lifted": "lifted_f4a2ef0",
   "chunk": "whole_21"
  },
+ "0x4a30a0": {
+  "port": "vertrix_port_alpha_columns16_4a30a0",
+  "lifted": "lifted_f4a30a0",
+  "chunk": "whole_21"
+ },
+ "0x4a3540": {
+  "port": "vertrix_port_pixel8_copy_4a3540",
+  "lifted": "lifted_f4a3540",
+  "chunk": "whole_21"
+ },
+ "0x4a3580": {
+  "port": "vertrix_port_pixel8_remap_4a3580",
+  "lifted": "lifted_f4a3580",
+  "chunk": "whole_21"
+ },
+ "0x4a3660": {
+  "port": "vertrix_port_pixel8_tint_4a3660",
+  "lifted": "lifted_f4a3660",
+  "chunk": "whole_21"
+ },
+ "0x4a3720": {
+  "port": "vertrix_port_pixel8_half_plus_4a3720",
+  "lifted": "lifted_f4a3720",
+  "chunk": "whole_21"
+ },
+ "0x4a3770": {
+  "port": "vertrix_port_pixel8_half_tint_4a3770",
+  "lifted": "lifted_f4a3770",
+  "chunk": "whole_21"
+ },
+ "0x4a3880": {
+  "port": "vertrix_port_pixel8_half_plus_remap_4a3880",
+  "lifted": "lifted_f4a3880",
+  "chunk": "whole_21"
+ },
+ "0x4a3970": {
+  "port": "vertrix_port_pixel8_mean_map_remap_4a3970",
+  "lifted": "lifted_f4a3970",
+  "chunk": "whole_21"
+ },
+ "0x4a3ac0": {
+  "port": "vertrix_port_pixel8_average_4a3ac0",
+  "lifted": "lifted_f4a3ac0",
+  "chunk": "whole_21"
+ },
+ "0x4a3b50": {
+  "port": "vertrix_port_pixel8_entry_mean_4a3b50",
+  "lifted": "lifted_f4a3b50",
+  "chunk": "whole_21"
+ },
+ "0x4a3ce0": {
+  "port": "vertrix_port_pixel8_average_4a3ce0",
+  "lifted": "lifted_f4a3ce0",
+  "chunk": "whole_21"
+ },
+ "0x4a3d70": {
+  "port": "vertrix_port_pixel8_add_4a3d70",
+  "lifted": "lifted_f4a3d70",
+  "chunk": "whole_21"
+ },
+ "0x4a3e20": {
+  "port": "vertrix_port_pixel8_subtract_4a3e20",
+  "lifted": "lifted_f4a3e20",
+  "chunk": "whole_21"
+ },
+ "0x4a3ed0": {
+  "port": "vertrix_port_pixel8_subtract_from_4a3ed0",
+  "lifted": "lifted_f4a3ed0",
+  "chunk": "whole_21"
+ },
+ "0x4a3f80": {
+  "port": "vertrix_port_pixel8_invert_4a3f80",
+  "lifted": "lifted_f4a3f80",
+  "chunk": "whole_21"
+ },
+ "0x4a3fd0": {
+  "port": "vertrix_port_pixel8_invert_target_4a3fd0",
+  "lifted": "lifted_f4a3fd0",
+  "chunk": "whole_21"
+ },
+ "0x4a4040": {
+  "port": "vertrix_port_pixel8_cross_remap_4a4040",
+  "lifted": "lifted_f4a4040",
+  "chunk": "whole_21"
+ },
+ "0x4a4170": {
+  "port": "vertrix_port_pixel8_target_cross_remap_4a4170",
+  "lifted": "lifted_f4a4170",
+  "chunk": "whole_21"
+ },
+ "0x4a42b0": {
+  "port": "vertrix_port_pixel8_average_remap_4a42b0",
+  "lifted": "lifted_f4a42b0",
+  "chunk": "whole_21"
+ },
+ "0x4a43e0": {
+  "port": "vertrix_port_pixel8_remap_average_4a43e0",
+  "lifted": "lifted_f4a43e0",
+  "chunk": "whole_21"
+ },
+ "0x4a4520": {
+  "port": "vertrix_port_pixel8_remap_add_4a4520",
+  "lifted": "lifted_f4a4520",
+  "chunk": "whole_21"
+ },
+ "0x4a4660": {
+  "port": "vertrix_port_pixel8_remap_subtract_4a4660",
+  "lifted": "lifted_f4a4660",
+  "chunk": "whole_21"
+ },
+ "0x4a47a0": {
+  "port": "vertrix_port_pixel8_remap_subtract_from_4a47a0",
+  "lifted": "lifted_f4a47a0",
+  "chunk": "whole_21"
+ },
+ "0x4a48e0": {
+  "port": "vertrix_port_pixel8_remap_invert_4a48e0",
+  "lifted": "lifted_f4a48e0",
+  "chunk": "whole_21"
+ },
+ "0x4a49e0": {
+  "port": "vertrix_port_pixel8_target_remap_invert_4a49e0",
+  "lifted": "lifted_f4a49e0",
+  "chunk": "whole_21"
+ },
+ "0x4a4b10": {
+  "port": "vertrix_port_pixel8_mean_map_tint_4a4b10",
+  "lifted": "lifted_f4a4b10",
+  "chunk": "whole_21"
+ },
+ "0x4a4c40": {
+  "port": "vertrix_port_pixel8_quarters_plus_4a4c40",
+  "lifted": "lifted_f4a4c40",
+  "chunk": "whole_21"
+ },
+ "0x4a4cd0": {
+  "port": "vertrix_port_pixel8_entry_mean_tint_4a4cd0",
+  "lifted": "lifted_f4a4cd0",
+  "chunk": "whole_21"
+ },
+ "0x4a4e80": {
+  "port": "vertrix_port_pixel8_tint_average_4a4e80",
+  "lifted": "lifted_f4a4e80",
+  "chunk": "whole_21"
+ },
+ "0x4a4f90": {
+  "port": "vertrix_port_pixel8_tint_add_4a4f90",
+  "lifted": "lifted_f4a4f90",
+  "chunk": "whole_21"
+ },
+ "0x4a50c0": {
+  "port": "vertrix_port_pixel8_half_plus_add_4a50c0",
+  "lifted": "lifted_f4a50c0",
+  "chunk": "whole_21"
+ },
+ "0x4a5180": {
+  "port": "vertrix_port_pixel8_half_tint_add_4a5180",
+  "lifted": "lifted_f4a5180",
+  "chunk": "whole_21"
+ },
+ "0x4a5300": {
+  "port": "vertrix_port_pixel8_tint_subtract_4a5300",
+  "lifted": "lifted_f4a5300",
+  "chunk": "whole_21"
+ },
+ "0x4a5420": {
+  "port": "vertrix_port_pixel8_half_plus_subtract_4a5420",
+  "lifted": "lifted_f4a5420",
+  "chunk": "whole_21"
+ },
+ "0x4a54e0": {
+  "port": "vertrix_port_pixel8_half_tint_subtract_4a54e0",
+  "lifted": "lifted_f4a54e0",
+  "chunk": "whole_21"
+ },
+ "0x4a5660": {
+  "port": "vertrix_port_pixel8_tint_subtract_from_4a5660",
+  "lifted": "lifted_f4a5660",
+  "chunk": "whole_21"
+ },
+ "0x4a5780": {
+  "port": "vertrix_port_pixel8_half_plus_subtract_from_4a5780",
+  "lifted": "lifted_f4a5780",
+  "chunk": "whole_21"
+ },
+ "0x4a5840": {
+  "port": "vertrix_port_pixel8_half_tint_subtract_from_4a5840",
+  "lifted": "lifted_f4a5840",
+  "chunk": "whole_21"
+ },
+ "0x4a59c0": {
+  "port": "vertrix_port_pixel8_invert_tint_4a59c0",
+  "lifted": "lifted_f4a59c0",
+  "chunk": "whole_21"
+ },
+ "0x4a5aa0": {
+  "port": "vertrix_port_pixel8_invert_half_plus_4a5aa0",
+  "lifted": "lifted_f4a5aa0",
+  "chunk": "whole_21"
+ },
+ "0x4a5b00": {
+  "port": "vertrix_port_pixel8_invert_half_tint_4a5b00",
+  "lifted": "lifted_f4a5b00",
+  "chunk": "whole_21"
+ },
+ "0x4a5c20": {
+  "port": "vertrix_port_pixel8_invert_target_tint_4a5c20",
+  "lifted": "lifted_f4a5c20",
+  "chunk": "whole_21"
+ },
+ "0x4a5d20": {
+  "port": "vertrix_port_pixel8_invert_target_half_plus_4a5d20",
+  "lifted": "lifted_f4a5d20",
+  "chunk": "whole_21"
+ },
+ "0x4a5db0": {
+  "port": "vertrix_port_pixel8_invert_target_half_tint_4a5db0",
+  "lifted": "lifted_f4a5db0",
+  "chunk": "whole_21"
+ },
+ "0x4a5ef0": {
+  "port": "vertrix_port_pixel8_source_tint_4a5ef0",
+  "lifted": "lifted_f4a5ef0",
+  "chunk": "whole_21"
+ },
+ "0x4a6020": {
+  "port": "vertrix_port_pixel8_cross_remap_half_plus_4a6020",
+  "lifted": "lifted_f4a6020",
+  "chunk": "whole_21"
+ },
+ "0x4a6170": {
+  "port": "vertrix_port_pixel8_cross_half_tint_4a6170",
+  "lifted": "lifted_f4a6170",
+  "chunk": "whole_21"
+ },
+ "0x4a62d0": {
+  "port": "vertrix_port_pixel8_target_tint_4a62d0",
+  "lifted": "lifted_f4a62d0",
+  "chunk": "whole_21"
+ },
+ "0x4a6400": {
+  "port": "vertrix_port_pixel8_target_cross_remap_half_plus_4a6400",
+  "lifted": "lifted_f4a6400",
+  "chunk": "whole_21"
+ },
+ "0x4a6550": {
+  "port": "vertrix_port_pixel8_target_cross_half_tint_4a6550",
+  "lifted": "lifted_f4a6550",
+  "chunk": "whole_21"
+ },
+ "0x4a66b0": {
+  "port": "vertrix_port_pixel8_quarters_plus_remap_4a66b0",
+  "lifted": "lifted_f4a66b0",
+  "chunk": "whole_21"
+ },
+ "0x4a67f0": {
+  "port": "vertrix_port_pixel8_half_plus_remap_add_4a67f0",
+  "lifted": "lifted_f4a67f0",
+  "chunk": "whole_21"
+ },
+ "0x4a6950": {
+  "port": "vertrix_port_pixel8_half_plus_remap_subtract_4a6950",
+  "lifted": "lifted_f4a6950",
+  "chunk": "whole_21"
+ },
+ "0x4a6aa0": {
+  "port": "vertrix_port_pixel8_half_plus_remap_subtract_from_4a6aa0",
+  "lifted": "lifted_f4a6aa0",
+  "chunk": "whole_21"
+ },
+ "0x4a6bf0": {
+  "port": "vertrix_port_pixel8_invert_half_plus_remap_4a6bf0",
+  "lifted": "lifted_f4a6bf0",
+  "chunk": "whole_21"
+ },
+ "0x4a6d10": {
+  "port": "vertrix_port_pixel8_invert_target_half_plus_remap_4a6d10",
+  "lifted": "lifted_f4a6d10",
+  "chunk": "whole_21"
+ },
+ "0x4a6e60": {
+  "port": "vertrix_port_pixel8_cross_half_plus_remap_4a6e60",
+  "lifted": "lifted_f4a6e60",
+  "chunk": "whole_21"
+ },
+ "0x4a7050": {
+  "port": "vertrix_port_pixel8_target_cross_half_plus_remap_4a7050",
+  "lifted": "lifted_f4a7050",
+  "chunk": "whole_21"
+ },
+ "0x4a7240": {
+  "port": "vertrix_port_pixel8_shade_4a7240",
+  "lifted": "lifted_f4a7240",
+  "chunk": "whole_21"
+ },
+ "0x4a73b0": {
+  "port": "vertrix_port_blend_levels8_4a73b0",
+  "lifted": "lifted_f4a73b0",
+  "chunk": "whole_21"
+ },
+ "0x4a74b0": {
+  "port": "vertrix_port_pixel8_entry_levels_4a74b0",
+  "lifted": "lifted_f4a74b0",
+  "chunk": "whole_21"
+ },
+ "0x4a7690": {
+  "port": "vertrix_port_blend_levels8_4a7690",
+  "lifted": "lifted_f4a7690",
+  "chunk": "whole_21"
+ },
+ "0x4a7790": {
+  "port": "vertrix_port_pixel8_levels_remap_4a7790",
+  "lifted": "lifted_f4a7790",
+  "chunk": "whole_21"
+ },
+ "0x4a7940": {
+  "port": "vertrix_port_pixel8_remap_levels_4a7940",
+  "lifted": "lifted_f4a7940",
+  "chunk": "whole_21"
+ },
+ "0x4a7af0": {
+  "port": "vertrix_port_pixel8_shade_tint_4a7af0",
+  "lifted": "lifted_f4a7af0",
+  "chunk": "whole_21"
+ },
+ "0x4a7c30": {
+  "port": "vertrix_port_pixel8_levels_bias_4a7c30",
+  "lifted": "lifted_f4a7c30",
+  "chunk": "whole_21"
+ },
+ "0x4a7d60": {
+  "port": "vertrix_port_pixel8_entry_levels_tint_4a7d60",
+  "lifted": "lifted_f4a7d60",
+  "chunk": "whole_21"
+ },
+ "0x4a7f60": {
+  "port": "vertrix_port_pixel8_tint_levels_4a7f60",
+  "lifted": "lifted_f4a7f60",
+  "chunk": "whole_21"
+ },
+ "0x4a80e0": {
+  "port": "vertrix_port_pixel8_levels_bias_remap_4a80e0",
+  "lifted": "lifted_f4a80e0",
+  "chunk": "whole_21"
+ },
+ "0x4a82c0": {
+  "port": "vertrix_port_pixel8_paired_entry_4a82c0",
+  "lifted": "lifted_f4a82c0",
+  "chunk": "whole_21"
+ },
+ "0x4a83c0": {
+  "port": "vertrix_port_pixel8_fixed_entry_4a83c0",
+  "lifted": "lifted_f4a83c0",
+  "chunk": "whole_21"
+ },
+ "0x4a84b0": {
+  "port": "vertrix_port_pixel8_half_plus_paired_4a84b0",
+  "lifted": "lifted_f4a84b0",
+  "chunk": "whole_21"
+ },
+ "0x4a85c0": {
+  "port": "vertrix_port_pixel8_half_tint_fixed_4a85c0",
+  "lifted": "lifted_f4a85c0",
+  "chunk": "whole_21"
+ },
+ "0x4a8760": {
+  "port": "vertrix_port_pixel8_mean_map_paired_4a8760",
+  "lifted": "lifted_f4a8760",
+  "chunk": "whole_21"
+ },
+ "0x4a88d0": {
+  "port": "vertrix_port_pixel8_average_paired_4a88d0",
+  "lifted": "lifted_f4a88d0",
+  "chunk": "whole_21"
+ },
+ "0x4a8a30": {
+  "port": "vertrix_port_pixel8_fixed_entry_mean_4a8a30",
+  "lifted": "lifted_f4a8a30",
+  "chunk": "whole_21"
+ },
+ "0x4a8be0": {
+  "port": "vertrix_port_pixel8_paired_average_4a8be0",
+  "lifted": "lifted_f4a8be0",
+  "chunk": "whole_21"
+ },
+ "0x4a8d40": {
+  "port": "vertrix_port_pixel8_paired_add_4a8d40",
+  "lifted": "lifted_f4a8d40",
+  "chunk": "whole_21"
+ },
+ "0x4a8ea0": {
+  "port": "vertrix_port_pixel8_paired_subtract_4a8ea0",
+  "lifted": "lifted_f4a8ea0",
+  "chunk": "whole_21"
+ },
+ "0x4a8ff0": {
+  "port": "vertrix_port_pixel8_paired_subtract_from_4a8ff0",
+  "lifted": "lifted_f4a8ff0",
+  "chunk": "whole_21"
+ },
+ "0x4a9250": {
+  "port": "vertrix_port_pixel8_target_paired_invert_4a9250",
+  "lifted": "lifted_f4a9250",
+  "chunk": "whole_21"
+ },
+ "0x4a9390": {
+  "port": "vertrix_port_pixel8_paired_cross_4a9390",
+  "lifted": "lifted_f4a9390",
+  "chunk": "whole_21"
+ },
+ "0x4a94f0": {
+  "port": "vertrix_port_pixel8_target_paired_cross_4a94f0",
+  "lifted": "lifted_f4a94f0",
+  "chunk": "whole_21"
+ },
+ "0x4a9640": {
+  "port": "vertrix_port_pixel8_shade_paired_4a9640",
+  "lifted": "lifted_f4a9640",
+  "chunk": "whole_21"
+ },
+ "0x4a97d0": {
+  "port": "vertrix_port_pixel8_levels_paired_4a97d0",
+  "lifted": "lifted_f4a97d0",
+  "chunk": "whole_21"
+ },
+ "0x4a99a0": {
+  "port": "vertrix_port_pixel8_fixed_entry_levels_4a99a0",
+  "lifted": "lifted_f4a99a0",
+  "chunk": "whole_21"
+ },
+ "0x4a9ba0": {
+  "port": "vertrix_port_pixel8_paired_levels_4a9ba0",
+  "lifted": "lifted_f4a9ba0",
+  "chunk": "whole_21"
+ },
+ "0x4a9d70": {
+  "port": "vertrix_port_render_keyed_row8_4a9d70",
+  "lifted": "lifted_f4a9d70",
+  "chunk": "whole_21"
+ },
+ "0x4a9de0": {
+  "port": "vertrix_port_render_mask_alpha_row8_4a9de0",
+  "lifted": "lifted_f4a9de0",
+  "chunk": "whole_21"
+ },
+ "0x4a9ee0": {
+  "port": "vertrix_port_render_row8_4a9ee0",
+  "lifted": "lifted_f4a9ee0",
+  "chunk": "whole_21"
+ },
  "0x4a9f40": {
   "port": "vertrix_port_render_mask_row_4a9f40",
   "lifted": "lifted_f4a9f40",
+  "chunk": "whole_21"
+ },
+ "0x4aa030": {
+  "port": "vertrix_port_render_sampled_row8_4aa030",
+  "lifted": "lifted_f4aa030",
+  "chunk": "whole_21"
+ },
+ "0x4aa0b0": {
+  "port": "vertrix_port_render_keyed_mask_row_back8_4aa0b0",
+  "lifted": "lifted_f4aa0b0",
+  "chunk": "whole_21"
+ },
+ "0x4aa1e0": {
+  "port": "vertrix_port_music_rows_play_4aa1e0",
+  "lifted": "lifted_f4aa1e0",
   "chunk": "whole_21"
  },
  "0x4aa240": {
@@ -4764,6 +5564,41 @@
   "lifted": "lifted_f4aa3c0",
   "chunk": "whole_44"
  },
+ "0x4aa450": {
+  "port": "vertrix_port_render_image_rows8_4aa450",
+  "lifted": "lifted_f4aa450",
+  "chunk": "whole_21"
+ },
+ "0x4aa660": {
+  "port": "vertrix_port_rectangle_remap8_4aa660",
+  "lifted": "lifted_f4aa660",
+  "chunk": "whole_21"
+ },
+ "0x4aa7f0": {
+  "port": "vertrix_port_rectangle_tint8_4aa7f0",
+  "lifted": "lifted_f4aa7f0",
+  "chunk": "whole_21"
+ },
+ "0x4aa950": {
+  "port": "vertrix_port_rectangle_half_plus8_4aa950",
+  "lifted": "lifted_f4aa950",
+  "chunk": "whole_21"
+ },
+ "0x4aaa40": {
+  "port": "vertrix_port_rectangle_half_tint8_4aaa40",
+  "lifted": "lifted_f4aaa40",
+  "chunk": "whole_21"
+ },
+ "0x4aabe0": {
+  "port": "vertrix_port_rectangle_half_plus_remap8_4aabe0",
+  "lifted": "lifted_f4aabe0",
+  "chunk": "whole_21"
+ },
+ "0x4aad90": {
+  "port": "vertrix_port_alpha_columns8_4aad90",
+  "lifted": "lifted_f4aad90",
+  "chunk": "whole_21"
+ },
  "0x4ab200": {
   "port": "vertrix_port_surface_mask32",
   "lifted": "lifted_surface_mask32",
@@ -4779,6 +5614,56 @@
   "lifted": "lifted_f4ab310",
   "chunk": "whole_21"
  },
+ "0x4ab380": {
+  "port": "vertrix_port_image_alpha32_4ab380",
+  "lifted": "lifted_render_alpha_image32",
+  "chunk": "whole_21"
+ },
+ "0x4ab4a0": {
+  "port": "vertrix_port_image_keyed16_4ab4a0",
+  "lifted": "lifted_f4ab4a0",
+  "chunk": "whole_21"
+ },
+ "0x4ab540": {
+  "port": "vertrix_port_image_copy16_4ab540",
+  "lifted": "lifted_f4ab540",
+  "chunk": "whole_21"
+ },
+ "0x4ab5e0": {
+  "port": "vertrix_port_image_alpha16_4ab5e0",
+  "lifted": "lifted_f4ab5e0",
+  "chunk": "whole_21"
+ },
+ "0x4ab790": {
+  "port": "vertrix_port_image_keyed16_4ab790",
+  "lifted": "lifted_f4ab790",
+  "chunk": "whole_21"
+ },
+ "0x4ab830": {
+  "port": "vertrix_port_image_copy16_4ab830",
+  "lifted": "lifted_f4ab830",
+  "chunk": "whole_21"
+ },
+ "0x4ab8d0": {
+  "port": "vertrix_port_image_alpha16_4ab8d0",
+  "lifted": "lifted_f4ab8d0",
+  "chunk": "whole_21"
+ },
+ "0x4aba80": {
+  "port": "vertrix_port_image_keyed8_4aba80",
+  "lifted": "lifted_f4aba80",
+  "chunk": "whole_21"
+ },
+ "0x4abb30": {
+  "port": "vertrix_port_image_copy8_4abb30",
+  "lifted": "lifted_f4abb30",
+  "chunk": "whole_21"
+ },
+ "0x4abbd0": {
+  "port": "vertrix_port_image_alpha8_4abbd0",
+  "lifted": "lifted_f4abbd0",
+  "chunk": "whole_21"
+ },
  "0x4abd70": {
   "port": "vertrix_port_actor_reset",
   "lifted": "lifted_actor_storage_construct",
@@ -4787,6 +5672,11 @@
  "0x4ac130": {
   "port": "vertrix_port_actor_base_destroy",
   "lifted": "lifted_actor_base_destroy_full",
+  "chunk": "whole_4"
+ },
+ "0x4ac1e0": {
+  "port": "vertrix_port_set_global_cell_5bb714_4ac1e0",
+  "lifted": "lifted_f4ac1e0",
   "chunk": "whole_4"
  },
  "0x4ac1f0": {
@@ -4887,6 +5777,11 @@
  "0x4ac600": {
   "port": "vertrix_port_actor_progress_advance",
   "lifted": "lifted_actor_advance_elapsed_4ac600",
+  "chunk": "whole_4"
+ },
+ "0x4ac610": {
+  "port": "vertrix_port_actor_clear_dc_4ac610",
+  "lifted": "lifted_f4ac610",
   "chunk": "whole_4"
  },
  "0x4ac620": {
@@ -5009,6 +5904,11 @@
   "lifted": "lifted_actor_set_b4_full",
   "chunk": "whole_4"
  },
+ "0x4ac960": {
+  "port": "vertrix_port_actor_get_b4_4ac960",
+  "lifted": "lifted_actor_get_b4_full",
+  "chunk": "whole_4"
+ },
  "0x4aca00": {
   "port": "vertrix_port_step_toward",
   "lifted": "lifted_step_toward_call",
@@ -5053,6 +5953,16 @@
   "port": "vertrix_port_actor_polar_offset_4ad210",
   "lifted": "lifted_actor_polar_offset_second",
   "chunk": "whole_4"
+ },
+ "0x4ad510": {
+  "port": "vertrix_port_actor_set_words_2a_4ad510",
+  "lifted": "lifted_actor_set_words_2a_full",
+  "chunk": "whole_4"
+ },
+ "0x4ad520": {
+  "port": "vertrix_port_actor_set_words_3a_4ad520",
+  "lifted": "lifted_actor_set_words_3a_full",
+  "chunk": "whole_21"
  },
  "0x4ad530": {
   "port": "vertrix_port_actor_approach",
@@ -5123,6 +6033,11 @@
   "port": "vertrix_port_actor_replace_call",
   "lifted": "lifted_f4adf90",
   "chunk": "whole_21"
+ },
+ "0x4adfa0": {
+  "port": "vertrix_port_actor_set_134_4adfa0",
+  "lifted": "lifted_f4adfa0",
+  "chunk": "whole_4"
  },
  "0x4adfb0": {
   "port": "vertrix_port_actor_value",
@@ -5279,6 +6194,11 @@
   "lifted": "lifted_f4b3500",
   "chunk": "whole_4"
  },
+ "0x4b3c30": {
+  "port": "vertrix_port_object_set_pair_4b3c30",
+  "lifted": "lifted_object_set_pair_4b3c30",
+  "chunk": "whole_4"
+ },
  "0x4b3f10": {
   "port": "vertrix_port_nothing_404580",
   "lifted": "lifted_f4b3f10",
@@ -5288,6 +6208,16 @@
   "port": "vertrix_port_actor_draw_call",
   "lifted": "lifted_f4b3f20",
   "chunk": "whole_24"
+ },
+ "0x4b4500": {
+  "port": "vertrix_port_object_dword_4b4500",
+  "lifted": "lifted_object_dword_4b4500",
+  "chunk": "whole_4"
+ },
+ "0x4b4fa0": {
+  "port": "vertrix_port_object_set_pair_4b4fa0",
+  "lifted": "lifted_object_set_pair_4b4fa0",
+  "chunk": "whole_4"
  },
  "0x4b5400": {
   "port": "vertrix_port_key_actor_construct",
@@ -5384,9 +6314,39 @@
   "lifted": "lifted_object_destroy_d",
   "chunk": "whole_4"
  },
+ "0x4b6530": {
+  "port": "vertrix_port_timer_reset_4b6530",
+  "lifted": "lifted_timer_reset",
+  "chunk": "whole_4"
+ },
+ "0x4b6540": {
+  "port": "vertrix_port_object_set_word_4b6540",
+  "lifted": "lifted_object_set_word",
+  "chunk": "whole_4"
+ },
+ "0x4b6550": {
+  "port": "vertrix_port_object_set_word_4b6550",
+  "lifted": "lifted_object_set_word_4b6550",
+  "chunk": "whole_4"
+ },
  "0x4b6560": {
   "port": "vertrix_port_timer_running",
   "lifted": "lifted_timer_running",
+  "chunk": "whole_4"
+ },
+ "0x4b6590": {
+  "port": "vertrix_port_object_word_4b6590",
+  "lifted": "lifted_object_word",
+  "chunk": "whole_4"
+ },
+ "0x4b65a0": {
+  "port": "vertrix_port_object_word_4b65a0",
+  "lifted": "lifted_object_word_4b65a0",
+  "chunk": "whole_4"
+ },
+ "0x4b65b0": {
+  "port": "vertrix_port_object_set_dword_4b65b0",
+  "lifted": "lifted_object_set_dword_4b65b0",
   "chunk": "whole_4"
  },
  "0x4b65d0": {
@@ -5559,6 +6519,11 @@
   "lifted": "lifted_f4b9050",
   "chunk": "whole_5"
  },
+ "0x4b9c10": {
+  "port": "vertrix_port_object_arm_child_24_4b9c10",
+  "lifted": "lifted_f4b9c10",
+  "chunk": "whole_5"
+ },
  "0x4b9ce0": {
   "port": "vertrix_port_nothing_404580",
   "lifted": "lifted_return_unchanged_4b9ce0",
@@ -5574,6 +6539,41 @@
   "lifted": "lifted_return_unchanged_4bb260",
   "chunk": "whole_5"
  },
+ "0x4bce90": {
+  "port": "vertrix_port_object_set_handler_4bce90",
+  "lifted": "lifted_f4bce90",
+  "chunk": "whole_5"
+ },
+ "0x4c1d20": {
+  "port": "vertrix_port_object_child_reset_4c1d20",
+  "lifted": "lifted_f4c1d20",
+  "chunk": "whole_5"
+ },
+ "0x4c35f0": {
+  "port": "vertrix_port_object_child_copy_4c35f0",
+  "lifted": "lifted_f4c35f0",
+  "chunk": "whole_5"
+ },
+ "0x4c3760": {
+  "port": "vertrix_port_store_ebx_at_ecx_4c3760",
+  "lifted": "lifted_f4c3760",
+  "chunk": "whole_5"
+ },
+ "0x4c3770": {
+  "port": "vertrix_port_clear_at_ecx_4c3770",
+  "lifted": "lifted_f4c3770",
+  "chunk": "whole_5"
+ },
+ "0x4c3f80": {
+  "port": "vertrix_port_object_clear_6c_14_4c3f80",
+  "lifted": "lifted_f4c3f80",
+  "chunk": "whole_5"
+ },
+ "0x4c5bf0": {
+  "port": "vertrix_port_return_ebx_4c5bf0",
+  "lifted": "lifted_return_ebx",
+  "chunk": "whole_5"
+ },
  "0x4c5c20": {
   "port": "vertrix_port_nothing_404580",
   "lifted": "lifted_return_unchanged_4c5c20",
@@ -5587,6 +6587,11 @@
  "0x4c93c0": {
   "port": "vertrix_port_nothing_404580",
   "lifted": "lifted_return_unchanged_4c93c0",
+  "chunk": "whole_5"
+ },
+ "0x4c9690": {
+  "port": "vertrix_port_object_arm_child_1c_4c9690",
+  "lifted": "lifted_f4c9690",
   "chunk": "whole_5"
  },
  "0x4c9921": {
@@ -5744,6 +6749,21 @@
   "lifted": "lifted_f4ca970",
   "chunk": "whole_5"
  },
+ "0x4cb390": {
+  "port": "vertrix_port_constant_4cb390",
+  "lifted": "lifted_return_constant_4cc7a0",
+  "chunk": "whole_5"
+ },
+ "0x4cb3a0": {
+  "port": "vertrix_port_constant_4cb3a0",
+  "lifted": "lifted_return_constant_4ccaf0",
+  "chunk": "whole_5"
+ },
+ "0x4cb3b0": {
+  "port": "vertrix_port_constant_4cb3b0",
+  "lifted": "lifted_return_constant_4ccb40",
+  "chunk": "whole_5"
+ },
  "0x4cb3d0": {
   "port": "vertrix_port_stream_tables_reset",
   "lifted": "lifted_f4cb3d0",
@@ -5864,6 +6884,111 @@
   "lifted": "lifted_f4cf3a0",
   "chunk": "whole_5"
  },
+ "0x4cfa10": {
+  "port": "vertrix_port_constant_4cfa10",
+  "lifted": "lifted_rtl_class_address",
+  "chunk": "whole_21"
+ },
+ "0x4d2ea0": {
+  "port": "vertrix_port_constant_4d2ea0",
+  "lifted": "lifted_return_constant_4d09b0",
+  "chunk": "whole_5"
+ },
+ "0x4d2eb0": {
+  "port": "vertrix_port_constant_4d2eb0",
+  "lifted": "lifted_return_constant_4d05e0",
+  "chunk": "whole_5"
+ },
+ "0x4d2ec0": {
+  "port": "vertrix_port_constant_4d2ec0",
+  "lifted": "lifted_return_constant_4d0740",
+  "chunk": "whole_5"
+ },
+ "0x4d2ed0": {
+  "port": "vertrix_port_constant_4d2ed0",
+  "lifted": "lifted_return_constant_4d24a0",
+  "chunk": "whole_5"
+ },
+ "0x4d2ee0": {
+  "port": "vertrix_port_constant_4d2ee0",
+  "lifted": "lifted_return_constant_4d0620",
+  "chunk": "whole_5"
+ },
+ "0x4d2ef0": {
+  "port": "vertrix_port_constant_4d2ef0",
+  "lifted": "lifted_return_constant_4d2460",
+  "chunk": "whole_5"
+ },
+ "0x4d2f00": {
+  "port": "vertrix_port_constant_4d2f00",
+  "lifted": "lifted_return_constant_4d2420",
+  "chunk": "whole_5"
+ },
+ "0x4d2f10": {
+  "port": "vertrix_port_constant_4d2f10",
+  "lifted": "lifted_return_constant_4d2440",
+  "chunk": "whole_5"
+ },
+ "0x4d2f20": {
+  "port": "vertrix_port_constant_4d2f20",
+  "lifted": "lifted_return_constant_4d0650",
+  "chunk": "whole_5"
+ },
+ "0x4d2f30": {
+  "port": "vertrix_port_constant_4d2f30",
+  "lifted": "lifted_return_constant_4d0670",
+  "chunk": "whole_5"
+ },
+ "0x4d2f40": {
+  "port": "vertrix_port_constant_4d2f40",
+  "lifted": "lifted_return_constant_4d06a0",
+  "chunk": "whole_5"
+ },
+ "0x4d2f50": {
+  "port": "vertrix_port_constant_4d2f50",
+  "lifted": "lifted_return_constant_4d02a0",
+  "chunk": "whole_5"
+ },
+ "0x4d2f60": {
+  "port": "vertrix_port_constant_4d2f60",
+  "lifted": "lifted_return_constant_4d2170",
+  "chunk": "whole_5"
+ },
+ "0x4d2f70": {
+  "port": "vertrix_port_constant_4d2f70",
+  "lifted": "lifted_return_constant_4d21d0",
+  "chunk": "whole_5"
+ },
+ "0x4d2f80": {
+  "port": "vertrix_port_constant_4d2f80",
+  "lifted": "lifted_return_constant_4d2260",
+  "chunk": "whole_5"
+ },
+ "0x4d2f90": {
+  "port": "vertrix_port_constant_4d2f90",
+  "lifted": "lifted_return_constant_4d22b0",
+  "chunk": "whole_5"
+ },
+ "0x4d2fa0": {
+  "port": "vertrix_port_constant_4d2fa0",
+  "lifted": "lifted_return_constant_4d2310",
+  "chunk": "whole_5"
+ },
+ "0x4d2fb0": {
+  "port": "vertrix_port_constant_4d2fb0",
+  "lifted": "lifted_return_constant_4d21a0",
+  "chunk": "whole_5"
+ },
+ "0x4d2fc0": {
+  "port": "vertrix_port_constant_4d2fc0",
+  "lifted": "lifted_rtl_scope_refresh_address",
+  "chunk": "whole_5"
+ },
+ "0x4d2fd0": {
+  "port": "vertrix_port_constant_4d2fd0",
+  "lifted": "lifted_return_constant_4d23f0",
+  "chunk": "whole_5"
+ },
  "0x4d2fe0": {
   "port": "vertrix_port_lock_init_5c7560",
   "lifted": "lifted_f4d2fe0",
@@ -5872,6 +6997,186 @@
  "0x4d30f0": {
   "port": "vertrix_port_application_link",
   "lifted": "lifted_f4d30f0",
+  "chunk": "whole_5"
+ },
+ "0x4d5350": {
+  "port": "vertrix_port_object_dword_4d5350",
+  "lifted": "lifted_object_dword_4d5350",
+  "chunk": "whole_5"
+ },
+ "0x4d6490": {
+  "port": "vertrix_port_constant_4d6490",
+  "lifted": "lifted_return_constant_4d54c0",
+  "chunk": "whole_5"
+ },
+ "0x4d64a0": {
+  "port": "vertrix_port_constant_4d64a0",
+  "lifted": "lifted_return_constant_4d5660",
+  "chunk": "whole_5"
+ },
+ "0x4d64b0": {
+  "port": "vertrix_port_constant_4d64b0",
+  "lifted": "lifted_return_constant_4d57a0",
+  "chunk": "whole_5"
+ },
+ "0x4d64c0": {
+  "port": "vertrix_port_constant_4d64c0",
+  "lifted": "lifted_return_constant_4d57c0",
+  "chunk": "whole_5"
+ },
+ "0x4d64d0": {
+  "port": "vertrix_port_constant_4d64d0",
+  "lifted": "lifted_return_constant_4d6080",
+  "chunk": "whole_5"
+ },
+ "0x4d64e0": {
+  "port": "vertrix_port_constant_4d64e0",
+  "lifted": "lifted_return_constant_4d58e0",
+  "chunk": "whole_5"
+ },
+ "0x4d64f0": {
+  "port": "vertrix_port_constant_4d64f0",
+  "lifted": "lifted_return_constant_4d4e00",
+  "chunk": "whole_5"
+ },
+ "0x4d6500": {
+  "port": "vertrix_port_constant_4d6500",
+  "lifted": "lifted_return_constant_4d4e30",
+  "chunk": "whole_5"
+ },
+ "0x4d6510": {
+  "port": "vertrix_port_constant_4d6510",
+  "lifted": "lifted_return_constant_4d5360",
+  "chunk": "whole_5"
+ },
+ "0x4d6520": {
+  "port": "vertrix_port_constant_4d6520",
+  "lifted": "lifted_return_constant_4d4990",
+  "chunk": "whole_5"
+ },
+ "0x4d6530": {
+  "port": "vertrix_port_constant_4d6530",
+  "lifted": "lifted_return_constant_4d4d10",
+  "chunk": "whole_5"
+ },
+ "0x4d6540": {
+  "port": "vertrix_port_constant_4d6540",
+  "lifted": "lifted_return_constant_4d4c00",
+  "chunk": "whole_5"
+ },
+ "0x4d6550": {
+  "port": "vertrix_port_constant_4d6550",
+  "lifted": "lifted_return_constant_4d62e0",
+  "chunk": "whole_5"
+ },
+ "0x4d6560": {
+  "port": "vertrix_port_constant_4d6560",
+  "lifted": "lifted_return_constant_4d6300",
+  "chunk": "whole_5"
+ },
+ "0x4d6570": {
+  "port": "vertrix_port_constant_4d6570",
+  "lifted": "lifted_return_constant_4d4ee0",
+  "chunk": "whole_5"
+ },
+ "0x4d6580": {
+  "port": "vertrix_port_constant_4d6580",
+  "lifted": "lifted_return_constant_4d4fd0",
+  "chunk": "whole_5"
+ },
+ "0x4d6590": {
+  "port": "vertrix_port_constant_4d6590",
+  "lifted": "lifted_return_constant_4d5010",
+  "chunk": "whole_5"
+ },
+ "0x4d65a0": {
+  "port": "vertrix_port_constant_4d65a0",
+  "lifted": "lifted_return_constant_4d50d0",
+  "chunk": "whole_5"
+ },
+ "0x4d65b0": {
+  "port": "vertrix_port_constant_4d65b0",
+  "lifted": "lifted_return_constant_4d5150",
+  "chunk": "whole_5"
+ },
+ "0x4d65c0": {
+  "port": "vertrix_port_constant_4d65c0",
+  "lifted": "lifted_return_constant_4d5180",
+  "chunk": "whole_5"
+ },
+ "0x4d65d0": {
+  "port": "vertrix_port_constant_4d65d0",
+  "lifted": "lifted_return_constant_4d4270",
+  "chunk": "whole_5"
+ },
+ "0x4d65e0": {
+  "port": "vertrix_port_constant_4d65e0",
+  "lifted": "lifted_return_constant_4d4630",
+  "chunk": "whole_5"
+ },
+ "0x4d65f0": {
+  "port": "vertrix_port_constant_4d65f0",
+  "lifted": "lifted_return_constant_4d41c0",
+  "chunk": "whole_5"
+ },
+ "0x4d6600": {
+  "port": "vertrix_port_constant_4d6600",
+  "lifted": "lifted_return_constant_4d41a0",
+  "chunk": "whole_5"
+ },
+ "0x4d6610": {
+  "port": "vertrix_port_constant_4d6610",
+  "lifted": "lifted_return_constant_4d42a0",
+  "chunk": "whole_5"
+ },
+ "0x4d6620": {
+  "port": "vertrix_port_constant_4d6620",
+  "lifted": "lifted_return_constant_4d4300",
+  "chunk": "whole_5"
+ },
+ "0x4d6630": {
+  "port": "vertrix_port_constant_4d6630",
+  "lifted": "lifted_return_constant_4d4e60",
+  "chunk": "whole_5"
+ },
+ "0x4d6640": {
+  "port": "vertrix_port_constant_4d6640",
+  "lifted": "lifted_return_constant_4d5a30",
+  "chunk": "whole_5"
+ },
+ "0x4d6650": {
+  "port": "vertrix_port_constant_4d6650",
+  "lifted": "lifted_return_constant_4d5a70",
+  "chunk": "whole_5"
+ },
+ "0x4d6660": {
+  "port": "vertrix_port_constant_4d6660",
+  "lifted": "lifted_return_constant_4d5bf8",
+  "chunk": "whole_5"
+ },
+ "0x4d6670": {
+  "port": "vertrix_port_constant_4d6670",
+  "lifted": "lifted_return_constant_4d5c70",
+  "chunk": "whole_5"
+ },
+ "0x4d6680": {
+  "port": "vertrix_port_constant_4d6680",
+  "lifted": "lifted_return_constant_4d5ab0",
+  "chunk": "whole_5"
+ },
+ "0x4d6690": {
+  "port": "vertrix_port_constant_4d6690",
+  "lifted": "lifted_return_constant_4d51c0",
+  "chunk": "whole_5"
+ },
+ "0x4d66a0": {
+  "port": "vertrix_port_constant_4d66a0",
+  "lifted": "lifted_return_constant_4d5280",
+  "chunk": "whole_5"
+ },
+ "0x4d66b0": {
+  "port": "vertrix_port_constant_4d66b0",
+  "lifted": "lifted_return_constant_4d5330",
   "chunk": "whole_5"
  },
  "0x4d66cd": {
@@ -5913,6 +7218,46 @@
   "port": "vertrix_port_static_init_503a1c",
   "lifted": "lifted_f4d6830",
   "chunk": "whole_38"
+ },
+ "0x4d7430": {
+  "port": "vertrix_port_constant_4d7430",
+  "lifted": "lifted_return_constant_4d73b0",
+  "chunk": "whole_6"
+ },
+ "0x4d7440": {
+  "port": "vertrix_port_object_class_c8_4d7440",
+  "lifted": "lifted_f4d7440",
+  "chunk": "whole_6"
+ },
+ "0x4d7450": {
+  "port": "vertrix_port_object_class_cc_4d7450",
+  "lifted": "lifted_f4d7450",
+  "chunk": "whole_6"
+ },
+ "0x4d7460": {
+  "port": "vertrix_port_constant_4d7460",
+  "lifted": "lifted_return_constant_4d73c0",
+  "chunk": "whole_6"
+ },
+ "0x4d7470": {
+  "port": "vertrix_port_constant_4d7470",
+  "lifted": "lifted_return_constant_4d7400",
+  "chunk": "whole_6"
+ },
+ "0x4d7480": {
+  "port": "vertrix_port_constant_4d7480",
+  "lifted": "lifted_return_constant_4d25e0",
+  "chunk": "whole_6"
+ },
+ "0x4d7490": {
+  "port": "vertrix_port_constant_4d7490",
+  "lifted": "lifted_return_constant_4d7140",
+  "chunk": "whole_6"
+ },
+ "0x4d74a0": {
+  "port": "vertrix_port_constant_4d74a0",
+  "lifted": "lifted_return_constant_4d7110",
+  "chunk": "whole_6"
  },
  "0x4d74a6": {
   "port": "vertrix_port_unsigned_to_single",
@@ -6349,6 +7694,11 @@
   "lifted": "lifted_return_unchanged_4e3697",
   "chunk": "whole_21"
  },
+ "0x4e36c4": {
+  "port": "vertrix_port_rtl_store_frame_20_4e36c4",
+  "lifted": "lifted_f4e36c4",
+  "chunk": "whole_6"
+ },
  "0x4e39a0": {
   "port": "vertrix_port_text_characters",
   "lifted": "lifted_f4e39a0",
@@ -6409,6 +7759,11 @@
   "lifted": "lifted_f4e55d4",
   "chunk": "whole_8"
  },
+ "0x4e5700": {
+  "port": "vertrix_port_rtl_clear_pair_8_4e5700",
+  "lifted": "lifted_f4e5700",
+  "chunk": "whole_6"
+ },
  "0x4e5794": {
   "port": "vertrix_port_heap_lock_enter",
   "lifted": "lifted_f4e5794",
@@ -6452,6 +7807,16 @@
  "0x4e6630": {
   "port": "vertrix_port_stack_limits",
   "lifted": "lifted_f4e6630",
+  "chunk": "whole_6"
+ },
+ "0x4e6bff": {
+  "port": "vertrix_port_rtl_bit_test_4e6bff",
+  "lifted": "lifted_f4e6bff",
+  "chunk": "whole_6"
+ },
+ "0x4e6c1d": {
+  "port": "vertrix_port_rtl_bit_clear_4e6c1d",
+  "lifted": "lifted_f4e6c1d",
   "chunk": "whole_6"
  },
  "0x4e6f30": {
@@ -6604,6 +7969,11 @@
   "lifted": "lifted_f4eb892",
   "chunk": "whole_6"
  },
+ "0x4ebcd0": {
+  "port": "vertrix_port_rtl_record_reset_4ebcd0",
+  "lifted": "lifted_f4ebcd0",
+  "chunk": "whole_7"
+ },
  "0x4ec160": {
   "port": "vertrix_port_clear_allocate",
   "lifted": "lifted_f4ec160",
@@ -6632,6 +8002,11 @@
  "0x4ec307": {
   "port": "vertrix_port_fill_dwords",
   "lifted": "lifted_f4ec307",
+  "chunk": "whole_7"
+ },
+ "0x4ec640": {
+  "port": "vertrix_port_rtl_block_header_4ec640",
+  "lifted": "lifted_f4ec640",
   "chunk": "whole_7"
  },
  "0x4ec850": {
@@ -6673,6 +8048,21 @@
   "port": "vertrix_port_static_init_50c08c",
   "lifted": "lifted_f4ee420",
   "chunk": "whole_38"
+ },
+ "0x4ee7f0": {
+  "port": "vertrix_port_constant_4ee7f0",
+  "lifted": "lifted_return_constant_4ee730",
+  "chunk": "whole_7"
+ },
+ "0x4ee800": {
+  "port": "vertrix_port_constant_4ee800",
+  "lifted": "lifted_return_constant_4ee750",
+  "chunk": "whole_7"
+ },
+ "0x4ee810": {
+  "port": "vertrix_port_constant_4ee810",
+  "lifted": "lifted_return_constant_4ee6a0",
+  "chunk": "whole_7"
  },
  "0x4ee820": {
   "port": "vertrix_port_lock_init_5c8b04",

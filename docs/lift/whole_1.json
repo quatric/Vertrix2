@@ -812,30 +812,6 @@
   "virtual": [],
   "address": 4388992
  },
- "board_piece_set_offset_x_full": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4389008
- },
- "board_piece_set_offset_y_full": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4389024
- },
  "f42f8b0": {
   "callees": {},
   "stack": 80,
@@ -1379,20 +1355,6 @@
   "virtual": [],
   "address": 4395840
  },
- "board_object_field": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   2656
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4395904
- },
  "f431390": {
   "callees": {
    "0x4ac7d0": [
@@ -1438,34 +1400,6 @@
   "constants": [],
   "virtual": [],
   "address": 4396032
- },
- "board_object_field_431480": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   2928
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4396160
- },
- "board_object_field_431490": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   2936
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4396176
  },
  "f4314a0": {
   "callees": {
@@ -1758,32 +1692,6 @@
   "virtual": [],
   "address": 4398096
  },
- "f431d60": {
-  "callees": {},
-  "stack": 72,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   2656
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4398432
- },
- "board_set_a68": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4398464
- },
  "f431d90": {
   "callees": {
    "0x4ca000": [
@@ -1893,20 +1801,6 @@
   "virtual": [],
   "address": 4399024
  },
- "board_object_field_432000": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   2656
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4399104
- },
  "board_piece_below_top": {
   "callees": {},
   "stack": 68,
@@ -1976,22 +1870,6 @@
   ],
   "virtual": [],
   "address": 4399232
- },
- "player_test_a60": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 4399296
  },
  "piece_actor_spawn": {
   "callees": {
@@ -2483,18 +2361,6 @@
   "virtual": [],
   "address": 4403408
  },
- "board_reset_counter": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4404384
- },
  "board_has_type_one_extra": {
   "callees": {},
   "stack": 104,
@@ -2728,18 +2594,6 @@
   ],
   "virtual": [],
   "address": 4406816
- },
- "board_bump_counter": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4408048
  },
  "f435e80": {
   "callees": {
@@ -4439,18 +4293,6 @@
   "virtual": [],
   "address": 4432912
  },
- "player_write_bytes_168": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4433136
- },
  "piece_children_setup_registers": {
   "callees": {
    "0x43a410": [
@@ -4771,20 +4613,6 @@
   "constants": [],
   "virtual": [],
   "address": 4435152
- },
- "player_reset_piece_progress": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   1104
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4435280
  },
  "f43ad70": {
   "callees": {
@@ -5177,30 +5005,6 @@
   "virtual": [],
   "address": 4438032
  },
- "player_set_e0_full": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4438112
- },
- "player_e0_full": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4438128
- },
  "player_alloc_side": {
   "callees": {
    "0x43b980": [
@@ -5229,22 +5033,6 @@
   "constants": [],
   "virtual": [],
   "address": 4438320
- },
- "player_test_4e8": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 4438384
  },
  "player_release_side": {
   "callees": {
@@ -5310,18 +5098,6 @@
   "virtual": [],
   "address": 4438464
  },
- "player_clear_field_18c": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4438656
- },
  "player_add_score": {
   "callees": {},
   "stack": 72,
@@ -5337,30 +5113,6 @@
   ],
   "virtual": [],
   "address": 4438672
- },
- "player_set_cd_full": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4438736
- },
- "player_set_cc_full": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4438752
  },
  "player_set_b00_and_refresh": {
   "callees": {
@@ -5563,22 +5315,6 @@
   "virtual": [],
   "address": 4439296
  },
- "player_test_4c4": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2
-  ],
-  "virtual": [],
-  "address": 4439360
- },
  "player_partner_free_full": {
   "callees": {},
   "stack": 64,
@@ -5746,24 +5482,6 @@
   "virtual": [],
   "address": 4440384
  },
- "player_partner_not_cc_one_full": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   944
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2
-  ],
-  "virtual": [],
-  "address": 4443280
- },
  "player_enter_4520b0": {
   "callees": {
    "0x43bb60": [
@@ -5902,18 +5620,6 @@
   "constants": [],
   "virtual": [],
   "address": 4443552
- },
- "player_enter_state_full": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4443616
  },
  "player_reset_side": {
   "callees": {
@@ -11409,30 +11115,6 @@
    ]
   ],
   "address": 4490768
- },
- "f448670": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4490864
- },
- "f448680": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4490880
  },
  "f448690": {
   "callees": {

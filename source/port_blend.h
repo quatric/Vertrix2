@@ -1016,4 +1016,129 @@ uint32_t vertrix_port_rectangle_half_tint16_4a2d50(PORT_SIGNATURE);
 uint32_t vertrix_port_rectangle_half_plus_remap16_49ae50(PORT_SIGNATURE);
 uint32_t vertrix_port_rectangle_half_plus_remap16_4a2ef0(PORT_SIGNATURE);
 
+/* The 3-3-2 copies of the narrow pixel operations (0x4a3540 to 0x4a9ba0), one for each 5-5-5
+ * one above. */
+uint32_t vertrix_port_pixel8_copy_4a3540(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_remap_4a3580(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_tint_4a3660(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_half_plus_4a3720(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_half_tint_4a3770(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_half_plus_remap_4a3880(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_mean_map_remap_4a3970(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_average_4a3ac0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_entry_mean_4a3b50(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_average_4a3ce0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_add_4a3d70(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_subtract_4a3e20(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_subtract_from_4a3ed0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_invert_4a3f80(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_invert_target_4a3fd0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_cross_remap_4a4040(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_target_cross_remap_4a4170(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_average_remap_4a42b0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_remap_average_4a43e0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_remap_add_4a4520(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_remap_subtract_4a4660(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_remap_subtract_from_4a47a0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_remap_invert_4a48e0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_target_remap_invert_4a49e0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_mean_map_tint_4a4b10(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_quarters_plus_4a4c40(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_entry_mean_tint_4a4cd0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_tint_average_4a4e80(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_tint_add_4a4f90(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_half_plus_add_4a50c0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_half_tint_add_4a5180(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_tint_subtract_4a5300(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_half_plus_subtract_4a5420(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_half_tint_subtract_4a54e0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_tint_subtract_from_4a5660(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_half_plus_subtract_from_4a5780(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_half_tint_subtract_from_4a5840(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_invert_tint_4a59c0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_invert_half_plus_4a5aa0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_invert_half_tint_4a5b00(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_invert_target_tint_4a5c20(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_invert_target_half_plus_4a5d20(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_invert_target_half_tint_4a5db0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_source_tint_4a5ef0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_cross_remap_half_plus_4a6020(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_cross_half_tint_4a6170(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_target_tint_4a62d0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_target_cross_remap_half_plus_4a6400(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_target_cross_half_tint_4a6550(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_quarters_plus_remap_4a66b0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_half_plus_remap_add_4a67f0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_half_plus_remap_subtract_4a6950(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_half_plus_remap_subtract_from_4a6aa0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_invert_half_plus_remap_4a6bf0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_invert_target_half_plus_remap_4a6d10(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_cross_half_plus_remap_4a6e60(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_target_cross_half_plus_remap_4a7050(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_shade_4a7240(PORT_SIGNATURE);
+uint32_t vertrix_port_blend_levels8_4a73b0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_entry_levels_4a74b0(PORT_SIGNATURE);
+uint32_t vertrix_port_blend_levels8_4a7690(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_levels_remap_4a7790(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_remap_levels_4a7940(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_shade_tint_4a7af0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_levels_bias_4a7c30(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_entry_levels_tint_4a7d60(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_tint_levels_4a7f60(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_levels_bias_remap_4a80e0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_paired_entry_4a82c0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_fixed_entry_4a83c0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_half_plus_paired_4a84b0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_half_tint_fixed_4a85c0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_mean_map_paired_4a8760(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_average_paired_4a88d0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_fixed_entry_mean_4a8a30(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_paired_average_4a8be0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_paired_add_4a8d40(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_paired_subtract_4a8ea0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_paired_subtract_from_4a8ff0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_paired_invert_4a9140(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_target_paired_invert_4a9250(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_paired_cross_4a9390(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_target_paired_cross_4a94f0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_shade_paired_4a9640(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_levels_paired_4a97d0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_fixed_entry_levels_4a99a0(PORT_SIGNATURE);
+uint32_t vertrix_port_pixel8_paired_levels_4a9ba0(PORT_SIGNATURE);
+
+/* The 8-bit row routines and rectangle fills, with the target pointer at 0x5bb778 (0x4a9d70
+ * to 0x4aabe0). */
+uint32_t vertrix_port_render_keyed_row8_4a9d70(PORT_SIGNATURE);
+uint32_t vertrix_port_render_mask_alpha_row8_4a9de0(PORT_SIGNATURE);
+uint32_t vertrix_port_render_row8_4a9ee0(PORT_SIGNATURE);
+uint32_t vertrix_port_render_sampled_row8_4aa030(PORT_SIGNATURE);
+uint32_t vertrix_port_render_keyed_mask_row_back8_4aa0b0(PORT_SIGNATURE);
+uint32_t vertrix_port_render_image_rows8_4aa450(PORT_SIGNATURE);
+uint32_t vertrix_port_render_sampled_rows8_4aa540(PORT_SIGNATURE);
+uint32_t vertrix_port_rectangle_remap8_4aa660(PORT_SIGNATURE);
+uint32_t vertrix_port_rectangle_tint8_4aa7f0(PORT_SIGNATURE);
+uint32_t vertrix_port_rectangle_half_plus8_4aa950(PORT_SIGNATURE);
+uint32_t vertrix_port_rectangle_half_tint8_4aaa40(PORT_SIGNATURE);
+uint32_t vertrix_port_rectangle_half_plus_remap8_4aabe0(PORT_SIGNATURE);
+
+/* The masked alpha blits by columns, bottom row up: 32-bit 0x4930c0, 5-5-5 0x49b000, 5-6-5 0x4a30a0
+ * and 3-3-2 0x4aad90. */
+uint32_t vertrix_port_alpha_columns32_4930c0(PORT_SIGNATURE);
+uint32_t vertrix_port_alpha_columns16_49b000(PORT_SIGNATURE);
+uint32_t vertrix_port_alpha_columns16_4a30a0(PORT_SIGNATURE);
+uint32_t vertrix_port_alpha_columns8_4aad90(PORT_SIGNATURE);
+
+/* The image blits: 32-bit alpha 0x4ab380; keyed, copy and alpha in 5-5-5 (0x4ab4a0), 5-6-5
+ * (0x4ab790) and 3-3-2 (0x4aba80). */
+uint32_t vertrix_port_image_alpha32_4ab380(PORT_SIGNATURE);
+uint32_t vertrix_port_image_keyed16_4ab4a0(PORT_SIGNATURE);
+uint32_t vertrix_port_image_copy16_4ab540(PORT_SIGNATURE);
+uint32_t vertrix_port_image_alpha16_4ab5e0(PORT_SIGNATURE);
+uint32_t vertrix_port_image_keyed16_4ab790(PORT_SIGNATURE);
+uint32_t vertrix_port_image_copy16_4ab830(PORT_SIGNATURE);
+uint32_t vertrix_port_image_alpha16_4ab8d0(PORT_SIGNATURE);
+uint32_t vertrix_port_image_keyed8_4aba80(PORT_SIGNATURE);
+uint32_t vertrix_port_image_copy8_4abb30(PORT_SIGNATURE);
+uint32_t vertrix_port_image_alpha8_4abbd0(PORT_SIGNATURE);
+
 #endif

@@ -14702,3 +14702,8 @@ uint32_t vertrix_port_option_value_text_4b7300(PORT_SIGNATURE)
     return option_value_text(calls, services, globals, entry, 0x51853c, 0x5110c0, 0x10, 0x532c88,
                              0x4f8168, 2);
 }
+
+uint32_t vertrix_port_music_rows_play_4aa1e0(PORT_SIGNATURE)
+{
+    return music_rows_play_at(calls, services, globals, entry, 0x5bb778, 1);
+}

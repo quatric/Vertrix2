@@ -11,9 +11,7 @@ enum
     LIFTED_MODULE_LOAD_STACK = 252,
     LIFTED_F410270_STACK = 140,
     LIFTED_RECORD_LOAD_CURRENT_STACK = 80,
-    LIFTED_OBJECT_TOGGLE_FLAG_FULL_STACK = 64,
     LIFTED_F413BD0_STACK = 1292,
-    LIFTED_GLOBAL_NEXT_INDEX_FULL_STACK = 68,
     LIFTED_F417060_STACK = 84,
     LIFTED_F417150_STACK = 76,
     LIFTED_HIGH_SCORE_INSERT_STACK = 88,
@@ -186,19 +184,9 @@ uint32_t lifted_record_load_current(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services,
                                     const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x4126d0. */
-uint32_t lifted_object_toggle_flag_full(const VertrixCalls *calls,
-                                        const VertrixFactoryServices *services,
-                                        const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x413bd0. */
 uint32_t lifted_f413bd0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x415d40. */
-uint32_t lifted_global_next_index_full(const VertrixCalls *calls,
-                                       const VertrixFactoryServices *services,
-                                       const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x417060. */
 uint32_t lifted_f417060(const VertrixCalls *calls, const VertrixFactoryServices *services,

@@ -2550,4 +2550,7 @@ uint32_t vertrix_port_option_value_text_4b71c0(PORT_SIGNATURE);
 uint32_t vertrix_port_option_value_text_4b7260(PORT_SIGNATURE);
 uint32_t vertrix_port_option_value_text_4b7300(PORT_SIGNATURE);
 
+/* The 8-bit copy of music_rows_play (0x4aa1e0). */
+uint32_t vertrix_port_music_rows_play_4aa1e0(PORT_SIGNATURE);
+
 #endif
