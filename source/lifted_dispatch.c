@@ -23,7 +23,6 @@
 #include "lifted_whole_17.h"
 #include "lifted_whole_18.h"
 #include "lifted_whole_2.h"
-#include "lifted_whole_20.h"
 #include "lifted_whole_21.h"
 #include "lifted_whole_23.h"
 #include "lifted_whole_25.h"
@@ -87,6 +86,7 @@
 #include "port_menu.h"
 #include "port_motions.h"
 #include "port_objects.h"
+#include "port_pauses.h"
 #include "port_pixel_format.h"
 #include "port_player_states.h"
 #include "port_records.h"
@@ -576,11 +576,11 @@ static const LiftedRoutine routines[] = {
     {0x424230, lifted_f424230, 436, 0},
     {0x424360, lifted_f424360, 668, 0},
     {0x424760, vertrix_port_object_center_titled_424760, 0, 0},
-    {0x424790, lifted_f424790, 160, 0},
-    {0x424890, lifted_f424890, 160, 0},
+    {0x424790, vertrix_port_game_event_wait_424790, 0, 0},
+    {0x424890, vertrix_port_game_event_wait_424890, 0, 0},
     {0x424990, lifted_f424990, 532, 0},
     {0x425260, lifted_f425260, 184, 0},
-    {0x4253b0, lifted_f4253b0, 164, 0},
+    {0x4253b0, vertrix_port_game_pause_teardown_4253b0, 0, 0},
     {0x4254a0, lifted_f4254a0, 196, 0},
     {0x425630, lifted_f425630, 216, 0},
     {0x425810, lifted_f425810, 184, 0},
@@ -614,7 +614,7 @@ static const LiftedRoutine routines[] = {
     {0x4290c0, lifted_settings_defaults, 116, 0},
     {0x429350, vertrix_port_actor_base_destroy_429350, 0, 0},
     {0x4293e0, vertrix_port_saved_block_load_4293e0, 0, 0},
-    {0x429460, lifted_f429460, 148, 0},
+    {0x429460, vertrix_port_level_file_load_429460, 0, 0},
     {0x429530, vertrix_port_saved_file_load, 316, 0},
     {0x429600, vertrix_port_settings_read_inverted_429600, 0, 0},
     {0x429660, vertrix_port_pointer_add_4, 0, 0},
@@ -622,7 +622,7 @@ static const LiftedRoutine routines[] = {
     {0x4296a0, vertrix_port_object_destroy_call_4296a0, 0, 0},
     {0x429750, lifted_f429750, 140, 0},
     {0x429880, vertrix_port_piece_actor_construct_slots_429880, 0, 0},
-    {0x429910, lifted_f429910, 168, 0},
+    {0x429910, vertrix_port_choice_grid_teardown_429910, 0, 0},
     {0x429a10, lifted_f429a10, 100, 0},
     {0x429a80, lifted_f429a80, 104, 0},
     {0x429af0, lifted_f429af0, 100, 0},
@@ -633,7 +633,7 @@ static const LiftedRoutine routines[] = {
     {0x429d50, vertrix_port_choice_grid_apply_429d50, 0, 0},
     {0x429df0, vertrix_port_choice_grid_load_values_429df0, 0, 0},
     {0x429e80, vertrix_port_choice_grid_store_values_429e80, 0, 0},
-    {0x429ee0, lifted_choice_grid_pick_rows, 112, 0},
+    {0x429ee0, vertrix_port_choice_grid_pick_rows_429ee0, 0, 0},
     {0x429fe0, lifted_choice_grid_pick_cell, 112, 0},
     {0x42a080, vertrix_port_choice_grid_pick_column_42a080, 0, 0},
     {0x42a140, vertrix_port_choice_grid_mark_42a140, 0, 0},
@@ -659,7 +659,7 @@ static const LiftedRoutine routines[] = {
     {0x42a9d0, vertrix_port_piece_children_offset_42a9d0, 0, 0},
     {0x42aa20, vertrix_port_blocks_set_state_42aa20, 0, 0},
     {0x42aab0, vertrix_port_piece_actor_parent_construct_42aab0, 0, 0},
-    {0x42ab10, lifted_piece_actor_destroy_full, 164, 0},
+    {0x42ab10, vertrix_port_piece_actor_destroy_full_42ab10, 0, 0},
     {0x42abf0, vertrix_port_piece_actor_forward_slot2_42abf0, 0, 0},
     {0x42ac40, vertrix_port_piece_actor_update_42ac40, 0, 0},
     {0x42acf0, lifted_piece_actor_construct_placed, 180, 0},
@@ -672,7 +672,7 @@ static const LiftedRoutine routines[] = {
     {0x42b0f0, vertrix_port_player_preview_toggle_42b0f0, 0, 0},
     {0x42b110, vertrix_port_player_preview_set_mode_42b110, 0, 0},
     {0x42b150, vertrix_port_ui_player_preview_parent_construct_42b150, 0, 0},
-    {0x42b190, lifted_f42b190, 168, 0},
+    {0x42b190, vertrix_port_piece_pairs_destroy_42b190, 0, 0},
     {0x42b290, lifted_f42b290, 96, 0},
     {0x42b2f0, vertrix_port_nothing_404580, 0, 0},
     {0x42b300, vertrix_port_forward_42b290_42b300, 0, 0},
@@ -691,7 +691,7 @@ static const LiftedRoutine routines[] = {
     {0x42bab0, vertrix_port_piece_set_mode_42bab0, 0, 0},
     {0x42bb00, vertrix_port_block_construct_full_42bb00, 0, 0},
     {0x42bb20, vertrix_port_object_destroy_call_42bb20, 0, 0},
-    {0x42bbd0, lifted_block_create_full, 128, 0},
+    {0x42bbd0, vertrix_port_block_create_full_42bbd0, 0, 0},
     {0x42bca0, lifted_f42bca0, 188, 0},
     {0x42e870, lifted_board_construct, 200, 0},
     {0x42ea00, lifted_f42ea00, 208, 0},
@@ -722,7 +722,7 @@ static const LiftedRoutine routines[] = {
     {0x42ef60, vertrix_port_player_fill_bytes_42ef60, 0, 0},
     {0x42ef80, vertrix_port_player_fill_bytes_42ef80, 0, 0},
     {0x42efa0, vertrix_port_board_piece_shape_fits_42efa0, 0, 0},
-    {0x42f030, lifted_board_piece_touches_side, 124, 0},
+    {0x42f030, vertrix_port_board_piece_touches_side_42f030, 0, 0},
     {0x42f120, lifted_board_piece_touches_side_42f120, 124, 0},
     {0x42f210, vertrix_port_board_mark_columns_42f210, 0, 0},
     {0x42f280, vertrix_port_board_piece_store_negated_42f280, 0, 0},

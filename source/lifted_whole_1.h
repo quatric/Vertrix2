@@ -6,7 +6,6 @@
 
 enum
 {
-    LIFTED_BOARD_PIECE_TOUCHES_SIDE_STACK = 124,
     LIFTED_BOARD_PIECE_TOUCHES_SIDE_42F120_STACK = 124,
     LIFTED_BOARD_CREATE_OVERLAY_STACK = 164,
     LIFTED_BOARD_RINGS_STACK = 204,
@@ -122,11 +121,6 @@ enum
     LIFTED_F44BC50_STACK = 236,
     LIFTED_F44BF70_STACK = 264
 };
-
-/* Original 0x42f030. */
-uint32_t lifted_board_piece_touches_side(const VertrixCalls *calls,
-                                         const VertrixFactoryServices *services,
-                                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42f120. */
 uint32_t lifted_board_piece_touches_side_42f120(const VertrixCalls *calls,

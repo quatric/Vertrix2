@@ -53,10 +53,7 @@ enum
     LIFTED_F423EA0_STACK = 640,
     LIFTED_F424180_STACK = 104,
     LIFTED_F424230_STACK = 436,
-    LIFTED_F424790_STACK = 160,
-    LIFTED_F424890_STACK = 160,
     LIFTED_F425260_STACK = 184,
-    LIFTED_F4253B0_STACK = 164,
     LIFTED_F425AE0_STACK = 196,
     LIFTED_PIECE_INIT_FROM_KIND_STACK = 68,
     LIFTED_OBJECT_COMPARE_REGIONS_STACK = 280,
@@ -65,9 +62,7 @@ enum
     LIFTED_AI_RECORD_SCORE_STACK = 136,
     LIFTED_AI_FIND_BEST_SLOT_STACK = 104,
     LIFTED_SETTINGS_DEFAULTS_STACK = 116,
-    LIFTED_F429460_STACK = 148,
     LIFTED_SLOT_OBJECTS_MAKE_STACK = 168,
-    LIFTED_CHOICE_GRID_PICK_ROWS_STACK = 112,
     LIFTED_CHOICE_GRID_PICK_CELL_STACK = 112,
     LIFTED_CHOICE_GRID_AVAILABLE_STACK = 64,
     LIFTED_F42A540_STACK = 276,
@@ -75,7 +70,6 @@ enum
     LIFTED_F42B290_STACK = 96,
     LIFTED_UI_PLAYER_PREVIEWS_CONSTRUCT_STACK = 232,
     LIFTED_F42B6B0_STACK = 176,
-    LIFTED_BLOCK_CREATE_FULL_STACK = 128,
     LIFTED_BOARD_CONSTRUCT_STACK = 200
 };
 
@@ -274,20 +268,8 @@ uint32_t lifted_f424180(const VertrixCalls *calls, const VertrixFactoryServices 
 uint32_t lifted_f424230(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x424790. */
-uint32_t lifted_f424790(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x424890. */
-uint32_t lifted_f424890(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x425260. */
 uint32_t lifted_f425260(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4253b0. */
-uint32_t lifted_f4253b0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x425ae0. */
@@ -324,18 +306,9 @@ uint32_t lifted_ai_find_best_slot(const VertrixCalls *calls, const VertrixFactor
 uint32_t lifted_settings_defaults(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x429460. */
-uint32_t lifted_f429460(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x429bf0. */
 uint32_t lifted_slot_objects_make(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x429ee0. */
-uint32_t lifted_choice_grid_pick_rows(const VertrixCalls *calls,
-                                      const VertrixFactoryServices *services,
-                                      const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x429fe0. */
 uint32_t lifted_choice_grid_pick_cell(const VertrixCalls *calls,
@@ -368,10 +341,6 @@ uint32_t lifted_ui_player_previews_construct(const VertrixCalls *calls,
 /* Original 0x42b6b0. */
 uint32_t lifted_f42b6b0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42bbd0. */
-uint32_t lifted_block_create_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                  const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42e870. */
 uint32_t lifted_board_construct(const VertrixCalls *calls, const VertrixFactoryServices *services,

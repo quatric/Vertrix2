@@ -1,31 +1,4 @@
 {
- "board_piece_touches_side": {
-  "callees": {
-   "0x431ae0": [
-    1,
-    false
-   ]
-  },
-  "stack": 124,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   20,
-   2656
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   27,
-   28,
-   29,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 4386864
- },
  "board_piece_touches_side_42f120": {
   "callees": {
    "0x431ae0": [
