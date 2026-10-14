@@ -349,6 +349,21 @@
   "lifted": "lifted_f40bb70",
   "chunk": "whole_34"
  },
+ "0x40bcc0": {
+  "port": "vertrix_port_sound_buffer_fill_40bcc0",
+  "lifted": "lifted_f40bcc0",
+  "chunk": "whole_34"
+ },
+ "0x40bdb0": {
+  "port": "vertrix_port_sound_channel_buffer_40bdb0",
+  "lifted": "lifted_f40bdb0",
+  "chunk": "whole_34"
+ },
+ "0x40beb0": {
+  "port": "vertrix_port_sound_channel_play_40beb0",
+  "lifted": "lifted_f40beb0",
+  "chunk": "whole_34"
+ },
  "0x40bf80": {
   "port": "vertrix_port_voice_set_rate_40bf80",
   "lifted": "lifted_f40bf80",
@@ -392,6 +407,11 @@
  "0x40c320": {
   "port": "vertrix_port_read_byte_40c320",
   "lifted": "lifted_f40c320",
+  "chunk": "whole_21"
+ },
+ "0x40c360": {
+  "port": "vertrix_port_file_read_word_swapped_40c360",
+  "lifted": "lifted_file_read_word_swapped",
   "chunk": "whole_21"
  },
  "0x40c430": {
@@ -669,6 +689,16 @@
   "lifted": "lifted_actor_storage_style",
   "chunk": "whole_0"
  },
+ "0x412430": {
+  "port": "vertrix_port_option_record_step_up_412430",
+  "lifted": "lifted_record_step",
+  "chunk": "whole_21"
+ },
+ "0x412510": {
+  "port": "vertrix_port_option_record_step_down_412510",
+  "lifted": "lifted_f412510",
+  "chunk": "whole_21"
+ },
  "0x4125e0": {
   "port": "vertrix_port_record_field_4125e0",
   "lifted": "lifted_record_field",
@@ -872,6 +902,11 @@
  "0x416970": {
   "port": "vertrix_port_settings_refresh_416970",
   "lifted": "lifted_f416970",
+  "chunk": "whole_0"
+ },
+ "0x416990": {
+  "port": "vertrix_port_high_score_name_416990",
+  "lifted": "lifted_f416990",
   "chunk": "whole_0"
  },
  "0x416a80": {
@@ -1142,6 +1177,11 @@
  "0x418150": {
   "port": "vertrix_port_compare_unsigned_418150",
   "lifted": "lifted_compare_unsigned",
+  "chunk": "whole_0"
+ },
+ "0x418170": {
+  "port": "vertrix_port_clock_text_418170",
+  "lifted": "lifted_clock_text",
   "chunk": "whole_0"
  },
  "0x418270": {
@@ -1572,6 +1612,11 @@
  "0x41fc70": {
   "port": "vertrix_port_scene_leave_options_41fc70",
   "lifted": "lifted_f41fc70",
+  "chunk": "whole_0"
+ },
+ "0x41fd20": {
+  "port": "vertrix_port_game_teardown_41fd20",
+  "lifted": "lifted_f41fd20",
   "chunk": "whole_0"
  },
  "0x421de0": {

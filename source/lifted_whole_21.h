@@ -8,11 +8,8 @@ enum
 {
     LIFTED_BITS_FILL_STACK = 128,
     LIFTED_WINDOW_TABLES_STACK = 208,
-    LIFTED_FILE_READ_WORD_SWAPPED_STACK = 88,
     LIFTED_MIXER_VOLUME_COLUMN_STACK = 92,
     LIFTED_MIXER_PLAYBACK_TICK_STACK = 88,
-    LIFTED_RECORD_STEP_STACK = 68,
-    LIFTED_F412510_STACK = 68,
     LIFTED_TEXT_TABLE_REFRESH_STACK = 148,
     LIFTED_QUAD_AVERAGE_STACK = 112,
     LIFTED_F41B310_STACK = 1060,
@@ -70,11 +67,6 @@ uint32_t lifted_bits_fill(const VertrixCalls *calls, const VertrixFactoryService
 uint32_t lifted_window_tables(const VertrixCalls *calls, const VertrixFactoryServices *services,
                               const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x40c360. */
-uint32_t lifted_file_read_word_swapped(const VertrixCalls *calls,
-                                       const VertrixFactoryServices *services,
-                                       const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x40dc80. */
 uint32_t lifted_mixer_volume_column(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services,
@@ -84,14 +76,6 @@ uint32_t lifted_mixer_volume_column(const VertrixCalls *calls,
 uint32_t lifted_mixer_playback_tick(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services,
                                     const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x412430. */
-uint32_t lifted_record_step(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                            const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x412510. */
-uint32_t lifted_f412510(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x415180. */
 uint32_t lifted_text_table_refresh(const VertrixCalls *calls,

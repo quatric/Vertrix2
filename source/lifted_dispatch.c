@@ -112,6 +112,7 @@
 #include "port_tails.h"
 #include "port_teardown.h"
 #include "port_texts.h"
+#include "port_voices.h"
 #include "port_widgets.h"
 #include "port_window.h"
 #include "port_windows.h"
@@ -224,9 +225,9 @@ static const LiftedRoutine routines[] = {
     {0x40bb30, vertrix_port_timer_flag_set_40bb30, 0, 0},
     {0x40bb70, vertrix_port_rate_set_40bb70, 0, 0},
     {0x40bba0, lifted_f40bba0, 148, 0},
-    {0x40bcc0, lifted_f40bcc0, 172, 0},
-    {0x40bdb0, lifted_f40bdb0, 168, 0},
-    {0x40beb0, lifted_f40beb0, 92, 0},
+    {0x40bcc0, vertrix_port_sound_buffer_fill_40bcc0, 0, 0},
+    {0x40bdb0, vertrix_port_sound_channel_buffer_40bdb0, 0, 0},
+    {0x40beb0, vertrix_port_sound_channel_play_40beb0, 0, 0},
     {0x40bf80, vertrix_port_voice_set_rate_40bf80, 0, 0},
     {0x40bfd0, vertrix_port_voice_set_pan_40bfd0, 0, 0},
     {0x40c020, lifted_f40c020, 84, 0},
@@ -238,7 +239,7 @@ static const LiftedRoutine routines[] = {
     {0x40c220, vertrix_port_file_read_exact_40c220, 0, 0},
     {0x40c2a0, vertrix_port_file_read_word_40c2a0, 0, 0},
     {0x40c320, vertrix_port_read_byte_40c320, 0, 0},
-    {0x40c360, lifted_file_read_word_swapped, 88, 0},
+    {0x40c360, vertrix_port_file_read_word_swapped_40c360, 0, 0},
     {0x40c430, vertrix_port_mixer_output, 0, 0},
     {0x40c460, vertrix_port_mixer_channel, 0, 0},
     {0x40c5c0, vertrix_port_mix_buffer_feed, 0, 0},
@@ -309,8 +310,8 @@ static const LiftedRoutine routines[] = {
     {0x4122f0, vertrix_port_object_load_4122f0, 0, 0},
     {0x412390, vertrix_port_object_pair_489170_412390, 0, 0},
     {0x4123d0, vertrix_port_actor_storage_style_4123d0, 0, 0},
-    {0x412430, lifted_record_step, 68, 0},
-    {0x412510, lifted_f412510, 68, 0},
+    {0x412430, vertrix_port_option_record_step_up_412430, 0, 0},
+    {0x412510, vertrix_port_option_record_step_down_412510, 0, 0},
     {0x4125e0, vertrix_port_record_field_4125e0, 0, 0},
     {0x412650, vertrix_port_record_load_current_412650, 0, 0},
     {0x412690, vertrix_port_record_store_current_412690, 0, 0},
@@ -363,7 +364,7 @@ static const LiftedRoutine routines[] = {
     {0x416500, lifted_f416500, 372, 0},
     {0x416900, vertrix_port_locked_call_416900, 0, 0},
     {0x416970, vertrix_port_settings_refresh_416970, 0, 0},
-    {0x416990, lifted_f416990, 180, 0},
+    {0x416990, vertrix_port_high_score_name_416990, 0, 0},
     {0x416a80, vertrix_port_object_load_script_416a80, 0, 0},
     {0x416b30, vertrix_port_table_value_532b54_416b30, 0, 0},
     {0x416b50, vertrix_port_table_value_532b58_416b50, 0, 0},
@@ -423,7 +424,7 @@ static const LiftedRoutine routines[] = {
     {0x418110, vertrix_port_import_failed_5bb490_418110, 0, 0},
     {0x418130, vertrix_port_import_failed_5bb498_418130, 0, 0},
     {0x418150, vertrix_port_compare_unsigned_418150, 0, 0},
-    {0x418170, lifted_clock_text, 212, 0},
+    {0x418170, vertrix_port_clock_text_418170, 0, 0},
     {0x418270, vertrix_port_timer_advance, 0, 0},
     {0x4182c0, vertrix_port_timer_count, 0, 0},
     {0x4182f0, vertrix_port_stream_open_513e60_4182f0, 0, 0},
@@ -543,7 +544,7 @@ static const LiftedRoutine routines[] = {
     {0x41f9b0, lifted_f41f9b0, 476, 0},
     {0x41fb40, lifted_f41fb40, 184, 0},
     {0x41fc70, vertrix_port_scene_leave_options_41fc70, 0, 0},
-    {0x41fd20, lifted_f41fd20, 180, 0},
+    {0x41fd20, vertrix_port_game_teardown_41fd20, 0, 0},
     {0x420040, lifted_f420040, 516, 0},
     {0x4202a0, lifted_f4202a0, 696, 0},
     {0x420e10, lifted_f420e10, 420, 0},
