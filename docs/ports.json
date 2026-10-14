@@ -3664,6 +3664,11 @@
   "lifted": "lifted_render_sample_binary_row32",
   "chunk": "whole_21"
  },
+ "0x4925d0": {
+  "port": "vertrix_port_render_keyed_mask_row_back",
+  "lifted": "lifted_f4925d0",
+  "chunk": "whole_21"
+ },
  "0x492710": {
   "port": "vertrix_port_music_rows_play",
   "lifted": "lifted_render_sample_row32",
@@ -4144,6 +4149,11 @@
   "lifted": "lifted_f49a270",
   "chunk": "whole_21"
  },
+ "0x49a2f0": {
+  "port": "vertrix_port_render_keyed_mask_row_back_49a2f0",
+  "lifted": "lifted_f49a2f0",
+  "chunk": "whole_21"
+ },
  "0x49a420": {
   "port": "vertrix_port_music_rows_play_49a420",
   "lifted": "lifted_f49a420",
@@ -4622,6 +4632,11 @@
  "0x4a2330": {
   "port": "vertrix_port_render_sampled_row32_4a2330",
   "lifted": "lifted_f4a2330",
+  "chunk": "whole_21"
+ },
+ "0x4a23b0": {
+  "port": "vertrix_port_render_keyed_mask_row_back_4a23b0",
+  "lifted": "lifted_f4a23b0",
   "chunk": "whole_21"
  },
  "0x4a24e0": {

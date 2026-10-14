@@ -981,4 +981,15 @@ uint32_t vertrix_port_render_sampled_rows_49a780(PORT_SIGNATURE);
 /* Original 0x4a2840: the same code as 0x49a780. */
 uint32_t vertrix_port_render_sampled_rows_4a2840(PORT_SIGNATURE);
 
+/* Original 0x4925d0: 0x492770 for a source with an alpha byte: the pixel operation runs (eax the
+ * alpha) only where the source's top byte is not 0, and in the row start's part only where the
+ * mask bit is clear too. Returns the eax left at the end; edx is unchanged. */
+uint32_t vertrix_port_render_keyed_mask_row_back(PORT_SIGNATURE);
+
+/* Original 0x49a2f0: the same for the 16-bit target pixel at 0x5bb780. */
+uint32_t vertrix_port_render_keyed_mask_row_back_49a2f0(PORT_SIGNATURE);
+
+/* Original 0x4a23b0: the same for the 16-bit target pixel at 0x5bb780. */
+uint32_t vertrix_port_render_keyed_mask_row_back_4a23b0(PORT_SIGNATURE);
+
 #endif
