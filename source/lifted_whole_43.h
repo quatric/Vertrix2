@@ -6,21 +6,11 @@
 
 enum
 {
-    LIFTED_F40C910_STACK = 76,
-    LIFTED_F40C970_STACK = 64,
     LIFTED_F40CAA0_STACK = 68,
     LIFTED_MIXER_SET_EFFECT_40D490_STACK = 68,
     LIFTED_SEQUENCE_EXTENDED_EFFECT_STACK = 92,
     LIFTED_MIXER_GLOBAL_EFFECT_STACK = 68
 };
-
-/* Original 0x40c910. */
-uint32_t lifted_f40c910(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x40c970. */
-uint32_t lifted_f40c970(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x40caa0. */
 uint32_t lifted_f40caa0(const VertrixCalls *calls, const VertrixFactoryServices *services,

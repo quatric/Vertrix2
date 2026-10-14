@@ -6,15 +6,11 @@
 
 enum
 {
-    LIFTED_PALETTE_CUBE_STACK = 112,
-    LIFTED_F4DAE80_STACK = 72
+    LIFTED_PALETTE_CUBE_STACK = 112
 };
 
 /* Original 0x480ca0. */
 uint32_t lifted_palette_cube(const VertrixCalls *calls, const VertrixFactoryServices *services,
                              const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x4dae80. */
-uint32_t lifted_f4dae80(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
 #endif

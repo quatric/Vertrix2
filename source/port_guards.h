@@ -1,0 +1,49 @@
+#ifndef VERTRIX_PORT_GUARDS_H
+#define VERTRIX_PORT_GUARDS_H
+#include "port.h"
+
+/* Clean ports of board, piece and player routines guarded by a check, and short fills and
+ * counts (port_guards.c). */
+uint32_t vertrix_port_board_fill_cells_42f2e0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_cell_values_fill_42f8b0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_cell_values_fill_full_42f8e0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_piece_raise_42f3d0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_piece_shift_42f6e0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_piece_shift_42f720(PORT_SIGNATURE);
+uint32_t vertrix_port_board_piece_raise_always_42f410(PORT_SIGNATURE);
+uint32_t vertrix_port_board_piece_store_touch_42f520(PORT_SIGNATURE);
+uint32_t vertrix_port_board_piece_store_touch_42f550(PORT_SIGNATURE);
+uint32_t vertrix_port_board_release_active_42eb60(PORT_SIGNATURE);
+uint32_t vertrix_port_board_release_extra_430150(PORT_SIGNATURE);
+uint32_t vertrix_port_board_piece_try_left_431100(PORT_SIGNATURE);
+uint32_t vertrix_port_board_piece_try_right_431140(PORT_SIGNATURE);
+uint32_t vertrix_port_piece_actor_spawn_4320d0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_marker_count_436030(PORT_SIGNATURE);
+uint32_t vertrix_port_board_marker_count_436070(PORT_SIGNATURE);
+uint32_t vertrix_port_piece_child_slots_init_43a160(PORT_SIGNATURE);
+uint32_t vertrix_port_piece_children_update_43a2d0(PORT_SIGNATURE);
+uint32_t vertrix_port_piece_children_restore_and_clear_43a520(PORT_SIGNATURE);
+uint32_t vertrix_port_slot_dispatch_43abd0(PORT_SIGNATURE);
+uint32_t vertrix_port_player_randomize_level_43b7c0(PORT_SIGNATURE);
+uint32_t vertrix_port_player_alloc_side_43b930(PORT_SIGNATURE);
+uint32_t vertrix_port_player_release_side_43b980(PORT_SIGNATURE);
+uint32_t vertrix_port_player_add_score_43ba90(PORT_SIGNATURE);
+uint32_t vertrix_port_player_conditional_reset_43bb00(PORT_SIGNATURE);
+uint32_t vertrix_port_sfx_dispatch_event_43c0e0(PORT_SIGNATURE);
+uint32_t vertrix_port_sfx_dispatch_secondary_43c110(PORT_SIGNATURE);
+uint32_t vertrix_port_player_enter_4520b0_43ccb0(PORT_SIGNATURE);
+uint32_t vertrix_port_player_gated_reset_43cd30(PORT_SIGNATURE);
+uint32_t vertrix_port_object_table_store_43d330(PORT_SIGNATURE);
+uint32_t vertrix_port_release_table_a_43f3f0(PORT_SIGNATURE);
+uint32_t vertrix_port_record_draw_441b30(PORT_SIGNATURE);
+uint32_t vertrix_port_release_table_b_442110(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_frame_decay_full_449360(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_frame_switch_full_449390(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_step_then_decay_4494c0(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_step_keep_44ae80(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_step_keep_44c260(PORT_SIGNATURE);
+uint32_t vertrix_port_player_indicator_update_44ff30(PORT_SIGNATURE);
+uint32_t vertrix_port_player_indicator_update_44ff60(PORT_SIGNATURE);
+uint32_t vertrix_port_ui_indicator_storage_update_450100(PORT_SIGNATURE);
+
+#endif

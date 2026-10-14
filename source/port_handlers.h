@@ -1,0 +1,45 @@
+#ifndef VERTRIX_PORT_HANDLERS_H
+#define VERTRIX_PORT_HANDLERS_H
+#include "port.h"
+
+/* Clean ports of interface state handlers, table releases and device notifications
+ * (port_handlers.c). */
+uint32_t vertrix_port_ui_border_storage_update_450300(PORT_SIGNATURE);
+uint32_t vertrix_port_ui_companion_storage_update_450920(PORT_SIGNATURE);
+uint32_t vertrix_port_ui_companion_storage_update_4509d0(PORT_SIGNATURE);
+uint32_t vertrix_port_player_countdown_update_450830(PORT_SIGNATURE);
+uint32_t vertrix_port_ui_companion_storage_update_4509a0(PORT_SIGNATURE);
+uint32_t vertrix_port_ui_companion_storage_update_450960(PORT_SIGNATURE);
+uint32_t vertrix_port_player_child_update_451f10(PORT_SIGNATURE);
+uint32_t vertrix_port_player_check_child_452070(PORT_SIGNATURE);
+uint32_t vertrix_port_player_check_child_4520b0(PORT_SIGNATURE);
+uint32_t vertrix_port_toggle_handler_456ca0(PORT_SIGNATURE);
+uint32_t vertrix_port_point_list_take_457730(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_step_then_finish_45c210(PORT_SIGNATURE);
+uint32_t vertrix_port_point_list_check_45c2b0(PORT_SIGNATURE);
+uint32_t vertrix_port_table_build_by_flag_45e630(PORT_SIGNATURE);
+uint32_t vertrix_port_table_release_rows_45e910(PORT_SIGNATURE);
+uint32_t vertrix_port_table_release_pair_45ea80(PORT_SIGNATURE);
+uint32_t vertrix_port_scene_clear_marker_4725f0(PORT_SIGNATURE);
+uint32_t vertrix_port_scene_create_472bd0(PORT_SIGNATURE);
+uint32_t vertrix_port_ui_panel_release_full_472d50(PORT_SIGNATURE);
+uint32_t vertrix_port_point_list_conditional_4735e0(PORT_SIGNATURE);
+uint32_t vertrix_port_palette_tables_cycle_4754e0(PORT_SIGNATURE);
+uint32_t vertrix_port_slot_select_4762e0(PORT_SIGNATURE);
+uint32_t vertrix_port_sound_check_primary_476c80(PORT_SIGNATURE);
+uint32_t vertrix_port_object_reset_center_477ed0(PORT_SIGNATURE);
+uint32_t vertrix_port_literal_copy_call_478c90(PORT_SIGNATURE);
+uint32_t vertrix_port_surface_write_478ed0(PORT_SIGNATURE);
+uint32_t vertrix_port_display_chain_count_47f160(PORT_SIGNATURE);
+uint32_t vertrix_port_display_release_buffer_47f3d0(PORT_SIGNATURE);
+uint32_t vertrix_port_checked_calls_47f9b0(PORT_SIGNATURE);
+uint32_t vertrix_port_checked_calls_47f9e0(PORT_SIGNATURE);
+uint32_t vertrix_port_display_notify_47fe20(PORT_SIGNATURE);
+uint32_t vertrix_port_display_notify_47fe50(PORT_SIGNATURE);
+uint32_t vertrix_port_display_describe_480030(PORT_SIGNATURE);
+uint32_t vertrix_port_object_notify_global_48c280(PORT_SIGNATURE);
+uint32_t vertrix_port_object_notify_choice_48c2b0(PORT_SIGNATURE);
+uint32_t vertrix_port_object_notify_byte_48c2e0(PORT_SIGNATURE);
+uint32_t vertrix_port_object_notify_field_48c330(PORT_SIGNATURE);
+
+#endif

@@ -1,18 +1,4 @@
 {
- "f4ebc90": {
-  "callees": {},
-  "stack": 80,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   8
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 5160080
- },
  "f4ebce8": {
   "callees": {
    "slot_507ca0": [
@@ -428,23 +414,6 @@
   ],
   "virtual": [],
   "address": 5162576
- },
- "f4eca85": {
-  "callees": {
-   "0x4ed79f": [
-    0,
-    false
-   ]
-  },
-  "stack": 72,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 5163653
  },
  "f4ecaa0": {
   "callees": {
@@ -1016,23 +985,6 @@
   ],
   "virtual": [],
   "address": 5170130
- },
- "f4ee730": {
-  "callees": {
-   "0x4f1a94": [
-    4,
-    false
-   ]
-  },
-  "stack": 88,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 5170992
  },
  "f4ee750": {
   "callees": {

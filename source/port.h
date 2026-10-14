@@ -167,6 +167,36 @@ static inline uint32_t port_call_stack(Port *port, uint32_t target, uint32_t eax
     return lift_call_arguments(&port->env, target, eax, edx, ebx, ecx, stack, count);
 }
 
+/* port_call_with handing the callee esi as given and the caller's own edi and ebp, as a routine
+ * that leaves them untouched does. */
+static inline uint32_t port_forward_esi(Port *port, const LiftEntry *entry, uint32_t target,
+                                        uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
+                                        uint32_t esi)
+{
+    return port_call_with(port, target, eax, edx, ebx, ecx, esi, entry->edi, entry->ebp);
+}
+
+/* The same handing over the caller's own esi too. */
+static inline uint32_t port_forward(Port *port, const LiftEntry *entry, uint32_t target,
+                                    uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx)
+{
+    return port_forward_esi(port, entry, target, eax, edx, ebx, ecx, entry->esi);
+}
+
+/* port_forward_esi with `count` stack arguments, the nearest to the stack pointer first. */
+static inline uint32_t port_forward_stack(Port *port, const LiftEntry *entry, uint32_t target,
+                                          uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
+                                          uint32_t esi, const uint32_t *stack, unsigned count)
+{
+    uint32_t result;
+    vertrix_lift_in_esi = esi;
+    vertrix_lift_in_edi = entry->edi;
+    vertrix_lift_in_ebp = entry->ebp;
+    result = lift_call_arguments(&port->env, target, eax, edx, ebx, ecx, stack, count);
+    vertrix_lift_in_esi = vertrix_lift_in_edi = vertrix_lift_in_ebp = 0;
+    return result;
+}
+
 /* The routine's return: eax, and the edx the original leaves for its caller. */
 static inline uint32_t port_return(Port *port, uint32_t eax, uint32_t edx)
 {

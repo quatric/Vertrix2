@@ -10,7 +10,6 @@ enum
     LIFTED_F429910_STACK = 168,
     LIFTED_F42A3C0_STACK = 164,
     LIFTED_F42A4C0_STACK = 84,
-    LIFTED_F42A510_STACK = 84,
     LIFTED_F42B190_STACK = 168,
     LIFTED_F432480_STACK = 228,
     LIFTED_F43A1A0_STACK = 164,
@@ -33,10 +32,6 @@ uint32_t lifted_f42a3c0(const VertrixCalls *calls, const VertrixFactoryServices 
 
 /* Original 0x42a4c0. */
 uint32_t lifted_f42a4c0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42a510. */
-uint32_t lifted_f42a510(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42b190. */
