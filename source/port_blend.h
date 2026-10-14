@@ -912,4 +912,53 @@ uint32_t vertrix_port_blend_mean_map_paired(PORT_SIGNATURE);
  * 0x5bc018) remapped as 0x498470 does. Returns the colour. */
 uint32_t vertrix_port_blend_average_paired(PORT_SIGNATURE);
 
+/* Original 0x4913e0: the target becomes the colour of 0x498bf0 for the 32-bit target. Returns the
+ * target address. */
+uint32_t vertrix_port_blend_fixed_entry_mean(PORT_SIGNATURE);
+
+/* Original 0x491530: the target becomes the average of itself and the source remapped as 0x498470
+ * does (kept at 0x5bc018). Returns the target address. */
+uint32_t vertrix_port_blend_paired_average(PORT_SIGNATURE);
+
+/* Original 0x491720: saturating subtract from the target of the source remapped as 0x498470 does
+ * (kept at 0x5bc018). Returns the target address. */
+uint32_t vertrix_port_blend_paired_subtract(PORT_SIGNATURE);
+
+/* Original 0x491820: the target becomes the source remapped as 0x498470 does (kept at 0x5bc018)
+ * less the target, each channel stopping at 0. Returns the target address. */
+uint32_t vertrix_port_blend_paired_subtract_from(PORT_SIGNATURE);
+
+/* Original 0x491920: the target becomes the source remapped as 0x498470 does (kept at 0x5bc018)
+ * inverted (low 24 bits). Returns that colour. */
+uint32_t vertrix_port_blend_paired_invert(PORT_SIGNATURE);
+
+/* Original 0x491a00: the target becomes its colour remapped as 0x498470 does (kept at 0x5bc018)
+ * inverted (low 24 bits). Returns the target address. */
+uint32_t vertrix_port_blend_target_paired_invert(PORT_SIGNATURE);
+
+/* Original 0x491af0: the target becomes the map the source's entry selects (stored at 0x54d5d0)
+ * applied to the dword picked as 0x498470 picks it from the target's entry index (stored at
+ * 0x54d5d4). Returns the target address. */
+uint32_t vertrix_port_blend_paired_cross(PORT_SIGNATURE);
+
+/* Original 0x491be0: the same with the map from the target and the dword from the source. Returns
+ * the target address. */
+uint32_t vertrix_port_blend_target_paired_cross(PORT_SIGNATURE);
+
+/* Original 0x491ce0: the target becomes the colour of 0x499860 for the 32-bit target. Returns the
+ * target address. */
+uint32_t vertrix_port_blend_shade_paired(PORT_SIGNATURE);
+
+/* Original 0x491e10: the target becomes the two-table sum of 0x4902a0, then that colour remapped
+ * as 0x498470 does. Returns the target address. */
+uint32_t vertrix_port_blend_levels_paired(PORT_SIGNATURE);
+
+/* Original 0x491f70: the target becomes the colour of 0x499bc0 for the 32-bit target. Returns the
+ * target address. */
+uint32_t vertrix_port_blend_fixed_entry_levels(PORT_SIGNATURE);
+
+/* Original 0x492120: the target becomes the two-table sum of the source remapped as 0x498470 does
+ * (kept at 0x5bc018) and itself. Returns the target address. */
+uint32_t vertrix_port_blend_paired_levels(PORT_SIGNATURE);
+
 #endif

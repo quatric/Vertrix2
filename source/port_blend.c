@@ -2810,9 +2810,11 @@ static uint32_t pixel16_tint_levels(PORT_SIGNATURE, int green6)
     return port_return(&port, keep16(&port, colour, green6), entry->edx);
 }
 
-static uint32_t pixel16_shade_paired(PORT_SIGNATURE, int green6)
+/* The map numbered as blend_shade numbers it (the source's entry stored at 0x54d5d4 first, the
+ * map at 0x54d5d0) applied to the dword picked as paired_remap picks it from the source's entry
+ * index (the dword stored at 0x54d5d4, the index at 0x54d5e4). */
+static uint32_t shade_paired(Port *port, uint32_t source, uint32_t target)
 {
-    Port port;
     uint32_t entries;
     uint32_t index;
     uint32_t value;
@@ -2820,25 +2822,32 @@ static uint32_t pixel16_shade_paired(PORT_SIGNATURE, int green6)
     uint32_t map;
     uint32_t fixed;
     uint32_t colour;
+    entries = port_u32(port, 0, COLOUR_ENTRIES);
+    index = entry_index(source);
+    value = port_u32(port, entries, index * 4);
+    port_set32(port, 0, ENTRY, value);
+    level = port_u8(port, entries, entry_index(target) * 4);
+    level = port_u16(port, port_u32(port, 0, SHADE_LEVELS), (value & 0xff) * 2) +
+            port_u16(port, port_u32(port, 0, SHADE_STEPS), level * 2);
+    map = port_u32(port, port_u32(port, 0, CHANNEL_MAPS), (uint32_t)((int32_t)(int16_t)level * 4));
+    port_set32(port, 0, MAP, map);
+    fixed = port_u8(port, port_u32(port, 0, FIXED_SELECTS), index);
+    fixed = port_u32(port, port_u32(port, port_u32(port, 0, FIXED_ENTRIES), fixed * 4), 0);
+    port_set32(port, 0, ENTRY, fixed);
+    colour = (port_u8(port, map, fixed >> 24) << 16) |
+             (port_u8(port, map, (fixed >> 16) & 0xff) << 8) |
+             port_u8(port, map, (fixed >> 8) & 0xff);
+    port_set32(port, 0, ENTRY_INDEX, index);
+    return colour;
+}
+
+static uint32_t pixel16_shade_paired(PORT_SIGNATURE, int green6)
+{
+    Port port;
+    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    entries = port_u32(&port, 0, COLOUR_ENTRIES);
-    index = entry_index(source_colour(&port));
-    value = port_u32(&port, entries, index * 4);
-    port_set32(&port, 0, ENTRY, value);
-    level = port_u8(&port, entries, entry_index(target16(&port, green6)) * 4);
-    level = port_u16(&port, port_u32(&port, 0, SHADE_LEVELS), (value & 0xff) * 2) +
-            port_u16(&port, port_u32(&port, 0, SHADE_STEPS), level * 2);
-    map =
-        port_u32(&port, port_u32(&port, 0, CHANNEL_MAPS), (uint32_t)((int32_t)(int16_t)level * 4));
-    port_set32(&port, 0, MAP, map);
-    fixed = port_u8(&port, port_u32(&port, 0, FIXED_SELECTS), index);
-    fixed = port_u32(&port, port_u32(&port, port_u32(&port, 0, FIXED_ENTRIES), fixed * 4), 0);
-    port_set32(&port, 0, ENTRY, fixed);
-    colour = (port_u8(&port, map, fixed >> 24) << 16) |
-             (port_u8(&port, map, (fixed >> 16) & 0xff) << 8) |
-             port_u8(&port, map, (fixed >> 8) & 0xff);
+    colour = shade_paired(&port, source_colour(&port), target16(&port, green6));
     put16(&port, colour, green6);
-    port_set32(&port, 0, ENTRY_INDEX, index);
     port_set32(&port, 0, WIDE_TARGET, colour);
     return port_return(&port, port_u32(&port, 0, TARGET_PIXEL_16), entry->edx);
 }
@@ -3020,35 +3029,40 @@ static uint32_t pixel16_remap_levels(PORT_SIGNATURE, int green6)
     return port_return(&port, keep16(&port, colour, green6), entry->edx);
 }
 
-static uint32_t pixel16_fixed_entry_mean(PORT_SIGNATURE, int green6)
+/* The map of the source's colour entry (the entry stored at 0x54d5d4 first, the map at 0x54d5d0)
+ * applied to the means of the bytes 3, 2 and 1 of the dword picked as paired_remap picks it
+ * (stored at 0x54d5d4; the index at 0x54d5e4) and of the target's entry (stored at 0x54d5d8). */
+static uint32_t fixed_entry_mean(Port *port, uint32_t source, uint32_t target)
 {
-    Port port;
-    uint32_t entries;
-    uint32_t index;
-    uint32_t value;
+    uint32_t entries = port_u32(port, 0, COLOUR_ENTRIES);
+    uint32_t index = entry_index(source);
+    uint32_t value = port_u32(port, entries, index * 4);
     uint32_t map;
     uint32_t fixed;
     uint32_t other;
     uint32_t colour;
+    port_set32(port, 0, ENTRY, value);
+    map = port_u32(port, port_u32(port, 0, CHANNEL_MAPS), (value & 0xff) * 4);
+    port_set32(port, 0, MAP, map);
+    fixed = port_u8(port, port_u32(port, 0, FIXED_SELECTS), index);
+    fixed = port_u32(port, port_u32(port, port_u32(port, 0, FIXED_ENTRIES), fixed * 4), 0);
+    port_set32(port, 0, ENTRY, fixed);
+    other = port_u32(port, entries, entry_index(target) * 4);
+    port_set32(port, 0, TARGET_ENTRY, other);
+    colour = port_u8(port, map, ((fixed >> 24) + (other >> 24)) >> 1) << 16;
+    colour |= port_u8(port, map, (((fixed >> 16) & 0xff) + ((other >> 16) & 0xff)) >> 1) << 8;
+    colour |= port_u8(port, map, (((fixed >> 8) & 0xff) + ((other >> 8) & 0xff)) >> 1);
+    port_set32(port, 0, ENTRY_INDEX, index);
+    return colour;
+}
+
+static uint32_t pixel16_fixed_entry_mean(PORT_SIGNATURE, int green6)
+{
+    Port port;
+    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    entries = port_u32(&port, 0, COLOUR_ENTRIES);
-    index = entry_index(source_colour(&port));
-    value = port_u32(&port, entries, index * 4);
-    port_set32(&port, 0, ENTRY, value);
-    map = port_u32(&port, port_u32(&port, 0, CHANNEL_MAPS), (value & 0xff) * 4);
-    port_set32(&port, 0, MAP, map);
-    fixed = port_u8(&port, port_u32(&port, 0, FIXED_SELECTS), index);
-    fixed = port_u32(&port, port_u32(&port, port_u32(&port, 0, FIXED_ENTRIES), fixed * 4), 0);
-    port_set32(&port, 0, ENTRY, fixed);
-    other = port_u32(&port, entries, entry_index(target16(&port, green6)) * 4);
-    port_set32(&port, 0, TARGET_ENTRY, other);
-    colour = port_u8(&port, map, ((fixed >> 24) + (other >> 24)) >> 1) << 16;
-    colour |= port_u8(&port, map, (((fixed >> 16) & 0xff) + ((other >> 16) & 0xff)) >> 1) << 8;
-    colour |= port_u8(&port, map, (((fixed >> 8) & 0xff) + ((other >> 8) & 0xff)) >> 1);
-    put16(&port, colour, green6);
-    port_set32(&port, 0, ENTRY_INDEX, index);
-    port_set32(&port, 0, WIDE_TARGET, colour);
-    return port_return(&port, port_u32(&port, 0, TARGET_PIXEL_16), entry->edx);
+    colour = fixed_entry_mean(&port, source_colour(&port), target16(&port, green6));
+    return port_return(&port, keep16(&port, colour, green6), entry->edx);
 }
 
 uint32_t vertrix_port_pixel16_remap_levels_497a90(PORT_SIGNATURE)
@@ -3266,9 +3280,11 @@ static uint32_t pixel16_entry_levels_tint(PORT_SIGNATURE, int green6)
     return port_return(&port, port_u32(&port, 0, TARGET_PIXEL_16), entry->edx);
 }
 
-static uint32_t pixel16_fixed_entry_levels(PORT_SIGNATURE, int green6)
+/* As 0x4975d0 with the source's entry replaced by the dword picked as paired_remap picks it
+ * (the index stored at 0x54d5e4, the dword at 0x54d5d4); the map stays that of the source's own
+ * entry. */
+static uint32_t fixed_entry_levels(Port *port, uint32_t source, uint32_t target)
 {
-    Port port;
     uint32_t entries;
     uint32_t index;
     uint32_t value;
@@ -3278,32 +3294,40 @@ static uint32_t pixel16_fixed_entry_levels(PORT_SIGNATURE, int green6)
     uint32_t source_levels;
     uint32_t target_levels;
     uint32_t colour;
-    port_open(&port, calls, services, globals, entry);
-    entries = port_u32(&port, 0, COLOUR_ENTRIES);
-    index = entry_index(source_colour(&port));
-    port_set32(&port, 0, ENTRY_INDEX, index);
-    value = port_u32(&port, entries, index * 4);
-    port_set32(&port, 0, ENTRY, value);
-    map = port_u32(&port, port_u32(&port, 0, CHANNEL_MAPS), (value & 0xff) * 4);
-    port_set32(&port, 0, MAP, map);
-    fixed = port_u8(&port, port_u32(&port, 0, FIXED_SELECTS), index);
-    fixed = port_u32(&port, port_u32(&port, port_u32(&port, 0, FIXED_ENTRIES), fixed * 4), 0);
-    port_set32(&port, 0, ENTRY, fixed);
-    other = port_u32(&port, entries, entry_index(target16(&port, green6)) * 4);
-    port_set32(&port, 0, TARGET_ENTRY, other);
-    source_levels = port_u32(&port, 0, SOURCE_LEVELS);
-    target_levels = port_u32(&port, 0, TARGET_LEVELS);
-    colour = port_u8(&port, map,
-                     port_u8(&port, source_levels, fixed >> 24) +
-                         port_u8(&port, target_levels, other >> 24))
+    entries = port_u32(port, 0, COLOUR_ENTRIES);
+    index = entry_index(source);
+    port_set32(port, 0, ENTRY_INDEX, index);
+    value = port_u32(port, entries, index * 4);
+    port_set32(port, 0, ENTRY, value);
+    map = port_u32(port, port_u32(port, 0, CHANNEL_MAPS), (value & 0xff) * 4);
+    port_set32(port, 0, MAP, map);
+    fixed = port_u8(port, port_u32(port, 0, FIXED_SELECTS), index);
+    fixed = port_u32(port, port_u32(port, port_u32(port, 0, FIXED_ENTRIES), fixed * 4), 0);
+    port_set32(port, 0, ENTRY, fixed);
+    other = port_u32(port, entries, entry_index(target) * 4);
+    port_set32(port, 0, TARGET_ENTRY, other);
+    source_levels = port_u32(port, 0, SOURCE_LEVELS);
+    target_levels = port_u32(port, 0, TARGET_LEVELS);
+    colour = port_u8(port, map,
+                     port_u8(port, source_levels, fixed >> 24) +
+                         port_u8(port, target_levels, other >> 24))
              << 16;
-    colour |= port_u8(&port, map,
-                      port_u8(&port, source_levels, (fixed >> 16) & 0xff) +
-                          port_u8(&port, target_levels, (other >> 16) & 0xff))
+    colour |= port_u8(port, map,
+                      port_u8(port, source_levels, (fixed >> 16) & 0xff) +
+                          port_u8(port, target_levels, (other >> 16) & 0xff))
               << 8;
-    colour |= port_u8(&port, map,
-                      port_u8(&port, source_levels, (fixed >> 8) & 0xff) +
-                          port_u8(&port, target_levels, (other >> 8) & 0xff));
+    colour |= port_u8(port, map,
+                      port_u8(port, source_levels, (fixed >> 8) & 0xff) +
+                          port_u8(port, target_levels, (other >> 8) & 0xff));
+    return colour;
+}
+
+static uint32_t pixel16_fixed_entry_levels(PORT_SIGNATURE, int green6)
+{
+    Port port;
+    uint32_t colour;
+    port_open(&port, calls, services, globals, entry);
+    colour = fixed_entry_levels(&port, source_colour(&port), target16(&port, green6));
     put16(&port, colour, green6);
     port_set32(&port, 0, WIDE_TARGET, colour);
     return port_return(&port, port_u32(&port, 0, TARGET_PIXEL_16), entry->edx);
@@ -3502,11 +3526,13 @@ enum
     COLOUR_TINT,
     COLOUR_HALF_TINT,
     COLOUR_REMAP,
-    COLOUR_HALF_PLUS_REMAP
+    COLOUR_HALF_PLUS_REMAP,
+    COLOUR_PAIRED
 };
 
 /* `colour` halved plus 0x54d5ec, remapped through fixed channels, remapped half way to them,
- * remapped, or halved plus 0x54d5ec and remapped, as `kind` names. */
+ * remapped, halved plus 0x54d5ec and remapped, or remapped as paired_remap does, as `kind` names.
+ */
 static uint32_t made_from(Port *port, uint32_t colour, int kind)
 {
     if (kind == COLOUR_HALF_PLUS)
@@ -3524,6 +3550,10 @@ static uint32_t made_from(Port *port, uint32_t colour, int kind)
     if (kind == COLOUR_HALF_PLUS_REMAP)
     {
         return remap(port, half_plus(port, colour));
+    }
+    if (kind == COLOUR_PAIRED)
+    {
+        return paired_remap(port, colour);
     }
     return remap(port, colour);
 }
@@ -3867,4 +3897,115 @@ uint32_t vertrix_port_blend_average_paired(PORT_SIGNATURE)
     colour = paired_remap(&port, colour);
     put32(&port, colour);
     return port_return(&port, colour, entry->edx);
+}
+
+uint32_t vertrix_port_blend_fixed_entry_mean(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t colour;
+    port_open(&port, calls, services, globals, entry);
+    colour = fixed_entry_mean(&port, source_colour(&port), target32(&port));
+    return port_return(&port, put32(&port, colour), entry->edx);
+}
+
+uint32_t vertrix_port_blend_paired_average(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t colour;
+    port_open(&port, calls, services, globals, entry);
+    colour = paired_remap(&port, source_colour(&port));
+    port_set32(&port, 0, REMAPPED, colour);
+    return port_return(&port, put32(&port, average(target32(&port), colour)), entry->edx);
+}
+
+uint32_t vertrix_port_blend_paired_subtract(PORT_SIGNATURE)
+{
+    return made_mix32(calls, services, globals, entry, COLOUR_PAIRED, MIX_SUBTRACT);
+}
+
+uint32_t vertrix_port_blend_paired_subtract_from(PORT_SIGNATURE)
+{
+    return made_mix32(calls, services, globals, entry, COLOUR_PAIRED, MIX_SUBTRACT_FROM);
+}
+
+uint32_t vertrix_port_blend_paired_invert(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t colour;
+    port_open(&port, calls, services, globals, entry);
+    colour = paired_remap(&port, source_colour(&port));
+    port_set32(&port, 0, REMAPPED, colour);
+    put32(&port, ~colour & CHANNELS);
+    return port_return(&port, ~colour & CHANNELS, entry->edx);
+}
+
+uint32_t vertrix_port_blend_target_paired_invert(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t colour;
+    port_open(&port, calls, services, globals, entry);
+    colour = paired_remap(&port, target32(&port));
+    port_set32(&port, 0, REMAPPED, colour);
+    return port_return(&port, put32(&port, ~colour & CHANNELS), entry->edx);
+}
+
+uint32_t vertrix_port_blend_paired_cross(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t colour;
+    port_open(&port, calls, services, globals, entry);
+    colour = paired_cross(&port, source_colour(&port), target32(&port));
+    return port_return(&port, put32(&port, colour), entry->edx);
+}
+
+uint32_t vertrix_port_blend_target_paired_cross(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t colour;
+    port_open(&port, calls, services, globals, entry);
+    colour = paired_cross(&port, target32(&port), source_colour(&port));
+    return port_return(&port, put32(&port, colour), entry->edx);
+}
+
+uint32_t vertrix_port_blend_shade_paired(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t colour;
+    port_open(&port, calls, services, globals, entry);
+    colour = shade_paired(&port, source_colour(&port), target32(&port));
+    return port_return(&port, put32(&port, colour), entry->edx);
+}
+
+uint32_t vertrix_port_blend_levels_paired(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t colour;
+    uint32_t target;
+    port_open(&port, calls, services, globals, entry);
+    colour = levels_mix_values(&port, source_colour(&port), target32(&port));
+    target = put32(&port, colour);
+    /* The entry index is taken from the stored pixel for its blue bits. */
+    colour = (colour & 0xfcfc00) | (port_u32(&port, target, 0) & 0xfc);
+    port_set32(&port, target, 0, paired_remap(&port, colour));
+    return port_return(&port, target, entry->edx);
+}
+
+uint32_t vertrix_port_blend_fixed_entry_levels(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t colour;
+    port_open(&port, calls, services, globals, entry);
+    colour = fixed_entry_levels(&port, source_colour(&port), target32(&port));
+    return port_return(&port, put32(&port, colour), entry->edx);
+}
+
+uint32_t vertrix_port_blend_paired_levels(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t colour;
+    port_open(&port, calls, services, globals, entry);
+    colour = paired_remap(&port, source_colour(&port));
+    port_set32(&port, 0, REMAPPED, colour);
+    colour = levels_mix_values(&port, colour, target32(&port));
+    return port_return(&port, put32(&port, colour), entry->edx);
 }
