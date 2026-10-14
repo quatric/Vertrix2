@@ -4180,3 +4180,22 @@ uint32_t vertrix_port_render_keyed_mask_row_back_4a23b0(PORT_SIGNATURE)
 {
     return keyed_mask_row_back(calls, services, globals, entry, 0x5bb780);
 }
+
+static uint32_t render_mask_alpha_row_at(PORT_SIGNATURE, uint32_t target_pixel)
+{
+    Port port;
+    uint32_t eax;
+    port_open(&port, calls, services, globals, entry);
+    eax = mask_row(&port, entry, 1, target_pixel);
+    return port_return(&port, eax, entry->edx);
+}
+
+uint32_t vertrix_port_render_mask_alpha_row_49a020(PORT_SIGNATURE)
+{
+    return render_mask_alpha_row_at(calls, services, globals, entry, 0x5bb780);
+}
+
+uint32_t vertrix_port_render_mask_alpha_row_4a20e0(PORT_SIGNATURE)
+{
+    return render_mask_alpha_row_at(calls, services, globals, entry, 0x5bb780);
+}

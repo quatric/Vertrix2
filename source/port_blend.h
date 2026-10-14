@@ -992,4 +992,10 @@ uint32_t vertrix_port_render_keyed_mask_row_back_49a2f0(PORT_SIGNATURE);
 /* Original 0x4a23b0: the same for the 16-bit target pixel at 0x5bb780. */
 uint32_t vertrix_port_render_keyed_mask_row_back_4a23b0(PORT_SIGNATURE);
 
+/* Original 0x49a020: 0x4922f0 for the 16-bit target pixel at 0x5bb780. */
+uint32_t vertrix_port_render_mask_alpha_row_49a020(PORT_SIGNATURE);
+
+/* Original 0x4a20e0: the same code as 0x49a020. */
+uint32_t vertrix_port_render_mask_alpha_row_4a20e0(PORT_SIGNATURE);
+
 #endif
