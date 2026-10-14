@@ -863,4 +863,53 @@ uint32_t vertrix_port_blend_half_plus_remap_subtract_from(PORT_SIGNATURE);
  * at 0x54d5ec (kept at 0x5bc018) and remapped. Returns the colour. */
 uint32_t vertrix_port_blend_invert_half_plus_remap(PORT_SIGNATURE);
 
+/* Original 0x48fdb0: the target becomes its inverted colour (low 24 bits) halved plus the colour
+ * at 0x54d5ec (kept at 0x5bc018) and remapped. Returns the colour. */
+uint32_t vertrix_port_blend_invert_target_half_plus_remap(PORT_SIGNATURE);
+
+/* Original 0x48fe90: the target's colour entry (stored at 0x54d5d4) through the map the source's
+ * entry selects (not stored), halved plus the colour at 0x54d5ec (kept at 0x5bc018), then
+ * remapped. Returns the target address. */
+uint32_t vertrix_port_blend_cross_half_plus_remap(PORT_SIGNATURE);
+
+/* Original 0x490010: the same with the map from the target and the entry from the source. Returns
+ * the target address. */
+uint32_t vertrix_port_blend_target_cross_half_plus_remap(PORT_SIGNATURE);
+
+/* Original 0x4908c0: each channel of the target becomes half the sum of the source's level (table
+ * at [0x55f1f0]), the target's level (table at [0x55f1f4]) and the channel's byte at 0x54d5e8,
+ * 0x54d5e9 or 0x54d5ea (the halves or-ed into place). Returns the target address. */
+uint32_t vertrix_port_blend_levels_bias(PORT_SIGNATURE);
+
+/* Original 0x490980: the target becomes the map of the source's colour entry (the entry stored at
+ * 0x54d5d4, the map at 0x54d5d0) applied to the sums of that entry's bytes 3, 2 and 1 through
+ * [0x55f1f0] and the target's entry's (stored at 0x54d5d8) through [0x55f1f4], each meaned with
+ * the fixed channel. Returns the target address. */
+uint32_t vertrix_port_blend_entry_levels_tint(PORT_SIGNATURE);
+
+/* Original 0x490dc0: the target becomes the source remapped as 0x498470 does. Returns the colour.
+ */
+uint32_t vertrix_port_blend_paired(PORT_SIGNATURE);
+
+/* Original 0x490e90: the target becomes the colour of 0x498570 (the map the source's entry selects
+ * applied to the dword through entry [0x54d5f0] of [0x54cdcc]). Returns the colour. */
+uint32_t vertrix_port_blend_fixed_entry(PORT_SIGNATURE);
+
+/* Original 0x490f60: the target becomes the source halved plus the colour at 0x54d5ec (kept at
+ * 0x5bc018), remapped as 0x498470 does. Returns the target address. */
+uint32_t vertrix_port_blend_half_plus_paired(PORT_SIGNATURE);
+
+/* Original 0x491050: the target becomes the colour of 0x498770 (the source remapped half way to
+ * the fixed channels, its map applied again to the dword picked from that colour's entry index).
+ * Returns the colour. */
+uint32_t vertrix_port_blend_half_tint_fixed(PORT_SIGNATURE);
+
+/* Original 0x4911d0: the target becomes the colour of 0x498910 for the 32-bit target. Returns the
+ * target address. */
+uint32_t vertrix_port_blend_mean_map_paired(PORT_SIGNATURE);
+
+/* Original 0x4912e0: the target becomes the average of the source and the target (kept at
+ * 0x5bc018) remapped as 0x498470 does. Returns the colour. */
+uint32_t vertrix_port_blend_average_paired(PORT_SIGNATURE);
+
 #endif

@@ -21,32 +21,6 @@
   "virtual": [],
   "address": 4721824
  },
- "f491050": {
-  "callees": {},
-  "stack": 80,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   0
-  ],
-  "pointer_globals": [
-   5552128,
-   5552132,
-   5557704,
-   5557708,
-   5559764,
-   6010724,
-   6010728
-  ],
-  "pointer_maybe": [],
-  "constants": [
-   3,
-   4,
-   5
-  ],
-  "virtual": [],
-  "address": 4788304
- },
  "f4dae80": {
   "callees": {
    "slot_507c9c": [

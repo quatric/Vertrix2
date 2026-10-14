@@ -3479,6 +3479,21 @@
   "lifted": "lifted_f48fcd0",
   "chunk": "whole_21"
  },
+ "0x48fdb0": {
+  "port": "vertrix_port_blend_invert_target_half_plus_remap",
+  "lifted": "lifted_f48fdb0",
+  "chunk": "whole_21"
+ },
+ "0x48fe90": {
+  "port": "vertrix_port_blend_cross_half_plus_remap",
+  "lifted": "lifted_f48fe90",
+  "chunk": "whole_21"
+ },
+ "0x490010": {
+  "port": "vertrix_port_blend_target_cross_half_plus_remap",
+  "lifted": "lifted_f490010",
+  "chunk": "whole_21"
+ },
  "0x4901a0": {
   "port": "vertrix_port_blend_shade",
   "lifted": "lifted_f4901a0",
@@ -3509,6 +3524,16 @@
   "lifted": "lifted_f4907d0",
   "chunk": "whole_21"
  },
+ "0x4908c0": {
+  "port": "vertrix_port_blend_levels_bias",
+  "lifted": "lifted_f4908c0",
+  "chunk": "whole_21"
+ },
+ "0x490980": {
+  "port": "vertrix_port_blend_entry_levels_tint",
+  "lifted": "lifted_f490980",
+  "chunk": "whole_21"
+ },
  "0x490b30": {
   "port": "vertrix_port_blend_tint_levels",
   "lifted": "lifted_f490b30",
@@ -3517,6 +3542,36 @@
  "0x490c60": {
   "port": "vertrix_port_render_palette_blend",
   "lifted": "lifted_f490c60",
+  "chunk": "whole_21"
+ },
+ "0x490dc0": {
+  "port": "vertrix_port_blend_paired",
+  "lifted": "lifted_f490dc0",
+  "chunk": "whole_21"
+ },
+ "0x490e90": {
+  "port": "vertrix_port_blend_fixed_entry",
+  "lifted": "lifted_f490e90",
+  "chunk": "whole_21"
+ },
+ "0x490f60": {
+  "port": "vertrix_port_blend_half_plus_paired",
+  "lifted": "lifted_f490f60",
+  "chunk": "whole_21"
+ },
+ "0x491050": {
+  "port": "vertrix_port_blend_half_tint_fixed",
+  "lifted": "lifted_f491050",
+  "chunk": "whole_44"
+ },
+ "0x4911d0": {
+  "port": "vertrix_port_blend_mean_map_paired",
+  "lifted": "lifted_f4911d0",
+  "chunk": "whole_21"
+ },
+ "0x4912e0": {
+  "port": "vertrix_port_blend_average_paired",
+  "lifted": "lifted_f4912e0",
   "chunk": "whole_21"
  },
  "0x491620": {
