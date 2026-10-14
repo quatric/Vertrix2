@@ -680,39 +680,6 @@
   "virtual": [],
   "address": 4955312
  },
- "f4b9cf0": {
-  "callees": {
-   "virtual_4b9d4c": [
-    0,
-    false
-   ],
-   "virtual_4b9d60": [
-    0,
-    false
-   ]
-  },
-  "stack": 96,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   24
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   3,
-   4,
-   5
-  ],
-  "virtual": [
-   [
-    4,
-    0,
-    0
-   ]
-  ],
-  "address": 4955376
- },
  "f4b9de0": {
   "callees": {
    "virtual_4b9f50": [
@@ -2237,84 +2204,6 @@
   "virtual": [],
   "address": 4999936
  },
- "f4c5120": {
-  "callees": {
-   "0x4c4d20": [
-    0,
-    false
-   ],
-   "virtual_4c5187": [
-    0,
-    false
-   ]
-  },
-  "stack": 88,
-  "arguments": 2,
-  "pointer_callees": [
-   "0x4c4d20"
-  ],
-  "pointer_fields": [
-   0,
-   4
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2,
-   3,
-   4,
-   5
-  ],
-  "virtual": [
-   [
-    0,
-    0,
-    0
-   ]
-  ],
-  "address": 5001504
- },
- "f4c5190": {
-  "callees": {
-   "0x4c4d20": [
-    0,
-    false
-   ],
-   "virtual_4c51f7": [
-    0,
-    false
-   ]
-  },
-  "stack": 88,
-  "arguments": 2,
-  "pointer_callees": [
-   "0x4c4d20"
-  ],
-  "pointer_fields": [
-   0,
-   4
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2,
-   3,
-   4,
-   5
-  ],
-  "virtual": [
-   [
-    0,
-    0,
-    0
-   ]
-  ],
-  "address": 5001616
- },
  "f4c5200": {
   "callees": {
    "0x4c5bf0": [
@@ -2957,36 +2846,6 @@
   "constants": [],
   "virtual": [],
   "address": 5022272
- },
- "rtl_string_concat": {
-  "callees": {
-   "0x4ca070": [
-    0,
-    false
-   ],
-   "0x4ca3f0": [
-    1,
-    false
-   ]
-  },
-  "stack": 112,
-  "arguments": 3,
-  "pointer_callees": [],
-  "pointer_fields": [
-   0
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   11,
-   12,
-   13,
-   19,
-   20,
-   21
-  ],
-  "virtual": [],
-  "address": 5022768
  },
  "f4ca4a0": {
   "callees": {
@@ -3797,31 +3656,6 @@
   "virtual": [],
   "address": 5036528
  },
- "rtl_local_chain_call": {
-  "callees": {
-   "0x4e0f8b": [
-    0,
-    false
-   ],
-   "0x4cd8b0": [
-    3,
-    true
-   ]
-  },
-  "stack": 96,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   11,
-   12,
-   13
-  ],
-  "virtual": [],
-  "address": 5036562
- },
  "rtl_string_fill": {
   "callees": {
    "0x4ca060": [
@@ -3855,36 +3689,6 @@
   ],
   "virtual": [],
   "address": 5036688
- },
- "f4cdb70": {
-  "callees": {
-   "0x4ca070": [
-    0,
-    false
-   ],
-   "0x4ca240": [
-    1,
-    false
-   ]
-  },
-  "stack": 112,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   0
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   11,
-   12,
-   13,
-   19,
-   20,
-   21
-  ],
-  "virtual": [],
-  "address": 5036912
  },
  "f4cdbe0": {
   "callees": {
@@ -4024,33 +3828,6 @@
   ],
   "virtual": [],
   "address": 5038000
- },
- "rtl_construct_buffer_stream": {
-  "callees": {
-   "0x4cb460": [
-    0,
-    false
-   ],
-   "0x4eb5c0": [
-    0,
-    false
-   ]
-  },
-  "stack": 120,
-  "arguments": 0,
-  "pointer_callees": [
-   "0x4cb460"
-  ],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   31,
-   32,
-   33
-  ],
-  "virtual": [],
-  "address": 5042976
  },
  "f4cf4a0": {
   "callees": {
@@ -5129,55 +4906,6 @@
    ]
   ],
   "address": 5054928
- },
- "f4d2310": {
-  "callees": {
-   "0x4cccc0": [
-    0,
-    false
-   ],
-   "0x4cbe80": [
-    0,
-    false
-   ],
-   "virtual_4d2331": [
-    0,
-    false
-   ],
-   "0x4f1998": [
-    1,
-    false
-   ],
-   "0x4f1a94": [
-    4,
-    false
-   ],
-   "0x4cf850": [
-    0,
-    false
-   ]
-  },
-  "stack": 140,
-  "arguments": 0,
-  "pointer_callees": [
-   "0x4cbe80"
-  ],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   1073741823,
-   1073741824,
-   1073741825
-  ],
-  "virtual": [
-   [
-    0,
-    120,
-    0
-   ]
-  ],
-  "address": 5055248
  },
  "f4d23f0": {
   "callees": {

@@ -1,0 +1,31 @@
+#ifndef VERTRIX_PORT_BEATS_H
+#define VERTRIX_PORT_BEATS_H
+#include "port.h"
+
+/* Clean ports of actor states stepping on timer beats (port_beats.c). */
+uint32_t vertrix_port_actor_burst_wait_4476b0(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_fade_state_447bc0(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_choice_picture_448ca0(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_pointer_beat_4493d0(PORT_SIGNATURE);
+uint32_t vertrix_port_list_arrow_back_44a0e0(PORT_SIGNATURE);
+uint32_t vertrix_port_list_arrow_forward_44a210(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_burst_start_44ab50(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_piece_kind_44c6e0(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_flash_state_44cab0(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_flash_state_44cb50(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_fade_frame_44d560(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_fade_frame_44d6d0(PORT_SIGNATURE);
+uint32_t vertrix_port_block_mode_pulse_update_44d8b0(PORT_SIGNATURE);
+uint32_t vertrix_port_block_mode_pulse_update_44d940(PORT_SIGNATURE);
+uint32_t vertrix_port_block_fade_out_44d9d0(PORT_SIGNATURE);
+uint32_t vertrix_port_block_half_pulse_update_44da70(PORT_SIGNATURE);
+uint32_t vertrix_port_block_half_pulse_update_44db10(PORT_SIGNATURE);
+uint32_t vertrix_port_block_collapse_update_44e380(PORT_SIGNATURE);
+uint32_t vertrix_port_block_drop_update_44e410(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_fade_frame_44e800(PORT_SIGNATURE);
+uint32_t vertrix_port_block_period_update_44e890(PORT_SIGNATURE);
+uint32_t vertrix_port_block_slide_update_44ec40(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_flash_state_44f7e0(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_flash_state_44f880(PORT_SIGNATURE);
+uint32_t vertrix_port_number_transition_configured_44fc60(PORT_SIGNATURE);
+#endif

@@ -1257,34 +1257,6 @@
   ],
   "address": 4342624
  },
- "ai_row_reach": {
-  "callees": {
-   "0x4eb5c0": [
-    0,
-    false
-   ]
-  },
-  "stack": 84,
-  "arguments": 1,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   3,
-   4,
-   5,
-   6,
-   9,
-   10,
-   11,
-   254,
-   255,
-   256
-  ],
-  "virtual": [],
-  "address": 4350384
- },
  "ai_fallback": {
   "callees": {
    "0x4eb5c0": [
@@ -2904,53 +2876,6 @@
   "virtual": [],
   "address": 4920800
  },
- "object_list_prune": {
-  "callees": {
-   "0x4ac900": [
-    0,
-    false
-   ],
-   "virtual_4b5fac": [
-    0,
-    false
-   ]
-  },
-  "stack": 100,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   4
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   7,
-   8,
-   9
-  ],
-  "virtual": [
-   [
-    0,
-    20,
-    0
-   ]
-  ],
-  "address": 4939600
- },
- "list_item_4b6fa0": {
-  "callees": {},
-  "stack": 68,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   4
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4943776
- },
  "object_is_idle": {
   "callees": {},
   "stack": 96,
@@ -3003,36 +2928,6 @@
   "constants": [],
   "virtual": [],
   "address": 5035296
- },
- "rtl_string_tail": {
-  "callees": {
-   "0x4ca070": [
-    0,
-    false
-   ],
-   "0x4ca240": [
-    1,
-    false
-   ]
-  },
-  "stack": 116,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   0
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   11,
-   12,
-   13,
-   19,
-   20,
-   21
-  ],
-  "virtual": [],
-  "address": 5036784
  },
  "rtl_range_table_find": {
   "callees": {},
@@ -3168,23 +3063,6 @@
   ],
   "virtual": [],
   "address": 5076944
- },
- "rtl_probe_call": {
-  "callees": {
-   "0x4db950": [
-    3,
-    false
-   ]
-  },
-  "stack": 92,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 5084320
  },
  "f4da3ba": {
   "callees": {

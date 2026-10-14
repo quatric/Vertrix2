@@ -1,0 +1,32 @@
+#ifndef VERTRIX_PORT_COMBINES_H
+#define VERTRIX_PORT_COMBINES_H
+#include "port.h"
+
+/* Clean ports of player board join, combine, effect and attack states and actor motion states
+ * (port_combines.c). */
+uint32_t vertrix_port_player_boards_join_452fc0(PORT_SIGNATURE);
+uint32_t vertrix_port_player_boards_restart_453280(PORT_SIGNATURE);
+uint32_t vertrix_port_state_combine_453320(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_stone_apply_4534e0(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_copy_speed_453c00(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_attack_453f40(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_attack_454250(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_attack_454560(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_struck_start_454600(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_struck_ticks_4548e0(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_board_restart_455700(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_board_restart_455970(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_board_restart_455a90(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_check_bind_455790(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_check_455b90(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_check_455d10(PORT_SIGNATURE);
+uint32_t vertrix_port_volume_fade_update_456f10(PORT_SIGNATURE);
+uint32_t vertrix_port_key_delay_update_457770(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_drift_update_457b70(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_tick_458330(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_rise_update_458710(PORT_SIGNATURE);
+uint32_t vertrix_port_spark_start_4589e0(PORT_SIGNATURE);
+uint32_t vertrix_port_bird_start_459200(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_fade_in_459950(PORT_SIGNATURE);
+uint32_t vertrix_port_player_message_show_45abd0(PORT_SIGNATURE);
+#endif

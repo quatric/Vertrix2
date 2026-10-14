@@ -52,40 +52,5 @@
    ]
   ],
   "address": 4931040
- },
- "f4b3f30": {
-  "callees": {
-   "virtual_4b3f42": [
-    0,
-    false
-   ],
-   "virtual_4b3f51": [
-    0,
-    false
-   ],
-   "0x4b3390": [
-    0,
-    false
-   ]
-  },
-  "stack": 92,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   180,
-   368,
-   372
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [
-   [
-    344,
-    4,
-    0
-   ]
-  ],
-  "address": 4931376
  }
 }
