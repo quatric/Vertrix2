@@ -48,55 +48,5 @@
    ]
   ],
   "address": 4369168
- },
- "piece_actor_update": {
-  "callees": {
-   "0x4ac500": [
-    0,
-    false
-   ],
-   "0x4ac520": [
-    0,
-    false
-   ],
-   "virtual_42ac6f": [
-    0,
-    false
-   ],
-   "0x42af30": [
-    0,
-    false
-   ],
-   "0x4ac540": [
-    0,
-    false
-   ],
-   "0x4ac5b0": [
-    0,
-    false
-   ]
-  },
-  "stack": 108,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   348
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2,
-   4294967295
-  ],
-  "virtual": [
-   [
-    344,
-    4,
-    0
-   ]
-  ],
-  "address": 4369472
  }
 }

@@ -27,11 +27,9 @@ enum
     LIFTED_AI_MODE_FLAGS_STACK = 76,
     LIFTED_AI_CHOICE_SCORES_STACK = 112,
     LIFTED_F429750_STACK = 140,
-    LIFTED_PIECE_CHILDREN_PLACE_STACK = 88,
     LIFTED_ACTOR_SPAWN_MATCH_EFFECT_STACK = 152,
     LIFTED_ACTOR_SPAWN_MATCH_BURST_STACK = 184,
     LIFTED_EFFECTS_RELEASE_ALL_FULL_STACK = 80,
-    LIFTED_F43E1A0_STACK = 160,
     LIFTED_F43EAB0_STACK = 384,
     LIFTED_F461610_STACK = 240,
     LIFTED_F461790_STACK = 252,
@@ -155,11 +153,6 @@ uint32_t lifted_ai_choice_scores(const VertrixCalls *calls, const VertrixFactory
 uint32_t lifted_f429750(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x42a800. */
-uint32_t lifted_piece_children_place(const VertrixCalls *calls,
-                                     const VertrixFactoryServices *services,
-                                     const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x430190. */
 uint32_t lifted_actor_spawn_match_effect(const VertrixCalls *calls,
                                          const VertrixFactoryServices *services,
@@ -174,10 +167,6 @@ uint32_t lifted_actor_spawn_match_burst(const VertrixCalls *calls,
 uint32_t lifted_effects_release_all_full(const VertrixCalls *calls,
                                          const VertrixFactoryServices *services,
                                          const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x43e1a0. */
-uint32_t lifted_f43e1a0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x43eab0. */
 uint32_t lifted_f43eab0(const VertrixCalls *calls, const VertrixFactoryServices *services,

@@ -6,18 +6,12 @@
 
 enum
 {
-    LIFTED_PIECE_ACTOR_DESTROY_FULL_STACK = 164,
-    LIFTED_PIECE_ACTOR_UPDATE_STACK = 108
+    LIFTED_PIECE_ACTOR_DESTROY_FULL_STACK = 164
 };
 
 /* Original 0x42ab10. */
 uint32_t lifted_piece_actor_destroy_full(const VertrixCalls *calls,
                                          const VertrixFactoryServices *services,
                                          const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42ac40. */
-uint32_t lifted_piece_actor_update(const VertrixCalls *calls,
-                                   const VertrixFactoryServices *services,
-                                   const VertrixGlobals *globals, const LiftEntry *entry);
 
 #endif

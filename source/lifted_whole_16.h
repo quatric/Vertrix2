@@ -8,7 +8,6 @@ enum
 {
     LIFTED_AI_SEARCH_STACK = 516,
     LIFTED_F429910_STACK = 168,
-    LIFTED_F42A3C0_STACK = 164,
     LIFTED_F42B190_STACK = 168,
     LIFTED_F432480_STACK = 228,
     LIFTED_F43A1A0_STACK = 164,
@@ -22,10 +21,6 @@ uint32_t lifted_ai_search(const VertrixCalls *calls, const VertrixFactoryService
 
 /* Original 0x429910. */
 uint32_t lifted_f429910(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42a3c0. */
-uint32_t lifted_f42a3c0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42b190. */
