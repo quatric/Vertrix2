@@ -998,4 +998,22 @@ uint32_t vertrix_port_render_mask_alpha_row_49a020(PORT_SIGNATURE);
 /* Original 0x4a20e0: the same code as 0x49a020. */
 uint32_t vertrix_port_render_mask_alpha_row_4a20e0(PORT_SIGNATURE);
 
+/* The rectangle fills (32-bit 0x492b90, 0x492cc0, 0x492e40, 0x492f90; 16-bit 0x49a8a0, 0x49aa40,
+ * 0x49abb0, 0x49aca0, 0x49ae50 in 5-5-5 and 0x4a2960, 0x4a2af0, 0x4a2c60, 0x4a2d50, 0x4a2ef0 in
+ * 5-6-5): remap, tint, half plus, half tint and half plus remap of each pixel in place. */
+uint32_t vertrix_port_rectangle_remap32_492b90(PORT_SIGNATURE);
+uint32_t vertrix_port_rectangle_tint32_492cc0(PORT_SIGNATURE);
+uint32_t vertrix_port_rectangle_half_tint32_492e40(PORT_SIGNATURE);
+uint32_t vertrix_port_rectangle_half_plus_remap32_492f90(PORT_SIGNATURE);
+uint32_t vertrix_port_rectangle_remap16_49a8a0(PORT_SIGNATURE);
+uint32_t vertrix_port_rectangle_remap16_4a2960(PORT_SIGNATURE);
+uint32_t vertrix_port_rectangle_tint16_49aa40(PORT_SIGNATURE);
+uint32_t vertrix_port_rectangle_tint16_4a2af0(PORT_SIGNATURE);
+uint32_t vertrix_port_rectangle_half_plus16_49abb0(PORT_SIGNATURE);
+uint32_t vertrix_port_rectangle_half_plus16_4a2c60(PORT_SIGNATURE);
+uint32_t vertrix_port_rectangle_half_tint16_49aca0(PORT_SIGNATURE);
+uint32_t vertrix_port_rectangle_half_tint16_4a2d50(PORT_SIGNATURE);
+uint32_t vertrix_port_rectangle_half_plus_remap16_49ae50(PORT_SIGNATURE);
+uint32_t vertrix_port_rectangle_half_plus_remap16_4a2ef0(PORT_SIGNATURE);
+
 #endif

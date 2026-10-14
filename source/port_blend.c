@@ -4199,3 +4199,205 @@ uint32_t vertrix_port_render_mask_alpha_row_4a20e0(PORT_SIGNATURE)
 {
     return render_mask_alpha_row_at(calls, services, globals, entry, 0x5bb780);
 }
+
+enum
+{
+    RECTANGLE_ACROSS = 0x5bb750,
+    RECTANGLE_ROWS = 0x5bb752,
+    RECTANGLE_REMAP = 0,
+    RECTANGLE_TINT,
+    RECTANGLE_HALF_PLUS,
+    RECTANGLE_HALF_TINT,
+    RECTANGLE_HALF_PLUS_REMAP,
+    /* What each original leaves in eax once a row is done: the pixel pointer at the row's end or
+     * the row skip, whole or with its low half replaced by the row count (zero at the end). */
+    LEFT_ROW_END = 0,
+    LEFT_ROW_END_HIGH,
+    LEFT_SKIP,
+    LEFT_SKIP_HIGH
+};
+
+static uint32_t rectangle_colour(Port *port, int kind, uint32_t colour)
+{
+    switch (kind)
+    {
+        case RECTANGLE_REMAP:
+            return remap(port, colour);
+        case RECTANGLE_TINT:
+            return remap_tint(port, colour);
+        case RECTANGLE_HALF_PLUS:
+            return half_plus(port, colour);
+        case RECTANGLE_HALF_TINT:
+            return half_tint(port, colour);
+        default:
+            return remap(port, half_plus(port, colour));
+    }
+}
+
+/* The rectangle fills: each pixel of a rectangle at the target pointer (0x5bb768 for 32-bit
+ * pixels, 0x5bb780 for 16-bit ones) is recoloured in place, 0x5bb750 pixels across and 0x5bb752
+ * rows (counted down to zero in place), with 0x5bb7c8 bytes skipped after each row. The pointer is
+ * left past the last row and 0x5bc016 at zero; the 16-bit forms widen each pixel first and leave
+ * the last colour at 0x5bb774. */
+static uint32_t rectangle_fill(PORT_SIGNATURE, int kind, int size16, int green6, int left)
+{
+    Port port;
+    uint32_t eax = entry->eax;
+    uint32_t pointer_global = size16 ? TARGET_PIXEL_16 : TARGET_PIXEL;
+    uint32_t pixel;
+    uint32_t rows;
+    uint32_t across;
+    uint32_t colour;
+    uint32_t map;
+    port_open(&port, calls, services, globals, entry);
+    pixel = port_u32(&port, 0, pointer_global);
+    map = port_u32(&port, 0, MAP);
+    rows = port_u16(&port, 0, RECTANGLE_ROWS);
+    if (rows == 0)
+    {
+        return port_return(&port, eax, entry->edx);
+    }
+    colour = port_u32(&port, 0, WIDE_TARGET);
+    for (; rows != 0; rows = (rows - 1) & 0xffff)
+    {
+        uint32_t skip;
+        for (across = port_u16(&port, 0, RECTANGLE_ACROSS); across != 0; across--)
+        {
+            if (size16)
+            {
+                colour = rectangle_colour(&port, kind, widen16(port_u16(&port, pixel, 0), green6));
+                port_set16(&port, pixel, 0, narrow16(colour, green6));
+                pixel += 2;
+            }
+            else if (kind == RECTANGLE_HALF_PLUS_REMAP)
+            {
+                /* The half plus is stored first and its green and blue index bits read back; the
+                 * map stays in hand until the end. */
+                colour = half_plus(&port, port_u32(&port, pixel, 0));
+                port_set32(&port, pixel, 0, colour);
+                colour = (colour & 0xfc0000) | (port_u32(&port, pixel, 0) & 0xfcfc);
+                colour =
+                    port_u32(&port, port_u32(&port, 0, COLOUR_ENTRIES), entry_index(colour) * 4);
+                port_set32(&port, 0, ENTRY, colour);
+                map =
+                    port_u32(&port, port_u32(&port, 0, CHANNEL_MAPS), port_u8(&port, 0, ENTRY) * 4);
+                colour = port_u32(&port, 0, ENTRY);
+                colour = (port_u8(&port, map, colour >> 24) << 16) |
+                         (port_u8(&port, map, (colour >> 16) & 0xff) << 8) |
+                         port_u8(&port, map, (port_u16(&port, 0, ENTRY) >> 8) & 0xff);
+                port_set32(&port, pixel, 0, colour);
+                pixel += 4;
+            }
+            else
+            {
+                port_set32(&port, pixel, 0,
+                           rectangle_colour(&port, kind, port_u32(&port, pixel, 0)));
+                pixel += 4;
+            }
+        }
+        skip = port_u32(&port, 0, TARGET_SKIP);
+        switch (left)
+        {
+            case LEFT_ROW_END:
+                eax = pixel;
+                break;
+            case LEFT_ROW_END_HIGH:
+                eax = pixel & 0xffff0000;
+                break;
+            case LEFT_SKIP:
+                eax = skip;
+                break;
+            default:
+                eax = skip & 0xffff0000;
+                break;
+        }
+        pixel += skip;
+        port_set16(&port, 0, RECTANGLE_ROWS, rows - 1);
+    }
+    if (!size16 && kind == RECTANGLE_HALF_PLUS_REMAP)
+    {
+        port_set32(&port, 0, MAP, map);
+    }
+    port_set32(&port, 0, pointer_global, pixel);
+    port_set16(&port, 0, ROW_COUNT, 0);
+    if (size16)
+    {
+        port_set32(&port, 0, WIDE_TARGET, colour);
+    }
+    return port_return(&port, eax, entry->edx);
+}
+
+uint32_t vertrix_port_rectangle_remap32_492b90(PORT_SIGNATURE)
+{
+    return rectangle_fill(calls, services, globals, entry, RECTANGLE_REMAP, 0, 0, LEFT_SKIP);
+}
+
+uint32_t vertrix_port_rectangle_tint32_492cc0(PORT_SIGNATURE)
+{
+    return rectangle_fill(calls, services, globals, entry, RECTANGLE_TINT, 0, 0, LEFT_ROW_END);
+}
+
+uint32_t vertrix_port_rectangle_half_tint32_492e40(PORT_SIGNATURE)
+{
+    return rectangle_fill(calls, services, globals, entry, RECTANGLE_HALF_TINT, 0, 0, LEFT_ROW_END);
+}
+
+uint32_t vertrix_port_rectangle_half_plus_remap32_492f90(PORT_SIGNATURE)
+{
+    return rectangle_fill(calls, services, globals, entry, RECTANGLE_HALF_PLUS_REMAP, 0, 0,
+                          LEFT_ROW_END);
+}
+
+uint32_t vertrix_port_rectangle_remap16_49a8a0(PORT_SIGNATURE)
+{
+    return rectangle_fill(calls, services, globals, entry, RECTANGLE_REMAP, 1, 0, LEFT_ROW_END);
+}
+
+uint32_t vertrix_port_rectangle_remap16_4a2960(PORT_SIGNATURE)
+{
+    return rectangle_fill(calls, services, globals, entry, RECTANGLE_REMAP, 1, 1, LEFT_ROW_END);
+}
+
+uint32_t vertrix_port_rectangle_tint16_49aa40(PORT_SIGNATURE)
+{
+    return rectangle_fill(calls, services, globals, entry, RECTANGLE_TINT, 1, 0, LEFT_SKIP_HIGH);
+}
+
+uint32_t vertrix_port_rectangle_tint16_4a2af0(PORT_SIGNATURE)
+{
+    return rectangle_fill(calls, services, globals, entry, RECTANGLE_TINT, 1, 1, LEFT_SKIP_HIGH);
+}
+
+uint32_t vertrix_port_rectangle_half_plus16_49abb0(PORT_SIGNATURE)
+{
+    return rectangle_fill(calls, services, globals, entry, RECTANGLE_HALF_PLUS, 1, 0,
+                          LEFT_ROW_END_HIGH);
+}
+
+uint32_t vertrix_port_rectangle_half_plus16_4a2c60(PORT_SIGNATURE)
+{
+    return rectangle_fill(calls, services, globals, entry, RECTANGLE_HALF_PLUS, 1, 1,
+                          LEFT_ROW_END_HIGH);
+}
+
+uint32_t vertrix_port_rectangle_half_tint16_49aca0(PORT_SIGNATURE)
+{
+    return rectangle_fill(calls, services, globals, entry, RECTANGLE_HALF_TINT, 1, 0, LEFT_ROW_END);
+}
+
+uint32_t vertrix_port_rectangle_half_tint16_4a2d50(PORT_SIGNATURE)
+{
+    return rectangle_fill(calls, services, globals, entry, RECTANGLE_HALF_TINT, 1, 1, LEFT_SKIP);
+}
+
+uint32_t vertrix_port_rectangle_half_plus_remap16_49ae50(PORT_SIGNATURE)
+{
+    return rectangle_fill(calls, services, globals, entry, RECTANGLE_HALF_PLUS_REMAP, 1, 0,
+                          LEFT_SKIP_HIGH);
+}
+
+uint32_t vertrix_port_rectangle_half_plus_remap16_4a2ef0(PORT_SIGNATURE)
+{
+    return rectangle_fill(calls, services, globals, entry, RECTANGLE_HALF_PLUS_REMAP, 1, 1,
+                          LEFT_ROW_END);
+}
