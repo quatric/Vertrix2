@@ -961,4 +961,24 @@ uint32_t vertrix_port_blend_fixed_entry_levels(PORT_SIGNATURE);
  * (kept at 0x5bc018) and itself. Returns the target address. */
 uint32_t vertrix_port_blend_paired_levels(PORT_SIGNATURE);
 
+/* Original 0x492a70: (eax = row routine): draw an image's rows from the last up, with sampled
+ * source rows. The row index 0x5bb7d4 moves on by the row count (the high word of 0x5bb750) less
+ * two, the source 0x5bb764 by the word at 0x5bb7e0 times 0x5bb7c0 pixels, the target row 0x5bb770
+ * by the stride 0x5bb7c4 and the mask row 0x5bb7e8 by the mask stride (high word of 0x5bb742) for
+ * each row but one. For each of the 16-bit count at 0x5bb750 rows, from the row starts at 0x5bb7ec
+ * (0x5bbfec the current one), the pixel count 0x5bc016 is the width less the row's start, the
+ * source row 0x5bb76c is the source plus four times the next byte of the list at 0x5bb7d8,
+ * 0x5bb7dc becomes the row index, the target pixel and mask are set, the target row moves four
+ * bytes and the mask one, and the routine is called (eax the mask, edx the target, ecx the
+ * source); the source becomes the source row after it. Returns the last source row; edx is
+ * unchanged. */
+uint32_t vertrix_port_render_sampled_rows(PORT_SIGNATURE);
+
+/* Original 0x49a780: the same for 16-bit targets (the pixel and row at 0x5bb780 and 0x5bb784, two
+ * bytes on). */
+uint32_t vertrix_port_render_sampled_rows_49a780(PORT_SIGNATURE);
+
+/* Original 0x4a2840: the same code as 0x49a780. */
+uint32_t vertrix_port_render_sampled_rows_4a2840(PORT_SIGNATURE);
+
 #endif

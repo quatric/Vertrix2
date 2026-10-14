@@ -4009,3 +4009,79 @@ uint32_t vertrix_port_blend_paired_levels(PORT_SIGNATURE)
     colour = levels_mix_values(&port, colour, target32(&port));
     return port_return(&port, put32(&port, colour), entry->edx);
 }
+
+enum
+{
+    FIRST_ROW = 0x5bb7e0
+};
+
+/* 0x492a70's rows with the target pixel and row at `target_pixel` and `row_global`, the target
+ * moving `step` bytes a row. */
+static uint32_t render_sampled_rows_at(PORT_SIGNATURE, uint32_t target_pixel, uint32_t row_global,
+                                       uint32_t step)
+{
+    Port port;
+    uint32_t routine = entry->eax;
+    uint32_t eax;
+    uint32_t rows;
+    uint32_t last;
+    uint32_t source;
+    uint32_t start = ROW_STARTS;
+    uint32_t count;
+    port_open(&port, calls, services, globals, entry);
+    rows = (uint32_t)((int32_t)port_u32(&port, 0, ROWS) >> 16);
+    last = rows - 1;
+    port_set32(&port, 0, ROW_INDEX, port_u32(&port, 0, ROW_INDEX) + rows - 2);
+    source = port_u32(&port, 0, SOURCE_PIXEL) +
+             ((port_u16(&port, 0, FIRST_ROW) * port_u32(&port, 0, ROW_SCALE)) << 2);
+    port_set32(&port, 0, row_global,
+               port_u32(&port, 0, row_global) + port_u32(&port, 0, TARGET_STRIDE) * last);
+    port_set32(&port, 0, SOURCE_PIXEL, source);
+    port_set32(&port, 0, MASK_ROW,
+               port_u32(&port, 0, MASK_ROW) +
+                   last * (uint32_t)((int32_t)port_u32(&port, 0, MASK_STRIDE) >> 16));
+    do
+    {
+        uint32_t steps;
+        uint32_t target;
+        uint32_t mask;
+        count = port_u16(&port, 0, WIDTH) - port_u16(&port, start, 0);
+        port_set32(&port, 0, ROW_START, start);
+        port_set16(&port, 0, ROW_COUNT, count);
+        steps = port_u32(&port, 0, NEXT_SAMPLE_STEPS);
+        source = port_u32(&port, 0, SOURCE_PIXEL) + (port_u8(&port, steps, 0) << 2);
+        port_set32(&port, 0, NEXT_SAMPLE_STEPS, steps + 1);
+        port_set32(&port, 0, SOURCE_ROW, source);
+        port_set32(&port, 0, SAMPLE_STEPS, port_u32(&port, 0, ROW_INDEX));
+        target = port_u32(&port, 0, row_global);
+        mask = port_u32(&port, 0, MASK_ROW);
+        port_set32(&port, 0, target_pixel, target);
+        port_set32(&port, 0, MASK_PIXEL, mask);
+        port_set32(&port, 0, row_global, target + step);
+        port_set32(&port, 0, MASK_ROW, mask + 1);
+        port_call(&port, routine, mask + 1, target + step, routine, source);
+        start = port_u32(&port, 0, ROW_START);
+        eax = port_u32(&port, 0, SOURCE_ROW);
+        port_set32(&port, 0, SOURCE_PIXEL, eax);
+        start += 2;
+        count = (port_u16(&port, 0, ROWS) - 1) & 0xffff;
+        port_set16(&port, 0, ROWS, count);
+    } while (count != 0);
+    port_set32(&port, 0, ROW_START, start);
+    return port_return(&port, eax, entry->edx);
+}
+
+uint32_t vertrix_port_render_sampled_rows(PORT_SIGNATURE)
+{
+    return render_sampled_rows_at(calls, services, globals, entry, TARGET_PIXEL, TARGET_ROW, 4);
+}
+
+uint32_t vertrix_port_render_sampled_rows_49a780(PORT_SIGNATURE)
+{
+    return render_sampled_rows_at(calls, services, globals, entry, 0x5bb780, 0x5bb784, 2);
+}
+
+uint32_t vertrix_port_render_sampled_rows_4a2840(PORT_SIGNATURE)
+{
+    return render_sampled_rows_at(calls, services, globals, entry, 0x5bb780, 0x5bb784, 2);
+}
