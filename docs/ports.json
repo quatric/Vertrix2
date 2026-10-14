@@ -3224,9 +3224,19 @@
   "lifted": "lifted_render_palette_pixel_layout_48d7f0",
   "chunk": "whole_21"
  },
+ "0x48d890": {
+  "port": "vertrix_port_blend_half_plus",
+  "lifted": "lifted_f48d890",
+  "chunk": "whole_21"
+ },
  "0x48d8c0": {
   "port": "vertrix_port_blend_half_tint",
   "lifted": "lifted_f48d8c0",
+  "chunk": "whole_21"
+ },
+ "0x48d9a0": {
+  "port": "vertrix_port_blend_half_plus_remap",
+  "lifted": "lifted_f48d9a0",
   "chunk": "whole_21"
  },
  "0x48da80": {
@@ -3259,14 +3269,39 @@
   "lifted": "lifted_f48dd50",
   "chunk": "whole_21"
  },
+ "0x48dda0": {
+  "port": "vertrix_port_blend_subtract_from",
+  "lifted": "lifted_f48dda0",
+  "chunk": "whole_21"
+ },
+ "0x48ddf0": {
+  "port": "vertrix_port_blend_invert",
+  "lifted": "lifted_f48ddf0",
+  "chunk": "whole_21"
+ },
+ "0x48de10": {
+  "port": "vertrix_port_blend_invert_target",
+  "lifted": "lifted_f48de10",
+  "chunk": "whole_21"
+ },
  "0x48de30": {
   "port": "vertrix_port_render_palette_map",
   "lifted": "lifted_f48de30",
   "chunk": "whole_21"
  },
+ "0x48df10": {
+  "port": "vertrix_port_blend_target_cross_remap",
+  "lifted": "lifted_f48df10",
+  "chunk": "whole_21"
+ },
  "0x48dff0": {
   "port": "vertrix_port_blend_average_remap",
   "lifted": "lifted_f48dff0",
+  "chunk": "whole_21"
+ },
+ "0x48e0c0": {
+  "port": "vertrix_port_blend_remap_average",
+  "lifted": "lifted_f48e0c0",
   "chunk": "whole_21"
  },
  "0x48e190": {
@@ -3279,6 +3314,36 @@
   "lifted": "lifted_f48e280",
   "chunk": "whole_21"
  },
+ "0x48e370": {
+  "port": "vertrix_port_blend_remap_subtract_from",
+  "lifted": "lifted_f48e370",
+  "chunk": "whole_21"
+ },
+ "0x48e460": {
+  "port": "vertrix_port_blend_remap_invert",
+  "lifted": "lifted_f48e460",
+  "chunk": "whole_21"
+ },
+ "0x48e520": {
+  "port": "vertrix_port_blend_target_remap_invert",
+  "lifted": "lifted_f48e520",
+  "chunk": "whole_21"
+ },
+ "0x48e5f0": {
+  "port": "vertrix_port_blend_mean_map_tint",
+  "lifted": "lifted_f48e5f0",
+  "chunk": "whole_21"
+ },
+ "0x48e6c0": {
+  "port": "vertrix_port_blend_quarters_plus",
+  "lifted": "lifted_f48e6c0",
+  "chunk": "whole_21"
+ },
+ "0x48e700": {
+  "port": "vertrix_port_blend_entry_mean_tint",
+  "lifted": "lifted_f48e700",
+  "chunk": "whole_21"
+ },
  "0x48e850": {
   "port": "vertrix_port_blend_tint_average",
   "lifted": "lifted_f48e850",
@@ -3289,14 +3354,44 @@
   "lifted": "lifted_f48e900",
   "chunk": "whole_21"
  },
+ "0x48e9d0": {
+  "port": "vertrix_port_blend_half_plus_add",
+  "lifted": "lifted_f48e9d0",
+  "chunk": "whole_21"
+ },
  "0x48ea30": {
   "port": "vertrix_port_render_palette_add_tinted",
   "lifted": "lifted_f48ea30",
   "chunk": "whole_21"
  },
+ "0x48eb40": {
+  "port": "vertrix_port_blend_tint_subtract",
+  "lifted": "lifted_f48eb40",
+  "chunk": "whole_21"
+ },
+ "0x48ec10": {
+  "port": "vertrix_port_blend_half_plus_subtract",
+  "lifted": "lifted_f48ec10",
+  "chunk": "whole_21"
+ },
  "0x48ec70": {
   "port": "vertrix_port_render_palette_subtract_tinted",
   "lifted": "lifted_f48ec70",
+  "chunk": "whole_21"
+ },
+ "0x48ed80": {
+  "port": "vertrix_port_blend_tint_subtract_from",
+  "lifted": "lifted_f48ed80",
+  "chunk": "whole_21"
+ },
+ "0x48ee50": {
+  "port": "vertrix_port_blend_half_plus_subtract_from",
+  "lifted": "lifted_f48ee50",
+  "chunk": "whole_21"
+ },
+ "0x48eeb0": {
+  "port": "vertrix_port_blend_half_tint_subtract_from",
+  "lifted": "lifted_f48eeb0",
   "chunk": "whole_21"
  },
  "0x4901a0": {

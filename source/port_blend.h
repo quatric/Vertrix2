@@ -715,4 +715,81 @@ uint32_t vertrix_port_pixel16_entry_levels_tint_49ffa0(PORT_SIGNATURE);
 uint32_t vertrix_port_pixel16_fixed_entry_levels_499bc0(PORT_SIGNATURE);
 uint32_t vertrix_port_pixel16_fixed_entry_levels_4a1c80(PORT_SIGNATURE);
 
+/* Original 0x48dda0: the target becomes the source less the target, each channel stopping at 0
+ * (the raw difference at 0x54d624). Returns the target address. */
+uint32_t vertrix_port_blend_subtract_from(PORT_SIGNATURE);
+
+/* Original 0x48ddf0: the target becomes the inverted source (low 24 bits). Returns the colour. */
+uint32_t vertrix_port_blend_invert(PORT_SIGNATURE);
+
+/* Original 0x48de10: the target is inverted (low 24 bits). Returns the target address. */
+uint32_t vertrix_port_blend_invert_target(PORT_SIGNATURE);
+
+/* Original 0x48d890: the target becomes the source halved (masked to 0x7f7f7f) plus the colour at
+ * 0x54d5ec. Returns the colour. */
+uint32_t vertrix_port_blend_half_plus(PORT_SIGNATURE);
+
+/* Original 0x48d9a0: the target becomes that colour, then the target is remapped. Returns the
+ * target address. */
+uint32_t vertrix_port_blend_half_plus_remap(PORT_SIGNATURE);
+
+/* Original 0x48df10: the source's colour entry (stored at 0x54d5d4) remapped through the map the
+ * target's entry selects (stored at 0x54d5d0). Returns the target address. */
+uint32_t vertrix_port_blend_target_cross_remap(PORT_SIGNATURE);
+
+/* Original 0x48e0c0: the target becomes the average of itself and the remapped source (kept at
+ * 0x5bc018). Returns the target address. */
+uint32_t vertrix_port_blend_remap_average(PORT_SIGNATURE);
+
+/* Original 0x48e370: the target becomes the remapped source (kept at 0x5bc018) less the target,
+ * each channel stopping at 0. Returns the target address. */
+uint32_t vertrix_port_blend_remap_subtract_from(PORT_SIGNATURE);
+
+/* Original 0x48e460: the target becomes the remapped source (kept at 0x5bc018) inverted (low 24
+ * bits). Returns that colour. */
+uint32_t vertrix_port_blend_remap_invert(PORT_SIGNATURE);
+
+/* Original 0x48e520: the target becomes its remapped colour (kept at 0x5bc018) inverted (low 24
+ * bits). Returns the target address. */
+uint32_t vertrix_port_blend_target_remap_invert(PORT_SIGNATURE);
+
+/* Original 0x48e5f0: the target becomes the fixed channels remapped through the map numbered by
+ * the mean (rounded down) of the source's and the target's entry bytes (stored at 0x54d5d0).
+ * Returns the target address. */
+uint32_t vertrix_port_blend_mean_map_tint(PORT_SIGNATURE);
+
+/* Original 0x48e6c0: the target becomes the sum of the source's and its own quarters (masked to
+ * 0x3f3f3f) and the colour at 0x54d5ec. Returns the target address. */
+uint32_t vertrix_port_blend_quarters_plus(PORT_SIGNATURE);
+
+/* Original 0x48e700: the target becomes the map of the source's colour entry (the entry stored at
+ * 0x54d5d4, the map at 0x54d5d0) applied to the means of that entry's bytes 3, 2 and 1 and the
+ * target's entry's (stored at 0x54d5d8), each meaned again with the fixed channel. Returns the
+ * target address. */
+uint32_t vertrix_port_blend_entry_mean_tint(PORT_SIGNATURE);
+
+/* Original 0x48e9d0: saturating add to the target of the source halved plus the colour at 0x54d5ec
+ * (kept at 0x5bc018). Returns the target address. */
+uint32_t vertrix_port_blend_half_plus_add(PORT_SIGNATURE);
+
+/* Original 0x48eb40: saturating subtract from the target of the source remapped through fixed
+ * channels (kept at 0x5bc018). Returns the target address. */
+uint32_t vertrix_port_blend_tint_subtract(PORT_SIGNATURE);
+
+/* Original 0x48ec10: saturating subtract from the target of the source halved plus the colour at
+ * 0x54d5ec (kept at 0x5bc018). Returns the target address. */
+uint32_t vertrix_port_blend_half_plus_subtract(PORT_SIGNATURE);
+
+/* Original 0x48ed80: the target becomes the source remapped through fixed channels (kept at
+ * 0x5bc018) less the target, each channel stopping at 0. Returns the target address. */
+uint32_t vertrix_port_blend_tint_subtract_from(PORT_SIGNATURE);
+
+/* Original 0x48ee50: the target becomes the source halved plus the colour at 0x54d5ec (kept at
+ * 0x5bc018) less the target, each channel stopping at 0. Returns the target address. */
+uint32_t vertrix_port_blend_half_plus_subtract_from(PORT_SIGNATURE);
+
+/* Original 0x48eeb0: the target becomes the source remapped half way to the fixed channels (kept
+ * at 0x5bc018) less the target, each channel stopping at 0. Returns the target address. */
+uint32_t vertrix_port_blend_half_tint_subtract_from(PORT_SIGNATURE);
+
 #endif
