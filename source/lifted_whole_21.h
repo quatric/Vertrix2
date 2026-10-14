@@ -31,12 +31,9 @@ enum
     LIFTED_PIECE_CHILDREN_PLACE_STACK = 88,
     LIFTED_ACTOR_SPAWN_MATCH_EFFECT_STACK = 152,
     LIFTED_ACTOR_SPAWN_MATCH_BURST_STACK = 184,
-    LIFTED_F439370_STACK = 92,
     LIFTED_EFFECTS_RELEASE_ALL_FULL_STACK = 80,
     LIFTED_F43E1A0_STACK = 160,
     LIFTED_F43EAB0_STACK = 384,
-    LIFTED_OBJECT_START_HOLD_STACK = 84,
-    LIFTED_RESOURCE_PAIRED_FINISH_STACK = 212,
     LIFTED_F461610_STACK = 240,
     LIFTED_F461790_STACK = 252,
     LIFTED_OPTIONS_BUILD_STACK = 1132,
@@ -182,10 +179,6 @@ uint32_t lifted_actor_spawn_match_burst(const VertrixCalls *calls,
                                         const VertrixFactoryServices *services,
                                         const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x439370. */
-uint32_t lifted_f439370(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x43d800. */
 uint32_t lifted_effects_release_all_full(const VertrixCalls *calls,
                                          const VertrixFactoryServices *services,
@@ -198,15 +191,6 @@ uint32_t lifted_f43e1a0(const VertrixCalls *calls, const VertrixFactoryServices 
 /* Original 0x43eab0. */
 uint32_t lifted_f43eab0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x450f80. */
-uint32_t lifted_object_start_hold(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                  const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x45f020. */
-uint32_t lifted_resource_paired_finish(const VertrixCalls *calls,
-                                       const VertrixFactoryServices *services,
-                                       const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x461610. */
 uint32_t lifted_f461610(const VertrixCalls *calls, const VertrixFactoryServices *services,

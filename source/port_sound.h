@@ -17,4 +17,5 @@ uint32_t vertrix_port_offset_pair_call_478bf0(PORT_SIGNATURE);
 uint32_t vertrix_port_offset_pair_clamp_call_478c40(PORT_SIGNATURE);
 uint32_t vertrix_port_display_restart_47e780(PORT_SIGNATURE);
 uint32_t vertrix_port_display_chain_find_47f320(PORT_SIGNATURE);
+uint32_t vertrix_port_sound_release_stream_477320(PORT_SIGNATURE);
 #endif

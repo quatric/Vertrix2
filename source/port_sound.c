@@ -424,3 +424,49 @@ uint32_t vertrix_port_display_chain_find_47f320(PORT_SIGNATURE)
     }
     return port_return(&port, 0, entry->edx);
 }
+
+/* Original 0x477320: the stream record's +0 cleared last; unless byte +4 is set, the buffer +0xc
+ * stopped by its method +0x20 when +0x10 is 1 (then cleared) and released by its method +8, then
+ * the object +8 released by its method +8. Each pointer is cleared after. */
+uint32_t vertrix_port_sound_release_stream_477320(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t record = entry->eax;
+    uint32_t eax = entry->eax;
+    uint32_t pointer;
+    uint32_t methods;
+    uint32_t pushed[1];
+    port_open(&port, calls, services, globals, entry);
+    if (port_u8(&port, record, 4) == 0)
+    {
+        pointer = port_u32(&port, record, 0xc);
+        if (pointer != 0)
+        {
+            if (port_u32(&port, record, 0x10) == 1)
+            {
+                methods = port_u32(&port, pointer, 0);
+                pushed[0] = pointer;
+                call_registers(&port, port_u32(&port, methods, 0x20), pointer, methods, record,
+                               entry->ecx, entry->esi, entry->edi, entry->ebp, pushed, 1);
+                port_set32(&port, record, 0x10, 0);
+            }
+            pointer = port_u32(&port, record, 0xc);
+            methods = port_u32(&port, pointer, 0);
+            pushed[0] = pointer;
+            eax = call_registers(&port, port_u32(&port, methods, 8), pointer, methods, record,
+                                 entry->ecx, entry->esi, entry->edi, entry->ebp, pushed, 1);
+            port_set32(&port, record, 0xc, 0);
+        }
+        pointer = port_u32(&port, record, 8);
+        if (pointer != 0)
+        {
+            methods = port_u32(&port, pointer, 0);
+            pushed[0] = pointer;
+            eax = call_registers(&port, port_u32(&port, methods, 8), eax, methods, record,
+                                 entry->ecx, pointer, entry->edi, entry->ebp, pushed, 1);
+            port_set32(&port, record, 8, 0);
+        }
+    }
+    port_set32(&port, record, 0, 0);
+    return port_return(&port, eax, entry->edx);
+}

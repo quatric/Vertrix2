@@ -1,0 +1,24 @@
+#ifndef VERTRIX_PORT_MARKS_H
+#define VERTRIX_PORT_MARKS_H
+#include "port.h"
+
+/* Clean ports of board marking, column, piece cycle and saved block helpers (port_marks.c). */
+uint32_t vertrix_port_scene_reload_4259d0(PORT_SIGNATURE);
+uint32_t vertrix_port_saved_block_load_4293e0(PORT_SIGNATURE);
+uint32_t vertrix_port_piece_actor_cycle_42af80(PORT_SIGNATURE);
+uint32_t vertrix_port_board_collection_all_handler_42ecc0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_mark_columns_42f210(PORT_SIGNATURE);
+uint32_t vertrix_port_board_mark_rows_first_42f440(PORT_SIGNATURE);
+uint32_t vertrix_port_board_mark_rows_second_42f4b0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_drop_columns_42f760(PORT_SIGNATURE);
+uint32_t vertrix_port_player_level_effect_431390(PORT_SIGNATURE);
+uint32_t vertrix_port_player_level_side_431400(PORT_SIGNATURE);
+uint32_t vertrix_port_board_purge_type_two_432200(PORT_SIGNATURE);
+uint32_t vertrix_port_board_has_type_one_432280(PORT_SIGNATURE);
+uint32_t vertrix_port_board_mark_fives_436fe0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_mark_fives_437240(PORT_SIGNATURE);
+uint32_t vertrix_port_board_mark_stones_not_bombs_437f60(PORT_SIGNATURE);
+uint32_t vertrix_port_board_mark_stones_4383f0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_flag_marked_437460(PORT_SIGNATURE);
+uint32_t vertrix_port_board_stamp_companions_437b70(PORT_SIGNATURE);
+#endif

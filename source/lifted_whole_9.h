@@ -26,7 +26,6 @@ enum
     LIFTED_F44B5D0_STACK = 176,
     LIFTED_F44B6F0_STACK = 200,
     LIFTED_F44B980_STACK = 200,
-    LIFTED_UI_PANELS_DESTROY_FULL_STACK = 96,
     LIFTED_F45FFB0_STACK = 248,
     LIFTED_STRING_TABLE_ASSIGN_STACK = 112,
     LIFTED_F47E4F0_STACK = 200,
@@ -145,11 +144,6 @@ uint32_t lifted_f44b6f0(const VertrixCalls *calls, const VertrixFactoryServices 
 /* Original 0x44b980. */
 uint32_t lifted_f44b980(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x45f9f0. */
-uint32_t lifted_ui_panels_destroy_full(const VertrixCalls *calls,
-                                       const VertrixFactoryServices *services,
-                                       const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x45ffb0. */
 uint32_t lifted_f45ffb0(const VertrixCalls *calls, const VertrixFactoryServices *services,

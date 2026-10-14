@@ -1,0 +1,25 @@
+#ifndef VERTRIX_PORT_CELLS_H
+#define VERTRIX_PORT_CELLS_H
+#include "port.h"
+
+/* Clean ports of board cell, marker, pattern and actor step helpers (port_cells.c). */
+uint32_t vertrix_port_board_prepare_slots_4387b0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_marker_in_column_438830(PORT_SIGNATURE);
+uint32_t vertrix_port_board_marker_in_column_4388a0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_apply_pattern_438c60(PORT_SIGNATURE);
+uint32_t vertrix_port_board_kinds_match_438cd0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_any_block_438d50(PORT_SIGNATURE);
+uint32_t vertrix_port_board_mark_kind_439370(PORT_SIGNATURE);
+uint32_t vertrix_port_player_set_side_43aab0(PORT_SIGNATURE);
+uint32_t vertrix_port_object_chain_select_pair_43acd0(PORT_SIGNATURE);
+uint32_t vertrix_port_player_draw_table_value_43b6a0(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_global_wait_4434e0(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_global_wait_443d50(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_callback_step_445890(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_callback_step_445d10(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_callback_step_445e90(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_bob_445a90(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_bob_445b10(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_select_animation_448c20(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_select_animation_4492f0(PORT_SIGNATURE);
+#endif
