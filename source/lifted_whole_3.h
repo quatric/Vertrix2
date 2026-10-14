@@ -8,8 +8,6 @@ enum
 {
     LIFTED_F45C600_STACK = 132,
     LIFTED_F45C9A0_STACK = 248,
-    LIFTED_F45CC40_STACK = 140,
-    LIFTED_F45CD00_STACK = 140,
     LIFTED_F45D1A0_STACK = 168,
     LIFTED_F45D690_STACK = 132,
     LIFTED_F45DCA0_STACK = 660,
@@ -100,14 +98,6 @@ uint32_t lifted_f45c600(const VertrixCalls *calls, const VertrixFactoryServices 
 
 /* Original 0x45c9a0. */
 uint32_t lifted_f45c9a0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x45cc40. */
-uint32_t lifted_f45cc40(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x45cd00. */
-uint32_t lifted_f45cd00(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x45d1a0. */
