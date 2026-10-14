@@ -1,0 +1,33 @@
+#ifndef VERTRIX_PORT_GRID_H
+#define VERTRIX_PORT_GRID_H
+#include "port.h"
+
+/* Clean ports of device state, channel and handle tables, grid scans and short update
+ * sequences (port_grid.c). */
+uint32_t vertrix_port_stream_read_byte_405ee0(PORT_SIGNATURE);
+uint32_t vertrix_port_handles_shutdown_40aba0(PORT_SIGNATURE);
+uint32_t vertrix_port_handles_release_40ad50(PORT_SIGNATURE);
+uint32_t vertrix_port_voice_set_rate_40bf80(PORT_SIGNATURE);
+uint32_t vertrix_port_voice_set_pan_40bfd0(PORT_SIGNATURE);
+uint32_t vertrix_port_device_lock_40ede0(PORT_SIGNATURE);
+uint32_t vertrix_port_device_set_pair_40eea0(PORT_SIGNATURE);
+uint32_t vertrix_port_device_get_locked_40ef40(PORT_SIGNATURE);
+uint32_t vertrix_port_record_table_load_4121e0(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_storage_style_4123d0(PORT_SIGNATURE);
+uint32_t vertrix_port_sfx_allocate_channel_p1_4174f0(PORT_SIGNATURE);
+uint32_t vertrix_port_sfx_allocate_channel_p2_417550(PORT_SIGNATURE);
+uint32_t vertrix_port_table_pair_value_4178d0(PORT_SIGNATURE);
+uint32_t vertrix_port_table_pair_link_417970(PORT_SIGNATURE);
+uint32_t vertrix_port_table_groups_used_417da0(PORT_SIGNATURE);
+uint32_t vertrix_port_table_column_nth_418000(PORT_SIGNATURE);
+uint32_t vertrix_port_scene_finish_419ea0(PORT_SIGNATURE);
+uint32_t vertrix_port_scene_teardown_41c020(PORT_SIGNATURE);
+uint32_t vertrix_port_scene_reset_41d410(PORT_SIGNATURE);
+uint32_t vertrix_port_settings_read_inverted_429600(PORT_SIGNATURE);
+uint32_t vertrix_port_grid_children_update_429b60(PORT_SIGNATURE);
+uint32_t vertrix_port_choice_grid_store_values_429e80(PORT_SIGNATURE);
+uint32_t vertrix_port_choice_grid_any_marked_42a1b0(PORT_SIGNATURE);
+uint32_t vertrix_port_lists_handler_42a4c0(PORT_SIGNATURE);
+uint32_t vertrix_port_piece_random_look_42a8e0(PORT_SIGNATURE);
+
+#endif

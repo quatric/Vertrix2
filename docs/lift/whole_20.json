@@ -49,29 +49,6 @@
   ],
   "address": 4369168
  },
- "piece_actor_forward_slot2": {
-  "callees": {
-   "virtual_42ac1b": [
-    0,
-    false
-   ]
-  },
-  "stack": 84,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [
-   [
-    344,
-    8,
-    0
-   ]
-  ],
-  "address": 4369392
- },
  "piece_actor_update": {
   "callees": {
    "0x4ac500": [

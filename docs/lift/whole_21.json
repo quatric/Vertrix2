@@ -239,49 +239,6 @@
   "virtual": [],
   "address": 4251696
  },
- "device_lock": {
-  "callees": {
-   "0x40ae00": [
-    0,
-    false
-   ]
-  },
-  "stack": 80,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   127,
-   128,
-   129,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 4255200
- },
- "device_get_locked": {
-  "callees": {},
-  "stack": 68,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   31,
-   32,
-   33,
-   127,
-   128,
-   129
-  ],
-  "virtual": [],
-  "address": 4255552
- },
  "record_step": {
   "callees": {},
   "stack": 68,
@@ -343,28 +300,6 @@
   ],
   "virtual": [],
   "address": 4269328
- },
- "record_field": {
-  "callees": {},
-  "stack": 68,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2,
-   3,
-   4,
-   5,
-   6,
-   7,
-   8
-  ],
-  "virtual": [],
-  "address": 4269536
  },
  "text_table_refresh": {
   "callees": {
@@ -1635,23 +1570,6 @@
   ],
   "address": 4364112
  },
- "choice_grid_store_values": {
-  "callees": {},
-  "stack": 92,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   6,
-   7,
-   8,
-   9
-  ],
-  "virtual": [],
-  "address": 4365952
- },
  "piece_children_place": {
   "callees": {},
   "stack": 88,
@@ -1799,28 +1717,6 @@
   "virtual": [],
   "address": 4391584
  },
- "f436100": {
-  "callees": {},
-  "stack": 84,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   4,
-   5,
-   6,
-   7,
-   8,
-   9,
-   12,
-   13,
-   14
-  ],
-  "virtual": [],
-  "address": 4415744
- },
  "f439370": {
   "callees": {
    "0x4327e0": [
@@ -1960,35 +1856,6 @@
   ],
   "virtual": [],
   "address": 4525952
- },
- "table_fill_slot": {
-  "callees": {
-   "0x487660": [
-    10,
-    false
-   ],
-   "0x4877f0": [
-    0,
-    false
-   ],
-   "0x482e10": [
-    0,
-    false
-   ],
-   "0x483ed0": [
-    0,
-    false
-   ]
-  },
-  "stack": 136,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4581200
  },
  "resource_paired_finish": {
   "callees": {
@@ -2522,41 +2389,6 @@
   "constants": [],
   "virtual": [],
   "address": 4657984
- },
- "scene_lookup_pair": {
-  "callees": {
-   "0x4b5eb0": [
-    0,
-    false
-   ],
-   "0x4123d0": [
-    0,
-    false
-   ]
-  },
-  "stack": 92,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4660752
- },
- "object_get_178": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   376
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4660944
  },
  "pair_flags": {
   "callees": {
@@ -3417,23 +3249,6 @@
   "virtual": [],
   "address": 5076944
  },
- "rtl_select_float_helpers": {
-  "callees": {},
-  "stack": 68,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 5079750
- },
  "rtl_probe_call": {
   "callees": {
    "0x4db950": [
@@ -3574,35 +3389,6 @@
   ],
   "virtual": [],
   "address": 5093478
- },
- "node_pool_take_quad": {
-  "callees": {
-   "0x4e23e0": [
-    3,
-    false
-   ]
-  },
-  "stack": 92,
-  "arguments": 0,
-  "pointer_callees": [
-   "0x4e23e0"
-  ],
-  "pointer_fields": [
-   16,
-   24
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   15,
-   16,
-   17,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 5107824
  },
  "f4df320": {
   "callees": {

@@ -2791,30 +2791,6 @@
   "virtual": [],
   "address": 5093568
  },
- "f4e0e69": {
-  "callees": {
-   "0x4e14b0": [
-    0,
-    false
-   ],
-   "0x4e14b7": [
-    0,
-    false
-   ]
-  },
-  "stack": 80,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   0,
-   20
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 5115497
- },
  "f4e87c1": {
   "callees": {
    "0x4ce9fd": [

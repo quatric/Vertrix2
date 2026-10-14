@@ -1,0 +1,35 @@
+#ifndef VERTRIX_PORT_BOARD_H
+#define VERTRIX_PORT_BOARD_H
+#include "port.h"
+
+/* Clean ports of piece, preview and board routines: child slots, motion starts, markers and
+ * fills (port_board.c). */
+uint32_t vertrix_port_piece_child_kinds_42a980(PORT_SIGNATURE);
+uint32_t vertrix_port_piece_children_offset_42a9d0(PORT_SIGNATURE);
+uint32_t vertrix_port_piece_actor_parent_construct_42aab0(PORT_SIGNATURE);
+uint32_t vertrix_port_piece_actor_forward_slot2_42abf0(PORT_SIGNATURE);
+uint32_t vertrix_port_piece_actor_layout_42af30(PORT_SIGNATURE);
+uint32_t vertrix_port_player_preview_motion_start_42b000(PORT_SIGNATURE);
+uint32_t vertrix_port_piece_arm_once_42b9f0(PORT_SIGNATURE);
+uint32_t vertrix_port_piece_children_draw_42b310(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_step_move_42b8d0(PORT_SIGNATURE);
+uint32_t vertrix_port_piece_snap_to_origin_42b990(PORT_SIGNATURE);
+uint32_t vertrix_port_piece_set_mode_42bab0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_collection_set_handler_42eda0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_ready_previews_42ee20(PORT_SIGNATURE);
+uint32_t vertrix_port_board_restart_slots_42ee80(PORT_SIGNATURE);
+uint32_t vertrix_port_board_place_extra_4300b0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_place_extra_430100(PORT_SIGNATURE);
+uint32_t vertrix_port_block_spawn_full_430800(PORT_SIGNATURE);
+uint32_t vertrix_port_board_piece_child_kind_431c10(PORT_SIGNATURE);
+uint32_t vertrix_port_board_flash_children_431fb0(PORT_SIGNATURE);
+uint32_t vertrix_port_player_preview_release_432110(PORT_SIGNATURE);
+uint32_t vertrix_port_player_piece_create_432160(PORT_SIGNATURE);
+uint32_t vertrix_port_player_piece_release_4321b0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_clear_mask_432840(PORT_SIGNATURE);
+uint32_t vertrix_port_board_marker_nth_by_row_435fe0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_marker_nth_by_column_4360b0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_marker_nth_by_column_436100(PORT_SIGNATURE);
+uint32_t vertrix_port_board_mark_filled_4375a0(PORT_SIGNATURE);
+
+#endif

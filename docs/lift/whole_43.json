@@ -1,16 +1,4 @@
 {
- "f40caa0": {
-  "callees": {},
-  "stack": 68,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4246176
- },
  "mixer_set_effect_40d490": {
   "callees": {},
   "stack": 68,
