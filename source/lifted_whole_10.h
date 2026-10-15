@@ -6,7 +6,6 @@
 
 enum
 {
-    LIFTED_F452960_STACK = 104,
     LIFTED_PALETTE_RGB_STACK = 292,
     LIFTED_PALETTE_COLOR_STACK = 256,
     LIFTED_SURFACE_FADE_STACK = 280,
@@ -24,10 +23,6 @@ enum
     LIFTED_F4ECF33_STACK = 80,
     LIFTED_F4ECF49_STACK = 72
 };
-
-/* Original 0x452960. */
-uint32_t lifted_f452960(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x474560. */
 uint32_t lifted_palette_rgb(const VertrixCalls *calls, const VertrixFactoryServices *services,
