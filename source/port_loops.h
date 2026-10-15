@@ -14,5 +14,8 @@ uint32_t vertrix_port_screen_keys_41c9e0(PORT_SIGNATURE);
 uint32_t vertrix_port_screen_finish_41ede0(PORT_SIGNATURE);
 uint32_t vertrix_port_screen_frame_421f10(PORT_SIGNATURE);
 uint32_t vertrix_port_picture_screen_frame_423600(PORT_SIGNATURE);
+uint32_t vertrix_port_picture_screen_frame_423fb0(PORT_SIGNATURE);
+uint32_t vertrix_port_game_screen_close_425630(PORT_SIGNATURE);
+uint32_t vertrix_port_game_close_425810(PORT_SIGNATURE);
 
 #endif

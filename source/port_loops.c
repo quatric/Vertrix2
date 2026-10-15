@@ -762,6 +762,7 @@ uint32_t vertrix_port_picture_screen_frame_423600(PORT_SIGNATURE)
         loop.ecx = 0;
         step_arguments(&loop, 0x47ce10, port_u32(&loop.port, 0, 0x558c7c), window, args, 4);
     }
+    loop.edx = page;
     if (page != port_u32(&loop.port, 0, 0x5405ec))
     {
         picture = port_u32(&loop.port, 0, 0x5405f0);
@@ -799,4 +800,329 @@ uint32_t vertrix_port_picture_screen_frame_423600(PORT_SIGNATURE)
         port_set8(&loop.port, 0, 0x5405e8, 0);
     }
     return port_return(&loop.port, port_u32(&loop.port, ebp, -0x34u), entry->edx);
+}
+
+/* Original 0x423fb0: under a guard record (0x514218) the picture screen eax's frame (0x54060c
+ * marking it entered, clearing the shown page 0x540610 and starting with 0x4724f0 for the kind
+ * +0xc8 6 or else 0x472470, then 0x4b7cd0 and 0x41d640): it runs (0x4b7d10, with +0xd4 clear
+ * 0x41d670 and 0x41dec0, 0x472350), takes the page 0x540614 (+0x58 of 0x4b5eb0 on 0x54676c with
+ * 8), clears the screen 0x558c7c to 0x558c80's size the first time (0x47ce10) and draws a new
+ * page (0x47ab70 of 0x558c88 and 0x558c80); the screen is drawn (0x41d6d0 with +0xd4 clear,
+ * 0x486da0, 0x487020, 0x486ed0, and with +0xd4 clear 0x41d660, 0x41de80, 0x41ddf0) and when done
+ * (0x472360 of 1) finishes (0x472330, 0x41ac80) and leaves (0x418830, bl cleared), clearing the
+ * mark. The guard record's chain. */
+uint32_t vertrix_port_picture_screen_frame_423fb0(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x2c
+    };
+    Loop loop;
+    uint32_t ebp = entry->esp - 4;
+    uint32_t screen = entry->eax;
+    uint32_t value;
+    uint32_t kind;
+    uint32_t page;
+    uint32_t window;
+    uint32_t args[4];
+    port_open_frame(&loop.port, calls, services, globals, entry, BELOW);
+    guard_record(&loop.port, ebp - 0x28, 0x514218);
+    loop.ebx = 0;
+    loop.ecx = 0x514218;
+    loop.esi = screen;
+    loop.edi = entry->edi;
+    loop.ebp = ebp;
+    value = port_u8(&loop.port, 0, 0x54060c);
+    loop.eax = ((ebp - 0x28) & 0xffff00ffu) | (value << 8);
+    loop.edx = 0x4ec1ec;
+    if (value == 0)
+    {
+        port_set8(&loop.port, 0, 0x54060c, 1);
+        kind = port_u8(&loop.port, screen, 0xc8);
+        loop.edx = (0x4ec1ec & 0xffff00ffu) | (kind << 8);
+        port_set32(&loop.port, 0, 0x540610, 0);
+        step(&loop, kind == 6 ? 0x4724f0 : 0x472470, loop.eax, loop.edx);
+        step(&loop, 0x4b7cd0, loop.eax, loop.edx);
+        step(&loop, 0x41d640, screen, loop.edx);
+    }
+    step(&loop, 0x4b7d10, loop.eax, loop.edx);
+    if (port_u32(&loop.port, screen, 0xd4) == 0)
+    {
+        step(&loop, 0x41d670, screen, loop.edx);
+        step(&loop, 0x41dec0, screen, loop.edx);
+    }
+    step(&loop, 0x472350, loop.eax, loop.edx);
+    step(&loop, 0x4b5eb0, 0x54676c, 8);
+    port_set32(&loop.port, 0, 0x540614, loop.eax != 0 ? port_u32(&loop.port, loop.eax, 0x58) : 0);
+    step(&loop, 0x486d00, 0x5b9c50, loop.edx);
+    loop.ecx = port_u32(&loop.port, 0, 0x540610);
+    if (loop.ecx == 0)
+    {
+        window = port_u32(&loop.port, 0, 0x558c80);
+        loop.edi = port_u32(&loop.port, window, 4);
+        args[0] = 0;
+        args[1] = 0;
+        args[2] = loop.edi;
+        args[3] = port_u32(&loop.port, window, 8);
+        loop.ebx = 0;
+        step_arguments(&loop, 0x47ce10, port_u32(&loop.port, 0, 0x558c7c), window, args, 4);
+    }
+    page = port_u32(&loop.port, 0, 0x540614);
+    loop.eax = port_u32(&loop.port, 0, 0x540610);
+    loop.edx = page;
+    if (loop.eax != page)
+    {
+        loop.ebx = port_u32(&loop.port, 0, 0x558c80);
+        loop.ecx = page;
+        step(&loop, 0x47ab70, port_u32(&loop.port, 0, 0x558c7c), port_u32(&loop.port, 0, 0x558c88));
+    }
+    if (port_u32(&loop.port, screen, 0xd4) == 0)
+    {
+        step(&loop, 0x41d6d0, screen, loop.edx);
+    }
+    step(&loop, 0x486da0, 0x5b9c50, loop.edx);
+    step(&loop, 0x487020, 0x5b9c50, loop.edx);
+    step(&loop, 0x486ed0, 0x5b9c50, loop.edx);
+    loop.eax = port_u32(&loop.port, 0, 0x540614);
+    port_set32(&loop.port, 0, 0x540610, loop.eax);
+    loop.ebx = port_u32(&loop.port, screen, 0xd4);
+    if (loop.ebx == 0)
+    {
+        step(&loop, 0x41d660, screen, loop.edx);
+        step(&loop, 0x41de80, screen, loop.edx);
+        step(&loop, 0x41ddf0, screen, loop.edx);
+    }
+    step(&loop, 0x472360, loop.eax, loop.edx);
+    if (loop.eax == 1)
+    {
+        step(&loop, 0x472330, loop.eax, loop.edx);
+        step(&loop, 0x41ac80, screen, loop.edx);
+        loop.ebx &= 0xffffff00u;
+        step(&loop, 0x418830, screen, loop.edx);
+        port_set8(&loop.port, 0, 0x54060c, 0);
+    }
+    return port_return(&loop.port, port_u32(&loop.port, ebp, -0x28u), entry->edx);
+}
+
+/* Original 0x425630: the game screen eax's closing frame (0x540633 marking it entered): the
+ * board, its pieces and players run and the screen is drawn as in 0x4254a0 (0x471b20 for
+ * 0x471ba0); when done (0x471d50 of 1) the state 0x532a60 decides: 0x4f7bc0 ends the music
+ * (0x471b10), shows 0x424990 (0x424760) and leaves (0x418840, bl cleared); 0x4f7bc4 ends the
+ * music, scores the players (0x471ea0: the first with 1 for 0x532a7c, 0x532a80 or no finish
+ * 0x532a8c, or finishes 1 to 3, the second with 1 unless 0x532a7c or finish 2 or 3) and leaves
+ * for 0x425810 (dh cleared); either clears the mark. The state then becomes 0x532a98, the
+ * result. */
+uint32_t vertrix_port_game_screen_close_425630(PORT_SIGNATURE)
+{
+    Loop loop;
+    uint32_t screen = entry->eax;
+    uint32_t state;
+    uint32_t finish;
+    uint32_t second = 1;
+    port_open(&loop.port, calls, services, globals, entry);
+    loop.eax = screen;
+    loop.edx = entry->edx;
+    loop.ebx = entry->ebx;
+    loop.ecx = screen;
+    loop.esi = entry->esi;
+    loop.edi = entry->edi;
+    loop.ebp = entry->ebp;
+    if (port_u8(&loop.port, 0, 0x540633) == 0)
+    {
+        port_set8(&loop.port, 0, 0x540633, 1);
+    }
+    step(&loop, 0x4b7d10, loop.eax, loop.edx);
+    step(&loop, 0x41d670, screen, loop.edx);
+    step(&loop, 0x41dec0, screen, loop.edx);
+    step(&loop, 0x4ac1c0, loop.eax, loop.edx);
+    step(&loop, 0x419490, screen, loop.edx);
+    step(&loop, 0x471b00, loop.eax, loop.edx);
+    step(&loop, 0x471a60, loop.eax, loop.edx);
+    step(&loop, 0x4854a0, 0x5b9c50, loop.edx);
+    if (loop.eax == 1)
+    {
+        step(&loop, 0x471a20, port_u32(&loop.port, 0, 0x558c84), port_u32(&loop.port, 0, 0x558c88));
+        step(&loop, 0x471a40, port_u32(&loop.port, 0, 0x558c84), loop.edx);
+        step(&loop, 0x485520, 0x5b9c50, loop.edx);
+    }
+    step(&loop, 0x41aaf0, screen, loop.edx);
+    step(&loop, 0x486d00, 0x5b9c50, loop.edx);
+    step(&loop, 0x471a50, port_u32(&loop.port, 0, 0x558c7c), loop.edx);
+    step(&loop, 0x471b20, port_u32(&loop.port, 0, 0x558c7c), loop.edx);
+    step(&loop, 0x4194b0, screen, loop.edx);
+    step(&loop, 0x41d6d0, screen, loop.edx);
+    step(&loop, 0x41dd60, screen, loop.edx);
+    step(&loop, 0x486da0, 0x5b9c50, loop.edx);
+    step(&loop, 0x487020, 0x5b9c50, loop.edx);
+    step(&loop, 0x41d660, screen, loop.edx);
+    step(&loop, 0x41de80, screen, loop.edx);
+    if (port_u32(&loop.port, 0, 0x532a38) == 1)
+    {
+        step(&loop, 0x41aca0, screen, loop.edx);
+    }
+    step(&loop, 0x471d50, loop.eax, loop.edx);
+    if (loop.eax != 1)
+    {
+        return port_return(&loop.port, loop.eax, entry->edx);
+    }
+    state = port_u32(&loop.port, 0, 0x532a60);
+    if (state == port_u32(&loop.port, 0, 0x4f7bc0))
+    {
+        step(&loop, 0x471b10, state, loop.edx);
+        step(&loop, 0x424760, screen, 0x424990);
+        loop.ebx &= 0xffffff00u;
+        step(&loop, 0x418840, screen, loop.edx);
+        port_set8(&loop.port, 0, 0x540633, 0);
+    }
+    else if (state == port_u32(&loop.port, 0, 0x4f7bc4))
+    {
+        step(&loop, 0x471b10, state, loop.edx);
+        loop.edi = port_u32(&loop.port, 0, 0x532a7c);
+        if (loop.edi == 1)
+        {
+            step(&loop, 0x471ea0, 1, 1);
+            second = 0;
+        }
+        else if (port_u32(&loop.port, 0, 0x532a80) == 1)
+        {
+            step(&loop, 0x471ea0, 1, 0);
+        }
+        else
+        {
+            finish = port_u32(&loop.port, 0, 0x532a8c);
+            if (finish == 0 || finish == 1)
+            {
+                step(&loop, 0x471ea0, 1, 0);
+            }
+            else if (finish == 2 || finish == 3)
+            {
+                step(&loop, 0x471ea0, 1, 0);
+                second = 0;
+            }
+            else
+            {
+                second = 2;
+            }
+        }
+        if (second != 2)
+        {
+            step(&loop, 0x471ea0, 2, second);
+        }
+        step(&loop, 0x418840, screen, 0x425810);
+        port_set8(&loop.port, 0, 0x540633, 0);
+    }
+    port_set32(&loop.port, 0, 0x532a60, port_u32(&loop.port, 0, 0x532a98));
+    return port_return(&loop.port, port_u32(&loop.port, 0, 0x532a98), entry->edx);
+}
+
+/* Original 0x425810: the screen eax closes the game (0x471ee0): the players' results (0x471eb0
+ * of 1 and 2) go to 0x532a90 and 0x532a94 (both 1 clears both); unless finished (0x532a8c) only
+ * the winner, else the first, has its score (0x471ec0) taken into 0x532aa4 and the second's into
+ * 0x532aa8, and the winner (by the edx left) adds its points (0x471ed0, 0x417e20) and a win
+ * (0x532aac, 0x532ab0); the screen is cleared to the colour of 0x544070's +0x268 (0x47ce10 of
+ * 0x558c80's size, 0x4719f0), readied (0x41a9e0, 0x4719e0, 0x45f9f0, 0x45e670 of 0 and 1,
+ * 0x45ea80), 0x532a10 and 0x532a14 cleared, 0x532b40 of 1 saving (0x415530, 0x472d50), and the
+ * states 0x421f10 (0x418840) and 0x41e780 (0x418820) set. */
+uint32_t vertrix_port_game_close_425810(PORT_SIGNATURE)
+{
+    Loop loop;
+    uint32_t screen = entry->eax;
+    uint32_t first;
+    uint32_t second;
+    uint32_t winner;
+    uint32_t points;
+    uint32_t window;
+    uint32_t args[4];
+    port_open(&loop.port, calls, services, globals, entry);
+    loop.edx = entry->edx;
+    loop.ebx = entry->ebx;
+    loop.ecx = entry->ecx;
+    loop.esi = screen;
+    loop.edi = entry->edi;
+    loop.ebp = entry->ebp;
+    step(&loop, 0x471ee0, screen, loop.edx);
+    step(&loop, 0x471eb0, 1, loop.edx);
+    first = loop.eax;
+    port_set32(&loop.port, 0, 0x532a90, first);
+    step(&loop, 0x471eb0, 2, loop.edx);
+    second = loop.eax;
+    port_set32(&loop.port, 0, 0x532a94, second);
+    if (first == 1 && second == 1)
+    {
+        loop.edi = 0;
+        port_set32(&loop.port, 0, 0x532a90, 0);
+        port_set32(&loop.port, 0, 0x532a94, 0);
+        winner = 0;
+    }
+    else
+    {
+        loop.ecx = port_u32(&loop.port, 0, 0x532a90);
+        if (loop.ecx == 1)
+        {
+            winner = 1;
+        }
+        else
+        {
+            winner = port_u32(&loop.port, 0, 0x532a94) == 1 ? 2 : 0;
+        }
+    }
+    loop.edx = winner;
+    if (port_u32(&loop.port, 0, 0x532a8c) != 0)
+    {
+        step(&loop, 0x471ec0, 1, loop.edx);
+        port_set32(&loop.port, 0, 0x532aa4, loop.eax);
+    }
+    else if (winner == 1)
+    {
+        step(&loop, 0x471ec0, 1, 1);
+        port_set32(&loop.port, 0, 0x532aa4, loop.eax);
+    }
+    step(&loop, 0x471ec0, 2, loop.edx);
+    port_set32(&loop.port, 0, 0x532aa8, loop.eax);
+    if (loop.edx == 1)
+    {
+        step(&loop, 0x471ed0, 1, 1);
+        points = loop.eax;
+        loop.ecx = port_u32(&loop.port, 0, 0x532aa4);
+        step(&loop, 0x417e20, loop.ecx, points);
+        loop.edi = port_u32(&loop.port, 0, 0x532aac) + 1;
+        port_set32(&loop.port, 0, 0x532aa4, loop.eax);
+        port_set32(&loop.port, 0, 0x532aac, loop.edi);
+    }
+    else if (loop.edx == 2)
+    {
+        step(&loop, 0x471ed0, 2, 2);
+        points = loop.eax;
+        loop.ecx = port_u32(&loop.port, 0, 0x532aa8);
+        step(&loop, 0x417e20, loop.ecx, points);
+        loop.ebx = port_u32(&loop.port, 0, 0x532ab0) + 1;
+        port_set32(&loop.port, 0, 0x532aa8, loop.eax);
+        port_set32(&loop.port, 0, 0x532ab0, loop.ebx);
+    }
+    window = port_u32(&loop.port, 0, 0x558c80);
+    args[0] = 0;
+    args[1] = 0;
+    args[2] = port_u32(&loop.port, window, 4);
+    args[3] = port_u32(&loop.port, window, 8);
+    loop.ebx = 0;
+    loop.ecx = 0;
+    step_arguments(&loop, 0x47ce10, window,
+                   port_u32(&loop.port, port_u32(&loop.port, 0, 0x544070), 0x268), args, 4);
+    step(&loop, 0x4719f0, port_u32(&loop.port, 0, 0x558c80), loop.edx);
+    step(&loop, 0x41a9e0, screen, loop.edx);
+    step(&loop, 0x4719e0, loop.eax, loop.edx);
+    step(&loop, 0x45f9f0, loop.eax, loop.edx);
+    step(&loop, 0x45e670, 0, loop.edx);
+    step(&loop, 0x45e670, 1, loop.edx);
+    step(&loop, 0x45ea80, loop.eax, loop.edx);
+    port_set32(&loop.port, 0, 0x532a10, 0);
+    port_set32(&loop.port, 0, 0x532a14, 0);
+    if (port_u32(&loop.port, 0, 0x532b40) == 1)
+    {
+        step(&loop, 0x415530, 1, loop.edx);
+        step(&loop, 0x472d50, loop.eax, loop.edx);
+    }
+    step(&loop, 0x418840, screen, 0x421f10);
+    step(&loop, 0x418820, screen, 0x41e780);
+    return port_return(&loop.port, loop.eax, entry->edx);
 }

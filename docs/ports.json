@@ -1744,6 +1744,11 @@
   "lifted": "lifted_f423d70",
   "chunk": "whole_0"
  },
+ "0x423fb0": {
+  "port": "vertrix_port_picture_screen_frame_423fb0",
+  "lifted": "lifted_f423fb0",
+  "chunk": "whole_8"
+ },
  "0x424160": {
   "port": "vertrix_port_forward_477610_424160",
   "lifted": "lifted_f424160",
@@ -1797,6 +1802,16 @@
  "0x4254a0": {
   "port": "vertrix_port_game_screen_frame_4254a0",
   "lifted": "lifted_f4254a0",
+  "chunk": "whole_8"
+ },
+ "0x425630": {
+  "port": "vertrix_port_game_screen_close_425630",
+  "lifted": "lifted_f425630",
+  "chunk": "whole_8"
+ },
+ "0x425810": {
+  "port": "vertrix_port_game_close_425810",
+  "lifted": "lifted_f425810",
   "chunk": "whole_8"
  },
  "0x4259d0": {
