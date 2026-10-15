@@ -1177,23 +1177,6 @@
   ],
   "address": 4763136
  },
- "f48b7e0": {
-  "callees": {
-   "0x4f1b30": [
-    4,
-    false
-   ]
-  },
-  "stack": 292,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4765664
- },
  "f48bca0": {
   "callees": {
    "0x4f1b48": [

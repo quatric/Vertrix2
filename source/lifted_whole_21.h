@@ -33,8 +33,6 @@ enum
     LIFTED_LETTER_ROW_SECOND_STACK = 236,
     LIFTED_SLIDE_PAIR_STACK = 228,
     LIFTED_DELAY_ACTOR_SPAWN_STACK = 128,
-    LIFTED_PAIR_FLAGS_STACK = 144,
-    LIFTED_PAIR_FLAGS_473960_STACK = 144,
     LIFTED_PAIR_SCAN_STACK = 144,
     LIFTED_LIST_PUSH_CALL_STACK = 80,
     LIFTED_F477390_STACK = 224,
@@ -167,14 +165,6 @@ uint32_t lifted_slide_pair(const VertrixCalls *calls, const VertrixFactoryServic
 
 /* Original 0x471340. */
 uint32_t lifted_delay_actor_spawn(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                  const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4737d0. */
-uint32_t lifted_pair_flags(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                           const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x473960. */
-uint32_t lifted_pair_flags_473960(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x473af0. */

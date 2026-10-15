@@ -1968,62 +1968,6 @@
   "virtual": [],
   "address": 4657984
  },
- "pair_flags": {
-  "callees": {
-   "0x476010": [
-    0,
-    false
-   ],
-   "0x473610": [
-    0,
-    false
-   ]
-  },
-  "stack": 144,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [
-   5509004,
-   5509008
-  ],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2
-  ],
-  "virtual": [],
-  "address": 4667344
- },
- "pair_flags_473960": {
-  "callees": {
-   "0x476010": [
-    0,
-    false
-   ],
-   "0x473610": [
-    0,
-    false
-   ]
-  },
-  "stack": 144,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [
-   5509004,
-   5509008
-  ],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2
-  ],
-  "virtual": [],
-  "address": 4667744
- },
  "pair_scan": {
   "callees": {
    "0x476480": [
