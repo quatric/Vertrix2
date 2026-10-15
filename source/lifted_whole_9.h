@@ -14,9 +14,6 @@ enum
     LIFTED_BOARD_REPLACE_MARKED_SCALED_STACK = 164,
     LIFTED_F4375F0_STACK = 176,
     LIFTED_BOARD_SPIN_MARKED_STACK = 256,
-    LIFTED_F448970_STACK = 176,
-    LIFTED_F448AD0_STACK = 172,
-    LIFTED_F44AEC0_STACK = 204,
     LIFTED_F44B170_STACK = 208,
     LIFTED_F44B340_STACK = 180,
     LIFTED_F45FFB0_STACK = 248,
@@ -79,18 +76,6 @@ uint32_t lifted_f4375f0(const VertrixCalls *calls, const VertrixFactoryServices 
 /* Original 0x437fe0. */
 uint32_t lifted_board_spin_marked(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x448970. */
-uint32_t lifted_f448970(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x448ad0. */
-uint32_t lifted_f448ad0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x44aec0. */
-uint32_t lifted_f44aec0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x44b170. */
 uint32_t lifted_f44b170(const VertrixCalls *calls, const VertrixFactoryServices *services,

@@ -98,6 +98,7 @@
 #include "port_memory.h"
 #include "port_memory_fill.h"
 #include "port_menu.h"
+#include "port_menus.h"
 #include "port_motions.h"
 #include "port_objects.h"
 #include "port_paths.h"
@@ -1119,7 +1120,7 @@ static const LiftedRoutine routines[] = {
     {0x4465a0, vertrix_port_slot_pick_4465a0, 0, 0},
     {0x446730, vertrix_port_actor_count_state_446730, 0, 0},
     {0x4467c0, vertrix_port_actor_count_state_4467c0, 0, 0},
-    {0x446850, lifted_f446850, 172, 0},
+    {0x446850, vertrix_port_menu_button_press_446850, 0, 0},
     {0x4469c0, vertrix_port_actor_pointer_hover_4469c0, 0, 0},
     {0x446a80, vertrix_port_actor_pointer_hover_446a80, 0, 0},
     {0x446b10, vertrix_port_menu_item_owner_step_446b10, 0, 0},
@@ -1160,9 +1161,9 @@ static const LiftedRoutine routines[] = {
     {0x4486f0, vertrix_port_actor_square_setup, 0, 0},
     {0x448740, vertrix_port_actor_move_to_point_448740, 0, 0},
     {0x448790, vertrix_port_actor_glide, 0, 0},
-    {0x448810, lifted_f448810, 176, 0},
-    {0x448970, lifted_f448970, 176, 0},
-    {0x448ad0, lifted_f448ad0, 172, 0},
+    {0x448810, vertrix_port_entry_button_448810, 0, 0},
+    {0x448970, vertrix_port_entry_key_state_448970, 0, 0},
+    {0x448ad0, vertrix_port_entry_key_state_448ad0, 0, 0},
     {0x448c20, vertrix_port_actor_select_animation_448c20, 0, 0},
     {0x448ca0, vertrix_port_actor_choice_picture_448ca0, 0, 0},
     {0x448d30, vertrix_port_switch_show_rest_448d30, 0, 0},
@@ -1170,7 +1171,7 @@ static const LiftedRoutine routines[] = {
     {0x448ed0, vertrix_port_switch_second_rest_448ed0, 0, 0},
     {0x448fb0, vertrix_port_switch_second_raised_448fb0, 0, 0},
     {0x449090, vertrix_port_option_switch_toggle_449090, 0, 0},
-    {0x449180, lifted_f449180, 140, 0},
+    {0x449180, vertrix_port_option_toggle_449180, 0, 0},
     {0x4492f0, vertrix_port_actor_select_animation_4492f0, 0, 0},
     {0x449360, vertrix_port_actor_frame_decay_full_449360, 0, 0},
     {0x449390, vertrix_port_actor_frame_switch_full_449390, 0, 0},
@@ -1215,7 +1216,7 @@ static const LiftedRoutine routines[] = {
     {0x44ad20, vertrix_port_actor_bob_pick_44ad20, 0, 0},
     {0x44add0, vertrix_port_actor_bob_pick_44add0, 0, 0},
     {0x44ae80, vertrix_port_actor_step_keep_44ae80, 0, 0},
-    {0x44aec0, lifted_f44aec0, 204, 0},
+    {0x44aec0, vertrix_port_level_tag_step_44aec0, 0, 0},
     {0x44b050, vertrix_port_tag_step_44b050, 0, 0},
     {0x44b170, lifted_f44b170, 208, 0},
     {0x44b340, lifted_f44b340, 180, 0},
