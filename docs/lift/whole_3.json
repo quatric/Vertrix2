@@ -329,59 +329,6 @@
   "virtual": [],
   "address": 4584016
  },
- "f45f3f0": {
-  "callees": {
-   "0x4ccfe0": [
-    0,
-    false
-   ],
-   "0x4895e0": [
-    0,
-    false
-   ],
-   "0x4ca000": [
-    0,
-    false
-   ],
-   "0x487b00": [
-    0,
-    false
-   ],
-   "0x487be0": [
-    0,
-    false
-   ],
-   "virtual_45f49b": [
-    0,
-    false
-   ]
-  },
-  "stack": 144,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [
-   5531336
-  ],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2,
-   23,
-   24,
-   25,
-   4294967295
-  ],
-  "virtual": [
-   [
-    0,
-    4,
-    0
-   ]
-  ],
-  "address": 4584432
- },
  "f45f770": {
   "callees": {
    "0x4ca000": [

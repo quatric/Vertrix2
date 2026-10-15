@@ -65,8 +65,7 @@ enum
     LIFTED_PIECE_ACTOR_CONSTRUCT_PLACED_STACK = 180,
     LIFTED_F42B290_STACK = 96,
     LIFTED_UI_PLAYER_PREVIEWS_CONSTRUCT_STACK = 232,
-    LIFTED_F42B6B0_STACK = 176,
-    LIFTED_BOARD_CONSTRUCT_STACK = 200
+    LIFTED_F42B6B0_STACK = 176
 };
 
 /* Original 0x401010. */
@@ -320,9 +319,5 @@ uint32_t lifted_ui_player_previews_construct(const VertrixCalls *calls,
 /* Original 0x42b6b0. */
 uint32_t lifted_f42b6b0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42e870. */
-uint32_t lifted_board_construct(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                const VertrixGlobals *globals, const LiftEntry *entry);
 
 #endif

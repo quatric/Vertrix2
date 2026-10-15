@@ -128,6 +128,7 @@
 #include "port_spawn.h"
 #include "port_spawners.h"
 #include "port_spawns.h"
+#include "port_spreads.h"
 #include "port_states.h"
 #include "port_steps.h"
 #include "port_stones.h"
@@ -141,6 +142,7 @@
 #include "port_tails.h"
 #include "port_tallies.h"
 #include "port_teardown.h"
+#include "port_teardowns.h"
 #include "port_texts.h"
 #include "port_turns.h"
 #include "port_twins.h"
@@ -726,8 +728,8 @@ static const LiftedRoutine routines[] = {
     {0x42bb20, vertrix_port_object_destroy_call_42bb20, 0, 0},
     {0x42bbd0, vertrix_port_block_create_full_42bbd0, 0, 0},
     {0x42bca0, lifted_f42bca0, 188, 0},
-    {0x42e870, lifted_board_construct, 200, 0},
-    {0x42ea00, lifted_f42ea00, 208, 0},
+    {0x42e870, vertrix_port_board_construct_42e870, 0, 0},
+    {0x42ea00, vertrix_port_board_destroy_42ea00, 0, 0},
     {0x42eb60, vertrix_port_board_release_active_42eb60, 0, 0},
     {0x42eba0, vertrix_port_board_release_piece_children_42eba0, 0, 0},
     {0x42ebc0, vertrix_port_release_slots_220_42ebc0, 0, 0},
@@ -1021,10 +1023,10 @@ static const LiftedRoutine routines[] = {
     {0x43d4b0, vertrix_port_forward_4b6800_43d4b0, 0, 0},
     {0x43d4c0, vertrix_port_forward_4b6890_43d4c0, 0, 0},
     {0x43d4d0, lifted_f43d4d0, 244, 0},
-    {0x43d6a0, lifted_slot_object_construct, 136, 0},
+    {0x43d6a0, vertrix_port_slot_object_construct_43d6a0, 0, 0},
     {0x43d800, lifted_effects_release_all_full, 80, 0},
     {0x43dc80, lifted_particle_emit, 156, 0},
-    {0x43dea0, lifted_spawn_spread_full, 108, 0},
+    {0x43dea0, vertrix_port_spawn_spread_full_43dea0, 0, 0},
     {0x43dff0, vertrix_port_object_populate_43dff0, 0, 0},
     {0x43e100, vertrix_port_hud_object_construct, 0, 0},
     {0x43e1a0, vertrix_port_effect_actor_teardown_43e1a0, 0, 0},
@@ -1762,7 +1764,7 @@ static const LiftedRoutine routines[] = {
     {0x45f1e0, vertrix_port_table_identity_cells_45f1e0, 0, 0},
     {0x45f1f0, vertrix_port_digits_draw, 0, 0},
     {0x45f250, lifted_resource_flagged_finish, 112, 0},
-    {0x45f3f0, lifted_f45f3f0, 144, 0},
+    {0x45f3f0, vertrix_port_music_load_45f3f0, 0, 0},
     {0x45f540, vertrix_port_path_join, 0, 0},
     {0x45f590, vertrix_port_file_exists, 0, 0},
     {0x45f620, vertrix_port_layer_lists_init, 0, 0},

@@ -34,9 +34,7 @@ enum
     LIFTED_F43C140_STACK = 84,
     LIFTED_PIECE_STACK = 116,
     LIFTED_F43D370_STACK = 80,
-    LIFTED_SLOT_OBJECT_CONSTRUCT_STACK = 136,
     LIFTED_PARTICLE_EMIT_STACK = 156,
-    LIFTED_SPAWN_SPREAD_FULL_STACK = 108,
     LIFTED_BOARD_PARTICLES_SETUP_STACK = 264,
     LIFTED_F43F200_STACK = 752,
     LIFTED_FONT_MAPS_INITIALIZE_STACK = 520,
@@ -184,18 +182,9 @@ uint32_t lifted_piece(const VertrixCalls *calls, const VertrixFactoryServices *s
 uint32_t lifted_f43d370(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x43d6a0. */
-uint32_t lifted_slot_object_construct(const VertrixCalls *calls,
-                                      const VertrixFactoryServices *services,
-                                      const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x43dc80. */
 uint32_t lifted_particle_emit(const VertrixCalls *calls, const VertrixFactoryServices *services,
                               const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x43dea0. */
-uint32_t lifted_spawn_spread_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                  const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x43e4d0. */
 uint32_t lifted_board_particles_setup(const VertrixCalls *calls,

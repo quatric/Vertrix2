@@ -1321,33 +1321,6 @@
   ],
   "address": 4445040
  },
- "slot_object_construct": {
-  "callees": {
-   "0x4abd70": [
-    0,
-    false
-   ],
-   "0x4b2290": [
-    0,
-    false
-   ]
-  },
-  "stack": 136,
-  "arguments": 0,
-  "pointer_callees": [
-   "0x4abd70"
-  ],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   31,
-   32,
-   33
-  ],
-  "virtual": [],
-  "address": 4445856
- },
  "particle_emit": {
   "callees": {
    "0x4826c0": [
@@ -1400,43 +1373,6 @@
   ],
   "virtual": [],
   "address": 4447360
- },
- "spawn_spread_full": {
-  "callees": {
-   "0x4ac8d0": [
-    0,
-    false
-   ],
-   "0x4ac710": [
-    0,
-    false
-   ],
-   "0x4ac8a0": [
-    0,
-    false
-   ],
-   "0x4ac7d0": [
-    0,
-    false
-   ],
-   "0x4826c0": [
-    0,
-    false
-   ]
-  },
-  "stack": 108,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2
-  ],
-  "virtual": [],
-  "address": 4447904
  },
  "board_particles_setup": {
   "callees": {
