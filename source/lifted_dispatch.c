@@ -70,6 +70,7 @@
 #include "port_decoders.h"
 #include "port_display.h"
 #include "port_drains.h"
+#include "port_drifts.h"
 #include "port_float.h"
 #include "port_font.h"
 #include "port_forward.h"
@@ -129,6 +130,7 @@
 #include "port_tallies.h"
 #include "port_teardown.h"
 #include "port_texts.h"
+#include "port_twins.h"
 #include "port_voices.h"
 #include "port_widgets.h"
 #include "port_window.h"
@@ -1277,10 +1279,10 @@ static const LiftedRoutine routines[] = {
     {0x44db10, vertrix_port_block_half_pulse_update_44db10, 0, 0},
     {0x44dbb0, vertrix_port_actor_drop_grow_44dbb0, 0, 0},
     {0x44dc80, vertrix_port_actor_fade_frame_44dc80, 0, 0},
-    {0x44dcf0, lifted_f44dcf0, 128, 0},
+    {0x44dcf0, vertrix_port_block_drift_step_44dcf0, 0, 0},
     {0x44de20, lifted_block_orbit_update, 184, 0},
     {0x44dfb0, lifted_f44dfb0, 188, 0},
-    {0x44e120, lifted_f44e120, 152, 0},
+    {0x44e120, vertrix_port_block_fall_step_44e120, 0, 0},
     {0x44e250, vertrix_port_block_slide_update_44e250, 0, 0},
     {0x44e2d0, vertrix_port_actor_move_span_44e2d0, 0, 0},
     {0x44e380, vertrix_port_block_collapse_update_44e380, 0, 0},
@@ -1299,7 +1301,7 @@ static const LiftedRoutine routines[] = {
     {0x44eaf0, vertrix_port_actor_grow_slide_shown_44eaf0, 0, 0},
     {0x44ebe0, vertrix_port_actor_step_frame_44ebe0, 0, 0},
     {0x44ec40, vertrix_port_block_slide_update_44ec40, 0, 0},
-    {0x44ece0, lifted_block_spin_update, 168, 0},
+    {0x44ece0, vertrix_port_block_spin_update_44ece0, 0, 0},
     {0x44ee20, lifted_f44ee20, 168, 0},
     {0x44f040, vertrix_port_actor_fade_frame_44f040, 0, 0},
     {0x44f0b0, vertrix_port_actor_fade_frame_44f0b0, 0, 0},
@@ -1392,7 +1394,7 @@ static const LiftedRoutine routines[] = {
     {0x451690, vertrix_port_state_start_451690, 0, 0},
     {0x451730, vertrix_port_state_steps_451730, 0, 0},
     {0x4517c0, lifted_object_post_lock, 188, 0},
-    {0x451920, lifted_object_post_lock_twin, 184, 0},
+    {0x451920, vertrix_port_object_post_lock_twin_451920, 0, 0},
     {0x451a60, vertrix_port_player_start_bonus_451a60, 0, 0},
     {0x451aa0, lifted_f451aa0, 164, 0},
     {0x451c00, vertrix_port_player_place_piece_451c00, 0, 0},
@@ -1430,7 +1432,7 @@ static const LiftedRoutine routines[] = {
     {0x452d70, vertrix_port_effect_progress_compare_452d70, 0, 0},
     {0x452e00, lifted_effect_board_match, 192, 0},
     {0x452fc0, vertrix_port_player_boards_join_452fc0, 0, 0},
-    {0x453150, lifted_effect_convert_blocks, 160, 0},
+    {0x453150, vertrix_port_effect_convert_blocks_453150, 0, 0},
     {0x453280, vertrix_port_player_boards_restart_453280, 0, 0},
     {0x453320, vertrix_port_state_combine_453320, 0, 0},
     {0x4533b0, vertrix_port_state_pair_4533b0, 0, 0},
@@ -1515,7 +1517,7 @@ static const LiftedRoutine routines[] = {
     {0x455f80, vertrix_port_effect_slide_advance_455f80, 0, 0},
     {0x456060, vertrix_port_effect_slide_end_456060, 0, 0},
     {0x4560c0, vertrix_port_actor_move_end_4560c0, 0, 0},
-    {0x456170, lifted_f456170, 144, 0},
+    {0x456170, vertrix_port_actor_choice_step_456170, 0, 0},
     {0x456290, vertrix_port_actor_sound_wait_456290, 0, 0},
     {0x456300, vertrix_port_approach_frame_456300, 0, 0},
     {0x456390, vertrix_port_button_frame_456390, 0, 0},
@@ -1560,7 +1562,7 @@ static const LiftedRoutine routines[] = {
     {0x457770, vertrix_port_key_delay_update_457770, 0, 0},
     {0x457810, vertrix_port_object_flip_side_457810, 0, 0},
     {0x457890, lifted_ui_center_on_anchor, 92, 0},
-    {0x4578f0, lifted_f4578f0, 128, 0},
+    {0x4578f0, vertrix_port_actor_fly_in_4578f0, 0, 0},
     {0x457a00, lifted_f457a00, 140, 0},
     {0x457b70, vertrix_port_actor_drift_update_457b70, 0, 0},
     {0x457c10, vertrix_port_title_walker_enter_457c10, 0, 0},
