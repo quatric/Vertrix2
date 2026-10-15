@@ -65,6 +65,7 @@
 #include "port_constants.h"
 #include "port_crt.h"
 #include "port_decoder.h"
+#include "port_decoders.h"
 #include "port_display.h"
 #include "port_drains.h"
 #include "port_float.h"
@@ -3042,8 +3043,8 @@ static const LiftedRoutine routines[] = {
     {0x4b9540, vertrix_port_decoder_header_check_4b9540, 0, 0},
     {0x4b95e0, lifted_f4b95e0, 100, 0},
     {0x4b9710, vertrix_port_decoder_start_4b9710, 0, 0},
-    {0x4b97c0, lifted_f4b97c0, 108, 0},
-    {0x4b98b0, lifted_f4b98b0, 116, 0},
+    {0x4b97c0, vertrix_port_decoder_consume_input_4b97c0, 0, 0},
+    {0x4b98b0, vertrix_port_decoder_output_start_4b98b0, 0, 0},
     {0x4b99b0, lifted_f4b99b0, 100, 0},
     {0x4b9c10, vertrix_port_object_arm_child_24_4b9c10, 0, 0},
     {0x4b9c20, vertrix_port_decoder_fill_input_4b9c20, 0, 0},
@@ -3086,7 +3087,7 @@ static const LiftedRoutine routines[] = {
     {0x4bdde0, lifted_f4bdde0, 160, 0},
     {0x4be0b0, lifted_f4be0b0, 160, 0},
     {0x4bef10, lifted_f4bef10, 108, 0},
-    {0x4bf190, lifted_f4bf190, 84, 0},
+    {0x4bf190, vertrix_port_decoder_adobe_marker_4bf190, 0, 0},
     {0x4bf270, lifted_f4bf270, 144, 0},
     {0x4bf3e0, lifted_f4bf3e0, 148, 0},
     {0x4bf6a0, lifted_f4bf6a0, 112, 0},
@@ -3097,10 +3098,10 @@ static const LiftedRoutine routines[] = {
     {0x4c09e0, lifted_f4c09e0, 88, 0},
     {0x4c0b51, lifted_object_is_idle, 96, 0},
     {0x4c14b7, lifted_f4c14b7, 160, 0},
-    {0x4c16dc, lifted_f4c16dc, 100, 0},
+    {0x4c16dc, vertrix_port_decoder_pass_finish_4c16dc, 0, 0},
     {0x4c17da, lifted_f4c17da, 232, 0},
     {0x4c1d20, vertrix_port_object_child_reset_4c1d20, 0, 0},
-    {0x4c1d40, lifted_f4c1d40, 108, 3},
+    {0x4c1d40, vertrix_port_decoder_merged_rows_4c1d40, 0, 0},
     {0x4c1e10, lifted_f4c1e10, 80, 3},
     {0x4c1e40, lifted_f4c1e40, 124, 0},
     {0x4c2000, lifted_f4c2000, 132, 0},
@@ -3112,10 +3113,10 @@ static const LiftedRoutine routines[] = {
     {0x4c2c50, lifted_f4c2c50, 128, 0},
     {0x4c2d60, lifted_f4c2d60, 468, 0},
     {0x4c31a0, lifted_f4c31a0, 88, 0},
-    {0x4c3220, lifted_f4c3220, 100, 0},
+    {0x4c3220, vertrix_port_decoder_buffer_pass_start_4c3220, 0, 0},
     {0x4c3320, lifted_f4c3320, 104, 3},
-    {0x4c33a0, lifted_f4c33a0, 128, 3},
-    {0x4c3470, lifted_f4c3470, 96, 3},
+    {0x4c33a0, vertrix_port_decoder_buffer_write_4c33a0, 0, 0},
+    {0x4c3470, vertrix_port_decoder_buffer_read_4c3470, 0, 0},
     {0x4c3540, vertrix_port_decoder_coefficients_4c3540, 0, 0},
     {0x4c35f0, vertrix_port_object_child_copy_4c35f0, 0, 0},
     {0x4c3610, lifted_f4c3610, 116, 3},

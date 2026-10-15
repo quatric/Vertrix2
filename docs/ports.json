@@ -11854,6 +11854,16 @@
   "lifted": "lifted_f4b9710",
   "chunk": "whole_9"
  },
+ "0x4b97c0": {
+  "port": "vertrix_port_decoder_consume_input_4b97c0",
+  "lifted": "lifted_f4b97c0",
+  "chunk": "whole_5"
+ },
+ "0x4b98b0": {
+  "port": "vertrix_port_decoder_output_start_4b98b0",
+  "lifted": "lifted_f4b98b0",
+  "chunk": "whole_5"
+ },
  "0x4b9c10": {
   "port": "vertrix_port_object_arm_child_24_4b9c10",
   "lifted": "lifted_f4b9c10",
@@ -11909,6 +11919,11 @@
   "lifted": "lifted_f4bd1c0",
   "chunk": "whole_5"
  },
+ "0x4bf190": {
+  "port": "vertrix_port_decoder_adobe_marker_4bf190",
+  "lifted": "lifted_f4bf190",
+  "chunk": "whole_5"
+ },
  "0x4c07d0": {
   "port": "vertrix_port_decoder_read_restart_4c07d0",
   "lifted": "lifted_f4c07d0",
@@ -11919,14 +11934,39 @@
   "lifted": "lifted_object_release_links",
   "chunk": "whole_5"
  },
+ "0x4c16dc": {
+  "port": "vertrix_port_decoder_pass_finish_4c16dc",
+  "lifted": "lifted_f4c16dc",
+  "chunk": "whole_8"
+ },
  "0x4c1d20": {
   "port": "vertrix_port_object_child_reset_4c1d20",
   "lifted": "lifted_f4c1d20",
   "chunk": "whole_5"
  },
+ "0x4c1d40": {
+  "port": "vertrix_port_decoder_merged_rows_4c1d40",
+  "lifted": "lifted_f4c1d40",
+  "chunk": "whole_8"
+ },
  "0x4c26f0": {
   "port": "vertrix_port_decoder_process_restart_4c26f0",
   "lifted": "lifted_f4c26f0",
+  "chunk": "whole_8"
+ },
+ "0x4c3220": {
+  "port": "vertrix_port_decoder_buffer_pass_start_4c3220",
+  "lifted": "lifted_f4c3220",
+  "chunk": "whole_5"
+ },
+ "0x4c33a0": {
+  "port": "vertrix_port_decoder_buffer_write_4c33a0",
+  "lifted": "lifted_f4c33a0",
+  "chunk": "whole_5"
+ },
+ "0x4c3470": {
+  "port": "vertrix_port_decoder_buffer_read_4c3470",
+  "lifted": "lifted_f4c3470",
   "chunk": "whole_8"
  },
  "0x4c3540": {
