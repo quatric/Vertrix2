@@ -457,10 +457,10 @@ uint32_t vertrix_port_menu_key_wait_45c600(PORT_SIGNATURE)
     return port_return(&port, result, entry->edx);
 }
 
-/* Original 0x45fe10: the label box at (ax, dx) to (bx, cx), 2 inside and 4 short: a frame object
- * (0x160 bytes, 0x4ca000, 0x4b5400) placed (0x4adf20), sized (0x4b54d0), mode 2 (0x4ac7b0),
- * +0x94, +0x95 and +0x110 1, drawn by 0x450080 (0x4ac4f0) in the colour 0x3003e (0x4ac4e0). */
-uint32_t vertrix_port_label_box_45fe10(PORT_SIGNATURE)
+/* The box at (ax, dx) to (bx, cx), 2 inside and 4 short: a frame object (0x160 bytes, 0x4ca000,
+ * 0x4b5400) placed (0x4adf20), sized (0x4b54d0), mode 2 (0x4ac7b0), +0x94, +0x95 and +0x110 1,
+ * drawn by `draw` (0x4ac4f0) in the colour `colour` (0x4ac4e0). */
+static uint32_t label_box(PORT_SIGNATURE, uint32_t draw, uint32_t colour)
 {
     enum
     {
@@ -497,7 +497,19 @@ uint32_t vertrix_port_label_box_45fe10(PORT_SIGNATURE)
     port_set8(&port, box, 0x94, 1);
     port_set8(&port, box, 0x95, 1);
     port_set8(&port, box, 0x110, 1);
-    port_call_with(&port, 0x4ac4f0, box, 0x450080, 0, edi & 0xffff, box, edi, ebp);
-    port_call_with(&port, 0x4ac4e0, box, 0x3003e, 0, edi & 0xffff, box, edi, ebp);
+    port_call_with(&port, 0x4ac4f0, box, draw, 0, edi & 0xffff, box, edi, ebp);
+    port_call_with(&port, 0x4ac4e0, box, colour, 0, edi & 0xffff, box, edi, ebp);
     return port_return(&port, box, vertrix_lift_edx);
+}
+
+/* Original 0x45fe10: the label box drawn by 0x450080 in the colour 0x3003e. */
+uint32_t vertrix_port_label_box_45fe10(PORT_SIGNATURE)
+{
+    return label_box(calls, services, globals, entry, 0x450080, 0x3003e);
+}
+
+/* Original 0x45fee0: the box drawn by 0x7f in the colour 0x3f. */
+uint32_t vertrix_port_plain_box_45fee0(PORT_SIGNATURE)
+{
+    return label_box(calls, services, globals, entry, 0x7f, 0x3f);
 }

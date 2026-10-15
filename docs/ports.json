@@ -6289,6 +6289,16 @@
   "lifted": "lifted_label_box",
   "chunk": "whole_3"
  },
+ "0x45fee0": {
+  "port": "vertrix_port_plain_box_45fee0",
+  "lifted": "lifted_f45fee0",
+  "chunk": "whole_3"
+ },
+ "0x4601c0": {
+  "port": "vertrix_port_menu_item_make_4601c0",
+  "lifted": "lifted_f4601c0",
+  "chunk": "whole_3"
+ },
  "0x460a40": {
   "port": "vertrix_port_label_box_place",
   "lifted": "lifted_f460a40",
@@ -6297,6 +6307,31 @@
  "0x460ad0": {
   "port": "vertrix_port_label_box_place_460ad0",
   "lifted": "lifted_f460ad0",
+  "chunk": "whole_3"
+ },
+ "0x460b60": {
+  "port": "vertrix_port_menu_item_make_460b60",
+  "lifted": "lifted_f460b60",
+  "chunk": "whole_3"
+ },
+ "0x460df0": {
+  "port": "vertrix_port_menu_item_make_460df0",
+  "lifted": "lifted_f460df0",
+  "chunk": "whole_3"
+ },
+ "0x460ed0": {
+  "port": "vertrix_port_menu_item_make_460ed0",
+  "lifted": "lifted_f460ed0",
+  "chunk": "whole_3"
+ },
+ "0x460fa0": {
+  "port": "vertrix_port_menu_item_make_460fa0",
+  "lifted": "lifted_f460fa0",
+  "chunk": "whole_3"
+ },
+ "0x461090": {
+  "port": "vertrix_port_menu_item_make_461090",
+  "lifted": "lifted_f461090",
   "chunk": "whole_3"
  },
  "0x465a70": {
@@ -6674,6 +6709,11 @@
   "lifted": "lifted_f472bd0",
   "chunk": "whole_3"
  },
+ "0x472c10": {
+  "port": "vertrix_port_overlay_spawn_472c10",
+  "lifted": "lifted_overlay_spawn",
+  "chunk": "whole_3"
+ },
  "0x472d00": {
   "port": "vertrix_port_slot_create_call_472d00",
   "lifted": "lifted_slot_create_call",
@@ -6959,6 +6999,11 @@
   "lifted": "lifted_slot_select",
   "chunk": "whole_3"
  },
+ "0x476320": {
+  "port": "vertrix_port_input_queue_acknowledge_full_476320",
+  "lifted": "lifted_input_queue_acknowledge_full",
+  "chunk": "whole_3"
+ },
  "0x476400": {
   "port": "vertrix_port_keys_age",
   "lifted": "lifted_f476400",
@@ -7018,6 +7063,11 @@
   "port": "vertrix_port_key_records_reset_4766f0",
   "lifted": "lifted_slot_table_reset",
   "chunk": "whole_21"
+ },
+ "0x476720": {
+  "port": "vertrix_port_sound_cue_both_476720",
+  "lifted": "lifted_sound_cue_both",
+  "chunk": "whole_3"
  },
  "0x476810": {
   "port": "vertrix_port_resource_entry_256_476810",

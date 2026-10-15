@@ -79,6 +79,7 @@
 #include "port_hovers.h"
 #include "port_imdct.h"
 #include "port_input.h"
+#include "port_items.h"
 #include "port_kinds.h"
 #include "port_layout.h"
 #include "port_letters.h"
@@ -1745,21 +1746,21 @@ static const LiftedRoutine routines[] = {
     {0x45fb00, lifted_label_frame, 228, 5},
     {0x45fc80, lifted_f45fc80, 232, 5},
     {0x45fe10, vertrix_port_label_box_45fe10, 0, 0},
-    {0x45fee0, lifted_f45fee0, 140, 0},
+    {0x45fee0, vertrix_port_plain_box_45fee0, 0, 0},
     {0x45ffb0, lifted_f45ffb0, 248, 9},
-    {0x4601c0, lifted_f4601c0, 172, 15},
+    {0x4601c0, vertrix_port_menu_item_make_4601c0, 0, 0},
     {0x4602a0, lifted_f4602a0, 232, 6},
     {0x460440, lifted_f460440, 244, 11},
     {0x460630, lifted_f460630, 260, 6},
     {0x460840, lifted_f460840, 252, 10},
     {0x460a40, vertrix_port_label_box_place, 0, 0},
     {0x460ad0, vertrix_port_label_box_place_460ad0, 0, 0},
-    {0x460b60, lifted_f460b60, 156, 12},
+    {0x460b60, vertrix_port_menu_item_make_460b60, 0, 0},
     {0x460c50, lifted_f460c50, 252, 11},
-    {0x460df0, lifted_f460df0, 160, 12},
-    {0x460ed0, lifted_f460ed0, 160, 12},
-    {0x460fa0, lifted_f460fa0, 180, 17},
-    {0x461090, lifted_f461090, 176, 16},
+    {0x460df0, vertrix_port_menu_item_make_460df0, 0, 0},
+    {0x460ed0, vertrix_port_menu_item_make_460ed0, 0, 0},
+    {0x460fa0, vertrix_port_menu_item_make_460fa0, 0, 0},
+    {0x461090, vertrix_port_menu_item_make_461090, 0, 0},
     {0x461180, lifted_f461180, 288, 6},
     {0x461360, lifted_f461360, 220, 0},
     {0x4614c0, lifted_f4614c0, 220, 0},
@@ -1866,7 +1867,7 @@ static const LiftedRoutine routines[] = {
     {0x4726d0, lifted_f4726d0, 428, 0},
     {0x472ad0, vertrix_port_text_item_add, 0, 0},
     {0x472bd0, vertrix_port_scene_create_472bd0, 0, 0},
-    {0x472c10, lifted_overlay_spawn, 132, 0},
+    {0x472c10, vertrix_port_overlay_spawn_472c10, 0, 0},
     {0x472d00, vertrix_port_slot_create_call_472d00, 0, 0},
     {0x472d50, vertrix_port_ui_panel_release_full_472d50, 0, 0},
     {0x472d90, vertrix_port_global_object_method_472d90, 0, 0},
@@ -1942,7 +1943,7 @@ static const LiftedRoutine routines[] = {
     {0x476260, vertrix_port_list_find_call_476260, 0, 0},
     {0x476280, vertrix_port_sound_slot_select, 0, 0},
     {0x4762e0, vertrix_port_slot_select_4762e0, 0, 0},
-    {0x476320, lifted_input_queue_acknowledge_full, 80, 0},
+    {0x476320, vertrix_port_input_queue_acknowledge_full_476320, 0, 0},
     {0x476400, vertrix_port_keys_age, 0, 0},
     {0x476440, vertrix_port_keys_age_476440, 0, 0},
     {0x476480, vertrix_port_input_slot_ready, 0, 0},
@@ -1955,7 +1956,7 @@ static const LiftedRoutine routines[] = {
     {0x476650, vertrix_port_sound_key_is_control_476650, 0, 0},
     {0x4766b0, vertrix_port_key_set_select, 0, 0},
     {0x4766f0, vertrix_port_key_records_reset_4766f0, 0, 0},
-    {0x476720, lifted_sound_cue_both, 96, 0},
+    {0x476720, vertrix_port_sound_cue_both_476720, 0, 0},
     {0x476810, vertrix_port_resource_entry_256_476810, 0, 0},
     {0x476870, vertrix_port_static_init_5536c8, 0, 0},
     {0x4768e0, vertrix_port_key_construct, 0, 0},

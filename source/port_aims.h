@@ -14,5 +14,6 @@ uint32_t vertrix_port_title_letter_wave_call_45a830(PORT_SIGNATURE);
 uint32_t vertrix_port_state_score_step_45b4c0(PORT_SIGNATURE);
 uint32_t vertrix_port_menu_key_wait_45c600(PORT_SIGNATURE);
 uint32_t vertrix_port_label_box_45fe10(PORT_SIGNATURE);
+uint32_t vertrix_port_plain_box_45fee0(PORT_SIGNATURE);
 
 #endif
