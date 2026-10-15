@@ -95,8 +95,10 @@
 #include "port_letters.h"
 #include "port_library.h"
 #include "port_lists.h"
+#include "port_loops.h"
 #include "port_makers.h"
 #include "port_marks.h"
+#include "port_memories.h"
 #include "port_memory.h"
 #include "port_memory_fill.h"
 #include "port_menu.h"
@@ -332,7 +334,7 @@ static const LiftedRoutine routines[] = {
     {0x411280, lifted_f411280, 80, 0},
     {0x411bf0, vertrix_port_static_init_5327f0, 0, 0},
     {0x411c70, vertrix_port_game_object_construct, 0, 0},
-    {0x411f50, lifted_f411f50, 108, 0},
+    {0x411f50, vertrix_port_app_player_release_411f50, 0, 0},
     {0x4120a0, vertrix_port_record_table_init_4120a0, 0, 0},
     {0x412130, vertrix_port_object_teardown_412130, 0, 0},
     {0x4121e0, vertrix_port_record_table_load_4121e0, 0, 0},
@@ -390,7 +392,7 @@ static const LiftedRoutine routines[] = {
     {0x415fe0, vertrix_port_string_set_532bf4, 0, 0},
     {0x416010, vertrix_port_notice_call_full_416010, 0, 0},
     {0x416140, lifted_f416140, 244, 0},
-    {0x4163b0, lifted_f4163b0, 176, 0},
+    {0x4163b0, vertrix_port_display_mode_notice_4163b0, 0, 0},
     {0x416500, lifted_f416500, 372, 0},
     {0x416900, vertrix_port_locked_call_416900, 0, 0},
     {0x416970, vertrix_port_settings_refresh_416970, 0, 0},
@@ -568,7 +570,7 @@ static const LiftedRoutine routines[] = {
     {0x41f350, vertrix_port_screen_state_41f350, 0, 0},
     {0x41f460, vertrix_port_scene_leave_41f460, 0, 0},
     {0x41f500, lifted_f41f500, 476, 0},
-    {0x41f680, lifted_f41f680, 204, 0},
+    {0x41f680, vertrix_port_menu_screen_frame_41f680, 0, 0},
     {0x41f800, vertrix_port_screen_state_41f800, 0, 0},
     {0x41f910, vertrix_port_scene_leave_41f910, 0, 0},
     {0x41f9b0, lifted_f41f9b0, 476, 0},
@@ -609,9 +611,9 @@ static const LiftedRoutine routines[] = {
     {0x424790, vertrix_port_game_event_wait_424790, 0, 0},
     {0x424890, vertrix_port_game_event_wait_424890, 0, 0},
     {0x424990, lifted_f424990, 532, 0},
-    {0x425260, lifted_f425260, 184, 0},
+    {0x425260, vertrix_port_screen_frame_425260, 0, 0},
     {0x4253b0, vertrix_port_game_pause_teardown_4253b0, 0, 0},
-    {0x4254a0, lifted_f4254a0, 196, 0},
+    {0x4254a0, vertrix_port_game_screen_frame_4254a0, 0, 0},
     {0x425630, lifted_f425630, 216, 0},
     {0x425810, lifted_f425810, 184, 0},
     {0x4259d0, vertrix_port_scene_reload_4259d0, 0, 0},
@@ -2922,7 +2924,7 @@ static const LiftedRoutine routines[] = {
     {0x4b3390, vertrix_port_actor_label_refresh, 0, 0},
     {0x4b34d0, vertrix_port_construct_517cf4_4b34d0, 0, 0},
     {0x4b3500, vertrix_port_object_destroy_call_4b3500, 0, 0},
-    {0x4b35b0, lifted_object_set_pair_4b35b0, 64, 0},
+    {0x4b35b0, vertrix_port_object_set_pair_4b35b0, 0, 0},
     {0x4b3740, vertrix_port_list_cycle_4b3740, 0, 0},
     {0x4b37e0, vertrix_port_list_cycle_4b37e0, 0, 0},
     {0x4b3880, vertrix_port_text_list_back_4b3880, 0, 0},
@@ -2936,7 +2938,7 @@ static const LiftedRoutine routines[] = {
     {0x4b3f10, vertrix_port_nothing_404580, 0, 0},
     {0x4b3f20, vertrix_port_actor_draw_call, 0, 0},
     {0x4b3f30, vertrix_port_object_layout_4b3f30, 0, 0},
-    {0x4b3fb0, lifted_f4b3fb0, 68, 0},
+    {0x4b3fb0, vertrix_port_object_make_4b3fb0, 0, 0},
     {0x4b4100, vertrix_port_pair_children_call_4b4100, 0, 0},
     {0x4b4150, vertrix_port_pair_children_show_4b4150, 0, 0},
     {0x4b41a0, vertrix_port_pair_children_hide_4b41a0, 0, 0},
@@ -3174,7 +3176,7 @@ static const LiftedRoutine routines[] = {
     {0x4c5740, lifted_f4c5740, 112, 1},
     {0x4c58e0, lifted_f4c58e0, 116, 0},
     {0x4c5a00, vertrix_port_pool_close_4c5a00, 0, 0},
-    {0x4c5a40, lifted_f4c5a40, 128, 0},
+    {0x4c5a40, vertrix_port_memory_manager_make_4c5a40, 0, 0},
     {0x4c5bb0, vertrix_port_edx_to_eax_4e7c90_4c5bb0, 0, 0},
     {0x4c5bc0, vertrix_port_edx_to_eax_4ea190_4c5bc0, 0, 0},
     {0x4c5bd0, vertrix_port_edx_to_eax_4e7c90_4c5bd0, 0, 0},
@@ -3889,7 +3891,7 @@ static const LiftedRoutine routines[] = {
     {0x4e909c, lifted_f4e909c, 128, 0},
     {0x4e9194, vertrix_port_time_later, 0, 0},
     {0x4e91e0, vertrix_port_is_dst, 0, 0},
-    {0x4e949c, lifted_f4e949c, 80, 0},
+    {0x4e949c, vertrix_port_triple_below_4e949c, 0, 0},
     {0x4e960c, vertrix_port_tzset, 0, 0},
     {0x4e9670, vertrix_port_parse_decimal_4e9670, 0, 0},
     {0x4e969c, lifted_f4e969c, 120, 0},

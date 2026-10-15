@@ -2641,18 +2641,6 @@
   "virtual": [],
   "address": 5148828
  },
- "f4e949c": {
-  "callees": {},
-  "stack": 80,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 5149852
- },
  "f4e97b4": {
   "callees": {
    "0x4e9670": [

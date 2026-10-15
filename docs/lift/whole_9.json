@@ -1,39 +1,4 @@
 {
- "f411f50": {
-  "callees": {
-   "0x418870": [
-    0,
-    false
-   ],
-   "0x4f1b94": [
-    0,
-    false
-   ],
-   "0x4f1cb4": [
-    2,
-    false
-   ],
-   "virtual_411fa9": [
-    0,
-    false
-   ]
-  },
-  "stack": 108,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [
-   [
-    0,
-    4,
-    0
-   ]
-  ],
-  "address": 4267856
- },
  "f41d6d0": {
   "callees": {
    "0x4d66cd": [

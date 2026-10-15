@@ -1970,18 +1970,6 @@
   "virtual": [],
   "address": 4926864
  },
- "object_set_pair_4b35b0": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4928944
- },
  "f4b3a00": {
   "callees": {
    "0x4b3100": [
@@ -2020,25 +2008,6 @@
   ],
   "virtual": [],
   "address": 4930048
- },
- "f4b3fb0": {
-  "callees": {
-   "0x4b34d0": [
-    0,
-    false
-   ]
-  },
-  "stack": 68,
-  "arguments": 0,
-  "pointer_callees": [
-   "0x4b34d0"
-  ],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4931504
  },
  "f4b4cf0": {
   "callees": {
