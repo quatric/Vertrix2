@@ -38,7 +38,6 @@ enum
     LIFTED_PAIR_SCAN_STACK = 144,
     LIFTED_LIST_PUSH_CALL_STACK = 80,
     LIFTED_F477390_STACK = 224,
-    LIFTED_F477B10_STACK = 236,
     LIFTED_SURFACE_BOUNDS_STACK = 124,
     LIFTED_F484B60_STACK = 752,
     LIFTED_FIND_SIZE_FIELD_STACK = 372,
@@ -188,10 +187,6 @@ uint32_t lifted_list_push_call(const VertrixCalls *calls, const VertrixFactorySe
 
 /* Original 0x477390. */
 uint32_t lifted_f477390(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x477b10. */
-uint32_t lifted_f477b10(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4792d0. */

@@ -85,6 +85,7 @@
 #include "port_hovers.h"
 #include "port_imdct.h"
 #include "port_input.h"
+#include "port_inputs.h"
 #include "port_items.h"
 #include "port_kinds.h"
 #include "port_layout.h"
@@ -2008,7 +2009,7 @@ static const LiftedRoutine routines[] = {
     {0x477960, vertrix_port_static_init_5588f8, 0, 0},
     {0x4779c0, vertrix_port_box_construct, 0, 0},
     {0x477af0, vertrix_port_handle_flag_set, 0, 0},
-    {0x477b10, lifted_f477b10, 236, 0},
+    {0x477b10, vertrix_port_mouse_setup_477b10, 0, 0},
     {0x477c30, lifted_cursor_capture, 108, 0},
     {0x477c90, vertrix_port_mouse_axis_mode_set, 0, 0},
     {0x477d10, vertrix_port_sound_release_looped_477d10, 0, 0},
@@ -2104,7 +2105,7 @@ static const LiftedRoutine routines[] = {
     {0x47f370, vertrix_port_display_chain_index_47f370, 0, 0},
     {0x47f3d0, vertrix_port_display_release_buffer_47f3d0, 0, 0},
     {0x47f410, lifted_display_ready, 64, 0},
-    {0x47f4b0, lifted_f47f4b0, 252, 0},
+    {0x47f4b0, vertrix_port_screen_blit_47f4b0, 0, 0},
     {0x47f5f0, lifted_f47f5f0, 212, 0},
     {0x47f750, vertrix_port_object_list_47f5f0_47f750, 0, 0},
     {0x47f770, vertrix_port_object_list_47f5f0_8_47f770, 0, 0},
@@ -2121,7 +2122,7 @@ static const LiftedRoutine routines[] = {
     {0x47faf0, lifted_object_set_text, 96, 0},
     {0x47fc10, lifted_f47fc10, 100, 0},
     {0x47fc50, vertrix_port_text_from_wide_47fc50, 0, 0},
-    {0x47fce0, lifted_f47fce0, 68, 0},
+    {0x47fce0, vertrix_port_text_copy_checked_47fce0, 0, 0},
     {0x47fe20, vertrix_port_display_notify_47fe20, 0, 0},
     {0x47fe50, vertrix_port_display_notify_47fe50, 0, 0},
     {0x47fe80, lifted_f47fe80, 96, 0},
@@ -2159,7 +2160,7 @@ static const LiftedRoutine routines[] = {
     {0x482720, vertrix_port_buffer_4k_allocate, 0, 0},
     {0x482740, vertrix_port_forward_first_dword_482740, 0, 0},
     {0x482750, vertrix_port_random_range, 0, 0},
-    {0x482770, lifted_f482770, 72, 0},
+    {0x482770, vertrix_port_random_from_482770, 0, 0},
     {0x4828a0, vertrix_port_button_released_4828a0, 0, 0},
     {0x4828f0, vertrix_port_sounds_volume_set, 0, 0},
     {0x482930, vertrix_port_sounds_pan_default, 0, 0},

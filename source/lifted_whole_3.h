@@ -72,7 +72,6 @@ enum
     LIFTED_F47EEB0_STACK = 180,
     LIFTED_F47F0F0_STACK = 112,
     LIFTED_OBJECT_PICK_ENTRY_STACK = 108,
-    LIFTED_F47F4B0_STACK = 252,
     LIFTED_F47F790_STACK = 656,
     LIFTED_F47F830_STACK = 656
 };
@@ -345,10 +344,6 @@ uint32_t lifted_f47f0f0(const VertrixCalls *calls, const VertrixFactoryServices 
 /* Original 0x47f280. */
 uint32_t lifted_object_pick_entry(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x47f4b0. */
-uint32_t lifted_f47f4b0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x47f790. */
 uint32_t lifted_f47f790(const VertrixCalls *calls, const VertrixFactoryServices *services,
