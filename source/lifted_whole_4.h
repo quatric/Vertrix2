@@ -10,7 +10,6 @@ enum
     LIFTED_F47FA90_STACK = 124,
     LIFTED_OBJECT_SET_TEXT_STACK = 96,
     LIFTED_F47FC10_STACK = 100,
-    LIFTED_F47FE80_STACK = 96,
     LIFTED_F480940_STACK = 92,
     LIFTED_F480D60_STACK = 280,
     LIFTED_RLE_DECODE_STACK = 112,
@@ -67,10 +66,6 @@ uint32_t lifted_object_set_text(const VertrixCalls *calls, const VertrixFactoryS
 
 /* Original 0x47fc10. */
 uint32_t lifted_f47fc10(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x47fe80. */
-uint32_t lifted_f47fe80(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x480940. */
