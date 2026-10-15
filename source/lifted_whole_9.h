@@ -10,7 +10,6 @@ enum
     LIFTED_F423BC0_STACK = 220,
     LIFTED_BOARDS_CONVERT_COUNTS_STACK = 208,
     LIFTED_BOARDS_CONVERT_RANDOM_STACK = 220,
-    LIFTED_BOARD_REPLACE_MARKED_SCALED_STACK = 164,
     LIFTED_F4375F0_STACK = 176,
     LIFTED_BOARD_SPIN_MARKED_STACK = 256,
     LIFTED_F44B170_STACK = 208,
@@ -57,11 +56,6 @@ uint32_t lifted_boards_convert_counts(const VertrixCalls *calls,
 uint32_t lifted_boards_convert_random(const VertrixCalls *calls,
                                       const VertrixFactoryServices *services,
                                       const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x437060. */
-uint32_t lifted_board_replace_marked_scaled(const VertrixCalls *calls,
-                                            const VertrixFactoryServices *services,
-                                            const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4375f0. */
 uint32_t lifted_f4375f0(const VertrixCalls *calls, const VertrixFactoryServices *services,

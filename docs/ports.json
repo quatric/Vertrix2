@@ -2704,6 +2704,16 @@
   "lifted": "lifted_f436100",
   "chunk": "whole_21"
  },
+ "0x436440": {
+  "port": "vertrix_port_board_replace_random_cell_436440",
+  "lifted": "lifted_board_replace_random_cell",
+  "chunk": "whole_1"
+ },
+ "0x4365c0": {
+  "port": "vertrix_port_board_replace_cell_4365c0",
+  "lifted": "lifted_board_replace_cell",
+  "chunk": "whole_1"
+ },
  "0x436720": {
   "port": "vertrix_port_board_replace_marked_436720",
   "lifted": "lifted_board_replace_marked",
@@ -2733,6 +2743,11 @@
   "port": "vertrix_port_board_mark_fives_436fe0",
   "lifted": "lifted_f436fe0",
   "chunk": "whole_1"
+ },
+ "0x437060": {
+  "port": "vertrix_port_board_replace_marked_scaled_437060",
+  "lifted": "lifted_board_replace_marked_scaled",
+  "chunk": "whole_9"
  },
  "0x4371b0": {
   "port": "vertrix_port_board_start_marked_4371b0",
@@ -2772,6 +2787,11 @@
  "0x437b70": {
   "port": "vertrix_port_board_stamp_companions_437b70",
   "lifted": "lifted_board_stamp_companions",
+  "chunk": "whole_1"
+ },
+ "0x437be0": {
+  "port": "vertrix_port_board_scatter_marked_437be0",
+  "lifted": "lifted_board_scatter_marked",
   "chunk": "whole_1"
  },
  "0x437f60": {
@@ -2834,6 +2854,11 @@
   "lifted": "lifted_f438dd0",
   "chunk": "whole_1"
  },
+ "0x438ef0": {
+  "port": "vertrix_port_board_flying_copy_438ef0",
+  "lifted": "lifted_f438ef0",
+  "chunk": "whole_1"
+ },
  "0x439080": {
   "port": "vertrix_port_board_burst_first_439080",
   "lifted": "lifted_f439080",
@@ -2863,6 +2888,11 @@
   "port": "vertrix_port_board_marked_step_4393f0",
   "lifted": "lifted_f4393f0",
   "chunk": "whole_8"
+ },
+ "0x439510": {
+  "port": "vertrix_port_board_flying_copy_439510",
+  "lifted": "lifted_f439510",
+  "chunk": "whole_1"
  },
  "0x43a080": {
   "port": "vertrix_port_block_construct_kind_one_43a080",

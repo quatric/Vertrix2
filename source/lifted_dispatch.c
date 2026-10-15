@@ -115,6 +115,7 @@
 #include "port_quantizers.h"
 #include "port_records.h"
 #include "port_render_rule.h"
+#include "port_replacements.h"
 #include "port_routines.h"
 #include "port_rows.h"
 #include "port_rtl.h"
@@ -870,8 +871,8 @@ static const LiftedRoutine routines[] = {
     {0x4360b0, vertrix_port_board_marker_nth_by_column_4360b0, 0, 0},
     {0x436100, vertrix_port_board_marker_nth_by_column_436100, 0, 0},
     {0x436150, lifted_board_swap_marked, 220, 0},
-    {0x436440, lifted_board_replace_random_cell, 152, 0},
-    {0x4365c0, lifted_board_replace_cell, 148, 0},
+    {0x436440, vertrix_port_board_replace_random_cell_436440, 0, 0},
+    {0x4365c0, vertrix_port_board_replace_cell_4365c0, 0, 0},
     {0x436720, vertrix_port_board_replace_marked_436720, 0, 0},
     {0x436850, vertrix_port_board_checker_marks_436850, 0, 0},
     {0x4368e0, vertrix_port_piece_replace_children_4368e0, 0, 0},
@@ -880,7 +881,7 @@ static const LiftedRoutine routines[] = {
     {0x436b40, lifted_boards_convert_counts, 208, 1},
     {0x436d80, lifted_boards_convert_random, 220, 1},
     {0x436fe0, vertrix_port_board_mark_fives_436fe0, 0, 0},
-    {0x437060, lifted_board_replace_marked_scaled, 164, 0},
+    {0x437060, vertrix_port_board_replace_marked_scaled_437060, 0, 0},
     {0x4371b0, vertrix_port_board_start_marked_4371b0, 0, 0},
     {0x437240, vertrix_port_board_mark_fives_437240, 0, 0},
     {0x4372c0, vertrix_port_board_checker_marks_4372c0, 0, 0},
@@ -891,7 +892,7 @@ static const LiftedRoutine routines[] = {
     {0x4375f0, lifted_f4375f0, 176, 0},
     {0x4378c0, lifted_board_swirl_marked, 180, 0},
     {0x437b70, vertrix_port_board_stamp_companions_437b70, 0, 0},
-    {0x437be0, lifted_board_scatter_marked, 168, 0},
+    {0x437be0, vertrix_port_board_scatter_marked_437be0, 0, 0},
     {0x437d70, lifted_board_split_marked, 160, 0},
     {0x437f60, vertrix_port_board_mark_stones_not_bombs_437f60, 0, 0},
     {0x437fe0, lifted_board_spin_marked, 256, 0},
@@ -908,14 +909,14 @@ static const LiftedRoutine routines[] = {
     {0x438cd0, vertrix_port_board_kinds_match_438cd0, 0, 0},
     {0x438d50, vertrix_port_board_any_block_438d50, 0, 0},
     {0x438dd0, vertrix_port_board_mark_fullest_row_438dd0, 0, 0},
-    {0x438ef0, lifted_f438ef0, 180, 0},
+    {0x438ef0, vertrix_port_board_flying_copy_438ef0, 0, 0},
     {0x439080, vertrix_port_board_burst_first_439080, 0, 0},
     {0x439140, vertrix_port_board_row_last_marker_439140, 0, 0},
     {0x439190, vertrix_port_board_destroy_marked_439190, 0, 0},
     {0x439260, vertrix_port_board_pick_kinds_439260, 0, 0},
     {0x439370, vertrix_port_board_mark_kind_439370, 0, 0},
     {0x4393f0, vertrix_port_board_marked_step_4393f0, 0, 0},
-    {0x439510, lifted_f439510, 180, 0},
+    {0x439510, vertrix_port_board_flying_copy_439510, 0, 0},
     {0x439690, lifted_f439690, 220, 0},
     {0x4398c0, lifted_board_clear_marked_extra, 112, 0},
     {0x43a080, vertrix_port_block_construct_kind_one_43a080, 0, 0},
