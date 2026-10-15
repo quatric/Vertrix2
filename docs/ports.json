@@ -12389,6 +12389,11 @@
   "lifted": "lifted_f4c1d40",
   "chunk": "whole_8"
  },
+ "0x4c2280": {
+  "port": "vertrix_port_colour_converter_make_4c2280",
+  "lifted": "lifted_f4c2280",
+  "chunk": "whole_8"
+ },
  "0x4c26f0": {
   "port": "vertrix_port_decoder_process_restart_4c26f0",
   "lifted": "lifted_f4c26f0",
@@ -12563,6 +12568,11 @@
   "port": "vertrix_port_object_arm_child_1c_4c9690",
   "lifted": "lifted_f4c9690",
   "chunk": "whole_5"
+ },
+ "0x4c96a0": {
+  "port": "vertrix_port_quantizer_two_pass_make_4c96a0",
+  "lifted": "lifted_f4c96a0",
+  "chunk": "whole_8"
  },
  "0x4c9820": {
   "port": "vertrix_port_divide_round_up_4c9820",
@@ -14789,6 +14799,11 @@
   "lifted": "lifted_f4e7bf0",
   "chunk": "whole_6"
  },
+ "0x4e7c30": {
+  "port": "vertrix_port_handle_close_4e7c30",
+  "lifted": "lifted_f4e7c30",
+  "chunk": "whole_6"
+ },
  "0x4e7e44": {
   "port": "vertrix_port_crt_stream_retire_4e7e44",
   "lifted": "lifted_f4e7e44",
@@ -15177,6 +15192,11 @@
  "0x4ecc60": {
   "port": "vertrix_port_rtl_scale_ten_steps_4ecc60",
   "lifted": "lifted_f4ecc60",
+  "chunk": "whole_7"
+ },
+ "0x4eda00": {
+  "port": "vertrix_port_console_put_4eda00",
+  "lifted": "lifted_f4eda00",
   "chunk": "whole_7"
  },
  "0x4edd24": {

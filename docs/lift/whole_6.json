@@ -2321,41 +2321,6 @@
   "virtual": [],
   "address": 5140320
  },
- "f4e7c30": {
-  "callees": {
-   "0x4dae70": [
-    0,
-    false
-   ],
-   "slot_507ca0": [
-    0,
-    false
-   ],
-   "0x4f1b6c": [
-    1,
-    false
-   ],
-   "0x4e0884": [
-    0,
-    false
-   ],
-   "slot_507ca4": [
-    0,
-    false
-   ]
-  },
-  "stack": 104,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [
-   5274764
-  ],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 5143600
- },
  "f4e7fc4": {
   "callees": {
    "0x4e3ce0": [

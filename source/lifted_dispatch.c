@@ -63,6 +63,7 @@
 #include "port_clib.h"
 #include "port_clicks.h"
 #include "port_combines.h"
+#include "port_consoles.h"
 #include "port_constants.h"
 #include "port_controls.h"
 #include "port_crt.h"
@@ -109,6 +110,7 @@
 #include "port_placements.h"
 #include "port_player_states.h"
 #include "port_presses.h"
+#include "port_quantizers.h"
 #include "port_records.h"
 #include "port_render_rule.h"
 #include "port_routines.h"
@@ -3125,7 +3127,7 @@ static const LiftedRoutine routines[] = {
     {0x4c1e10, lifted_f4c1e10, 80, 3},
     {0x4c1e40, lifted_f4c1e40, 124, 0},
     {0x4c2000, lifted_f4c2000, 132, 0},
-    {0x4c2280, lifted_f4c2280, 124, 0},
+    {0x4c2280, vertrix_port_colour_converter_make_4c2280, 0, 0},
     {0x4c23f0, lifted_f4c23f0, 144, 0},
     {0x4c26f0, vertrix_port_decoder_process_restart_4c26f0, 0, 0},
     {0x4c2780, lifted_f4c2780, 176, 0},
@@ -3201,7 +3203,7 @@ static const LiftedRoutine routines[] = {
     {0x4c93c0, vertrix_port_nothing_404580, 0, 0},
     {0x4c9550, lifted_f4c9550, 116, 0},
     {0x4c9690, vertrix_port_object_arm_child_1c_4c9690, 0, 0},
-    {0x4c96a0, lifted_f4c96a0, 132, 0},
+    {0x4c96a0, vertrix_port_quantizer_two_pass_make_4c96a0, 0, 0},
     {0x4c9820, vertrix_port_divide_round_up_4c9820, 0, 0},
     {0x4c9840, vertrix_port_round_up_4c9840, 0, 0},
     {0x4c9860, lifted_rtl_copy_rows, 88, 2},
@@ -3839,7 +3841,7 @@ static const LiftedRoutine routines[] = {
     {0x4e7b50, vertrix_port_char_end, 0, 0},
     {0x4e7b90, vertrix_port_text_copy_limit, 0, 0},
     {0x4e7bf0, vertrix_port_stream_mark_device_4e7bf0, 0, 0},
-    {0x4e7c30, lifted_f4e7c30, 104, 0},
+    {0x4e7c30, vertrix_port_handle_close_4e7c30, 0, 0},
     {0x4e7d80, lifted_f4e7d80, 112, 0},
     {0x4e7e44, vertrix_port_crt_stream_retire_4e7e44, 0, 0},
     {0x4e7eb0, vertrix_port_rtl_stream_close_4e7eb0, 0, 0},
@@ -3966,7 +3968,7 @@ static const LiftedRoutine routines[] = {
     {0x4ed79f, lifted_f4ed79f, 136, 0},
     {0x4ed880, lifted_f4ed880, 136, 0},
     {0x4ed984, lifted_f4ed984, 144, 0},
-    {0x4eda00, lifted_f4eda00, 128, 0},
+    {0x4eda00, vertrix_port_console_put_4eda00, 0, 0},
     {0x4edb48, lifted_f4edb48, 80, 0},
     {0x4edc0e, lifted_f4edc0e, 88, 0},
     {0x4edd24, vertrix_port_rtl_extended_op_4edd24, 0, 0},
