@@ -214,50 +214,6 @@
   "virtual": [],
   "address": 4251696
  },
- "text_table_refresh": {
-  "callees": {
-   "0x4ca310": [
-    0,
-    false
-   ],
-   "0x4ccfe0": [
-    0,
-    false
-   ]
-  },
-  "stack": 148,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   0
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   3,
-   4,
-   5,
-   6,
-   7,
-   8,
-   9,
-   10,
-   11,
-   12,
-   13,
-   19,
-   20,
-   21,
-   47,
-   48,
-   49,
-   79,
-   80,
-   81
-  ],
-  "virtual": [],
-  "address": 4280704
- },
  "quad_average": {
   "callees": {
    "0x417970": [

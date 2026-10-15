@@ -340,3 +340,138 @@ uint32_t vertrix_port_display_mode_notice_4163b0(PORT_SIGNATURE)
     port_set32(&port, ebp, -0x28u, 0);
     return port_return(&port, port_u32(&port, ebp, -0x34u), entry->edx);
 }
+
+/* The frame shared by 0x41af30 and 0x41b130 under the guard record `guard` (BELOW 0x28): the
+ * mark `entered` opens the screen (0x41d640 with dl 1, 0x4b7cd0) and clears `shown` on entry; the
+ * board and pieces run (0x4b7d10, 0x41d670, 0x41dec0, 0x419490 with `players`, 0x471a70,
+ * 0x471a80, 0x471b00, and once `shown` is clear 0x471a60, 0x471b70 and 0x471af0 of 1, which
+ * leaves its edx in `shown`); a ready window (0x4854a0 on 0x5b9c50) shows the frame 0x558c84 at
+ * 0x558c88 (0x471ab0, 0x471b30, 0x471a20, 0x471ad0, 0x471b50, 0x471a40, 0x485520); the screen is
+ * drawn (0x41aaf0, 0x486d00, 0x471ae0, 0x471b60 and 0x471a50 on 0x558c7c, 0x4194b0, 0x41d6d0,
+ * 0x41dd60, 0x486da0, 0x487020, 0x41d660, 0x41de80, and 0x41aca0 clearing `shown` when 0x532a38
+ * is 1). Whether the state 0x532a4c changed from 0x532a98. */
+static int cutscene_frame(Loop *loop, uint32_t screen, uint32_t entered, uint32_t shown,
+                          uint32_t guard, int players, PORT_SIGNATURE)
+{
+    uint32_t ebp = entry->esp - 4;
+    uint32_t value;
+    uint32_t frame;
+    uint32_t place;
+    port_open_frame(&loop->port, calls, services, globals, entry, 0x28);
+    guard_record(&loop->port, ebp - 0x24, guard);
+    loop->ebx = guard;
+    loop->ecx = screen;
+    loop->esi = 0;
+    loop->edi = entry->edi;
+    loop->ebp = ebp;
+    value = port_u8(&loop->port, 0, entered);
+    loop->eax = ((ebp - 0x24) & 0xffff00ffu) | (value << 8);
+    loop->edx = 0x4ec1ec;
+    if (value == 0)
+    {
+        port_set8(&loop->port, 0, entered, 1);
+        step(loop, 0x41d640, screen, 0x4ec101);
+        step(loop, 0x4b7cd0, loop->eax, loop->edx);
+        port_set32(&loop->port, 0, shown, 0);
+    }
+    step(loop, 0x4b7d10, loop->eax, loop->edx);
+    step(loop, 0x41d670, screen, loop->edx);
+    step(loop, 0x41dec0, screen, loop->edx);
+    if (players)
+    {
+        step(loop, 0x419490, screen, loop->edx);
+    }
+    step(loop, 0x471a70, loop->eax, loop->edx);
+    step(loop, 0x471a80, loop->eax, loop->edx);
+    step(loop, 0x471b00, loop->eax, loop->edx);
+    if (port_u32(&loop->port, 0, shown) == 0)
+    {
+        step(loop, 0x471a60, loop->eax, loop->edx);
+        step(loop, 0x471b70, loop->eax, loop->edx);
+        step(loop, 0x471af0, loop->eax, 1);
+        port_set32(&loop->port, 0, shown, loop->edx);
+    }
+    step(loop, 0x4854a0, 0x5b9c50, loop->edx);
+    if (loop->eax == 1)
+    {
+        frame = port_u32(&loop->port, 0, 0x558c84);
+        place = port_u32(&loop->port, 0, 0x558c88);
+        step(loop, 0x471ab0, frame, place);
+        step(loop, 0x471b30, port_u32(&loop->port, 0, 0x558c84),
+             port_u32(&loop->port, 0, 0x558c88));
+        step(loop, 0x471a20, port_u32(&loop->port, 0, 0x558c84),
+             port_u32(&loop->port, 0, 0x558c88));
+        step(loop, 0x471ad0, port_u32(&loop->port, 0, 0x558c84), loop->edx);
+        step(loop, 0x471b50, port_u32(&loop->port, 0, 0x558c84), loop->edx);
+        step(loop, 0x471a40, port_u32(&loop->port, 0, 0x558c84), loop->edx);
+        step(loop, 0x485520, 0x5b9c50, loop->edx);
+    }
+    step(loop, 0x41aaf0, screen, loop->edx);
+    step(loop, 0x486d00, 0x5b9c50, loop->edx);
+    step(loop, 0x471ae0, port_u32(&loop->port, 0, 0x558c7c), loop->edx);
+    step(loop, 0x471b60, port_u32(&loop->port, 0, 0x558c7c), loop->edx);
+    step(loop, 0x471a50, port_u32(&loop->port, 0, 0x558c7c), loop->edx);
+    step(loop, 0x4194b0, screen, loop->edx);
+    step(loop, 0x41d6d0, screen, loop->edx);
+    step(loop, 0x41dd60, screen, loop->edx);
+    step(loop, 0x486da0, 0x5b9c50, loop->edx);
+    step(loop, 0x487020, 0x5b9c50, loop->edx);
+    step(loop, 0x41d660, screen, loop->edx);
+    step(loop, 0x41de80, screen, loop->edx);
+    if (port_u32(&loop->port, 0, 0x532a38) == 1)
+    {
+        step(loop, 0x41aca0, screen, loop->edx);
+        port_set32(&loop->port, 0, shown, 0);
+    }
+    loop->eax = port_u32(&loop->port, 0, 0x532a4c);
+    return loop->eax != port_u32(&loop->port, 0, 0x532a98);
+}
+
+/* Original 0x41af30: the frame of the screen eax (0x540320 entered, 0x540324 shown, guard
+ * 0x513ff8); leaving the state 0x4f7ba0 clears the mark and goes to 0x41b130 (0x418840), resets
+ * the sound 0x5588f8 (0x477ed0, 0x45f770, 0x477d70 with 0) and the keys 0x54d640 (0x4766b0); a
+ * changed state is taken in. The guard record's chain. */
+uint32_t vertrix_port_cutscene_frame_41af30(PORT_SIGNATURE)
+{
+    Loop loop;
+    uint32_t ebp = entry->esp - 4;
+    uint32_t screen = entry->eax;
+    if (cutscene_frame(&loop, screen, 0x540320, 0x540324, 0x513ff8, 0, calls, services, globals,
+                       entry))
+    {
+        if (loop.eax == port_u32(&loop.port, 0, 0x4f7ba0))
+        {
+            port_set8(&loop.port, 0, 0x540320, 0);
+            step(&loop, 0x418840, screen, 0x41b130);
+            step(&loop, 0x477ed0, 0x5588f8, loop.edx);
+            step(&loop, 0x45f770, loop.eax, loop.edx);
+            step(&loop, 0x477d70, 0x5588f8, 0);
+            step(&loop, 0x4766b0, 0x54d640, loop.edx);
+        }
+        port_set32(&loop.port, 0, 0x532a4c, port_u32(&loop.port, 0, 0x532a98));
+    }
+    return port_return(&loop.port, port_u32(&loop.port, ebp, -0x24u), entry->edx);
+}
+
+/* Original 0x41b130: the frame of the screen eax (0x540328 entered, 0x54032c shown, guard
+ * 0x513ffc, with the players 0x419490); leaving the state 0x4f7b94 runs 0x4719e0, shows the
+ * choice dialog 0x461360 and goes to 0x41b820 (0x418840); a changed state is taken in. The guard
+ * record's chain. */
+uint32_t vertrix_port_cutscene_frame_41b130(PORT_SIGNATURE)
+{
+    Loop loop;
+    uint32_t ebp = entry->esp - 4;
+    uint32_t screen = entry->eax;
+    if (cutscene_frame(&loop, screen, 0x540328, 0x54032c, 0x513ffc, 1, calls, services, globals,
+                       entry))
+    {
+        if (loop.eax == port_u32(&loop.port, 0, 0x4f7b94))
+        {
+            step(&loop, 0x4719e0, loop.eax, loop.edx);
+            step(&loop, 0x461360, loop.eax, loop.edx);
+            step(&loop, 0x418840, screen, 0x41b820);
+        }
+        port_set32(&loop.port, 0, 0x532a4c, port_u32(&loop.port, 0, 0x532a98));
+    }
+    return port_return(&loop.port, port_u32(&loop.port, ebp, -0x24u), entry->edx);
+}

@@ -56,6 +56,7 @@
 #include "port_boards.h"
 #include "port_bobs.h"
 #include "port_branches.h"
+#include "port_captions.h"
 #include "port_cells.h"
 #include "port_checks.h"
 #include "port_children.h"
@@ -73,6 +74,7 @@
 #include "port_decoder.h"
 #include "port_decoders.h"
 #include "port_display.h"
+#include "port_displays.h"
 #include "port_drains.h"
 #include "port_drifts.h"
 #include "port_float.h"
@@ -366,7 +368,7 @@ static const LiftedRoutine routines[] = {
     {0x413bd0, lifted_f413bd0, 1292, 0},
     {0x414a90, vertrix_port_level_offsets_534888, 0, 0},
     {0x414b10, vertrix_port_level_offsets_540064, 0, 0},
-    {0x415180, lifted_text_table_refresh, 148, 0},
+    {0x415180, vertrix_port_text_table_refresh_415180, 0, 0},
     {0x415330, vertrix_port_seven_calls_415330, 0, 0},
     {0x415350, vertrix_port_table_pair_select_415350, 0, 0},
     {0x4153e0, vertrix_port_table_pair_select_4153e0, 0, 0},
@@ -499,7 +501,7 @@ static const LiftedRoutine routines[] = {
     {0x419f80, vertrix_port_window_activate_419f80, 0, 0},
     {0x41a010, vertrix_port_window_close_41a010, 0, 0},
     {0x41a040, vertrix_port_screen_refresh, 0, 0},
-    {0x41a080, lifted_f41a080, 300, 0},
+    {0x41a080, vertrix_port_display_start_41a080, 0, 0},
     {0x41a240, vertrix_port_language_apply_41a240, 0, 0},
     {0x41a2b0, vertrix_port_scene_refresh, 0, 0},
     {0x41a2f0, vertrix_port_screen_blit, 0, 0},
@@ -533,8 +535,8 @@ static const LiftedRoutine routines[] = {
     {0x41ac80, vertrix_port_scene_leave, 0, 0},
     {0x41aca0, vertrix_port_call_41aa20_41aaa0_41aca0, 0, 0},
     {0x41acc0, lifted_f41acc0, 1048, 0},
-    {0x41af30, lifted_f41af30, 256, 0},
-    {0x41b130, lifted_f41b130, 252, 0},
+    {0x41af30, vertrix_port_cutscene_frame_41af30, 0, 0},
+    {0x41b130, vertrix_port_cutscene_frame_41b130, 0, 0},
     {0x41b310, lifted_f41b310, 1060, 0},
     {0x41b5e0, vertrix_port_scene_enter_41b5e0, 0, 0},
     {0x41b680, vertrix_port_scene_title_construct, 0, 0},

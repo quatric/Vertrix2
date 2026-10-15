@@ -10,7 +10,6 @@ enum
     LIFTED_WINDOW_TABLES_STACK = 208,
     LIFTED_MIXER_VOLUME_COLUMN_STACK = 92,
     LIFTED_MIXER_PLAYBACK_TICK_STACK = 88,
-    LIFTED_TEXT_TABLE_REFRESH_STACK = 148,
     LIFTED_QUAD_AVERAGE_STACK = 112,
     LIFTED_F41B310_STACK = 1060,
     LIFTED_F41C410_STACK = 572,
@@ -68,11 +67,6 @@ uint32_t lifted_mixer_volume_column(const VertrixCalls *calls,
 uint32_t lifted_mixer_playback_tick(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services,
                                     const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x415180. */
-uint32_t lifted_text_table_refresh(const VertrixCalls *calls,
-                                   const VertrixFactoryServices *services,
-                                   const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4179d0. */
 uint32_t lifted_quad_average(const VertrixCalls *calls, const VertrixFactoryServices *services,
