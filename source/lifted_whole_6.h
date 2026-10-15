@@ -15,7 +15,6 @@ enum
     LIFTED_RTL_SINGLE_DIVIDE_SOFTWARE_FULL_STACK = 88,
     LIFTED_F4D83F0_STACK = 136,
     LIFTED_F4D85C0_STACK = 80,
-    LIFTED_F4D8950_STACK = 80,
     LIFTED_OBJECT_DESTROY_G_STACK = 136,
     LIFTED_NODE_POOL_TAKE_INITIALISED_STACK = 104,
     LIFTED_RTL_STATIC_INIT_CALL_STACK = 72,
@@ -142,10 +141,6 @@ uint32_t lifted_f4d83f0(const VertrixCalls *calls, const VertrixFactoryServices 
 
 /* Original 0x4d85c0. */
 uint32_t lifted_f4d85c0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4d8950. */
-uint32_t lifted_f4d8950(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4d8b80. */
