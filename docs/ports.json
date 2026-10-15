@@ -13584,6 +13584,11 @@
   "lifted": "lifted_rtl_lookup_call",
   "chunk": "whole_21"
  },
+ "0x4dc190": {
+  "port": "vertrix_port_heap_pointer_release_4dc190",
+  "lifted": "lifted_f4dc190",
+  "chunk": "whole_6"
+ },
  "0x4dc400": {
   "port": "vertrix_port_handle_close_clear",
   "lifted": "lifted_f4dc400",
@@ -13654,6 +13659,11 @@
   "lifted": "lifted_f4de630",
   "chunk": "whole_6"
  },
+ "0x4de810": {
+  "port": "vertrix_port_system_colours_load_4de810",
+  "lifted": "lifted_f4de810",
+  "chunk": "whole_6"
+ },
  "0x4de900": {
   "port": "vertrix_port_screen_metrics_read",
   "lifted": "lifted_f4de900",
@@ -13692,6 +13702,11 @@
  "0x4decd0": {
   "port": "vertrix_port_rtl_construct_event_table_4decd0",
   "lifted": "lifted_rtl_construct_event_table",
+  "chunk": "whole_6"
+ },
+ "0x4ded70": {
+  "port": "vertrix_port_handle_table_slot_4ded70",
+  "lifted": "lifted_f4ded70",
   "chunk": "whole_6"
  },
  "0x4deea0": {
@@ -13738,6 +13753,11 @@
   "port": "vertrix_port_map_remove_4df1c0",
   "lifted": "lifted_f4df1c0",
   "chunk": "whole_6"
+ },
+ "0x4df220": {
+  "port": "vertrix_port_map_iterate_4df220",
+  "lifted": "lifted_map_iterate",
+  "chunk": "whole_8"
  },
  "0x4df307": {
   "port": "vertrix_port_handle_table_allocate",
@@ -13818,6 +13838,11 @@
   "port": "vertrix_port_nothing_4e04f4",
   "lifted": "lifted_f4e04f4",
   "chunk": "whole_38"
+ },
+ "0x4e0738": {
+  "port": "vertrix_port_runtime_fatal_exit_4e0738",
+  "lifted": "lifted_f4e0738",
+  "chunk": "whole_6"
  },
  "0x4e081c": {
   "port": "vertrix_port_crt_map_error_4e081c",
@@ -13989,6 +14014,11 @@
   "lifted": "lifted_f4e3743",
   "chunk": "whole_6"
  },
+ "0x4e37fe": {
+  "port": "vertrix_port_type_record_base_4e37fe",
+  "lifted": "lifted_f4e37fe",
+  "chunk": "whole_6"
+ },
  "0x4e38ff": {
   "port": "vertrix_port_crt_record_setup_4e38ff",
   "lifted": "lifted_f4e38ff",
@@ -14023,6 +14053,11 @@
   "port": "vertrix_port_crt_stream_buffer_4e3b60",
   "lifted": "lifted_f4e3b60",
   "chunk": "whole_8"
+ },
+ "0x4e3bf0": {
+  "port": "vertrix_port_file_write_raw_4e3bf0",
+  "lifted": "lifted_f4e3bf0",
+  "chunk": "whole_6"
  },
  "0x4e3f28": {
   "port": "vertrix_port_rtl_streams_count_4e3f28",

@@ -64,6 +64,7 @@
 #include "port_combines.h"
 #include "port_constants.h"
 #include "port_crt.h"
+#include "port_cstd.h"
 #include "port_decoder.h"
 #include "port_decoders.h"
 #include "port_display.h"
@@ -3601,7 +3602,7 @@ static const LiftedRoutine routines[] = {
     {0x4dc000, vertrix_port_handle_unmap_4dc000, 0, 0},
     {0x4dc030, lifted_f4dc030, 216, 0},
     {0x4dc160, vertrix_port_rtl_lookup_call_4dc160, 0, 0},
-    {0x4dc190, lifted_f4dc190, 72, 0},
+    {0x4dc190, vertrix_port_heap_pointer_release_4dc190, 0, 0},
     {0x4dc290, lifted_f4dc290, 116, 2},
     {0x4dc2f0, lifted_f4dc2f0, 184, 3},
     {0x4dc400, vertrix_port_handle_close_clear, 0, 0},
@@ -3624,7 +3625,7 @@ static const LiftedRoutine routines[] = {
     {0x4de5c0, vertrix_port_console_handles, 0, 0},
     {0x4de600, vertrix_port_standard_handles_4de600, 0, 0},
     {0x4de630, vertrix_port_system_info_init, 0, 0},
-    {0x4de810, lifted_f4de810, 252, 0},
+    {0x4de810, vertrix_port_system_colours_load_4de810, 0, 0},
     {0x4de900, vertrix_port_screen_metrics_read, 0, 0},
     {0x4de970, vertrix_port_runtime_version_init, 0, 0},
     {0x4de9c0, vertrix_port_runtime_lock, 0, 0},
@@ -3633,7 +3634,7 @@ static const LiftedRoutine routines[] = {
     {0x4dec60, vertrix_port_rtl_record_increment_4dec60, 0, 0},
     {0x4dec70, vertrix_port_rtl_thread_leave_4dec70, 0, 0},
     {0x4decd0, vertrix_port_rtl_construct_event_table_4decd0, 0, 0},
-    {0x4ded70, lifted_f4ded70, 104, 0},
+    {0x4ded70, vertrix_port_handle_table_slot_4ded70, 0, 0},
     {0x4dee73, lifted_rtl_segment_dispatch, 84, 0},
     {0x4deea0, vertrix_port_lock_init_5c7b88, 0, 0},
     {0x4deec0, vertrix_port_error_object_construct, 0, 0},
@@ -3646,7 +3647,7 @@ static const LiftedRoutine routines[] = {
     {0x4df140, lifted_rtl_table_lookup_value, 76, 0},
     {0x4df160, vertrix_port_map_find_or_add_4df160, 0, 0},
     {0x4df1c0, vertrix_port_map_remove_4df1c0, 0, 0},
-    {0x4df220, lifted_map_iterate, 80, 0},
+    {0x4df220, vertrix_port_map_iterate_4df220, 0, 0},
     {0x4df307, vertrix_port_handle_table_allocate, 0, 0},
     {0x4df320, lifted_f4df320, 248, 0},
     {0x4df6c8, vertrix_port_format_spec, 0, 0},
@@ -3670,7 +3671,7 @@ static const LiftedRoutine routines[] = {
     {0x4e04ec, vertrix_port_global_get_5c7b9c, 0, 0},
     {0x4e04f4, vertrix_port_nothing_4e04f4, 0, 0},
     {0x4e0508, lifted_f4e0508, 156, 0},
-    {0x4e0738, lifted_f4e0738, 116, 0},
+    {0x4e0738, vertrix_port_runtime_fatal_exit_4e0738, 0, 0},
     {0x4e081c, vertrix_port_crt_map_error_4e081c, 0, 0},
     {0x4e0884, vertrix_port_import_4f1bbc_call_4e0884, 0, 0},
     {0x4e08a0, lifted_f4e08a0, 72, 0},
@@ -3723,7 +3724,7 @@ static const LiftedRoutine routines[] = {
     {0x4e36e4, vertrix_port_rtl_stream_release_4e36e4, 0, 0},
     {0x4e373e, lifted_f4e373e, 76, 0},
     {0x4e3743, vertrix_port_crt_object_reset_4e3743, 0, 0},
-    {0x4e37fe, lifted_f4e37fe, 68, 0},
+    {0x4e37fe, vertrix_port_type_record_base_4e37fe, 0, 0},
     {0x4e38ff, vertrix_port_crt_record_setup_4e38ff, 0, 0},
     {0x4e39a0, vertrix_port_text_characters, 0, 0},
     {0x4e39d0, vertrix_port_text_copy, 0, 0},
@@ -3732,7 +3733,7 @@ static const LiftedRoutine routines[] = {
     {0x4e3a90, vertrix_port_char_next, 0, 0},
     {0x4e3ac0, lifted_f4e3ac0, 376, 0},
     {0x4e3b60, vertrix_port_crt_stream_buffer_4e3b60, 0, 0},
-    {0x4e3bf0, lifted_f4e3bf0, 176, 0},
+    {0x4e3bf0, vertrix_port_file_write_raw_4e3bf0, 0, 0},
     {0x4e3ce0, lifted_f4e3ce0, 112, 0},
     {0x4e3e00, lifted_f4e3e00, 124, 0},
     {0x4e3f28, vertrix_port_rtl_streams_count_4e3f28, 0, 0},
