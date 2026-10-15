@@ -2255,45 +2255,6 @@
   "virtual": [],
   "address": 5043552
  },
- "f4d9a10": {
-  "callees": {
-   "0x4ca000": [
-    0,
-    false
-   ],
-   "0x4d9280": [
-    0,
-    false
-   ],
-   "0x4ca070": [
-    0,
-    false
-   ],
-   "0x4ca370": [
-    0,
-    false
-   ],
-   "0x4da71b": [
-    0,
-    false
-   ]
-  },
-  "stack": 132,
-  "arguments": 3,
-  "pointer_callees": [
-   "0x4ca070"
-  ],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   39,
-   40,
-   41
-  ],
-  "virtual": [],
-  "address": 5085712
- },
  "f4dabd0": {
   "callees": {
    "0x4e3f20": [

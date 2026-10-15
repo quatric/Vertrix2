@@ -20,7 +20,6 @@ enum
     LIFTED_NODE_POOL_TAKE_INITIALISED_STACK = 104,
     LIFTED_RTL_STATIC_INIT_CALL_STACK = 72,
     LIFTED_F4D9530_STACK = 72,
-    LIFTED_RTL_FORWARD_PAIR_STACK = 88,
     LIFTED_F4D9AE0_STACK = 64,
     LIFTED_RTL_ZERO_CALL3_STACK = 100,
     LIFTED_EXCEPTION_CHAIN_STEP_STACK = 128,
@@ -174,10 +173,6 @@ uint32_t lifted_rtl_static_init_call(const VertrixCalls *calls,
 /* Original 0x4d9530. */
 uint32_t lifted_f4d9530(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4d9930. */
-uint32_t lifted_rtl_forward_pair(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                 const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4d9ae0. */
 uint32_t lifted_f4d9ae0(const VertrixCalls *calls, const VertrixFactoryServices *services,

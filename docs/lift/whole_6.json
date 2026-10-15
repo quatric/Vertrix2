@@ -428,27 +428,6 @@
   "virtual": [],
   "address": 5084464
  },
- "rtl_forward_pair": {
-  "callees": {
-   "0x4d9ae0": [
-    1,
-    false
-   ],
-   "0x4d9a10": [
-    3,
-    false
-   ]
-  },
-  "stack": 88,
-  "arguments": 2,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 5085488
- },
  "f4d9ae0": {
   "callees": {},
   "stack": 64,
