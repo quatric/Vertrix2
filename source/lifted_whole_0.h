@@ -19,9 +19,7 @@ enum
     LIFTED_OBJECT_ATTACH_ITEM_STACK = 100,
     LIFTED_F411280_STACK = 80,
     LIFTED_F415580_STACK = 976,
-    LIFTED_TABLE_ALL_FILLED_415C30_STACK = 72,
     LIFTED_TABLE_FIND_MATCHING_STACK = 88,
-    LIFTED_NOTICE_CALL_FULL_STACK = 164,
     LIFTED_F416140_STACK = 244,
     LIFTED_F4163B0_STACK = 176,
     LIFTED_F416500_STACK = 372,
@@ -127,19 +125,10 @@ uint32_t lifted_f411280(const VertrixCalls *calls, const VertrixFactoryServices 
 uint32_t lifted_f415580(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x415c30. */
-uint32_t lifted_table_all_filled_415c30(const VertrixCalls *calls,
-                                        const VertrixFactoryServices *services,
-                                        const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x415e40. */
 uint32_t lifted_table_find_matching(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services,
                                     const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x416010. */
-uint32_t lifted_notice_call_full(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                 const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x416140. */
 uint32_t lifted_f416140(const VertrixCalls *calls, const VertrixFactoryServices *services,

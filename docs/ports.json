@@ -349,6 +349,11 @@
   "lifted": "lifted_f40bb70",
   "chunk": "whole_34"
  },
+ "0x40bba0": {
+  "port": "vertrix_port_sound_buffer_make_40bba0",
+  "lifted": "lifted_f40bba0",
+  "chunk": "whole_34"
+ },
  "0x40bcc0": {
   "port": "vertrix_port_sound_buffer_fill_40bcc0",
   "lifted": "lifted_f40bcc0",
@@ -372,6 +377,11 @@
  "0x40bfd0": {
   "port": "vertrix_port_voice_set_pan_40bfd0",
   "lifted": "lifted_f40bfd0",
+  "chunk": "whole_34"
+ },
+ "0x40c020": {
+  "port": "vertrix_port_sound_channel_volume_40c020",
+  "lifted": "lifted_f40c020",
   "chunk": "whole_34"
  },
  "0x40c1c0": {
@@ -804,6 +814,11 @@
   "lifted": "lifted_table_all_filled",
   "chunk": "whole_0"
  },
+ "0x415c30": {
+  "port": "vertrix_port_table_all_filled_415c30",
+  "lifted": "lifted_table_all_filled_415c30",
+  "chunk": "whole_0"
+ },
  "0x415d40": {
   "port": "vertrix_port_global_next_index_415d40",
   "lifted": "lifted_global_next_index_full",
@@ -892,6 +907,11 @@
  "0x415fe0": {
   "port": "vertrix_port_string_set_532bf4",
   "lifted": "lifted_f415fe0",
+  "chunk": "whole_0"
+ },
+ "0x416010": {
+  "port": "vertrix_port_notice_call_full_416010",
+  "lifted": "lifted_notice_call_full",
   "chunk": "whole_0"
  },
  "0x416900": {
@@ -1599,15 +1619,35 @@
   "lifted": "lifted_f41efe0",
   "chunk": "whole_0"
  },
+ "0x41f210": {
+  "port": "vertrix_port_screen_state_41f210",
+  "lifted": "lifted_f41f210",
+  "chunk": "whole_8"
+ },
+ "0x41f350": {
+  "port": "vertrix_port_screen_state_41f350",
+  "lifted": "lifted_f41f350",
+  "chunk": "whole_8"
+ },
  "0x41f460": {
   "port": "vertrix_port_scene_leave_41f460",
   "lifted": "lifted_f41f460",
   "chunk": "whole_0"
  },
+ "0x41f800": {
+  "port": "vertrix_port_screen_state_41f800",
+  "lifted": "lifted_f41f800",
+  "chunk": "whole_8"
+ },
  "0x41f910": {
   "port": "vertrix_port_scene_leave_41f910",
   "lifted": "lifted_f41f910",
   "chunk": "whole_0"
+ },
+ "0x41fb40": {
+  "port": "vertrix_port_screen_state_41fb40",
+  "lifted": "lifted_f41fb40",
+  "chunk": "whole_8"
  },
  "0x41fc70": {
   "port": "vertrix_port_scene_leave_options_41fc70",
