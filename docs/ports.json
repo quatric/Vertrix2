@@ -5689,6 +5689,11 @@
   "lifted": "lifted_f457c10",
   "chunk": "whole_2"
  },
+ "0x457d10": {
+  "port": "vertrix_port_letter_rise_457d10",
+  "lifted": "lifted_f457d10",
+  "chunk": "whole_2"
+ },
  "0x457e40": {
   "port": "vertrix_port_title_walker_run_457e40",
   "lifted": "lifted_f457e40",
@@ -5702,6 +5707,11 @@
  "0x458100": {
   "port": "vertrix_port_actor_step_bob_458100",
   "lifted": "lifted_f458100",
+  "chunk": "whole_2"
+ },
+ "0x458150": {
+  "port": "vertrix_port_letter_return_458150",
+  "lifted": "lifted_f458150",
   "chunk": "whole_2"
  },
  "0x458260": {
@@ -5764,6 +5774,11 @@
   "lifted": "lifted_f4589e0",
   "chunk": "whole_2"
  },
+ "0x458c20": {
+  "port": "vertrix_port_letter_fall_458c20",
+  "lifted": "lifted_f458c20",
+  "chunk": "whole_2"
+ },
  "0x458d40": {
   "port": "vertrix_port_title_letter_throw_458d40",
   "lifted": "lifted_f458d40",
@@ -5797,6 +5812,11 @@
  "0x459200": {
   "port": "vertrix_port_bird_start_459200",
   "lifted": "lifted_f459200",
+  "chunk": "whole_2"
+ },
+ "0x459290": {
+  "port": "vertrix_port_letter_land_459290",
+  "lifted": "lifted_f459290",
   "chunk": "whole_2"
  },
  "0x4593b0": {
@@ -5909,6 +5929,11 @@
   "lifted": "lifted_f45aa70",
   "chunk": "whole_2"
  },
+ "0x45aab0": {
+  "port": "vertrix_port_actor_player_pick_45aab0",
+  "lifted": "lifted_f45aab0",
+  "chunk": "whole_2"
+ },
  "0x45abd0": {
   "port": "vertrix_port_player_message_show_45abd0",
   "lifted": "lifted_f45abd0",
@@ -5962,6 +5987,11 @@
  "0x45b590": {
   "port": "vertrix_port_state_child_step_45b590",
   "lifted": "lifted_f45b590",
+  "chunk": "whole_2"
+ },
+ "0x45b5f0": {
+  "port": "vertrix_port_player_line_check_45b5f0",
+  "lifted": "lifted_f45b5f0",
   "chunk": "whole_2"
  },
  "0x45b710": {
@@ -6977,6 +7007,11 @@
  "0x474540": {
   "port": "vertrix_port_counter_wrap_474540",
   "lifted": "lifted_f474540",
+  "chunk": "whole_3"
+ },
+ "0x474cd0": {
+  "port": "vertrix_port_palette_channels_474cd0",
+  "lifted": "lifted_palette_channels",
   "chunk": "whole_3"
  },
  "0x4754e0": {

@@ -3340,36 +3340,6 @@
   "virtual": [],
   "address": 4669856
  },
- "palette_channels": {
-  "callees": {
-   "0x474910": [
-    2,
-    false
-   ]
-  },
-  "stack": 152,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   47,
-   48,
-   49,
-   100,
-   101,
-   102,
-   200,
-   201,
-   202,
-   764,
-   765,
-   766
-  ],
-  "virtual": [],
-  "address": 4672720
- },
  "release_pair": {
   "callees": {
    "0x4ea190": [

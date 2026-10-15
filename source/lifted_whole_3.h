@@ -49,7 +49,6 @@ enum
     LIFTED_F473E60_STACK = 136,
     LIFTED_F473FC0_STACK = 308,
     LIFTED_F4741A0_STACK = 348,
-    LIFTED_PALETTE_CHANNELS_STACK = 152,
     LIFTED_RELEASE_PAIR_STACK = 112,
     LIFTED_FORMAT_DECIMAL_STACK = 100,
     LIFTED_CURSOR_CAPTURE_STACK = 108,
@@ -251,10 +250,6 @@ uint32_t lifted_f473fc0(const VertrixCalls *calls, const VertrixFactoryServices 
 /* Original 0x4741a0. */
 uint32_t lifted_f4741a0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x474cd0. */
-uint32_t lifted_palette_channels(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                 const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x475510. */
 uint32_t lifted_release_pair(const VertrixCalls *calls, const VertrixFactoryServices *services,
