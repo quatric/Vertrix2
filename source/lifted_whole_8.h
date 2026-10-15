@@ -30,12 +30,10 @@ enum
     LIFTED_LINE_PASS_STACK = 272,
     LIFTED_FIGURE_PASS_STACK = 208,
     LIFTED_BOARD_SWIRL_MARKED_STACK = 180,
-    LIFTED_F439690_STACK = 220,
     LIFTED_MODE_COLORS_STACK = 76,
     LIFTED_PATTERN_TABLES_STACK = 148,
     LIFTED_F442140_STACK = 108,
     LIFTED_F443DC0_STACK = 152,
-    LIFTED_F444550_STACK = 132,
     LIFTED_F444700_STACK = 132,
     LIFTED_F449090_STACK = 124,
     LIFTED_F472F80_STACK = 260,
@@ -199,10 +197,6 @@ uint32_t lifted_board_swirl_marked(const VertrixCalls *calls,
                                    const VertrixFactoryServices *services,
                                    const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x439690. */
-uint32_t lifted_f439690(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x43bd90. */
 uint32_t lifted_mode_colors(const VertrixCalls *calls, const VertrixFactoryServices *services,
                             const VertrixGlobals *globals, const LiftEntry *entry);
@@ -217,10 +211,6 @@ uint32_t lifted_f442140(const VertrixCalls *calls, const VertrixFactoryServices 
 
 /* Original 0x443dc0. */
 uint32_t lifted_f443dc0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x444550. */
-uint32_t lifted_f444550(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x444700. */
