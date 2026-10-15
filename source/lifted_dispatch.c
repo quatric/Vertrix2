@@ -95,6 +95,7 @@
 #include "port_menu.h"
 #include "port_motions.h"
 #include "port_objects.h"
+#include "port_paths.h"
 #include "port_pauses.h"
 #include "port_pixel_format.h"
 #include "port_player_states.h"
@@ -3859,7 +3860,7 @@ static const LiftedRoutine routines[] = {
     {0x4e8abc, vertrix_port_crt_console_check_4e8abc, 0, 0},
     {0x4e8b24, vertrix_port_crt_console_both_4e8b24, 0, 0},
     {0x4e8b8c, vertrix_port_rtl_console_handler_off_4e8b8c, 0, 0},
-    {0x4e8bd4, lifted_f4e8bd4, 88, 0},
+    {0x4e8bd4, vertrix_port_signal_raise_4e8bd4, 0, 0},
     {0x4e8cc8, lifted_f4e8cc8, 104, 0},
     {0x4e8d80, vertrix_port_signals_reset_4e8d80, 0, 0},
     {0x4e8db0, vertrix_port_hooks_set_507cdc, 0, 0},
@@ -3886,7 +3887,7 @@ static const LiftedRoutine routines[] = {
     {0x4ea2a8, vertrix_port_bank_allocate_5130c4, 0, 0},
     {0x4ea310, vertrix_port_char_trail_check_4ea310, 0, 0},
     {0x4ea350, lifted_f4ea350, 108, 0},
-    {0x4ea470, lifted_f4ea470, 128, 0},
+    {0x4ea470, vertrix_port_full_path_4ea470, 0, 0},
     {0x4ea540, lifted_f4ea540, 104, 0},
     {0x4ea6a0, vertrix_port_call_4ea540_4ea6a0, 0, 0},
     {0x4ea6b0, lifted_f4ea6b0, 72, 0},
@@ -3901,7 +3902,7 @@ static const LiftedRoutine routines[] = {
     {0x4eb860, vertrix_port_text_copy_padded, 0, 0},
     {0x4eb892, vertrix_port_double_to_int, 0, 0},
     {0x4eb910, lifted_f4eb910, 92, 0},
-    {0x4eba4c, lifted_f4eba4c, 120, 2},
+    {0x4eba4c, vertrix_port_stream_open_4eba4c, 0, 0},
     {0x4ebb34, lifted_f4ebb34, 100, 0},
     {0x4ebb78, lifted_f4ebb78, 72, 0},
     {0x4ebc90, vertrix_port_buffer_seek_4ebc90, 0, 0},

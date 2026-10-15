@@ -14444,6 +14444,11 @@
   "lifted": "lifted_f4e8b8c",
   "chunk": "whole_8"
  },
+ "0x4e8bd4": {
+  "port": "vertrix_port_signal_raise_4e8bd4",
+  "lifted": "lifted_f4e8bd4",
+  "chunk": "whole_13"
+ },
  "0x4e8d80": {
   "port": "vertrix_port_signals_reset_4e8d80",
   "lifted": "lifted_f4e8d80",
@@ -14509,6 +14514,11 @@
   "lifted": "lifted_f4ea310",
   "chunk": "whole_6"
  },
+ "0x4ea470": {
+  "port": "vertrix_port_full_path_4ea470",
+  "lifted": "lifted_f4ea470",
+  "chunk": "whole_6"
+ },
  "0x4ea6a0": {
   "port": "vertrix_port_call_4ea540_4ea6a0",
   "lifted": "lifted_f4ea6a0",
@@ -14547,6 +14557,11 @@
  "0x4eb892": {
   "port": "vertrix_port_double_to_int",
   "lifted": "lifted_f4eb892",
+  "chunk": "whole_6"
+ },
+ "0x4eba4c": {
+  "port": "vertrix_port_stream_open_4eba4c",
+  "lifted": "lifted_f4eba4c",
   "chunk": "whole_6"
  },
  "0x4ebc90": {
