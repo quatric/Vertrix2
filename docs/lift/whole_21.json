@@ -1356,40 +1356,6 @@
   "virtual": [],
   "address": 4357648
  },
- "ai_choice_scores": {
-  "callees": {
-   "0x4eb5c0": [
-    0,
-    false
-   ]
-  },
-  "stack": 112,
-  "arguments": 1,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2,
-   3,
-   4,
-   5,
-   6,
-   7,
-   8,
-   27,
-   28,
-   29,
-   31,
-   32,
-   33,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 4361840
- },
  "actor_spawn_match_burst": {
   "callees": {
    "0x4826c0": [

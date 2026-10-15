@@ -13,8 +13,6 @@ enum
     LIFTED_F4083A0_STACK = 212,
     LIFTED_F40AED0_STACK = 92,
     LIFTED_CURVE_TABLE_BUILD_STACK = 120,
-    LIFTED_MIXER_VIBRATO_STACK = 80,
-    LIFTED_MIXER_VOLUME_SLIDE_STACK = 76,
     LIFTED_OBJECT_FREE_TREE_STACK = 116,
     LIFTED_OBJECT_ATTACH_ITEM_STACK = 100,
     LIFTED_F411280_STACK = 80,
@@ -58,7 +56,6 @@ enum
     LIFTED_AI_RECORD_SCORE_STACK = 136,
     LIFTED_AI_FIND_BEST_SLOT_STACK = 104,
     LIFTED_SETTINGS_DEFAULTS_STACK = 116,
-    LIFTED_SLOT_OBJECTS_MAKE_STACK = 168,
     LIFTED_CHOICE_GRID_PICK_CELL_STACK = 112,
     LIFTED_CHOICE_GRID_AVAILABLE_STACK = 64,
     LIFTED_F42A540_STACK = 276,
@@ -95,15 +92,6 @@ uint32_t lifted_f40aed0(const VertrixCalls *calls, const VertrixFactoryServices 
 /* Original 0x40ba00. */
 uint32_t lifted_curve_table_build(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x40d090. */
-uint32_t lifted_mixer_vibrato(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                              const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x40d250. */
-uint32_t lifted_mixer_volume_slide(const VertrixCalls *calls,
-                                   const VertrixFactoryServices *services,
-                                   const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x40ef90. */
 uint32_t lifted_object_free_tree(const VertrixCalls *calls, const VertrixFactoryServices *services,
@@ -282,10 +270,6 @@ uint32_t lifted_ai_find_best_slot(const VertrixCalls *calls, const VertrixFactor
 
 /* Original 0x4290c0. */
 uint32_t lifted_settings_defaults(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                  const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x429bf0. */
-uint32_t lifted_slot_objects_make(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x429fe0. */

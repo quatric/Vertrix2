@@ -539,6 +539,16 @@
   "lifted": "lifted_mixer_portamento",
   "chunk": "whole_0"
  },
+ "0x40d090": {
+  "port": "vertrix_port_mixer_vibrato_40d090",
+  "lifted": "lifted_mixer_vibrato",
+  "chunk": "whole_0"
+ },
+ "0x40d250": {
+  "port": "vertrix_port_mixer_volume_slide_40d250",
+  "lifted": "lifted_mixer_volume_slide",
+  "chunk": "whole_0"
+ },
  "0x40dc50": {
   "port": "vertrix_port_mixer_effect",
   "lifted": "lifted_mixer_effect_select",
@@ -642,6 +652,11 @@
  "0x410f80": {
   "port": "vertrix_port_import_check_4f1740",
   "lifted": "lifted_f410f80",
+  "chunk": "whole_35"
+ },
+ "0x410fa0": {
+  "port": "vertrix_port_sound_output_open_410fa0",
+  "lifted": "lifted_f410fa0",
   "chunk": "whole_35"
  },
  "0x4111c0": {
@@ -1794,6 +1809,11 @@
   "lifted": "lifted_ai_row_reach",
   "chunk": "whole_21"
  },
+ "0x428e70": {
+  "port": "vertrix_port_ai_choice_scores_428e70",
+  "lifted": "lifted_ai_choice_scores",
+  "chunk": "whole_21"
+ },
  "0x4290a0": {
   "port": "vertrix_port_ai_choose_piece_rotation_4290a0",
   "lifted": "lifted_ai_choose_piece_rotation",
@@ -1863,6 +1883,11 @@
   "port": "vertrix_port_grid_children_update_429b60",
   "lifted": "lifted_f429b60",
   "chunk": "whole_14"
+ },
+ "0x429bf0": {
+  "port": "vertrix_port_slot_objects_make_429bf0",
+  "lifted": "lifted_slot_objects_make",
+  "chunk": "whole_0"
  },
  "0x429d50": {
   "port": "vertrix_port_choice_grid_apply_429d50",

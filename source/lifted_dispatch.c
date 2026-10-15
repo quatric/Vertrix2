@@ -34,7 +34,6 @@
 #include "lifted_whole_31.h"
 #include "lifted_whole_33.h"
 #include "lifted_whole_34.h"
-#include "lifted_whole_35.h"
 #include "lifted_whole_38.h"
 #include "lifted_whole_4.h"
 #include "lifted_whole_40.h"
@@ -130,6 +129,7 @@
 #include "port_sessions.h"
 #include "port_settle.h"
 #include "port_setups.h"
+#include "port_slots.h"
 #include "port_small.h"
 #include "port_sound.h"
 #include "port_spawn.h"
@@ -154,7 +154,9 @@
 #include "port_turns.h"
 #include "port_twins.h"
 #include "port_upsamples.h"
+#include "port_vibratos.h"
 #include "port_voices.h"
+#include "port_waveouts.h"
 #include "port_widgets.h"
 #include "port_window.h"
 #include "port_windows.h"
@@ -306,8 +308,8 @@ static const LiftedRoutine routines[] = {
     {0x40ce20, vertrix_port_audio_period_from, 0, 0},
     {0x40ce80, vertrix_port_mixer_note_period, 0, 0},
     {0x40cff0, vertrix_port_mixer_portamento_40cff0, 0, 0},
-    {0x40d090, lifted_mixer_vibrato, 80, 0},
-    {0x40d250, lifted_mixer_volume_slide, 76, 0},
+    {0x40d090, vertrix_port_mixer_vibrato_40d090, 0, 0},
+    {0x40d250, vertrix_port_mixer_volume_slide_40d250, 0, 0},
     {0x40d490, lifted_mixer_set_effect_40d490, 68, 0},
     {0x40d540, lifted_sequence_extended_effect, 92, 0},
     {0x40d880, lifted_mixer_global_effect, 68, 0},
@@ -339,7 +341,7 @@ static const LiftedRoutine routines[] = {
     {0x410270, vertrix_native_s3m_pattern, 0, 0},
     {0x410f20, vertrix_port_sound_device_caps, 0, 0},
     {0x410f80, vertrix_port_import_check_4f1740, 0, 0},
-    {0x410fa0, lifted_f410fa0, 224, 0},
+    {0x410fa0, vertrix_port_sound_output_open_410fa0, 0, 0},
     {0x4111c0, vertrix_port_wave_pump, 0, 0},
     {0x411270, vertrix_port_global_set_532574, 0, 0},
     {0x411280, lifted_f411280, 80, 0},
@@ -651,7 +653,7 @@ static const LiftedRoutine routines[] = {
     {0x428110, lifted_ai_compare_boards, 184, 0},
     {0x428610, lifted_ai_record_score, 136, 0},
     {0x4288d0, lifted_f4288d0, 296, 2},
-    {0x428e70, lifted_ai_choice_scores, 112, 1},
+    {0x428e70, vertrix_port_ai_choice_scores_428e70, 0, 0},
     {0x429000, lifted_ai_find_best_slot, 104, 0},
     {0x4290a0, vertrix_port_ai_choose_piece_rotation_4290a0, 0, 0},
     {0x4290c0, lifted_settings_defaults, 116, 0},
@@ -672,7 +674,7 @@ static const LiftedRoutine routines[] = {
     {0x429b10, vertrix_port_nothing_404580, 0, 0},
     {0x429b60, vertrix_port_grid_children_update_429b60, 0, 0},
     {0x429ba0, lifted_f429ba0, 92, 0},
-    {0x429bf0, lifted_slot_objects_make, 168, 0},
+    {0x429bf0, vertrix_port_slot_objects_make_429bf0, 0, 0},
     {0x429d50, vertrix_port_choice_grid_apply_429d50, 0, 0},
     {0x429df0, vertrix_port_choice_grid_load_values_429df0, 0, 0},
     {0x429e80, vertrix_port_choice_grid_store_values_429e80, 0, 0},
