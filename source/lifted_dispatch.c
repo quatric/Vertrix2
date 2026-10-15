@@ -127,6 +127,7 @@
 #include "port_runtime.h"
 #include "port_scenes.h"
 #include "port_screens.h"
+#include "port_searches.h"
 #include "port_seeks.h"
 #include "port_sessions.h"
 #include "port_settle.h"
@@ -633,7 +634,7 @@ static const LiftedRoutine routines[] = {
     {0x425810, vertrix_port_game_close_425810, 0, 0},
     {0x4259d0, vertrix_port_scene_reload_4259d0, 0, 0},
     {0x425a50, vertrix_port_scene_leave_picture_425a50, 0, 0},
-    {0x425ae0, lifted_f425ae0, 196, 0},
+    {0x425ae0, vertrix_port_game_keys_setup_425ae0, 0, 0},
     {0x425d30, vertrix_port_rule_set_construct_425d30, 0, 0},
     {0x425d50, vertrix_port_object_destroy_425d50, 0, 0},
     {0x425de0, vertrix_port_object_reset_slots_425de0, 0, 0},
@@ -642,7 +643,7 @@ static const LiftedRoutine routines[] = {
     {0x425e40, vertrix_port_object_destroy_call_425e40, 0, 0},
     {0x425ef0, lifted_piece_init_from_kind, 68, 0},
     {0x425f40, vertrix_port_nothing_425f40, 0, 0},
-    {0x425f60, lifted_f425f60, 252, 1},
+    {0x425f60, vertrix_port_ai_move_search_425f60, 0, 0},
     {0x4261b0, vertrix_port_ai_row_reach_4261b0, 0, 0},
     {0x426240, lifted_ai_fallback, 252, 6},
     {0x4269e0, lifted_ai_chain_search, 600, 6},

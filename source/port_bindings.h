@@ -11,5 +11,6 @@ uint32_t vertrix_port_key_bind_473960(PORT_SIGNATURE);
 uint32_t vertrix_port_events_setup_48b7e0(PORT_SIGNATURE);
 uint32_t vertrix_port_marker_reader_make_4c09e0(PORT_SIGNATURE);
 uint32_t vertrix_port_release_pair_475510(PORT_SIGNATURE);
+uint32_t vertrix_port_game_keys_setup_425ae0(PORT_SIGNATURE);
 
 #endif

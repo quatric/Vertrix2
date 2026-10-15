@@ -1,49 +1,4 @@
 {
- "f425f60": {
-  "callees": {
-   "0x431b20": [
-    0,
-    false
-   ],
-   "0x432820": [
-    0,
-    false
-   ],
-   "0x427380": [
-    8,
-    false
-   ],
-   "0x4270a0": [
-    6,
-    false
-   ],
-   "0x4269e0": [
-    6,
-    false
-   ],
-   "0x426240": [
-    6,
-    false
-   ]
-  },
-  "stack": 252,
-  "arguments": 1,
-  "pointer_callees": [],
-  "pointer_fields": [
-   348
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [
-   348
-  ],
-  "constants": [
-   31,
-   32,
-   33
-  ],
-  "virtual": [],
-  "address": 4349792
- },
  "f42f910": {
   "callees": {
    "virtual_42f9cf": [

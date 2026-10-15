@@ -877,7 +877,7 @@ The synthesis (0x405720, 491 instructions) is three windowed sums, written as lo
 single helpers. The port keeps the ebx and ecx its helpers see, which carry the loop counters and
 the last clamp's limit.
 
-3112 routines run as clean ports. Counted by calls, 99.65% of the calls the dispatcher serves in the
+3114 routines run as clean ports. Counted by calls, 99.65% of the calls the dispatcher serves in the
 1,500-tick gameplay profile go to a port or a recovered native (202,169 of 57,234,341 still ran lifted
 copies before 0x4928f0 below).
 

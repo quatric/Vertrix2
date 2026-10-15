@@ -45,7 +45,6 @@ enum
     LIFTED_F423EA0_STACK = 640,
     LIFTED_F424180_STACK = 104,
     LIFTED_F424230_STACK = 436,
-    LIFTED_F425AE0_STACK = 196,
     LIFTED_PIECE_INIT_FROM_KIND_STACK = 68,
     LIFTED_OBJECT_COMPARE_REGIONS_STACK = 280,
     LIFTED_AI_FEATURES_STACK = 76,
@@ -221,10 +220,6 @@ uint32_t lifted_f424180(const VertrixCalls *calls, const VertrixFactoryServices 
 
 /* Original 0x424230. */
 uint32_t lifted_f424230(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x425ae0. */
-uint32_t lifted_f425ae0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x425ef0. */

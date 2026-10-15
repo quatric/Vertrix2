@@ -2398,47 +2398,6 @@
   "virtual": [],
   "address": 4342320
  },
- "f425ae0": {
-  "callees": {
-   "0x4760c0": [
-    0,
-    false
-   ],
-   "0x476590": [
-    0,
-    false
-   ],
-   "0x4765b0": [
-    0,
-    false
-   ],
-   "0x476140": [
-    0,
-    false
-   ],
-   "0x473490": [
-    0,
-    false
-   ],
-   "0x476500": [
-    0,
-    false
-   ],
-   "0x4764d0": [
-    0,
-    false
-   ]
-  },
-  "stack": 196,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4348640
- },
  "piece_init_from_kind": {
   "callees": {},
   "stack": 68,

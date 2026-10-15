@@ -1824,6 +1824,11 @@
   "lifted": "lifted_f425a50",
   "chunk": "whole_0"
  },
+ "0x425ae0": {
+  "port": "vertrix_port_game_keys_setup_425ae0",
+  "lifted": "lifted_f425ae0",
+  "chunk": "whole_0"
+ },
  "0x425d30": {
   "port": "vertrix_port_rule_set_construct_425d30",
   "lifted": "lifted_object_set_table",
@@ -1858,6 +1863,11 @@
   "port": "vertrix_port_nothing_425f40",
   "lifted": "lifted_return_unchanged_425f40",
   "chunk": "whole_0"
+ },
+ "0x425f60": {
+  "port": "vertrix_port_ai_move_search_425f60",
+  "lifted": "lifted_f425f60",
+  "chunk": "whole_15"
  },
  "0x4261b0": {
   "port": "vertrix_port_ai_row_reach_4261b0",

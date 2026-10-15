@@ -237,3 +237,59 @@ uint32_t vertrix_port_release_pair_475510(PORT_SIGNATURE)
                    entry->esi, entry->edi, ebp);
     return port_return(&port, port_u32(&port, ebp, -0x20u), entry->edx);
 }
+
+/* Original 0x425ae0: the keys 0x54d640 are reset (0x4760c0, 0x476590, 0x4765b0 of 1) and
+ * released (0x476140 of the edx left and of 0x3b to 0x42), the players' keys released
+ * (0x473490), the pause key 0x532b7c released, and each move key bound up and down (0x476500,
+ * 0x4764d0) to its player: 0x532b6c, 0x532b6e and 0x532b70 to 0x532b80, 0x532b72 and 0x532b7a
+ * to 0x553644, and 0x532b74, 0x532b76 and 0x532b78 to 0x532b84. */
+uint32_t vertrix_port_game_keys_setup_425ae0(PORT_SIGNATURE)
+{
+    static const uint32_t codes[] = {0x532b6c, 0x532b6e, 0x532b70, 0x532b72,
+                                     0x532b74, 0x532b76, 0x532b78, 0x532b7a};
+    static const uint32_t owners[] = {0x532b80, 0x532b80, 0x532b80, 0,
+                                      0x532b84, 0x532b84, 0x532b84, 0};
+    Port port;
+    uint32_t eax;
+    uint32_t ebx = entry->ebx;
+    uint32_t ecx = entry->ecx;
+    uint32_t esi = entry->esi;
+    uint32_t edi = entry->edi;
+    uint32_t ebp = entry->ebp;
+    uint32_t code;
+    unsigned index;
+    port_open(&port, calls, services, globals, entry);
+    port_call_with(&port, 0x4760c0, 0x54d640, entry->edx, ebx, ecx, esi, edi, ebp);
+    port_call_with(&port, 0x476590, 0x54d640, vertrix_lift_edx, ebx, ecx, esi, edi, ebp);
+    port_call_with(&port, 0x4765b0, 0x54d640, 1, ebx, ecx, esi, edi, ebp);
+    port_call_with(&port, 0x476140, 0x54d640, vertrix_lift_edx, ebx, ecx, esi, edi, ebp);
+    eax = 0;
+    for (code = 0x3b; code <= 0x42; ++code)
+    {
+        eax = port_call_with(&port, 0x476140, 0x54d640, code, ebx, ecx, esi, edi, ebp);
+    }
+    port_call_with(&port, 0x473490, eax, vertrix_lift_edx, ebx, ecx, esi, edi, ebp);
+    port_call_with(&port, 0x476140, 0x54d640, port_u16(&port, 0, 0x532b7c), ebx, ecx, esi, edi,
+                   ebp);
+    for (index = 0; index < 8; ++index)
+    {
+        if (index == 2)
+        {
+            ebx = port_u32(&port, 0, owners[index]);
+            port_call_with(&port, 0x476500, 0x54d640, port_u16(&port, 0, codes[index]), ebx, ecx,
+                           esi, edi, ebp);
+            ebx = port_u32(&port, 0, owners[index]);
+            ecx = port_u32(&port, 0, 0x553644);
+            eax = port_call_with(&port, 0x4764d0, 0x54d640, port_u16(&port, 0, codes[index]), ebx,
+                                 ecx, esi, edi, ebp);
+            continue;
+        }
+        ebx = owners[index] != 0 ? port_u32(&port, 0, owners[index]) : ecx;
+        port_call_with(&port, 0x476500, 0x54d640, port_u16(&port, 0, codes[index]), ebx, ecx, esi,
+                       edi, ebp);
+        ebx = owners[index] != 0 ? port_u32(&port, 0, owners[index]) : ecx;
+        eax = port_call_with(&port, 0x4764d0, 0x54d640, port_u16(&port, 0, codes[index]), ebx, ecx,
+                             esi, edi, ebp);
+    }
+    return port_return(&port, eax, entry->edx);
+}
