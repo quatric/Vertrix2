@@ -26,18 +26,15 @@ enum
     LIFTED_PATH_LAST_SEPARATOR_STACK = 68,
     LIFTED_PATH_IS_NETWORK_STACK = 68,
     LIFTED_F489170_STACK = 204,
-    LIFTED_F489230_STACK = 208,
     LIFTED_RTL_WRITE_TEXT_CALL_STACK = 100,
     LIFTED_FIND_ATTRIBUTE_FLAG_STACK = 368,
     LIFTED_F489A10_STACK = 216,
     LIFTED_F48A100_STACK = 212,
-    LIFTED_F48A710_STACK = 192,
     LIFTED_F48AC50_STACK = 408,
     LIFTED_F48AD00_STACK = 464,
     LIFTED_F48AE00_STACK = 932,
     LIFTED_F48BCA0_STACK = 124,
     LIFTED_F48BE70_STACK = 124,
-    LIFTED_F48C0F0_STACK = 140,
     LIFTED_F48C4A0_STACK = 184,
     LIFTED_F48C6C0_STACK = 208,
     LIFTED_F48C860_STACK = 2528,
@@ -138,10 +135,6 @@ uint32_t lifted_path_is_network(const VertrixCalls *calls, const VertrixFactoryS
 uint32_t lifted_f489170(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x489230. */
-uint32_t lifted_f489230(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x489470. */
 uint32_t lifted_rtl_write_text_call(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services,
@@ -158,10 +151,6 @@ uint32_t lifted_f489a10(const VertrixCalls *calls, const VertrixFactoryServices 
 
 /* Original 0x48a100. */
 uint32_t lifted_f48a100(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x48a710. */
-uint32_t lifted_f48a710(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x48ac50. */
@@ -182,10 +171,6 @@ uint32_t lifted_f48bca0(const VertrixCalls *calls, const VertrixFactoryServices 
 
 /* Original 0x48be70. */
 uint32_t lifted_f48be70(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x48c0f0. */
-uint32_t lifted_f48c0f0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x48c4a0. */
