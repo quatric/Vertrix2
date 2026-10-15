@@ -82,6 +82,7 @@
 #include "port_drains.h"
 #include "port_drifts.h"
 #include "port_drops.h"
+#include "port_fades.h"
 #include "port_float.h"
 #include "port_font.h"
 #include "port_forward.h"
@@ -177,6 +178,7 @@
 #include "port_widgets.h"
 #include "port_window.h"
 #include "port_windows.h"
+#include "port_wobbles.h"
 #include "port_wrappers.h"
 
 enum
@@ -1294,12 +1296,12 @@ static const LiftedRoutine routines[] = {
     {0x44cb50, vertrix_port_actor_flash_state_44cb50, 0, 0},
     {0x44cbf0, vertrix_port_block_fade_frame_44cbf0, 0, 0},
     {0x44cc60, vertrix_port_block_fade_frame_44cc60, 0, 0},
-    {0x44ccd0, lifted_f44ccd0, 152, 0},
+    {0x44ccd0, vertrix_port_piece_wobble_44ccd0, 0, 0},
     {0x44ce80, vertrix_port_block_scale_update_44ce80, 0, 0},
     {0x44cf00, vertrix_port_block_return_update_44cf00, 0, 0},
     {0x44cf70, vertrix_port_actor_step_show_44cf70, 0, 0},
     {0x44cfd0, vertrix_port_actor_step_show_44cfd0, 0, 0},
-    {0x44d030, lifted_f44d030, 152, 0},
+    {0x44d030, vertrix_port_piece_wobble_dark_44d030, 0, 0},
     {0x44d1e0, vertrix_port_actor_fade_frame_44d1e0, 0, 0},
     {0x44d250, vertrix_port_actor_fade_frame_44d250, 0, 0},
     {0x44d2c0, vertrix_port_block_fade_frame_44d2c0, 0, 0},
@@ -1345,7 +1347,7 @@ static const LiftedRoutine routines[] = {
     {0x44ebe0, vertrix_port_actor_step_frame_44ebe0, 0, 0},
     {0x44ec40, vertrix_port_block_slide_update_44ec40, 0, 0},
     {0x44ece0, vertrix_port_block_spin_update_44ece0, 0, 0},
-    {0x44ee20, lifted_f44ee20, 168, 0},
+    {0x44ee20, vertrix_port_piece_fade_44ee20, 0, 0},
     {0x44f040, vertrix_port_actor_fade_frame_44f040, 0, 0},
     {0x44f0b0, vertrix_port_actor_fade_frame_44f0b0, 0, 0},
     {0x44f120, vertrix_port_actor_swing_frame_44f120, 0, 0},
