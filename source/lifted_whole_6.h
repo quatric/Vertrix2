@@ -38,13 +38,11 @@ enum
     LIFTED_F4DD430_STACK = 112,
     LIFTED_F4DD4A0_STACK = 152,
     LIFTED_F4DDC30_STACK = 112,
-    LIFTED_RTL_RELEASE_LIST_HEAD_STACK = 84,
     LIFTED_F4DDE50_STACK = 72,
     LIFTED_RTL_SEGMENT_DISPATCH_STACK = 84,
     LIFTED_F4DEFD0_STACK = 136,
     LIFTED_RTL_TABLE_LOOKUP_VALUE_STACK = 76,
     LIFTED_F4E0430_STACK = 120,
-    LIFTED_F4E0508_STACK = 156,
     LIFTED_F4E08A0_STACK = 72,
     LIFTED_F4E0AE5_STACK = 104,
     LIFTED_F4E0B9E_STACK = 84,
@@ -235,11 +233,6 @@ uint32_t lifted_f4dd4a0(const VertrixCalls *calls, const VertrixFactoryServices 
 uint32_t lifted_f4ddc30(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x4ddc60. */
-uint32_t lifted_rtl_release_list_head(const VertrixCalls *calls,
-                                      const VertrixFactoryServices *services,
-                                      const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x4dde50. */
 uint32_t lifted_f4dde50(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
@@ -260,10 +253,6 @@ uint32_t lifted_rtl_table_lookup_value(const VertrixCalls *calls,
 
 /* Original 0x4e0430. */
 uint32_t lifted_f4e0430(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4e0508. */
-uint32_t lifted_f4e0508(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4e08a0. */

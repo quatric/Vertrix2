@@ -541,28 +541,6 @@
   ],
   "address": 4979008
  },
- "f4c3a30": {
-  "callees": {},
-  "stack": 136,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   -4,
-   0
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   1,
-   2,
-   3,
-   59,
-   60,
-   61
-  ],
-  "virtual": [],
-  "address": 4995632
- },
  "f4cae30": {
   "callees": {
    "0x4ccb9f": [
