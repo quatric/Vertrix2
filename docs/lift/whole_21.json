@@ -1809,30 +1809,6 @@
   "virtual": [],
   "address": 4903872
  },
- "actor_image_bounds": {
-  "callees": {},
-  "stack": 96,
-  "arguments": 1,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [
-   5521520
-  ],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   15,
-   16,
-   17,
-   19,
-   20,
-   21,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 4920800
- },
  "object_is_idle": {
   "callees": {},
   "stack": 96,

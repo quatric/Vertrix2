@@ -31,7 +31,6 @@ enum
     LIFTED_FIND_SIZE_FIELD_STACK = 372,
     LIFTED_RENDER_PALETTE_WEIGHTED_PIXEL_STACK = 92,
     LIFTED_ACTOR_DOUBLE_ORBIT_POINT_STACK = 100,
-    LIFTED_ACTOR_IMAGE_BOUNDS_STACK = 96,
     LIFTED_OBJECT_IS_IDLE_STACK = 96,
     LIFTED_SCALED_ROUND_STACK = 64,
     LIFTED_F4CD520_STACK = 92,
@@ -149,11 +148,6 @@ uint32_t lifted_render_palette_weighted_pixel(const VertrixCalls *calls,
 uint32_t lifted_actor_double_orbit_point(const VertrixCalls *calls,
                                          const VertrixFactoryServices *services,
                                          const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4b15e0. */
-uint32_t lifted_actor_image_bounds(const VertrixCalls *calls,
-                                   const VertrixFactoryServices *services,
-                                   const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4c0b51. */
 uint32_t lifted_object_is_idle(const VertrixCalls *calls, const VertrixFactoryServices *services,

@@ -19,10 +19,6 @@ enum
     LIFTED_PATH_SPLIT_A_STACK = 108,
     LIFTED_STRING_APPEND_CALLS_STACK = 84,
     LIFTED_TEXT_WRAP_STACK = 216,
-    LIFTED_F4B42E0_STACK = 184,
-    LIFTED_OBJECT_TEXT_INSERT_STACK = 236,
-    LIFTED_OBJECT_TEXT_REMOVE_STACK = 216,
-    LIFTED_OBJECT_TEXT_REBUILD_STACK = 216,
     LIFTED_F4B6A30_STACK = 136,
     LIFTED_F4BD950_STACK = 112,
     LIFTED_F4C6020_STACK = 148,
@@ -90,25 +86,6 @@ uint32_t lifted_string_append_calls(const VertrixCalls *calls,
 /* Original 0x4b25b0. */
 uint32_t lifted_text_wrap(const VertrixCalls *calls, const VertrixFactoryServices *services,
                           const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4b42e0. */
-uint32_t lifted_f4b42e0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4b4790. */
-uint32_t lifted_object_text_insert(const VertrixCalls *calls,
-                                   const VertrixFactoryServices *services,
-                                   const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4b4950. */
-uint32_t lifted_object_text_remove(const VertrixCalls *calls,
-                                   const VertrixFactoryServices *services,
-                                   const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4b4af0. */
-uint32_t lifted_object_text_rebuild(const VertrixCalls *calls,
-                                    const VertrixFactoryServices *services,
-                                    const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4b6a30. */
 uint32_t lifted_f4b6a30(const VertrixCalls *calls, const VertrixFactoryServices *services,
