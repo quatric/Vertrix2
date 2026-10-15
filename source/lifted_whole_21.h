@@ -23,8 +23,6 @@ enum
     LIFTED_AI_BOMB_SEARCH_STACK = 268,
     LIFTED_AI_MODE_FLAGS_STACK = 76,
     LIFTED_AI_CHOICE_SCORES_STACK = 112,
-    LIFTED_F429750_STACK = 140,
-    LIFTED_ACTOR_SPAWN_MATCH_EFFECT_STACK = 152,
     LIFTED_ACTOR_SPAWN_MATCH_BURST_STACK = 184,
     LIFTED_EFFECTS_RELEASE_ALL_FULL_STACK = 80,
     LIFTED_F43EAB0_STACK = 384,
@@ -129,15 +127,6 @@ uint32_t lifted_ai_mode_flags(const VertrixCalls *calls, const VertrixFactorySer
 /* Original 0x428e70. */
 uint32_t lifted_ai_choice_scores(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                  const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x429750. */
-uint32_t lifted_f429750(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x430190. */
-uint32_t lifted_actor_spawn_match_effect(const VertrixCalls *calls,
-                                         const VertrixFactoryServices *services,
-                                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4302a0. */
 uint32_t lifted_actor_spawn_match_burst(const VertrixCalls *calls,

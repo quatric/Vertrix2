@@ -31,7 +31,6 @@ enum
     LIFTED_F425630_STACK = 216,
     LIFTED_F425810_STACK = 184,
     LIFTED_F4288D0_STACK = 296,
-    LIFTED_F42A200_STACK = 120,
     LIFTED_PLAYER_PREVIEW_FRAMES_STACK = 84,
     LIFTED_SCENE_LAYOUT_STACK = 284,
     LIFTED_BOARD_TILE_CELL_STACK = 72,
@@ -40,8 +39,6 @@ enum
     LIFTED_LINE_PASS_STACK = 272,
     LIFTED_FIGURE_PASS_STACK = 208,
     LIFTED_BOARD_SWIRL_MARKED_STACK = 180,
-    LIFTED_BOARD_PICK_KINDS_STACK = 140,
-    LIFTED_F4393F0_STACK = 128,
     LIFTED_F439690_STACK = 220,
     LIFTED_MODE_COLORS_STACK = 76,
     LIFTED_PATTERN_TABLES_STACK = 148,
@@ -221,10 +218,6 @@ uint32_t lifted_f425810(const VertrixCalls *calls, const VertrixFactoryServices 
 uint32_t lifted_f4288d0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x42a200. */
-uint32_t lifted_f42a200(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x42b090. */
 uint32_t lifted_player_preview_frames(const VertrixCalls *calls,
                                       const VertrixFactoryServices *services,
@@ -258,14 +251,6 @@ uint32_t lifted_figure_pass(const VertrixCalls *calls, const VertrixFactoryServi
 uint32_t lifted_board_swirl_marked(const VertrixCalls *calls,
                                    const VertrixFactoryServices *services,
                                    const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x439260. */
-uint32_t lifted_board_pick_kinds(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                 const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4393f0. */
-uint32_t lifted_f4393f0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x439690. */
 uint32_t lifted_f439690(const VertrixCalls *calls, const VertrixFactoryServices *services,

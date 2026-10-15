@@ -61,6 +61,7 @@
 #include "port_checks.h"
 #include "port_children.h"
 #include "port_clib.h"
+#include "port_clicks.h"
 #include "port_combines.h"
 #include "port_constants.h"
 #include "port_crt.h"
@@ -75,6 +76,7 @@
 #include "port_frame_resource.h"
 #include "port_game.h"
 #include "port_gate.h"
+#include "port_glides.h"
 #include "port_grid.h"
 #include "port_guards.h"
 #include "port_handlers.h"
@@ -98,6 +100,7 @@
 #include "port_paths.h"
 #include "port_pauses.h"
 #include "port_pixel_format.h"
+#include "port_placements.h"
 #include "port_player_states.h"
 #include "port_records.h"
 #include "port_render_rule.h"
@@ -121,7 +124,9 @@
 #include "port_string.h"
 #include "port_surface.h"
 #include "port_system.h"
+#include "port_tags.h"
 #include "port_tails.h"
+#include "port_tallies.h"
 #include "port_teardown.h"
 #include "port_texts.h"
 #include "port_voices.h"
@@ -632,7 +637,7 @@ static const LiftedRoutine routines[] = {
     {0x429660, vertrix_port_pointer_add_4, 0, 0},
     {0x429670, vertrix_port_marker_actor_construct_429670, 0, 0},
     {0x4296a0, vertrix_port_object_destroy_call_4296a0, 0, 0},
-    {0x429750, lifted_f429750, 140, 0},
+    {0x429750, vertrix_port_board_spawn_cells_429750, 0, 0},
     {0x429880, vertrix_port_piece_actor_construct_slots_429880, 0, 0},
     {0x429910, vertrix_port_choice_grid_teardown_429910, 0, 0},
     {0x429a10, lifted_f429a10, 100, 0},
@@ -652,7 +657,7 @@ static const LiftedRoutine routines[] = {
     {0x42a170, vertrix_port_choice_grid_cell_bytes_42a170, 0, 0},
     {0x42a190, lifted_choice_grid_available, 64, 0},
     {0x42a1b0, vertrix_port_choice_grid_any_marked_42a1b0, 0, 0},
-    {0x42a200, lifted_f42a200, 120, 0},
+    {0x42a200, vertrix_port_board_place_pieces_42a200, 0, 0},
     {0x42a310, vertrix_port_choice_grid_construct_42a310, 0, 0},
     {0x42a3c0, vertrix_port_choice_grid_teardown_42a3c0, 0, 0},
     {0x42a480, vertrix_port_release_slots_15c_42a480, 0, 0},
@@ -767,12 +772,12 @@ static const LiftedRoutine routines[] = {
     {0x42f910, lifted_f42f910, 172, 0},
     {0x42fb60, lifted_f42fb60, 304, 0},
     {0x42ff10, vertrix_port_board_set_actor_clip_42ff10, 0, 0},
-    {0x42ff50, lifted_board_create_overlay, 164, 0},
+    {0x42ff50, vertrix_port_board_create_overlay_42ff50, 0, 0},
     {0x430090, vertrix_port_board_extra_is_idle_430090, 0, 0},
     {0x4300b0, vertrix_port_board_place_extra_4300b0, 0, 0},
     {0x430100, vertrix_port_board_place_extra_430100, 0, 0},
     {0x430150, vertrix_port_board_release_extra_430150, 0, 0},
-    {0x430190, lifted_actor_spawn_match_effect, 152, 0},
+    {0x430190, vertrix_port_actor_spawn_match_effect_430190, 0, 0},
     {0x4302a0, lifted_actor_spawn_match_burst, 184, 0},
     {0x430440, lifted_board_rings, 204, 0},
     {0x430660, lifted_board_burst, 180, 0},
@@ -852,9 +857,9 @@ static const LiftedRoutine routines[] = {
     {0x436150, lifted_board_swap_marked, 220, 0},
     {0x436440, lifted_board_replace_random_cell, 152, 0},
     {0x4365c0, lifted_board_replace_cell, 148, 0},
-    {0x436720, lifted_board_replace_marked, 152, 0},
+    {0x436720, vertrix_port_board_replace_marked_436720, 0, 0},
     {0x436850, vertrix_port_board_checker_marks_436850, 0, 0},
-    {0x4368e0, lifted_piece_replace_children, 140, 0},
+    {0x4368e0, vertrix_port_piece_replace_children_4368e0, 0, 0},
     {0x436a10, vertrix_port_board_mark_kind_count_436a10, 0, 0},
     {0x436aa0, vertrix_port_board_mark_kind_match_436aa0, 0, 0},
     {0x436b40, lifted_boards_convert_counts, 208, 1},
@@ -864,7 +869,7 @@ static const LiftedRoutine routines[] = {
     {0x4371b0, vertrix_port_board_start_marked_4371b0, 0, 0},
     {0x437240, vertrix_port_board_mark_fives_437240, 0, 0},
     {0x4372c0, vertrix_port_board_checker_marks_4372c0, 0, 0},
-    {0x437350, lifted_board_mirror_marked, 156, 0},
+    {0x437350, vertrix_port_board_mirror_marked_437350, 0, 0},
     {0x437460, vertrix_port_board_flag_marked_437460, 0, 0},
     {0x4374e0, vertrix_port_board_clear_marked_4374e0, 0, 0},
     {0x4375a0, vertrix_port_board_mark_filled_4375a0, 0, 0},
@@ -887,14 +892,14 @@ static const LiftedRoutine routines[] = {
     {0x438c60, vertrix_port_board_apply_pattern_438c60, 0, 0},
     {0x438cd0, vertrix_port_board_kinds_match_438cd0, 0, 0},
     {0x438d50, vertrix_port_board_any_block_438d50, 0, 0},
-    {0x438dd0, lifted_f438dd0, 156, 0},
+    {0x438dd0, vertrix_port_board_mark_fullest_row_438dd0, 0, 0},
     {0x438ef0, lifted_f438ef0, 180, 0},
     {0x439080, vertrix_port_board_burst_first_439080, 0, 0},
     {0x439140, vertrix_port_board_row_last_marker_439140, 0, 0},
     {0x439190, vertrix_port_board_destroy_marked_439190, 0, 0},
-    {0x439260, lifted_board_pick_kinds, 140, 0},
+    {0x439260, vertrix_port_board_pick_kinds_439260, 0, 0},
     {0x439370, vertrix_port_board_mark_kind_439370, 0, 0},
-    {0x4393f0, lifted_f4393f0, 128, 0},
+    {0x4393f0, vertrix_port_board_marked_step_4393f0, 0, 0},
     {0x439510, lifted_f439510, 180, 0},
     {0x439690, lifted_f439690, 220, 0},
     {0x4398c0, lifted_board_clear_marked_extra, 112, 0},
@@ -915,7 +920,7 @@ static const LiftedRoutine routines[] = {
     {0x43a5b0, vertrix_port_piece_kinds_43a5b0, 0, 0},
     {0x43a5f0, vertrix_port_piece_children_setup_selected_43a5f0, 0, 0},
     {0x43a6f0, lifted_f43a6f0, 168, 0},
-    {0x43a970, lifted_f43a970, 180, 0},
+    {0x43a970, vertrix_port_object_teardown_43a970, 0, 0},
     {0x43aab0, vertrix_port_player_set_side_43aab0, 0, 0},
     {0x43ab30, vertrix_port_player_init_piece_and_delays_43ab30, 0, 0},
     {0x43ab60, vertrix_port_player_call_4279b0_43ab60, 0, 0},
@@ -1004,7 +1009,7 @@ static const LiftedRoutine routines[] = {
     {0x43d800, lifted_effects_release_all_full, 80, 0},
     {0x43dc80, lifted_particle_emit, 156, 0},
     {0x43dea0, lifted_spawn_spread_full, 108, 0},
-    {0x43dff0, lifted_object_populate, 184, 0},
+    {0x43dff0, vertrix_port_object_populate_43dff0, 0, 0},
     {0x43e100, vertrix_port_hud_object_construct, 0, 0},
     {0x43e1a0, vertrix_port_effect_actor_teardown_43e1a0, 0, 0},
     {0x43e260, vertrix_port_arena_release_all_43e260, 0, 0},
@@ -1065,11 +1070,11 @@ static const LiftedRoutine routines[] = {
     {0x443d50, vertrix_port_actor_global_wait_443d50, 0, 0},
     {0x443dc0, lifted_f443dc0, 152, 0},
     {0x444020, lifted_f444020, 160, 0},
-    {0x444290, lifted_f444290, 132, 0},
+    {0x444290, vertrix_port_actor_glide_step_444290, 0, 0},
     {0x4443d0, lifted_f4443d0, 112, 0},
     {0x444550, lifted_f444550, 132, 0},
     {0x444700, lifted_f444700, 132, 0},
-    {0x444850, lifted_f444850, 136, 0},
+    {0x444850, vertrix_port_actor_fall_step_444850, 0, 0},
     {0x444970, lifted_f444970, 124, 0},
     {0x444a30, vertrix_port_actor_step_flash_444a30, 0, 0},
     {0x444a80, lifted_f444a80, 128, 0},
@@ -1083,7 +1088,7 @@ static const LiftedRoutine routines[] = {
     {0x445350, lifted_f445350, 272, 0},
     {0x445630, vertrix_port_actor_swing_state_445630, 0, 0},
     {0x4456d0, vertrix_port_actor_swing_state_4456d0, 0, 0},
-    {0x445770, lifted_f445770, 152, 0},
+    {0x445770, vertrix_port_actor_pointer_step_445770, 0, 0},
     {0x445890, vertrix_port_actor_callback_step_445890, 0, 0},
     {0x445900, vertrix_port_menu_item_pointer_445900, 0, 0},
     {0x445a00, vertrix_port_actor_sound_wait_445a00, 0, 0},
@@ -1091,7 +1096,7 @@ static const LiftedRoutine routines[] = {
     {0x445b10, vertrix_port_actor_bob_445b10, 0, 0},
     {0x445b90, lifted_f445b90, 180, 0},
     {0x445d10, vertrix_port_actor_callback_step_445d10, 0, 0},
-    {0x445d80, lifted_f445d80, 144, 0},
+    {0x445d80, vertrix_port_actor_click_step_445d80, 0, 0},
     {0x445e90, vertrix_port_actor_callback_step_445e90, 0, 0},
     {0x445f00, vertrix_port_option_label_445f00, 0, 0},
     {0x445fc0, vertrix_port_option_label_445fc0, 0, 0},
@@ -1111,10 +1116,10 @@ static const LiftedRoutine routines[] = {
     {0x446b10, vertrix_port_menu_item_owner_step_446b10, 0, 0},
     {0x446c10, lifted_f446c10, 164, 0},
     {0x446d70, lifted_f446d70, 124, 0},
-    {0x446ec0, lifted_f446ec0, 128, 0},
+    {0x446ec0, vertrix_port_button_step_446ec0, 0, 0},
     {0x446fe0, lifted_f446fe0, 164, 0},
     {0x447140, lifted_f447140, 124, 0},
-    {0x447290, lifted_f447290, 128, 0},
+    {0x447290, vertrix_port_button_step_447290, 0, 0},
     {0x4473b0, lifted_f4473b0, 176, 0},
     {0x447560, vertrix_port_actor_burst_start_447560, 0, 0},
     {0x447600, vertrix_port_actor_settle_wait_447600, 0, 0},
@@ -1127,17 +1132,17 @@ static const LiftedRoutine routines[] = {
     {0x447aa0, vertrix_port_actor_step_fall_447aa0, 0, 0},
     {0x447af0, vertrix_port_actor_step_caption_447af0, 0, 0},
     {0x447bc0, vertrix_port_actor_fade_state_447bc0, 0, 0},
-    {0x447c60, lifted_f447c60, 160, 0},
-    {0x447d70, lifted_f447d70, 160, 0},
+    {0x447c60, vertrix_port_actor_caption_bob_447c60, 0, 0},
+    {0x447d70, vertrix_port_actor_caption_rest_447d70, 0, 0},
     {0x447e80, vertrix_port_actor_label_settle_447e80, 0, 0},
     {0x447f40, vertrix_port_actor_bob_hover_447f40, 0, 0},
-    {0x448010, lifted_f448010, 204, 0},
+    {0x448010, vertrix_port_actor_notice_wait_448010, 0, 0},
     {0x448140, vertrix_port_enter_448160_448140, 0, 0},
     {0x448160, vertrix_port_when_flag_48c4a0_448160, 0, 0},
     {0x448180, vertrix_port_list_scroll_hover_448180, 0, 0},
     {0x448260, lifted_f448260, 152, 0},
-    {0x4483d0, lifted_f4483d0, 148, 0},
-    {0x4484f0, lifted_f4484f0, 148, 0},
+    {0x4483d0, vertrix_port_actor_hover_step_4483d0, 0, 0},
+    {0x4484f0, vertrix_port_actor_hover_rest_4484f0, 0, 0},
     {0x448610, vertrix_port_actor_wait_point_448610, 0, 0},
     {0x448670, vertrix_port_copy_global_532a4c_448670, 0, 0},
     {0x448680, vertrix_port_copy_global_532b68_448680, 0, 0},
@@ -1202,14 +1207,14 @@ static const LiftedRoutine routines[] = {
     {0x44add0, vertrix_port_actor_bob_pick_44add0, 0, 0},
     {0x44ae80, vertrix_port_actor_step_keep_44ae80, 0, 0},
     {0x44aec0, lifted_f44aec0, 204, 0},
-    {0x44b050, lifted_f44b050, 176, 0},
+    {0x44b050, vertrix_port_tag_step_44b050, 0, 0},
     {0x44b170, lifted_f44b170, 208, 0},
     {0x44b340, lifted_f44b340, 180, 0},
-    {0x44b4a0, lifted_f44b4a0, 180, 0},
-    {0x44b5d0, lifted_f44b5d0, 176, 0},
-    {0x44b6f0, lifted_f44b6f0, 200, 0},
+    {0x44b4a0, vertrix_port_tag_step_44b4a0, 0, 0},
+    {0x44b5d0, vertrix_port_tag_step_44b5d0, 0, 0},
+    {0x44b6f0, vertrix_port_tag_step_44b6f0, 0, 0},
     {0x44b810, lifted_f44b810, 224, 0},
-    {0x44b980, lifted_f44b980, 200, 0},
+    {0x44b980, vertrix_port_tag_step_44b980, 0, 0},
     {0x44bac0, vertrix_port_actor_show_selection_44bac0, 0, 0},
     {0x44bb30, vertrix_port_actor_show_selection_44bb30, 0, 0},
     {0x44bba0, vertrix_port_actor_grow_start_44bba0, 0, 0},

@@ -9,7 +9,6 @@ enum
     LIFTED_AI_SEARCH_STACK = 516,
     LIFTED_F432480_STACK = 228,
     LIFTED_F43A1A0_STACK = 164,
-    LIFTED_F43A970_STACK = 180,
     LIFTED_TITLE_LETTER_FIRST_CALL_STACK = 212
 };
 
@@ -23,10 +22,6 @@ uint32_t lifted_f432480(const VertrixCalls *calls, const VertrixFactoryServices 
 
 /* Original 0x43a1a0. */
 uint32_t lifted_f43a1a0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x43a970. */
-uint32_t lifted_f43a970(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4713d0. */
