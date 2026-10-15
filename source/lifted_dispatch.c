@@ -116,6 +116,7 @@
 #include "port_placements.h"
 #include "port_player_states.h"
 #include "port_presses.h"
+#include "port_previews.h"
 #include "port_quantizers.h"
 #include "port_records.h"
 #include "port_render_rule.h"
@@ -651,7 +652,7 @@ static const LiftedRoutine routines[] = {
     {0x427380, lifted_ai_bomb_search, 268, 8},
     {0x427850, lifted_f427850, 468, 0},
     {0x427ae0, lifted_object_compare_regions, 280, 0},
-    {0x427c10, lifted_ai_features, 76, 5},
+    {0x427c10, vertrix_port_ai_features_427c10, 0, 0},
     {0x427e10, lifted_ai_mode_flags, 76, 0},
     {0x428110, lifted_ai_compare_boards, 184, 0},
     {0x428610, lifted_ai_record_score, 136, 0},
@@ -725,10 +726,10 @@ static const LiftedRoutine routines[] = {
     {0x42b2f0, vertrix_port_nothing_404580, 0, 0},
     {0x42b300, vertrix_port_forward_42b290_42b300, 0, 0},
     {0x42b310, vertrix_port_piece_children_draw_42b310, 0, 0},
-    {0x42b370, lifted_ui_player_previews_construct, 232, 0},
+    {0x42b370, vertrix_port_ui_player_previews_construct_42b370, 0, 0},
     {0x42b5c0, vertrix_port_piece_actor_construct_empty_42b5c0, 0, 0},
     {0x42b600, vertrix_port_object_destroy_call_42b600, 0, 0},
-    {0x42b6b0, lifted_f42b6b0, 176, 0},
+    {0x42b6b0, vertrix_port_ui_player_bar_construct_42b6b0, 0, 0},
     {0x42b8d0, vertrix_port_actor_step_move_42b8d0, 0, 0},
     {0x42b920, vertrix_port_piece_set_variant_42b920, 0, 0},
     {0x42b950, vertrix_port_piece_snap_to_left_42b950, 0, 0},

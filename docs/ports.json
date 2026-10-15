@@ -1874,6 +1874,11 @@
   "lifted": "lifted_ai_row_reach",
   "chunk": "whole_21"
  },
+ "0x427c10": {
+  "port": "vertrix_port_ai_features_427c10",
+  "lifted": "lifted_ai_features",
+  "chunk": "whole_0"
+ },
  "0x428e70": {
   "port": "vertrix_port_ai_choice_scores_428e70",
   "lifted": "lifted_ai_choice_scores",
@@ -2159,6 +2164,11 @@
   "lifted": "lifted_f42b310",
   "chunk": "whole_14"
  },
+ "0x42b370": {
+  "port": "vertrix_port_ui_player_previews_construct_42b370",
+  "lifted": "lifted_ui_player_previews_construct",
+  "chunk": "whole_0"
+ },
  "0x42b5c0": {
   "port": "vertrix_port_piece_actor_construct_empty_42b5c0",
   "lifted": "lifted_piece_actor_construct_empty",
@@ -2168,6 +2178,11 @@
   "port": "vertrix_port_object_destroy_call_42b600",
   "lifted": "lifted_f42b600",
   "chunk": "whole_20"
+ },
+ "0x42b6b0": {
+  "port": "vertrix_port_ui_player_bar_construct_42b6b0",
+  "lifted": "lifted_f42b6b0",
+  "chunk": "whole_0"
  },
  "0x42b8d0": {
   "port": "vertrix_port_actor_step_move_42b8d0",

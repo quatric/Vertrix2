@@ -1,6 +1,6 @@
 #include "port_searches.h"
 
-/* The computer player's move search. */
+/* The computer player's move search and move features. */
 
 static uint32_t call_frame(Port *port, uint32_t target, uint32_t eax, uint32_t edx, uint32_t ebx,
                            uint32_t ecx, uint32_t esi, uint32_t edi, uint32_t ebp,
@@ -121,4 +121,135 @@ uint32_t vertrix_port_ai_move_search_425f60(PORT_SIGNATURE)
     result = call_frame(&port, 0x426240, search, entry->ebx, entry->ecx, port_u32(&port, ebp, 8),
                         args[5], args[4], ebp, args, 6);
     return port_return(&port, result, vertrix_lift_edx);
+}
+
+/* Original 0x427c10: the move features (ret 0x14) of the row edx against the target row arg 3,
+ * the kind ebx and the columns ecx and arg 0 at the widths arg 1 and arg 2, into the bytes of
+ * arg 4: +1 the rows below the target (0 beneath it or both 9, else 1 to 4), +6 the kind (0 for
+ * 9 or below 4, 1 for 4, 2 for 5, 4 for 8, else 3), +0xb the height over the kind (0 to 4 by 0,
+ * 2, 4 and 6), +0xf the reach right and +0x26 the reach left (0 none, else by 12, 24 and 36
+ * units between the column ends). The last feature, edx as the original leaves it. */
+uint32_t vertrix_port_ai_features_427c10(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0xc
+    };
+    Port port;
+    uint8_t stack[BELOW + 8 + 0x14];
+    uint32_t ebp = entry->esp - 4;
+    uint32_t row = entry->edx;
+    uint32_t kind = entry->ebx;
+    uint32_t column = entry->ecx;
+    uint32_t other;
+    uint32_t left;
+    uint32_t right;
+    uint32_t target;
+    uint32_t out;
+    uint32_t value;
+    uint32_t edx;
+    int32_t near;
+    int32_t far;
+    int32_t height;
+    port_open_arguments(&port, stack, calls, services, globals, entry, BELOW, 5);
+    other = port_u32(&port, ebp, 8);
+    left = port_u32(&port, ebp, 0xc);
+    right = port_u32(&port, ebp, 0x10);
+    target = port_u32(&port, ebp, 0x14);
+    out = port_u32(&port, ebp, 0x18);
+    if (row < target || (row == 9 && target == 9))
+    {
+        value = 0;
+    }
+    else if (row == target)
+    {
+        value = 1;
+    }
+    else if (target == row + 1)
+    {
+        value = 2;
+    }
+    else if (target == row + 2)
+    {
+        value = 3;
+    }
+    else
+    {
+        value = 4;
+    }
+    port_set8(&port, out, 1, value);
+    if (kind == 9 || kind < 4)
+    {
+        value = 0;
+    }
+    else if (kind == 8)
+    {
+        value = 4;
+    }
+    else if (kind == 5)
+    {
+        value = 2;
+    }
+    else if (kind == 4)
+    {
+        value = 1;
+    }
+    else
+    {
+        value = 3;
+    }
+    edx = row - kind;
+    port_set8(&port, out, 6, value);
+    height = (int32_t)edx;
+    value = height <= 0 ? 0 : height > 6 ? 4 : height > 4 ? 3 : height > 2 ? 2 : 1;
+    port_set8(&port, out, 0xb, value);
+    if (column < other)
+    {
+        near = (int32_t)(left + column * 12);
+        far = (int32_t)(right + other * 12);
+        edx = (uint32_t)near;
+        if (far > near + 0xc)
+        {
+            value = 1;
+        }
+        else if (far > near + 0x18)
+        {
+            value = 2;
+        }
+        else
+        {
+            edx = (uint32_t)(near + 0x24);
+            value = far > near + 0x24 ? 3 : 4;
+        }
+    }
+    else
+    {
+        value = 0;
+    }
+    port_set8(&port, out, 0xf, value);
+    if (other >= column)
+    {
+        value = 0;
+    }
+    else
+    {
+        near = (int32_t)(left + column * 12);
+        far = (int32_t)(right + other * 12);
+        edx = (uint32_t)far;
+        if (near > far + 0xc)
+        {
+            value = 1;
+        }
+        else if (near > far + 0x18)
+        {
+            value = 2;
+        }
+        else
+        {
+            edx = (uint32_t)(far + 0x24);
+            value = near > far + 0x24 ? 3 : 4;
+        }
+    }
+    port_set8(&port, out, 0x26, value);
+    return port_return(&port, value, edx);
 }
