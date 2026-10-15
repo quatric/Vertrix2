@@ -106,6 +106,7 @@
 #include "port_pixel_format.h"
 #include "port_placements.h"
 #include "port_player_states.h"
+#include "port_presses.h"
 #include "port_records.h"
 #include "port_render_rule.h"
 #include "port_routines.h"
@@ -139,6 +140,7 @@
 #include "port_widgets.h"
 #include "port_window.h"
 #include "port_windows.h"
+#include "port_wrappers.h"
 
 enum
 {
@@ -1120,11 +1122,11 @@ static const LiftedRoutine routines[] = {
     {0x4469c0, vertrix_port_actor_pointer_hover_4469c0, 0, 0},
     {0x446a80, vertrix_port_actor_pointer_hover_446a80, 0, 0},
     {0x446b10, vertrix_port_menu_item_owner_step_446b10, 0, 0},
-    {0x446c10, lifted_f446c10, 164, 0},
-    {0x446d70, lifted_f446d70, 124, 0},
+    {0x446c10, vertrix_port_button_hover_446c10, 0, 0},
+    {0x446d70, vertrix_port_button_arrive_446d70, 0, 0},
     {0x446ec0, vertrix_port_button_step_446ec0, 0, 0},
-    {0x446fe0, lifted_f446fe0, 164, 0},
-    {0x447140, lifted_f447140, 124, 0},
+    {0x446fe0, vertrix_port_button_hover_446fe0, 0, 0},
+    {0x447140, vertrix_port_button_arrive_447140, 0, 0},
     {0x447290, vertrix_port_button_step_447290, 0, 0},
     {0x4473b0, lifted_f4473b0, 176, 0},
     {0x447560, vertrix_port_actor_burst_start_447560, 0, 0},
@@ -1180,7 +1182,7 @@ static const LiftedRoutine routines[] = {
     {0x449710, vertrix_port_list_count_forward_449710, 0, 0},
     {0x4497c0, vertrix_port_menu_item_input_4497c0, 0, 0},
     {0x449870, vertrix_port_actor_restart_sound_449870, 0, 0},
-    {0x4498e0, lifted_f4498e0, 180, 0},
+    {0x4498e0, vertrix_port_dial_turn_4498e0, 0, 0},
     {0x449a50, vertrix_port_actor_restart_or_wait_449a50, 0, 0},
     {0x449aa0, vertrix_port_menu_item_input_449aa0, 0, 0},
     {0x449b50, vertrix_port_list_count_back_449b50, 0, 0},
@@ -1188,7 +1190,7 @@ static const LiftedRoutine routines[] = {
     {0x449cb0, vertrix_port_list_count_forward_449cb0, 0, 0},
     {0x449d60, vertrix_port_menu_item_input_449d60, 0, 0},
     {0x449e10, vertrix_port_actor_restart_sound_449e10, 0, 0},
-    {0x449e80, lifted_f449e80, 176, 0},
+    {0x449e80, vertrix_port_dial_turn_449e80, 0, 0},
     {0x449ff0, vertrix_port_actor_restart_or_wait_449ff0, 0, 0},
     {0x44a040, vertrix_port_menu_item_click_44a040, 0, 0},
     {0x44a0e0, vertrix_port_list_arrow_back_44a0e0, 0, 0},
@@ -1196,7 +1198,7 @@ static const LiftedRoutine routines[] = {
     {0x44a210, vertrix_port_list_arrow_forward_44a210, 0, 0},
     {0x44a2a0, vertrix_port_menu_item_click_44a2a0, 0, 0},
     {0x44a340, vertrix_port_actor_restart_or_wait_44a340, 0, 0},
-    {0x44a3a0, lifted_f44a3a0, 176, 0},
+    {0x44a3a0, vertrix_port_dial_turn_44a3a0, 0, 0},
     {0x44a520, vertrix_port_actor_restart_or_wait_44a520, 0, 0},
     {0x44a570, vertrix_port_actor_kind_follow_44a570, 0, 0},
     {0x44a5c0, vertrix_port_actor_kind_follow_44a5c0, 0, 0},
@@ -3789,7 +3791,7 @@ static const LiftedRoutine routines[] = {
     {0x4e5918, vertrix_port_rtl_thread_attach_4e5918, 0, 0},
     {0x4e596c, vertrix_port_rtl_thread_detach_4e596c, 0, 0},
     {0x4e59c4, lifted_f4e59c4, 84, 0},
-    {0x4e59d0, lifted_f4e59d0, 80, 0},
+    {0x4e59d0, vertrix_port_handle_close_4e59d0, 0, 0},
     {0x4e5b0c, lifted_f4e5b0c, 120, 0},
     {0x4e5bec, lifted_f4e5bec, 72, 0},
     {0x4e5ef0, lifted_f4e5ef0, 140, 0},
@@ -3889,7 +3891,7 @@ static const LiftedRoutine routines[] = {
     {0x4e97b4, lifted_f4e97b4, 116, 0},
     {0x4e9a30, lifted_f4e9a30, 80, 0},
     {0x4e9d00, vertrix_port_zero_4ea130, 0, 0},
-    {0x4e9d10, lifted_f4e9d10, 76, 0},
+    {0x4e9d10, vertrix_port_import_call_4e9d10, 0, 0},
     {0x4e9e30, lifted_f4e9e30, 108, 0},
     {0x4e9f00, lifted_f4e9f00, 84, 0},
     {0x4e9f10, lifted_f4e9f10, 144, 0},
@@ -3916,7 +3918,7 @@ static const LiftedRoutine routines[] = {
     {0x4eb910, lifted_f4eb910, 92, 0},
     {0x4eba4c, vertrix_port_stream_open_4eba4c, 0, 0},
     {0x4ebb34, lifted_f4ebb34, 100, 0},
-    {0x4ebb78, lifted_f4ebb78, 72, 0},
+    {0x4ebb78, vertrix_port_open_plain_4ebb78, 0, 0},
     {0x4ebc90, vertrix_port_buffer_seek_4ebc90, 0, 0},
     {0x4ebcd0, vertrix_port_rtl_record_reset_4ebcd0, 0, 0},
     {0x4ebce8, lifted_f4ebce8, 144, 0},

@@ -6780,27 +6780,6 @@
   "virtual": [],
   "address": 5134788
  },
- "f4e59d0": {
-  "callees": {
-   "0x4f1cd8": [
-    1,
-    false
-   ]
-  },
-  "stack": 80,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   4294967294,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 5134800
- },
  "f4e6c37": {
   "callees": {
    "slot_507ce4": [
