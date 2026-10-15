@@ -23,7 +23,6 @@ enum
     LIFTED_F484530_STACK = 72,
     LIFTED_F485700_STACK = 476,
     LIFTED_F4871D0_STACK = 232,
-    LIFTED_OBJECT_CONSTRUCT_G_STACK = 68,
     LIFTED_F487BE0_STACK = 176,
     LIFTED_F488050_STACK = 88,
     LIFTED_PATH_LAST_SEPARATOR_STACK = 68,
@@ -50,21 +49,16 @@ enum
     LIFTED_F48CC30_STACK = 740,
     LIFTED_F4ACD30_STACK = 80,
     LIFTED_ACTOR_TURN_TOWARD_STACK = 84,
-    LIFTED_F4AD2C0_STACK = 100,
-    LIFTED_ACTOR_CHAIN_ORBIT_POINT_STACK = 108,
     LIFTED_F4B0B70_STACK = 136,
     LIFTED_F4B2A00_STACK = 340,
     LIFTED_F4B2D90_STACK = 300,
     LIFTED_OBJECT_SET_PAIR_4B35B0_STACK = 64,
     LIFTED_F4B3A00_STACK = 212,
     LIFTED_F4B3FB0_STACK = 68,
-    LIFTED_OBJECT_SET_MODE_STACK = 68,
     LIFTED_F4B4CF0_STACK = 252,
     LIFTED_F4B50D0_STACK = 112,
-    LIFTED_F4B5630_STACK = 160,
     LIFTED_F4B5700_STACK = 208,
-    LIFTED_F4B58A0_STACK = 196,
-    LIFTED_OBJECT_START_5182C4_STACK = 68
+    LIFTED_F4B58A0_STACK = 196
 };
 
 /* Original 0x47fa40. */
@@ -135,11 +129,6 @@ uint32_t lifted_f485700(const VertrixCalls *calls, const VertrixFactoryServices 
 /* Original 0x4871d0. */
 uint32_t lifted_f4871d0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x487b00. */
-uint32_t lifted_object_construct_g(const VertrixCalls *calls,
-                                   const VertrixFactoryServices *services,
-                                   const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x487be0. */
 uint32_t lifted_f487be0(const VertrixCalls *calls, const VertrixFactoryServices *services,
@@ -248,15 +237,6 @@ uint32_t lifted_f4acd30(const VertrixCalls *calls, const VertrixFactoryServices 
 uint32_t lifted_actor_turn_toward(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x4ad2c0. */
-uint32_t lifted_f4ad2c0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4ad440. */
-uint32_t lifted_actor_chain_orbit_point(const VertrixCalls *calls,
-                                        const VertrixFactoryServices *services,
-                                        const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x4b0b70. */
 uint32_t lifted_f4b0b70(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
@@ -282,20 +262,12 @@ uint32_t lifted_f4b3a00(const VertrixCalls *calls, const VertrixFactoryServices 
 uint32_t lifted_f4b3fb0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x4b4510. */
-uint32_t lifted_object_set_mode(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x4b4cf0. */
 uint32_t lifted_f4b4cf0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4b50d0. */
 uint32_t lifted_f4b50d0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4b5630. */
-uint32_t lifted_f4b5630(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4b5700. */
@@ -305,10 +277,5 @@ uint32_t lifted_f4b5700(const VertrixCalls *calls, const VertrixFactoryServices 
 /* Original 0x4b58a0. */
 uint32_t lifted_f4b58a0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4b5c60. */
-uint32_t lifted_object_start_5182c4(const VertrixCalls *calls,
-                                    const VertrixFactoryServices *services,
-                                    const VertrixGlobals *globals, const LiftEntry *entry);
 
 #endif

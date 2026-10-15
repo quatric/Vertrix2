@@ -33,7 +33,6 @@ enum
     LIFTED_PATH_SPLIT_A_STACK = 108,
     LIFTED_STRING_APPEND_CALLS_STACK = 84,
     LIFTED_F489BA0_STACK = 120,
-    LIFTED_OBJECT_CONSTRUCT_LABELED_STACK = 136,
     LIFTED_TEXT_WRAP_STACK = 216,
     LIFTED_F4B42E0_STACK = 184,
     LIFTED_OBJECT_TEXT_INSERT_STACK = 236,
@@ -165,11 +164,6 @@ uint32_t lifted_string_append_calls(const VertrixCalls *calls,
 /* Original 0x489ba0. */
 uint32_t lifted_f489ba0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4b2400. */
-uint32_t lifted_object_construct_labeled(const VertrixCalls *calls,
-                                         const VertrixFactoryServices *services,
-                                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4b25b0. */
 uint32_t lifted_text_wrap(const VertrixCalls *calls, const VertrixFactoryServices *services,

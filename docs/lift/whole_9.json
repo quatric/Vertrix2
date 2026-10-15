@@ -1675,37 +1675,6 @@
   "virtual": [],
   "address": 4758432
  },
- "object_construct_labeled": {
-  "callees": {
-   "0x4abd70": [
-    0,
-    false
-   ],
-   "0x4ca070": [
-    0,
-    false
-   ],
-   "0x4ca370": [
-    0,
-    false
-   ]
-  },
-  "stack": 136,
-  "arguments": 0,
-  "pointer_callees": [
-   "0x4ca070"
-  ],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   31,
-   32,
-   33
-  ],
-  "virtual": [],
-  "address": 4924416
- },
  "text_wrap": {
   "callees": {
    "0x4ca370": [
