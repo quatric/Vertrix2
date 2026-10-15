@@ -2959,6 +2959,11 @@
   "lifted": "lifted_player_first_turn",
   "chunk": "whole_8"
  },
+ "0x43b430": {
+  "port": "vertrix_port_player_ai_tick_43b430",
+  "lifted": "lifted_player_ai_tick",
+  "chunk": "whole_1"
+ },
  "0x43b590": {
   "port": "vertrix_port_player_draw_all_delays_43b590",
   "lifted": "lifted_player_draw_all_delays",
@@ -3634,6 +3639,11 @@
   "lifted": "lifted_f446500",
   "chunk": "whole_9"
  },
+ "0x4465a0": {
+  "port": "vertrix_port_slot_pick_4465a0",
+  "lifted": "lifted_f4465a0",
+  "chunk": "whole_1"
+ },
  "0x446730": {
   "port": "vertrix_port_actor_count_state_446730",
   "lifted": "lifted_f446730",
@@ -3782,6 +3792,11 @@
  "0x448180": {
   "port": "vertrix_port_list_scroll_hover_448180",
   "lifted": "lifted_f448180",
+  "chunk": "whole_1"
+ },
+ "0x448260": {
+  "port": "vertrix_port_actor_pointer_pick_448260",
+  "lifted": "lifted_f448260",
   "chunk": "whole_1"
  },
  "0x4483d0": {
@@ -4949,9 +4964,19 @@
   "lifted": "lifted_player_start_bonus",
   "chunk": "whole_2"
  },
+ "0x451aa0": {
+  "port": "vertrix_port_player_key_step_451aa0",
+  "lifted": "lifted_f451aa0",
+  "chunk": "whole_2"
+ },
  "0x451c00": {
   "port": "vertrix_port_player_place_piece_451c00",
   "lifted": "lifted_f451c00",
+  "chunk": "whole_2"
+ },
+ "0x451c80": {
+  "port": "vertrix_port_player_ai_key_step_451c80",
+  "lifted": "lifted_f451c80",
   "chunk": "whole_2"
  },
  "0x451dd0": {
@@ -5259,6 +5284,11 @@
   "lifted": "lifted_effect_slide_start_453fd0",
   "chunk": "whole_2"
  },
+ "0x454090": {
+  "port": "vertrix_port_board_shift_454090",
+  "lifted": "lifted_f454090",
+  "chunk": "whole_2"
+ },
  "0x454200": {
   "port": "vertrix_port_state_ask_454200",
   "lifted": "lifted_state_ask_454200",
@@ -5272,6 +5302,11 @@
  "0x4542e0": {
   "port": "vertrix_port_effect_slide_start_4542e0",
   "lifted": "lifted_effect_slide_start_4542e0",
+  "chunk": "whole_2"
+ },
+ "0x4543a0": {
+  "port": "vertrix_port_board_shift_4543a0",
+  "lifted": "lifted_f4543a0",
   "chunk": "whole_2"
  },
  "0x454510": {
@@ -5802,6 +5837,11 @@
  "0x4587a0": {
   "port": "vertrix_port_title_walker_blink_4587a0",
   "lifted": "lifted_f4587a0",
+  "chunk": "whole_2"
+ },
+ "0x458880": {
+  "port": "vertrix_port_actor_drop_land_458880",
+  "lifted": "lifted_f458880",
   "chunk": "whole_2"
  },
  "0x4589e0": {

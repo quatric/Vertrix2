@@ -135,6 +135,7 @@
 #include "port_tallies.h"
 #include "port_teardown.h"
 #include "port_texts.h"
+#include "port_turns.h"
 #include "port_twins.h"
 #include "port_voices.h"
 #include "port_widgets.h"
@@ -940,7 +941,7 @@ static const LiftedRoutine routines[] = {
     {0x43ad70, lifted_f43ad70, 328, 0},
     {0x43b1a0, vertrix_port_player_first_turn_43b1a0, 0, 0},
     {0x43b260, lifted_f43b260, 172, 0},
-    {0x43b430, lifted_player_ai_tick, 160, 0},
+    {0x43b430, vertrix_port_player_ai_tick_43b430, 0, 0},
     {0x43b590, vertrix_port_player_draw_all_delays_43b590, 0, 0},
     {0x43b5b0, vertrix_port_ai_reaction_time_43b5b0, 0, 0},
     {0x43b660, vertrix_port_player_draw_delay_1_43b660, 0, 0},
@@ -1115,7 +1116,7 @@ static const LiftedRoutine routines[] = {
     {0x446380, vertrix_port_option_label_446380, 0, 0},
     {0x446440, vertrix_port_actor_level_label_446440, 0, 0},
     {0x446500, vertrix_port_actor_count_text_446500, 0, 0},
-    {0x4465a0, lifted_f4465a0, 148, 0},
+    {0x4465a0, vertrix_port_slot_pick_4465a0, 0, 0},
     {0x446730, vertrix_port_actor_count_state_446730, 0, 0},
     {0x4467c0, vertrix_port_actor_count_state_4467c0, 0, 0},
     {0x446850, lifted_f446850, 172, 0},
@@ -1148,7 +1149,7 @@ static const LiftedRoutine routines[] = {
     {0x448140, vertrix_port_enter_448160_448140, 0, 0},
     {0x448160, vertrix_port_when_flag_48c4a0_448160, 0, 0},
     {0x448180, vertrix_port_list_scroll_hover_448180, 0, 0},
-    {0x448260, lifted_f448260, 152, 0},
+    {0x448260, vertrix_port_actor_pointer_pick_448260, 0, 0},
     {0x4483d0, vertrix_port_actor_hover_step_4483d0, 0, 0},
     {0x4484f0, vertrix_port_actor_hover_rest_4484f0, 0, 0},
     {0x448610, vertrix_port_actor_wait_point_448610, 0, 0},
@@ -1402,9 +1403,9 @@ static const LiftedRoutine routines[] = {
     {0x4517c0, lifted_object_post_lock, 188, 0},
     {0x451920, vertrix_port_object_post_lock_twin_451920, 0, 0},
     {0x451a60, vertrix_port_player_start_bonus_451a60, 0, 0},
-    {0x451aa0, lifted_f451aa0, 164, 0},
+    {0x451aa0, vertrix_port_player_key_step_451aa0, 0, 0},
     {0x451c00, vertrix_port_player_place_piece_451c00, 0, 0},
-    {0x451c80, lifted_f451c80, 164, 0},
+    {0x451c80, vertrix_port_player_ai_key_step_451c80, 0, 0},
     {0x451dd0, vertrix_port_state_choice_check_451dd0, 0, 0},
     {0x451e20, vertrix_port_state_choice_apply_451e20, 0, 0},
     {0x451f10, vertrix_port_player_child_update_451f10, 0, 0},
@@ -1469,11 +1470,11 @@ static const LiftedRoutine routines[] = {
     {0x453ef0, vertrix_port_state_ask_453ef0, 0, 0},
     {0x453f40, vertrix_port_effect_attack_453f40, 0, 0},
     {0x453fd0, vertrix_port_effect_slide_start_453fd0, 0, 0},
-    {0x454090, lifted_f454090, 156, 0},
+    {0x454090, vertrix_port_board_shift_454090, 0, 0},
     {0x454200, vertrix_port_state_ask_454200, 0, 0},
     {0x454250, vertrix_port_effect_attack_454250, 0, 0},
     {0x4542e0, vertrix_port_effect_slide_start_4542e0, 0, 0},
-    {0x4543a0, lifted_f4543a0, 156, 0},
+    {0x4543a0, vertrix_port_board_shift_4543a0, 0, 0},
     {0x454510, vertrix_port_state_ask_454510, 0, 0},
     {0x454560, vertrix_port_effect_attack_454560, 0, 0},
     {0x454600, vertrix_port_effect_struck_start_454600, 0, 0},
@@ -1590,7 +1591,7 @@ static const LiftedRoutine routines[] = {
     {0x4585c0, lifted_f4585c0, 144, 0},
     {0x458710, vertrix_port_actor_rise_update_458710, 0, 0},
     {0x4587a0, vertrix_port_title_walker_blink_4587a0, 0, 0},
-    {0x458880, lifted_f458880, 160, 0},
+    {0x458880, vertrix_port_actor_drop_land_458880, 0, 0},
     {0x4589e0, vertrix_port_spark_start_4589e0, 0, 0},
     {0x458a70, lifted_f458a70, 140, 0},
     {0x458c20, vertrix_port_letter_fall_458c20, 0, 0},
