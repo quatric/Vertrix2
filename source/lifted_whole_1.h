@@ -45,8 +45,7 @@ enum
     LIFTED_F445350_STACK = 272,
     LIFTED_F445B90_STACK = 180,
     LIFTED_F44A720_STACK = 200,
-    LIFTED_F44BC50_STACK = 236,
-    LIFTED_F44BF70_STACK = 264
+    LIFTED_F44BC50_STACK = 236
 };
 
 /* Original 0x431340. */
@@ -214,10 +213,6 @@ uint32_t lifted_f44a720(const VertrixCalls *calls, const VertrixFactoryServices 
 
 /* Original 0x44bc50. */
 uint32_t lifted_f44bc50(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x44bf70. */
-uint32_t lifted_f44bf70(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 #endif

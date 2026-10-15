@@ -61,8 +61,8 @@ uint32_t vertrix_port_piece_bounce_443890(PORT_SIGNATURE)
     port_set32(&port, 0, 0x5448e4, 1);
     port_call_with(&port, 0x4ac500, piece, 1, ebx, piece, esi, edi, ebp);
     port_call_with(&port, 0x4ac600, piece, vertrix_lift_edx, ebx, piece, esi, edi, ebp);
-    if (port_call_with(&port, 0x4ac620, piece, vertrix_lift_edx, ebx, piece, esi, edi, ebp) ==
-        vertrix_lift_edx)
+    eax = port_call_with(&port, 0x4ac620, piece, vertrix_lift_edx, ebx, piece, esi, edi, ebp);
+    if (eax == vertrix_lift_edx)
     {
         stride =
             port_call_with(&port, 0x4ac640, piece, vertrix_lift_edx, ebx, piece, esi, edi, ebp);
@@ -152,8 +152,8 @@ uint32_t vertrix_port_piece_fall_444550(PORT_SIGNATURE)
     port_set32(&port, 0, 0x54499c, 1);
     port_call_with(&port, 0x4ac500, piece, 1, ebx, piece, esi, edi, ebp);
     port_call_with(&port, 0x4ac600, piece, vertrix_lift_edx, ebx, piece, esi, edi, ebp);
-    if (port_call_with(&port, 0x4ac620, piece, vertrix_lift_edx, ebx, piece, esi, edi, ebp) ==
-        vertrix_lift_edx)
+    eax = port_call_with(&port, 0x4ac620, piece, vertrix_lift_edx, ebx, piece, esi, edi, ebp);
+    if (eax == vertrix_lift_edx)
     {
         stride =
             port_call_with(&port, 0x4ac640, piece, vertrix_lift_edx, ebx, piece, esi, edi, ebp);

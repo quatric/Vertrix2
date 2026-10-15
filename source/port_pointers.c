@@ -21,8 +21,8 @@ static uint32_t call_frame(Port *port, uint32_t target, uint32_t eax, uint32_t e
  * at the volume 0x532b9c); else, over the pointer 0x558944, 0x558946 (or 0x7d00 while 0x558958
  * is set; 0x4b0b70) it grows (+0x28, ecx 0) or shrinks (0x4b6590 of 10), moves (0x4ac500) and,
  * once it lands (0x4ac520 gives 1), takes its stride (0x4ac540, 0x4ac5b0) and its place
- * (0x4b65a0, 0x4ac980, 0x4b6540); with the key 0x74 ready (0x476480 of 0x54d640) at a place
- * (0x4764a0) over it (0x4b0b70) it takes +0x44 0x10 and the state 0x447560. The registers but
+ * (0x4b65a0, 0x4ac980 by the speed, 0x4b6540); with the key 0x74 ready (0x476480 of 0x54d640) at a
+ * place (0x4764a0) over it (0x4b0b70) it takes +0x44 0x10 and the state 0x447560. The registers but
  * eax kept. */
 uint32_t vertrix_port_actor_pointer_press_4473b0(PORT_SIGNATURE)
 {
@@ -87,10 +87,10 @@ uint32_t vertrix_port_actor_pointer_press_4473b0(PORT_SIGNATURE)
         edx = port_call_with(&port, 0x4ac540, actor, vertrix_lift_edx, ebx, ecx, actor, edi, ebp);
         port_call_with(&port, 0x4ac5b0, actor, edx, ebx, ecx, actor, edi, ebp);
         args[0] = ebx;
-        ebx = (uint32_t)(int32_t)(int16_t)call_frame(&port, 0x4b65a0, actor, vertrix_lift_edx, ebx,
-                                                     ecx, actor, edi, ebp, args, 1);
-        edx = (uint32_t)(int32_t)(int16_t)port_call_with(&port, 0x4ac980, actor, vertrix_lift_edx,
+        ebx = (uint32_t)(int32_t)(int16_t)port_call_with(&port, 0x4b65a0, actor, vertrix_lift_edx,
                                                          ebx, ecx, actor, edi, ebp);
+        edx = (uint32_t)(int32_t)(int16_t)call_frame(&port, 0x4ac980, actor, vertrix_lift_edx, ebx,
+                                                     ecx, actor, edi, ebp, args, 1);
         port_call_with(&port, 0x4b6540, actor, edx, ebx, ecx, actor, edi, ebp);
     }
     eax = port_call_with(&port, 0x476480, 0x54d640, 0x74, ebx, ecx, actor, edi, ebp);

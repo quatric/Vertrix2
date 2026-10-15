@@ -4399,6 +4399,11 @@
   "lifted": "lifted_f44b050",
   "chunk": "whole_9"
  },
+ "0x44b170": {
+  "port": "vertrix_port_player_tag_step_44b170",
+  "lifted": "lifted_f44b170",
+  "chunk": "whole_9"
+ },
  "0x44b340": {
   "port": "vertrix_port_piece_tag_step_44b340",
   "lifted": "lifted_f44b340",
@@ -4447,6 +4452,11 @@
  "0x44beb0": {
   "port": "vertrix_port_actor_show_sounds_44beb0",
   "lifted": "lifted_f44beb0",
+  "chunk": "whole_1"
+ },
+ "0x44bf70": {
+  "port": "vertrix_port_actor_homing_44bf70",
+  "lifted": "lifted_f44bf70",
   "chunk": "whole_1"
  },
  "0x44c1a0": {

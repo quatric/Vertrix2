@@ -92,6 +92,7 @@
 #include "port_grid.h"
 #include "port_guards.h"
 #include "port_handlers.h"
+#include "port_homings.h"
 #include "port_hooks.h"
 #include "port_hovers.h"
 #include "port_imdct.h"
@@ -114,6 +115,7 @@
 #include "port_menu.h"
 #include "port_menus.h"
 #include "port_motions.h"
+#include "port_nametags.h"
 #include "port_objects.h"
 #include "port_paces.h"
 #include "port_particles.h"
@@ -1251,7 +1253,7 @@ static const LiftedRoutine routines[] = {
     {0x44ae80, vertrix_port_actor_step_keep_44ae80, 0, 0},
     {0x44aec0, vertrix_port_level_tag_step_44aec0, 0, 0},
     {0x44b050, vertrix_port_tag_step_44b050, 0, 0},
-    {0x44b170, lifted_f44b170, 208, 0},
+    {0x44b170, vertrix_port_player_tag_step_44b170, 0, 0},
     {0x44b340, vertrix_port_piece_tag_step_44b340, 0, 0},
     {0x44b4a0, vertrix_port_tag_step_44b4a0, 0, 0},
     {0x44b5d0, vertrix_port_tag_step_44b5d0, 0, 0},
@@ -1263,7 +1265,7 @@ static const LiftedRoutine routines[] = {
     {0x44bba0, vertrix_port_actor_grow_start_44bba0, 0, 0},
     {0x44bc50, lifted_f44bc50, 236, 0},
     {0x44beb0, vertrix_port_actor_show_sounds_44beb0, 0, 0},
-    {0x44bf70, lifted_f44bf70, 264, 0},
+    {0x44bf70, vertrix_port_actor_homing_44bf70, 0, 0},
     {0x44c1a0, vertrix_port_actor_menu_wait_44c1a0, 0, 0},
     {0x44c260, vertrix_port_actor_step_keep_44c260, 0, 0},
     {0x44c2a0, vertrix_port_forward_4ac8a0_44c2a0, 0, 0},
