@@ -24,7 +24,6 @@ enum
     LIFTED_TITLE_LETTER_FIGHT_COUNT_CALL_STACK = 144,
     LIFTED_TITLE_LETTER_FIGHT_FLY_CALL_STACK = 140,
     LIFTED_TITLE_LETTER_WAVE_COUNT_CALL_STACK = 136,
-    LIFTED_TITLE_LETTER_WAVE_FLY_CALL_STACK = 140,
     LIFTED_F45AD20_STACK = 140,
     LIFTED_F45B190_STACK = 168,
     LIFTED_EFFECT_ATTACK_45B9C0_STACK = 104
@@ -109,11 +108,6 @@ uint32_t lifted_title_letter_fight_fly_call(const VertrixCalls *calls,
 uint32_t lifted_title_letter_wave_count_call(const VertrixCalls *calls,
                                              const VertrixFactoryServices *services,
                                              const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x45a910. */
-uint32_t lifted_title_letter_wave_fly_call(const VertrixCalls *calls,
-                                           const VertrixFactoryServices *services,
-                                           const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x45ad20. */
 uint32_t lifted_f45ad20(const VertrixCalls *calls, const VertrixFactoryServices *services,

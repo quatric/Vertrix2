@@ -3653,26 +3653,6 @@
   "virtual": [],
   "address": 5006912
  },
- "f4c6ff0": {
-  "callees": {},
-  "stack": 88,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   0,
-   24,
-   460
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   11,
-   12,
-   13
-  ],
-  "virtual": [],
-  "address": 5009392
- },
  "f4c8cd0": {
   "callees": {
    "0x4c8500": [

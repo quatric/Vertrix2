@@ -208,6 +208,7 @@
 #include "port_rtlreads.h"
 #include "port_rtlreals.h"
 #include "port_rtlrecords.h"
+#include "port_rtlruns.h"
 #include "port_rtlsections.h"
 #include "port_rtlsetups.h"
 #include "port_rtlshells.h"
@@ -721,7 +722,7 @@ static const LiftedRoutine routines[] = {
     {0x423bc0, lifted_f423bc0, 220, 0},
     {0x423d70, vertrix_port_script_object_load, 0, 0},
     {0x423dc0, vertrix_port_script_object_open_423dc0, 544, 0},
-    {0x423ea0, lifted_f423ea0, 640, 0},
+    {0x423ea0, vertrix_port_object_named_423ea0, 540, 0},
     {0x423fb0, vertrix_port_picture_screen_frame_423fb0, 0, 0},
     {0x424160, vertrix_port_forward_477610_424160, 0, 0},
     {0x424180, vertrix_port_guard_noop_424180, 0, 0},
@@ -1759,7 +1760,7 @@ static const LiftedRoutine routines[] = {
     {0x45a620, lifted_title_letter_wave_count_call, 136, 0},
     {0x45a750, vertrix_port_title_letter_wave_call_45a750, 0, 0},
     {0x45a830, vertrix_port_title_letter_wave_call_45a830, 0, 0},
-    {0x45a910, lifted_title_letter_wave_fly_call, 140, 0},
+    {0x45a910, vertrix_port_title_letter_wave_fly_45a910, 0, 0},
     {0x45aa20, vertrix_port_actor_step_cycle_45aa20, 0, 0},
     {0x45aa70, vertrix_port_head_idle_wait_45aa70, 0, 0},
     {0x45aab0, vertrix_port_actor_player_pick_45aab0, 0, 0},
@@ -2270,7 +2271,7 @@ static const LiftedRoutine routines[] = {
     {0x480ca0, vertrix_port_palette_cube_480ca0, 0, 0},
     {0x480d60, lifted_f480d60, 280, 0},
     {0x480ec0, vertrix_port_image_read, 0, 0},
-    {0x481480, lifted_rle_decode, 112, 0},
+    {0x481480, vertrix_port_rle_decode_481480, 0, 0},
     {0x481580, lifted_rle_decode_bitmap, 108, 0},
     {0x4816f0, vertrix_port_list_file_read, 316, 0},
     {0x481b20, vertrix_port_object_set_table, 0, 0},
@@ -3319,7 +3320,7 @@ static const LiftedRoutine routines[] = {
     {0x4c6a80, vertrix_port_nothing_404580, 0, 0},
     {0x4c6c70, vertrix_port_object_error_2e_4c6c70, 0, 0},
     {0x4c6c80, lifted_f4c6c80, 200, 0},
-    {0x4c6ff0, lifted_f4c6ff0, 88, 0},
+    {0x4c6ff0, vertrix_port_jpeg_histogram_rows_4c6ff0, 0, 0},
     {0x4c70f0, lifted_f4c70f0, 268, 0},
     {0x4c8500, lifted_f4c8500, 2200, 0},
     {0x4c8be0, vertrix_port_jpeg_quantize_rows_4c8be0, 0, 0},

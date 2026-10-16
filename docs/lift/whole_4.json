@@ -74,41 +74,6 @@
   "virtual": [],
   "address": 4722016
  },
- "rle_decode": {
-  "callees": {
-   "0x48a930": [
-    0,
-    false
-   ],
-   "0x4d85c0": [
-    1,
-    true
-   ],
-   "0x4eb4d4": [
-    0,
-    false
-   ]
-  },
-  "stack": 112,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   15,
-   16,
-   17,
-   191,
-   192,
-   193,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 4723840
- },
  "rle_decode_bitmap": {
   "callees": {
    "0x478d10": [

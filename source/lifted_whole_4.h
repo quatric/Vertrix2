@@ -8,7 +8,6 @@ enum
 {
     LIFTED_OBJECT_SET_TEXT_STACK = 96,
     LIFTED_F480D60_STACK = 280,
-    LIFTED_RLE_DECODE_STACK = 112,
     LIFTED_RLE_DECODE_BITMAP_STACK = 108,
     LIFTED_F485700_STACK = 476,
     LIFTED_F487BE0_STACK = 176,
@@ -36,10 +35,6 @@ uint32_t lifted_object_set_text(const VertrixCalls *calls, const VertrixFactoryS
 /* Original 0x480d60. */
 uint32_t lifted_f480d60(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x481480. */
-uint32_t lifted_rle_decode(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                           const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x481580. */
 uint32_t lifted_rle_decode_bitmap(const VertrixCalls *calls, const VertrixFactoryServices *services,
