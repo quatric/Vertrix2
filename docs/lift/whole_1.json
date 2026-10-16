@@ -59,42 +59,6 @@
   "virtual": [],
   "address": 4396192
  },
- "f432a30": {
-  "callees": {
-   "0x4327e0": [
-    0,
-    false
-   ],
-   "0x4328e0": [
-    0,
-    false
-   ],
-   "0x432ba0": [
-    2,
-    false
-   ]
-  },
-  "stack": 392,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2,
-   3,
-   4,
-   5,
-   6,
-   283,
-   284,
-   285
-  ],
-  "virtual": [],
-  "address": 4401712
- },
  "board_swap_slots": {
   "callees": {},
   "stack": 72,
@@ -564,35 +528,6 @@
   ],
   "virtual": [],
   "address": 4440384
- },
- "piece": {
-  "callees": {
-   "0x43d130": [
-    0,
-    false
-   ]
-  },
-  "stack": 116,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   11,
-   12,
-   13,
-   40,
-   41,
-   42,
-   43,
-   44,
-   45,
-   46,
-   47
-  ],
-  "virtual": [],
-  "address": 4444544
  },
  "board_particles_setup": {
   "callees": {

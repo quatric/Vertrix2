@@ -172,6 +172,7 @@
 #include "port_rtl.h"
 #include "port_rtlarrays.h"
 #include "port_rtlbits.h"
+#include "port_rtlboards.h"
 #include "port_rtlcalls.h"
 #include "port_rtlconsoles.h"
 #include "port_rtldigits.h"
@@ -717,7 +718,7 @@ static const LiftedRoutine routines[] = {
     {0x4237d0, lifted_f4237d0, 212, 0},
     {0x423bc0, lifted_f423bc0, 220, 0},
     {0x423d70, vertrix_port_script_object_load, 0, 0},
-    {0x423dc0, lifted_f423dc0, 632, 0},
+    {0x423dc0, vertrix_port_script_object_open_423dc0, 544, 0},
     {0x423ea0, lifted_f423ea0, 640, 0},
     {0x423fb0, vertrix_port_picture_screen_frame_423fb0, 0, 0},
     {0x424160, vertrix_port_forward_477610_424160, 0, 0},
@@ -966,7 +967,7 @@ static const LiftedRoutine routines[] = {
     {0x4328a0, vertrix_port_board_any_falling_4328a0, 276, 0},
     {0x4328e0, vertrix_port_board_mark_floating_4328e0, 0, 0},
     {0x432980, vertrix_port_board_settle_432980, 296, 0},
-    {0x432a30, lifted_f432a30, 392, 0},
+    {0x432a30, vertrix_port_board_drop_marked_432a30, 308, 0},
     {0x432b10, vertrix_port_board_mark_falling_cells_432b10, 0, 0},
     {0x432ba0, lifted_board_swap_slots, 72, 2},
     {0x433040, vertrix_port_board_burst_occupied_433040, 0, 0},
@@ -1127,7 +1128,7 @@ static const LiftedRoutine routines[] = {
     {0x43d0b0, vertrix_port_player_setup_side_2d_43d0b0, 0, 0},
     {0x43d0f0, vertrix_port_player_setup_side_2e_43d0f0, 0, 0},
     {0x43d130, vertrix_port_player_random_kind_43d130, 0, 0},
-    {0x43d180, lifted_piece, 116, 0},
+    {0x43d180, vertrix_port_piece_kinds_43d180, 0, 0},
     {0x43d260, vertrix_port_player_generate_preview_43d260, 0, 0},
     {0x43d2b0, vertrix_port_player_create_overlay_43d2b0, 0, 0},
     {0x43d300, vertrix_port_object_list_filled_43d300, 0, 0},
@@ -3292,7 +3293,7 @@ static const LiftedRoutine routines[] = {
     {0x4c5190, vertrix_port_pool_block_4c5190, 0, 0},
     {0x4c5200, vertrix_port_virtual_arrays_realize_4c5200, 0, 0},
     {0x4c5400, vertrix_port_jpeg_sarray_io_4c5400, 0, 0},
-    {0x4c54d0, lifted_f4c54d0, 120, 0},
+    {0x4c54d0, vertrix_port_jpeg_barray_io_4c54d0, 0, 0},
     {0x4c55a0, vertrix_port_virtual_sample_access_4c55a0, 0, 0},
     {0x4c5740, vertrix_port_virtual_block_access_4c5740, 0, 0},
     {0x4c58e0, lifted_f4c58e0, 116, 0},
