@@ -6,7 +6,6 @@
 
 enum
 {
-    LIFTED_MIXER_OUTPUT_STACK = 92,
     LIFTED_F406170_STACK = 852,
     LIFTED_F407020_STACK = 184,
     LIFTED_F407830_STACK = 392,
@@ -16,12 +15,9 @@ enum
     LIFTED_OBJECT_FREE_TREE_STACK = 116,
     LIFTED_OBJECT_ATTACH_ITEM_STACK = 100,
     LIFTED_F415580_STACK = 976,
-    LIFTED_TABLE_FIND_MATCHING_STACK = 88,
     LIFTED_F416140_STACK = 244,
     LIFTED_F416500_STACK = 372,
     LIFTED_POINT_LIST_ADD_STACK = 76,
-    LIFTED_TABLE_RANDOM_EMPTY_STACK = 164,
-    LIFTED_TABLE_RANDOM_EMPTY_417ED0_STACK = 164,
     LIFTED_RTL_CONSTRUCT_DERIVED_STREAM_STACK = 68,
     LIFTED_F418AF0_STACK = 488,
     LIFTED_F418D50_STACK = 896,
@@ -49,14 +45,9 @@ enum
     LIFTED_AI_FIND_BEST_SLOT_STACK = 104,
     LIFTED_SETTINGS_DEFAULTS_STACK = 116,
     LIFTED_CHOICE_GRID_PICK_CELL_STACK = 112,
-    LIFTED_CHOICE_GRID_AVAILABLE_STACK = 64,
     LIFTED_F42A540_STACK = 276,
     LIFTED_PIECE_ACTOR_CONSTRUCT_PLACED_STACK = 180
 };
-
-/* Original 0x401010. */
-uint32_t lifted_mixer_output(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                             const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x406170. */
 uint32_t lifted_f406170(const VertrixCalls *calls, const VertrixFactoryServices *services,
@@ -95,11 +86,6 @@ uint32_t lifted_object_attach_item(const VertrixCalls *calls,
 uint32_t lifted_f415580(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x415e40. */
-uint32_t lifted_table_find_matching(const VertrixCalls *calls,
-                                    const VertrixFactoryServices *services,
-                                    const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x416140. */
 uint32_t lifted_f416140(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
@@ -111,16 +97,6 @@ uint32_t lifted_f416500(const VertrixCalls *calls, const VertrixFactoryServices 
 /* Original 0x416c10. */
 uint32_t lifted_point_list_add(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x417e60. */
-uint32_t lifted_table_random_empty(const VertrixCalls *calls,
-                                   const VertrixFactoryServices *services,
-                                   const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x417ed0. */
-uint32_t lifted_table_random_empty_417ed0(const VertrixCalls *calls,
-                                          const VertrixFactoryServices *services,
-                                          const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x418760. */
 uint32_t lifted_rtl_construct_derived_stream(const VertrixCalls *calls,
@@ -231,11 +207,6 @@ uint32_t lifted_settings_defaults(const VertrixCalls *calls, const VertrixFactor
 
 /* Original 0x429fe0. */
 uint32_t lifted_choice_grid_pick_cell(const VertrixCalls *calls,
-                                      const VertrixFactoryServices *services,
-                                      const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42a190. */
-uint32_t lifted_choice_grid_available(const VertrixCalls *calls,
                                       const VertrixFactoryServices *services,
                                       const VertrixGlobals *globals, const LiftEntry *entry);
 

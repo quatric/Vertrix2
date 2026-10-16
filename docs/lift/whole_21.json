@@ -1515,23 +1515,6 @@
   "virtual": [],
   "address": 4657984
  },
- "list_push_call": {
-  "callees": {
-   "0x475790": [
-    1,
-    false
-   ]
-  },
-  "stack": 80,
-  "arguments": 1,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4676272
- },
  "surface_bounds": {
   "callees": {
    "0x478f10": [
@@ -1740,27 +1723,6 @@
   ],
   "address": 4737888
  },
- "find_size_field": {
-  "callees": {
-   "0x4d9060": [
-    2,
-    false
-   ]
-  },
-  "stack": 372,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   279,
-   280,
-   281
-  ],
-  "virtual": [],
-  "address": 4757008
- },
  "render_palette_weighted_pixel": {
   "callees": {},
   "stack": 92,
@@ -1783,31 +1745,6 @@
   ],
   "virtual": [],
   "address": 4784960
- },
- "actor_double_orbit_point": {
-  "callees": {
-   "0x4ad210": [
-    1,
-    false
-   ],
-   "0x4ad1c0": [
-    1,
-    false
-   ]
-  },
-  "stack": 100,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   3,
-   4,
-   5
-  ],
-  "virtual": [],
-  "address": 4903872
  },
  "object_is_idle": {
   "callees": {},

@@ -775,27 +775,6 @@
   "virtual": [],
   "address": 4551152
  },
- "ui_center_on_anchor": {
-  "callees": {
-   "0x4b14c0": [
-    0,
-    false
-   ]
-  },
-  "stack": 92,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   7,
-   8,
-   9
-  ],
-  "virtual": [],
-  "address": 4552848
- },
  "f457a00": {
   "callees": {
    "0x4ac500": [

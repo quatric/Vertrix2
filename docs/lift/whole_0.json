@@ -1,16 +1,4 @@
 {
- "mixer_output": {
-  "callees": {},
-  "stack": 92,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4198416
- },
  "f406170": {
   "callees": {
    "0x4d6768": [
@@ -465,27 +453,6 @@
   "virtual": [],
   "address": 4281728
  },
- "table_find_matching": {
-  "callees": {
-   "0x4ccfe0": [
-    0,
-    false
-   ]
-  },
-  "stack": 88,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   3,
-   4,
-   5
-  ],
-  "virtual": [],
-  "address": 4283968
- },
  "f416140": {
   "callees": {
    "0x417260": [
@@ -680,60 +647,6 @@
   "constants": [],
   "virtual": [],
   "address": 4287504
- },
- "table_random_empty": {
-  "callees": {
-   "0x4826c0": [
-    0,
-    false
-   ]
-  },
-  "stack": 164,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   18,
-   19,
-   20,
-   75,
-   76,
-   77,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 4292192
- },
- "table_random_empty_417ed0": {
-  "callees": {
-   "0x4826c0": [
-    0,
-    false
-   ]
-  },
-  "stack": 164,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   18,
-   19,
-   20,
-   75,
-   76,
-   77,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 4292304
  },
  "rtl_construct_derived_stream": {
   "callees": {
@@ -2537,18 +2450,6 @@
   ],
   "virtual": [],
   "address": 4366304
- },
- "choice_grid_available": {
-  "callees": {},
-  "stack": 64,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4366736
  },
  "f42a540": {
   "callees": {

@@ -238,27 +238,6 @@
   "virtual": [],
   "address": 5082144
  },
- "rtl_static_init_call": {
-  "callees": {
-   "0x4da71b": [
-    1,
-    true
-   ]
-  },
-  "stack": 72,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   3,
-   4,
-   5
-  ],
-  "virtual": [],
-  "address": 5084432
- },
  "f4d9ae0": {
   "callees": {},
   "stack": 64,
@@ -335,27 +314,6 @@
   ],
   "virtual": [],
   "address": 5085920
- },
- "rtl_zero_call3": {
-  "callees": {
-   "0x4da3ba": [
-    0,
-    false
-   ]
-  },
-  "stack": 100,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   19,
-   20,
-   21
-  ],
-  "virtual": [],
-  "address": 5088878
  },
  "exception_chain_step": {
   "callees": {
@@ -645,29 +603,6 @@
   "constants": [],
   "virtual": [],
   "address": 5107315
- },
- "rtl_table_lookup_value": {
-  "callees": {
-   "0x4df0f0": [
-    0,
-    false
-   ]
-  },
-  "stack": 76,
-  "arguments": 0,
-  "pointer_callees": [
-   "0x4df0f0"
-  ],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   3,
-   4,
-   5
-  ],
-  "virtual": [],
-  "address": 5108032
  },
  "f4e0ae5": {
   "callees": {

@@ -21,7 +21,6 @@ enum
     LIFTED_EFFECT_ATTACK_455CA0_STACK = 104,
     LIFTED_F4570B0_STACK = 124,
     LIFTED_F4571F0_STACK = 124,
-    LIFTED_UI_CENTER_ON_ANCHOR_STACK = 92,
     LIFTED_F457A00_STACK = 140,
     LIFTED_F457F40_STACK = 148,
     LIFTED_F4585C0_STACK = 144,
@@ -100,11 +99,6 @@ uint32_t lifted_f4570b0(const VertrixCalls *calls, const VertrixFactoryServices 
 /* Original 0x4571f0. */
 uint32_t lifted_f4571f0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x457890. */
-uint32_t lifted_ui_center_on_anchor(const VertrixCalls *calls,
-                                    const VertrixFactoryServices *services,
-                                    const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x457a00. */
 uint32_t lifted_f457a00(const VertrixCalls *calls, const VertrixFactoryServices *services,

@@ -6,12 +6,7 @@
 
 enum
 {
-    LIFTED_BOARD_PIECE_COLUMN_STACK = 96,
     LIFTED_F4314A0_STACK = 160,
-    LIFTED_BOARD_PIECE_SPAN_STACK = 104,
-    LIFTED_BOARD_PIECE_PAST_EDGE_STACK = 100,
-    LIFTED_BOARD_PIECE_PAST_EDGE_432080_STACK = 100,
-    LIFTED_BOARD_ANY_FALLING_STACK = 348,
     LIFTED_F432A30_STACK = 392,
     LIFTED_BOARD_SWAP_SLOTS_STACK = 72,
     LIFTED_F433840_STACK = 272,
@@ -43,32 +38,9 @@ enum
     LIFTED_F44BC50_STACK = 236
 };
 
-/* Original 0x431340. */
-uint32_t lifted_board_piece_column(const VertrixCalls *calls,
-                                   const VertrixFactoryServices *services,
-                                   const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x4314a0. */
 uint32_t lifted_f4314a0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x431b20. */
-uint32_t lifted_board_piece_span(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                 const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x432040. */
-uint32_t lifted_board_piece_past_edge(const VertrixCalls *calls,
-                                      const VertrixFactoryServices *services,
-                                      const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x432080. */
-uint32_t lifted_board_piece_past_edge_432080(const VertrixCalls *calls,
-                                             const VertrixFactoryServices *services,
-                                             const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4328a0. */
-uint32_t lifted_board_any_falling(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                  const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x432a30. */
 uint32_t lifted_f432a30(const VertrixCalls *calls, const VertrixFactoryServices *services,

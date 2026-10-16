@@ -25,12 +25,9 @@ enum
     LIFTED_F43EAB0_STACK = 384,
     LIFTED_OPTIONS_BUILD_STACK = 1132,
     LIFTED_DELAY_ACTOR_SPAWN_STACK = 128,
-    LIFTED_LIST_PUSH_CALL_STACK = 80,
     LIFTED_SURFACE_BOUNDS_STACK = 124,
     LIFTED_F484B60_STACK = 752,
-    LIFTED_FIND_SIZE_FIELD_STACK = 372,
     LIFTED_RENDER_PALETTE_WEIGHTED_PIXEL_STACK = 92,
-    LIFTED_ACTOR_DOUBLE_ORBIT_POINT_STACK = 100,
     LIFTED_OBJECT_IS_IDLE_STACK = 96,
     LIFTED_SCALED_ROUND_STACK = 64,
     LIFTED_RTL_RANGE_TABLE_FIND_STACK = 68,
@@ -119,10 +116,6 @@ uint32_t lifted_options_build(const VertrixCalls *calls, const VertrixFactorySer
 uint32_t lifted_delay_actor_spawn(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x475ab0. */
-uint32_t lifted_list_push_call(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                               const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x4792d0. */
 uint32_t lifted_surface_bounds(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                const VertrixGlobals *globals, const LiftEntry *entry);
@@ -131,20 +124,11 @@ uint32_t lifted_surface_bounds(const VertrixCalls *calls, const VertrixFactorySe
 uint32_t lifted_f484b60(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x489610. */
-uint32_t lifted_find_size_field(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x490340. */
 uint32_t lifted_render_palette_weighted_pixel(const VertrixCalls *calls,
                                               const VertrixFactoryServices *services,
                                               const VertrixGlobals *globals,
                                               const LiftEntry *entry);
-
-/* Original 0x4ad3c0. */
-uint32_t lifted_actor_double_orbit_point(const VertrixCalls *calls,
-                                         const VertrixFactoryServices *services,
-                                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4c0b51. */
 uint32_t lifted_object_is_idle(const VertrixCalls *calls, const VertrixFactoryServices *services,
