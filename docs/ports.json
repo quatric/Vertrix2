@@ -279,6 +279,11 @@
   "lifted": "lifted_module_reset_calls",
   "chunk": "whole_0"
  },
+ "0x40aed0": {
+  "port": "vertrix_port_frame_wait_40aed0",
+  "lifted": "lifted_f40aed0",
+  "chunk": "whole_0"
+ },
  "0x40af30": {
   "port": "vertrix_port_audio_thread_start",
   "lifted": "lifted_f40af30",
@@ -558,6 +563,11 @@
   "port": "vertrix_port_mixer_volume_slide_40d250",
   "lifted": "lifted_mixer_volume_slide",
   "chunk": "whole_0"
+ },
+ "0x40d490": {
+  "port": "vertrix_port_mixer_set_volume_40d490",
+  "lifted": "lifted_mixer_set_effect_40d490",
+  "chunk": "whole_43"
  },
  "0x40dc50": {
   "port": "vertrix_port_mixer_effect",
@@ -8289,6 +8299,11 @@
   "lifted": "lifted_f477b10",
   "chunk": "whole_21"
  },
+ "0x477c30": {
+  "port": "vertrix_port_cursor_capture_477c30",
+  "lifted": "lifted_cursor_capture",
+  "chunk": "whole_3"
+ },
  "0x477c90": {
   "port": "vertrix_port_mouse_axis_mode_set",
   "lifted": "lifted_cursor_release",
@@ -14369,6 +14384,11 @@
   "lifted": "lifted_f4d06a0",
   "chunk": "whole_5"
  },
+ "0x4d06d0": {
+  "port": "vertrix_port_menu_find_4d06d0",
+  "lifted": "lifted_f4d06d0",
+  "chunk": "whole_10"
+ },
  "0x4d0740": {
   "port": "vertrix_port_rtl_message_dispatch_4d0740",
   "lifted": "lifted_f4d0740",
@@ -14713,6 +14733,11 @@
   "port": "vertrix_port_window_system_command_4d5010",
   "lifted": "lifted_f4d5010",
   "chunk": "whole_5"
+ },
+ "0x4d50d0": {
+  "port": "vertrix_port_files_dropped_4d50d0",
+  "lifted": "lifted_f4d50d0",
+  "chunk": "whole_13"
  },
  "0x4d5150": {
   "port": "vertrix_port_frame_window_call_4d5150",
@@ -15488,6 +15513,11 @@
   "port": "vertrix_port_double_polynomial_odd",
   "lifted": "lifted_rtl_bracket_call",
   "chunk": "whole_6"
+ },
+ "0x4db866": {
+  "port": "vertrix_port_rtl_flags_call_4db866",
+  "lifted": "lifted_rtl_flags_call",
+  "chunk": "whole_21"
  },
  "0x4db8b0": {
   "port": "vertrix_port_thread_runtime_init",
@@ -17067,6 +17097,11 @@
  "0x4edf7f": {
   "port": "vertrix_port_crt_long_double_class_4edf7f",
   "lifted": "lifted_f4edf7f",
+  "chunk": "whole_7"
+ },
+ "0x4ee025": {
+  "port": "vertrix_port_rtl_float_trunc_4ee025",
+  "lifted": "lifted_f4ee025",
   "chunk": "whole_7"
  },
  "0x4ee094": {

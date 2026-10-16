@@ -4,69 +4,6 @@
 
 #include "lifted_whole_43.h"
 
-uint32_t lifted_mixer_set_effect_40d490(const VertrixCalls *calls,
-                                        const VertrixFactoryServices *services,
-                                        const VertrixGlobals *globals, const LiftEntry *entry)
-{
-    uint8_t stack[LIFTED_MIXER_SET_EFFECT_40D490_STACK + 4 + 4 * 0 + 4];
-    LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0, 0};
-    uint32_t eax = entry->eax;
-    uint32_t edx = entry->edx;
-    uint32_t ebx = entry->ebx;
-    uint32_t ecx = entry->ecx;
-    uint32_t esi = entry->esi;
-    uint32_t edi = entry->edi;
-    uint32_t ebp = entry->ebp;
-    uint32_t esp = entry->esp;
-    (void)fl;
-    (void)eax;
-    (void)edx;
-    (void)ebx;
-    (void)ecx;
-    (void)esi;
-    (void)edi;
-    (void)ebp;
-    (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_MIXER_SET_EFFECT_40D490_STACK, 0,
-               entry);
-    {
-        uint32_t v = edx;
-        esp -= 4u;
-        lift_store(&env, esp, 0u, 4, v);
-    }
-    edx = lift_load(&env, 0u, 0x531b4cu, 4);
-    {
-        (void)lift_and(32, edx, edx, &fl);
-    }
-    if (!fl.zf)
-        goto L_40d4b7;
-    edx = (edx & 0xffffff00u) | ((lift_load(&env, eax, 0x4u, 1)) & 0xffu);
-    lift_store(&env, eax, 0x10u, 4, edx);
-    {
-        (void)lift_sub(32, edx, 0x40u, &fl);
-    }
-    if (fl.zf || fl.sf != fl.of)
-        goto L_40d4ad;
-    lift_store(&env, eax, 0x10u, 4, 0x40u);
-L_40d4ad:
-    edx = lift_load(&env, eax, 0x10u, 4);
-    lift_store(&env, eax, 0x14u, 4, edx);
-    {
-        uint32_t r = lift_or(8, lift_load(&env, eax, 0x1u, 1), 0x2u, &fl);
-        lift_store(&env, eax, 0x1u, 1, r);
-    }
-L_40d4b7:
-    {
-        uint32_t v = lift_load(&env, esp, 0u, 4);
-        esp += 4u;
-        edx = v;
-    }
-    vertrix_lift_edx = edx;
-    vertrix_lift_fl = fl;
-    return env.failed ? 0u : eax;
-}
-
 uint32_t lifted_sequence_extended_effect(const VertrixCalls *calls,
                                          const VertrixFactoryServices *services,
                                          const VertrixGlobals *globals, const LiftEntry *entry)

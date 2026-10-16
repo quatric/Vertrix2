@@ -1,20 +1,4 @@
 {
- "mixer_set_effect_40d490": {
-  "callees": {},
-  "stack": 68,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   63,
-   64,
-   65
-  ],
-  "virtual": [],
-  "address": 4248720
- },
  "sequence_extended_effect": {
   "callees": {
    "0x40ce80": [

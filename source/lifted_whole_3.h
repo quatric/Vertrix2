@@ -32,7 +32,6 @@ enum
     LIFTED_BITMAP_LOAD_STACK = 232,
     LIFTED_F4741A0_STACK = 348,
     LIFTED_FORMAT_DECIMAL_STACK = 100,
-    LIFTED_CURSOR_CAPTURE_STACK = 108,
     LIFTED_SURFACE_FLIP_VERTICAL_STACK = 112,
     LIFTED_F47BD80_STACK = 160,
     LIFTED_F47C3B0_STACK = 96,
@@ -146,10 +145,6 @@ uint32_t lifted_f4741a0(const VertrixCalls *calls, const VertrixFactoryServices 
 
 /* Original 0x4776a0. */
 uint32_t lifted_format_decimal(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                               const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x477c30. */
-uint32_t lifted_cursor_capture(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x479b50. */

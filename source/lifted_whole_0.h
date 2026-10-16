@@ -10,7 +10,6 @@ enum
     LIFTED_F407020_STACK = 184,
     LIFTED_F407830_STACK = 392,
     LIFTED_F4083A0_STACK = 212,
-    LIFTED_F40AED0_STACK = 92,
     LIFTED_CURVE_TABLE_BUILD_STACK = 120,
     LIFTED_OBJECT_FREE_TREE_STACK = 116,
     LIFTED_OBJECT_ATTACH_ITEM_STACK = 100,
@@ -58,10 +57,6 @@ uint32_t lifted_f407830(const VertrixCalls *calls, const VertrixFactoryServices 
 
 /* Original 0x4083a0. */
 uint32_t lifted_f4083a0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x40aed0. */
-uint32_t lifted_f40aed0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x40ba00. */

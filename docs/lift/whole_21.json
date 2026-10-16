@@ -1958,27 +1958,6 @@
   "virtual": [],
   "address": 5088186
  },
- "rtl_flags_call": {
-  "callees": {
-   "0x4dad2e": [
-    0,
-    false
-   ]
-  },
-  "stack": 80,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   7,
-   8,
-   9
-  ],
-  "virtual": [],
-  "address": 5093478
- },
  "f4df320": {
   "callees": {
    "virtual_4df373": [

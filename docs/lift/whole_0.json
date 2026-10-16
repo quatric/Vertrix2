@@ -252,35 +252,6 @@
   "virtual": [],
   "address": 4228000
  },
- "f40aed0": {
-  "callees": {
-   "0x4f1bf8": [
-    0,
-    false
-   ],
-   "0x40ab10": [
-    0,
-    false
-   ],
-   "0x4f1cc8": [
-    1,
-    false
-   ]
-  },
-  "stack": 92,
-  "arguments": 1,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 4239056
- },
  "curve_table_build": {
   "callees": {
    "0x4c9e2f": [
