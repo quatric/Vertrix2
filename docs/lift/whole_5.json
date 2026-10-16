@@ -168,58 +168,6 @@
   "virtual": [],
   "address": 4948591
  },
- "f4bb040": {
-  "callees": {
-   "virtual_4bb05c": [
-    0,
-    false
-   ],
-   "0x4c9840": [
-    0,
-    false
-   ],
-   "virtual_4bb0dd": [
-    0,
-    false
-   ],
-   "virtual_4bb12a": [
-    0,
-    false
-   ]
-  },
-  "stack": 128,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   12,
-   216
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   15,
-   16,
-   17
-  ],
-  "virtual": [
-   [
-    -1,
-    20,
-    0
-   ],
-   [
-    4,
-    0,
-    0
-   ],
-   [
-    4,
-    4,
-    0
-   ]
-  ],
-  "address": 4960320
- },
  "f4bcea0": {
   "callees": {
    "virtual_4bcefd": [
@@ -561,57 +509,6 @@
    ]
   ],
   "address": 4976400
- },
- "f4c0860": {
-  "callees": {
-   "virtual_4c0890": [
-    0,
-    false
-   ],
-   "virtual_4c08f3": [
-    0,
-    false
-   ],
-   "0x4bf770": [
-    0,
-    false
-   ]
-  },
-  "stack": 112,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   0
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2,
-   3,
-   4,
-   15,
-   16,
-   17,
-   191,
-   192,
-   193,
-   207,
-   208,
-   209,
-   214,
-   215,
-   216
-  ],
-  "virtual": [
-   [
-    0,
-    4,
-    0
-   ]
-  ],
-  "address": 4982880
  },
  "f4c2000": {
   "callees": {},
@@ -1158,60 +1055,6 @@
    ]
   ],
   "address": 5027232
- },
- "f4cc0d0": {
-  "callees": {
-   "0x4f1a5c": [
-    5,
-    false
-   ],
-   "virtual_4cc101": [
-    0,
-    false
-   ],
-   "virtual_4cc10f": [
-    0,
-    false
-   ],
-   "virtual_4cc11d": [
-    0,
-    false
-   ],
-   "virtual_4cc148": [
-    0,
-    false
-   ]
-  },
-  "stack": 148,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [
-   [
-    0,
-    96,
-    0
-   ],
-   [
-    0,
-    100,
-    0
-   ],
-   [
-    0,
-    104,
-    0
-   ],
-   [
-    0,
-    108,
-    0
-   ]
-  ],
-  "address": 5030096
  },
  "rtl_block_call": {
   "callees": {
