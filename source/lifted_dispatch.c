@@ -172,6 +172,7 @@
 #include "port_rtl.h"
 #include "port_rtlarrays.h"
 #include "port_rtlbits.h"
+#include "port_rtlblits.h"
 #include "port_rtlboards.h"
 #include "port_rtlbonus.h"
 #include "port_rtlcalls.h"
@@ -194,6 +195,7 @@
 #include "port_rtlhandlers.h"
 #include "port_rtlhandles.h"
 #include "port_rtlhooks.h"
+#include "port_rtlhops.h"
 #include "port_rtlletters.h"
 #include "port_rtllinks.h"
 #include "port_rtllocks.h"
@@ -207,6 +209,7 @@
 #include "port_rtlparses.h"
 #include "port_rtlpaths.h"
 #include "port_rtlpicks.h"
+#include "port_rtlpics.h"
 #include "port_rtlpools.h"
 #include "port_rtlprints.h"
 #include "port_rtlpumps.h"
@@ -1708,12 +1711,12 @@ static const LiftedRoutine routines[] = {
     {0x457810, vertrix_port_object_flip_side_457810, 0, 0},
     {0x457890, vertrix_port_ui_center_on_anchor_457890, 0, 0},
     {0x4578f0, vertrix_port_actor_fly_in_4578f0, 0, 0},
-    {0x457a00, lifted_f457a00, 140, 0},
+    {0x457a00, vertrix_port_title_letter_hop_457a00, 0, 0},
     {0x457b70, vertrix_port_actor_drift_update_457b70, 0, 0},
     {0x457c10, vertrix_port_title_walker_enter_457c10, 0, 0},
     {0x457d10, vertrix_port_letter_rise_457d10, 0, 0},
     {0x457e40, vertrix_port_title_walker_run_457e40, 0, 0},
-    {0x457f40, lifted_f457f40, 148, 0},
+    {0x457f40, vertrix_port_title_letter_hop_back_457f40, 0, 0},
     {0x4580b0, vertrix_port_actor_step_bob_4580b0, 0, 0},
     {0x458100, vertrix_port_actor_step_bob_458100, 0, 0},
     {0x458150, vertrix_port_letter_return_458150, 0, 0},
@@ -2211,7 +2214,7 @@ static const LiftedRoutine routines[] = {
     {0x47cb40, vertrix_port_surface_blend_masked_47cb40, 0, 0},
     {0x47cd60, vertrix_port_surface_decimate_47cd60, 0, 0},
     {0x47ce10, lifted_surface_blit, 104, 4},
-    {0x47e200, lifted_surface_blit_keyed, 92, 4},
+    {0x47e200, vertrix_port_surface_blit_keyed_47e200, 0, 0},
     {0x47e360, lifted_f47e360, 216, 0},
     {0x47e4f0, vertrix_port_screen_construct_47e4f0, 0, 0},
     {0x47e680, lifted_f47e680, 188, 0},
@@ -2276,10 +2279,10 @@ static const LiftedRoutine routines[] = {
     {0x4808f0, vertrix_port_palette_create_4808f0, 0, 0},
     {0x480940, vertrix_port_object_check_report_480940, 0, 0},
     {0x480ca0, vertrix_port_palette_cube_480ca0, 0, 0},
-    {0x480d60, lifted_f480d60, 280, 0},
+    {0x480d60, vertrix_port_picture_decode_rle_480d60, 0, 0},
     {0x480ec0, vertrix_port_image_read, 0, 0},
     {0x481480, vertrix_port_rle_decode_481480, 0, 0},
-    {0x481580, lifted_rle_decode_bitmap, 108, 0},
+    {0x481580, vertrix_port_rle_decode_bitmap_481580, 0, 0},
     {0x4816f0, vertrix_port_list_file_read, 316, 0},
     {0x481b20, vertrix_port_object_set_table, 0, 0},
     {0x481b30, vertrix_port_object_destroy, 0, 0},
@@ -3218,7 +3221,7 @@ static const LiftedRoutine routines[] = {
     {0x4bb040, vertrix_port_jpeg_coef_controller_init_4bb040, 0, 0},
     {0x4bb170, lifted_f4bb170, 112, 0},
     {0x4bb260, vertrix_port_nothing_404580, 0, 0},
-    {0x4bb270, lifted_f4bb270, 132, 1},
+    {0x4bb270, vertrix_port_jpeg_ycc_rgb_convert_4bb270, 0, 0},
     {0x4bb3d0, vertrix_port_jpeg_rows_spread_4bb3d0, 0, 0},
     {0x4bb470, vertrix_port_jpeg_rows_copy_4bb470, 0, 0},
     {0x4bb4a0, vertrix_port_jpeg_rows_triple_4bb4a0, 0, 0},

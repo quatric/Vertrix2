@@ -16,8 +16,6 @@ enum
     LIFTED_EFFECT_ATTACK_454E90_STACK = 104,
     LIFTED_EFFECT_ATTACK_455B20_STACK = 104,
     LIFTED_EFFECT_ATTACK_455CA0_STACK = 104,
-    LIFTED_F457A00_STACK = 140,
-    LIFTED_F457F40_STACK = 148,
     LIFTED_F4594A0_STACK = 140,
     LIFTED_F45AD20_STACK = 140,
     LIFTED_F45B190_STACK = 168,
@@ -67,14 +65,6 @@ uint32_t lifted_effect_attack_455b20(const VertrixCalls *calls,
 uint32_t lifted_effect_attack_455ca0(const VertrixCalls *calls,
                                      const VertrixFactoryServices *services,
                                      const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x457a00. */
-uint32_t lifted_f457a00(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x457f40. */
-uint32_t lifted_f457f40(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4594a0. */
 uint32_t lifted_f4594a0(const VertrixCalls *calls, const VertrixFactoryServices *services,

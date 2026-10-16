@@ -2576,28 +2576,6 @@
   "virtual": [],
   "address": 4705808
  },
- "surface_blit_keyed": {
-  "callees": {},
-  "stack": 92,
-  "arguments": 4,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   3,
-   4,
-   5,
-   15,
-   16,
-   17,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 4710912
- },
  "f47e360": {
   "callees": {
    "0x481b20": [
