@@ -173,6 +173,7 @@
 #include "port_rtlarrays.h"
 #include "port_rtlbits.h"
 #include "port_rtlboards.h"
+#include "port_rtlbonus.h"
 #include "port_rtlcalls.h"
 #include "port_rtlcomings.h"
 #include "port_rtlconsoles.h"
@@ -1537,7 +1538,7 @@ static const LiftedRoutine routines[] = {
     {0x451630, vertrix_port_state_check_451630, 0, 0},
     {0x451690, vertrix_port_state_start_451690, 0, 0},
     {0x451730, vertrix_port_state_steps_451730, 0, 0},
-    {0x4517c0, lifted_object_post_lock, 188, 0},
+    {0x4517c0, vertrix_port_object_post_lock_4517c0, 0, 0},
     {0x451920, vertrix_port_object_post_lock_twin_451920, 0, 0},
     {0x451a60, vertrix_port_player_start_bonus_451a60, 0, 0},
     {0x451aa0, vertrix_port_player_key_step_451aa0, 0, 0},
@@ -1725,7 +1726,7 @@ static const LiftedRoutine routines[] = {
     {0x458490, vertrix_port_actor_drop_start_458490, 0, 0},
     {0x4584f0, vertrix_port_object_flip_update_4584f0, 0, 0},
     {0x458560, vertrix_port_actor_drop_step_458560, 0, 0},
-    {0x4585c0, lifted_f4585c0, 144, 0},
+    {0x4585c0, vertrix_port_title_letter_bonus_count_4585c0, 0, 0},
     {0x458710, vertrix_port_actor_rise_update_458710, 0, 0},
     {0x4587a0, vertrix_port_title_walker_blink_4587a0, 0, 0},
     {0x458880, vertrix_port_actor_drop_land_458880, 0, 0},
@@ -3499,7 +3500,7 @@ static const LiftedRoutine routines[] = {
     {0x4d1ae0, lifted_f4d1ae0, 188, 6},
     {0x4d1e50, vertrix_port_object_method_ac_4d1e50, 0, 0},
     {0x4d1e80, vertrix_port_rtl_window_route_4d1e80, 0, 0},
-    {0x4d2020, lifted_message_dispatch, 132, 1},
+    {0x4d2020, vertrix_port_message_dispatch_4d2020, 0, 0},
     {0x4d2170, vertrix_port_command_route_4d2170, 0, 0},
     {0x4d21a0, vertrix_port_idle_check_4d21a0, 0, 0},
     {0x4d21d0, vertrix_port_rtl_window_close_4d21d0, 0, 0},

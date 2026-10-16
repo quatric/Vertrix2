@@ -1798,63 +1798,6 @@
   "virtual": [],
   "address": 5049136
  },
- "message_dispatch": {
-  "callees": {
-   "0x4d0c84": [
-    1,
-    false
-   ],
-   "0x4cb820": [
-    1,
-    false
-   ]
-  },
-  "stack": 132,
-  "arguments": 1,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   19,
-   20,
-   21,
-   42,
-   43,
-   44,
-   45,
-   46,
-   47,
-   48,
-   56,
-   57,
-   58,
-   77,
-   78,
-   79,
-   272,
-   273,
-   274,
-   275,
-   276,
-   277,
-   278,
-   305,
-   306,
-   307,
-   311,
-   312,
-   313,
-   527,
-   528,
-   529,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 5054496
- },
  "f4da3ba": {
   "callees": {
    "0x4e0f8b": [

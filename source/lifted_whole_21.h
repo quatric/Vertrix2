@@ -31,7 +31,6 @@ enum
     LIFTED_OBJECT_IS_IDLE_STACK = 96,
     LIFTED_SCALED_ROUND_STACK = 64,
     LIFTED_RTL_RANGE_TABLE_FIND_STACK = 68,
-    LIFTED_MESSAGE_DISPATCH_STACK = 132,
     LIFTED_F4DA3BA_STACK = 1400,
     LIFTED_F4DF320_STACK = 248
 };
@@ -141,10 +140,6 @@ uint32_t lifted_scaled_round(const VertrixCalls *calls, const VertrixFactoryServ
 uint32_t lifted_rtl_range_table_find(const VertrixCalls *calls,
                                      const VertrixFactoryServices *services,
                                      const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4d2020. */
-uint32_t lifted_message_dispatch(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                 const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4da3ba. */
 uint32_t lifted_f4da3ba(const VertrixCalls *calls, const VertrixFactoryServices *services,
