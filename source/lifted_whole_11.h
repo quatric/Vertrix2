@@ -7,8 +7,7 @@
 enum
 {
     LIFTED_F4202A0_STACK = 696,
-    LIFTED_RENDER_COLOR_BANK_BUILD_STACK = 184,
-    LIFTED_F4E6AE0_STACK = 96
+    LIFTED_RENDER_COLOR_BANK_BUILD_STACK = 184
 };
 
 /* Original 0x4202a0. */
@@ -20,7 +19,4 @@ uint32_t lifted_render_color_bank_build(const VertrixCalls *calls,
                                         const VertrixFactoryServices *services,
                                         const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x4e6ae0. */
-uint32_t lifted_f4e6ae0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
 #endif

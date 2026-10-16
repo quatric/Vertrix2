@@ -2323,22 +2323,6 @@
   "virtual": [],
   "address": 4341408
  },
- "f424180": {
-  "callees": {},
-  "stack": 104,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   19,
-   20,
-   21
-  ],
-  "virtual": [],
-  "address": 4342144
- },
  "f424230": {
   "callees": {
    "0x4ca070": [

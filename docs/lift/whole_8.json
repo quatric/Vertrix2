@@ -3419,29 +3419,6 @@
   ],
   "address": 4986842
  },
- "f4c1e10": {
-  "callees": {
-   "virtual_4c1e2c": [
-    0,
-    false
-   ]
-  },
-  "stack": 80,
-  "arguments": 3,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [
-   [
-    452,
-    12,
-    0
-   ]
-  ],
-  "address": 4988432
- },
  "f4c23f0": {
   "callees": {
    "virtual_4c2490": [
@@ -3869,23 +3846,6 @@
   ],
   "address": 5017824
  },
- "f4ccc40": {
-  "callees": {
-   "0x4dba80": [
-    1,
-    false
-   ]
-  },
-  "stack": 72,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 5033024
- },
  "f4ce740": {
   "callees": {
    "0x4dbf80": [
@@ -4041,27 +4001,6 @@
    ]
   ],
   "address": 5039968
- },
- "f4ce7e0": {
-  "callees": {
-   "0x4dba80": [
-    1,
-    false
-   ]
-  },
-  "stack": 76,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   11,
-   12,
-   13
-  ],
-  "virtual": [],
-  "address": 5040096
  },
  "f4d5360": {
   "callees": {
@@ -4587,20 +4526,6 @@
   ],
   "address": 5116416
  },
- "f4e3698": {
-  "callees": {},
-  "stack": 68,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   0
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 5125784
- },
  "f4e3e00": {
   "callees": {
    "slot_507ca0": [
@@ -4682,31 +4607,6 @@
   ],
   "virtual": [],
   "address": 5134152
- },
- "f4e59c4": {
-  "callees": {
-   "0x4e596c": [
-    0,
-    false
-   ],
-   "0x4f1cd8": [
-    1,
-    false
-   ]
-  },
-  "stack": 84,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   4294967294,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 5134788
  },
  "f4e6c37": {
   "callees": {

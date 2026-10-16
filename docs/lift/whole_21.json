@@ -1845,23 +1845,6 @@
   "virtual": [],
   "address": 5004640
  },
- "f4cd520": {
-  "callees": {
-   "0x4cd544": [
-    4,
-    true
-   ]
-  },
-  "stack": 92,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 5035296
- },
  "rtl_range_table_find": {
   "callees": {},
   "stack": 68,
