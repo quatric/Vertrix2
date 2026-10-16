@@ -11,7 +11,6 @@ enum
     LIFTED_F485700_STACK = 476,
     LIFTED_F487BE0_STACK = 176,
     LIFTED_PATH_LAST_SEPARATOR_STACK = 68,
-    LIFTED_RTL_WRITE_TEXT_CALL_STACK = 100,
     LIFTED_F489A10_STACK = 216,
     LIFTED_F48AC50_STACK = 408,
     LIFTED_F48AD00_STACK = 464,
@@ -44,11 +43,6 @@ uint32_t lifted_f487be0(const VertrixCalls *calls, const VertrixFactoryServices 
 
 /* Original 0x4885a0. */
 uint32_t lifted_path_last_separator(const VertrixCalls *calls,
-                                    const VertrixFactoryServices *services,
-                                    const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x489470. */
-uint32_t lifted_rtl_write_text_call(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services,
                                     const VertrixGlobals *globals, const LiftEntry *entry);
 

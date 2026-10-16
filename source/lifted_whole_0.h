@@ -30,9 +30,7 @@ enum
     LIFTED_F41F500_STACK = 476,
     LIFTED_F420040_STACK = 516,
     LIFTED_F421BE0_STACK = 524,
-    LIFTED_F424230_STACK = 436,
     LIFTED_PIECE_INIT_FROM_KIND_STACK = 68,
-    LIFTED_OBJECT_COMPARE_REGIONS_STACK = 280,
     LIFTED_AI_COMPARE_BOARDS_STACK = 184,
     LIFTED_AI_RECORD_SCORE_STACK = 136,
     LIFTED_SETTINGS_DEFAULTS_STACK = 116,
@@ -137,19 +135,10 @@ uint32_t lifted_f420040(const VertrixCalls *calls, const VertrixFactoryServices 
 uint32_t lifted_f421be0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x424230. */
-uint32_t lifted_f424230(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x425ef0. */
 uint32_t lifted_piece_init_from_kind(const VertrixCalls *calls,
                                      const VertrixFactoryServices *services,
                                      const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x427ae0. */
-uint32_t lifted_object_compare_regions(const VertrixCalls *calls,
-                                       const VertrixFactoryServices *services,
-                                       const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x428110. */
 uint32_t lifted_ai_compare_boards(const VertrixCalls *calls, const VertrixFactoryServices *services,

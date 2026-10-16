@@ -174,6 +174,7 @@
 #include "port_rtlbits.h"
 #include "port_rtlboards.h"
 #include "port_rtlcalls.h"
+#include "port_rtlcomings.h"
 #include "port_rtlconsoles.h"
 #include "port_rtlcontrols.h"
 #include "port_rtldigits.h"
@@ -735,7 +736,7 @@ static const LiftedRoutine routines[] = {
     {0x4241e0, vertrix_port_constant_4241e0, 0, 0},
     {0x4241f0, vertrix_port_constant_4241f0, 0, 0},
     {0x424200, vertrix_port_constant_424200, 0, 0},
-    {0x424230, lifted_f424230, 436, 0},
+    {0x424230, vertrix_port_screen_slot_open_424230, 316, 0},
     {0x424360, lifted_f424360, 668, 0},
     {0x424760, vertrix_port_object_center_titled_424760, 0, 0},
     {0x424790, vertrix_port_game_event_wait_424790, 0, 0},
@@ -764,7 +765,7 @@ static const LiftedRoutine routines[] = {
     {0x4270a0, lifted_ai_search, 516, 6},
     {0x427380, lifted_ai_bomb_search, 268, 8},
     {0x427850, lifted_f427850, 468, 0},
-    {0x427ae0, lifted_object_compare_regions, 280, 0},
+    {0x427ae0, vertrix_port_object_compare_regions_427ae0, 0, 0},
     {0x427c10, vertrix_port_ai_features_427c10, 0, 0},
     {0x427e10, lifted_ai_mode_flags, 76, 0},
     {0x428110, lifted_ai_compare_boards, 184, 0},
@@ -1218,7 +1219,7 @@ static const LiftedRoutine routines[] = {
     {0x444290, vertrix_port_actor_glide_step_444290, 0, 0},
     {0x4443d0, lifted_f4443d0, 112, 0},
     {0x444550, vertrix_port_piece_fall_444550, 0, 0},
-    {0x444700, lifted_f444700, 132, 0},
+    {0x444700, vertrix_port_actor_bring_on_444700, 0, 0},
     {0x444850, vertrix_port_actor_fall_step_444850, 0, 0},
     {0x444970, vertrix_port_actor_shade_step_444970, 0, 0},
     {0x444a30, vertrix_port_actor_step_flash_444a30, 0, 0},
@@ -1758,7 +1759,7 @@ static const LiftedRoutine routines[] = {
     {0x459ec0, vertrix_port_title_letter_digit_call_459ec0, 0, 0},
     {0x45a0c0, vertrix_port_title_letter_launch_call_45a0c0, 0, 0},
     {0x45a1c0, vertrix_port_actor_orbit_frame, 0, 0},
-    {0x45a290, lifted_title_letter_fight_count_call, 144, 0},
+    {0x45a290, vertrix_port_title_letter_fight_count_45a290, 0, 0},
     {0x45a3e0, vertrix_port_actor_animate_drop_45a3e0, 0, 0},
     {0x45a440, vertrix_port_title_letter_fight_restart_45a440, 0, 0},
     {0x45a4f0, vertrix_port_title_letter_fight_fly_45a4f0, 0, 0},
@@ -2399,7 +2400,7 @@ static const LiftedRoutine routines[] = {
     {0x489170, vertrix_port_guarded_copy_489170, 0, 0},
     {0x489230, vertrix_port_stream_read_exact_489230, 0, 0},
     {0x4893c0, vertrix_port_file_text_read_4893c0, 0, 0},
-    {0x489470, lifted_rtl_write_text_call, 100, 0},
+    {0x489470, vertrix_port_stream_write_text_489470, 0, 0},
     {0x4895b0, vertrix_port_find_attribute_flag_4895b0, 292, 0},
     {0x4895e0, vertrix_port_find_succeeded, 292, 0},
     {0x489610, vertrix_port_find_size_field_489610, 296, 0},

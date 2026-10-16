@@ -21,7 +21,6 @@ enum
     LIFTED_F457F40_STACK = 148,
     LIFTED_F4585C0_STACK = 144,
     LIFTED_F4594A0_STACK = 140,
-    LIFTED_TITLE_LETTER_FIGHT_COUNT_CALL_STACK = 144,
     LIFTED_F45AD20_STACK = 140,
     LIFTED_F45B190_STACK = 168,
     LIFTED_EFFECT_ATTACK_45B9C0_STACK = 104
@@ -90,12 +89,6 @@ uint32_t lifted_f4585c0(const VertrixCalls *calls, const VertrixFactoryServices 
 /* Original 0x4594a0. */
 uint32_t lifted_f4594a0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x45a290. */
-uint32_t lifted_title_letter_fight_count_call(const VertrixCalls *calls,
-                                              const VertrixFactoryServices *services,
-                                              const VertrixGlobals *globals,
-                                              const LiftEntry *entry);
 
 /* Original 0x45ad20. */
 uint32_t lifted_f45ad20(const VertrixCalls *calls, const VertrixFactoryServices *services,

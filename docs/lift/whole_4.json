@@ -238,27 +238,6 @@
   "virtual": [],
   "address": 4752800
  },
- "rtl_write_text_call": {
-  "callees": {
-   "0x4d79c0": [
-    0,
-    false
-   ]
-  },
-  "stack": 100,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   7,
-   8,
-   9
-  ],
-  "virtual": [],
-  "address": 4756592
- },
  "f489a10": {
   "callees": {
    "0x4d93f0": [

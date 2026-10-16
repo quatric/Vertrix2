@@ -34,7 +34,6 @@ enum
     LIFTED_PATTERN_TABLES_STACK = 148,
     LIFTED_F442140_STACK = 108,
     LIFTED_F443DC0_STACK = 152,
-    LIFTED_F444700_STACK = 132,
     LIFTED_F449090_STACK = 124,
     LIFTED_SURFACE_FILL_STACK = 96,
     LIFTED_F47AB70_STACK = 100,
@@ -189,10 +188,6 @@ uint32_t lifted_f442140(const VertrixCalls *calls, const VertrixFactoryServices 
 
 /* Original 0x443dc0. */
 uint32_t lifted_f443dc0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x444700. */
-uint32_t lifted_f444700(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x449090. */
