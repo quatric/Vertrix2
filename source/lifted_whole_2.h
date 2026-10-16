@@ -7,7 +7,6 @@
 enum
 {
     LIFTED_F44DBB0_STACK = 124,
-    LIFTED_BLOCK_ORBIT_UPDATE_STACK = 184,
     LIFTED_F44DFB0_STACK = 188,
     LIFTED_F44E920_STACK = 136,
     LIFTED_F44E9F0_STACK = 140,
@@ -24,11 +23,6 @@ enum
 /* Original 0x44dbb0. */
 uint32_t lifted_f44dbb0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x44de20. */
-uint32_t lifted_block_orbit_update(const VertrixCalls *calls,
-                                   const VertrixFactoryServices *services,
-                                   const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x44dfb0. */
 uint32_t lifted_f44dfb0(const VertrixCalls *calls, const VertrixFactoryServices *services,

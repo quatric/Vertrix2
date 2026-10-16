@@ -27,7 +27,6 @@ enum
     LIFTED_DELAY_ACTOR_SPAWN_STACK = 128,
     LIFTED_SURFACE_BOUNDS_STACK = 124,
     LIFTED_F484B60_STACK = 752,
-    LIFTED_RENDER_PALETTE_WEIGHTED_PIXEL_STACK = 92,
     LIFTED_OBJECT_IS_IDLE_STACK = 96,
     LIFTED_SCALED_ROUND_STACK = 64,
     LIFTED_RTL_RANGE_TABLE_FIND_STACK = 68,
@@ -121,12 +120,6 @@ uint32_t lifted_surface_bounds(const VertrixCalls *calls, const VertrixFactorySe
 /* Original 0x484b60. */
 uint32_t lifted_f484b60(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x490340. */
-uint32_t lifted_render_palette_weighted_pixel(const VertrixCalls *calls,
-                                              const VertrixFactoryServices *services,
-                                              const VertrixGlobals *globals,
-                                              const LiftEntry *entry);
 
 /* Original 0x4c0b51. */
 uint32_t lifted_object_is_idle(const VertrixCalls *calls, const VertrixFactoryServices *services,

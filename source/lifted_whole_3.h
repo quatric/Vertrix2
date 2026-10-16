@@ -34,7 +34,6 @@ enum
     LIFTED_SURFACE_FLIP_VERTICAL_STACK = 112,
     LIFTED_F47BD80_STACK = 160,
     LIFTED_SURFACE_BLIT_STACK = 104,
-    LIFTED_F47E360_STACK = 216,
     LIFTED_F47E680_STACK = 188,
     LIFTED_F47EAB0_STACK = 96,
     LIFTED_F47EDA0_STACK = 772
@@ -152,10 +151,6 @@ uint32_t lifted_f47bd80(const VertrixCalls *calls, const VertrixFactoryServices 
 /* Original 0x47ce10. */
 uint32_t lifted_surface_blit(const VertrixCalls *calls, const VertrixFactoryServices *services,
                              const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x47e360. */
-uint32_t lifted_f47e360(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x47e680. */
 uint32_t lifted_f47e680(const VertrixCalls *calls, const VertrixFactoryServices *services,

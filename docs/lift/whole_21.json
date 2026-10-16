@@ -1723,29 +1723,6 @@
   ],
   "address": 4737888
  },
- "render_palette_weighted_pixel": {
-  "callees": {},
-  "stack": 92,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [
-   5552128,
-   5559760,
-   5632496,
-   5632500,
-   6010724,
-   6010728
-  ],
-  "pointer_maybe": [],
-  "constants": [
-   7,
-   8,
-   9
-  ],
-  "virtual": [],
-  "address": 4784960
- },
  "object_is_idle": {
   "callees": {},
   "stack": 96,
