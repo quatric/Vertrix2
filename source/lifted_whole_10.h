@@ -14,14 +14,7 @@ enum
     LIFTED_F4D06D0_STACK = 136,
     LIFTED_F4D1A50_STACK = 168,
     LIFTED_F4D1AE0_STACK = 188,
-    LIFTED_F4E0C56_STACK = 212,
-    LIFTED_F4E5710_STACK = 108,
-    LIFTED_F4E5728_STACK = 108,
-    LIFTED_F4E576C_STACK = 108,
-    LIFTED_F4E5780_STACK = 108,
-    LIFTED_F4E57A4_STACK = 108,
-    LIFTED_F4ECF33_STACK = 80,
-    LIFTED_F4ECF49_STACK = 72
+    LIFTED_F4E0C56_STACK = 212
 };
 
 /* Original 0x474560. */
@@ -60,31 +53,4 @@ uint32_t lifted_f4d1ae0(const VertrixCalls *calls, const VertrixFactoryServices 
 uint32_t lifted_f4e0c56(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x4e5710. */
-uint32_t lifted_f4e5710(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4e5728. */
-uint32_t lifted_f4e5728(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4e576c. */
-uint32_t lifted_f4e576c(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4e5780. */
-uint32_t lifted_f4e5780(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4e57a4. */
-uint32_t lifted_f4e57a4(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4ecf33. */
-uint32_t lifted_f4ecf33(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4ecf49. */
-uint32_t lifted_f4ecf49(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
 #endif

@@ -12,15 +12,11 @@ enum
     LIFTED_F4CFD20_STACK = 240,
     LIFTED_F4D2710_STACK = 300,
     LIFTED_F4D50D0_STACK = 416,
-    LIFTED_F4D79C0_STACK = 132,
     LIFTED_F4DABBE_STACK = 376,
     LIFTED_F4DFAC0_STACK = 92,
     LIFTED_F4DFB24_STACK = 168,
     LIFTED_F4E3AC0_STACK = 376,
     LIFTED_F4E63B0_STACK = 156,
-    LIFTED_F4E65B0_STACK = 96,
-    LIFTED_F4E6B5C_STACK = 88,
-    LIFTED_F4E6BAC_STACK = 84,
     LIFTED_F4E7F18_STACK = 116,
     LIFTED_F4E843C_STACK = 136,
     LIFTED_F4E969C_STACK = 120,
@@ -52,10 +48,6 @@ uint32_t lifted_f4d2710(const VertrixCalls *calls, const VertrixFactoryServices 
 uint32_t lifted_f4d50d0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x4d79c0. */
-uint32_t lifted_f4d79c0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x4dabbe. */
 uint32_t lifted_f4dabbe(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
@@ -74,18 +66,6 @@ uint32_t lifted_f4e3ac0(const VertrixCalls *calls, const VertrixFactoryServices 
 
 /* Original 0x4e63b0. */
 uint32_t lifted_f4e63b0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4e65b0. */
-uint32_t lifted_f4e65b0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4e6b5c. */
-uint32_t lifted_f4e6b5c(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4e6bac. */
-uint32_t lifted_f4e6bac(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4e7f18. */

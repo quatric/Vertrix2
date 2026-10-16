@@ -12,7 +12,6 @@ enum
     LIFTED_BOARD_PIECE_PAST_EDGE_STACK = 100,
     LIFTED_BOARD_PIECE_PAST_EDGE_432080_STACK = 100,
     LIFTED_BOARD_ANY_FALLING_STACK = 348,
-    LIFTED_F432980_STACK = 368,
     LIFTED_F432A30_STACK = 392,
     LIFTED_BOARD_SWAP_SLOTS_STACK = 72,
     LIFTED_F433840_STACK = 272,
@@ -32,9 +31,7 @@ enum
     LIFTED_F440FC0_STACK = 176,
     LIFTED_F441600_STACK = 496,
     LIFTED_F441B70_STACK = 408,
-    LIFTED_F4429A0_STACK = 92,
     LIFTED_F443550_STACK = 132,
-    LIFTED_F443AB0_STACK = 96,
     LIFTED_F444020_STACK = 160,
     LIFTED_F4443D0_STACK = 112,
     LIFTED_F444970_STACK = 124,
@@ -72,10 +69,6 @@ uint32_t lifted_board_piece_past_edge_432080(const VertrixCalls *calls,
 /* Original 0x4328a0. */
 uint32_t lifted_board_any_falling(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x432980. */
-uint32_t lifted_f432980(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x432a30. */
 uint32_t lifted_f432a30(const VertrixCalls *calls, const VertrixFactoryServices *services,
@@ -157,16 +150,8 @@ uint32_t lifted_f441600(const VertrixCalls *calls, const VertrixFactoryServices 
 uint32_t lifted_f441b70(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x4429a0. */
-uint32_t lifted_f4429a0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x443550. */
 uint32_t lifted_f443550(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x443ab0. */
-uint32_t lifted_f443ab0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x444020. */

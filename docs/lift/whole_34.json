@@ -101,38 +101,5 @@
    ]
   ],
   "address": 4241120
- },
- "f40c160": {
-  "callees": {
-   "virtual_40c198": [
-    2,
-    false
-   ]
-  },
-  "stack": 92,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2,
-   3,
-   4,
-   5,
-   31,
-   32,
-   33
-  ],
-  "virtual": [
-   [
-    0,
-    36,
-    2
-   ]
-  ],
-  "address": 4243808
  }
 }

@@ -16,7 +16,6 @@ enum
     LIFTED_F450FF0_STACK = 304,
     LIFTED_STATE_DRAIN_451580_STACK = 124,
     LIFTED_OBJECT_POST_LOCK_STACK = 188,
-    LIFTED_F452370_STACK = 88,
     LIFTED_EFFECT_ATTACK_454E90_STACK = 104,
     LIFTED_EFFECT_ATTACK_455B20_STACK = 104,
     LIFTED_EFFECT_ATTACK_455CA0_STACK = 104,
@@ -78,10 +77,6 @@ uint32_t lifted_state_drain_451580(const VertrixCalls *calls,
 /* Original 0x4517c0. */
 uint32_t lifted_object_post_lock(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                  const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x452370. */
-uint32_t lifted_f452370(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x454e90. */
 uint32_t lifted_effect_attack_454e90(const VertrixCalls *calls,

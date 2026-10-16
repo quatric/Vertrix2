@@ -15,13 +15,11 @@ enum
     LIFTED_CURVE_TABLE_BUILD_STACK = 120,
     LIFTED_OBJECT_FREE_TREE_STACK = 116,
     LIFTED_OBJECT_ATTACH_ITEM_STACK = 100,
-    LIFTED_F411280_STACK = 80,
     LIFTED_F415580_STACK = 976,
     LIFTED_TABLE_FIND_MATCHING_STACK = 88,
     LIFTED_F416140_STACK = 244,
     LIFTED_F416500_STACK = 372,
     LIFTED_POINT_LIST_ADD_STACK = 76,
-    LIFTED_F417690_STACK = 364,
     LIFTED_TABLE_RANDOM_EMPTY_STACK = 164,
     LIFTED_TABLE_RANDOM_EMPTY_417ED0_STACK = 164,
     LIFTED_RTL_CONSTRUCT_DERIVED_STREAM_STACK = 68,
@@ -53,8 +51,7 @@ enum
     LIFTED_CHOICE_GRID_PICK_CELL_STACK = 112,
     LIFTED_CHOICE_GRID_AVAILABLE_STACK = 64,
     LIFTED_F42A540_STACK = 276,
-    LIFTED_PIECE_ACTOR_CONSTRUCT_PLACED_STACK = 180,
-    LIFTED_F42B290_STACK = 96
+    LIFTED_PIECE_ACTOR_CONSTRUCT_PLACED_STACK = 180
 };
 
 /* Original 0x401010. */
@@ -94,10 +91,6 @@ uint32_t lifted_object_attach_item(const VertrixCalls *calls,
                                    const VertrixFactoryServices *services,
                                    const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x411280. */
-uint32_t lifted_f411280(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x415580. */
 uint32_t lifted_f415580(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
@@ -118,10 +111,6 @@ uint32_t lifted_f416500(const VertrixCalls *calls, const VertrixFactoryServices 
 /* Original 0x416c10. */
 uint32_t lifted_point_list_add(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x417690. */
-uint32_t lifted_f417690(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x417e60. */
 uint32_t lifted_table_random_empty(const VertrixCalls *calls,
@@ -258,9 +247,5 @@ uint32_t lifted_f42a540(const VertrixCalls *calls, const VertrixFactoryServices 
 uint32_t lifted_piece_actor_construct_placed(const VertrixCalls *calls,
                                              const VertrixFactoryServices *services,
                                              const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x42b290. */
-uint32_t lifted_f42b290(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 #endif

@@ -513,41 +513,6 @@
   ],
   "address": 4528064
  },
- "f452370": {
-  "callees": {
-   "virtual_452399": [
-    0,
-    false
-   ],
-   "0x43bbf0": [
-    0,
-    false
-   ]
-  },
-  "stack": 88,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   348,
-   944
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2,
-   4294967295
-  ],
-  "virtual": [
-   [
-    344,
-    4,
-    0
-   ]
-  ],
-  "address": 4531056
- },
  "effect_attack_454e90": {
   "callees": {
    "0x43bb60": [
