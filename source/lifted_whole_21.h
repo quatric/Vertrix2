@@ -8,10 +8,8 @@ enum
 {
     LIFTED_WINDOW_TABLES_STACK = 208,
     LIFTED_MIXER_PLAYBACK_TICK_STACK = 88,
-    LIFTED_F41B310_STACK = 1060,
     LIFTED_F41CC30_STACK = 704,
     LIFTED_F41E780_STACK = 548,
-    LIFTED_F424360_STACK = 668,
     LIFTED_AI_FALLBACK_STACK = 252,
     LIFTED_AI_CHAIN_SEARCH_STACK = 600,
     LIFTED_AI_BOMB_SEARCH_STACK = 268,
@@ -35,20 +33,12 @@ uint32_t lifted_mixer_playback_tick(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services,
                                     const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x41b310. */
-uint32_t lifted_f41b310(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x41cc30. */
 uint32_t lifted_f41cc30(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x41e780. */
 uint32_t lifted_f41e780(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x424360. */
-uint32_t lifted_f424360(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x426240. */
