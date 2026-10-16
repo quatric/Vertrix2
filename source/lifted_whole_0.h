@@ -42,9 +42,7 @@ enum
     LIFTED_OBJECT_COMPARE_REGIONS_STACK = 280,
     LIFTED_AI_COMPARE_BOARDS_STACK = 184,
     LIFTED_AI_RECORD_SCORE_STACK = 136,
-    LIFTED_AI_FIND_BEST_SLOT_STACK = 104,
     LIFTED_SETTINGS_DEFAULTS_STACK = 116,
-    LIFTED_CHOICE_GRID_PICK_CELL_STACK = 112,
     LIFTED_F42A540_STACK = 276,
     LIFTED_PIECE_ACTOR_CONSTRUCT_PLACED_STACK = 180
 };
@@ -197,18 +195,9 @@ uint32_t lifted_ai_compare_boards(const VertrixCalls *calls, const VertrixFactor
 uint32_t lifted_ai_record_score(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                 const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x429000. */
-uint32_t lifted_ai_find_best_slot(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                  const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x4290c0. */
 uint32_t lifted_settings_defaults(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                   const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x429fe0. */
-uint32_t lifted_choice_grid_pick_cell(const VertrixCalls *calls,
-                                      const VertrixFactoryServices *services,
-                                      const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x42a540. */
 uint32_t lifted_f42a540(const VertrixCalls *calls, const VertrixFactoryServices *services,

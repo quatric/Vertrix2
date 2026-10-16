@@ -728,42 +728,6 @@
   ],
   "address": 5008512
  },
- "rtl_read_into": {
-  "callees": {
-   "0x4db950": [
-    3,
-    false
-   ],
-   "0x4ca370": [
-    0,
-    false
-   ],
-   "0x4ca670": [
-    0,
-    false
-   ],
-   "0x4ca6c0": [
-    0,
-    false
-   ]
-  },
-  "stack": 384,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   1,
-   2,
-   3,
-   255,
-   256,
-   257
-  ],
-  "virtual": [],
-  "address": 5093568
- },
  "f4ec68c": {
   "callees": {
    "0x4ea190": [

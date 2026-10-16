@@ -2346,61 +2346,6 @@
   "virtual": [],
   "address": 4668656
  },
- "f473e60": {
-  "callees": {
-   "0x4ca000": [
-    0,
-    false
-   ],
-   "0x489040": [
-    0,
-    false
-   ],
-   "0x473fc0": [
-    0,
-    false
-   ],
-   "virtual_473ec2": [
-    0,
-    false
-   ],
-   "0x488b10": [
-    0,
-    false
-   ],
-   "virtual_473efb": [
-    0,
-    false
-   ]
-  },
-  "stack": 136,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2,
-   23,
-   24,
-   25
-  ],
-  "virtual": [
-   [
-    0,
-    4,
-    0
-   ],
-   [
-    0,
-    84,
-    0
-   ]
-  ],
-  "address": 4669024
- },
  "f4741a0": {
   "callees": {
    "0x481b20": [
@@ -2630,27 +2575,6 @@
   ],
   "virtual": [],
   "address": 4703152
- },
- "surface_decimate": {
-  "callees": {},
-  "stack": 88,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   0
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   3,
-   4,
-   5,
-   7,
-   8,
-   9
-  ],
-  "virtual": [],
-  "address": 4705632
  },
  "surface_blit": {
   "callees": {
@@ -2978,93 +2902,5 @@
    ]
   ],
   "address": 4713888
- },
- "f47f790": {
-  "callees": {
-   "0x47fc10": [
-    0,
-    false
-   ],
-   "0x4eb5c0": [
-    0,
-    false
-   ],
-   "virtual_47f7fe": [
-    5,
-    false
-   ],
-   "0x480080": [
-    0,
-    false
-   ]
-  },
-  "stack": 656,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   0
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   535,
-   536,
-   537,
-   4294967295
-  ],
-  "virtual": [
-   [
-    0,
-    80,
-    5
-   ]
-  ],
-  "address": 4716432
- },
- "f47f830": {
-  "callees": {
-   "0x47fc10": [
-    0,
-    false
-   ],
-   "0x4eb5c0": [
-    0,
-    false
-   ],
-   "virtual_47f89e": [
-    5,
-    false
-   ],
-   "0x480080": [
-    0,
-    false
-   ]
-  },
-  "stack": 656,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   0
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   535,
-   536,
-   537,
-   4294967295
-  ],
-  "virtual": [
-   [
-    0,
-    80,
-    5
-   ]
-  ],
-  "address": 4716592
  }
 }

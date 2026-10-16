@@ -18,7 +18,6 @@ enum
     LIFTED_TEXT_WRAP_STACK = 216,
     LIFTED_F4C6020_STACK = 148,
     LIFTED_F4C6C80_STACK = 200,
-    LIFTED_RTL_READ_INTO_STACK = 384,
     LIFTED_F4EC68C_STACK = 96
 };
 
@@ -72,10 +71,6 @@ uint32_t lifted_f4c6020(const VertrixCalls *calls, const VertrixFactoryServices 
 /* Original 0x4c6c80. */
 uint32_t lifted_f4c6c80(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4db8c0. */
-uint32_t lifted_rtl_read_into(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                              const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4ec68c. */
 uint32_t lifted_f4ec68c(const VertrixCalls *calls, const VertrixFactoryServices *services,
