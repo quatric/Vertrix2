@@ -7,7 +7,6 @@
 enum
 {
     LIFTED_F41D6D0_STACK = 392,
-    LIFTED_F423BC0_STACK = 220,
     LIFTED_BOARDS_CONVERT_COUNTS_STACK = 208,
     LIFTED_BOARDS_CONVERT_RANDOM_STACK = 220,
     LIFTED_F4375F0_STACK = 176,
@@ -23,10 +22,6 @@ enum
 
 /* Original 0x41d6d0. */
 uint32_t lifted_f41d6d0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x423bc0. */
-uint32_t lifted_f423bc0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x436b40. */

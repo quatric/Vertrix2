@@ -195,6 +195,7 @@
 #include "port_rtlframes.h"
 #include "port_rtlgrids.h"
 #include "port_rtlguards.h"
+#include "port_rtlhalls.h"
 #include "port_rtlhandlers.h"
 #include "port_rtlhandles.h"
 #include "port_rtlhooks.h"
@@ -224,6 +225,7 @@
 #include "port_rtlreals.h"
 #include "port_rtlrecords.h"
 #include "port_rtlrings.h"
+#include "port_rtlrooms.h"
 #include "port_rtlruns.h"
 #include "port_rtlsections.h"
 #include "port_rtlsetups.h"
@@ -702,20 +704,20 @@ static const LiftedRoutine routines[] = {
     {0x41df30, lifted_f41df30, 1088, 0},
     {0x41e280, vertrix_port_scene_load_named_41e280, 0, 0},
     {0x41e310, lifted_f41e310, 808, 0},
-    {0x41e5e0, lifted_f41e5e0, 724, 0},
+    {0x41e5e0, vertrix_port_picture_tables_load_41e5e0, 612, 0},
     {0x41e780, lifted_f41e780, 548, 0},
     {0x41eab0, lifted_f41eab0, 308, 0},
     {0x41ede0, vertrix_port_screen_finish_41ede0, 0, 0},
     {0x41efe0, vertrix_port_scene_leave_41efe0, 0, 0},
-    {0x41f080, lifted_f41f080, 484, 0},
+    {0x41f080, vertrix_port_screen_title_music_41f080, 300, 0},
     {0x41f210, vertrix_port_screen_state_41f210, 0, 0},
     {0x41f350, vertrix_port_screen_state_41f350, 0, 0},
     {0x41f460, vertrix_port_scene_leave_41f460, 0, 0},
-    {0x41f500, lifted_f41f500, 476, 0},
+    {0x41f500, vertrix_port_screen_title_room_41f500, 300, 0},
     {0x41f680, vertrix_port_menu_screen_frame_41f680, 0, 0},
     {0x41f800, vertrix_port_screen_state_41f800, 0, 0},
     {0x41f910, vertrix_port_scene_leave_41f910, 0, 0},
-    {0x41f9b0, lifted_f41f9b0, 476, 0},
+    {0x41f9b0, vertrix_port_level_screen_setup_41f9b0, 304, 0},
     {0x41fb40, vertrix_port_screen_state_41fb40, 0, 0},
     {0x41fc70, vertrix_port_scene_leave_options_41fc70, 0, 0},
     {0x41fd20, vertrix_port_game_teardown_41fd20, 0, 0},
@@ -735,8 +737,8 @@ static const LiftedRoutine routines[] = {
     {0x422c50, lifted_f422c50, 292, 0},
     {0x422f50, lifted_f422f50, 360, 0},
     {0x423600, vertrix_port_picture_screen_frame_423600, 0, 0},
-    {0x4237d0, lifted_f4237d0, 212, 0},
-    {0x423bc0, lifted_f423bc0, 220, 0},
+    {0x4237d0, vertrix_port_screen_room_refresh_4237d0, 0, 0},
+    {0x423bc0, vertrix_port_level_room_refresh_423bc0, 0, 0},
     {0x423d70, vertrix_port_script_object_load, 0, 0},
     {0x423dc0, vertrix_port_script_object_open_423dc0, 544, 0},
     {0x423ea0, vertrix_port_object_named_423ea0, 540, 0},
@@ -1194,7 +1196,7 @@ static const LiftedRoutine routines[] = {
     {0x43fa90, vertrix_port_font_glyphs_map_1a6, 0, 0},
     {0x43fb70, vertrix_port_font_glyphs_map_1d6, 0, 0},
     {0x43fc50, lifted_font_maps_initialize, 520, 0},
-    {0x440490, lifted_f440490, 136, 1},
+    {0x440490, vertrix_port_text_glyph_row_440490, 0, 0},
     {0x440610, vertrix_port_text_measure, 0, 0},
     {0x4408e0, vertrix_port_text_measure_layout, 0, 0},
     {0x440990, vertrix_port_text_layout, 0, 0},
@@ -1251,7 +1253,7 @@ static const LiftedRoutine routines[] = {
     {0x445a00, vertrix_port_actor_sound_wait_445a00, 0, 0},
     {0x445a90, vertrix_port_actor_bob_445a90, 0, 0},
     {0x445b10, vertrix_port_actor_bob_445b10, 0, 0},
-    {0x445b90, lifted_f445b90, 180, 0},
+    {0x445b90, vertrix_port_actor_pointer_steer_445b90, 0, 0},
     {0x445d10, vertrix_port_actor_callback_step_445d10, 0, 0},
     {0x445d80, vertrix_port_actor_click_step_445d80, 0, 0},
     {0x445e90, vertrix_port_actor_callback_step_445e90, 0, 0},
@@ -1912,7 +1914,7 @@ static const LiftedRoutine routines[] = {
     {0x45fa70, vertrix_port_cursor_actors_update, 0, 0},
     {0x45fab0, vertrix_port_cursor_actors_draw, 0, 0},
     {0x45fb00, lifted_label_frame, 228, 5},
-    {0x45fc80, lifted_f45fc80, 232, 5},
+    {0x45fc80, vertrix_port_text_panel_make_45fc80, 0, 0},
     {0x45fe10, vertrix_port_label_box_45fe10, 0, 0},
     {0x45fee0, vertrix_port_plain_box_45fee0, 0, 0},
     {0x45ffb0, vertrix_port_menu_item_construct_45ffb0, 0, 0},
