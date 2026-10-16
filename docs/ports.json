@@ -6654,6 +6654,11 @@
   "lifted": "lifted_f45ac70",
   "chunk": "whole_2"
  },
+ "0x45ad20": {
+  "port": "vertrix_port_menu_key_pick_45ad20",
+  "lifted": "lifted_f45ad20",
+  "chunk": "whole_2"
+ },
  "0x45aea0": {
   "port": "vertrix_port_picture_play_update_45aea0",
   "lifted": "lifted_f45aea0",
@@ -7839,6 +7844,11 @@
   "lifted": "lifted_resource_entry_call_473cd0",
   "chunk": "whole_3"
  },
+ "0x473cf0": {
+  "port": "vertrix_port_bitmap_load_473cf0",
+  "lifted": "lifted_bitmap_load",
+  "chunk": "whole_3"
+ },
  "0x473e60": {
   "port": "vertrix_port_guarded_object_load_473e60",
   "lifted": "lifted_f473e60",
@@ -8598,6 +8608,11 @@
   "port": "vertrix_port_circle_points_479e50",
   "lifted": "lifted_circle_points",
   "chunk": "whole_8"
+ },
+ "0x47c3b0": {
+  "port": "vertrix_port_surface_fill_rect_47c3b0",
+  "lifted": "lifted_f47c3b0",
+  "chunk": "whole_3"
  },
  "0x47c520": {
   "port": "vertrix_port_draw_outline",
@@ -14907,6 +14922,11 @@
  "0x4d5180": {
   "port": "vertrix_port_frame_window_activate_4d5180",
   "lifted": "lifted_f4d5180",
+  "chunk": "whole_5"
+ },
+ "0x4d51c0": {
+  "port": "vertrix_port_atom_pair_answer_4d51c0",
+  "lifted": "lifted_f4d51c0",
   "chunk": "whole_5"
  },
  "0x4d5330": {

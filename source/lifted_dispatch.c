@@ -171,6 +171,8 @@
 #include "port_rows.h"
 #include "port_rtl.h"
 #include "port_rtlarrays.h"
+#include "port_rtlatoms.h"
+#include "port_rtlbitmaps.h"
 #include "port_rtlbits.h"
 #include "port_rtlblits.h"
 #include "port_rtlboards.h"
@@ -201,6 +203,7 @@
 #include "port_rtllocks.h"
 #include "port_rtllookups.h"
 #include "port_rtlloops.h"
+#include "port_rtlmenus2.h"
 #include "port_rtlmessages.h"
 #include "port_rtlmixed.h"
 #include "port_rtlmodes.h"
@@ -1776,7 +1779,7 @@ static const LiftedRoutine routines[] = {
     {0x45aab0, vertrix_port_actor_player_pick_45aab0, 0, 0},
     {0x45abd0, vertrix_port_player_message_show_45abd0, 0, 0},
     {0x45ac70, vertrix_port_actor_animation_step_45ac70, 0, 0},
-    {0x45ad20, lifted_f45ad20, 140, 0},
+    {0x45ad20, vertrix_port_menu_key_pick_45ad20, 0, 0},
     {0x45aea0, vertrix_port_picture_play_update_45aea0, 0, 0},
     {0x45af40, vertrix_port_actor_glide_update_45af40, 0, 0},
     {0x45afe0, vertrix_port_actor_wander, 0, 0},
@@ -2043,7 +2046,7 @@ static const LiftedRoutine routines[] = {
     {0x473960, vertrix_port_key_bind_473960, 0, 0},
     {0x473af0, vertrix_port_pair_scan_473af0, 0, 0},
     {0x473cd0, vertrix_port_stream_open_513e60, 0, 0},
-    {0x473cf0, lifted_bitmap_load, 232, 0},
+    {0x473cf0, vertrix_port_bitmap_load_473cf0, 0, 0},
     {0x473e60, vertrix_port_guarded_object_load_473e60, 0, 0},
     {0x473f10, vertrix_port_bitmap_file_read, 320, 0},
     {0x473fc0, vertrix_port_surface_save_bitmap_473fc0, 0, 0},
@@ -2207,7 +2210,7 @@ static const LiftedRoutine routines[] = {
     {0x47a040, lifted_surface_fade, 280, 2},
     {0x47ab70, lifted_f47ab70, 100, 0},
     {0x47bd80, lifted_f47bd80, 160, 3},
-    {0x47c3b0, lifted_f47c3b0, 96, 2},
+    {0x47c3b0, vertrix_port_surface_fill_rect_47c3b0, 0, 0},
     {0x47c520, vertrix_port_draw_outline, 0, 0},
     {0x47c710, vertrix_port_surface_fill_clipped_47c710, 0, 0},
     {0x47c930, vertrix_port_surface_blend_47c930, 0, 0},
@@ -3571,7 +3574,7 @@ static const LiftedRoutine routines[] = {
     {0x4d50d0, vertrix_port_files_dropped_4d50d0, 280, 0},
     {0x4d5150, vertrix_port_frame_window_call_4d5150, 0, 0},
     {0x4d5180, vertrix_port_frame_window_activate_4d5180, 0, 0},
-    {0x4d51c0, lifted_f4d51c0, 412, 0},
+    {0x4d51c0, vertrix_port_atom_pair_answer_4d51c0, 276, 0},
     {0x4d5330, vertrix_port_import_4f1a60_4d5330, 0, 0},
     {0x4d5350, vertrix_port_object_dword_4d5350, 0, 0},
     {0x4d5360, vertrix_port_rtl_window_state_4d5360, 0, 0},
