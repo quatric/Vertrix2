@@ -1289,51 +1289,5 @@
   ],
   "virtual": [],
   "address": 5154112
- },
- "f4eb910": {
-  "callees": {
-   "0x4dae70": [
-    0,
-    false
-   ]
-  },
-  "stack": 92,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   3,
-   4,
-   5,
-   42,
-   43,
-   44,
-   96,
-   97,
-   98,
-   99,
-   100,
-   109,
-   110,
-   111,
-   113,
-   114,
-   115,
-   116,
-   117,
-   118,
-   119,
-   120,
-   511,
-   512,
-   513,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 5159184
  }
 }

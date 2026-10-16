@@ -175,6 +175,7 @@
 #include "port_rtlboards.h"
 #include "port_rtlcalls.h"
 #include "port_rtlconsoles.h"
+#include "port_rtlcontrols.h"
 #include "port_rtldigits.h"
 #include "port_rtldrains.h"
 #include "port_rtldraws.h"
@@ -198,6 +199,7 @@
 #include "port_rtlloops.h"
 #include "port_rtlmessages.h"
 #include "port_rtlmixed.h"
+#include "port_rtlmodes.h"
 #include "port_rtlowners.h"
 #include "port_rtlpanels.h"
 #include "port_rtlparses.h"
@@ -2189,7 +2191,7 @@ static const LiftedRoutine routines[] = {
     {0x478f50, lifted_surface_fill, 96, 0},
     {0x4792d0, lifted_surface_bounds, 124, 1},
     {0x4797f0, vertrix_port_image_alpha_from_mask, 0, 0},
-    {0x4798b0, lifted_f4798b0, 96, 0},
+    {0x4798b0, vertrix_port_picture_shade_4798b0, 0, 0},
     {0x4799f0, vertrix_port_image_alpha_key, 0, 0},
     {0x479a40, vertrix_port_pixel_pack, 0, 0},
     {0x479b30, vertrix_port_surface_cell_address_479b30, 0, 0},
@@ -3487,7 +3489,7 @@ static const LiftedRoutine routines[] = {
     {0x4d0740, vertrix_port_rtl_message_dispatch_4d0740, 0, 0},
     {0x4d0b30, lifted_rtl_range_table_find, 68, 4},
     {0x4d16b0, vertrix_port_rtl_record_mark_4d16b0, 0, 0},
-    {0x4d1710, lifted_f4d1710, 160, 0},
+    {0x4d1710, vertrix_port_control_command_4d1710, 0, 0},
     {0x4d1840, vertrix_port_rtl_parent_form_4d1840, 0, 0},
     {0x4d1890, vertrix_port_rtl_owner_handle_4d1890, 0, 0},
     {0x4d1900, vertrix_port_window_top_parent_4d1900, 0, 0},
@@ -3568,7 +3570,7 @@ static const LiftedRoutine routines[] = {
     {0x4d5330, vertrix_port_import_4f1a60_4d5330, 0, 0},
     {0x4d5350, vertrix_port_object_dword_4d5350, 0, 0},
     {0x4d5360, vertrix_port_rtl_window_state_4d5360, 0, 0},
-    {0x4d5390, lifted_f4d5390, 136, 0},
+    {0x4d5390, vertrix_port_form_control_show_4d5390, 0, 0},
     {0x4d54c0, vertrix_port_rtl_menu_popup_init_4d54c0, 0, 0},
     {0x4d5660, vertrix_port_control_command_note_4d5660, 0, 0},
     {0x4d57a0, vertrix_port_control_send_note_4d57a0, 0, 0},
@@ -3744,7 +3746,7 @@ static const LiftedRoutine routines[] = {
     {0x4dba20, vertrix_port_rtl_chain_unlink_4dba20, 0, 0},
     {0x4dba80, vertrix_port_local_allocate, 0, 0},
     {0x4dbac0, vertrix_port_lock_construct, 0, 0},
-    {0x4dbb30, lifted_f4dbb30, 192, 0},
+    {0x4dbb30, vertrix_port_handle_table_take_4dbb30, 0, 0},
     {0x4dbc60, vertrix_port_rtl_slot_release_4dbc60, 0, 0},
     {0x4dbcd0, vertrix_port_thread_value, 0, 0},
     {0x4dbd20, lifted_f4dbd20, 192, 0},
@@ -4050,7 +4052,7 @@ static const LiftedRoutine routines[] = {
     {0x4eb606, vertrix_port_double_to_single, 0, 0},
     {0x4eb860, vertrix_port_text_copy_padded, 0, 0},
     {0x4eb892, vertrix_port_double_to_int, 0, 0},
-    {0x4eb910, lifted_f4eb910, 92, 0},
+    {0x4eb910, vertrix_port_rtl_open_mode_4eb910, 0, 0},
     {0x4eba4c, vertrix_port_stream_open_4eba4c, 0, 0},
     {0x4ebb34, vertrix_port_rtl_name_lookup_4ebb34, 0, 0},
     {0x4ebb78, vertrix_port_open_plain_4ebb78, 0, 0},
