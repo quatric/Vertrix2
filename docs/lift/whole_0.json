@@ -648,25 +648,6 @@
   "virtual": [],
   "address": 4287504
  },
- "rtl_construct_derived_stream": {
-  "callees": {
-   "0x4d3e20": [
-    0,
-    false
-   ]
-  },
-  "stack": 68,
-  "arguments": 0,
-  "pointer_callees": [
-   "0x4d3e20"
-  ],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4294496
- },
  "f418af0": {
   "callees": {
    "0x418270": [

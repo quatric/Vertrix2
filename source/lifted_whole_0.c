@@ -6369,44 +6369,6 @@ uint32_t lifted_point_list_add(const VertrixCalls *calls, const VertrixFactorySe
     return env.failed ? 0u : eax;
 }
 
-uint32_t lifted_rtl_construct_derived_stream(const VertrixCalls *calls,
-                                             const VertrixFactoryServices *services,
-                                             const VertrixGlobals *globals, const LiftEntry *entry)
-{
-    uint8_t stack[LIFTED_RTL_CONSTRUCT_DERIVED_STREAM_STACK + 4 + 4 * 0 + 4];
-    LiftEnv env;
-    LiftFlags fl = {0, 0, 0, 0, 0, 0};
-    uint32_t eax = entry->eax;
-    uint32_t edx = entry->edx;
-    uint32_t ebx = entry->ebx;
-    uint32_t ecx = entry->ecx;
-    uint32_t esi = entry->esi;
-    uint32_t edi = entry->edi;
-    uint32_t ebp = entry->ebp;
-    uint32_t esp = entry->esp;
-    (void)fl;
-    (void)eax;
-    (void)edx;
-    (void)ebx;
-    (void)ecx;
-    (void)esi;
-    (void)edi;
-    (void)ebp;
-    (void)esp;
-    lift_begin(&env, calls, services, globals, stack, LIFTED_RTL_CONSTRUCT_DERIVED_STREAM_STACK, 0,
-               entry);
-    vertrix_lift_fl = fl;
-    eax = lift_call(&env, 0x4d3e20u, eax, edx, ebx, ecx, 0, esp);
-    edx = vertrix_lift_edx;
-    fl = vertrix_lift_fl;
-    lift_store(&env, eax, 0x0u, 4, 0x514284u);
-    lift_store(&env, eax, 0xc8u, 1, 0x0u);
-    lift_store(&env, eax, 0xd8u, 4, 0x0u);
-    vertrix_lift_edx = edx;
-    vertrix_lift_fl = fl;
-    return env.failed ? 0u : eax;
-}
-
 uint32_t lifted_f418af0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry)
 {

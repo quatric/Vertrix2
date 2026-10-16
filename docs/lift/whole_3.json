@@ -2737,49 +2737,6 @@
   "virtual": [],
   "address": 4712064
  },
- "f47e7d0": {
-  "callees": {
-   "0x4f175c": [
-    5,
-    false
-   ],
-   "virtual_47e826": [
-    1,
-    false
-   ],
-   "virtual_47e847": [
-    4,
-    false
-   ],
-   "virtual_47e87c": [
-    1,
-    false
-   ]
-  },
-  "stack": 160,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   0,
-   444
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [
-   [
-    0,
-    8,
-    1
-   ],
-   [
-    0,
-    12,
-    4
-   ]
-  ],
-  "address": 4712400
- },
  "f47eab0": {
   "callees": {
    "virtual_47eae3": [

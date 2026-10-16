@@ -11,7 +11,6 @@ enum
     LIFTED_RLE_DECODE_STACK = 112,
     LIFTED_RLE_DECODE_BITMAP_STACK = 108,
     LIFTED_F485700_STACK = 476,
-    LIFTED_F4871D0_STACK = 232,
     LIFTED_F487BE0_STACK = 176,
     LIFTED_PATH_LAST_SEPARATOR_STACK = 68,
     LIFTED_RTL_WRITE_TEXT_CALL_STACK = 100,
@@ -48,10 +47,6 @@ uint32_t lifted_rle_decode_bitmap(const VertrixCalls *calls, const VertrixFactor
 
 /* Original 0x485700. */
 uint32_t lifted_f485700(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4871d0. */
-uint32_t lifted_f4871d0(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x487be0. */

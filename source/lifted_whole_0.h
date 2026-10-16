@@ -18,7 +18,6 @@ enum
     LIFTED_F416140_STACK = 244,
     LIFTED_F416500_STACK = 372,
     LIFTED_POINT_LIST_ADD_STACK = 76,
-    LIFTED_RTL_CONSTRUCT_DERIVED_STREAM_STACK = 68,
     LIFTED_F418AF0_STACK = 488,
     LIFTED_F418D50_STACK = 896,
     LIFTED_F4192A0_STACK = 172,
@@ -95,11 +94,6 @@ uint32_t lifted_f416500(const VertrixCalls *calls, const VertrixFactoryServices 
 /* Original 0x416c10. */
 uint32_t lifted_point_list_add(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x418760. */
-uint32_t lifted_rtl_construct_derived_stream(const VertrixCalls *calls,
-                                             const VertrixFactoryServices *services,
-                                             const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x418af0. */
 uint32_t lifted_f418af0(const VertrixCalls *calls, const VertrixFactoryServices *services,

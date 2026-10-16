@@ -938,25 +938,6 @@
   ],
   "address": 5003488
  },
- "f4c63a0": {
-  "callees": {},
-  "stack": 108,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   0,
-   460
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   31,
-   32,
-   33
-  ],
-  "virtual": [],
-  "address": 5006240
- },
  "f4c6460": {
   "callees": {},
   "stack": 100,
