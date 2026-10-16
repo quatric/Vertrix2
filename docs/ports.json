@@ -1424,6 +1424,11 @@
   "lifted": "lifted_surface_blit_progress",
   "chunk": "whole_0"
  },
+ "0x41a320": {
+  "port": "vertrix_port_level_open_41a320",
+  "lifted": "lifted_f41a320",
+  "chunk": "whole_0"
+ },
  "0x41a440": {
   "port": "vertrix_port_player_reset",
   "lifted": "lifted_f41a440",
@@ -1772,6 +1777,11 @@
  "0x420e10": {
   "port": "settings_screen_reload_420e10",
   "lifted": "lifted_f420e10",
+  "chunk": "whole_0"
+ },
+ "0x421ac0": {
+  "port": "vertrix_port_settings_screen_open_421ac0",
+  "lifted": "lifted_f421ac0",
   "chunk": "whole_0"
  },
  "0x421de0": {
@@ -8779,6 +8789,11 @@
   "lifted": "lifted_f47fa90",
   "chunk": "whole_4"
  },
+ "0x47faf0": {
+  "port": "vertrix_port_object_set_text_47faf0",
+  "lifted": "lifted_object_set_text",
+  "chunk": "whole_4"
+ },
  "0x47fc10": {
   "port": "vertrix_port_text_widen_47fc10",
   "lifted": "lifted_f47fc10",
@@ -9722,6 +9737,11 @@
  "0x48c6c0": {
   "port": "vertrix_port_session_names_48c6c0",
   "lifted": "lifted_f48c6c0",
+  "chunk": "whole_4"
+ },
+ "0x48c860": {
+  "port": "vertrix_port_file_dialog_open_48c860",
+  "lifted": "lifted_f48c860",
   "chunk": "whole_4"
  },
  "0x48c970": {
@@ -13474,6 +13494,11 @@
   "lifted": "lifted_f4c2780",
   "chunk": "whole_8"
  },
+ "0x4c2c50": {
+  "port": "vertrix_port_jpeg_decode_dc_refine_4c2c50",
+  "lifted": "lifted_f4c2c50",
+  "chunk": "whole_8"
+ },
  "0x4c31a0": {
   "port": "vertrix_port_jpeg_quantizer_init_4c31a0",
   "lifted": "lifted_f4c31a0",
@@ -13648,6 +13673,11 @@
   "port": "vertrix_port_virtual_block_access_4c5740",
   "lifted": "lifted_f4c5740",
   "chunk": "whole_8"
+ },
+ "0x4c58e0": {
+  "port": "vertrix_port_jpeg_free_pool_4c58e0",
+  "lifted": "lifted_f4c58e0",
+  "chunk": "whole_5"
  },
  "0x4c5a00": {
   "port": "vertrix_port_pool_close_4c5a00",
@@ -14353,6 +14383,11 @@
   "port": "vertrix_port_rtl_message_hook_4cfc90",
   "lifted": "lifted_f4cfc90",
   "chunk": "whole_5"
+ },
+ "0x4cfd20": {
+  "port": "vertrix_port_window_procedure_restore_4cfd20",
+  "lifted": "lifted_f4cfd20",
+  "chunk": "whole_13"
  },
  "0x4cfe40": {
   "port": "vertrix_port_window_procedure_hook_4cfe40",

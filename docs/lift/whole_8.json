@@ -3532,42 +3532,6 @@
   "virtual": [],
   "address": 4991424
  },
- "f4c2c50": {
-  "callees": {
-   "0x4c26f0": [
-    0,
-    false
-   ],
-   "0x4bbf30": [
-    0,
-    false
-   ]
-  },
-  "stack": 128,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   24
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [
-   0,
-   4,
-   24,
-   444
-  ],
-  "constants": [
-   0,
-   1,
-   2,
-   35,
-   36,
-   37,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 4992080
- },
  "f4c2d60": {
   "callees": {
    "0x4c26f0": [
