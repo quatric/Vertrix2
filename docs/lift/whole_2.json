@@ -161,62 +161,6 @@
   "virtual": [],
   "address": 4513712
  },
- "f450e70": {
-  "callees": {
-   "0x43d3b0": [
-    0,
-    false
-   ],
-   "0x43b860": [
-    0,
-    false
-   ],
-   "0x43cd30": [
-    0,
-    false
-   ],
-   "0x4ac8f0": [
-    0,
-    false
-   ],
-   "0x4ac500": [
-    0,
-    false
-   ],
-   "0x4ac520": [
-    0,
-    false
-   ],
-   "0x4ac540": [
-    0,
-    false
-   ],
-   "0x4ac5b0": [
-    0,
-    false
-   ],
-   "0x4ad6e0": [
-    0,
-    false
-   ]
-  },
-  "stack": 148,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2,
-   3,
-   4,
-   5
-  ],
-  "virtual": [],
-  "address": 4525680
- },
  "f450ff0": {
   "callees": {
    "0x43ad70": [

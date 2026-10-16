@@ -3633,44 +3633,6 @@
   ],
   "address": 4992352
  },
- "f4c5030": {
-  "callees": {
-   "0x4c4d20": [
-    0,
-    false
-   ],
-   "0x4c4ea0": [
-    0,
-    false
-   ],
-   "virtual_4c5105": [
-    0,
-    false
-   ]
-  },
-  "stack": 116,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   0,
-   4
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   27,
-   28,
-   29
-  ],
-  "virtual": [
-   [
-    0,
-    0,
-    0
-   ]
-  ],
-  "address": 5001264
- },
  "f4c6640": {
   "callees": {},
   "stack": 132,

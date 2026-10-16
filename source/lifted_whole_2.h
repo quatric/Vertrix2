@@ -12,7 +12,6 @@ enum
     LIFTED_F44E920_STACK = 136,
     LIFTED_F44E9F0_STACK = 140,
     LIFTED_F44EAF0_STACK = 136,
-    LIFTED_F450E70_STACK = 148,
     LIFTED_F450FF0_STACK = 304,
     LIFTED_OBJECT_POST_LOCK_STACK = 188,
     LIFTED_EFFECT_ATTACK_454E90_STACK = 104,
@@ -54,10 +53,6 @@ uint32_t lifted_f44e9f0(const VertrixCalls *calls, const VertrixFactoryServices 
 
 /* Original 0x44eaf0. */
 uint32_t lifted_f44eaf0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x450e70. */
-uint32_t lifted_f450e70(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x450ff0. */
