@@ -30,49 +30,6 @@
   "virtual": [],
   "address": 5161184
  },
- "f4ec1ec": {
-  "callees": {
-   "0x4cd9f0": [
-    0,
-    false
-   ],
-   "slot_507c9c": [
-    0,
-    false
-   ],
-   "0x4e8fa7": [
-    0,
-    false
-   ]
-  },
-  "stack": 80,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   8,
-   24,
-   52
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2,
-   3,
-   4,
-   5,
-   6,
-   7,
-   8,
-   627511859,
-   627511860,
-   627511861,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 5161452
- },
  "f4ec650": {
   "callees": {
    "slot_507cb8": [

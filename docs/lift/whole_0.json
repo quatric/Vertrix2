@@ -352,27 +352,5 @@
   ],
   "virtual": [],
   "address": 4297648
- },
- "piece_init_from_kind": {
-  "callees": {},
-  "stack": 68,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   2,
-   3,
-   4,
-   6,
-   7,
-   8,
-   11,
-   12,
-   13
-  ],
-  "virtual": [],
-  "address": 4349680
  }
 }
