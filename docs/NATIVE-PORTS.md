@@ -126,3 +126,7 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x46ea30 | `rtlfightbanners.c` | letters of the pre-fight lines and PREPARE ... FIGHT |
 | 0x424360 | `rtlgamescreensetups.c` | game screen setup (and the network host's start wait) |
 | 0x41e780 | `rtlplayscreensetups.c` | play screen setup without heads |
+| 0x40b6e0 | `rtlsounddeviceopens.c` | open the DirectSound device and its primary buffer |
+| 0x4cb5a0 | `rtlrangerecords.c` | range dispatcher call: store a record or call a method by kind |
+| 0x4651b0 | `rtlhighscoremenus.c` | high-score menu |
+| 0x48cc30 | `rtlsessionstarts.c` | start a lobby-launched network session (host or join); the random cases reach only the early exits |
