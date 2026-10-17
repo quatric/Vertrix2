@@ -1,232 +1,92 @@
 #include "port_rtljpegmarkerskips.h"
 
-/* At 0x4bf6a0, reads a 2-byte big-endian marker length from the source manager at [cinfo+0x18]. */
+/* libjpeg's skip_variable (jdmarker.c): skip a marker the decoder does not use. */
+
+enum
+{
+    CINFO_ERR = 0,
+    CINFO_SRC = 0x18,
+    CINFO_UNREAD_MARKER = 0x1a0,
+    /* The source manager. */
+    SRC_NEXT_INPUT_BYTE = 0,
+    SRC_BYTES_IN_BUFFER = 4,
+    SRC_FILL_INPUT_BUFFER = 0xc,
+    SRC_SKIP_INPUT_DATA = 0x10,
+    /* The error manager: its emit_message(cinfo, level) and the message with two parameters. */
+    ERR_EMIT_MESSAGE = 4,
+    ERR_MSG_CODE = 0x14,
+    ERR_MSG_PARM = 0x18,
+    JTRC_MISC_MARKER = 0x5b,
+    TRACE_LEVEL = 1
+};
 
 typedef struct
 {
-    Port *port;
-    uint32_t eax;
-    uint32_t edx;
-    uint32_t ebx;
-    uint32_t ecx;
-    uint32_t esi;
-    uint32_t edi;
-    uint32_t ebp;
-    uint32_t stack[32];
-    unsigned pushed;
-    uint32_t fa;
-    uint32_t fb;
-    unsigned fk;
-    unsigned fw;
-    uint32_t fc;
-} Regs;
+    uint32_t next;
+    uint32_t bytes;
+} Input;
 
-/* The kinds of the last flag-setting instruction: a subtraction or compare of fa and fb, an
- * addition, a logical result fa (CF and OF clear), and inc / dec of the result fa (CF kept). */
-enum
+/* A method of the source or error manager: like the original, it leaves the source manager in
+ * ebx and cinfo in ecx. */
+static uint32_t method(Port *port, uint32_t function, uint32_t cinfo, uint32_t edx, uint32_t src)
 {
-    F_SUB,
-    F_ADD,
-    F_LOGIC,
-    F_INC,
-    F_DEC
-};
-
-/* The conditions of the jumps and sets. */
-enum
-{
-    CC_E,
-    CC_NE,
-    CC_B,
-    CC_AE,
-    CC_BE,
-    CC_A,
-    CC_L,
-    CC_GE,
-    CC_LE,
-    CC_G,
-    CC_S,
-    CC_NS
-};
-
-/* A call of the tracked registers taking the last count values pushed (nearest first) and, unless
- * kept, popping them as the callee's ret does. */
-static void call_with_stack(Regs *r, uint32_t target, unsigned count, int keep)
-{
-    uint32_t args[32] = {0};
-    unsigned i;
-    if (count > r->pushed)
-    {
-        count = r->pushed;
-    }
-    for (i = 0; i < count; i++)
-    {
-        args[i] = r->stack[r->pushed - 1 - i];
-    }
-    if (!keep)
-    {
-        r->pushed -= count;
-    }
-    vertrix_lift_in_esi = r->esi;
-    vertrix_lift_in_edi = r->edi;
-    vertrix_lift_in_ebp = r->ebp;
-    r->eax =
-        lift_call_arguments(&r->port->env, target, r->eax, r->edx, r->ebx, r->ecx, args, count);
-    vertrix_lift_in_esi = vertrix_lift_in_edi = vertrix_lift_in_ebp = 0;
-    r->edx = vertrix_lift_edx;
+    return port_call(port, function, cinfo, edx, src, cinfo);
 }
 
-static uint32_t rd8(Regs *r, uint32_t address)
+/* The next byte (INPUT_BYTE): refill an empty buffer first; 0 when that fails. */
+static int input_byte(Port *port, const LiftEntry *entry, uint32_t cinfo, uint32_t src,
+                      Input *input, uint32_t *byte)
 {
-    return port_u8(r->port, address, 0);
+    if (input->bytes == 0)
+    {
+        if (method(port, port_u32(port, src, SRC_FILL_INPUT_BUFFER), cinfo, entry->edx, src) == 0)
+        {
+            return 0;
+        }
+        input->next = port_u32(port, src, SRC_NEXT_INPUT_BYTE);
+        input->bytes = port_u32(port, src, SRC_BYTES_IN_BUFFER);
+    }
+    input->bytes--;
+    *byte = port_u8(port, input->next, 0);
+    input->next++;
+    return 1;
 }
 
-static uint32_t rd32(Regs *r, uint32_t address)
-{
-    return port_u32(r->port, address, 0);
-}
-
-static void wr32(Regs *r, uint32_t address, uint32_t value)
-{
-    port_set32(r->port, address, 0, value);
-}
-
-static void set_low8(uint32_t *reg, uint32_t value)
-{
-    *reg = (*reg & 0xffffff00u) | (value & 0xff);
-}
-
-/* An indirect call (an import or a method): every value pushed passed and popped, as stdcall. */
-static void call_all(Regs *r, uint32_t target)
-{
-    call_with_stack(r, target, r->pushed, 0);
-}
-
-/* Original 0x4bf6a0: At 0x4bf6a0, reads a 2-byte big-endian marker length from the source manager
- * at [cinfo+0x18]. It calls fill_input_buffer (+0xc) whenever the buffer is empty and returns 0 if
- * that call fails. It sets err->msg_code to 0x5b with msg_parm = (unread_marker [cinfo+0x1a0],
- * length-2) and emits a level-1 trace through err+4. It then stores back next_input_byte and
- * bytes_in_buffer, calls skip_input_data (+0x10) for length-2 bytes when that is positive, and
- * returns 1. This is libjpeg's skip_variable. Evidence: no calls. Register-for-register from the
- * listing (0x4bf6ab..0x4bf760); labels are the original addresses. */
-static void run(Regs *r)
-{
-    r->ecx = r->eax;
-    r->ebx = rd32(r, r->eax + 0x18);
-    r->eax = rd32(r, r->ebx + 0x4);
-    r->esi = rd32(r, r->ebx);
-    wr32(r, r->ebp - 0x18, r->eax);
-    if (r->eax == 0)
-    {
-        goto at_4bf74f;
-    }
-at_4bf6c0:
-    r->esi = r->esi + 1;
-    r->eax = 0;
-    r->edi = rd32(r, r->ebp - 0x18);
-    set_low8(&r->eax, rd8(r, r->esi - 0x1));
-    r->edi = r->edi - 1;
-    r->eax = r->eax << 0x8;
-    wr32(r, r->ebp - 0x18, r->edi);
-    wr32(r, r->ebp - 0x1c, r->eax);
-    if (r->edi != 0)
-    {
-        goto at_4bf6e8;
-    }
-    r->eax = r->ecx;
-    call_all(r, rd32(r, r->ebx + 0xc));
-    if (r->eax == 0)
-    {
-        goto at_4bf745;
-    }
-    r->eax = rd32(r, r->ebx + 0x4);
-    r->esi = rd32(r, r->ebx);
-    wr32(r, r->ebp - 0x18, r->eax);
-at_4bf6e8:
-    r->eax = 0;
-    r->edi = rd32(r, r->ebp - 0x1c);
-    set_low8(&r->eax, rd8(r, r->esi));
-    r->edx = rd32(r, r->ebp - 0x18);
-    r->edi = r->edi + r->eax;
-    r->eax = rd32(r, r->ecx);
-    r->edx = r->edx - 1;
-    wr32(r, r->eax + 0x14, 0x5b);
-    wr32(r, r->ebp - 0x18, r->edx);
-    r->edx = rd32(r, r->ecx);
-    r->eax = rd32(r, r->ecx + 0x1a0);
-    wr32(r, r->ebp - 0x1c, r->edi);
-    wr32(r, r->edx + 0x18, r->eax);
-    r->edx = r->edi - 0x2;
-    r->eax = rd32(r, r->ecx);
-    wr32(r, r->ebp - 0x1c, r->edx);
-    wr32(r, r->eax + 0x1c, r->edx);
-    r->edx = 0x1;
-    r->edi = rd32(r, r->ecx);
-    r->eax = r->ecx;
-    r->esi = r->esi + 1;
-    call_all(r, rd32(r, r->edi + 0x4));
-    r->eax = rd32(r, r->ebp - 0x18);
-    wr32(r, r->ebx, r->esi);
-    wr32(r, r->ebx + 0x4, r->eax);
-    if ((int32_t)rd32(r, r->ebp - 0x1c) <= (int32_t)0x0)
-    {
-        goto at_4bf740;
-    }
-    r->ebx = rd32(r, r->ecx + 0x18);
-    r->edx = rd32(r, r->ebp - 0x1c);
-    r->eax = r->ecx;
-    call_all(r, rd32(r, r->ebx + 0x10));
-at_4bf740:
-    r->eax = 0x1;
-at_4bf745:
-    r->edi = rd32(r, r->ebp - 0x14);
-    r->esi = rd32(r, r->ebp - 0x10);
-    r->edx = rd32(r, r->ebp - 0xc);
-    r->ecx = rd32(r, r->ebp - 0x8);
-    r->ebx = rd32(r, r->ebp - 0x4);
-    return;
-at_4bf74f:
-    r->eax = r->ecx;
-    call_all(r, rd32(r, r->ebx + 0xc));
-    if (r->eax == 0 && !r->port->env.failed)
-    {
-        goto at_4bf745;
-    }
-    r->eax = rd32(r, r->ebx + 0x4);
-    r->esi = rd32(r, r->ebx);
-    wr32(r, r->ebp - 0x18, r->eax);
-    if (r->port->env.failed)
-    {
-        return;
-    }
-    goto at_4bf6c0;
-}
-
+/* Original 0x4bf6a0 (eax = cinfo): read the marker's big-endian length, trace it with the
+ * unread marker (JTRC_MISC_MARKER, level 1), hand the source manager back its place and skip
+ * the length less its own 2 bytes when that is positive. Returns 1, or 0 when the source cannot
+ * be refilled. edx is kept as it came (the original saves it). */
 uint32_t vertrix_port_jpeg_skip_variable_marker_4bf6a0(PORT_SIGNATURE)
 {
-    enum
-    {
-        BELOW = 0x20
-    };
     Port port;
-    uint8_t stack[BELOW + 8];
-    Regs r;
-    port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
-    memset(&r, 0, sizeof r);
-    r.port = &port;
-    r.eax = entry->eax;
-    r.edx = entry->edx;
-    r.ebx = entry->ebx;
-    r.ecx = entry->ecx;
-    r.esi = entry->esi;
-    r.edi = entry->edi;
-    r.ebp = entry->esp - 4;
-    port_set32(&port, r.ebp, 0, entry->ebp);
-    port_set32(&port, r.ebp, -0x4u, entry->ebx);
-    port_set32(&port, r.ebp, -0x8u, entry->ecx);
-    port_set32(&port, r.ebp, -0xcu, entry->edx);
-    port_set32(&port, r.ebp, -0x10u, entry->esi);
-    port_set32(&port, r.ebp, -0x14u, entry->edi);
-    run(&r);
-    return port_return(&port, r.eax, r.edx);
+    port_open(&port, calls, services, globals, entry);
+    const uint32_t cinfo = entry->eax;
+    const uint32_t src = port_u32(&port, cinfo, CINFO_SRC);
+    Input input = {port_u32(&port, src, SRC_NEXT_INPUT_BYTE),
+                   port_u32(&port, src, SRC_BYTES_IN_BUFFER)};
+    uint32_t high;
+    uint32_t low;
+    if (!input_byte(&port, entry, cinfo, src, &input, &high) ||
+        !input_byte(&port, entry, cinfo, src, &input, &low))
+    {
+        return port_return(&port, 0, entry->edx);
+    }
+    const uint32_t length = (high << 8) + low - 2;
+
+    const uint32_t err = port_u32(&port, cinfo, CINFO_ERR);
+    port_set32(&port, err, ERR_MSG_CODE, JTRC_MISC_MARKER);
+    port_set32(&port, port_u32(&port, cinfo, CINFO_ERR), ERR_MSG_PARM,
+               port_u32(&port, cinfo, CINFO_UNREAD_MARKER));
+    port_set32(&port, port_u32(&port, cinfo, CINFO_ERR), ERR_MSG_PARM + 4, length);
+    const uint32_t emit = port_u32(&port, port_u32(&port, cinfo, CINFO_ERR), ERR_EMIT_MESSAGE);
+    method(&port, emit, cinfo, TRACE_LEVEL, src);
+
+    port_set32(&port, src, SRC_NEXT_INPUT_BYTE, input.next);
+    port_set32(&port, src, SRC_BYTES_IN_BUFFER, input.bytes);
+    if ((int32_t)length > 0)
+    {
+        const uint32_t now = port_u32(&port, cinfo, CINFO_SRC);
+        method(&port, port_u32(&port, now, SRC_SKIP_INPUT_DATA), cinfo, length, now);
+    }
+    return port_return(&port, 1, entry->edx);
 }

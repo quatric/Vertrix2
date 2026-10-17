@@ -81,6 +81,44 @@ def _regs(insn):
     return used, defined
 
 
+def _halves(names):
+    """Registers as their low and high 16 bits, the units the liveness follows (a 16-bit write
+    replaces the low half; a byte write replaces neither)."""
+    return {name + half for name in names for half in ('.lo', '.hi')}
+
+
+WORDS = {reg: name for reg, name in lift.REG16.items() if name in NAMES}
+
+
+EVERY = frozenset(_halves(NAMES))
+
+
+def _regs_halves(insn):
+    """_regs in register halves."""
+    if _padding(insn):
+        return set(), set()
+    reads, writes = insn.regs_access()
+    used, defined = set(), set()
+    for reg in reads:
+        if reg in WIDE:
+            used |= _halves((WIDE[reg],))
+        elif reg in PART:
+            used.add(PART[reg] + '.lo')
+    for reg in writes:
+        if reg in WIDE:
+            defined |= _halves((WIDE[reg],))
+        elif reg in WORDS:
+            defined.add(WORDS[reg] + '.lo')
+    ops = insn.operands
+    if (insn.mnemonic in CLEARS and len(ops) == 2 and ops[0].type == X.X86_OP_REG and
+            ops[1].type == X.X86_OP_REG and ops[0].reg == ops[1].reg):
+        if ops[0].reg in WIDE:
+            used -= _halves((WIDE[ops[0].reg],))
+        elif ops[0].reg in WORDS:
+            used.discard(WORDS[ops[0].reg] + '.lo')
+    return used, defined
+
+
 def _slots(insn, slots):
     """The frame slots (ebp offsets) an instruction reads and fully writes."""
     used, defined = set(), set()
@@ -199,18 +237,17 @@ def _foreign(target, start):
         for at in range(0x1000, 0xf1000 - 6):
             site = lift.BASE + at
             if image[at] in (0xe8, 0xe9):
-                target = (site + 5 + int.from_bytes(image[at + 1:at + 5], 'little', signed=True)) \
+                to = (site + 5 + int.from_bytes(image[at + 1:at + 5], 'little', signed=True)) \
                     & 0xffffffff
                 if image[at] == 0xe8:
-                    _entries.add(target)
+                    _entries.add(to)
                 else:
-                    jumps.setdefault(target, []).append(site)
+                    jumps.setdefault(to, []).append(site)
             elif image[at] == 0x0f and 0x80 <= image[at + 1] <= 0x8f:
-                target = (site + 6 + int.from_bytes(image[at + 2:at + 6], 'little', signed=True)) \
+                to = (site + 6 + int.from_bytes(image[at + 2:at + 6], 'little', signed=True)) \
                     & 0xffffffff
-                jumps.setdefault(target, []).append(site)
-        _entries |= {target for target, sites in jumps.items()
-                     if max(sites) - min(sites) > 0x800}
+                jumps.setdefault(to, []).append(site)
+        _entries |= {to for to, sites in jumps.items() if max(sites) - min(sites) > 0x800}
     return target != start and (target < start or target in _entries)
 
 
@@ -507,32 +544,32 @@ def _inputs(start, depth, entry=True):
                 successors[address] = (op.imm,)
             elif op.type == X.X86_OP_IMM:
                 successors[address] = ()  # a tail jump into another routine
-                used = set(inputs(op.imm, depth + 1))
+                used = _halves(inputs(op.imm, depth + 1))
             elif address in TABLES:
                 successors[address] = tuple(TABLES[address])
-                used, _ = _regs(insn)
+                used, _ = _regs_halves(insn)
             elif _import_slot(insn):
                 successors[address] = ()
             else:
                 successors[address] = ()
-                used = _through(insn, depth)
+                used = _halves(_through(insn, depth))
         elif mnemonic in lift.JUMPS:
             target = insn.operands[0].imm
             if target in seen:
                 successors[address] = (target, nxt)
-                used, defined = _regs(insn)
+                used, defined = _regs_halves(insn)
             else:
                 # A conditional tail call: either branch.
                 successors[address] = (nxt,)
-                used = _regs(insn)[0] | set(inputs(target, depth + 1))
+                used = _regs_halves(insn)[0] | _halves(inputs(target, depth + 1))
         else:
             successors[address] = (nxt,)
             if mnemonic == 'call':
                 op = insn.operands[0]
                 if op.type == X.X86_OP_IMM:
-                    used = set(inputs(op.imm, depth + 1))
+                    used = _halves(inputs(op.imm, depth + 1))
                 elif not _import_slot(insn):
-                    used = _through(insn, depth)
+                    used = _halves(_through(insn, depth))
             elif mnemonic == 'push' and insn.operands[0].type == X.X86_OP_REG:
                 reg = insn.operands[0].reg
                 name = WIDE.get(reg)
@@ -545,9 +582,9 @@ def _inputs(start, depth, entry=True):
                 elif address in prologue and reg in saves:
                     pass
                 else:
-                    used = {name}
+                    used = _halves((name,))
             else:
-                used, defined = _regs(insn)
+                used, defined = _regs_halves(insn)
         frame_used, frame_defined = _slots(insn, slots) if slots else (set(), set())
         effects[address] = (frozenset(used | frame_used), frozenset(defined | frame_defined))
     live = {address: frozenset() for address in order}
@@ -558,21 +595,21 @@ def _inputs(start, depth, entry=True):
             used, defined = effects[address]
             out = frozenset()
             for successor in successors[address]:
-                out |= live.get(successor, ALL)
+                out |= live.get(successor, EVERY)
             value = set(out - defined)
             for item in used:
                 if isinstance(item, tuple):
                     _, slot, name = item
                     value.discard(slot)  # the push fills the slot
                     if slot in out:
-                        value.add(name)
+                        value |= _halves((name,))
                 else:
                     value.add(item)
             value = frozenset(value)
             if value != live[address]:
                 live[address] = value
                 changed = True
-    return frozenset(n for n in live[start] if n in NAMES)
+    return frozenset(n for n in NAMES if _halves((n,)) & live[start])
 
 
 def live_at(address):

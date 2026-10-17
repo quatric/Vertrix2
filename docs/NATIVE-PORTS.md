@@ -19,6 +19,9 @@ the same thing as ordinary C, and is verified the same way.
   are call arguments. Saved registers are not written back: nothing reads them.
 - Calls hand over the arguments and 0 in the registers the callee does not read (see below).
   Give a callee used more than once a small static wrapper (`decode_frame`, `release`).
+- The C++ exception frames the original registers (fs:[0], with a state word moved on as each
+  member of an object is built) are left out: the lifted runtime does not hand fs:[0] to
+  callees, so nothing would read them (0x4b4cf0).
 - A shared tail the original jumps to (no dispatch entry of its own) becomes a static function,
   and the routines sharing it one file (`port_handlemaps.c`: four MFC routines that all end in
   0x4dee00).
@@ -51,6 +54,8 @@ calls, or a tail several routines share) as calls. A call through a fixed global
 driver's slots goes to the routines the image puts there, a Windows import reads no register, and
 an unknown method or procedure variable reads all four. Pushes that save a register (followed by
 the stack depth of each instruction) or reserve a local the routine overwrites are not reads.
+Registers are followed in 16-bit halves, so `mov si, [x]; cmp si, 0x1001` reads nothing of the
+caller's esi (0x4826c0).
 Where it cannot see, it assumes the register is read. `SITES` and `ROUTINES` hold the few calls
 known better than the code shows, each with its reason (GetMem's C++ new-handler, which nothing
 installs; MFC's thread data, whose only register reads are the exception machinery's).
@@ -81,3 +86,10 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x4d5bf8 | `port_rtllockkeystates.c` | MFC CFrameWnd::OnUpdateKeyIndicator |
 | 0x4dd430, 0x4ddc30, 0x4e1200, 0x4cf8d0 | `port_handlemaps.c` | delete the thread's MFC handle maps |
 | 0x4bb170 | `port_rtlyccrgbtables.c` | libjpeg build_ycc_rgb_table |
+| 0x4885a0 | `port_rtlpathseparators.c` | last backslash of a path |
+| 0x4c6460 | `port_rtljpegquantize3s.c` | libjpeg color_quantize3 |
+| 0x4bf6a0 | `port_rtljpegmarkerskips.c` | libjpeg skip_variable |
+| 0x4b3de0 | `port_rtlsplitbars.c` | options menu slider draw |
+| 0x47eab0 | `port_rtldevicemessages.c` | sound device COM event callback |
+| 0x4b4cf0 | `port_rtlkeytextactors.c` | text actor with three key actors |
+| 0x42bca0 | `port_rtlactorring.c` | ring of eight sparks around a board cell |
