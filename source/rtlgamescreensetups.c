@@ -203,7 +203,7 @@ uint32_t vertrix_port_game_screen_setup_424360(PORT_SIGNATURE)
         {
             reset_event(&port, LOST_HANDLE);
             port_call(&port, MESSAGES_CLEAR, MESSAGES, STATE_LOST, 0, 0);
-            port_call(&port, SOUND_STOP, 0, 0, 0, 0);
+            port_call(&port, SOUND_STOP, 0, vertrix_lift_edx, 0, 0);
             /* The state is the edx the two calls hand back, which is 0x41e780 as the original
              * passes it on. */
             port_call(&port, STATE_SET_FRAME, self, vertrix_lift_edx, 0, 0);

@@ -47,7 +47,8 @@ uint32_t vertrix_port_guarded_method38_call_489a10(PORT_SIGNATURE)
     const uint32_t frame = entry->esp - 4;
     port_set32(&port, frame, 0, entry->ebp);
 
-    port_call_with(&port, CHAIN_PUSH, frame - CHAIN_RECORD, 0, 0, 0, 0, STATE, frame);
+    port_call_with(&port, CHAIN_PUSH, frame - CHAIN_RECORD, entry->eax, HANDLER_TABLE, HANDLER_CODE,
+                   0, STATE, frame);
     const uint32_t chain_edx = vertrix_lift_edx;
     const uint32_t jumped = port_call_with(&port, JUMP_CAPTURE, frame - JUMP_BUFFER, chain_edx,
                                            HANDLER_TABLE, HANDLER_CODE, 0, STATE, frame);

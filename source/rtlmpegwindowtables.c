@@ -165,6 +165,7 @@ uint32_t vertrix_port_window_tables_40a590(PORT_SIGNATURE)
             helper(&port, DIVIDE, &d);
             helper(&port, TO_SINGLE, &d);
             port_set32(&port, out, 0, d.eax);
+            d.edx = out;
             out += 4;
             d.edi = out;
         }

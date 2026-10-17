@@ -69,7 +69,7 @@ uint32_t vertrix_port_font_set_member_construct_47e680(PORT_SIGNATURE)
     uint32_t edx = (vertrix_lift_edx & 0xffffff00u) | flags;
     if ((flags & FLAG_FREE) != 0)
     {
-        port_call(&port, FREE_INSTANCE, member, 0, 0, 0);
+        port_call(&port, FREE_INSTANCE, member, edx, 0, 0);
         edx = vertrix_lift_edx;
     }
     return port_return(&port, member, edx);

@@ -184,7 +184,7 @@ uint32_t vertrix_port_spawn_prepare_fight_letters_46ea30(PORT_SIGNATURE)
         uint32_t y = FIRST_Y;
         for (uint32_t index = 0; index < count && !port.env.failed; index++)
         {
-            port_call(&port, STRING_ASSIGN, line, port_u32(&port, lines + index * 4, 0), 0, 0);
+            port_call(&port, STRING_ASSIGN, line, lines + index * 4, 0, 0);
             const uint32_t string = port_u32(&port, line, 0);
             const uint32_t length = port_u32(&port, string - STRING_LENGTH, 0);
             const uint32_t height_at = frame - HEIGHT;

@@ -115,7 +115,7 @@ def verify(address, function, cases, timeout=600):
     natives = [header + '.c' for header in
                re.findall(r'^#include "(\w+)\.h"', sources[0].read_text(), re.M)
                if (ROOT / 'source' / (header + '.c')).exists() and header not in HARNESS
-               and not header.startswith(('port', 'lift'))]
+               and not header.startswith(('port', 'lift')) and header != sources[0].stem]
     # The oracle hands the port the lifted copy's stack below esp (LiftEntry.garbage).
     (scratch / (name + '.c')).write_text(
         '#include "%s"\n#include "lifted_%s.h"\n\nuint32_t lifted_%s(PORT_SIGNATURE);\n'
