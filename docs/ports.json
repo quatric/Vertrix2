@@ -17520,7 +17520,7 @@
   "chunk": "whole_6"
  },
  "0x4e3e00": {
-  "port": "vertrix_port_rtl_flush_all_streams_4e3e00",
+  "port": "vertrix_port_rtl_put_char_4e3e00",
   "lifted": "lifted_f4e3e00",
   "chunk": "whole_8"
  },
@@ -18475,7 +18475,7 @@
   "chunk": "whole_7"
  },
  "0x4ed880": {
-  "port": "vertrix_port_rtl_pending_error_check_4ed880",
+  "port": "vertrix_port_rtl_console_getch_4ed880",
   "lifted": "lifted_f4ed880",
   "chunk": "whole_8"
  },

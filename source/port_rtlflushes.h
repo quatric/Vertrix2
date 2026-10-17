@@ -3,7 +3,7 @@
 
 #include "port.h"
 
-/* Flushes every open stream and returns how many were flushed. */
-uint32_t vertrix_port_rtl_flush_all_streams_4e3e00(PORT_SIGNATURE);
+/* The runtime's fputc: writes a character to a stream, as CR LF for a newline in text mode. */
+uint32_t vertrix_port_rtl_put_char_4e3e00(PORT_SIGNATURE);
 
 #endif

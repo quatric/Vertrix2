@@ -103,3 +103,8 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x4b58a0 | `port_rtlactornumbers.c` | number actor text (`%u`, zero-padded) |
 | 0x427850 | `port_rtlaiboardcompares.c` | computer player compares both boards |
 | 0x48c4a0 | `port_rtldisplaychainlists.c` | image record list from a display chain |
+| 0x4e43c4 | `port_rtlformatwidths.c` | printf width, precision and size prefix |
+| 0x4df978 | `port_rtlfixedtexts.c` | text of a 16.16 fixed-point number |
+| 0x4e3e00 | `port_rtlflushes.c` | fputc (renamed from "flush all streams") |
+| 0x4ed880 | `port_rtlpendingerrors.c` | console getch (renamed from "pending error check") |
+| 0x4e6f60 | `port_rtlcodepages.c` | _setmbcp |
