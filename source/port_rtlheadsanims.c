@@ -209,7 +209,7 @@ at_41e3ab:
     push(r, r->ecx);
     r->ecx = rd32(r, r->eax + 0x537300);
     r->eax = rd32(r, r->ebp - 0x1c);
-    call(r, 0x45e9e0, 0);
+    call(r, 0x45e9e0, 1);
     r->eax = r->esi;
     call(r, 0x478d80, 0);
 at_41e44d:
@@ -302,7 +302,7 @@ at_41e4d8:
     push(r, r->edi);
     r->ecx = rd32(r, r->ebp - 0x20);
     r->ebx = r->esi;
-    call(r, 0x45e990, 0);
+    call(r, 0x45e990, 2);
     r->edx = 0x1;
     wr32(r, r->ebp - 0x4c, r->edx);
     r->esi = r->esi + r->edx;

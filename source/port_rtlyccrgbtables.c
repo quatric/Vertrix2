@@ -87,12 +87,6 @@ static void wr32(Regs *r, uint32_t address, uint32_t value)
     port_set32(r->port, address, 0, value);
 }
 
-/* The last value pushed taken back. */
-static uint32_t pop(Regs *r)
-{
-    return r->pushed != 0 ? r->stack[--r->pushed] : 0;
-}
-
 /* An indirect call (an import or a method): every value pushed passed and popped, as stdcall. */
 static void call_all(Regs *r, uint32_t target)
 {
@@ -173,12 +167,12 @@ at_4bb1f1:
     {
         goto at_4bb1f1;
     }
-    r->edi = pop(r);
-    r->esi = pop(r);
-    r->edx = pop(r);
-    r->ecx = pop(r);
-    r->ebx = pop(r);
-    r->ebp = pop(r);
+    r->edi = rd32(r, r->ebp - 0x14);
+    r->esi = rd32(r, r->ebp - 0x10);
+    r->edx = rd32(r, r->ebp - 0xc);
+    r->ecx = rd32(r, r->ebp - 0x8);
+    r->ebx = rd32(r, r->ebp - 0x4);
+    return;
 }
 
 uint32_t vertrix_port_jpeg_build_ycc_rgb_table_4bb170(PORT_SIGNATURE)
