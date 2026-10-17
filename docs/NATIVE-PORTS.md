@@ -208,3 +208,6 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x4d3140 | `rtlhandlerrecords.c` | fill the runtime's handler records (stores read off the straight-line code) |
 | 0x4b826f | `rtlxmmoduleloads.c` | load an XM module (header, patterns, instruments and samples) |
 | 0x406170 | `rtlmpegtableinits.c` | build the MP3 decoder's layer III tables (mpg123's init_layer3, through the soft-float routines) |
+| 0x4d7140 | `rtlownernotes.c` | route a window notification through the thread's handler, then the parent |
+| 0x4ba7b0 | `rtlsurfacefilters.c` | libjpeg decompress_smooth_data (block smoothing of a progressive scan) |
+| 0x484b60 | `rtlvideoons.c` | turn the video on with DirectDraw (mode, flip chain, offscreen surface, palette) |
