@@ -211,3 +211,4 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x4d7140 | `rtlownernotes.c` | route a window notification through the thread's handler, then the parent |
 | 0x4ba7b0 | `rtlsurfacefilters.c` | libjpeg decompress_smooth_data (block smoothing of a progressive scan) |
 | 0x484b60 | `rtlvideoons.c` | turn the video on with DirectDraw (mode, flip chain, offscreen surface, palette) |
+| 0x407830 | `rtlmpeghuffmans.c` | mpg123 III_dequantize_sample: Huffman-decode and scale a granule |
