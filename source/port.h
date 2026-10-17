@@ -12,7 +12,7 @@
  *
  * Every port is checked by tools/verify_port.py against the original executing in Unicorn, with
  * the same cases as its lifted copy: every call with its stack arguments and the registers its
- * callee reads (tools/register_inputs.py), the returned eax (and edx where a caller reads it),
+ * callee reads (tools/register_inputs.py), the eax and edx it leaves where a caller reads them,
  * every stored global and every pool object must match. So a port hands a callee its arguments
  * and 0 in the registers it does not read, as ordinary C would (docs/NATIVE-PORTS.md). */
 

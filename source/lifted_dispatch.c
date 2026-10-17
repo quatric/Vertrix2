@@ -89,6 +89,7 @@
 #include "port_glows.h"
 #include "port_grid.h"
 #include "port_guards.h"
+#include "port_handlemaps.h"
 #include "port_handlers.h"
 #include "port_homings.h"
 #include "port_hooks.h"
@@ -421,10 +422,6 @@
 #include "port_rtltextfieldkeys3.h"
 #include "port_rtltextloads.h"
 #include "port_rtltextwraps.h"
-#include "port_rtlthreadrecords.h"
-#include "port_rtlthreadrecords2.h"
-#include "port_rtlthreadrecords3.h"
-#include "port_rtlthreadstrings.h"
 #include "port_rtltileblits.h"
 #include "port_rtltiles.h"
 #include "port_rtltitleletters.h"
@@ -3677,7 +3674,7 @@ static const LiftedRoutine routines[] = {
     {0x4cf800, vertrix_port_rtl_dialog_units_4cf800, 0, 0},
     {0x4cf850, vertrix_port_object_method_a4_4cf850, 0, 0},
     {0x4cf880, vertrix_port_rtl_thread_string_4cf880, 0, 0},
-    {0x4cf8d0, vertrix_port_rtl_thread_string_finish_4cf8d0, 0, 0},
+    {0x4cf8d0, vertrix_port_delete_thread_window_map, 0, 0},
     {0x4cf8e0, vertrix_port_rtl_triple_call_4cf8e0, 0, 0},
     {0x4cf910, vertrix_port_rtl_query_dword_4cf910, 0, 0},
     {0x4cf940, vertrix_port_window_attach_4cf940, 0, 0},
@@ -3977,12 +3974,12 @@ static const LiftedRoutine routines[] = {
     {0x4dd190, vertrix_port_runtime_errors_init, 0, 0},
     {0x4dd360, vertrix_port_rtl_construct_list_4dd360, 0, 0},
     {0x4dd3e0, vertrix_port_rtl_thread_record_4dd3e0, 0, 0},
-    {0x4dd430, vertrix_port_rtl_thread_record_finish_4dd430, 0, 0},
+    {0x4dd430, vertrix_port_delete_thread_dc_map, 0, 0},
     {0x4dd440, vertrix_port_rtl_pair_4dd3e0_4dd440, 0, 0},
     {0x4dd460, vertrix_port_handle_detach_4dd460, 0, 0},
     {0x4dd4a0, vertrix_port_rtl_handle_destroy_4dd4a0, 0, 0},
     {0x4ddbe0, vertrix_port_rtl_thread_record_4ddbe0, 0, 0},
-    {0x4ddc30, vertrix_port_rtl_thread_record_finish_4ddc30, 0, 0},
+    {0x4ddc30, vertrix_port_delete_thread_gdi_map, 0, 0},
     {0x4ddc40, vertrix_port_rtl_pair_4ddbe0_4ddc40, 0, 0},
     {0x4ddc60, vertrix_port_rtl_handle_detach_4ddc60, 0, 0},
     {0x4dde50, vertrix_port_rtl_table_register_4dde50, 0, 0},
@@ -4064,7 +4061,7 @@ static const LiftedRoutine routines[] = {
     {0x4e10d0, vertrix_port_is_space, 0, 0},
     {0x4e1190, vertrix_port_lock_init_5c81c0, 0, 0},
     {0x4e11b0, vertrix_port_rtl_thread_record_4e11b0, 0, 0},
-    {0x4e1200, vertrix_port_rtl_thread_record_finish_4e1200, 0, 0},
+    {0x4e1200, vertrix_port_delete_thread_menu_map, 0, 0},
     {0x4e1210, vertrix_port_rtl_pair_4e11b0_4e1210, 0, 0},
     {0x4e1230, vertrix_port_rtl_query_dword_4e1230, 0, 0},
     {0x4e14a3, vertrix_port_call_global_509750_4e14a3, 0, 0},

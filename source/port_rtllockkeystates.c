@@ -1,205 +1,69 @@
 #include "port_rtllockkeystates.h"
 
-/* Answers messages 0xe701..0xe706: reads GetKeyState for Caps Lock, Num Lock, Scroll Lock or Kana
- * (masked with 1, or 0x8000 when [0x5c79c8] is set) and passes it to the handler at [msg+0x24];
- * other codes set +0x18 to 1. */
-
-typedef struct
-{
-    Port *port;
-    uint32_t eax;
-    uint32_t edx;
-    uint32_t ebx;
-    uint32_t ecx;
-    uint32_t esi;
-    uint32_t edi;
-    uint32_t ebp;
-    uint32_t esp;
-    uint32_t tmp;
-    uint32_t stack[32];
-    unsigned pushed;
-    uint32_t fa;
-    uint32_t fb;
-    unsigned fk;
-    unsigned fw;
-    uint32_t fc;
-} Regs;
-
-/* The kinds of the last flag-setting instruction: a subtraction or compare of fa and fb, an
- * addition, a logical result fa (CF and OF clear), and inc / dec of the result fa (CF kept). */
 enum
 {
-    F_SUB,
-    F_ADD,
-    F_LOGIC,
-    F_INC,
-    F_DEC
+    /* MFC's status bar indicators. */
+    INDICATOR_CAPS = 0xe701,
+    INDICATOR_NUM = 0xe702,
+    INDICATOR_SCRL = 0xe703,
+    INDICATOR_KANA = 0xe706,
+    VK_CAPITAL = 0x14,
+    VK_KANA = 0x15,
+    VK_NUMLOCK = 0x90,
+    VK_SCROLL = 0x91,
+    TOGGLED = 1,
+    DOWN = 0x8000,
+    /* Kana reads the key's down bit, not its toggle, when this is set. */
+    KANA_BY_DOWN = 0x5c79c8,
+    GET_KEY_STATE = 0x4f1998,
+
+    /* The CCmdUI: its command id, the flag that passes the update on, and its method table (the
+     * first method enables or disables the item). */
+    COMMAND_ID = 0,
+    CONTINUE_ROUTING = 0x18,
+    METHODS = 0x24,
+    ENABLE = 0
 };
 
-/* The conditions of the jumps and sets. */
-enum
-{
-    CC_E,
-    CC_NE,
-    CC_B,
-    CC_AE,
-    CC_BE,
-    CC_A,
-    CC_L,
-    CC_GE,
-    CC_LE,
-    CC_G,
-    CC_S,
-    CC_NS
-};
-
-static uint32_t rd32(Regs *r, uint32_t address)
-{
-    return port_u32(r->port, address, 0);
-}
-
-static void wr32(Regs *r, uint32_t address, uint32_t value)
-{
-    port_set32(r->port, address, 0, value);
-}
-
-/* The emulated stack of a routine without a frame pointer: pushes and pops move esp. */
-static void push_mem(Regs *r, uint32_t value)
-{
-    r->esp -= 4;
-    wr32(r, r->esp, value);
-}
-
-static uint32_t pop_mem(Regs *r)
-{
-    uint32_t value = rd32(r, r->esp);
-    r->esp += 4;
-    return value;
-}
-
-/* A call taking count stack arguments from esp up; the callee pops them unless kept (cdecl). */
-static void call_mem_with(Regs *r, uint32_t target, unsigned count, int keep)
-{
-    uint32_t args[32] = {0};
-    unsigned i;
-    for (i = 0; i < count && i < 32; i++)
-    {
-        args[i] = rd32(r, r->esp + 4 * i);
-    }
-    vertrix_lift_in_esi = r->esi;
-    vertrix_lift_in_edi = r->edi;
-    vertrix_lift_in_ebp = r->ebp;
-    r->eax =
-        lift_call_arguments(&r->port->env, target, r->eax, r->edx, r->ebx, r->ecx, args, count);
-    vertrix_lift_in_esi = vertrix_lift_in_edi = vertrix_lift_in_ebp = 0;
-    r->edx = vertrix_lift_edx;
-    if (!keep)
-    {
-        r->esp += 4 * count;
-    }
-}
-
-static void call_mem(Regs *r, uint32_t target, unsigned count)
-{
-    call_mem_with(r, target, count, 0);
-}
-
-/* Original 0x4d5bf8: Answers messages 0xe701..0xe706: reads GetKeyState for Caps Lock, Num Lock,
- * Scroll Lock or Kana (masked with 1, or 0x8000 when [0x5c79c8] is set) and passes it to the
- * handler at [msg+0x24]; other codes set +0x18 to 1. Evidence: reads 0x5c79c8, 0x4f1998.
- * Register-for-register from the listing (0x4d5bf8..0x4d5c64); labels are the original addresses.
- */
-static void run(Regs *r)
-{
-    push_mem(r, r->ebx);
-    push_mem(r, r->ecx);
-    push_mem(r, r->esi);
-    push_mem(r, r->edi);
-    r->ebx = r->edx;
-    r->eax = rd32(r, r->edx);
-    r->eax = r->eax - 0xe701;
-    r->edi = 0x1;
-    if (r->eax > 0x5)
-    {
-        goto at_4d5c40;
-    }
-    switch (r->eax)
-    {
-        case 0:
-            goto at_4d5c16;
-        case 1:
-            goto at_4d5c1d;
-        case 2:
-            goto at_4d5c24;
-        case 3:
-            goto at_4d5c40;
-        case 4:
-            goto at_4d5c40;
-        case 5:
-            goto at_4d5c2b;
-        default:
-            r->port->env.failed = 1;
-            return;
-    }
-at_4d5c16:
-    r->eax = 0x14;
-    goto at_4d5c4c;
-at_4d5c1d:
-    r->eax = 0x90;
-    goto at_4d5c4c;
-at_4d5c24:
-    r->eax = 0x91;
-    goto at_4d5c4c;
-at_4d5c2b:
-    r->eax = 0x15;
-    if (rd32(r, 0x5c79c8) == 0x0)
-    {
-        goto at_4d5c4c;
-    }
-    r->edi = 0x8000;
-    goto at_4d5c4c;
-at_4d5c40:
-    wr32(r, r->ebx + 0x18, 0x1);
-    r->edi = pop_mem(r);
-    r->esi = pop_mem(r);
-    r->ecx = pop_mem(r);
-    r->ebx = pop_mem(r);
-    return;
-at_4d5c4c:
-    push_mem(r, r->eax);
-    r->esi = rd32(r, r->ebx + 0x24);
-    call_mem(r, rd32(r, 0x4f1998), 1);
-    r->edx = (uint32_t)(int32_t)(int16_t)(r->eax & 0xffff);
-    r->eax = r->ebx;
-    r->edx = r->edx & r->edi;
-    call_mem(r, rd32(r, r->esi), 0);
-    r->edi = pop_mem(r);
-    r->esi = pop_mem(r);
-    r->ecx = pop_mem(r);
-    r->ebx = pop_mem(r);
-    return;
-}
-
+/* Original 0x4d5bf8 (eax = frame, edx = CCmdUI): MFC's CFrameWnd::OnUpdateKeyIndicator: the Caps
+ * Lock, Num Lock, Scroll Lock and Kana indicators are enabled by their key's toggle state
+ * (GetKeyState & 1; Kana's down bit 0x8000 when 0x5c79c8 is set); any other command passes the
+ * update on (+0x18 = 1) and returns the command id less 0xe701, with edx the CCmdUI. Otherwise
+ * returns what Enable returns, edx too (its callers read it). */
 uint32_t vertrix_port_lock_key_state_query_4d5bf8(PORT_SIGNATURE)
 {
-    enum
-    {
-        BELOW = 0x20
-    };
     Port port;
-    uint8_t stack[BELOW + 8 + 4 * 8];
-    Regs r;
-    port_open_arguments(&port, stack, calls, services, globals, entry, BELOW, 8);
-    memset(&r, 0, sizeof r);
-    r.port = &port;
-    r.eax = entry->eax;
-    r.edx = entry->edx;
-    r.ebx = entry->ebx;
-    r.ecx = entry->ecx;
-    r.esi = entry->esi;
-    r.edi = entry->edi;
-    r.ebp = entry->ebp;
-    r.esp = entry->esp;
-    run(&r);
-    return port_return(&port, r.eax, r.edx);
+    port_open(&port, calls, services, globals, entry);
+    const uint32_t cmd_ui = entry->edx;
+    const uint32_t id = port_u32(&port, cmd_ui, COMMAND_ID);
+    uint32_t key;
+    uint32_t bit = TOGGLED;
+    switch (id)
+    {
+        case INDICATOR_CAPS:
+            key = VK_CAPITAL;
+            break;
+        case INDICATOR_NUM:
+            key = VK_NUMLOCK;
+            break;
+        case INDICATOR_SCRL:
+            key = VK_SCROLL;
+            break;
+        case INDICATOR_KANA:
+            key = VK_KANA;
+            if (port_u32(&port, KANA_BY_DOWN, 0) != 0)
+            {
+                bit = DOWN;
+            }
+            break;
+        default:
+            port_set32(&port, cmd_ui, CONTINUE_ROUTING, 1);
+            return port_return(&port, id - INDICATOR_CAPS, cmd_ui);
+    }
+    const uint32_t state = port_call_stack(&port, GET_KEY_STATE, 0, 0, 0, 0, &key, 1);
+    const uint32_t enable = (uint32_t)(int32_t)(int16_t)state & bit;
+    /* A virtual call: the original also leaves the CCmdUI in ebx and the caller's ecx. */
+    const uint32_t method = port_u32(&port, port_u32(&port, cmd_ui, METHODS), ENABLE);
+    const uint32_t result = port_call(&port, method, cmd_ui, enable, cmd_ui, entry->ecx);
+    return port_return(&port, result, vertrix_lift_edx);
 }

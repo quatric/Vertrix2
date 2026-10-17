@@ -341,10 +341,11 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
         # The call log first: a diverging path explains a differing result.
         assert masked(native_log) == masked(stubs.log), \
             (case, first_difference(masked(native_log), masked(stubs.log)))
-        if compare:
-            assert got == result & result_mask, (case, hex(got), hex(result))
-        else:
+        if not compare:
             assert got == 1, (case, got)
+        elif os.environ.get('VERTRIX_VERIFY_EAX', '1') == '1':
+            # The eax the routine leaves, unless no caller reads it (tools/verify_port.py).
+            assert got == result & result_mask, (case, hex(got), hex(result))
         if compare_edx:
             # The edx the routine leaves (vertrix_lift_edx), which a caller may read as a result.
             got_edx = c.c_uint32.in_dll(native, 'vertrix_lift_edx').value

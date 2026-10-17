@@ -15560,7 +15560,7 @@
   "chunk": "whole_5"
  },
  "0x4cf8d0": {
-  "port": "vertrix_port_rtl_thread_string_finish_4cf8d0",
+  "port": "vertrix_port_delete_thread_window_map",
   "lifted": "lifted_f4cf8d0",
   "chunk": "whole_5"
  },
@@ -16965,7 +16965,7 @@
   "chunk": "whole_6"
  },
  "0x4dd430": {
-  "port": "vertrix_port_rtl_thread_record_finish_4dd430",
+  "port": "vertrix_port_delete_thread_dc_map",
   "lifted": "lifted_f4dd430",
   "chunk": "whole_6"
  },
@@ -16990,7 +16990,7 @@
   "chunk": "whole_6"
  },
  "0x4ddc30": {
-  "port": "vertrix_port_rtl_thread_record_finish_4ddc30",
+  "port": "vertrix_port_delete_thread_gdi_map",
   "lifted": "lifted_f4ddc30",
   "chunk": "whole_6"
  },
@@ -17350,7 +17350,7 @@
   "chunk": "whole_6"
  },
  "0x4e1200": {
-  "port": "vertrix_port_rtl_thread_record_finish_4e1200",
+  "port": "vertrix_port_delete_thread_menu_map",
   "lifted": "lifted_f4e1200",
   "chunk": "whole_8"
  },

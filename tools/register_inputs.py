@@ -19,7 +19,9 @@ Pushes are reads only where the pushed value is read back:
   its own (read by any access overlapping it, an indexed access of the frame, or an address taken
   of the slot itself);
 - a frameless prologue push of a register the epilogue pops again is a save, unless the routine
-  reads through esp at or above the locals the prologue reserves.
+  reads its slot back: the stack depth of every instruction is followed (pushes, pops, esp
+  arithmetic and the ret counts of callees), and an esp access at an unknown depth counts as
+  reading every slot.
 """
 import sys
 
@@ -27,6 +29,7 @@ from capstone import CS_AC_READ, CS_AC_WRITE
 from capstone import x86_const as X
 
 import lift
+from import_args import BY_SLOT
 
 # The registers a call compares (the stub logs them), then the ones a port hands over through
 # port_call_with: a callee that reads those needs them passed.
@@ -49,14 +52,19 @@ _known = {}
 _active = set()
 
 
-def _regs(insn):
-    """The registers (of the four) an instruction reads and fully writes."""
+def _padding(insn):
+    """Alignment padding that does nothing: lea edx, [edx] / mov eax, eax."""
     ops = insn.operands
-    if (insn.mnemonic in ('lea', 'mov') and len(ops) == 2 and ops[0].type == X.X86_OP_REG and
+    return (insn.mnemonic in ('lea', 'mov') and len(ops) == 2 and ops[0].type == X.X86_OP_REG and
             ((ops[1].type == X.X86_OP_REG and ops[1].reg == ops[0].reg) or
              (insn.mnemonic == 'lea' and ops[1].mem.base == ops[0].reg and not ops[1].mem.index
-              and not ops[1].mem.disp))):
-        return set(), set()  # padding: lea edx, [edx] / mov eax, eax
+              and not ops[1].mem.disp and not ops[1].mem.segment)))
+
+
+def _regs(insn):
+    """The registers (of the four) an instruction reads and fully writes."""
+    if _padding(insn):
+        return set(), set()
     reads, writes = insn.regs_access()
     used, defined = set(), set()
     for reg in reads:
@@ -130,47 +138,261 @@ def _epilogue_pops(seen):
         back = address
         while True:
             before = [a for a in seen if a < back and a + seen[a].size == back]
-            if not before or seen[before[0]].mnemonic not in ('pop', 'mov'):
+            if not before:
                 break
             prior = seen[before[0]]
             if prior.mnemonic == 'pop' and prior.operands[0].type == X.X86_OP_REG:
                 regs.add(prior.operands[0].reg)
-            elif prior.op_str != 'esp, ebp':
+            elif not (prior.op_str == 'esp, ebp' or prior.mnemonic == 'nop' or
+                      _padding(prior)):
                 break
             back = before[0]
         popped = regs if popped is None else popped & regs
     return popped or set()
 
 
-def _reserved(seen, start):
-    """The bytes of locals the prologue reserves under its pushes (sub esp, n / add esp, -n)."""
+TABLES = {}
+
+
+def _jump_table(seen, insn):
+    """lift.jump_table, and also a byte index zero-extended after its bound check (0x4da48f:
+    `cmp al, 6; ja ...; movzx eax, al; jmp [eax*4 + table]`)."""
+    try:
+        return lift.jump_table(seen, insn)
+    except NotImplementedError:
+        mem = insn.operands[0].mem
+        if insn.operands[0].type != X.X86_OP_MEM or mem.base or not mem.index or mem.scale != 4:
+            raise
+        prior = sorted((a for a in seen if a < insn.address), reverse=True)[:8]
+        if not prior or seen[prior[0]].mnemonic != 'movzx':
+            raise
+        source = seen[prior[0]].operands[1]
+        if source.type != X.X86_OP_REG or seen[prior[0]].operands[0].reg != mem.index:
+            raise
+        count = None
+        for address in prior[1:]:
+            check = seen[address]
+            if (check.mnemonic == 'cmp' and check.operands[0].type == X.X86_OP_REG and
+                    check.operands[0].reg == source.reg and
+                    check.operands[1].type == X.X86_OP_IMM):
+                count = check.operands[1].imm + 1
+                break
+        if count is None or not 0 < count <= 256:
+            raise
+        base = mem.disp & 0xffffffff
+        return [int.from_bytes(lift.code_at(base + 4 * i, 4), 'little') for i in range(count)]
+
+
+_entries = None
+
+
+def _foreign(target, start):
+    """Whether a jump to `target` leaves the routine at `start` for another one: a tail call to an
+    address some instruction calls directly, to a tail shared by routines (jumps reach it from
+    sites over 0x800 bytes apart: 0x4dee00 ends 0x4cf8d0, 0x4dd430, 0x4ddc30 and 0x4e1200), or to
+    one before the start."""
+    global _entries
+    if _entries is None:
+        image = _code()
+        _entries = set()
+        jumps = {}
+        for at in range(0x1000, 0xf1000 - 6):
+            site = lift.BASE + at
+            if image[at] in (0xe8, 0xe9):
+                target = (site + 5 + int.from_bytes(image[at + 1:at + 5], 'little', signed=True)) \
+                    & 0xffffffff
+                if image[at] == 0xe8:
+                    _entries.add(target)
+                else:
+                    jumps.setdefault(target, []).append(site)
+            elif image[at] == 0x0f and 0x80 <= image[at + 1] <= 0x8f:
+                target = (site + 6 + int.from_bytes(image[at + 2:at + 6], 'little', signed=True)) \
+                    & 0xffffffff
+                jumps.setdefault(target, []).append(site)
+        _entries |= {target for target, sites in jumps.items()
+                     if max(sites) - min(sites) > 0x800}
+    return target != start and (target < start or target in _entries)
+
+
+def _trace(start):
+    """lift.trace with the jump tables of _jump_table, kept in TABLES, not following tail calls."""
+    seen, todo = {}, [start]
+    while todo:
+        address = todo.pop()
+        while address not in seen:
+            insn = lift.insn_at(address)
+            if insn is None:
+                raise ValueError('undecodable %x' % address)
+            seen[address] = insn
+            mnemonic = insn.mnemonic
+            if mnemonic in lift.JUMPS:
+                op = insn.operands[0]
+                if op.type == X.X86_OP_IMM:
+                    if not _foreign(op.imm, start):
+                        todo.append(op.imm)
+                elif mnemonic == 'jmp' and not _import_slot(insn):
+                    targets = _jump_table(seen, insn)
+                    TABLES[insn.address] = targets
+                    todo.extend(targets)
+                if mnemonic == 'jmp':
+                    break
+            if mnemonic == 'ret':
+                break
+            address += insn.size
+    return seen
+
+
+def _successors(seen, address):
+    insn = seen[address]
+    nxt = address + insn.size
+    if insn.mnemonic == 'ret':
+        return ()
+    if insn.mnemonic == 'jmp':
+        op = insn.operands[0]
+        if op.type == X.X86_OP_IMM:
+            return (op.imm,) if op.imm in seen else ()
+        return tuple(TABLES.get(address, ()))
+    if insn.mnemonic in lift.JUMPS:
+        return (insn.operands[0].imm, nxt)
+    return (nxt,)
+
+
+def _popped(insn):
+    """The stack bytes a call's callee removes with its ret, or None when unknown."""
+    op = insn.operands[0]
+    if op.type == X.X86_OP_IMM:
+        count = lift.callee_args(op.imm)
+    elif _import_slot(insn):
+        count = BY_SLOT.get(op.mem.disp & 0xffffffff)
+    elif op.type == X.X86_OP_MEM and not op.mem.base and not op.mem.index:
+        target = _stored_code(op.mem.disp & 0xffffffff)
+        count = None if target is None else lift.callee_args(target)
+    else:
+        count = None
+    return None if count is None else 4 * count
+
+
+def _step(insn, depth):
+    """The bytes pushed since the entry after the instruction, or None when not known."""
+    mnemonic = insn.mnemonic
+    ops = insn.operands
+    # An operand-size prefix makes a 2-byte push; segment registers push 4 bytes.
+    size = 2 if 0x66 in insn.prefix else 4
+    if mnemonic == 'push':
+        return depth + size
+    if mnemonic == 'pop':
+        return depth - size
+    if mnemonic in ('pushal', 'pushad'):
+        return depth + 32
+    if mnemonic in ('popal', 'popad'):
+        return depth - 32
+    if mnemonic in ('pushfd', 'pushf'):
+        return depth + 4
+    if mnemonic in ('popfd', 'popf'):
+        return depth - 4
+    if mnemonic == 'call':
+        popped = _popped(insn)
+        return None if popped is None else depth - popped
+    if (mnemonic in ('sub', 'add') and ops[0].type == X.X86_OP_REG and
+            ops[0].reg == X.X86_REG_ESP):
+        if ops[1].type != X.X86_OP_IMM:
+            return None
+        amount = ops[1].imm if ops[1].imm < 0x80000000 else ops[1].imm - 0x100000000
+        return depth + amount if mnemonic == 'sub' else depth - amount
+    _, writes = insn.regs_access()
+    if X.X86_REG_ESP in writes:
+        return None
+    return depth
+
+
+def _depths(seen, start):
+    """The bytes pushed since the entry before each instruction (None where paths disagree or the
+    routine moves esp in a way not followed)."""
+    depth = {start: 0}
+    todo = [start]
+    while todo:
+        address = todo.pop()
+        here = depth[address]
+        after = None if here is None else _step(seen[address], here)
+        for successor in _successors(seen, address):
+            if successor not in seen:
+                continue
+            if successor not in depth:
+                depth[successor] = after
+                todo.append(successor)
+            elif depth[successor] is not None and depth[successor] != after:
+                depth[successor] = None
+                todo.append(successor)
+    return depth
+
+
+def _saves(seen, start, prologue):
+    """The registers of the frameless prologue pushes that are only saved: popped again before
+    every ret, and their slots never read (through esp, or through an ebp set up after them)."""
+    popped = _epilogue_pops(seen)
+    slots = {}
+    offset = 0
+    ebp_depth = None
     address = start
     while address in seen:
         insn = seen[address]
-        if insn.mnemonic == 'push' or (insn.mnemonic == 'mov' and insn.op_str == 'ebp, esp'):
-            address += insn.size
-            continue
-        if (insn.mnemonic in ('sub', 'add') and insn.operands[0].type == X.X86_OP_REG and
-                insn.operands[0].reg == X.X86_REG_ESP and insn.operands[1].type == X.X86_OP_IMM):
-            amount = insn.operands[1].imm & 0xffffffff
-            return amount if insn.mnemonic == 'sub' else (-amount) & 0xffffffff
-        break
-    return 0
+        if address in prologue and prologue[address] is None:
+            offset += 4
+            slots[insn.operands[0].reg] = -offset
+        elif insn.mnemonic == 'mov' and insn.op_str == 'ebp, esp':
+            ebp_depth = offset
+        elif address not in prologue:
+            break
+        address += insn.size
+    if not slots:
+        return set()
+    reserve = 0
+    if address in seen:
+        first = seen[address]
+        if (first.mnemonic in ('sub', 'add') and first.operands[0].type == X.X86_OP_REG and
+                first.operands[0].reg == X.X86_REG_ESP and first.operands[1].type == X.X86_OP_IMM):
+            amount = first.operands[1].imm & 0xffffffff
+            reserve = amount if first.mnemonic == 'sub' else (-amount) & 0xffffffff
+    depths = _depths(seen, start)
+    unsafe = set()
+    for address, insn in seen.items():
+        for op in insn.operands:
+            if op.type != X.X86_OP_MEM:
+                continue
+            if op.mem.base == X.X86_REG_ESP:
+                if insn.mnemonic == 'lea' and insn.operands[0].reg == X.X86_REG_ESP:
+                    continue
+                if op.mem.index:
+                    return set()
+                here = depths.get(address)
+                if here is None:
+                    # esp only goes further down after the prologue in balanced code: an access
+                    # inside the locals the prologue reserves stays below the saves.
+                    if op.mem.disp + op.size <= reserve:
+                        continue
+                    return set()
+                low = -here + op.mem.disp
+            elif op.mem.base == X.X86_REG_EBP and ebp_depth is not None:
+                if op.mem.index:
+                    return set()
+                low = -ebp_depth + op.mem.disp
+            else:
+                continue
+            reads = insn.mnemonic == 'lea' or op.access & CS_AC_READ
+            high = low + (1 if insn.mnemonic == 'lea' else op.size)
+            for reg, slot in slots.items():
+                if reads and low < slot + 4 and slot < high:
+                    unsafe.add(reg)
+    return {reg for reg in slots if reg in popped and reg not in unsafe}
 
 
-def _reads_esp(seen, reserve):
-    """Whether the routine may read its pushed registers back through esp: an esp-based access at
-    or above the reserved locals (pushes later in the routine only move esp further down)."""
-    return any(op.type == X.X86_OP_MEM and op.mem.base == X.X86_REG_ESP and
-               (op.mem.index or op.mem.disp >= reserve)
-               for insn in seen.values() for op in insn.operands if insn.mnemonic != 'lea' or
-               insn.operands[0].reg != X.X86_REG_ESP)
+IMPORTS = (0x4f1000, 0x4f4000)
 
 
 def _import_slot(insn):
     op = insn.operands[0]
     return (op.type == X.X86_OP_MEM and not op.mem.base and not op.mem.index and
-            0x4f1000 <= (op.mem.disp & 0xffffffff) < 0x4f4000)
+            IMPORTS[0] <= (op.mem.disp & 0xffffffff) < IMPORTS[1])
 
 
 # The sound driver's routines, called through 0x52f028 .. 0x52f08f: 0x40a830 fills the slots from
@@ -189,6 +411,15 @@ SITES = {
     # 0x4ce22a, 0x4ce74a, 0x4ce78f, 0x4d9410 and 0x4d9444) is one of these.
     0x4dbfe3: (0x4cc780, 0x4ce7c0, 0x4ce7a0),
 }
+
+
+def _stored_code(slot):
+    """The code address the image holds in a global, or None."""
+    try:
+        target = int.from_bytes(lift.code_at(slot, 4), 'little')
+    except Exception:  # noqa: BLE001 - outside the image
+        return None
+    return target if lift.BASE + 0x1000 <= target < lift.BASE + 0xf1000 else None
 
 
 def _through(insn, depth):
@@ -220,8 +451,23 @@ def _through(insn, depth):
     return own | set(COMPARED)
 
 
+# Routines whose arguments are known better than the analysis can see.
+ROUTINES = {
+    # The C++ runtime's thread data (0x4ce740) and its +0x1038 part (0x4ce780): they load their
+    # TLS key and constructor and call 0x4dbf80, taking no register argument. Only a failure to
+    # create the data reaches the exception machinery (0x4da66e), which records whatever
+    # registers it is handed.
+    0x4ce740: frozenset(),
+    0x4ce780: frozenset(),
+}
+
+
 def inputs(start, depth=0):
     """The set of eax, edx, ebx and ecx the routine at `start` reads before writing."""
+    if start in ROUTINES:
+        return ROUTINES[start]
+    if IMPORTS[0] <= start < IMPORTS[1]:
+        return frozenset()  # a Windows import (called through its slot): stack arguments only
     if start in _known:
         return _known[start]
     if start in _active or depth > 24:
@@ -240,11 +486,10 @@ def inputs(start, depth=0):
 
 
 def _inputs(start, depth, entry=True):
-    seen = lift.trace(start)
+    seen = _trace(start)
     prologue = _prologue(seen, start) if entry else {}
     slots = sorted(s for s in prologue.values() if s is not None)
-    saves = (_epilogue_pops(seen) if entry and not _reads_esp(seen, _reserved(seen, start))
-             else set())
+    saves = _saves(seen, start, prologue) if entry else set()
     order = sorted(seen)
     successors = {}
     effects = {}
@@ -263,8 +508,8 @@ def _inputs(start, depth, entry=True):
             elif op.type == X.X86_OP_IMM:
                 successors[address] = ()  # a tail jump into another routine
                 used = set(inputs(op.imm, depth + 1))
-            elif address in lift.TABLES:
-                successors[address] = tuple(lift.TABLES[address])
+            elif address in TABLES:
+                successors[address] = tuple(TABLES[address])
                 used, _ = _regs(insn)
             elif _import_slot(insn):
                 successors[address] = ()
@@ -272,8 +517,14 @@ def _inputs(start, depth, entry=True):
                 successors[address] = ()
                 used = _through(insn, depth)
         elif mnemonic in lift.JUMPS:
-            successors[address] = (insn.operands[0].imm, nxt)
-            used, defined = _regs(insn)
+            target = insn.operands[0].imm
+            if target in seen:
+                successors[address] = (target, nxt)
+                used, defined = _regs(insn)
+            else:
+                # A conditional tail call: either branch.
+                successors[address] = (nxt,)
+                used = _regs(insn)[0] | set(inputs(target, depth + 1))
         else:
             successors[address] = (nxt,)
             if mnemonic == 'call':
@@ -344,8 +595,8 @@ def _code():
 
 
 def returned_read(start, name='edx'):
-    """Whether a caller of the routine at `start` may read the register it leaves (edx: the high
-    half of a 64-bit result). Every direct call site is followed from its return address; a tail
+    """Whether a caller of the routine at `start` may read the register it leaves (eax: its result;
+    edx: the high half of a 64-bit result, or what a routine that keeps it leaves). Every direct call site is followed from its return address; a tail
     jump to the routine, or its address held anywhere in the image (a method table, a pointer
     pushed or stored), counts as a reader."""
     image = _code()
@@ -375,9 +626,10 @@ def mask(start):
 def main():
     for text in sys.argv[1:]:
         address = int(text, 16)
-        print('%x reads %s; callers %s edx' % (
+        left = [n for n in ('eax', 'edx') if returned_read(address, n)]
+        print('%x reads %s; callers read %s' % (
             address, ' '.join(n for n in NAMES if n in inputs(address)) or '-',
-            'read' if returned_read(address) else 'never read'))
+            ' and '.join(left) if left else 'neither eax nor edx'))
 
 
 if __name__ == '__main__':

@@ -70,10 +70,11 @@ def flag_readers(address):
     return readers
 
 
-def run_mode(directory, name, cases, mode, flags, timeout, natives=(), edx=True):
-    # A port's calls compare only in the registers their callees read, and the edx it leaves only
-    # where a caller reads it (tools/register_inputs.py).
+def run_mode(directory, name, cases, mode, flags, timeout, natives=(), edx=True, eax=True):
+    # A port's calls compare only in the registers their callees read, and the eax and edx it
+    # leaves only where a caller reads them (tools/register_inputs.py).
     environment = dict(os.environ, VERTRIX_VERIFY_EDX='1' if edx else '0',
+                       VERTRIX_VERIFY_EAX='1' if eax else '0',
                        VERTRIX_VERIFY_FLAGS='1' if flags else '0', VERTRIX_VERIFY_LIVE='1',
                        VERTRIX_VERIFY_SOURCES=' '.join(natives))
     try:
@@ -124,19 +125,20 @@ def verify(address, function, cases, timeout=600):
     # Callers that branch on the flags the routine leaves: the flags are compared too.
     readers = sorted(set(flag_readers(address)))
     edx = register_inputs.returned_read(address)
+    eax = register_inputs.returned_read(address, 'eax')
     failed = False
     passed = 0
     modes = {}
     for mode in ('wide', 'small'):
         port_ok, port_detail = run_mode(scratch, name, cases, mode, bool(readers), timeout,
-                                        natives, edx)
+                                        natives, edx, eax)
         if port_ok:
             print('%s %s: port passes %d cases' % (name, mode, cases))
             modes[mode] = 'passed'
             passed += 1
             continue
         lifted_ok, lifted_detail = run_mode(lifted, name, cases, mode, bool(readers), timeout,
-                                            edx=edx)
+                                            edx=edx, eax=eax)
         if lifted_ok:
             print('%s %s: PORT FAILS: %s' % (name, mode, port_detail))
             modes[mode] = 'failed'
@@ -155,7 +157,8 @@ def verify(address, function, cases, timeout=600):
     print('%s %s: %s' % (name, function, 'FAILED' if failed else 'verified'))
     (scratch / 'result.json').write_text(json.dumps(
         {'address': '0x%x' % address, 'port': function, 'cases': cases, 'modes': modes,
-         'flags_compared': bool(readers), 'edx_compared': edx, 'verified': not failed}, indent=1) + '\n')
+         'flags_compared': bool(readers), 'edx_compared': edx, 'eax_compared': eax,
+         'verified': not failed}, indent=1) + '\n')
     return not failed
 
 

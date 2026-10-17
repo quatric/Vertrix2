@@ -19,9 +19,14 @@ the same thing as ordinary C, and is verified the same way.
   are call arguments. Saved registers are not written back: nothing reads them.
 - Calls hand over the arguments and 0 in the registers the callee does not read (see below).
   Give a callee used more than once a small static wrapper (`decode_frame`, `release`).
+- A shared tail the original jumps to (no dispatch entry of its own) becomes a static function,
+  and the routines sharing it one file (`port_handlemaps.c`: four MFC routines that all end in
+  0x4dee00).
 - `port_copy` is `rep movsd` plus `rep movsb`; a `repne scasb` length is a byte loop.
-- Return the edx the original leaves only when a caller reads it (`entry->edx` for a routine that
-  never touches it); otherwise return 0.
+- Return eax and edx only when a caller reads them; a routine whose result nobody reads returns
+  0 like the procedure it is. The C++ parts of the original (libjpeg, MFC) are compiled to keep
+  values in edx and ecx across calls, so their callees save edx: where the original pushes and
+  pops edx, the port returns `entry->edx`.
 - The comment on the port says what the routine does, in the terms of the game, and states every
   oddity of the original that the port keeps (0x48b2f0 frees its buffer twice when the sample
   allocation fails, and fills the freed sample).
@@ -30,8 +35,9 @@ the same thing as ordinary C, and is verified the same way.
 
 `tools/verify_port.py` checks a port against the original executing in Unicorn, with the cases of
 its lifted copy. A call compares its stack arguments and only the registers among eax, edx, ebx and
-ecx that its callee reads (`VERTRIX_VERIFY_LIVE`); the returned edx compares only when a caller of
-the routine reads it after the call. Both come from `tools/register_inputs.py`, a liveness analysis
+ecx that its callee reads (`VERTRIX_VERIFY_LIVE`); the returned eax and edx compare only when a
+caller of the routine reads them after the call (`VERTRIX_VERIFY_EAX`, `VERTRIX_VERIFY_EDX`). A
+routine whose address the image holds (a method) may be called from anywhere, so both compare. Both come from `tools/register_inputs.py`, a liveness analysis
 of the original's code:
 
 ```
@@ -40,12 +46,21 @@ python tools/register_inputs.py 405f70 40acd0
 40acd0 reads eax edx ebx; callers never read edx
 ```
 
-It follows calls into their callees and calls through fixed globals and the sound driver's slots
-to the routines the image puts there. Pushes that save a register (or reserve a local the routine
-overwrites) are not reads. Where it cannot see, it assumes the register is read. It also reports
-esi, edi and ebp, which no call compares: a port passes 0 there (`port_call`), so a callee listed
-as reading one needs a look. So far each such read has been the runtime's error path (0x4eb4d4) or
-the exception machinery, not an argument.
+It follows calls into their callees, and tail jumps into other routines (an address something
+calls, or a tail several routines share) as calls. A call through a fixed global or the sound
+driver's slots goes to the routines the image puts there, a Windows import reads no register, and
+an unknown method or procedure variable reads all four. Pushes that save a register (followed by
+the stack depth of each instruction) or reserve a local the routine overwrites are not reads.
+Where it cannot see, it assumes the register is read. `SITES` and `ROUTINES` hold the few calls
+known better than the code shows, each with its reason (GetMem's C++ new-handler, which nothing
+installs; MFC's thread data, whose only register reads are the exception machinery's).
+
+It also reports esi, edi and ebp, which no call compares: a port passes 0 there (`port_call`), so a
+callee listed as reading one needs a look. So far each such read has been the runtime's error path
+(0x4eb4d4) or the exception machinery, not an argument.
+
+A virtual call goes to a stub in the verifier, which compares all four registers: the port hands
+over what the original leaves in them and says so (0x4d5bf8, 0x4dee00 in `port_handlemaps.c`).
 
 A deliberate mistake in a register the callee reads still fails (0x48b2f0 with the length off by
 one in ebx at 0x40acd0), and the same mistake in ecx, which it does not read, passes.
@@ -60,3 +75,9 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x47f410 | `port_rtldisplayreadies.c` | display ready test |
 | 0x4c5d60 | `port_rtljpeglargestinputs.c` | libjpeg largest_input_value |
 | 0x489760 | `port_rtlstringsuffixes.c` | path relative to a directory (`.\` + rest) |
+| 0x425ef0 | `port_rtlailevelsettings.c` | computer player set up for its skill |
+| 0x43d800 | `port_rtleffectreleases.c` | release an object's effect slots |
+| 0x471340 | `port_rtldelayactors.c` | actor that waits while a message is read |
+| 0x4d5bf8 | `port_rtllockkeystates.c` | MFC CFrameWnd::OnUpdateKeyIndicator |
+| 0x4dd430, 0x4ddc30, 0x4e1200, 0x4cf8d0 | `port_handlemaps.c` | delete the thread's MFC handle maps |
+| 0x4bb170 | `port_rtlyccrgbtables.c` | libjpeg build_ycc_rgb_table |
