@@ -40,7 +40,11 @@ for address in NATIVE_UNVERIFIED_BOUNDARIES:
     entries.pop(address, None)
 headers = sorted(Path(p).name for p in glob.glob(str(ROOT / 'source' / 'lifted_*.h'))
                  if 'dispatch' not in p)
-headers += sorted(Path(p).name for p in glob.glob(str(ROOT / 'source' / 'port_*.h')))
+# Ports: the register-level port_*.h, and the native rewrites (no prefix) that declare ports.
+headers += sorted(Path(p).name for p in glob.glob(str(ROOT / 'source' / '*.h'))
+                  if Path(p).name.startswith('port_')
+                  or (not Path(p).name.startswith('lifted_')
+                      and 'uint32_t vertrix_port_' in Path(p).read_text()))
 row_text = {a: '    {0x%x, lifted_%s, %d, %d},' % (a, entries[a][0], entries[a][1]['stack'],
                                                 entries[a][1]['arguments']) for a in entries}
 row_text.update({a: '    {0x%x, %s, %d, %d},' % ((a,) + port) for a, port in NATIVE_PORTS.items()})

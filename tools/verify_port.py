@@ -1,4 +1,4 @@
-"""Verify a clean port (source/port_*.c) against the original executing in Unicorn.
+"""Verify a clean port (source/port_*.c, or a native rewrite without the prefix) against the original executing in Unicorn.
 
 usage: verify_port.py ADDRESS FUNCTION [--cases N]
        verify_port.py --all [--cases N]   (every port in PORTS, tools/dispatch_boundaries.py)
@@ -88,8 +88,8 @@ def run_mode(directory, name, cases, mode, flags, timeout, natives=(), edx=True,
 
 def verify(address, function, cases, timeout=600):
     """Print the outcome for one port; returns whether it is verified."""
-    sources = [p for p in sorted((ROOT / 'source').glob('port_*.c'))
-               if re.search(r'^uint32_t %s\(' % function, p.read_text(), re.M)]
+    sources = [p for p in sorted((ROOT / 'source').glob('*.c')) if not p.name.startswith('lifted_')
+               and re.search(r'^uint32_t %s\(' % function, p.read_text(), re.M)]
     name = 'f%x' % address
     if len(sources) != 1:
         print('%s: %s is defined in %d port sources' % (name, function, len(sources)))
