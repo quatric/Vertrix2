@@ -1,534 +1,166 @@
 #include "port_rtljpegapp0s.h"
 
-/* libjpeg examine_app0: recognises a JFIF APP0 header and stores its version, density unit and
- * densities. */
+/* libjpeg's examine_app0 (jdmarker.c): looks at an APP0 marker's first bytes for a JFIF or JFXX
+ * header and traces what it finds. */
 
-typedef struct
-{
-    Port *port;
-    uint32_t eax;
-    uint32_t edx;
-    uint32_t ebx;
-    uint32_t ecx;
-    uint32_t esi;
-    uint32_t edi;
-    uint32_t ebp;
-    uint32_t esp;
-    uint32_t tmp;
-    uint32_t stack[32];
-    unsigned pushed;
-    uint32_t fa;
-    uint32_t fb;
-    unsigned fk;
-    unsigned fw;
-    uint32_t fc;
-} Regs;
-
-/* The kinds of the last flag-setting instruction: a subtraction or compare of fa and fb, an
- * addition, a logical result fa (CF and OF clear), and inc / dec of the result fa (CF kept). */
 enum
 {
-    F_SUB,
-    F_ADD,
-    F_LOGIC,
-    F_INC,
-    F_DEC
+    CINFO_ERR = 0,
+    CINFO_SAW_JFIF_MARKER = 0x118,
+    CINFO_JFIF_MAJOR_VERSION = 0x11c,
+    CINFO_JFIF_MINOR_VERSION = 0x11d,
+    CINFO_DENSITY_UNIT = 0x11e,
+    CINFO_X_DENSITY = 0x120,
+    CINFO_Y_DENSITY = 0x122,
+    /* jpeg_error_mgr: emit_message, msg_code and the integer message parameters. */
+    ERR_EMIT_MESSAGE = 4,
+    ERR_MSG_CODE = 0x14,
+    ERR_MSG_PARM = 0x18,
+
+    APP0_DATA_LEN = 14,
+    JFXX_DATA_LEN = 6,
+
+    JTRC_APP0 = 0x4d,
+    JTRC_JFIF = 0x57,
+    JTRC_JFIF_BADTHUMBNAILSIZE = 0x58,
+    JTRC_JFIF_EXTENSION = 0x59,
+    JTRC_JFIF_THUMBNAIL = 0x5a,
+    JTRC_THUMB_JPEG = 0x6c,
+    JTRC_THUMB_PALETTE = 0x6d,
+    JTRC_THUMB_RGB = 0x6e,
+    JWRN_JFIF_MAJOR = 0x77
 };
 
-/* The conditions of the jumps and sets. */
-enum
+static uint32_t error_manager(Port *port, uint32_t cinfo)
 {
-    CC_E,
-    CC_NE,
-    CC_B,
-    CC_AE,
-    CC_BE,
-    CC_A,
-    CC_L,
-    CC_GE,
-    CC_LE,
-    CC_G,
-    CC_S,
-    CC_NS
-};
-
-static uint32_t rd8(Regs *r, uint32_t address)
-{
-    return port_u8(r->port, address, 0);
+    return port_u32(port, cinfo, CINFO_ERR);
 }
 
-static uint32_t rd16(Regs *r, uint32_t address)
+static void set_parm(Port *port, uint32_t cinfo, unsigned index, uint32_t value)
 {
-    return port_u16(r->port, address, 0);
+    port_set32(port, error_manager(port, cinfo), ERR_MSG_PARM + index * 4, value);
 }
 
-static uint32_t rd32(Regs *r, uint32_t address)
+/* cinfo->err->emit_message(cinfo, level) for a message whose code and parameters are set. A
+ * method call: ebx and ecx are what the original leaves in them, given at each call. */
+static void emit(Port *port, uint32_t cinfo, uint32_t code, uint32_t level, uint32_t ebx,
+                 uint32_t ecx)
 {
-    return port_u32(r->port, address, 0);
+    port_set32(port, error_manager(port, cinfo), ERR_MSG_CODE, code);
+    port_call(port, port_u32(port, error_manager(port, cinfo), ERR_EMIT_MESSAGE), cinfo, level, ebx,
+              ecx);
 }
 
-static void wr8(Regs *r, uint32_t address, uint32_t value)
+/* TRACEMS1 and friends, after which the original leaves the error manager in ecx. */
+static void trace(Port *port, uint32_t cinfo, uint32_t code, uint32_t ebx)
 {
-    port_set8(r->port, address, 0, value);
+    emit(port, cinfo, code, 1, ebx, error_manager(port, cinfo));
 }
 
-static void wr16(Regs *r, uint32_t address, uint32_t value)
+static uint32_t word_be(Port *port, uint32_t data, uint32_t offset)
 {
-    port_set16(r->port, address, 0, value);
+    return (port_u8(port, data, offset) << 8) + port_u8(port, data, offset + 1);
 }
 
-static void wr32(Regs *r, uint32_t address, uint32_t value)
+static int matches(Port *port, uint32_t data, const char *tag)
 {
-    port_set32(r->port, address, 0, value);
+    for (unsigned i = 0; i < 5; i++)
+    {
+        if (port_u8(port, data, i) != (uint8_t)tag[i])
+        {
+            return 0;
+        }
+    }
+    return 1;
 }
 
-static void set_low8(uint32_t *reg, uint32_t value)
-{
-    *reg = (*reg & 0xffffff00u) | (value & 0xff);
-}
-
-static void set_high8(uint32_t *reg, uint32_t value)
-{
-    *reg = (*reg & 0xffff00ffu) | ((value & 0xff) << 8);
-}
-
-static void set_low16(uint32_t *reg, uint32_t value)
-{
-    *reg = (*reg & 0xffff0000u) | (value & 0xffff);
-}
-
-static uint32_t flag_mask(const Regs *r)
-{
-    return r->fw == 8 ? 0xffu : r->fw == 16 ? 0xffffu : 0xffffffffu;
-}
-
-static uint32_t result(const Regs *r)
-{
-    uint32_t mask = flag_mask(r);
-    if (r->fk == F_SUB)
-    {
-        return (r->fa - r->fb) & mask;
-    }
-    if (r->fk == F_ADD)
-    {
-        return (r->fa + r->fb) & mask;
-    }
-    return r->fa & mask;
-}
-
-static uint32_t carry(const Regs *r)
-{
-    uint32_t mask = flag_mask(r);
-    if (r->fk == F_SUB)
-    {
-        return (r->fa & mask) < (r->fb & mask);
-    }
-    if (r->fk == F_ADD)
-    {
-        return result(r) < (r->fa & mask);
-    }
-    if (r->fk == F_INC || r->fk == F_DEC)
-    {
-        return r->fc;
-    }
-    return 0;
-}
-
-/* The flags of an instruction recorded (width 8, 16 or 32). */
-static void flags(Regs *r, unsigned kind, uint32_t a, uint32_t b, unsigned width)
-{
-    if (kind == F_INC || kind == F_DEC)
-    {
-        r->fc = carry(r);
-    }
-    r->fk = kind;
-    r->fa = a;
-    r->fb = b;
-    r->fw = width;
-}
-
-static uint32_t overflow(const Regs *r)
-{
-    uint32_t top = 1u << (r->fw - 1);
-    uint32_t value = result(r);
-    if (r->fk == F_SUB)
-    {
-        return (((r->fa ^ r->fb) & (r->fa ^ value)) & top) != 0;
-    }
-    if (r->fk == F_ADD)
-    {
-        return ((~(r->fa ^ r->fb) & (r->fa ^ value)) & top) != 0;
-    }
-    if (r->fk == F_INC)
-    {
-        return value == top;
-    }
-    if (r->fk == F_DEC)
-    {
-        return value == top - 1;
-    }
-    return 0;
-}
-
-/* A condition of the recorded flags. */
-static uint32_t cond(const Regs *r, unsigned code)
-{
-    uint32_t zero = result(r) == 0;
-    uint32_t sign = (result(r) >> (r->fw - 1)) & 1;
-    uint32_t less = sign != overflow(r);
-    switch (code)
-    {
-        case CC_E:
-            return zero;
-        case CC_NE:
-            return !zero;
-        case CC_B:
-            return carry(r);
-        case CC_AE:
-            return !carry(r);
-        case CC_BE:
-            return carry(r) || zero;
-        case CC_A:
-            return !carry(r) && !zero;
-        case CC_L:
-            return less;
-        case CC_GE:
-            return !less;
-        case CC_LE:
-            return less || zero;
-        case CC_G:
-            return !less && !zero;
-        case CC_S:
-            return sign;
-        default:
-            return !sign;
-    }
-}
-
-/* The emulated stack of a routine without a frame pointer: pushes and pops move esp. */
-static void push_mem(Regs *r, uint32_t value)
-{
-    r->esp -= 4;
-    wr32(r, r->esp, value);
-}
-
-static uint32_t pop_mem(Regs *r)
-{
-    uint32_t value = rd32(r, r->esp);
-    r->esp += 4;
-    return value;
-}
-
-/* A call taking count stack arguments from esp up; the callee pops them unless kept (cdecl). */
-static void call_mem_with(Regs *r, uint32_t target, unsigned count, int keep)
-{
-    uint32_t args[32] = {0};
-    unsigned i;
-    for (i = 0; i < count && i < 32; i++)
-    {
-        args[i] = rd32(r, r->esp + 4 * i);
-    }
-    vertrix_lift_in_esi = r->esi;
-    vertrix_lift_in_edi = r->edi;
-    vertrix_lift_in_ebp = r->ebp;
-    r->eax =
-        lift_call_arguments(&r->port->env, target, r->eax, r->edx, r->ebx, r->ecx, args, count);
-    vertrix_lift_in_esi = vertrix_lift_in_edi = vertrix_lift_in_ebp = 0;
-    r->edx = vertrix_lift_edx;
-    if (!keep)
-    {
-        r->esp += 4 * count;
-    }
-}
-
-static void call_mem(Regs *r, uint32_t target, unsigned count)
-{
-    call_mem_with(r, target, count, 0);
-}
-
-/* Original 0x4bef10: libjpeg examine_app0: recognises a JFIF APP0 header and stores its version,
- * density unit and densities. Evidence: no calls. Register-for-register from the listing
- * (0x4bef10..0x4bf18b); labels are the original addresses. */
-static void run(Regs *r)
-{
-    push_mem(r, r->esi);
-    push_mem(r, r->edi);
-    r->esi = r->eax;
-    r->edi = r->edx;
-    r->ecx = r->ecx + r->ebx;
-    if (r->ebx < 0xe)
-    {
-        goto at_4bf09f;
-    }
-    if ((uint8_t)rd8(r, r->edx) != (uint8_t)0x4a)
-    {
-        goto at_4bf09f;
-    }
-    set_low8(&r->edx, rd8(r, r->edx + 0x1));
-    if ((uint8_t)((r->edx & 0xff)) != (uint8_t)0x46)
-    {
-        goto at_4bf09f;
-    }
-    if ((uint8_t)rd8(r, r->edi + 0x2) != (uint8_t)0x49)
-    {
-        goto at_4bf09f;
-    }
-    if ((uint8_t)((r->edx & 0xff)) != (uint8_t)rd8(r, r->edi + 0x3))
-    {
-        goto at_4bf09f;
-    }
-    set_high8(&r->eax, rd8(r, r->edi + 0x4));
-    if ((uint8_t)(((r->eax >> 8) & 0xff)) != 0)
-    {
-        goto at_4bf09f;
-    }
-    wr32(r, r->esi + 0x118, 0x1);
-    set_low8(&r->eax, rd8(r, r->edi + 0x5));
-    wr8(r, r->esi + 0x11c, (r->eax & 0xff));
-    set_low8(&r->eax, rd8(r, r->edi + 0x6));
-    wr8(r, r->esi + 0x11d, (r->eax & 0xff));
-    set_low8(&r->eax, rd8(r, r->edi + 0x7));
-    wr8(r, r->esi + 0x11e, (r->eax & 0xff));
-    set_low8(&r->eax, rd8(r, r->edi + 0x8));
-    r->ebx = r->eax;
-    r->ebx = r->ebx << 0x8;
-    set_low8(&r->eax, rd8(r, r->edi + 0x9));
-    r->ebx = r->ebx + r->eax;
-    wr16(r, r->esi + 0x120, (r->ebx & 0xffff));
-    set_low8(&r->eax, rd8(r, r->edi + 0xa));
-    r->ebx = r->eax;
-    r->ebx = r->ebx << 0x8;
-    set_low8(&r->eax, rd8(r, r->edi + 0xb));
-    r->ebx = r->ebx + r->eax;
-    set_high8(&r->eax, rd8(r, r->esi + 0x11c));
-    wr16(r, r->esi + 0x122, (r->ebx & 0xffff));
-    if ((uint8_t)(((r->eax >> 8) & 0xff)) == (uint8_t)0x1)
-    {
-        goto at_4befdb;
-    }
-    r->eax = rd32(r, r->esi);
-    wr32(r, r->eax + 0x14, 0x77);
-    r->eax = 0;
-    r->ebx = rd32(r, r->esi);
-    set_low8(&r->eax, rd8(r, r->esi + 0x11c));
-    wr32(r, r->ebx + 0x18, r->eax);
-    r->eax = 0;
-    r->ebx = rd32(r, r->esi);
-    set_low8(&r->eax, rd8(r, r->esi + 0x11d));
-    wr32(r, r->ebx + 0x1c, r->eax);
-    r->ebx = rd32(r, r->esi);
-    r->edx = 0xffffffffu;
-    r->eax = r->esi;
-    call_mem(r, rd32(r, r->ebx + 0x4), 2);
-at_4befdb:
-    r->ebx = 0;
-    r->eax = rd32(r, r->esi);
-    set_low8(&r->ebx, rd8(r, r->esi + 0x11c));
-    wr32(r, r->eax + 0x18, r->ebx);
-    r->ebx = 0;
-    set_low8(&r->ebx, rd8(r, r->esi + 0x11d));
-    wr32(r, r->eax + 0x1c, r->ebx);
-    r->ebx = 0;
-    set_low16(&r->ebx, rd16(r, r->esi + 0x120));
-    wr32(r, r->eax + 0x20, r->ebx);
-    r->ebx = 0;
-    set_low16(&r->ebx, rd16(r, r->esi + 0x122));
-    wr32(r, r->eax + 0x24, r->ebx);
-    r->ebx = 0;
-    set_low8(&r->ebx, rd8(r, r->esi + 0x11e));
-    wr32(r, r->eax + 0x28, r->ebx);
-    r->eax = rd32(r, r->esi);
-    wr32(r, r->eax + 0x14, 0x57);
-    r->ebx = rd32(r, r->esi);
-    r->edx = 0x1;
-    r->eax = r->esi;
-    call_mem(r, rd32(r, r->ebx + 0x4), 0);
-    r->ebx = 0;
-    r->eax = 0;
-    set_low8(&r->ebx, rd8(r, r->edi + 0xc));
-    set_low8(&r->eax, rd8(r, r->edi + 0xd));
-    r->eax = r->eax | r->ebx;
-    if (r->eax == 0)
-    {
-        goto at_4bf062;
-    }
-    r->eax = rd32(r, r->esi);
-    wr32(r, r->eax + 0x14, 0x5a);
-    r->ebx = 0;
-    r->eax = rd32(r, r->esi);
-    set_low8(&r->ebx, rd8(r, r->edi + 0xc));
-    wr32(r, r->eax + 0x18, r->ebx);
-    r->eax = 0;
-    r->ebx = rd32(r, r->esi);
-    set_low8(&r->eax, rd8(r, r->edi + 0xd));
-    wr32(r, r->ebx + 0x1c, r->eax);
-    r->ebx = rd32(r, r->esi);
-    r->edx = 0x1;
-    r->eax = r->esi;
-    call_mem(r, rd32(r, r->ebx + 0x4), 0);
-at_4bf062:
-    r->ebx = 0;
-    r->eax = 0;
-    set_low8(&r->ebx, rd8(r, r->edi + 0xc));
-    set_low8(&r->eax, rd8(r, r->edi + 0xd));
-    r->ebx = r->ebx * r->eax;
-    r->eax = r->ebx * 4;
-    r->ecx = r->ecx - 0xe;
-    r->eax = r->eax - r->ebx;
-    if (r->ecx != r->eax)
-    {
-        goto at_4bf082;
-    }
-    r->edi = pop_mem(r);
-    r->esi = pop_mem(r);
-    return;
-at_4bf082:
-    r->eax = rd32(r, r->esi);
-    wr32(r, r->eax + 0x14, 0x58);
-    r->eax = rd32(r, r->esi);
-    wr32(r, r->eax + 0x18, r->ecx);
-    r->ecx = rd32(r, r->esi);
-    r->edx = 0x1;
-    r->eax = r->esi;
-    call_mem(r, rd32(r, r->ecx + 0x4), 0);
-    r->edi = pop_mem(r);
-    r->esi = pop_mem(r);
-    return;
-at_4bf09f:
-    if (r->ebx < 0x6)
-    {
-        goto at_4bf16f;
-    }
-    if ((uint8_t)rd8(r, r->edi) != (uint8_t)0x4a)
-    {
-        goto at_4bf16f;
-    }
-    if ((uint8_t)rd8(r, r->edi + 0x1) != (uint8_t)0x46)
-    {
-        goto at_4bf16f;
-    }
-    set_low8(&r->ebx, rd8(r, r->edi + 0x2));
-    if ((uint8_t)((r->ebx & 0xff)) != (uint8_t)0x58)
-    {
-        goto at_4bf16f;
-    }
-    if ((uint8_t)((r->ebx & 0xff)) != (uint8_t)rd8(r, r->edi + 0x3))
-    {
-        goto at_4bf16f;
-    }
-    if ((uint8_t)rd8(r, r->edi + 0x4) != (uint8_t)0x0)
-    {
-        goto at_4bf16f;
-    }
-    set_low8(&r->eax, rd8(r, r->edi + 0x5));
-    flags(r, F_SUB, (r->eax & 0xff), 0x11, 8);
-    if (cond(r, CC_AE))
-    {
-        goto at_4bf167;
-    }
-    if ((uint8_t)((r->eax & 0xff)) != (uint8_t)0x10)
-    {
-        goto at_4bf140;
-    }
-    r->eax = rd32(r, r->esi);
-    wr32(r, r->eax + 0x14, 0x6c);
-    r->eax = rd32(r, r->esi);
-    wr32(r, r->eax + 0x18, r->ecx);
-    r->ecx = rd32(r, r->esi);
-    r->edx = 0x1;
-    r->eax = r->esi;
-    call_mem(r, rd32(r, r->ecx + 0x4), 0);
-    r->edi = pop_mem(r);
-    r->esi = pop_mem(r);
-    return;
-at_4bf106:
-    r->eax = rd32(r, r->esi);
-    wr32(r, r->eax + 0x14, 0x6d);
-    r->eax = rd32(r, r->esi);
-    wr32(r, r->eax + 0x18, r->ecx);
-    r->ecx = rd32(r, r->esi);
-    r->edx = 0x1;
-    r->eax = r->esi;
-    call_mem(r, rd32(r, r->ecx + 0x4), 0);
-    r->edi = pop_mem(r);
-    r->esi = pop_mem(r);
-    return;
-at_4bf123:
-    r->eax = rd32(r, r->esi);
-    wr32(r, r->eax + 0x14, 0x6e);
-    r->eax = rd32(r, r->esi);
-    wr32(r, r->eax + 0x18, r->ecx);
-    r->ecx = rd32(r, r->esi);
-    r->edx = 0x1;
-    r->eax = r->esi;
-    call_mem(r, rd32(r, r->ecx + 0x4), 0);
-    r->edi = pop_mem(r);
-    r->esi = pop_mem(r);
-    return;
-at_4bf140:
-    r->eax = rd32(r, r->esi);
-    wr32(r, r->eax + 0x14, 0x59);
-    r->eax = 0;
-    r->ebx = rd32(r, r->esi);
-    set_low8(&r->eax, rd8(r, r->edi + 0x5));
-    wr32(r, r->ebx + 0x18, r->eax);
-    r->eax = rd32(r, r->esi);
-    wr32(r, r->eax + 0x1c, r->ecx);
-    r->ecx = rd32(r, r->esi);
-    r->edx = 0x1;
-    r->eax = r->esi;
-    call_mem(r, rd32(r, r->ecx + 0x4), 0);
-    r->edi = pop_mem(r);
-    r->esi = pop_mem(r);
-    return;
-at_4bf167:
-    if (cond(r, CC_BE) && !r->port->env.failed)
-    {
-        goto at_4bf106;
-    }
-    if ((uint8_t)((r->eax & 0xff)) == (uint8_t)0x13 && !r->port->env.failed)
-    {
-        goto at_4bf123;
-    }
-    if (r->port->env.failed)
-    {
-        return;
-    }
-    goto at_4bf140;
-at_4bf16f:
-    r->eax = rd32(r, r->esi);
-    wr32(r, r->eax + 0x14, 0x4d);
-    r->eax = rd32(r, r->esi);
-    wr32(r, r->eax + 0x18, r->ecx);
-    r->ecx = rd32(r, r->esi);
-    r->edx = 0x1;
-    r->eax = r->esi;
-    call_mem(r, rd32(r, r->ecx + 0x4), 0);
-    r->edi = pop_mem(r);
-    r->esi = pop_mem(r);
-    return;
-}
-
+/* Original 0x4bef10 (eax = cinfo, edx = data, ebx = datalen, ecx = remaining). */
 uint32_t vertrix_port_jpeg_examine_app0_4bef10(PORT_SIGNATURE)
 {
-    enum
-    {
-        BELOW = 0x20
-    };
     Port port;
-    uint8_t stack[BELOW + 8 + 4 * 8];
-    Regs r;
-    port_open_arguments(&port, stack, calls, services, globals, entry, BELOW, 8);
-    memset(&r, 0, sizeof r);
-    r.port = &port;
-    r.eax = entry->eax;
-    r.edx = entry->edx;
-    r.ebx = entry->ebx;
-    r.ecx = entry->ecx;
-    r.esi = entry->esi;
-    r.edi = entry->edi;
-    r.ebp = entry->ebp;
-    r.esp = entry->esp;
-    run(&r);
-    return port_return(&port, r.eax, r.edx);
+    port_open(&port, calls, services, globals, entry);
+    const uint32_t cinfo = entry->eax;
+    const uint32_t data = entry->edx;
+    const uint32_t datalen = entry->ebx;
+    const uint32_t totallen = datalen + entry->ecx;
+
+    if (datalen >= APP0_DATA_LEN && matches(&port, data, "JFIF"))
+    {
+        /* Found JFIF APP0 marker: save info. */
+        port_set32(&port, cinfo, CINFO_SAW_JFIF_MARKER, 1);
+        port_set8(&port, cinfo, CINFO_JFIF_MAJOR_VERSION, port_u8(&port, data, 5));
+        port_set8(&port, cinfo, CINFO_JFIF_MINOR_VERSION, port_u8(&port, data, 6));
+        port_set8(&port, cinfo, CINFO_DENSITY_UNIT, port_u8(&port, data, 7));
+        port_set16(&port, cinfo, CINFO_X_DENSITY, word_be(&port, data, 8));
+        port_set16(&port, cinfo, CINFO_Y_DENSITY, word_be(&port, data, 10));
+        const uint32_t major = port_u8(&port, cinfo, CINFO_JFIF_MAJOR_VERSION);
+        const uint32_t minor = port_u8(&port, cinfo, CINFO_JFIF_MINOR_VERSION);
+        if (major != 1)
+        {
+            set_parm(&port, cinfo, 0, major);
+            set_parm(&port, cinfo, 1, minor);
+            emit(&port, cinfo, JWRN_JFIF_MAJOR, 0xffffffffu, error_manager(&port, cinfo), totallen);
+        }
+        set_parm(&port, cinfo, 0, major);
+        set_parm(&port, cinfo, 1, minor);
+        set_parm(&port, cinfo, 2, port_u16(&port, cinfo, CINFO_X_DENSITY));
+        set_parm(&port, cinfo, 3, port_u16(&port, cinfo, CINFO_Y_DENSITY));
+        set_parm(&port, cinfo, 4, port_u8(&port, cinfo, CINFO_DENSITY_UNIT));
+        emit(&port, cinfo, JTRC_JFIF, 1, error_manager(&port, cinfo), totallen);
+        const uint32_t thumb_width = port_u8(&port, data, 12);
+        const uint32_t thumb_height = port_u8(&port, data, 13);
+        if ((thumb_width | thumb_height) != 0)
+        {
+            set_parm(&port, cinfo, 0, thumb_width);
+            set_parm(&port, cinfo, 1, thumb_height);
+            emit(&port, cinfo, JTRC_JFIF_THUMBNAIL, 1, error_manager(&port, cinfo), totallen);
+        }
+        const uint32_t thumb_pixels = port_u8(&port, data, 12) * port_u8(&port, data, 13);
+        const uint32_t rest = totallen - APP0_DATA_LEN;
+        if (rest != thumb_pixels * 3)
+        {
+            set_parm(&port, cinfo, 0, rest);
+            trace(&port, cinfo, JTRC_JFIF_BADTHUMBNAILSIZE, thumb_pixels);
+        }
+    }
+    else if (datalen >= JFXX_DATA_LEN && matches(&port, data, "JFXX"))
+    {
+        /* Found JFIF "JFXX" extension APP0 marker. The original leaves 'X' over ebx's low byte. */
+        const uint32_t ebx = (datalen & ~0xffu) | 'X';
+        const uint32_t code = port_u8(&port, data, 5);
+        switch (code)
+        {
+            case 0x10:
+                set_parm(&port, cinfo, 0, totallen);
+                trace(&port, cinfo, JTRC_THUMB_JPEG, ebx);
+                break;
+            case 0x11:
+                set_parm(&port, cinfo, 0, totallen);
+                trace(&port, cinfo, JTRC_THUMB_PALETTE, ebx);
+                break;
+            case 0x13:
+                set_parm(&port, cinfo, 0, totallen);
+                trace(&port, cinfo, JTRC_THUMB_RGB, ebx);
+                break;
+            default:
+                set_parm(&port, cinfo, 0, code);
+                set_parm(&port, cinfo, 1, totallen);
+                trace(&port, cinfo, JTRC_JFIF_EXTENSION, error_manager(&port, cinfo));
+                break;
+        }
+    }
+    else
+    {
+        /* Start of APP0 does not match "JFIF" or "JFXX", or too short. The original's ebx holds
+         * data[2] in its low byte once the JFXX test has read it. */
+        uint32_t ebx = datalen;
+        if (datalen >= JFXX_DATA_LEN && port_u8(&port, data, 0) == 'J' &&
+            port_u8(&port, data, 1) == 'F')
+        {
+            ebx = (datalen & ~0xffu) | port_u8(&port, data, 2);
+        }
+        set_parm(&port, cinfo, 0, totallen);
+        trace(&port, cinfo, JTRC_APP0, ebx);
+    }
+    return port_return(&port, 0, 0);
 }

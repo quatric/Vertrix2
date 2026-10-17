@@ -93,3 +93,8 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x47eab0 | `port_rtldevicemessages.c` | sound device COM event callback |
 | 0x4b4cf0 | `port_rtlkeytextactors.c` | text actor with three key actors |
 | 0x42bca0 | `port_rtlactorring.c` | ring of eight sparks around a board cell |
+| 0x4c0b51 | `port_rtljpegmergedchecks.c` | libjpeg use_merged_upsample |
+| 0x4c6640 | `port_rtljpegorddithers.c` | libjpeg quantize3_ord_dither |
+| 0x4bef10 | `port_rtljpegapp0s.c` | libjpeg examine_app0 |
+| 0x479b50 | `port_rtlsurfaceflips.c` | flip a bitmap upside down |
+| 0x4d9ae0 | `port_rtldoserrors.c` | Windows error code to errno (table read off the original at every compared code) |
