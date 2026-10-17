@@ -3,8 +3,7 @@
 
 #include "port.h"
 
-/* Enters the critical section 0x5328f0 and takes the next 4-byte message from the list at +0x200
- * into ebx. */
+/* Takes the next message off the network session's queue (+0x200) under the lock 0x5328f0. */
 uint32_t vertrix_port_message_queue_take_48be70(PORT_SIGNATURE);
 
 #endif

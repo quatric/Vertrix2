@@ -108,3 +108,7 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x4e3e00 | `port_rtlflushes.c` | fputc (renamed from "flush all streams") |
 | 0x4ed880 | `port_rtlpendingerrors.c` | console getch (renamed from "pending error check") |
 | 0x4e6f60 | `port_rtlcodepages.c` | _setmbcp |
+| 0x48b970 | `port_rtlnetworkhandles.c` | close the network session's handles |
+| 0x48be70 | `port_rtlmessagequeues.c` | take a message off the network queue |
+| 0x487be0 | `port_rtlmusicindexreads.c` | read a music file's index |
+| 0x41e310 | `port_rtlheadsanims.c` | load a set's head images and animations |
