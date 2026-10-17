@@ -3279,6 +3279,11 @@
   "lifted": "lifted_f4323d0",
   "chunk": "whole_1"
  },
+ "0x432480": {
+  "port": "vertrix_port_board_match_resolve_432480",
+  "lifted": "lifted_f432480",
+  "chunk": "whole_16"
+ },
  "0x432820": {
   "port": "vertrix_port_board_slots_4327e0_432820",
   "lifted": "lifted_f432820",
@@ -14873,6 +14878,16 @@
   "port": "vertrix_port_jpeg_row_sums_4c63a0",
   "lifted": "lifted_f4c63a0",
   "chunk": "whole_5"
+ },
+ "0x4c6460": {
+  "port": "vertrix_port_jpeg_color_quantize3_4c6460",
+  "lifted": "lifted_f4c6460",
+  "chunk": "whole_5"
+ },
+ "0x4c6640": {
+  "port": "vertrix_port_jpeg_quantize3_ord_dither_4c6640",
+  "lifted": "lifted_f4c6640",
+  "chunk": "whole_8"
  },
  "0x4c69c0": {
   "port": "vertrix_port_channels_allocate_4c69c0",

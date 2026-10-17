@@ -15,7 +15,6 @@
 #include "lifted_whole_10.h"
 #include "lifted_whole_12.h"
 #include "lifted_whole_13.h"
-#include "lifted_whole_16.h"
 #include "lifted_whole_18.h"
 #include "lifted_whole_2.h"
 #include "lifted_whole_21.h"
@@ -190,6 +189,7 @@
 #include "port_rtlblockcalls.h"
 #include "port_rtlblockimageloads.h"
 #include "port_rtlboardframes.h"
+#include "port_rtlboardmatches.h"
 #include "port_rtlboards.h"
 #include "port_rtlboardselectscreens.h"
 #include "port_rtlbonus.h"
@@ -292,8 +292,10 @@
 #include "port_rtljpegmcudecodes.h"
 #include "port_rtljpegmergedchecks.h"
 #include "port_rtljpegmergedupsamples.h"
+#include "port_rtljpegorddithers.h"
 #include "port_rtljpegprogressivestarts.h"
 #include "port_rtljpegquant1starts.h"
+#include "port_rtljpegquantize3s.h"
 #include "port_rtljpegquantizers.h"
 #include "port_rtljpegquantpasses.h"
 #include "port_rtljpegscansetups.h"
@@ -1177,7 +1179,7 @@ static const LiftedRoutine routines[] = {
     {0x432280, vertrix_port_board_has_type_one_432280, 0, 0},
     {0x4322f0, vertrix_port_board_has_kind_six_4322f0, 0, 0},
     {0x4323d0, vertrix_port_board_extras_start_4323d0, 0, 0},
-    {0x432480, lifted_f432480, 228, 2},
+    {0x432480, vertrix_port_board_match_resolve_432480, 0, 0},
     {0x4327e0, vertrix_native_kind_snapshot, 0, 0},
     {0x432820, vertrix_port_board_slots_4327e0_432820, 0, 0},
     {0x432840, vertrix_port_board_clear_mask_432840, 0, 0},
@@ -3529,8 +3531,8 @@ static const LiftedRoutine routines[] = {
     {0x4c5d60, vertrix_port_jpeg_largest_input_value_4c5d60, 0, 0},
     {0x4c6020, lifted_f4c6020, 148, 0},
     {0x4c63a0, vertrix_port_jpeg_row_sums_4c63a0, 0, 0},
-    {0x4c6460, lifted_f4c6460, 100, 0},
-    {0x4c6640, lifted_f4c6640, 132, 0},
+    {0x4c6460, vertrix_port_jpeg_color_quantize3_4c6460, 0, 0},
+    {0x4c6640, vertrix_port_jpeg_quantize3_ord_dither_4c6640, 0, 0},
     {0x4c69c0, vertrix_port_channels_allocate_4c69c0, 0, 0},
     {0x4c6a20, vertrix_port_jpeg_quant1_start_pass_4c6a20, 0, 0},
     {0x4c6a80, vertrix_port_nothing_404580, 0, 0},

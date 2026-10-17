@@ -1,25 +1,4 @@
 {
- "f4c6460": {
-  "callees": {},
-  "stack": 100,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   0,
-   4,
-   24,
-   460
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   23,
-   24,
-   25
-  ],
-  "virtual": [],
-  "address": 5006432
- },
  "f4c8500": {
   "callees": {},
   "stack": 2200,
