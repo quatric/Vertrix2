@@ -58,8 +58,9 @@ calls, or a tail several routines share) as calls. A call through a fixed global
 driver's slots goes to the routines the image puts there, a Windows import reads no register, and
 an unknown method or procedure variable reads all four. Pushes that save a register (followed by
 the stack depth of each instruction) or reserve a local the routine overwrites are not reads.
-Registers are followed in 16-bit halves, so `mov si, [x]; cmp si, 0x1001` reads nothing of the
-caller's esi (0x4826c0).
+Registers are followed by byte: each of the two low bytes, and the high 16 bits as one unit. So
+`mov si, [x]; cmp si, 0x1001` reads nothing of the caller's esi (0x4826c0), and after `mov cl, [x]`
+only ch is still the caller's.
 Where it cannot see, it assumes the register is read. `SITES` and `ROUTINES` hold the few calls
 known better than the code shows, each with its reason (GetMem's C++ new-handler, which nothing
 installs; MFC's thread data, whose only register reads are the exception machinery's).
@@ -68,8 +69,32 @@ It also reports esi, edi and ebp, which no call compares: a port passes 0 there 
 callee listed as reading one needs a look. So far each such read has been the runtime's error path
 (0x4eb4d4) or the exception machinery, not an argument.
 
-A virtual call goes to a stub in the verifier, which compares all four registers: the port hands
-over what the original leaves in them and says so (0x4d5bf8, 0x4dee00 in `handlemaps.c`).
+A virtual call, or a call through a procedure variable (an address read from a table or a field),
+goes to a stub in the verifier, which compares all four registers: the port hands over what the
+original leaves in them and says so (0x4d5bf8, 0x4dee00 in `handlemaps.c`; the libjpeg
+methods 0x4ba470 and 0x4b9f70 call).
+
+The harness hands a port only the eax a callee returns, never its edx. The libjpeg and MFC callees
+save edx, so where the original reads edx after such a call, the port uses the edx it passed
+(0x4c9550, 0x4c29c0). A routine that pushes and pops edx itself returns `entry->edx` (0x4bb870).
+
+An invalid `div` or `idiv` (by 0, or a quotient too large) does not fault in the lifted runtime: it
+leaves eax and edx as they were. A port that can reach one does the same in a small helper
+(`divide` in 0x483790 for a one-pixel image; `quotient` and `remainder_of` in 0x4c3be0).
+
+An array the routine indexes with values it reads from data, without a bound it checks, stays in
+the emulated frame at the original's offsets, so an index past its end reads and writes what the
+original's would (huffsize and huffcode in 0x4bbc00).
+
+A loop the compiler bounds by a scaled value rather than its index (c1 * 64 against c1max * 64,
+(c2 << 3) + 4 against (c2max << 3) + 4) ends where that value overflows, so the port compares the
+same values and steps its indices with wraparound (`scaled` in 0x4c70f0, `within` in 0x4c90e0).
+Loads never fault in the lifted runtime, so a loop over a wide random range runs to its end on
+whatever the globals hold, and only these bounds decide where it stops.
+
+A routine reached only through a method pointer has no callers `register_inputs.py` can see, so
+the verifier compares both eax and edx it leaves: 0x4c90e0 (finish_pass1) returns the cquantize
+pointer it last loaded into eax.
 
 A deliberate mistake in a register the callee reads still fails (0x48b2f0 with the length off by
 one in ebx at 0x40acd0), and the same mistake in ecx, which it does not read, passes.
@@ -116,6 +141,32 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x48be70 | `rtlmessagequeues.c` | take a message off the network queue |
 | 0x487be0 | `rtlmusicindexreads.c` | read a music file's index |
 | 0x41e310 | `rtlheadsanims.c` | load a set's head images and animations |
+| 0x4b7e80 | `rtlwavestreamloads.c` | load a WAV file from a stream into a sample |
+| 0x441f20 | `rtlpatterntables.c` | cut the pattern sheet into patterns |
+| 0x4c2000 | `rtljpegmergedupsamples.c` | libjpeg h2v2_merged_upsample |
+| 0x4c4730 | `rtljpegidct4s.c` | libjpeg jpeg_idct_4x4 |
+| 0x407020 | `rtlmpegsideinfos.c` | MPEG-1 Layer III side info |
+| 0x41df30 | `rtlblockimageloads.c` | load a level's block images for its mode |
+| 0x4e97b4 | `rtltzrules.c` | runtime TZ rule parser |
+| 0x4d4390 | `rtlancestors.c` | MFC: is a window the parent or owner of another |
+| 0x4270a0 | `rtlaisearches.c` | computer player's figure search |
+| 0x40d540 | `rtlextendedeffects.c` | module player's extended effects (Exy) |
+| 0x4e9a30 | `rtlheapfrees.c` | free a heap block |
+| 0x4e4110 | `rtlformatscans.c` | scanf core |
+| 0x4c4000 | `rtljpegidct8s.c` | libjpeg jpeg_idct_islow |
+| 0x4083a0 | `rtlmpegstereos.c` | MPEG Layer III intensity stereo |
+| 0x4c29c0 | `rtljpegacfirsts.c` | libjpeg decode_mcu_AC_first |
+| 0x427380 | `rtlaibombsearches.c` | computer player's bomb search |
+| 0x483790 | `rtlalphaedges.c` | smooth a 32-bit image's edges |
+| 0x4cdbe0 | `rtlformatspecs.c` | MFC CString::FormatV |
+| 0x4cd0a4 | `rtlterminates.c` | vsprintf (renamed from "terminate call") |
+| 0x4c9550 | `rtljpegquantpasses.c` | libjpeg start_pass_2_quant |
+| 0x4bbf30 | `rtljpegbitbuffers.c` | libjpeg jpeg_fill_bit_buffer |
+| 0x4bb870 | `rtljpegidctpasses.c` | libjpeg start_pass of the IDCT manager |
+| 0x4ba470 | `rtljpegcoefrows.c` | libjpeg decompress_data (buffered image) |
+| 0x4c3be0 | `rtljpegupsamplers.c` | libjpeg jinit_upsampler |
+| 0x4b9f70 | `rtljpegdecompresses.c` | libjpeg decompress_onepass |
+| 0x4bbc00 | `rtlhuffderivedtables.c` | libjpeg jpeg_make_d_derived_tbl |
 | 0x47e680 | `rtlfontsetmembers.c` | font set member destructor (locks, COM, strings) |
 | 0x4ccb9f | `rtlblockcalls.c` | release a runtime block, return its header |
 | 0x40ba00 | `rtlcurvetables.c` | sound device's logarithmic volume curve |
@@ -130,3 +181,28 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x4cb5a0 | `rtlrangerecords.c` | range dispatcher call: store a record or call a method by kind |
 | 0x4651b0 | `rtlhighscoremenus.c` | high-score menu |
 | 0x48cc30 | `rtlsessionstarts.c` | start a lobby-launched network session (host or join); the random cases reach only the early exits |
+| 0x424990 | `rtlgameloops.c` | game screen frame handler (single and network); the register-level port had lost the conditions at 0x4251f7 and 0x425213 |
+| 0x4b17e0 | `rtlactorspans.c` | actor blit setup: rectangle, scale, clip and first pixel (verified at 4096 cases; 256 miss the clip and pixel paths) |
+| 0x4c6c80 | `rtljpegquantizers.c` | libjpeg jinit_1pass_quantizer |
+| 0x41cc30 | `rtlplayscreenheads.c` | play screen setup with heads (and the network start wait) |
+| 0x4c6a20 | `rtljpegquant1starts.c` | libjpeg start_pass_1_quant |
+| 0x4be0b0 | `rtljpegsofmarkers.c` | libjpeg get_sof |
+| 0x4c23f0 | `rtljpegprogressivestarts.c` | libjpeg start_pass_phuff_decoder |
+| 0x4bcea0 | `rtljpeginputs.c` | libjpeg consume_markers |
+| 0x4bcbc0 | `rtljpegscansetups.c` | libjpeg start_input_pass |
+| 0x4bd9e0 | `rtlbufsteps.c` | libjpeg process_data_context_main |
+| 0x4c2d60 | `rtljpegacrefines.c` | libjpeg decode_mcu_AC_refine |
+| 0x4bc1e0 | `rtljpegmcudecodes.c` | libjpeg decode_mcu |
+| 0x4c70f0 | `rtljpegupdateboxes.c` | libjpeg update_box |
+| 0x4c90e0 | `rtljpegcolorselects.c` | libjpeg finish_pass1 (select_colors and median cut) |
+| 0x40b110 | `rtlsoundoutputopens.c` | open the DirectSound output (primary and streaming buffers) |
+| 0x46a410 | `rtlactorsets.c` | seven-kind piece display (four rows of actors) |
+| 0x4b25b0 | `rtltextwraps.c` | break a text object's text into lines (16-bit widths) |
+| 0x4e2434 | `rtlformatoutputs.c` | stream printf (lock, buffer, print through 0x4df320); the -1 error branch needs an error the stubs never set |
+| 0x4b0b70 | `rtlactorclips.c` | whether a point hits an actor (rectangle, scale, clip and alpha) |
+| 0x4269e0 | `rtlaichainsearches.c` | computer player's chain search |
+| 0x480080 | `rtldplayerrors.c` | name of a DirectPlay result code (table read off the original's compare tree) |
+| 0x485700 | `rtlddrawerrors.c` | DirectDraw error text: prefix and code name (table read off the compare tree) |
+| 0x43fc50 | `rtlfontchartables.c` | build the fonts' character-to-glyph tables (a table of steps) |
+| 0x412700 | `rtlglobalinits.c` | the game's static initializer (a table of 207 steps read off the straight-line code) |
+| 0x4d3140 | `rtlhandlerrecords.c` | fill the runtime's handler records (stores read off the straight-line code) |

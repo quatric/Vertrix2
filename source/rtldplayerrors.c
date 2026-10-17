@@ -1,0 +1,112 @@
+#include "rtldplayerrors.h"
+
+/* The name of a DirectPlay result code, for the network error messages. */
+
+enum
+{
+    /* Where an unknown code is printed, and how. */
+    UNKNOWN_TEXT = 0x558c90,
+    UNKNOWN_FORMAT = 0x50f6b4,
+    WSPRINTF = 0x4f1b24
+};
+
+typedef struct
+{
+    uint32_t code;
+    uint32_t name;
+} ErrorName;
+
+/* The codes the original tests, with the address of each one's name. */
+static const ErrorName NAMES[] = {
+    {0x00000000u, 0x50f0b0}, /* S_OK */
+    {0x0015800eu, 0x50f5c3}, /* DPNERR_PENDING */
+    {0x80004001u, 0x50f68f}, /* DPNERR_UNSUPPORTED */
+    {0x80004002u, 0x50f526}, /* DPNERR_NOINTERFACE */
+    {0x80004003u, 0x50f486}, /* DPNERR_INVALIDPOINTER */
+    {0x80004005u, 0x50f2a5}, /* DPNERR_GENERIC */
+    {0x8007000eu, 0x50f5b0}, /* DPNERR_OUTOFMEMORY */
+    {0x80070057u, 0x50f446}, /* DPNERR_INVALIDPARAM */
+    {0x80158030u, 0x50f0b5}, /* DPNERR_ABORTED */
+    {0x80158040u, 0x50f0c4}, /* DPNERR_ADDRESSING */
+    {0x80158050u, 0x50f0d6}, /* DPNERR_ALREADYCLOSING */
+    {0x80158060u, 0x50f0ec}, /* DPNERR_ALREADYCONNECTED */
+    {0x80158070u, 0x50f104}, /* DPNERR_ALREADYDISCONNECTING */
+    {0x80158080u, 0x50f120}, /* DPNERR_ALREADYINITIALIZED */
+    {0x80158090u, 0x50f13a}, /* DPNERR_ALREADYREGISTERED */
+    {0x80158100u, 0x50f153}, /* DPNERR_BUFFERTOOSMALL */
+    {0x80158110u, 0x50f169}, /* DPNERR_CANNOTCANCEL */
+    {0x80158120u, 0x50f17d}, /* DPNERR_CANTCREATEGROUP */
+    {0x80158130u, 0x50f194}, /* DPNERR_CANTCREATEPLAYER */
+    {0x80158140u, 0x50f1ac}, /* DPNERR_CANTLAUNCHAPPLICATION */
+    {0x80158150u, 0x50f1c9}, /* DPNERR_CONNECTING */
+    {0x80158160u, 0x50f1db}, /* DPNERR_CONNECTIONLOST */
+    {0x80158170u, 0x50f1f1}, /* DPNERR_CONVERSION */
+    {0x80158175u, 0x50f203}, /* DPNERR_DATATOOLARGE */
+    {0x80158180u, 0x50f217}, /* DPNERR_DOESNOTEXIST */
+    {0x80158190u, 0x50f22b}, /* DPNERR_DUPLICATECOMMAND */
+    {0x80158200u, 0x50f243}, /* DPNERR_ENDPOINTNOTRECEIVING */
+    {0x80158210u, 0x50f25f}, /* DPNERR_ENUMQUERYTOOLARGE */
+    {0x80158220u, 0x50f278}, /* DPNERR_ENUMRESPONSETOOLARGE */
+    {0x80158230u, 0x50f294}, /* DPNERR_EXCEPTION */
+    {0x80158240u, 0x50f2b4}, /* DPNERR_GROUPNOTEMPTY */
+    {0x80158250u, 0x50f2c9}, /* DPNERR_HOSTING */
+    {0x80158260u, 0x50f2d8}, /* DPNERR_HOSTREJECTEDCONNECTION */
+    {0x80158270u, 0x50f2f6}, /* DPNERR_HOSTTERMINATEDSESSION */
+    {0x80158280u, 0x50f313}, /* DPNERR_INCOMPLETEADDRESS */
+    {0x80158290u, 0x50f32c}, /* DPNERR_INVALIDADDRESSFORMAT */
+    {0x80158300u, 0x50f348}, /* DPNERR_INVALIDAPPLICATION */
+    {0x80158310u, 0x50f362}, /* DPNERR_INVALIDCOMMAND */
+    {0x80158320u, 0x50f378}, /* DPNERR_INVALIDDEVICEADDRESS */
+    {0x80158330u, 0x50f394}, /* DPNERR_INVALIDENDPOINT */
+    {0x80158340u, 0x50f3ab}, /* DPNERR_INVALIDFLAGS */
+    {0x80158350u, 0x50f3bf}, /* DPNERR_INVALIDGROUP */
+    {0x80158360u, 0x50f3d3}, /* DPNERR_INVALIDHANDLE */
+    {0x80158370u, 0x50f3e8}, /* DPNERR_INVALIDHOSTADDRESS */
+    {0x80158380u, 0x50f402}, /* DPNERR_INVALIDINSTANCE */
+    {0x80158390u, 0x50f419}, /* DPNERR_INVALIDINTERFACE */
+    {0x80158400u, 0x50f431}, /* DPNERR_INVALIDOBJECT */
+    {0x80158410u, 0x50f45a}, /* DPNERR_INVALIDPASSWORD */
+    {0x80158420u, 0x50f471}, /* DPNERR_INVALIDPLAYER */
+    {0x80158430u, 0x50f49c}, /* DPNERR_INVALIDPRIORITY */
+    {0x80158440u, 0x50f4b3}, /* DPNERR_INVALIDSTRING */
+    {0x80158450u, 0x50f4c8}, /* DPNERR_INVALIDURL */
+    {0x80158460u, 0x50f4da}, /* DPNERR_INVALIDVERSION */
+    {0x80158470u, 0x50f4f0}, /* DPNERR_NOCAPS */
+    {0x80158480u, 0x50f4fe}, /* DPNERR_NOCONNECTION */
+    {0x80158490u, 0x50f512}, /* DPNERR_NOHOSTPLAYER */
+    {0x80158500u, 0x50f539}, /* DPNERR_NOMOREADDRESSCOMPONENTS */
+    {0x80158510u, 0x50f558}, /* DPNERR_NORESPONSE */
+    {0x80158520u, 0x50f56a}, /* DPNERR_NOTALLOWED */
+    {0x80158530u, 0x50f57c}, /* DPNERR_NOTHOST */
+    {0x80158540u, 0x50f58b}, /* DPNERR_NOTREADY */
+    {0x80158550u, 0x50f59b}, /* DPNERR_NOTREGISTERED */
+    {0x80158560u, 0x50f5d2}, /* DPNERR_PLAYERALREADYINGROUP */
+    {0x80158570u, 0x50f5ee}, /* DPNERR_PLAYERLOST */
+    {0x80158580u, 0x50f600}, /* DPNERR_PLAYERNOTINGROUP */
+    {0x80158590u, 0x50f618}, /* DPNERR_PLAYERNOTREACHABLE */
+    {0x80158600u, 0x50f632}, /* DPNERR_SENDTOOLARGE */
+    {0x80158610u, 0x50f646}, /* DPNERR_SESSIONFULL */
+    {0x80158620u, 0x50f659}, /* DPNERR_TABLEFULL */
+    {0x80158630u, 0x50f66a}, /* DPNERR_TIMEDOUT */
+    {0x80158640u, 0x50f67a}, /* DPNERR_UNINITIALIZED */
+    {0x80158650u, 0x50f6a2}, /* DPNERR_USERCANCEL */
+};
+
+/* Original 0x480080 (edx = the result code): the name's address, or for an unknown code its
+ * number printed as 0x%08X (wsprintfA) into the buffer at 0x558c90. */
+uint32_t vertrix_port_dplay_error_name_480080(PORT_SIGNATURE)
+{
+    Port port;
+    port_open(&port, calls, services, globals, entry);
+    const uint32_t code = entry->edx;
+    for (size_t i = 0; i < sizeof NAMES / sizeof NAMES[0]; i++)
+    {
+        if (NAMES[i].code == code)
+        {
+            return port_return(&port, NAMES[i].name, 0);
+        }
+    }
+    const uint32_t arguments[3] = {UNKNOWN_TEXT, UNKNOWN_FORMAT, code};
+    port_call_stack(&port, port_u32(&port, WSPRINTF, 0), 0, 0, 0, 0, arguments, 3);
+    return port_return(&port, UNKNOWN_TEXT, 0);
+}

@@ -82,19 +82,29 @@ def _regs(insn):
 
 
 def _halves(names):
-    """Registers as their low and high 16 bits, the units the liveness follows (a 16-bit write
-    replaces the low half; a byte write replaces neither)."""
-    return {name + half for name in names for half in ('.lo', '.hi')}
+    """Registers as the units the liveness follows: the two low bytes and the high 16 bits (a
+    16-bit write replaces both low bytes, a byte write its own byte)."""
+    return {name + unit for name in names for unit in ('.b0', '.b1', '.hi')}
 
 
 WORDS = {reg: name for reg, name in lift.REG16.items() if name in NAMES}
+# The units a 16-bit or byte register covers.
+UNITS = {}
+for reg, name in WORDS.items():
+    UNITS[reg] = {name + '.b0', name + '.b1'}
+for reg, name in lift.REG8L.items():
+    if name in NAMES:
+        UNITS[reg] = {name + '.b0'}
+for reg, name in lift.REG8H.items():
+    if name in NAMES:
+        UNITS[reg] = {name + '.b1'}
 
 
 EVERY = frozenset(_halves(NAMES))
 
 
 def _regs_halves(insn):
-    """_regs in register halves."""
+    """_regs in register units (_halves)."""
     if _padding(insn):
         return set(), set()
     reads, writes = insn.regs_access()
@@ -102,20 +112,20 @@ def _regs_halves(insn):
     for reg in reads:
         if reg in WIDE:
             used |= _halves((WIDE[reg],))
-        elif reg in PART:
-            used.add(PART[reg] + '.lo')
+        elif reg in UNITS:
+            used |= UNITS[reg]
     for reg in writes:
         if reg in WIDE:
             defined |= _halves((WIDE[reg],))
-        elif reg in WORDS:
-            defined.add(WORDS[reg] + '.lo')
+        elif reg in UNITS:
+            defined |= UNITS[reg]
     ops = insn.operands
     if (insn.mnemonic in CLEARS and len(ops) == 2 and ops[0].type == X.X86_OP_REG and
             ops[1].type == X.X86_OP_REG and ops[0].reg == ops[1].reg):
         if ops[0].reg in WIDE:
             used -= _halves((WIDE[ops[0].reg],))
-        elif ops[0].reg in WORDS:
-            used.discard(WORDS[ops[0].reg] + '.lo')
+        elif ops[0].reg in UNITS:
+            used -= UNITS[ops[0].reg]
     return used, defined
 
 

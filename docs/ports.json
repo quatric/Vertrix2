@@ -15380,7 +15380,7 @@
   "chunk": "whole_5"
  },
  "0x4cd0a4": {
-  "port": "vertrix_port_rtl_terminate_call_4cd0a4",
+  "port": "vertrix_port_rtl_vsprintf_4cd0a4",
   "lifted": "lifted_rtl_terminate_call",
   "chunk": "whole_5"
  },
