@@ -6,52 +6,21 @@
 
 enum
 {
-    LIFTED_WINDOW_TABLES_STACK = 208,
     LIFTED_MIXER_PLAYBACK_TICK_STACK = 88,
-    LIFTED_F41CC30_STACK = 704,
-    LIFTED_F41E780_STACK = 548,
-    LIFTED_EFFECTS_RELEASE_ALL_FULL_STACK = 80,
     LIFTED_SURFACE_BOUNDS_STACK = 124,
-    LIFTED_F484B60_STACK = 752,
-    LIFTED_SCALED_ROUND_STACK = 64,
     LIFTED_RTL_RANGE_TABLE_FIND_STACK = 68,
     LIFTED_F4DA3BA_STACK = 1400,
     LIFTED_F4DF320_STACK = 248
 };
-
-/* Original 0x40a590. */
-uint32_t lifted_window_tables(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                              const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x40e030. */
 uint32_t lifted_mixer_playback_tick(const VertrixCalls *calls,
                                     const VertrixFactoryServices *services,
                                     const VertrixGlobals *globals, const LiftEntry *entry);
 
-/* Original 0x41cc30. */
-uint32_t lifted_f41cc30(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x41e780. */
-uint32_t lifted_f41e780(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x43d800. */
-uint32_t lifted_effects_release_all_full(const VertrixCalls *calls,
-                                         const VertrixFactoryServices *services,
-                                         const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x4792d0. */
 uint32_t lifted_surface_bounds(const VertrixCalls *calls, const VertrixFactoryServices *services,
                                const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x484b60. */
-uint32_t lifted_f484b60(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4c5d60. */
-uint32_t lifted_scaled_round(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                             const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4d0b30. */
 uint32_t lifted_rtl_range_table_find(const VertrixCalls *calls,
