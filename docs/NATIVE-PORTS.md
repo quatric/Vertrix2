@@ -98,3 +98,8 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x4bef10 | `port_rtljpegapp0s.c` | libjpeg examine_app0 |
 | 0x479b50 | `port_rtlsurfaceflips.c` | flip a bitmap upside down |
 | 0x4d9ae0 | `port_rtldoserrors.c` | Windows error code to errno (table read off the original at every compared code) |
+| 0x4dabe0 | `port_rtlstackpairs.c` | varargs entry of the printf core |
+| 0x4cd544 | `port_rtlvarargs.c` | varargs forwarder |
+| 0x4b58a0 | `port_rtlactornumbers.c` | number actor text (`%u`, zero-padded) |
+| 0x427850 | `port_rtlaiboardcompares.c` | computer player compares both boards |
+| 0x48c4a0 | `port_rtldisplaychainlists.c` | image record list from a display chain |
