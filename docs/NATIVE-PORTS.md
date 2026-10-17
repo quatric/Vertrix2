@@ -206,3 +206,5 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x43fc50 | `rtlfontchartables.c` | build the fonts' character-to-glyph tables (a table of steps) |
 | 0x412700 | `rtlglobalinits.c` | the game's static initializer (a table of 207 steps read off the straight-line code) |
 | 0x4d3140 | `rtlhandlerrecords.c` | fill the runtime's handler records (stores read off the straight-line code) |
+| 0x4b826f | `rtlxmmoduleloads.c` | load an XM module (header, patterns, instruments and samples) |
+| 0x406170 | `rtlmpegtableinits.c` | build the MP3 decoder's layer III tables (mpg123's init_layer3, through the soft-float routines) |

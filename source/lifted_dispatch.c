@@ -257,7 +257,6 @@
 #include "port_rtlmodulefrees.h"
 #include "port_rtlmoduleloads.h"
 #include "port_rtlmpeghuffmans.h"
-#include "port_rtlmpegtableinits.h"
 #include "port_rtloptionpanels.h"
 #include "port_rtloverlays.h"
 #include "port_rtlownernotes.h"
@@ -339,7 +338,6 @@
 #include "port_rtlwindows.h"
 #include "port_rtlwrappers.h"
 #include "port_rtlwrites.h"
-#include "port_rtlxmmoduleloads.h"
 #include "port_runtime.h"
 #include "port_scenes.h"
 #include "port_screens.h"
@@ -465,6 +463,7 @@
 #include "rtlmp3memorydecodes.h"
 #include "rtlmpegsideinfos.h"
 #include "rtlmpegstereos.h"
+#include "rtlmpegtableinits.h"
 #include "rtlmpegwindowtables.h"
 #include "rtlmusicindexreads.h"
 #include "rtlnetworkhandles.h"
@@ -487,6 +486,7 @@
 #include "rtltzrules.h"
 #include "rtlvarargs.h"
 #include "rtlwavestreamloads.h"
+#include "rtlxmmoduleloads.h"
 #include "rtlyccrgbtables.h"
 
 enum
