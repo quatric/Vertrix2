@@ -104,6 +104,11 @@
   "lifted": "lifted_f406170",
   "chunk": "whole_0"
  },
+ "0x407020": {
+  "port": "vertrix_port_mpeg1_side_info_407020",
+  "lifted": "lifted_f407020",
+  "chunk": "whole_0"
+ },
  "0x407280": {
   "port": "vertrix_port_mpeg_side_info",
   "lifted": "lifted_bits_header",
@@ -4408,6 +4413,11 @@
   "port": "vertrix_port_color_table_build_full_441e30",
   "lifted": "lifted_color_table_build_full",
   "chunk": "whole_1"
+ },
+ "0x441f20": {
+  "port": "vertrix_port_pattern_tables_441f20",
+  "lifted": "lifted_pattern_tables",
+  "chunk": "whole_8"
  },
  "0x442110": {
   "port": "vertrix_port_release_table_b_442110",

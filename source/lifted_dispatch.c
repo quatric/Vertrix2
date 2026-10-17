@@ -327,6 +327,7 @@
 #include "port_rtlmoduleloads.h"
 #include "port_rtlmp3memorydecodes.h"
 #include "port_rtlmpeghuffmans.h"
+#include "port_rtlmpegsideinfos.h"
 #include "port_rtlmpegstereos.h"
 #include "port_rtlmpegtableinits.h"
 #include "port_rtlmpegwindowtables.h"
@@ -343,6 +344,7 @@
 #include "port_rtlpaths.h"
 #include "port_rtlpathseparators.h"
 #include "port_rtlpatterns.h"
+#include "port_rtlpatterntables.h"
 #include "port_rtlpendingerrors.h"
 #include "port_rtlpicks.h"
 #include "port_rtlpics.h"
@@ -532,7 +534,7 @@ static const LiftedRoutine routines[] = {
     {0x405f70, vertrix_port_mpeg_decode_frame, 0, 0},
     {0x4060e0, vertrix_port_reader_consume, 0, 0},
     {0x406170, vertrix_port_mpeg_tables_init_406170, 288, 0},
-    {0x407020, lifted_f407020, 184, 1},
+    {0x407020, vertrix_port_mpeg1_side_info_407020, 0, 0},
     {0x407280, vertrix_port_mpeg_side_info, 0, 0},
     {0x4074a0, vertrix_port_scale_factors_4074a0, 0, 0},
     {0x407720, vertrix_port_mpeg_scale_factors, 0, 0},
@@ -1408,7 +1410,7 @@ static const LiftedRoutine routines[] = {
     {0x441b70, vertrix_port_backdrop_view_set_441b70, 316, 0},
     {0x441d60, vertrix_port_image_load_any, 0, 0},
     {0x441e30, vertrix_port_color_table_build_full_441e30, 0, 0},
-    {0x441f20, lifted_pattern_tables, 148, 0},
+    {0x441f20, vertrix_port_pattern_tables_441f20, 0, 0},
     {0x442110, vertrix_port_release_table_b_442110, 0, 0},
     {0x442140, vertrix_port_tile_blit_442140, 0, 0},
     {0x4429a0, vertrix_port_text_draw_4429a0, 0, 0},

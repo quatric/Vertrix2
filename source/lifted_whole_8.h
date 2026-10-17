@@ -8,7 +8,6 @@ enum
 {
     LIFTED_PLAYER_PREVIEW_FRAMES_STACK = 84,
     LIFTED_SCENE_LAYOUT_STACK = 284,
-    LIFTED_PATTERN_TABLES_STACK = 148,
     LIFTED_F4B3140_STACK = 160,
     LIFTED_F4C17DA_STACK = 232,
     LIFTED_F4C6640_STACK = 132,
@@ -34,10 +33,6 @@ uint32_t lifted_player_preview_frames(const VertrixCalls *calls,
 /* Original 0x430930. */
 uint32_t lifted_scene_layout(const VertrixCalls *calls, const VertrixFactoryServices *services,
                              const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x441f20. */
-uint32_t lifted_pattern_tables(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                               const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4b3140. */
 uint32_t lifted_f4b3140(const VertrixCalls *calls, const VertrixFactoryServices *services,

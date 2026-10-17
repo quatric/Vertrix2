@@ -60,51 +60,6 @@
   "virtual": [],
   "address": 4393264
  },
- "pattern_tables": {
-  "callees": {
-   "0x478f10": [
-    0,
-    false
-   ],
-   "0x4ec160": [
-    0,
-    false
-   ]
-  },
-  "stack": 148,
-  "arguments": 0,
-  "pointer_callees": [
-   "0x4ec160"
-  ],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [
-   4
-  ],
-  "constants": [
-   0,
-   1,
-   2,
-   5,
-   6,
-   7,
-   9,
-   10,
-   11,
-   47,
-   48,
-   49,
-   114,
-   115,
-   116,
-   255,
-   256,
-   257,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 4464416
- },
  "f4b3140": {
   "callees": {
    "virtual_4b31a8": [
