@@ -1,84 +1,62 @@
-# Native ports in the lifted dispatcher
+# Native ports
 
-Routines whose batch lift did not pass verification
-(`docs/lifted-batch-verification.json`) are otherwise call boundaries:
-lifted callers that reach them fall through to the platform. A hand
-recovery can take their place in the dispatch table:
+The generated ports (`port_rtl*.c`) are register-for-register: a `Regs` struct with the x86
+registers, an emulated push stack, `goto` labels at the original addresses and every frame local in
+the emulated stack. They are correct but read like the listing they came from. A native port says
+the same thing as ordinary C, and is verified the same way.
 
-`tools/port_oracle.py` is the shared oracle harness for these ports (mirrored regions, object
-and global modes).
+## Style
 
-1. Write it over the original's address space with
-   `source/native_memory.[ch]`. An address the services resolve is used in
-   place. Any other address is read through `VertrixGlobals` and stored
-   through the `0xf0000000` pseudo call, exactly as `lift_load` and
-   `lift_store` do on the lifted host.
-2. Verify it against the original with a dedicated oracle. The oracle
-   should cover both the object path and the globals path.
-3. Add an adapter with the lifted-routine signature to
-   `source/native_dispatch.[ch]`, list it in `NATIVE_PORTS`
-   (`tools/dispatch_boundaries.py`) and run `tools/gen_dispatch.py`.
+`source/port_rtlmp3memorydecodes.c` (0x48b2f0) is the model.
 
-| Original | Routine | Source | Oracle / evidence |
-|---|---|---|---|
-| `0x410270` | S3M pattern converter (`docs/S3M-PATTERN.md`) | `source/s3m_pattern.c` | `tools/verify_s3m_pattern.py`, `docs/s3m-pattern-verification.json` |
-| `0x4327e0` | Slot kind snapshot (28 lifted call sites) | `source/native_ports.c` | `tools/verify_kind_snapshot.py`, `docs/kind-snapshot-verification.json` |
-| `0x4046e0` | Coded-stream bit read (24 lifted call sites) | `source/native_ports.c` | `tools/verify_bit_read.py`, `docs/bit-read-verification.json` |
-| `0x4346b0` | Line-matching pass (6 lifted call sites) | `source/native_ports.c` | `tools/verify_line_pass_port.py`, `docs/line-pass-port-verification.json` |
+- Name the values: entry registers become `const` locals named for what they hold (`stream`,
+  `result`), and offsets, globals, table addresses and callees become an `enum` (`SAMPLE_LENGTH`,
+  `LOADED_BYTES`, `DECODE_FRAME`).
+- Structured control flow: loops and ifs, not labels. Keep the original's `!port.env.failed` test
+  in every loop, so a fault stops the loop as it does in the lifted copy.
+- Locals live in C. Only the locals a callee reaches by address stay in the emulated frame
+  (`port_open_stack`), at the original's offsets below `entry->esp - 4`, because their addresses
+  are call arguments. Saved registers are not written back: nothing reads them.
+- Calls hand over the arguments and 0 in the registers the callee does not read (see below).
+  Give a callee used more than once a small static wrapper (`decode_frame`, `release`).
+- `port_copy` is `rep movsd` plus `rep movsb`; a `repne scasb` length is a byte loop.
+- Return the edx the original leaves only when a caller reads it (`entry->edx` for a routine that
+  never touches it); otherwise return 0.
+- The comment on the port says what the routine does, in the terms of the game, and states every
+  oddity of the original that the port keeps (0x48b2f0 frees its buffer twice when the sample
+  allocation fails, and fills the freed sample).
 
-## 0x4327e0 slot kind snapshot
+## What the verifier compares
 
-eax = slot pointer array, edx = kind bytes, ebx = count. For each slot the
-kind byte is first set to `0xff`. The slot dword is then read, and when it
-is non-zero the byte at object `+0x15c` replaces the `0xff`. The loop is a
-do-while ending when the slot pointer reaches `eax + count * 4` (unsigned,
-wrapping, so a count of `0x40000000` or `0xc0000000` runs once). A zero
-count returns at once. eax on return is the final slot pointer. Because the
-stores happen in order, overlapping arrays see earlier stores. The native
-array form for the recovered board code is `vertrix_board_snapshot_kinds`
-(`source/board_markers.c`).
+`tools/verify_port.py` checks a port against the original executing in Unicorn, with the cases of
+its lifted copy. A call compares its stack arguments and only the registers among eax, edx, ebx and
+ecx that its callee reads (`VERTRIX_VERIFY_LIVE`); the returned edx compares only when a caller of
+the routine reads it after the call. Both come from `tools/register_inputs.py`, a liveness analysis
+of the original's code:
 
-Verification: 4,096 complete original executions compare the returned eax
-and the whole 0x20000 byte test memory. The cases cover zero, ordinary,
-wrapping and huge counts, unaligned and overlapping arrays, and empty and
-occupied slots. Two thirds of them serve the kinds, the slots or the
-objects as globals. Page zero is unmapped for this oracle, so a slot
-pointer overwritten by an overlapping store faults as on Windows. Such
-cases, where the original itself faults, are skipped and counted. The
-batch lift had failed because of this oracle artifact and the generic
-oracle's pointer draws; the routine has no exception frame.
+```
+python tools/register_inputs.py 405f70 40acd0
+405f70 reads eax edx ebx ecx; callers never read edx
+40acd0 reads eax edx ebx; callers never read edx
+```
 
-## 0x4046e0 bit read
+It follows calls into their callees and calls through fixed globals and the sound driver's slots
+to the routines the image puts there. Pushes that save a register (or reserve a local the routine
+overwrites) are not reads. Where it cannot see, it assumes the register is read. It also reports
+esi, edi and ebp, which no call compares: a port passes 0 there (`port_call`), so a callee listed
+as reading one needs a look. So far each such read has been the runtime's error path (0x4eb4d4) or
+the exception machinery, not an argument.
 
-The byte at the stream pointer (global `0x51f014`) is shifted left by the
-low five bits of the bit index (global `0x51f018`) as an eight bit operand
-(`shl bl, cl`), so an index of 8 to 31 leaves zero. The top bit is the
-result. The routine then stores index plus one, advances the pointer by
-`(index + 1) >> 3` (arithmetic) and stores the index's low three bits, in
-that order. `vertrix_bit_reader_next` (`source/bit_reader.c`) is the same on
-a native reader. Verification: 4,096 complete original executions cover
-indexes below 8, wide and negative indexes, and the byte served from an
-object or from globals. The result, the order of the three global stores
-and both memory regions compare.
+A deliberate mistake in a register the callee reads still fails (0x48b2f0 with the length off by
+one in ebx at 0x40acd0), and the same mistake in ecx, which it does not read, passes.
 
-## 0x4346b0 line pass
+The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port.
 
-The same algorithm as `vertrix_line_pass` (`source/match.c`): the board is
-copied, then the six directions are scanned, and runs longer than the
-threshold byte set their mask dwords to 1. Widening the oracle's domain
-beyond the earlier `tools/verify_line_pass.py` (masks 0/1, rewards below
-0x10000, game palettes) exposed two details that matter over the raw
-address space:
+## Converted
 
-- A cell counts as already marked only when its mask dword is exactly 1
-  (`cmp dword ptr [ecx], 1` at `0x434b70`). The native model's `!= 0`
-  agrees only for 0/1 masks.
-- The reward is a 16-bit word (`mov dx, word ptr [eax]` / `inc` / store at
-  `0x434b93`), so it wraps at 0x10000 and leaves the upper half alone.
-
-Both are harmless for `match_board`, which clears the mask and counts from
-zero, but the port follows the original. Verification: 8,192 complete
-original executions over any board byte, arbitrary mask dwords, wrapping
-rewards and any threshold byte (with garbage above `bl`). A third of the
-cases take the globals path. The full eax and the board, mask and reward
-regions compare.
+| Original | Port | Routine |
+| --- | --- | --- |
+| 0x48b2f0 | `port_rtlmp3memorydecodes.c` | decode an MP3 stream into a sample |
+| 0x47f410 | `port_rtldisplayreadies.c` | display ready test |
+| 0x4c5d60 | `port_rtljpeglargestinputs.c` | libjpeg largest_input_value |
+| 0x489760 | `port_rtlstringsuffixes.c` | path relative to a directory (`.\` + rest) |

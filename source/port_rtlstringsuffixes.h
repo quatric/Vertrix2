@@ -3,8 +3,8 @@
 
 #include "port.h"
 
-/* Sets the string at eax to the text at ebx past strlen(edx) characters (after clearing it with
- * 0x5109ce) and returns 1. */
+/* Makes the path at ebx relative to the directory at edx: the string at eax becomes ".\" and the
+ * path past the directory's length. Returns 1. */
 uint32_t vertrix_port_string_take_after_prefix_489760(PORT_SIGNATURE);
 
 #endif

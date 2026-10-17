@@ -11,8 +11,10 @@
  * original instruction: the services resolve the base as an object first.
  *
  * Every port is checked by tools/verify_port.py against the original executing in Unicorn, with
- * the same cases as its lifted copy: every call with its registers and stack arguments, the
- * returned eax, every stored global and every pool object must match. */
+ * the same cases as its lifted copy: every call with its stack arguments and the registers its
+ * callee reads (tools/register_inputs.py), the returned eax (and edx where a caller reads it),
+ * every stored global and every pool object must match. So a port hands a callee its arguments
+ * and 0 in the registers it does not read, as ordinary C would (docs/NATIVE-PORTS.md). */
 
 enum
 {
@@ -119,6 +121,21 @@ static inline void port_set16(Port *port, uint32_t base, uint32_t offset, uint32
 static inline void port_set32(Port *port, uint32_t base, uint32_t offset, uint32_t value)
 {
     lift_store(&port->env, base, offset, 4, value);
+}
+
+/* memcpy inside the original's address space as its rep movsd / rep movsb pair does it: count / 4
+ * dwords forwards, then the count % 4 bytes left. */
+static inline void port_copy(Port *port, uint32_t to, uint32_t from, uint32_t count)
+{
+    uint32_t done = 0;
+    for (; done + 4 <= count && !port->env.failed; done += 4)
+    {
+        port_set32(port, to + done, 0, port_u32(port, from + done, 0));
+    }
+    for (; done < count && !port->env.failed; done++)
+    {
+        port_set8(port, to + done, 0, port_u8(port, from + done, 0));
+    }
 }
 
 /* x86 shifts: the count is taken modulo 32. */

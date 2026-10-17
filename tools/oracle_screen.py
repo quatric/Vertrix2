@@ -283,6 +283,19 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
     _host_before[0] = before
     reader = global_reader(cpu, before, native_shadow)
     globals_ = Globals(reader, None)
+    # VERTRIX_VERIFY_LIVE=1: a call's eax, edx, ebx and ecx compare only where the callee reads
+    # them (tools/register_inputs.py), so a port written as ordinary C need not reproduce what the
+    # original's registers happen to hold at a call.
+    if os.environ.get('VERTRIX_VERIFY_LIVE') == '1':
+        from register_inputs import mask as live_mask
+
+        def masked(log):
+            return [(entry[0], *(value if keep else None
+                                 for value, keep in zip(entry[1:5], live_mask(entry[0]))),
+                     *entry[5:]) for entry in log]
+    else:
+        def masked(log):
+            return log
     completed = skipped_cases = 0
     fault_reasons = {}
     # With tolerated faults, inputs on which the original itself faults do not count: keep drawing
@@ -326,7 +339,8 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
         objects = {'calls': calls, 'services': services, 'globals': globals_}
         got = fn(*[c.byref(objects[name_]) for name_ in leading], *native_args)
         # The call log first: a diverging path explains a differing result.
-        assert native_log == stubs.log, (case, first_difference(native_log, stubs.log))
+        assert masked(native_log) == masked(stubs.log), \
+            (case, first_difference(masked(native_log), masked(stubs.log)))
         if compare:
             assert got == result & result_mask, (case, hex(got), hex(result))
         else:

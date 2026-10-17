@@ -2,351 +2,132 @@
 
 /* Decodes a whole MP3 stream into memory: allocates a 400,000-byte buffer, resets the reader,
  * decodes frames 0x2000 bytes at a time (0x405f70) and appends each frame's output, then wraps the
- * result in a new 0x18-byte record. */
+ * result in a new 0x18-byte sample. */
 
-typedef struct
-{
-    Port *port;
-    uint32_t eax;
-    uint32_t edx;
-    uint32_t ebx;
-    uint32_t ecx;
-    uint32_t esi;
-    uint32_t edi;
-    uint32_t ebp;
-    uint32_t esp;
-    uint32_t tmp;
-    uint32_t stack[32];
-    unsigned pushed;
-    uint32_t fa;
-    uint32_t fb;
-    unsigned fk;
-    unsigned fw;
-    uint32_t fc;
-} Regs;
-
-/* The kinds of the last flag-setting instruction: a subtraction or compare of fa and fb, an
- * addition, a logical result fa (CF and OF clear), and inc / dec of the result fa (CF kept). */
 enum
 {
-    F_SUB,
-    F_ADD,
-    F_LOGIC,
-    F_INC,
-    F_DEC
+    /* The routine's frame under its return slot. Its callees reach three of its locals by
+     * address, so they keep the original's places below the saved ebp. */
+    BELOW = 0x679c,
+    DECODER = 0x6798,
+    FRAME_OUTPUT = 0x2028,
+    FRAME_SIZE = 0x24,
+    FRAME_BYTES = 0x2000,
+    BUFFER_BYTES = 400000,
+    DECODE_FAILED = 0xffffffffu,
+    LOAD_FAILED = 0xb,
+
+    /* The decoder (0x405d60): its MPEG header (+0x14, 0x404480), the header's sample rate index,
+     * and the word table of rates it indexes (dword strides, MPEG-HEADER.md). */
+    DECODER_HEADER = 0x14,
+    DECODER_RATE_INDEX = 0x38,
+    SAMPLE_RATES = 0x4f41ac,
+
+    /* The sample: its data, byte count, loop bounds, rate and flags (bit 0: 16-bit samples). */
+    SAMPLE_BYTES = 0x18,
+    SAMPLE_DATA = 0,
+    SAMPLE_LENGTH = 8,
+    SAMPLE_LOOP_START = 0xc,
+    SAMPLE_LOOP_END = 0x10,
+    SAMPLE_RATE = 0x14,
+    SAMPLE_FLAGS = 0x16,
+    SAMPLE_16_BIT = 1,
+
+    /* The bytes of every sample loaded so far. */
+    LOADED_BYTES = 0x598dac,
+
+    CALLOC = 0x4ec160,
+    FREE = 0x4ea190,
+    READER_RESET = 0x405d60,
+    STREAM_DATA = 0x48aa70,
+    STREAM_POSITION = 0x48aa80,
+    DECODE_FRAME = 0x405f70,
+    RETURNS_AT_ONCE = 0x404580,
+    SAMPLE_LOAD = 0x40ac50,
+    SAMPLE_WRITE = 0x40acd0
 };
 
-/* The conditions of the jumps and sets. */
-enum
+/* 0x405f70: decode the next frame into the frame output, its byte count into the frame size.
+ * The first call hands over the stream's data and position, the later ones nothing (the decoder
+ * reads on from where it is). Returns 0, 1 when the input runs out, -1 on an error. */
+static uint32_t decode_frame(Port *port, uint32_t decoder, uint32_t position, uint32_t data,
+                             uint32_t output, uint32_t size)
 {
-    CC_E,
-    CC_NE,
-    CC_B,
-    CC_AE,
-    CC_BE,
-    CC_A,
-    CC_L,
-    CC_GE,
-    CC_LE,
-    CC_G,
-    CC_S,
-    CC_NS
-};
-
-/* A value pushed for the next call. */
-static void push(Regs *r, uint32_t value)
-{
-    if (r->pushed < 32)
-    {
-        r->stack[r->pushed++] = value;
-    }
+    const uint32_t stack[2] = {FRAME_BYTES, size};
+    return port_call_stack(port, DECODE_FRAME, decoder, position, data, output, stack, 2);
 }
 
-/* A call of the tracked registers taking the last count values pushed (nearest first) and, unless
- * kept, popping them as the callee's ret does. */
-static void call_with_stack(Regs *r, uint32_t target, unsigned count, int keep)
+static void release(Port *port, uint32_t block)
 {
-    uint32_t args[32] = {0};
-    unsigned i;
-    if (count > r->pushed)
-    {
-        count = r->pushed;
-    }
-    for (i = 0; i < count; i++)
-    {
-        args[i] = r->stack[r->pushed - 1 - i];
-    }
-    if (!keep)
-    {
-        r->pushed -= count;
-    }
-    vertrix_lift_in_esi = r->esi;
-    vertrix_lift_in_edi = r->edi;
-    vertrix_lift_in_ebp = r->ebp;
-    r->eax =
-        lift_call_arguments(&r->port->env, target, r->eax, r->edx, r->ebx, r->ecx, args, count);
-    vertrix_lift_in_esi = vertrix_lift_in_edi = vertrix_lift_in_ebp = 0;
-    r->edx = vertrix_lift_edx;
+    port_call(port, FREE, block, 0, 0, 0);
 }
 
-static void call(Regs *r, uint32_t target, unsigned count)
-{
-    call_with_stack(r, target, count, 0);
-}
-
-/* A call that pops nothing (cdecl, or no stack arguments): every value pushed passed and left for
- * the caller's add esp. */
-static void call_keep(Regs *r, uint32_t target)
-{
-    call_with_stack(r, target, r->pushed, 1);
-}
-
-static uint32_t rd8(Regs *r, uint32_t address)
-{
-    return port_u8(r->port, address, 0);
-}
-
-static uint32_t rd16(Regs *r, uint32_t address)
-{
-    return port_u16(r->port, address, 0);
-}
-
-static uint32_t rd32(Regs *r, uint32_t address)
-{
-    return port_u32(r->port, address, 0);
-}
-
-static void wr8(Regs *r, uint32_t address, uint32_t value)
-{
-    port_set8(r->port, address, 0, value);
-}
-
-static void wr16(Regs *r, uint32_t address, uint32_t value)
-{
-    port_set16(r->port, address, 0, value);
-}
-
-static void wr32(Regs *r, uint32_t address, uint32_t value)
-{
-    port_set32(r->port, address, 0, value);
-}
-
-static void set_low8(uint32_t *reg, uint32_t value)
-{
-    *reg = (*reg & 0xffffff00u) | (value & 0xff);
-}
-
-static void set_low16(uint32_t *reg, uint32_t value)
-{
-    *reg = (*reg & 0xffff0000u) | (value & 0xffff);
-}
-
-/* The last value pushed taken back. */
-static uint32_t pop(Regs *r)
-{
-    return r->pushed != 0 ? r->stack[--r->pushed] : 0;
-}
-
-/* movs and rep movs of size bytes from esi to edi, forwards. */
-static void movs(Regs *r, unsigned size)
-{
-    if (size == 1)
-    {
-        wr8(r, r->edi, rd8(r, r->esi));
-    }
-    else if (size == 2)
-    {
-        wr16(r, r->edi, rd16(r, r->esi));
-    }
-    else
-    {
-        wr32(r, r->edi, rd32(r, r->esi));
-    }
-    r->esi += size;
-    r->edi += size;
-}
-
-static void rep_movs(Regs *r, unsigned size)
-{
-    for (; r->ecx != 0 && !r->port->env.failed; r->ecx--)
-    {
-        movs(r, size);
-    }
-}
-
-/* Original 0x48b2f0: Decodes a whole MP3 stream into memory: allocates a 400,000-byte buffer,
- * resets the reader, decodes frames 0x2000 bytes at a time (0x405f70) and appends each frame's
- * output, then wraps the result in a new 0x18-byte record. Evidence: calls 0x4ec160, 0x405d60,
- * 0x48aa70, 0x48aa80, 0x405f70, 0x404580, 0x40ac50, 0x4ea190, 0x40acd0; reads 0x598dac; writes
- * 0x598dac. Register-for-register from the listing (0x48b2fd..0x48b49d); labels are the original
- * addresses. */
-static void run(Regs *r)
-{
-    r->ecx = r->eax;
-    wr32(r, r->ebp - 0x20, r->edx);
-    r->edx = 0;
-    r->eax = 0x1;
-    wr32(r, r->ebp - 0x18, r->edx);
-    r->edx = 0x61a80;
-    call_keep(r, 0x4ec160);
-    wr32(r, r->ebp - 0x1c, r->eax);
-    wr32(r, r->ebp - 0x14, r->eax);
-    r->eax = r->ebp - 0x6798;
-    call_keep(r, 0x405d60);
-    r->eax = r->ebp - 0x24;
-    push(r, r->eax);
-    push(r, 0x2000);
-    r->eax = r->ecx;
-    call_keep(r, 0x48aa70);
-    r->ebx = r->eax;
-    r->eax = r->ecx;
-    call_keep(r, 0x48aa80);
-    r->ecx = r->ebp - 0x2028;
-    r->edx = r->eax;
-    r->eax = r->ebp - 0x6798;
-    call(r, 0x405f70, 2);
-    r->ebx = r->eax;
-    r->ecx = r->eax;
-    r->eax = r->ebp - 0x6784;
-    call_keep(r, 0x404580);
-    if (r->ebx != 0)
-    {
-        goto at_48b3c0;
-    }
-at_48b366:
-    r->ecx = rd32(r, r->ebp - 0x24);
-    r->esi = r->ebp - 0x2028;
-    r->edi = rd32(r, r->ebp - 0x14);
-    r->ebx = rd32(r, r->ebp - 0x18);
-    push(r, r->edi);
-    r->eax = r->ecx;
-    r->ecx = r->ecx >> 0x2;
-    rep_movs(r, 4);
-    set_low8(&r->ecx, (r->eax & 0xff));
-    set_low8(&r->ecx, (r->ecx & 0xff) & 0x3);
-    rep_movs(r, 1);
-    r->edi = pop(r);
-    r->eax = rd32(r, r->ebp - 0x24);
-    r->edx = 0;
-    r->ecx = r->edi + r->eax;
-    r->ebx = r->ebx + r->eax;
-    r->eax = r->ebp - 0x24;
-    wr32(r, r->ebp - 0x14, r->ecx);
-    push(r, r->eax);
-    wr32(r, r->ebp - 0x18, r->ebx);
-    r->ecx = r->ebp - 0x2028;
-    push(r, 0x2000);
-    r->ebx = 0;
-    r->eax = r->ebp - 0x6798;
-    call(r, 0x405f70, 2);
-    r->ecx = r->eax;
-    if (r->eax == 0 && !r->port->env.failed)
-    {
-        goto at_48b366;
-    }
-at_48b3c0:
-    if (r->ecx == 0xffffffffu)
-    {
-        goto at_48b488;
-    }
-    r->edx = 0x18;
-    r->eax = 0x1;
-    call_keep(r, 0x4ec160);
-    r->ecx = r->eax;
-    wr32(r, r->ebp - 0x28, r->eax);
-    if (r->eax == 0)
-    {
-        goto at_48b488;
-    }
-    wr16(r, r->eax + 0x16, 0x1);
-    r->eax = rd32(r, r->ebp - 0x6760);
-    set_low16(&r->eax, rd16(r, r->eax * 4 + 0x4f41ac));
-    wr32(r, r->ecx + 0xc, 0x0);
-    wr16(r, r->ecx + 0x14, (r->eax & 0xffff));
-    r->eax = rd32(r, r->ebp - 0x18);
-    wr32(r, r->ecx + 0x8, r->eax);
-    r->eax = r->ecx;
-    wr32(r, r->ecx + 0x10, 0x0);
-    call_keep(r, 0x40ac50);
-    if (r->eax == 0)
-    {
-        goto at_48b434;
-    }
-    r->eax = rd32(r, r->ebp - 0x1c);
-    call_keep(r, 0x4ea190);
-    r->eax = r->ecx;
-    call_keep(r, 0x4ea190);
-    r->eax = rd32(r, r->ebp - 0x20);
-    wr32(r, r->eax, 0x0);
-at_48b434:
-    r->edi = rd32(r, r->ebp - 0x28);
-    r->ecx = rd32(r, r->ebp - 0x18);
-    r->esi = rd32(r, r->ebp - 0x1c);
-    r->ebx = rd32(r, r->ebp - 0x18);
-    r->edi = rd32(r, r->edi);
-    r->edx = 0;
-    push(r, r->edi);
-    r->eax = r->ecx;
-    r->ecx = r->ecx >> 0x2;
-    rep_movs(r, 4);
-    set_low8(&r->ecx, (r->eax & 0xff));
-    set_low8(&r->ecx, (r->ecx & 0xff) & 0x3);
-    rep_movs(r, 1);
-    r->edi = pop(r);
-    r->eax = rd32(r, r->ebp - 0x28);
-    call_keep(r, 0x40acd0);
-    r->eax = rd32(r, r->ebp - 0x20);
-    r->ecx = rd32(r, r->ebp - 0x28);
-    wr32(r, r->eax, r->ecx);
-    r->eax = rd32(r, r->ebp - 0x1c);
-    call_keep(r, 0x4ea190);
-    r->esi = rd32(r, 0x598dac);
-    r->eax = rd32(r, r->ecx + 0x8);
-    r->esi = r->esi + r->eax;
-    wr32(r, 0x598dac, r->esi);
-    r->eax = 0;
-    r->edi = rd32(r, r->ebp - 0x10);
-    r->esi = rd32(r, r->ebp - 0xc);
-    r->ecx = rd32(r, r->ebp - 0x8);
-    r->ebx = rd32(r, r->ebp - 0x4);
-    return;
-at_48b488:
-    r->eax = rd32(r, r->ebp - 0x1c);
-    call_keep(r, 0x4ea190);
-    r->eax = 0xb;
-    r->edi = rd32(r, r->ebp - 0x10);
-    r->esi = rd32(r, r->ebp - 0xc);
-    r->ecx = rd32(r, r->ebp - 0x8);
-    r->ebx = rd32(r, r->ebp - 0x4);
-    return;
-}
-
+/* Original 0x48b2f0 (eax = stream, edx = where the sample goes): decode the stream frame by frame
+ * into a 400,000-byte buffer (no bound is checked), then make a 0x18-byte sample of it: the byte
+ * count, the stream's sample rate, 16-bit, no loop. 0x40ac50 allocates and registers the sample's
+ * data; the buffer is copied there and written to the driver (0x40acd0), and the bytes are added
+ * to 0x598dac. Returns 0, or 0xb (nothing stored) when decoding fails or there is no memory for
+ * the sample. When 0x40ac50 fails the original frees the buffer and the sample and clears the
+ * result, then goes on as if it had not: it fills, stores and counts the freed sample and frees
+ * the buffer a second time. */
 uint32_t vertrix_port_mp3_decode_to_memory_48b2f0(PORT_SIGNATURE)
 {
-    enum
-    {
-        BELOW = 0x679c
-    };
     /* Static: 26 KB is too much for the Wii thread stack, and the routine is not reentered (its
      * callees decode one MP3 frame and never call back). */
     static uint8_t stack[BELOW + 8];
     Port port;
-    Regs r;
     port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
-    memset(&r, 0, sizeof r);
-    r.port = &port;
-    r.eax = entry->eax;
-    r.edx = entry->edx;
-    r.ebx = entry->ebx;
-    r.ecx = entry->ecx;
-    r.esi = entry->esi;
-    r.edi = entry->edi;
-    r.ebp = entry->esp - 4;
-    port_set32(&port, r.ebp, 0, entry->ebp);
-    port_set32(&port, r.ebp, -0x4u, entry->ebx);
-    port_set32(&port, r.ebp, -0x8u, entry->ecx);
-    port_set32(&port, r.ebp, -0xcu, entry->esi);
-    port_set32(&port, r.ebp, -0x10u, entry->edi);
-    run(&r);
-    return port_return(&port, r.eax, r.edx);
+    const uint32_t frame = entry->esp - 4;
+    const uint32_t decoder = frame - DECODER;
+    const uint32_t output = frame - FRAME_OUTPUT;
+    const uint32_t size = frame - FRAME_SIZE;
+    const uint32_t stream = entry->eax;
+    const uint32_t result = entry->edx;
+
+    const uint32_t buffer = port_call(&port, CALLOC, 1, BUFFER_BYTES, 0, 0);
+    port_call(&port, READER_RESET, decoder, 0, 0, 0);
+    const uint32_t data = port_call(&port, STREAM_DATA, stream, 0, 0, 0);
+    const uint32_t position = port_call(&port, STREAM_POSITION, stream, 0, 0, 0);
+    uint32_t status = decode_frame(&port, decoder, position, data, output, size);
+    /* The original calls 0x404580 on the header here: it returns at once. */
+    port_call(&port, RETURNS_AT_ONCE, decoder + DECODER_HEADER, 0, 0, 0);
+
+    uint32_t length = 0;
+    while (status == 0 && !port.env.failed)
+    {
+        const uint32_t bytes = port_u32(&port, size, 0);
+        port_copy(&port, buffer + length, output, bytes);
+        length += bytes;
+        status = decode_frame(&port, decoder, 0, 0, output, size);
+    }
+
+    uint32_t sample = 0;
+    if (status != DECODE_FAILED)
+    {
+        sample = port_call(&port, CALLOC, 1, SAMPLE_BYTES, 0, 0);
+    }
+    if (sample == 0)
+    {
+        release(&port, buffer);
+        return port_return(&port, LOAD_FAILED, 0);
+    }
+    const uint32_t rate_index = port_u32(&port, decoder, DECODER_RATE_INDEX);
+    port_set16(&port, sample, SAMPLE_FLAGS, SAMPLE_16_BIT);
+    port_set32(&port, sample, SAMPLE_LOOP_START, 0);
+    port_set16(&port, sample, SAMPLE_RATE, port_u16(&port, SAMPLE_RATES + rate_index * 4, 0));
+    port_set32(&port, sample, SAMPLE_LENGTH, length);
+    port_set32(&port, sample, SAMPLE_LOOP_END, 0);
+    if (port_call(&port, SAMPLE_LOAD, sample, 0, 0, 0) != 0)
+    {
+        release(&port, buffer);
+        release(&port, sample);
+        port_set32(&port, result, 0, 0);
+    }
+    port_copy(&port, port_u32(&port, sample, SAMPLE_DATA), buffer, length);
+    port_call(&port, SAMPLE_WRITE, sample, 0, length, 0);
+    port_set32(&port, result, 0, sample);
+    release(&port, buffer);
+    port_set32(&port, LOADED_BYTES, 0,
+               port_u32(&port, LOADED_BYTES, 0) + port_u32(&port, sample, SAMPLE_LENGTH));
+    return port_return(&port, 0, 0);
 }
