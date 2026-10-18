@@ -35,6 +35,7 @@ CALL_SITE_ARGUMENTS = {0x486e52: 3}
 
 REG32 = {X.X86_REG_EAX: 'eax', X.X86_REG_ECX: 'ecx', X.X86_REG_EDX: 'edx', X.X86_REG_EBX: 'ebx',
          X.X86_REG_ESI: 'esi', X.X86_REG_EDI: 'edi', X.X86_REG_EBP: 'ebp', X.X86_REG_ESP: 'esp'}
+REG32_IDS = set(REG32)
 REG16 = {X.X86_REG_AX: 'eax', X.X86_REG_CX: 'ecx', X.X86_REG_DX: 'edx', X.X86_REG_BX: 'ebx',
          X.X86_REG_SI: 'esi', X.X86_REG_DI: 'edi', X.X86_REG_BP: 'ebp'}
 REG8L = {X.X86_REG_AL: 'eax', X.X86_REG_CL: 'ecx', X.X86_REG_DL: 'edx', X.X86_REG_BL: 'ebx'}
@@ -102,14 +103,21 @@ def jump_table(seen, insn):
     if insn.operands[0].type != X.X86_OP_MEM or mem.base or not mem.index or mem.scale != 4:
         raise NotImplementedError('%x indirect jmp' % insn.address)
     count = masked = None
+    index = mem.index
     for address in sorted((a for a in seen if a < insn.address), reverse=True)[:8]:
         prior = seen[address]
         if prior.mnemonic == 'cmp' and prior.operands[1].type == X.X86_OP_IMM:
             count = prior.operands[1].imm + 1
             break
         writes_index = (len(prior.operands) > 0 and prior.operands[0].type == X.X86_OP_REG and
-                        prior.operands[0].reg == mem.index and
+                        prior.operands[0].reg == index and
                         prior.mnemonic not in ('cmp', 'test', 'push'))
+        if writes_index and prior.mnemonic == 'mov' and prior.operands[1].type == X.X86_OP_REG \
+                and prior.operands[1].reg in REG32_IDS:
+            # A copy keeps the bound of its source's cmp (0x4ed4b2: `cmp ebx, 3; ja ...;
+            # mov eax, ebx` before `jmp [eax*4 + table]`).
+            index = prior.operands[1].reg
+            continue
         if writes_index and prior.mnemonic == 'movzx' and prior.operands[1].type == X.X86_OP_REG:
             # A zero extension keeps the bound of the narrower register's cmp (0x4e0b14:
             # `cmp al, 0xd; ja ...; movzx eax, al` before `jmp [eax*4 + table]`).

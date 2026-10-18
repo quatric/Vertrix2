@@ -725,6 +725,8 @@ callee's entry and clears them. The probes match the original.
 
 `and reg, 0xff` (or 0xffff) is a zero extension like `movzx`: the bound is the `cmp` before it,
 the mask only when there is none (0x40e259 in 0x40e030: `cmp dl, 3; ja ...; and edx, 0xff`).
+A register copy passes the bound on too: `cmp ebx, 3; ja ...; mov eax, ebx` before
+`jmp [eax*4 + table]` (0x4ed4b2 in 0x4ed2b5) takes the cmp on ebx.
 
 ### Lifter: call-site argument counts
 
@@ -886,7 +888,7 @@ The synthesis (0x405720, 491 instructions) is three windowed sums, written as lo
 single helpers. The port keeps the ebx and ecx its helpers see, which carry the loop counters and
 the last clamp's limit.
 
-3793 routines run as clean ports. Counted by calls, 99.65% of the calls the dispatcher serves in the
+3797 routines run as clean ports. Counted by calls, 99.65% of the calls the dispatcher serves in the
 1,500-tick gameplay profile go to a port or a recovered native (202,169 of 57,234,341 still ran lifted
 copies before 0x4928f0 below).
 

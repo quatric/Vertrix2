@@ -15,7 +15,6 @@
 #include "lifted_whole_12.h"
 #include "lifted_whole_13.h"
 #include "lifted_whole_21.h"
-#include "lifted_whole_29.h"
 #include "lifted_whole_40.h"
 #include "lifted_whole_6.h"
 #include "lifted_whole_7.h"
@@ -397,6 +396,7 @@
 #include "rtlexceptionallocs.h"
 #include "rtlexceptioncatches.h"
 #include "rtlexceptionsteps.h"
+#include "rtlexponentformats.h"
 #include "rtlextendedeffects.h"
 #include "rtlextendedroots.h"
 #include "rtlfightbanners.h"
@@ -481,6 +481,7 @@
 #include "rtlpathseparators.h"
 #include "rtlpatterntables.h"
 #include "rtlpendingerrors.h"
+#include "rtlplaypanels.h"
 #include "rtlplayscreenactors.h"
 #include "rtlplayscreenheads.h"
 #include "rtlplayscreensetups.h"
@@ -546,7 +547,7 @@ enum
     LIFTED_ARENA_BOTTOM = 0x7b0000,
     LIFTED_ARENA_GAP = 0x100, /* above a frame: its return slot and the arguments passed on */
     LIFTED_MAX_DEPTH = 16,
-    LIFTED_MAX_STACK = 1416,
+    LIFTED_MAX_STACK = 1400,
     LIFTED_MAX_ARGUMENTS = 17
 };
 
@@ -1423,7 +1424,7 @@ static const LiftedRoutine routines[] = {
     {0x43e1a0, vertrix_port_effect_actor_teardown_43e1a0, 0, 0},
     {0x43e260, vertrix_port_arena_release_all_43e260, 0, 0},
     {0x43e2a0, vertrix_port_actor_table_update_43e2a0, 0, 0},
-    {0x43e320, lifted_f43e320, 128, 0},
+    {0x43e320, vertrix_port_rtl_actor_projection_43e320, 0, 0},
     {0x43e4d0, vertrix_port_board_particles_setup_43e4d0, 0, 0},
     {0x43e740, vertrix_port_star_setup, 0, 0},
     {0x43e840, vertrix_port_drop_actor_start, 0, 0},
@@ -2195,7 +2196,7 @@ static const LiftedRoutine routines[] = {
     {0x4651b0, vertrix_port_high_scores_menu_build_4651b0, 0, 0},
     {0x4657f0, vertrix_port_menu_panel_make_4657f0, 0, 0},
     {0x465a70, vertrix_port_marker_spawn_465a70, 0, 0},
-    {0x465af0, lifted_title_screen, 1416, 0},
+    {0x465af0, vertrix_port_rtl_play_panels_465af0, 0, 0},
     {0x466d60, vertrix_port_board_select_screen_build_466d60, 0, 0},
     {0x469480, vertrix_port_play_screen_actors_build_469480, 0, 0},
     {0x46a410, vertrix_port_spawn_random_actor_set_46a410, 296, 0},
@@ -3524,7 +3525,7 @@ static const LiftedRoutine routines[] = {
     {0x4c0b51, vertrix_port_jpeg_use_merged_upsample_4c0b51, 0, 0},
     {0x4c14b7, vertrix_port_decoder_output_pass_prepare_4c14b7, 0, 0},
     {0x4c16dc, vertrix_port_decoder_pass_finish_4c16dc, 0, 0},
-    {0x4c17da, lifted_f4c17da, 232, 0},
+    {0x4c17da, vertrix_port_jpeg_master_decompress_4c17da, 0, 0},
     {0x4c1d20, vertrix_port_object_child_reset_4c1d20, 0, 0},
     {0x4c1d40, vertrix_port_decoder_merged_rows_4c1d40, 0, 0},
     {0x4c1e10, vertrix_port_jpeg_process_row_4c1e10, 0, 0},
@@ -4367,7 +4368,7 @@ static const LiftedRoutine routines[] = {
     {0x4ecf49, vertrix_port_rtl_four_digits_4ecf49, 0, 0},
     {0x4ecf60, vertrix_port_rtl_two_digits_4ecf60, 0, 0},
     {0x4ed096, vertrix_port_rtl_fixed_format_4ed096, 0, 0},
-    {0x4ed2b5, lifted_f4ed2b5, 128, 0},
+    {0x4ed2b5, vertrix_port_rtl_exponent_format_4ed2b5, 0, 0},
     {0x4ed60b, vertrix_port_rtl_text_to_extended_4ed60b, 0, 0},
     {0x4ed79f, vertrix_port_rtl_text_to_double_4ed79f, 0, 0},
     {0x4ed880, vertrix_port_rtl_console_getch_4ed880, 0, 0},

@@ -122,7 +122,17 @@ copy's 0.
 data that the port never stored: the store comparison alone only checks the stores the port makes,
 so a dropped store passed it (0x480730 passed without the last word of each percent row). Use it
 for routines that write globals (0x480730, 0x4ceaa0, 0x474560, 0x474910, 0x423960).
-`VERTRIX_ORACLE_LIMIT` raises the original's instruction budget (0x480730 runs 1.6 million). The settings that reach each routine's deep paths are kept as `tools/verify_cases/ADDR.sh`; source one
+`VERTRIX_ORACLE_LIMIT` raises the original's instruction budget (0x480730 runs 1.6 million). `VERTRIX_MODES=wide` compares the wide registers only, for a routine the small ones leave with
+nowhere to go (0x4c17da calls through cinfo's method and error manager pointers; with small
+registers its original returned in 3 of 128 cases and the run took hours). Stores are compared at the end
+only, so where stubs hand several objects one address a later object's store hides an earlier
+one's: draw the objects apart (0x465af0's constructors return one of 64 addresses, else a planted
+wrong frame for its fourth panel, 9 at 0x465fb1, passed; 0x43e320's 450 slots hold 0 or one of
+three pool objects, else a wrong screen y for a depthless actor, 0x43e4b7, passed). An object
+the routine calls through is the stub vtable 0x904000, whose data fields are set with
+`VERTRIX_GLOBAL_CHOICES` (0x4c17da's input controller's has_multiple_scans, 0x904010: without it
+the progress monitor's pass counts were never reached, and a port that kept cinfo->progress in a
+local, where the original reads it again for each store, passed). The settings that reach each routine's deep paths are kept as `tools/verify_cases/ADDR.sh`; source one
 before `verify_port.py`. Check that a
 planted mistake fails before trusting a pass: 0x47ce10 passed with a wrong 5:6:5 shift until the
 pixel pointers were drawn into the pool (0x806000 + 0x1000 * i, four objects). 0x426240,
@@ -329,3 +339,7 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x423960 | `rtlscreenwipes.c` | one frame of the screen wipe |
 | 0x40e030 | `rtlmixerticks.c` | the mixer's per-tick instrument update (envelopes, fadeout, vibrato) |
 | 0x486e20 | `rtlvideooffs.c` | the video turned off (DirectDraw back to the normal level, its objects released) |
+| 0x4ed2b5 | `rtlexponentformats.c` | a number's exponent form (digits, point, fraction, letter, signed exponent of 1 to 4 digits) |
+| 0x465af0 | `rtlplaypanels.c` | the play screen's bars, panels, cell grid, texts, indicators and markers |
+| 0x43e320 | `rtlactorprojections.c` | the actors' projection to the screen (position over depth, level from depth) |
+| 0x4c17da | `rtljpegmasters.c` | libjpeg's jinit_master_decompress (range limit table, master_selection) |
