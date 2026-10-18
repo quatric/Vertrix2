@@ -22,9 +22,10 @@ callee results and object fields found by the lifter (`docs/lift/NAME.json`) are
 pool, the globals the routine reads are drawn from small values so every branch is taken.
 
 Verified: `0x46b810` (also hand ported in `source/hud_builder.c`; the lift agrees with it),
-`0x465af0`, `0x466d60`, `0x46c9d0`. The generated sources are `source/lifted_*.c`; regenerate with
-
-    tools/lift.py 465af0 title_screen --meta docs/lift/title_screen.json > source/lifted_title_screen.c
+`0x465af0`, `0x466d60`, `0x46c9d0`. All four are native ports now (`rtlplaypanels.c` for 0x465af0
+and the `vertrix_port_*` builders for the others), and their lifted sources
+(`source/lifted_{title,select,game}_screen.c`, `source/lifted_hud_decor.c`) and metadata were
+removed; the probes and `tools/test_dispatch.c` reach them through the dispatcher by address.
 
 ## Uniform stack model
 
@@ -985,7 +986,8 @@ a heap arena at original-style addresses, global reads and stores, the object re
 boundary that serves the allocators (`0x4ca000`, the RTL `GetMem` `0x4e7c90`) and records every
 other target it is asked for. It is byte order independent. `tools/host_probe.c` (host) and
 `tools/wii_lifted_probe.c` (`make wii-lifted-probe`, `build/vertrix2-lifted-probe.dol`) run the four
-lifted screens through it. On the host, with the image built by `tools/dump_image.py`:
+lifted screens through it (they now dispatch to the native ports). On the host, with the image
+built by `tools/dump_image.py`, when they were still lifted:
 
 | screen | allocated | boundary calls left |
 | --- | --- | --- |

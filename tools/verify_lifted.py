@@ -171,21 +171,6 @@ def run(name, spec=None, meta=None, source=None, hints=None):
                compare_flags=spec.get('compare_flags', False))
 
 
-def hud_case(rng, pool, cpu, kwargs):
-    kwargs['edx'] = rng.choice([0xffffffff, 0xffffffff, 0x20, 0x21, 0x22, rng.getrandbits(32)])
-    cpu.mem_write(0x532a68, struct.pack('<I', rng.randrange(0, 19)))
-    cpu.mem_write(0x532a6c, struct.pack('<I', rng.randrange(0, 19)))
-
-
-register('hud_decor', 0x46b810, 0, setup_case=hud_case,
-         globals=((0x4f888a, 0x4f8ce0 - 0x4f888a), (0x4fbf28, 0xc0), (0x5466c4, 4),
-                  (0x5345d4, 0x50), (0x4f9c07, 4)),
-         choices={0x4178d0: [0xffffffff, 0xffffffff, 0, 5], 0x4126f0: [1, 1, 0]})
-
-register('title_screen', 0x465af0, 0, small=True, bounds=(0x4f86d4, 0x4f870c, 0x532a84))
-register('select_screen', 0x466d60, 0, mixed=True, small=True)
-register('game_screen', 0x46c9d0, 0, mixed=True, small=True, pool_size=0x1000)
-
 if __name__ == '__main__':
     name = sys.argv.pop()
     run(name)

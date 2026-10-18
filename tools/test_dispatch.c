@@ -47,10 +47,12 @@ int main(void)
 {
     static const uint32_t values[] = {0, 1, 0x7fffffffu, 0x80000000u, 0xfffffffeu, 0xffffffffu};
     static const uint32_t targets[] = {0x401010, 0x478da0};
-    /* Routines whose lift still fails verification (docs/lifted-batch-verification.json). */
-    static const uint32_t unlifted[] = {0x415c60, 0x432c00, 0x475090, 0x479450};
+    /* Routines whose lift still fails verification (docs/lifted-batch-verification.json); 0x432c00
+     * left the list when it was ported. */
+    static const uint32_t unlifted[] = {0x415c60, 0x475090, 0x479450};
     static const uint32_t screens[] = {0x465af0, 0x466d60, 0x46b810, 0x46c9d0};
-    static const uint32_t optional[] = {0x423960};
+    /* A routine only in the unverified tier (0x423960, here before, is a native port now). */
+    static const uint32_t optional[] = {0x4e6250};
     static const uint32_t leaves[] = {0x4b9ce0, 0x4bb260, 0x4c5c20, 0x4c6a80, 0x4c93c0};
     Boundary boundary = {0};
     VertrixCalls inner = {boundary_call, &boundary};

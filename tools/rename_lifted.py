@@ -223,33 +223,8 @@ def plan_renames(root):
     else:
         # Legacy fixtures and dispatchers have only the verified table.
         rows = DISPATCH.findall(dispatch_text)
-    screen_addresses = {
-        "hud_decor": 0x46b810, "title_screen": 0x465af0,
-        "select_screen": 0x466d60, "game_screen": 0x46c9d0,
-    }
     expected_rows = {meta["address"]: (f"lifted_{name}", meta["stack"], meta["arguments"])
                      for name, meta in records.items()}
-    # gen_dispatch explicitly prefers these separately verified screen routines.
-    for name, address in screen_addresses.items():
-        screen_path = root / "docs" / "lift" / f"{name}.json"
-        if not screen_path.exists():
-            continue
-        meta = read_json(screen_path)
-        for suffix in ("c", "h"):
-            screen_source = root / "source" / f"lifted_{name}.{suffix}"
-            if not screen_source.is_file():
-                raise ValueError(f"Missing screen override source: {name}")
-            signatures = SIGNATURE.findall(executable_text(screen_source.read_text()))
-            terminator = "{" if suffix == "c" else ";"
-            if sum(symbol == f"lifted_{name}" and end == terminator
-                   for symbol, end in signatures) != 1:
-                raise ValueError(f"Invalid screen override signature: {name}")
-        if meta.get("address") not in (None, address) or not all(
-                isinstance(meta.get(key), int) for key in ("stack", "arguments")):
-            raise ValueError(f"Invalid screen override metadata: {name}")
-        if f"lifted_{name}" in substitutions:
-            raise ValueError(f"Whole rename would overwrite reserved screen identifier: {name}")
-        expected_rows[address] = (f"lifted_{name}", meta["stack"], meta["arguments"])
     actual_rows = {int(address, 16): (name, int(stack), int(arguments))
                    for address, name, stack, arguments in rows}
     if len(actual_rows) != len(rows) or actual_rows != expected_rows:

@@ -24,7 +24,6 @@ from drop_ported import drop
 from lift import EXE
 
 ROOT = Path(__file__).resolve().parents[1]
-SCREENS = {'game_screen', 'hud_decor', 'select_screen', 'title_screen'}
 
 
 def lifted_routines():
@@ -32,8 +31,6 @@ def lifted_routines():
     routines = {}
     for path in sorted(glob.glob(str(ROOT / 'docs' / 'lift' / '*.json'))):
         chunk = Path(path).stem
-        if chunk in SCREENS:
-            continue
         for name, meta in json.loads(Path(path).read_text()).items():
             routines[meta['address']] = (chunk, name)
     return routines

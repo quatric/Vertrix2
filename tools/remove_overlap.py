@@ -4,8 +4,7 @@ A routine is removed when docs/lifted-overlap.json (tools/lifted_overlap.py) sho
 port and a passing verification record, and
   - no other lifted routine lists it as a direct or pointer callee,
   - its address does not appear as a dword in the original image (a vtable or function pointer
-    could call it through the dispatcher), and
-  - it is not one of the four screen entry points.
+    could call it through the dispatcher).
 The addresses go to docs/lifted-removed.json; tools/lift_batch.py combine skips them."""
 import glob
 import json
@@ -13,23 +12,13 @@ import struct
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SCREEN_FILES = {'hud_decor': 0x46b810, 'title_screen': 0x465af0, 'select_screen': 0x466d60,
-                'game_screen': 0x46c9d0}
-SCREENS = set(SCREEN_FILES.values())
 
 overlap = json.loads((ROOT / 'docs' / 'lifted-overlap.json').read_text())
 candidates = {int(a, 16) for a, r in overlap.items() if r['hand_files'] and r['verification']}
-candidates -= SCREENS
 
 metas = {}
 for path in glob.glob(str(ROOT / 'docs' / 'lift' / '*.json')):
-    data = json.loads(Path(path).read_text())
-    if 'stack' in data:  # a screen: its own file, with no address of its own in the record
-        screen = SCREEN_FILES.get(Path(path).stem)
-        if screen:
-            metas[screen] = data
-        continue
-    for meta in data.values():
+    for meta in json.loads(Path(path).read_text()).values():
         if meta.get('address'):
             metas[meta['address']] = meta
 

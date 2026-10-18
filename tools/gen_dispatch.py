@@ -16,20 +16,8 @@ for path in sorted(glob.glob(str(ROOT / 'docs' / 'lift' / '*.json'))):
         for func, meta in json.loads(Path(path).read_text()).items():
             unverified_entries[meta['address']] = (func, meta)
         continue
-    data = json.loads(Path(path).read_text())
-    if 'stack' in data:
-        entries[data.get('address') or 0] = (name, data)
-        data['_screen'] = True
-    else:
-        for func, meta in data.items():
-            entries[meta['address']] = (func, meta)
-screens = {'hud_decor': 0x46b810, 'title_screen': 0x465af0, 'select_screen': 0x466d60,
-           'game_screen': 0x46c9d0}
-for name, address in screens.items():
-    data = json.loads((ROOT / 'docs' / 'lift' / (name + '.json')).read_text())
-    entries[address] = (name, data)
-for address in [a for a in entries if a == 0]:
-    del entries[address]
+    for func, meta in json.loads(Path(path).read_text()).items():
+        entries[meta['address']] = (func, meta)
 NATIVE_PORTS = {**NATIVE_PORTS, **{a: (f, PORT_FRAMES.get(a, 0), 0) for a, f in PORTS.items()}}
 for address in NATIVE_PORTS:
     entries.pop(address, None)

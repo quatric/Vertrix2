@@ -13,10 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 lifted = {}
 for path in glob.glob(str(ROOT / 'docs' / 'lift' / '*.json')):
-    data = json.loads(Path(path).read_text())
-    if 'stack' in data:
-        continue
-    for name, meta in data.items():
+    for name, meta in json.loads(Path(path).read_text()).items():
         lifted[meta['address']] = name
 
 ports = {}  # address -> set of files

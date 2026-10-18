@@ -99,31 +99,6 @@ uint32_t lifted_beta(void)
                     plan_renames(root)
                 self.assertEqual(before, {file: file.read_bytes() for file in before})
 
-    def test_verified_screen_override_remains_unchanged(self):
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory).resolve()
-            self.fixture(root)
-            metadata_path = root / "docs" / "lift" / "whole_0.json"
-            metadata = json.loads(metadata_path.read_text())
-            metadata["alpha"]["address"] = 0x46b810
-            metadata_path.write_text(json.dumps(metadata))
-            header = root / "source" / "lifted_whole_0.h"
-            header.write_text(header.read_text().replace("0x401000", "0x46b810"))
-            screen_meta = root / "docs" / "lift" / "hud_decor.json"
-            screen_meta.write_text(json.dumps({"address": 0x46b810, "stack": 16, "arguments": 0}))
-            (root / "source" / "lifted_hud_decor.h").write_text("uint32_t lifted_hud_decor(void);")
-            (root / "source" / "lifted_hud_decor.c").write_text("uint32_t lifted_hud_decor(void) { return 1; }")
-            dispatch = root / "source" / "lifted_dispatch.c"
-            dispatch.write_text(dispatch.read_text().replace("0x401000, lifted_alpha, 8", "0x46b810, lifted_hud_decor, 16"))
-            staged, changes = plan_renames(root)
-            self.assertEqual(changes["alpha"], "f46b810")
-            self.assertIn("0x46b810, lifted_hud_decor, 16", staged[dispatch])
-            self.assertNotIn(screen_meta, staged)
-            self.assertNotIn(root / "source" / "lifted_hud_decor.c", staged)
-            dispatch.write_text(dispatch.read_text().replace("lifted_hud_decor, 16", "lifted_hud_decor, 17"))
-            with self.assertRaisesRegex(ValueError, "Dispatcher metadata mismatch"):
-                plan_renames(root)
-
     def test_external_references_rejected(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory).resolve()
