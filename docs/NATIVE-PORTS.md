@@ -224,3 +224,5 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x4633b0 | `rtllobbyscreens.c` | build the lobby: settings, players table and buttons, or the network lines |
 | 0x466d60 | `rtlboardselectscreens.c` | build the board select screen: areas, keys, board, labels and toggles |
 | 0x46c9d0 | `rtlgamescreenbuilds.c` | build the game screen: boards, previews, arrows, scoreboards, lights, drop queues |
+| 0x432480 | `rtlboardmatches.c` | resolve the matches after a piece locks: passes, extras, cleared cells and their effects |
+| 0x426240 | `rtlaifallbacks.c` | the AI fallback: lowest reachable column, then a rotation from a pair, the neighbours or random(3) |
