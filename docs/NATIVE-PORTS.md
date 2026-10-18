@@ -212,3 +212,6 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x4ba7b0 | `rtlsurfacefilters.c` | libjpeg decompress_smooth_data (block smoothing of a progressive scan) |
 | 0x484b60 | `rtlvideoons.c` | turn the video on with DirectDraw (mode, flip chain, offscreen surface, palette) |
 | 0x407830 | `rtlmpeghuffmans.c` | mpg123 III_dequantize_sample: Huffman-decode and scale a granule |
+| 0x444e00 | `rtltextfieldkeys.c` | the name field's key loop (edit keys, Enter, Escape, characters) |
+| 0x445350 | `rtltextfieldkeys.c` | the password field's key loop |
+| 0x45c9a0 | `rtltextfieldkeys.c` | a menu text field's key loop |
