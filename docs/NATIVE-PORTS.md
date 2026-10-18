@@ -272,3 +272,6 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x4d01a0 | `rtlstreamdestroys.c` | a runtime stream object's destructor (close, child, owner, base, free) |
 | 0x452520 | `rtlscenecountersteps.c` | step a player's scene counter against the opponent's scene |
 | 0x41fe10 | `rtllevelstarts.c` | start the next enabled level: teardown, title, music, scene and state |
+| 0x4b2a00 | `rtltextboxdraws.c` | draw a text box's lines (widest line, vertical centring, alignment) |
+| 0x4b2d90 | `rtltextboxdraws.c` | whether a text box's lines fit its height |
+| 0x43e2a0 | `rtlactortableupdates.c` | update an owner's 450 actors, its list and its last actor |

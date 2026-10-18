@@ -19,9 +19,7 @@
 #include "lifted_whole_27.h"
 #include "lifted_whole_28.h"
 #include "lifted_whole_29.h"
-#include "lifted_whole_30.h"
 #include "lifted_whole_38.h"
-#include "lifted_whole_4.h"
 #include "lifted_whole_40.h"
 #include "lifted_whole_5.h"
 #include "lifted_whole_6.h"
@@ -368,6 +366,7 @@
 #include "rtlactorring.h"
 #include "rtlactorsets.h"
 #include "rtlactorspans.h"
+#include "rtlactortableupdates.h"
 #include "rtlaiboardcompares.h"
 #include "rtlaibombsearches.h"
 #include "rtlaichainsearches.h"
@@ -380,6 +379,7 @@
 #include "rtlblockcalls.h"
 #include "rtlblockimageloads.h"
 #include "rtlblocklistdestroys.h"
+#include "rtlboardlayouts.h"
 #include "rtlboardmatches.h"
 #include "rtlboardselectscreens.h"
 #include "rtlbufsteps.h"
@@ -493,6 +493,7 @@
 #include "rtlsurfacefilters.h"
 #include "rtlsurfaceflips.h"
 #include "rtlterminates.h"
+#include "rtltextboxdraws.h"
 #include "rtltextfieldkeys.h"
 #include "rtltextwraps.h"
 #include "rtltzrules.h"
@@ -1384,7 +1385,7 @@ static const LiftedRoutine routines[] = {
     {0x43e100, vertrix_port_hud_object_construct, 0, 0},
     {0x43e1a0, vertrix_port_effect_actor_teardown_43e1a0, 0, 0},
     {0x43e260, vertrix_port_arena_release_all_43e260, 0, 0},
-    {0x43e2a0, lifted_f43e2a0, 100, 0},
+    {0x43e2a0, vertrix_port_actor_table_update_43e2a0, 0, 0},
     {0x43e320, lifted_f43e320, 128, 0},
     {0x43e4d0, vertrix_port_board_particles_setup_43e4d0, 0, 0},
     {0x43e740, vertrix_port_star_setup, 0, 0},
@@ -3274,8 +3275,8 @@ static const LiftedRoutine routines[] = {
     {0x4b24e0, vertrix_port_object_destroy_d_4b24e0, 0, 0},
     {0x4b25b0, vertrix_port_text_wrap_4b25b0, 0, 0},
     {0x4b29d0, vertrix_port_forward_4b2a00_4b29d0, 0, 0},
-    {0x4b2a00, lifted_f4b2a00, 340, 0},
-    {0x4b2d90, lifted_f4b2d90, 300, 0},
+    {0x4b2a00, vertrix_port_text_box_draw_4b2a00, 0, 0},
+    {0x4b2d90, vertrix_port_text_box_fits_4b2d90, 0, 0},
     {0x4b3100, vertrix_port_text_actor_construct, 0, 0},
     {0x4b3140, vertrix_port_object_destroy_4b3140, 0, 0},
     {0x4b3210, vertrix_port_object_place_label, 0, 0},

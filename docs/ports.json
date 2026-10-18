@@ -4234,6 +4234,11 @@
   "lifted": "lifted_arena_release_all_full",
   "chunk": "whole_1"
  },
+ "0x43e2a0": {
+  "port": "vertrix_port_actor_table_update_43e2a0",
+  "lifted": "lifted_f43e2a0",
+  "chunk": "whole_30"
+ },
  "0x43e4d0": {
   "port": "vertrix_port_board_particles_setup_43e4d0",
   "lifted": "lifted_board_particles_setup",
@@ -13578,6 +13583,16 @@
   "port": "vertrix_port_forward_4b2a00_4b29d0",
   "lifted": "lifted_f4b29d0",
   "chunk": "whole_14"
+ },
+ "0x4b2a00": {
+  "port": "vertrix_port_text_box_draw_4b2a00",
+  "lifted": "lifted_f4b2a00",
+  "chunk": "whole_4"
+ },
+ "0x4b2d90": {
+  "port": "vertrix_port_text_box_fits_4b2d90",
+  "lifted": "lifted_f4b2d90",
+  "chunk": "whole_4"
  },
  "0x4b3100": {
   "port": "vertrix_port_text_actor_construct",
