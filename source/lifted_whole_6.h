@@ -6,34 +6,12 @@
 
 enum
 {
-    LIFTED_F4D80D5_STACK = 84,
-    LIFTED_F4D8198_STACK = 80,
-    LIFTED_RTL_SINGLE_DIVIDE_SOFTWARE_FULL_STACK = 88,
-    LIFTED_F4DC2F0_STACK = 184,
     LIFTED_RTL_SEGMENT_DISPATCH_STACK = 84,
     LIFTED_F4E628C_STACK = 80,
     LIFTED_F4E6C98_STACK = 80,
     LIFTED_F4E88BF_STACK = 76,
     LIFTED_F4EA540_STACK = 104
 };
-
-/* Original 0x4d80d5. */
-uint32_t lifted_f4d80d5(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4d8198. */
-uint32_t lifted_f4d8198(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4d8227. */
-uint32_t lifted_rtl_single_divide_software_full(const VertrixCalls *calls,
-                                                const VertrixFactoryServices *services,
-                                                const VertrixGlobals *globals,
-                                                const LiftEntry *entry);
-
-/* Original 0x4dc2f0. */
-uint32_t lifted_f4dc2f0(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                        const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4dee73. */
 uint32_t lifted_rtl_segment_dispatch(const VertrixCalls *calls,

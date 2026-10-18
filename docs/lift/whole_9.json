@@ -1,49 +1,4 @@
 {
- "f4c6020": {
-  "callees": {
-   "virtual_4c606e": [
-    0,
-    false
-   ],
-   "0x4c5d60": [
-    0,
-    false
-   ]
-  },
-  "stack": 148,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   24
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [
-   0,
-   20,
-   460
-  ],
-  "constants": [
-   0,
-   1,
-   2,
-   47,
-   48,
-   49,
-   254,
-   255,
-   256,
-   257,
-   4294967295
-  ],
-  "virtual": [
-   [
-    4,
-    8,
-    0
-   ]
-  ],
-  "address": 5005344
- },
  "f4ec68c": {
   "callees": {
    "0x4ea190": [

@@ -294,3 +294,10 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x4db131 | `rtlextendedroots.c` | the square root of an 80-bit extended value, by integer Newton steps |
 | 0x4cae30 | `rtlruntimeobjectdestroys.c` | the destructor of the runtime object with the table 0x518a94 |
 | 0x4cfa20 | `rtlsubclassprocs.c` | the procedure of a subclassed dialog window (init, activate, cursor, destroy) under a jump buffer |
+| 0x4c6020 | `rtljpegcolorindexes.c` | libjpeg's create_colorindex (padded for the ordered dither) |
+| 0x4d80d5 | `rtlsingleadds.c` | the runtime's software single add |
+| 0x4d8198 | `rtlsinglemultiplies.c` | the runtime's software single multiply |
+| 0x4d8227 | `rtlsingledivides.c` | the runtime's software single divide |
+| 0x4cd56c | `rtlfileopens.c` | the runtime's open (CreateFileA from the open flags, the handle slot and its mode) |
+| 0x4dc2f0 | `rtlchildwindowpoints.c` | a parent's visible child control at a point |
+| 0x4ee750 | `rtlwindowpoints.c` | the window under a screen point (or its parent, or a disabled child) |
