@@ -6,15 +6,9 @@
 
 enum
 {
-    LIFTED_MIXER_PLAYBACK_TICK_STACK = 88,
     LIFTED_F4DA3BA_STACK = 1400,
     LIFTED_F4DF320_STACK = 248
 };
-
-/* Original 0x40e030. */
-uint32_t lifted_mixer_playback_tick(const VertrixCalls *calls,
-                                    const VertrixFactoryServices *services,
-                                    const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4da3ba. */
 uint32_t lifted_f4da3ba(const VertrixCalls *calls, const VertrixFactoryServices *services,

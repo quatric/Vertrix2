@@ -723,6 +723,15 @@ callee's entry and clears them. The probes match the original.
 `jmp [reg*4+table]` after `and reg, 2^n-1` now reads 2^n entries (0x402cc7 in 0x402c18 and
 0x4013d0 in 0x401328). Before, the table had no bound.
 
+`and reg, 0xff` (or 0xffff) is a zero extension like `movzx`: the bound is the `cmp` before it,
+the mask only when there is none (0x40e259 in 0x40e030: `cmp dl, 3; ja ...; and edx, 0xff`).
+
+### Lifter: call-site argument counts
+
+The stack arguments of a call are the pushes directly before it, back to a branch.
+`CALL_SITE_ARGUMENTS` in `tools/lift.py` gives the count where an argument is pushed before the
+branch: 0x486e52, SetCooperativeLevel, whose `push 8` precedes the `jne` that picks the window.
+
 ### Speed
 
 The software floating point runs for every decoded sample, so the dispatcher's lookups
@@ -877,7 +886,7 @@ The synthesis (0x405720, 491 instructions) is three windowed sums, written as lo
 single helpers. The port keeps the ebx and ecx its helpers see, which carry the loop counters and
 the last clamp's limit.
 
-3781 routines run as clean ports. Counted by calls, 99.65% of the calls the dispatcher serves in the
+3793 routines run as clean ports. Counted by calls, 99.65% of the calls the dispatcher serves in the
 1,500-tick gameplay profile go to a port or a recovered native (202,169 of 57,234,341 still ran lifted
 copies before 0x4928f0 below).
 

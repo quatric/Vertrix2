@@ -117,7 +117,12 @@ object, which would run as code). `VERTRIX_EXTRA_SOURCES="port_runtime.c"` links
 harness leaves out, for a rewrite that runs another port's code directly where the original jumps
 into it (0x4ce780 into 0x4dbf80 in `port_runtime.c`). A routine passing ds (0x4dee73,
 0x4e628c: the selector to 0x4e6220) cannot be compared: the original's ds is 0x10 and the lifted
-copy's 0. The settings that reach each routine's deep paths are kept as `tools/verify_cases/ADDR.sh`; source one
+copy's 0.
+`VERTRIX_CHECK_MISSING_STORES=1` also fails a case when the original changed a byte of the image's
+data that the port never stored: the store comparison alone only checks the stores the port makes,
+so a dropped store passed it (0x480730 passed without the last word of each percent row). Use it
+for routines that write globals (0x480730, 0x4ceaa0, 0x474560, 0x474910, 0x423960).
+`VERTRIX_ORACLE_LIMIT` raises the original's instruction budget (0x480730 runs 1.6 million). The settings that reach each routine's deep paths are kept as `tools/verify_cases/ADDR.sh`; source one
 before `verify_port.py`. Check that a
 planted mistake fails before trusting a pass: 0x47ce10 passed with a wrong 5:6:5 shift until the
 pixel pointers were drawn into the pool (0x806000 + 0x1000 * i, four objects). 0x426240,
@@ -312,3 +317,15 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x4ce760 | `rtlthreaddatas.c` | the thread data's first slot (jumps into 0x4dc030) |
 | 0x4ce780 | `rtlthreaddataseconds.c` | the thread data's second slot (jumps into 0x4dbf80) |
 | 0x4e5ef0 | `rtlcodepageresets.c` | _setmbcp(0) (jumps into 0x4e6f60) |
+| 0x4ceaa0 | `rtlstaticinits.c` | a static initialiser: the drag list message, four runtime objects and the message tables' member pointers |
+| 0x4c8500 | `rtljpeginversecmaps.c` | libjpeg's fill_inverse_cmap (find_nearby_colors and find_best_colors inlined) |
+| 0x4c8cd0 | `rtljpegfsdithers.c` | libjpeg's pass2_fs_dither |
+| 0x4ea540 | `rtlstringlongs.c` | the runtime's strtol and strtoul |
+| 0x4cd7dc | `rtlexceptioncatches.c` | a record's exception handler, its catch type's kind checked |
+| 0x488c50 | `rtlguardedreads.c` | a virtual read (+0x28) through a frame string, a result made when it fails |
+| 0x480730 | `rtlrenderweights.c` | the renderer's blending tables (percent and level quotients) |
+| 0x474560 | `rtlpalettehues.c` | a colour's hue, saturation and value |
+| 0x474910 | `rtlpalettecolours.c` | a hue, saturation and value's colour |
+| 0x423960 | `rtlscreenwipes.c` | one frame of the screen wipe |
+| 0x40e030 | `rtlmixerticks.c` | the mixer's per-tick instrument update (envelopes, fadeout, vibrato) |
+| 0x486e20 | `rtlvideooffs.c` | the video turned off (DirectDraw back to the normal level, its objects released) |

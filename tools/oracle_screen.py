@@ -6,6 +6,7 @@ from unicorn.x86_const import (UC_X86_REG_CS, UC_X86_REG_DS, UC_X86_REG_EDX, UC_
                                UC_X86_REG_SS)
 import ctypes as c
 import json
+import os
 import struct
 
 U = c.c_uint32
@@ -365,6 +366,15 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
         for byte_address, byte in shadow.items():
             held = bytes(cpu.mem_read(byte_address, 1))[0]
             assert held == byte, (case, hex(byte_address), held, byte)
+        # VERTRIX_CHECK_MISSING_STORES=1: every byte of the image's data (0x4f1000 up to the stub
+        # page) the original changed must also be stored by the native code; the check above only
+        # compares the stores the native code makes, so a dropped store passes it.
+        if os.environ.get('VERTRIX_CHECK_MISSING_STORES'):
+            for byte_address in sorted(before):
+                if 0x4f1000 <= byte_address < 0x700000 and byte_address not in shadow:
+                    held = bytes(cpu.mem_read(byte_address, 1))[0]
+                    assert held == before[byte_address], \
+                        (case, 'missing store', hex(byte_address), held, before[byte_address])
         if post:
             post(cpu, native_args)
         assert not replay and not replay_out and not flag_replay and pool.same(), \

@@ -12,16 +12,11 @@
 #include "lifted_select_screen.h"
 #include "lifted_title_screen.h"
 #include "lifted_unverified.h"
-#include "lifted_whole_10.h"
 #include "lifted_whole_12.h"
 #include "lifted_whole_13.h"
 #include "lifted_whole_21.h"
-#include "lifted_whole_27.h"
-#include "lifted_whole_28.h"
 #include "lifted_whole_29.h"
-#include "lifted_whole_38.h"
 #include "lifted_whole_40.h"
-#include "lifted_whole_5.h"
 #include "lifted_whole_6.h"
 #include "lifted_whole_7.h"
 #include "lifted_whole_8.h"
@@ -363,6 +358,7 @@
 #include "rtlactorclips.h"
 #include "rtlactorgridupdates.h"
 #include "rtlactornumbers.h"
+#include "rtlactorprojections.h"
 #include "rtlactorring.h"
 #include "rtlactorsets.h"
 #include "rtlactorspans.h"
@@ -399,6 +395,7 @@
 #include "rtldplayerrors.h"
 #include "rtleffectreleases.h"
 #include "rtlexceptionallocs.h"
+#include "rtlexceptioncatches.h"
 #include "rtlexceptionsteps.h"
 #include "rtlextendedeffects.h"
 #include "rtlextendedroots.h"
@@ -418,6 +415,7 @@
 #include "rtlgamescreensetups.h"
 #include "rtlglobalinits.h"
 #include "rtlguardedcalls.h"
+#include "rtlguardedreads.h"
 #include "rtlhandlerrecords.h"
 #include "rtlhandlerthunks.h"
 #include "rtlhandleslots.h"
@@ -434,15 +432,18 @@
 #include "rtljpegcolorindexes.h"
 #include "rtljpegcolorselects.h"
 #include "rtljpegdecompresses.h"
+#include "rtljpegfsdithers.h"
 #include "rtljpegidct4s.h"
 #include "rtljpegidct8s.h"
 #include "rtljpegidctpasses.h"
 #include "rtljpeginputs.h"
+#include "rtljpeginversecmaps.h"
 #include "rtljpeglargestinputs.h"
 #include "rtljpegmaincontrollers.h"
 #include "rtljpegmarkerreads.h"
 #include "rtljpegmarkersaves.h"
 #include "rtljpegmarkerskips.h"
+#include "rtljpegmasters.h"
 #include "rtljpegmcudecodes.h"
 #include "rtljpegmergedchecks.h"
 #include "rtljpegmergedupsamples.h"
@@ -463,6 +464,7 @@
 #include "rtllobbyscreens.h"
 #include "rtllockkeystates.h"
 #include "rtlmessagequeues.h"
+#include "rtlmixerticks.h"
 #include "rtlmp3memorydecodes.h"
 #include "rtlmpeghuffmans.h"
 #include "rtlmpegsideinfos.h"
@@ -474,6 +476,8 @@
 #include "rtlnodepooltakes.h"
 #include "rtlobjectjumps.h"
 #include "rtlownernotes.h"
+#include "rtlpalettecolours.h"
+#include "rtlpalettehues.h"
 #include "rtlpathseparators.h"
 #include "rtlpatterntables.h"
 #include "rtlpendingerrors.h"
@@ -484,11 +488,13 @@
 #include "rtlrangefinds.h"
 #include "rtlrangerecords.h"
 #include "rtlrecordreleases.h"
+#include "rtlrenderweights.h"
 #include "rtlruntimeobjectdestroys.h"
 #include "rtlscenecountersteps.h"
 #include "rtlscenedraws.h"
 #include "rtlscreenobjectdestroys.h"
 #include "rtlscreenshots.h"
+#include "rtlscreenwipes.h"
 #include "rtlsessionstarts.h"
 #include "rtlsignalraises.h"
 #include "rtlsigncompares.h"
@@ -500,9 +506,11 @@
 #include "rtlsplitbars.h"
 #include "rtlstackpairs.h"
 #include "rtlstatepairs.h"
+#include "rtlstaticinits.h"
 #include "rtlstreamcloses.h"
 #include "rtlstreamdestroys.h"
 #include "rtlstreamflushes.h"
+#include "rtlstringlongs.h"
 #include "rtlstringsuffixes.h"
 #include "rtlsubclassprocs.h"
 #include "rtlsurfaceblits.h"
@@ -523,6 +531,7 @@
 #include "rtluiscreenactors.h"
 #include "rtlunwindstates.h"
 #include "rtlvarargs.h"
+#include "rtlvideooffs.h"
 #include "rtlvideoons.h"
 #include "rtlwavestreamloads.h"
 #include "rtlwidestringconverts.h"
@@ -537,7 +546,7 @@ enum
     LIFTED_ARENA_BOTTOM = 0x7b0000,
     LIFTED_ARENA_GAP = 0x100, /* above a frame: its return slot and the arguments passed on */
     LIFTED_MAX_DEPTH = 16,
-    LIFTED_MAX_STACK = 2200,
+    LIFTED_MAX_STACK = 1416,
     LIFTED_MAX_ARGUMENTS = 17
 };
 
@@ -685,7 +694,7 @@ static const LiftedRoutine routines[] = {
     {0x40dc50, vertrix_port_mixer_effect, 0, 0},
     {0x40dc80, vertrix_port_mixer_volume_column_40dc80, 0, 0},
     {0x40df20, vertrix_port_voice_note_reset, 0, 0},
-    {0x40e030, lifted_mixer_playback_tick, 88, 0},
+    {0x40e030, vertrix_port_rtl_mixer_tick_40e030, 0, 0},
     {0x40e580, vertrix_port_voice_sample_select, 0, 0},
     {0x40e640, vertrix_port_mixer_note_release_40e640, 0, 0},
     {0x40e670, vertrix_port_actor_chain_update_40e670, 0, 0},
@@ -977,6 +986,7 @@ static const LiftedRoutine routines[] = {
     {0x422f50, vertrix_port_game_curtain_422f50, 0, 0},
     {0x423600, vertrix_port_picture_screen_frame_423600, 0, 0},
     {0x4237d0, vertrix_port_screen_room_refresh_4237d0, 0, 0},
+    {0x423960, vertrix_port_rtl_screen_wipe_423960, 0, 0},
     {0x423bc0, vertrix_port_level_room_refresh_423bc0, 0, 0},
     {0x423d70, vertrix_port_script_object_load, 0, 0},
     {0x423dc0, vertrix_port_script_object_open_423dc0, 544, 0},
@@ -2301,8 +2311,8 @@ static const LiftedRoutine routines[] = {
     {0x4741a0, vertrix_port_bitmap_load_convert_4741a0, 0, 0},
     {0x474490, vertrix_port_list_file_read_474490, 316, 0},
     {0x474540, vertrix_port_counter_wrap_474540, 0, 0},
-    {0x474560, lifted_palette_rgb, 292, 2},
-    {0x474910, lifted_palette_color, 256, 2},
+    {0x474560, vertrix_port_rtl_palette_hue_474560, 0, 0},
+    {0x474910, vertrix_port_rtl_palette_colour_474910, 0, 0},
     {0x474cd0, vertrix_port_palette_channels_474cd0, 0, 0},
     {0x474e00, vertrix_port_colour_banks_build_474e00, 0, 0},
     {0x4754e0, vertrix_port_palette_tables_cycle_4754e0, 0, 0},
@@ -2526,7 +2536,7 @@ static const LiftedRoutine routines[] = {
     {0x480030, vertrix_port_display_describe_480030, 0, 0},
     {0x480070, vertrix_port_object_dword_480070, 0, 0},
     {0x480080, vertrix_port_dplay_error_name_480080, 0, 0},
-    {0x480730, lifted_render_weights_build, 124, 0},
+    {0x480730, vertrix_port_render_weights_build_480730, 0, 0},
     {0x480890, vertrix_port_palette_expand_vga_480890, 0, 0},
     {0x4808f0, vertrix_port_palette_create_4808f0, 0, 0},
     {0x480940, vertrix_port_object_check_report_480940, 0, 0},
@@ -2606,6 +2616,7 @@ static const LiftedRoutine routines[] = {
     {0x485700, vertrix_port_ddraw_error_text_485700, 0, 0},
     {0x486d00, vertrix_port_display_restore, 0, 0},
     {0x486da0, vertrix_port_surface_restore_68, 0, 0},
+    {0x486e20, vertrix_port_video_off_486e20, 0, 0},
     {0x486ed0, vertrix_port_display_present_486ed0, 0, 0},
     {0x487020, vertrix_port_surface_flip, 0, 0},
     {0x487060, vertrix_port_surface_wait_487060, 0, 0},
@@ -2652,7 +2663,7 @@ static const LiftedRoutine routines[] = {
     {0x488940, vertrix_port_path_is_network_488940, 0, 0},
     {0x488b10, vertrix_port_object_construct_e, 0, 0},
     {0x488b90, vertrix_port_object_destroy_e, 0, 0},
-    {0x488c50, lifted_f488c50, 192, 0},
+    {0x488c50, vertrix_port_rtl_guarded_read_488c50, 0, 0},
     {0x488d80, vertrix_port_error_kind_text_488d80, 0, 0},
     {0x489170, vertrix_port_guarded_copy_489170, 0, 0},
     {0x489230, vertrix_port_stream_read_exact_489230, 0, 0},
@@ -3587,9 +3598,9 @@ static const LiftedRoutine routines[] = {
     {0x4c6c80, vertrix_port_jpeg_one_pass_quantizer_init_4c6c80, 0, 0},
     {0x4c6ff0, vertrix_port_jpeg_histogram_rows_4c6ff0, 0, 0},
     {0x4c70f0, vertrix_port_jpeg_update_box_4c70f0, 0, 0},
-    {0x4c8500, lifted_f4c8500, 2200, 0},
+    {0x4c8500, vertrix_port_jpeg_fill_inverse_cmap_4c8500, 2136, 0},
     {0x4c8be0, vertrix_port_jpeg_quantize_rows_4c8be0, 0, 0},
-    {0x4c8cd0, lifted_f4c8cd0, 216, 0},
+    {0x4c8cd0, vertrix_port_jpeg_pass2_fs_dither_4c8cd0, 0, 0},
     {0x4c9030, vertrix_port_decoder_range_table_4c9030, 0, 0},
     {0x4c90e0, vertrix_port_jpeg_quant2_select_colors_4c90e0, 0, 0},
     {0x4c93c0, vertrix_port_nothing_404580, 0, 0},
@@ -3686,7 +3697,7 @@ static const LiftedRoutine routines[] = {
     {0x4cd520, vertrix_port_rtl_forward_three_4cd520, 0, 0},
     {0x4cd544, vertrix_port_rtl_vararg_call_4cd544, 0, 0},
     {0x4cd56c, vertrix_port_rtl_open_4cd56c, 0, 0},
-    {0x4cd7dc, lifted_f4cd7dc, 84, 0},
+    {0x4cd7dc, vertrix_port_rtl_exception_catch_4cd7dc, 0, 0},
     {0x4cd819, vertrix_port_catch_adjust_4cd819, 0, 0},
     {0x4cd836, vertrix_port_call_4e0eaf_4e0ec7_4cd836, 0, 0},
     {0x4cd847, vertrix_port_record_sweep_4cd847, 0, 0},
@@ -3715,7 +3726,7 @@ static const LiftedRoutine routines[] = {
     {0x4ce9c0, vertrix_port_array_destroy_elements, 0, 0},
     {0x4ce9fd, vertrix_port_object_release_if, 0, 0},
     {0x4cea15, vertrix_port_guarded_call_pair, 0, 0},
-    {0x4ceaa0, lifted_f4ceaa0, 700, 0},
+    {0x4ceaa0, vertrix_port_rtl_static_init_4ceaa0, 0, 0},
     {0x4cf320, vertrix_port_rtl_construct_buffer_stream_4cf320, 0, 0},
     {0x4cf3a0, vertrix_port_memory_stream_construct, 0, 0},
     {0x4cf4a0, vertrix_port_rtl_handle_query_4cf4a0, 0, 0},
@@ -4300,7 +4311,7 @@ static const LiftedRoutine routines[] = {
     {0x4ea310, vertrix_port_char_trail_check_4ea310, 0, 0},
     {0x4ea350, vertrix_port_rtl_wide_to_multibyte_4ea350, 0, 0},
     {0x4ea470, vertrix_port_full_path_4ea470, 0, 0},
-    {0x4ea540, lifted_f4ea540, 104, 0},
+    {0x4ea540, vertrix_port_rtl_string_to_long_4ea540, 0, 0},
     {0x4ea6a0, vertrix_port_call_4ea540_4ea6a0, 0, 0},
     {0x4ea6b0, vertrix_port_rtl_digit_value_4ea6b0, 0, 0},
     {0x4eab80, vertrix_port_rtl_char_fold_4eab80, 0, 0},
@@ -4387,8 +4398,6 @@ static const LiftedRoutine routines[] = {
  * vertrix_lifted_allow_unverified(1). */
 static const LiftedRoutine unverified_routines[] = {
     {0, NULL, 0, 0},
-    {0x423960, lifted_f423960, 308, 0},
-    {0x486e20, lifted_f486e20, 140, 0},
     {0x4d9f06, lifted_rtl_jump_capture, 72, 0},
     {0x4e6250, lifted_f4e6250, 156, 0},
     {0x4e6d16, lifted_f4e6d16, 216, 0},

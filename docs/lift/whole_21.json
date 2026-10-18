@@ -1,44 +1,4 @@
 {
- "mixer_playback_tick": {
-  "callees": {},
-  "stack": 88,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   52
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2,
-   3,
-   4,
-   5,
-   63,
-   64,
-   65,
-   127,
-   128,
-   129,
-   8191,
-   8192,
-   8193,
-   16383,
-   16384,
-   16385,
-   31998,
-   31999,
-   32000,
-   32766,
-   32767,
-   32768,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 4251696
- },
  "f4da3ba": {
   "callees": {
    "0x4e0f8b": [

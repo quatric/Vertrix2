@@ -28,6 +28,11 @@ BASE = pe.OPTIONAL_HEADER.ImageBase
 md = capstone.Cs(capstone.CS_ARCH_X86, capstone.CS_MODE_32)
 md.detail = True
 
+# The stack arguments of a call through a pointer whose first argument is pushed before a branch
+# the pushes directly before the call do not show (0x486e52: `push 8` precedes the `jne` that picks
+# the window, then `push edx; push eax; call [ecx + 0x50]`, SetCooperativeLevel's three).
+CALL_SITE_ARGUMENTS = {0x486e52: 3}
+
 REG32 = {X.X86_REG_EAX: 'eax', X.X86_REG_ECX: 'ecx', X.X86_REG_EDX: 'edx', X.X86_REG_EBX: 'ebx',
          X.X86_REG_ESI: 'esi', X.X86_REG_EDI: 'edi', X.X86_REG_EBP: 'ebp', X.X86_REG_ESP: 'esp'}
 REG16 = {X.X86_REG_AX: 'eax', X.X86_REG_CX: 'ecx', X.X86_REG_DX: 'edx', X.X86_REG_BX: 'ebx',
@@ -96,7 +101,7 @@ def jump_table(seen, insn):
     mem = insn.operands[0].mem
     if insn.operands[0].type != X.X86_OP_MEM or mem.base or not mem.index or mem.scale != 4:
         raise NotImplementedError('%x indirect jmp' % insn.address)
-    count = None
+    count = masked = None
     for address in sorted((a for a in seen if a < insn.address), reverse=True)[:8]:
         prior = seen[address]
         if prior.mnemonic == 'cmp' and prior.operands[1].type == X.X86_OP_IMM:
@@ -109,12 +114,20 @@ def jump_table(seen, insn):
             # A zero extension keeps the bound of the narrower register's cmp (0x4e0b14:
             # `cmp al, 0xd; ja ...; movzx eax, al` before `jmp [eax*4 + table]`).
             continue
+        if writes_index and prior.mnemonic == 'and' and prior.operands[1].type == X.X86_OP_IMM \
+                and prior.operands[1].imm in (0xff, 0xffff):
+            # The same for a zero extension by mask (0x40e259: `cmp dl, 3; ja ...; and edx, 0xff`
+            # before `jmp [edx*4 + table]`); the mask bounds it when no cmp comes first.
+            masked = prior.operands[1].imm + 1
+            continue
         if writes_index:
             # A mask bounds the index (0x402cc7: `and eax, 0xf` before `jmp [eax*4 + table]`).
             if prior.mnemonic == 'and' and prior.operands[1].type == X.X86_OP_IMM and \
                     (prior.operands[1].imm & (prior.operands[1].imm + 1)) == 0:
                 count = prior.operands[1].imm + 1
             break
+    if count is None:
+        count = masked
     if count is None or not 0 < count <= 512:
         raise NotImplementedError('%x indirect jmp without a bound' % insn.address)
     base = mem.disp & 0xffffffff
@@ -644,7 +657,7 @@ class Lifter:
         else:
             target_expr = self.read(op)
             count = int(next_insn.op_str.split(',')[1], 0) // 4 if cdecl else \
-                self.pending_pushes(insn)
+                CALL_SITE_ARGUMENTS.get(insn.address, self.pending_pushes(insn))
             self.callees[('virtual', insn.address)] = (count, cdecl)
             pops = 0 if cdecl else count
         self.emit('vertrix_lift_fl = fl;')
@@ -794,7 +807,7 @@ class Lifter:
             if nxt is not None and nxt.mnemonic == 'add' and nxt.op_str.startswith('esp,'):
                 count = int(nxt.op_str.split(',')[1], 0) // 4
             else:
-                count = self.pending_pushes(insn)
+                count = CALL_SITE_ARGUMENTS.get(address, self.pending_pushes(insn))
             found.add((field, mem.disp, count))
         return found
 
