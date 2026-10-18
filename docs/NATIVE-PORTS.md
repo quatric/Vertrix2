@@ -101,13 +101,22 @@ one in ebx at 0x40acd0), and the same mistake in ecx, which it does not read, pa
 
 Random cases can miss whole paths. A path gated on several fields at once (0x47ce10 needs both
 surfaces' pixel sizes, formats and locks to agree) is reached about once in a thousand draws, and a
-store through a pointer field that is not a pool object lands in memory nothing compares. Three
-opt-in environment variables shape the cases: `VERTRIX_FIELD_CHOICES="0x0:4:0x806100,0x807100;0xc:1:1,2,3,4"`
+store through a pointer field that is not a pool object lands in memory nothing compares. Opt-in
+environment variables shape the cases: `VERTRIX_FIELD_CHOICES="0x0:4:0x806100,0x807100;0xc:1:1,2,3,4"`
 draws each named field (offset:size:values) of every pool object from its values,
 `VERTRIX_HANDLE_REGISTERS=eax,edx` makes those registers pool objects, and
-`VERTRIX_ARGUMENT_LIMIT=12` keeps every stack argument below the limit so loops finish. Check that a
+`VERTRIX_ARGUMENT_LIMIT=12` keeps every stack argument below the limit so loops finish. `VERTRIX_ARGUMENT_CHOICES="0:0x806f00,0x807f00;5:3,4"` draws stack argument N from its values (an
+output pointer into the pool, so what is stored there is compared), `VERTRIX_REGISTER_CHOICES=
+"edx:0,1,2"` does the same for registers, and `VERTRIX_FRAME_BYTES="0,1,1"` fills the frame below
+the entry (a local a stubbed callee would fill: 0x426240's reach flags from 0x4261b0). The
+settings that reach each routine's deep paths are kept as `tools/verify_cases/ADDR.sh`; source one
+before `verify_port.py`. Check that a
 planted mistake fails before trusting a pass: 0x47ce10 passed with a wrong 5:6:5 shift until the
-pixel pointers were drawn into the pool (0x806000 + 0x1000 * i, four objects).
+pixel pointers were drawn into the pool (0x806000 + 0x1000 * i, four objects). 0x426240,
+0x432480 and 0x42f910 needed the same: each passed a planted mistake under the default cases and
+fails it under its `tools/verify_cases` settings. 0x4bf940 (the JPEG marker reader) passed
+wrong DHT and 16-bit DQT handling under the default cases and the gate; its settings put the
+source and its bytes (+0x18, read from 0x900) in the pool and the next marker in +0x1a0.
 
 The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port.
 
@@ -238,3 +247,4 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x42f910 | `rtlscenedraws.c` | draw a player's scene: cells and shadows by layer, lists, single actors, score and cursor |
 | 0x426240 | `rtlaifallbacks.c` | the AI fallback: lowest reachable column, then a rotation from a pair, the neighbours or random(3) |
 | 0x47ce10 | `rtlsurfaceblits.c` | blit a rectangle between surfaces, converting 1/2/3/4-byte pixels, locked or not |
+| 0x4bf940 | `rtljpegmarkerreads.c` | libjpeg read_markers with SOI, SOS, DHT, DQT and DRI inlined |

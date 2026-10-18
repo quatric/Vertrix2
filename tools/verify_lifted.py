@@ -100,6 +100,11 @@ def run(name, spec=None, meta=None, source=None, hints=None):
         for register_name in os.environ.get('VERTRIX_HANDLE_REGISTERS', '').split(','):
             if register_name:
                 kwargs[register_name] = rng.choice(pool.handles)
+        # VERTRIX_REGISTER_CHOICES="edx:0,1,2;ecx:0,1,2": those registers drawn from their values.
+        for item in os.environ.get('VERTRIX_REGISTER_CHOICES', '').split(';'):
+            if item:
+                register_name, values = item.split(':')
+                kwargs[register_name] = rng.choice([int(v, 0) for v in values.split(',')])
         if spec.get('setup_case'):
             spec['setup_case'](rng, pool, cpu, kwargs)
         if small is not None:
@@ -115,6 +120,18 @@ def run(name, spec=None, meta=None, source=None, hints=None):
         if os.environ.get('VERTRIX_ARGUMENT_LIMIT'):
             stack_args = tuple(rng.randrange(0, int(os.environ['VERTRIX_ARGUMENT_LIMIT']))
                                for _ in range(count))
+        # VERTRIX_ARGUMENT_CHOICES="0:0x806010,0x807010;5:3,4": stack argument N drawn from its
+        # values (an output pointer into the pool, so what the routine stores there is compared).
+        for item in os.environ.get('VERTRIX_ARGUMENT_CHOICES', '').split(';'):
+            if item:
+                index, values = item.split(':')
+                stack_args = tuple(rng.choice([int(v, 0) for v in values.split(',')])
+                                   if i == int(index) else a for i, a in enumerate(stack_args))
+        # VERTRIX_FRAME_BYTES="0,1,1": the frame below the entry starts as these bytes (a local a
+        # stubbed callee would fill, like 0x426240's reach flags from 0x4261b0).
+        if os.environ.get('VERTRIX_FRAME_BYTES'):
+            choices = [int(v, 0) for v in os.environ['VERTRIX_FRAME_BYTES'].split(',')]
+            cpu.mem_write(FRAME - locals_size, bytes(rng.choice(choices) for _ in range(locals_size)))
         garbage = bytes(cpu.mem_read(FRAME - locals_size, locals_size))
         chain = struct.unpack('<I', bytes(cpu.mem_read(TEB, 4)))[0]
         arguments = (U * max(count, 1))(*stack_args)
