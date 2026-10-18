@@ -222,3 +222,4 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x469480 | `rtlplayscreenactors.c` | build the play screen's panels, clock, meters, players and lives |
 | 0x46f440 | `rtlleveltitleletters.c` | make the level title's flying letters, sparkles and extras |
 | 0x4633b0 | `rtllobbyscreens.c` | build the lobby: settings, players table and buttons, or the network lines |
+| 0x466d60 | `rtlboardselectscreens.c` | build the board select screen: areas, keys, board, labels and toggles |
