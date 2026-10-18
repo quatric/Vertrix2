@@ -1,46 +1,4 @@
 {
- "scene_layout": {
-  "callees": {
-   "0x4b14c0": [
-    0,
-    false
-   ]
-  },
-  "stack": 284,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   804,
-   808,
-   812,
-   816,
-   2172,
-   2440,
-   2536,
-   2604
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   4,
-   5,
-   6,
-   12,
-   13,
-   14,
-   15,
-   16,
-   17,
-   23,
-   24,
-   25,
-   175,
-   176,
-   177
-  ],
-  "virtual": [],
-  "address": 4393264
- },
  "f4c17da": {
   "callees": {
    "virtual_4c17fe": [

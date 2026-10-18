@@ -385,6 +385,7 @@
 #include "rtlbufsteps.h"
 #include "rtlcatchadjusts.h"
 #include "rtlcodepages.h"
+#include "rtlcurrentdirectories.h"
 #include "rtlcurvetables.h"
 #include "rtlddrawerrors.h"
 #include "rtldelayactors.h"
@@ -487,6 +488,7 @@
 #include "rtlstackpairs.h"
 #include "rtlstatepairs.h"
 #include "rtlstreamdestroys.h"
+#include "rtlstreamflushes.h"
 #include "rtlstringsuffixes.h"
 #include "rtlsurfaceblits.h"
 #include "rtlsurfaceboundses.h"
@@ -501,6 +503,7 @@
 #include "rtlvarargs.h"
 #include "rtlvideoons.h"
 #include "rtlwavestreamloads.h"
+#include "rtlwidestringconverts.h"
 #include "rtlxmmoduleloads.h"
 #include "rtlyccrgbtables.h"
 
@@ -1154,7 +1157,7 @@ static const LiftedRoutine routines[] = {
     {0x430660, vertrix_port_board_burst_430660, 0, 0},
     {0x430800, vertrix_port_block_spawn_full_430800, 0, 0},
     {0x430850, vertrix_port_bonus_marker_create_430850, 0, 0},
-    {0x430930, lifted_scene_layout, 284, 0},
+    {0x430930, vertrix_port_board_layout_430930, 0, 0},
     {0x431100, vertrix_port_board_piece_try_left_431100, 0, 0},
     {0x431140, vertrix_port_board_piece_try_right_431140, 0, 0},
     {0x431180, vertrix_port_board_piece_call_431180, 0, 0},
@@ -3942,7 +3945,7 @@ static const LiftedRoutine routines[] = {
     {0x4daab0, vertrix_port_copy_terminated, 0, 0},
     {0x4daae8, vertrix_port_split_path, 0, 0},
     {0x4dabb0, vertrix_port_upper_case, 0, 0},
-    {0x4dabbe, lifted_f4dabbe, 376, 0},
+    {0x4dabbe, vertrix_port_rtl_getcwd_jump_4dabbe, 276, 0},
     {0x4dabd0, vertrix_port_rtl_select_4e3ce0_4dabd0, 0, 0},
     {0x4dabe0, vertrix_port_rtl_stack_pair_call_4dabe0, 0, 0},
     {0x4dac10, vertrix_port_rtl_print_4dac10, 0, 0},
@@ -4116,10 +4119,10 @@ static const LiftedRoutine routines[] = {
     {0x4e39f0, vertrix_port_text_width_chars, 0, 0},
     {0x4e3a50, vertrix_port_char_code, 0, 0},
     {0x4e3a90, vertrix_port_char_next, 0, 0},
-    {0x4e3ac0, lifted_f4e3ac0, 376, 0},
+    {0x4e3ac0, vertrix_port_rtl_getcwd_4e3ac0, 276, 0},
     {0x4e3b60, vertrix_port_crt_stream_buffer_4e3b60, 0, 0},
     {0x4e3bf0, vertrix_port_file_write_raw_4e3bf0, 0, 0},
-    {0x4e3ce0, lifted_f4e3ce0, 112, 0},
+    {0x4e3ce0, vertrix_port_rtl_stream_flush_4e3ce0, 0, 0},
     {0x4e3e00, vertrix_port_rtl_put_char_4e3e00, 0, 0},
     {0x4e3f28, vertrix_port_rtl_streams_count_4e3f28, 0, 0},
     {0x4e3f70, vertrix_port_file_streams_init, 0, 0},
@@ -4270,7 +4273,7 @@ static const LiftedRoutine routines[] = {
     {0x4ea144, vertrix_port_hook_call_50b20c, 0, 0},
     {0x4ea2a8, vertrix_port_bank_allocate_5130c4, 0, 0},
     {0x4ea310, vertrix_port_char_trail_check_4ea310, 0, 0},
-    {0x4ea350, lifted_f4ea350, 108, 0},
+    {0x4ea350, vertrix_port_rtl_wide_to_multibyte_4ea350, 0, 0},
     {0x4ea470, vertrix_port_full_path_4ea470, 0, 0},
     {0x4ea540, lifted_f4ea540, 104, 0},
     {0x4ea6a0, vertrix_port_call_4ea540_4ea6a0, 0, 0},

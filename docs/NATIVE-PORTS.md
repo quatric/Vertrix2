@@ -275,3 +275,8 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x4b2a00 | `rtltextboxdraws.c` | draw a text box's lines (widest line, vertical centring, alignment) |
 | 0x4b2d90 | `rtltextboxdraws.c` | whether a text box's lines fit its height |
 | 0x43e2a0 | `rtlactortableupdates.c` | update an owner's 450 actors, its list and its last actor |
+| 0x430930 | `rtlboardlayouts.c` | lay out a board's cell, edge and quarter actors, centring each by its size |
+| 0x4ea350 | `rtlwidestringconverts.c` | the runtime's wcstombs |
+| 0x4e3ac0 | `rtlcurrentdirectories.c` | the runtime's getcwd |
+| 0x4dabbe | `rtlcurrentdirectories.c` | a jump to getcwd |
+| 0x4e3ce0 | `rtlstreamflushes.c` | the runtime's stream flush (write out or seek back over the buffer, then commit) |

@@ -211,58 +211,6 @@
   "virtual": [],
   "address": 5114597
  },
- "f4e3ce0": {
-  "callees": {
-   "slot_507ca0": [
-    0,
-    false
-   ],
-   "0x4e3bf0": [
-    0,
-    false
-   ],
-   "0x4dae70": [
-    0,
-    false
-   ],
-   "0x4e0150": [
-    0,
-    false
-   ],
-   "0x4e7c30": [
-    0,
-    false
-   ],
-   "slot_507ca4": [
-    0,
-    false
-   ]
-  },
-  "stack": 112,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   8
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2,
-   3,
-   15,
-   16,
-   17,
-   31,
-   32,
-   33,
-   4294967294,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 5127392
- },
  "f4e628c": {
   "callees": {
    "0x4e6220": [
@@ -441,31 +389,6 @@
   ],
   "virtual": [],
   "address": 5147848
- },
- "f4ea350": {
-  "callees": {
-   "0x4e62e0": [
-    0,
-    false
-   ]
-  },
-  "stack": 108,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   11,
-   12,
-   13,
-   4294967294,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 5153616
  },
  "f4ea540": {
   "callees": {

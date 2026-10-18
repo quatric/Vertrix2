@@ -6,7 +6,6 @@
 
 enum
 {
-    LIFTED_SCENE_LAYOUT_STACK = 284,
     LIFTED_F4C17DA_STACK = 232,
     LIFTED_F4C8CD0_STACK = 216,
     LIFTED_F4CE740_STACK = 220,
@@ -21,10 +20,6 @@ enum
     LIFTED_F4EDC0E_STACK = 88,
     LIFTED_F4EDDC4_STACK = 104
 };
-
-/* Original 0x430930. */
-uint32_t lifted_scene_layout(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                             const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4c17da. */
 uint32_t lifted_f4c17da(const VertrixCalls *calls, const VertrixFactoryServices *services,
