@@ -53,6 +53,14 @@ scalar_reads = sorted({(int(m.group(1), 16), int(m.group(2))) for m in re.findit
 
 constants = meta.get('constants', [])
 
+# VERTRIX_FIELD_CHOICES="0xc:1:1,2,3,4;0x10:4:0,0,1" draws each named field (offset:size:values) of
+# every pool object from its values, after the usual patches, for routines whose deep paths need
+# several fields to agree (0x47ce10's need both surfaces' pixel sizes, formats and locks).
+field_choices = [(int(o, 0), int(s), [int(v, 0) for v in values.split(',')])
+                 for o, s, values in (item.split(':') for item in
+                                      __import__('os').environ.get('VERTRIX_FIELD_CHOICES', '')
+                                      .split(';') if item)]
+
 
 def vtable_patch(rng, handle, data):
     for offset in meta.get('pointer_maybe', []):
@@ -68,6 +76,9 @@ def vtable_patch(rng, handle, data):
     for field, slot, _count in virtual:
         if field >= 0 and field + 4 <= len(data):
             data[field:field + 4] = VTABLE.to_bytes(4, 'little')
+    for offset, size, values in field_choices:
+        if offset + size <= len(data):
+            data[offset:offset + size] = rng.choice(values).to_bytes(size, 'little')
 
 
 slots = [int(k[5:], 16) for k in meta['callees'] if k.startswith('slot_')]

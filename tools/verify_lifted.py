@@ -4,6 +4,7 @@ usage: verify_lifted.py EXECUTABLE --build-dir DIR NAME  (NAME is a key of LIFTE
 """
 import ctypes as c
 import json
+import os
 import struct
 import sys
 from pathlib import Path
@@ -95,6 +96,10 @@ def run(name, spec=None, meta=None, source=None, hints=None):
                     (register_name == 'eax' and not (spec.get('smallregs') and rng.random() < 0.5)) or
                     (not spec.get('smallregs') and rng.random() < 0.5)):
                 kwargs[register_name] = rng.choice(pool.handles)
+        # VERTRIX_HANDLE_REGISTERS="eax,edx": those registers always hold pool objects.
+        for register_name in os.environ.get('VERTRIX_HANDLE_REGISTERS', '').split(','):
+            if register_name:
+                kwargs[register_name] = rng.choice(pool.handles)
         if spec.get('setup_case'):
             spec['setup_case'](rng, pool, cpu, kwargs)
         if small is not None:
@@ -106,6 +111,10 @@ def run(name, spec=None, meta=None, source=None, hints=None):
         if spec.get('smallregs'):
             stack_args = tuple(rng.randrange(0, 64) if rng.random() < 0.85 else a
                                for a in stack_args)
+        # VERTRIX_ARGUMENT_LIMIT=N: every stack argument below N (loop counts that finish).
+        if os.environ.get('VERTRIX_ARGUMENT_LIMIT'):
+            stack_args = tuple(rng.randrange(0, int(os.environ['VERTRIX_ARGUMENT_LIMIT']))
+                               for _ in range(count))
         garbage = bytes(cpu.mem_read(FRAME - locals_size, locals_size))
         chain = struct.unpack('<I', bytes(cpu.mem_read(TEB, 4)))[0]
         arguments = (U * max(count, 1))(*stack_args)

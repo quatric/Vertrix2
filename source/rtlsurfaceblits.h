@@ -1,5 +1,5 @@
-#ifndef PORT_RTLSURFACEBLITS_H
-#define PORT_RTLSURFACEBLITS_H
+#ifndef RTLSURFACEBLITS_H
+#define RTLSURFACEBLITS_H
 
 #include "port.h"
 

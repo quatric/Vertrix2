@@ -99,6 +99,16 @@ pointer it last loaded into eax.
 A deliberate mistake in a register the callee reads still fails (0x48b2f0 with the length off by
 one in ebx at 0x40acd0), and the same mistake in ecx, which it does not read, passes.
 
+Random cases can miss whole paths. A path gated on several fields at once (0x47ce10 needs both
+surfaces' pixel sizes, formats and locks to agree) is reached about once in a thousand draws, and a
+store through a pointer field that is not a pool object lands in memory nothing compares. Three
+opt-in environment variables shape the cases: `VERTRIX_FIELD_CHOICES="0x0:4:0x806100,0x807100;0xc:1:1,2,3,4"`
+draws each named field (offset:size:values) of every pool object from its values,
+`VERTRIX_HANDLE_REGISTERS=eax,edx` makes those registers pool objects, and
+`VERTRIX_ARGUMENT_LIMIT=12` keeps every stack argument below the limit so loops finish. Check that a
+planted mistake fails before trusting a pass: 0x47ce10 passed with a wrong 5:6:5 shift until the
+pixel pointers were drawn into the pool (0x806000 + 0x1000 * i, four objects).
+
 The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port.
 
 ## Converted
@@ -227,3 +237,4 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x432480 | `rtlboardmatches.c` | resolve the matches after a piece locks: passes, extras, cleared cells and their effects |
 | 0x42f910 | `rtlscenedraws.c` | draw a player's scene: cells and shadows by layer, lists, single actors, score and cursor |
 | 0x426240 | `rtlaifallbacks.c` | the AI fallback: lowest reachable column, then a rotation from a pair, the neighbours or random(3) |
+| 0x47ce10 | `rtlsurfaceblits.c` | blit a rectangle between surfaces, converting 1/2/3/4-byte pixels, locked or not |
