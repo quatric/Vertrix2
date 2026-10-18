@@ -218,3 +218,6 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x4da6b6 | `rtlexceptionsteps.c` | rethrow the exception being handled from the innermost frame |
 | 0x4ec1ec | `rtlhandlerthunks.c` | the C++ frame handler (unwind cleanup, try-block matching) |
 | 0x4627a0 | `rtlkeysmenus.c` | build the key-configuration menu (keys, speeds, control, name) |
+| 0x46b810 | `rtluiscreenactors.c` | place the play screen's interface pieces, grids and panel actors |
+| 0x469480 | `rtlplayscreenactors.c` | build the play screen's panels, clock, meters, players and lives |
+| 0x46f440 | `rtlleveltitleletters.c` | make the level title's flying letters, sparkles and extras |
