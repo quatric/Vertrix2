@@ -109,6 +109,13 @@ def run(name, spec=None, meta=None, source=None, hints=None):
             spec['setup_case'](rng, pool, cpu, kwargs)
         if small is not None:
             small(rng, cpu)
+        # VERTRIX_GLOBAL_CHOICES="0x53bd0c:4:0,1;0x532a64:4:0,5": each global (address:size:values)
+        # drawn from its values, for tables read by index (0x41fe10's enabled levels).
+        for item in os.environ.get('VERTRIX_GLOBAL_CHOICES', '').split(';'):
+            if item:
+                address, size, values = item.split(':')
+                value = rng.choice([int(v, 0) for v in values.split(',')])
+                cpu.mem_write(int(address, 0), value.to_bytes(int(size), 'little'))
         # Platform facts the drawn globals must not change (written after the draws).
         for fixed_address, fixed_bytes in spec.get('fixed_globals', {}).items():
             cpu.mem_write(fixed_address, fixed_bytes)

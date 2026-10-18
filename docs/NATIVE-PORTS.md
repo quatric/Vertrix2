@@ -108,7 +108,9 @@ draws each named field (offset:size:values) of every pool object from its values
 `VERTRIX_ARGUMENT_LIMIT=12` keeps every stack argument below the limit so loops finish. `VERTRIX_ARGUMENT_CHOICES="0:0x806f00,0x807f00;5:3,4"` draws stack argument N from its values (an
 output pointer into the pool, so what is stored there is compared), `VERTRIX_REGISTER_CHOICES=
 "edx:0,1,2"` does the same for registers, and `VERTRIX_FRAME_BYTES="0,1,1"` fills the frame below
-the entry (a local a stubbed callee would fill: 0x426240's reach flags from 0x4261b0). The
+the entry (a local a stubbed callee would fill: 0x426240's reach flags from 0x4261b0), and
+`VERTRIX_GLOBAL_CHOICES="0x53bd0c:4:0,1"` draws a global from its values (a table read by index,
+such as 0x41fe10's enabled levels, which the original searches forever when all are 0). The
 settings that reach each routine's deep paths are kept as `tools/verify_cases/ADDR.sh`; source one
 before `verify_port.py`. Check that a
 planted mistake fails before trusting a pass: 0x47ce10 passed with a wrong 5:6:5 shift until the
@@ -266,3 +268,7 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x453050 | `rtlstatepairs.c` | clear both players' scenes when both are in the paired state |
 | 0x4792d0 | `rtlsurfaceboundses.c` | the box around a surface's set pixels |
 | 0x4193b0 | `rtlscreenshots.c` | save a screenshot under the first free name |
+| 0x4bf3e0 | `rtljpegmarkersaves.c` | libjpeg save_marker (with the shared return tail at 0x4bf342) |
+| 0x4d01a0 | `rtlstreamdestroys.c` | a runtime stream object's destructor (close, child, owner, base, free) |
+| 0x452520 | `rtlscenecountersteps.c` | step a player's scene counter against the opponent's scene |
+| 0x41fe10 | `rtllevelstarts.c` | start the next enabled level: teardown, title, music, scene and state |

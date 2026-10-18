@@ -36,9 +36,8 @@ static void format(Port *port, uint32_t name, uint32_t edx, uint32_t pattern, ui
  * exists (0x4895e0 returns 1) with 0x50d7f8 and the edx 0x4895e0 hands back plus 1. The video is
  * locked (0x486d00), the image saved under the name with the palette 0x558c7c (0x473e60), the
  * video unlocked (0x486da0, ebx 0) and the name released (0x4ca210). The frame descriptor 0x513fa0
- * stays in ecx, as the original leaves it. eax is the last call's result, or the exception chain
- * the original reloads when there is no shot; no caller reads edx. The exception frame is left out
- * (docs/NATIVE-PORTS.md). */
+ * stays in ecx, as the original leaves it. eax is the exception chain the original reloads last; no
+ * caller reads edx. The exception frame is left out (docs/NATIVE-PORTS.md). */
 uint32_t vertrix_port_screenshot_save_4193b0(PORT_SIGNATURE)
 {
     Port port;
@@ -61,6 +60,6 @@ uint32_t vertrix_port_screenshot_save_4193b0(PORT_SIGNATURE)
     port_call(&port, IMAGE_SAVE, port_u32(&port, name, 0), port_u32(&port, PALETTE, 0), 0,
               FRAME_DESCRIPTOR);
     port_call(&port, VIDEO_UNLOCK, VIDEO, vertrix_lift_edx, 0, FRAME_DESCRIPTOR);
-    const uint32_t result = port_call(&port, STRING_RELEASE, name, 0, 0, FRAME_DESCRIPTOR);
-    return port_return(&port, result, 0);
+    port_call(&port, STRING_RELEASE, name, 0, 0, FRAME_DESCRIPTOR);
+    return port_return(&port, entry->chain, 0);
 }

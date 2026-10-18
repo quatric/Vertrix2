@@ -475,7 +475,6 @@
 #include "rtlrangefinds.h"
 #include "rtlrangerecords.h"
 #include "rtlrecordreleases.h"
-#include "rtlrenderweights.h"
 #include "rtlscenecountersteps.h"
 #include "rtlscenedraws.h"
 #include "rtlscreenobjectdestroys.h"
@@ -499,10 +498,8 @@
 #include "rtltzrules.h"
 #include "rtluiscreenactors.h"
 #include "rtlvarargs.h"
-#include "rtlvideooffs.h"
 #include "rtlvideoons.h"
 #include "rtlwavestreamloads.h"
-#include "rtlwidestringconverts.h"
 #include "rtlxmmoduleloads.h"
 #include "rtlyccrgbtables.h"
 
@@ -934,6 +931,7 @@ static const LiftedRoutine routines[] = {
     {0x41fb40, vertrix_port_screen_state_41fb40, 0, 0},
     {0x41fc70, vertrix_port_scene_leave_options_41fc70, 0, 0},
     {0x41fd20, vertrix_port_game_teardown_41fd20, 0, 0},
+    {0x41fe10, vertrix_port_level_start_41fe10, 304, 0},
     {0x420040, vertrix_port_world_map_setup_420040, 312, 0},
     {0x4202a0, vertrix_port_set_picker_4202a0, 0, 0},
     {0x420e10, vertrix_port_settings_screen_reload_420e10, 308, 0},
@@ -1785,6 +1783,7 @@ static const LiftedRoutine routines[] = {
     {0x4523b0, vertrix_port_nothing_404580, 0, 0},
     {0x4523d0, vertrix_port_player_hold_release_4523d0, 0, 0},
     {0x452440, vertrix_port_state_attack_452440, 0, 0},
+    {0x452520, vertrix_port_scene_counter_step_452520, 0, 0},
     {0x4526e0, vertrix_port_player_opponent_settle_4526e0, 0, 0},
     {0x452770, vertrix_port_state_advance_452770, 0, 0},
     {0x452830, vertrix_port_effect_negated_gate_452830, 0, 0},
@@ -3476,7 +3475,7 @@ static const LiftedRoutine routines[] = {
     {0x4bef10, vertrix_port_jpeg_examine_app0_4bef10, 0, 0},
     {0x4bf190, vertrix_port_decoder_adobe_marker_4bf190, 0, 0},
     {0x4bf270, vertrix_port_application_marker_4bf270, 0, 0},
-    {0x4bf3e0, lifted_f4bf3e0, 148, 0},
+    {0x4bf3e0, vertrix_port_jpeg_save_marker_4bf3e0, 0, 0},
     {0x4bf6a0, vertrix_port_jpeg_skip_variable_marker_4bf6a0, 0, 0},
     {0x4bf940, vertrix_port_jpeg_read_markers_4bf940, 388, 0},
     {0x4c07d0, vertrix_port_decoder_read_restart_4c07d0, 0, 0},
@@ -3709,7 +3708,7 @@ static const LiftedRoutine routines[] = {
     {0x4cfd20, vertrix_port_window_procedure_restore_4cfd20, 0, 0},
     {0x4cfe40, vertrix_port_window_procedure_hook_4cfe40, 0, 0},
     {0x4cff20, vertrix_port_rtl_command_finish_4cff20, 0, 0},
-    {0x4d01a0, lifted_f4d01a0, 152, 0},
+    {0x4d01a0, vertrix_port_stream_destroy_4d01a0, 0, 0},
     {0x4d0410, vertrix_port_window_close_4d0410, 0, 0},
     {0x4d04d0, vertrix_port_record_handler_4d04d0, 0, 0},
     {0x4d04f0, vertrix_port_application_idle_step_4d04f0, 0, 0},
@@ -4359,9 +4358,7 @@ static const LiftedRoutine routines[] = {
  * vertrix_lifted_allow_unverified(1). */
 static const LiftedRoutine unverified_routines[] = {
     {0, NULL, 0, 0},
-    {0x41fe10, lifted_f41fe10, 496, 0},
     {0x423960, lifted_f423960, 308, 0},
-    {0x452520, lifted_f452520, 192, 0},
     {0x486e20, lifted_f486e20, 140, 0},
     {0x4ce780, lifted_f4ce780, 108, 0},
     {0x4d9f06, lifted_rtl_jump_capture, 72, 0},
