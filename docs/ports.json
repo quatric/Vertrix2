@@ -15569,6 +15569,16 @@
   "lifted": "lifted_f4ce230",
   "chunk": "whole_5"
  },
+ "0x4ce740": {
+  "port": "vertrix_port_rtl_thread_data_4ce740",
+  "lifted": "lifted_f4ce740",
+  "chunk": "whole_8"
+ },
+ "0x4ce760": {
+  "port": "vertrix_port_rtl_thread_data_first_4ce760",
+  "lifted": "lifted_f4ce760",
+  "chunk": "whole_8"
+ },
  "0x4ce7a0": {
   "port": "vertrix_port_file_buffer_new",
   "lifted": "lifted_f4ce7a0",
@@ -17079,6 +17089,11 @@
   "lifted": "lifted_f4dc000",
   "chunk": "whole_6"
  },
+ "0x4dc030": {
+  "port": "vertrix_port_rtl_thread_slot_get_4dc030",
+  "lifted": "lifted_f4dc030",
+  "chunk": "whole_8"
+ },
  "0x4dc160": {
   "port": "vertrix_port_rtl_lookup_call_4dc160",
   "lifted": "lifted_rtl_lookup_call",
@@ -17483,6 +17498,11 @@
   "port": "vertrix_port_call_4e0c0c_4e0bf8",
   "lifted": "lifted_f4e0bf8",
   "chunk": "whole_6"
+ },
+ "0x4e0c56": {
+  "port": "vertrix_port_rtl_exception_allocate_4e0c56",
+  "lifted": "lifted_f4e0c56",
+  "chunk": "whole_10"
  },
  "0x4e0e69": {
   "port": "vertrix_port_rtl_block_release_4e0e69",
@@ -17934,6 +17954,11 @@
   "lifted": "lifted_f4e5bec",
   "chunk": "whole_6"
  },
+ "0x4e5ef0": {
+  "port": "vertrix_port_rtl_code_page_reset_4e5ef0",
+  "lifted": "lifted_f4e5ef0",
+  "chunk": "whole_38"
+ },
  "0x4e62b0": {
   "port": "vertrix_port_heap_reserve",
   "lifted": "lifted_f4e62b0",
@@ -18032,6 +18057,11 @@
  "0x4e6c1d": {
   "port": "vertrix_port_rtl_bit_clear_4e6c1d",
   "lifted": "lifted_f4e6c1d",
+  "chunk": "whole_6"
+ },
+ "0x4e6c98": {
+  "port": "vertrix_port_rtl_type_size_4e6c98",
+  "lifted": "lifted_f4e6c98",
   "chunk": "whole_6"
  },
  "0x4e6cd4": {

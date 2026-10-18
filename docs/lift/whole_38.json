@@ -31,52 +31,5 @@
   ],
   "virtual": [],
   "address": 5040800
- },
- "f4e5ef0": {
-  "callees": {
-   "0x4f1b7c": [
-    0,
-    false
-   ],
-   "0x4f1bd0": [
-    0,
-    false
-   ],
-   "0x4eb5c0": [
-    0,
-    false
-   ],
-   "0x4f1b80": [
-    2,
-    false
-   ]
-  },
-  "stack": 140,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2,
-   19,
-   20,
-   21,
-   158,
-   159,
-   160,
-   251,
-   252,
-   253,
-   4294967291,
-   4294967292,
-   4294967293,
-   4294967294,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 5136112
  }
 }

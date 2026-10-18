@@ -385,6 +385,7 @@
 #include "rtlbufsteps.h"
 #include "rtlcatchadjusts.h"
 #include "rtlchildwindowpoints.h"
+#include "rtlcodepageresets.h"
 #include "rtlcodepages.h"
 #include "rtlcurrentdirectories.h"
 #include "rtlcurvetables.h"
@@ -397,6 +398,7 @@
 #include "rtldoserrors.h"
 #include "rtldplayerrors.h"
 #include "rtleffectreleases.h"
+#include "rtlexceptionallocs.h"
 #include "rtlexceptionsteps.h"
 #include "rtlextendedeffects.h"
 #include "rtlextendedroots.h"
@@ -511,8 +513,12 @@
 #include "rtltextboxdraws.h"
 #include "rtltextfieldkeys.h"
 #include "rtltextwraps.h"
+#include "rtlthreaddatas.h"
+#include "rtlthreaddataseconds.h"
+#include "rtlthreadslotgets.h"
 #include "rtlthreadslots.h"
 #include "rtltooltiptexts.h"
+#include "rtltypesizes.h"
 #include "rtltzrules.h"
 #include "rtluiscreenactors.h"
 #include "rtlunwindstates.h"
@@ -3699,8 +3705,9 @@ static const LiftedRoutine routines[] = {
     {0x4ce0e0, vertrix_port_exit_register_501fc0, 0, 0},
     {0x4ce220, vertrix_port_rtl_application_4ce220, 0, 0},
     {0x4ce230, vertrix_port_file_object_construct, 0, 0},
-    {0x4ce740, lifted_f4ce740, 220, 0},
-    {0x4ce760, lifted_f4ce760, 220, 0},
+    {0x4ce740, vertrix_port_rtl_thread_data_4ce740, 0, 0},
+    {0x4ce760, vertrix_port_rtl_thread_data_first_4ce760, 0, 0},
+    {0x4ce780, vertrix_port_rtl_thread_data_second_4ce780, 0, 0},
     {0x4ce7a0, vertrix_port_file_buffer_new, 0, 0},
     {0x4ce7c0, vertrix_port_stream_object_new, 0, 0},
     {0x4ce7e0, vertrix_port_rtl_object_new_4ce7e0, 0, 0},
@@ -4006,7 +4013,7 @@ static const LiftedRoutine routines[] = {
     {0x4dbd20, vertrix_port_rtl_thread_slot_set_4dbd20, 0, 0},
     {0x4dbf80, vertrix_port_thread_slot, 0, 0},
     {0x4dc000, vertrix_port_handle_unmap_4dc000, 0, 0},
-    {0x4dc030, lifted_f4dc030, 216, 0},
+    {0x4dc030, vertrix_port_rtl_thread_slot_get_4dc030, 0, 0},
     {0x4dc160, vertrix_port_rtl_lookup_call_4dc160, 0, 0},
     {0x4dc190, vertrix_port_heap_pointer_release_4dc190, 0, 0},
     {0x4dc290, vertrix_port_rtl_window_class_check_4dc290, 0, 0},
@@ -4094,7 +4101,7 @@ static const LiftedRoutine routines[] = {
     {0x4e0bed, vertrix_port_call_4e0ae5_4e0bed, 0, 0},
     {0x4e0bf8, vertrix_port_call_4e0c0c_4e0bf8, 0, 0},
     {0x4e0c0c, lifted_f4e0c0c, 88, 0},
-    {0x4e0c56, lifted_f4e0c56, 212, 0},
+    {0x4e0c56, vertrix_port_rtl_exception_allocate_4e0c56, 0, 0},
     {0x4e0e69, vertrix_port_rtl_block_release_4e0e69, 0, 0},
     {0x4e0eaf, vertrix_port_record_find_4e0eaf, 0, 0},
     {0x4e0ec7, vertrix_port_rtl_record_release_guarded_4e0ec7, 0, 0},
@@ -4185,7 +4192,7 @@ static const LiftedRoutine routines[] = {
     {0x4e59d0, vertrix_port_handle_close_4e59d0, 0, 0},
     {0x4e5b0c, vertrix_port_rtl_locks_init_4e5b0c, 0, 0},
     {0x4e5bec, vertrix_port_rtl_object_flush_4e5bec, 0, 0},
-    {0x4e5ef0, lifted_f4e5ef0, 140, 0},
+    {0x4e5ef0, vertrix_port_rtl_code_page_reset_4e5ef0, 0, 0},
     {0x4e628c, lifted_f4e628c, 80, 0},
     {0x4e62b0, vertrix_port_heap_reserve, 0, 0},
     {0x4e62e0, vertrix_port_rtl_char_widen_4e62e0, 0, 0},
@@ -4209,7 +4216,7 @@ static const LiftedRoutine routines[] = {
     {0x4e6bff, vertrix_port_rtl_bit_test_4e6bff, 0, 0},
     {0x4e6c1d, vertrix_port_rtl_bit_clear_4e6c1d, 0, 0},
     {0x4e6c37, lifted_f4e6c37, 132, 0},
-    {0x4e6c98, lifted_f4e6c98, 80, 0},
+    {0x4e6c98, vertrix_port_rtl_type_size_4e6c98, 0, 0},
     {0x4e6cd4, vertrix_port_thunk_target_4e6cd4, 0, 0},
     {0x4e6cf2, vertrix_port_stream_record_reset_4e6cf2, 0, 0},
     {0x4e6f30, vertrix_port_char_length, 0, 0},
@@ -4382,7 +4389,6 @@ static const LiftedRoutine unverified_routines[] = {
     {0, NULL, 0, 0},
     {0x423960, lifted_f423960, 308, 0},
     {0x486e20, lifted_f486e20, 140, 0},
-    {0x4ce780, lifted_f4ce780, 108, 0},
     {0x4d9f06, lifted_rtl_jump_capture, 72, 0},
     {0x4e6250, lifted_f4e6250, 156, 0},
     {0x4e6d16, lifted_f4e6d16, 216, 0},

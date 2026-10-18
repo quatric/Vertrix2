@@ -113,7 +113,11 @@ the entry (a local a stubbed callee would fill: 0x426240's reach flags from 0x42
 such as 0x41fe10's enabled levels, which the original searches forever when all are 0), and
 `VERTRIX_RETURN_CHOICES="0x4e8a58:0,1,2,3,0x4e8b24"` draws a stubbed callee's eax from its values
 (0x4e8cc8 calls the signal handler 0x4e8a58 returns, so it must be another stub, not a pool
-object, which would run as code). The settings that reach each routine's deep paths are kept as `tools/verify_cases/ADDR.sh`; source one
+object, which would run as code). `VERTRIX_EXTRA_SOURCES="port_runtime.c"` links a port source the
+harness leaves out, for a rewrite that runs another port's code directly where the original jumps
+into it (0x4ce780 into 0x4dbf80 in `port_runtime.c`). A routine passing ds (0x4dee73,
+0x4e628c: the selector to 0x4e6220) cannot be compared: the original's ds is 0x10 and the lifted
+copy's 0. The settings that reach each routine's deep paths are kept as `tools/verify_cases/ADDR.sh`; source one
 before `verify_port.py`. Check that a
 planted mistake fails before trusting a pass: 0x47ce10 passed with a wrong 5:6:5 shift until the
 pixel pointers were drawn into the pool (0x806000 + 0x1000 * i, four objects). 0x426240,
@@ -301,3 +305,10 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x4cd56c | `rtlfileopens.c` | the runtime's open (CreateFileA from the open flags, the handle slot and its mode) |
 | 0x4dc2f0 | `rtlchildwindowpoints.c` | a parent's visible child control at a point |
 | 0x4ee750 | `rtlwindowpoints.c` | the window under a screen point (or its parent, or a disabled child) |
+| 0x4e6c98 | `rtltypesizes.c` | the size of a thrown value from its type record's kind |
+| 0x4e0c56 | `rtlexceptionallocs.c` | a thrown exception from the exception memory's free list, its value copied by kind |
+| 0x4dc030 | `rtlthreadslotgets.c` | the calling thread's value in the runtime's thread slot set, made on first use |
+| 0x4ce740 | `rtlthreaddatas.c` | the runtime's thread data (jumps into 0x4dc030) |
+| 0x4ce760 | `rtlthreaddatas.c` | the thread data's first slot (jumps into 0x4dc030) |
+| 0x4ce780 | `rtlthreaddataseconds.c` | the thread data's second slot (jumps into 0x4dbf80) |
+| 0x4e5ef0 | `rtlcodepageresets.c` | _setmbcp(0) (jumps into 0x4e6f60) |
