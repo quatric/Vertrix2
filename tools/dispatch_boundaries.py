@@ -25,7 +25,7 @@ NATIVE_PORTS = {0x41c7b0: ('vertrix_native_title_frame', 0, 0),
                 0x4046e0: ('vertrix_native_bit_read', 0, 0),
                 0x4346b0: ('vertrix_native_line_pass', 0, 0)}
 
-# Clean ports (source/port_*.c): original routines rewritten as ordinary C, which the dispatcher
+# Native ports (the source/*.c that define vertrix_port_*): original routines rewritten as ordinary C, which the dispatcher
 # runs in place of their lifted copies. `tools/verify_port.py --all` compares each with the
 # original in Unicorn (eax, edx, calls, stores and pool objects, both register modes) and checks
 # that no caller reads the flags it leaves.

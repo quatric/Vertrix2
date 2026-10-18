@@ -32,13 +32,7 @@ static uint32_t call_with_stack(Port *port, uint32_t target, uint32_t eax, uint3
                                 uint32_t ebx, uint32_t ecx, uint32_t esi, uint32_t edi,
                                 uint32_t ebp, const uint32_t *stack, unsigned count)
 {
-    uint32_t result;
-    vertrix_lift_in_esi = esi;
-    vertrix_lift_in_edi = edi;
-    vertrix_lift_in_ebp = ebp;
-    result = port_call_stack(port, target, eax, edx, ebx, ecx, stack, count);
-    vertrix_lift_in_esi = vertrix_lift_in_edi = vertrix_lift_in_ebp = 0;
-    return result;
+    return port_call_registers(port, target, eax, edx, ebx, ecx, esi, edi, ebp, stack, count);
 }
 
 /* Original 0x4d1ae0 (stdcall: parent, message, wparam, lparam, deep, controls): sends a message

@@ -1,0 +1,28 @@
+#ifndef CLIB_H
+#define CLIB_H
+#include "port.h"
+
+/* Clean ports of C runtime stream, thread, heap, number and text helpers (clib.c). */
+uint32_t vertrix_port_rtl_stream_release_4e36e4(PORT_SIGNATURE);
+uint32_t vertrix_port_rtl_streams_count_4e3f28(PORT_SIGNATURE);
+uint32_t vertrix_port_rtl_print_message_4e5024(PORT_SIGNATURE);
+uint32_t vertrix_port_rtl_handles_close_4e56a8(PORT_SIGNATURE);
+uint32_t vertrix_port_rtl_thread_attach_4e5918(PORT_SIGNATURE);
+uint32_t vertrix_port_rtl_thread_detach_4e596c(PORT_SIGNATURE);
+uint32_t vertrix_port_rtl_utoa_4e6320(PORT_SIGNATURE);
+uint32_t vertrix_port_rtl_itoa_4e636c(PORT_SIGNATURE);
+uint32_t vertrix_port_rtl_append_hex_4e66dc(PORT_SIGNATURE);
+uint32_t vertrix_port_rtl_char_is_digit_4e70d0(PORT_SIGNATURE);
+uint32_t vertrix_port_rtl_stream_close_4e7eb0(PORT_SIGNATURE);
+uint32_t vertrix_port_rtl_table_remove_4e8574(PORT_SIGNATURE);
+uint32_t vertrix_port_rtl_heap_free_block_4e869c(PORT_SIGNATURE);
+uint32_t vertrix_port_rtl_char_compare_4e8730(PORT_SIGNATURE);
+uint32_t vertrix_port_rtl_signal_set_4e8a10(PORT_SIGNATURE);
+uint32_t vertrix_port_rtl_console_handler_off_4e8b8c(PORT_SIGNATURE);
+uint32_t vertrix_port_rtl_stream_tell_4ebe60(PORT_SIGNATURE);
+uint32_t vertrix_port_rtl_handle_tell_4ec380(PORT_SIGNATURE);
+uint32_t vertrix_port_rtl_scale_power_ten_4ecba9(PORT_SIGNATURE);
+uint32_t vertrix_port_rtl_scale_ten_4ecc03(PORT_SIGNATURE);
+uint32_t vertrix_port_rtl_scale_ten_steps_4ecc60(PORT_SIGNATURE);
+uint32_t vertrix_port_rtl_int_to_extended_4ee094(PORT_SIGNATURE);
+#endif

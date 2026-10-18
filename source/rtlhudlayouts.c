@@ -1,0 +1,110 @@
+#include "rtlhudlayouts.h"
+
+/* The game screen's panel layout. */
+
+/* One placement: the routine, the step the running position 0x54406c takes before it, eax (a
+ * name byte's address when byte is set), edx (the running position when at is set), ebx, ecx and
+ * the stack argument (none for 0x43f190). */
+typedef struct
+{
+    uint32_t target;
+    uint32_t step;
+    uint32_t eax;
+    int byte;
+    uint32_t edx;
+    int at;
+    uint32_t ebx;
+    uint32_t ecx;
+    uint32_t pushed;
+} Placement;
+
+static const Placement placements[] = {
+    {0x43f200, 0, 0x513c2d, 1, 0, 0, 0x23, 0x1e, 0xc},
+    {0x43f200, 0xc, 0x513c2e, 1, 0, 1, 0x23, 0x1e, 0x1a},
+    {0x43f200, 0x1a, 0x513c2f, 1, 0, 1, 0x23, 0x1e, 0xa},
+    {0x43f200, 0xa, 0x513c30, 1, 0, 1, 0x23, 0x1e, 0x1a},
+    {0x43f200, 0x1a, 0x513c31, 1, 0, 1, 0x23, 0x1e, 0xa},
+    {0x43f200, 0xa, 0x513c32, 1, 0, 1, 0x1c, 0x1e, 0xa},
+    {0x43f200, 0xa, 0x513c33, 1, 0, 1, 0xd, 0xc, 0xc},
+    {0x43f200, 0xc, 0x513c34, 1, 0, 1, 0xd, 0xc, 0x1a},
+    {0x43f200, 0x1a, 0x513c35, 1, 0, 1, 0xd, 0xc, 0xa},
+    {0x43f200, 0xa, 0x513c36, 1, 0, 1, 0xe, 0x10, 0xa},
+    {0x43f200, 0xa, 0x513c37, 1, 0, 1, 0xe, 0x10, 0x1a},
+    {0x43f110, 0x1a, 0xb2, 0, 0xc, 0, 0x1a, 6, 1},
+    {0x43f110, 0x1a, 0xcc, 0, 0x26, 0, 0xa, 6, 1},
+    {0x43f110, 0xa, 0xd6, 0, 0, 0, 0xc, 6, 1},
+    {0x43f110, 0xc, 0xe2, 0, 0x36, 0, 1, 9, 0},
+    {0x43f110, 1, 0xe3, 0, 0x3e, 0, 1, 9, 0},
+    {0x43f110, 1, 0xe4, 0, 0x21, 0, 1, 9, 0},
+    {0x43f110, 1, 0xe5, 0, 0x1e, 0, 1, 9, 0},
+    {0x43f200, 1, 0x513c3b, 1, 0, 1, 0x12, 0xe, 0xc},
+    {0x43f200, 0xc, 0x513c3c, 1, 0, 1, 0x12, 0xe, 0x1a},
+    {0x43f200, 0x1a, 0x513c3d, 1, 0, 1, 0x12, 0xe, 0xa},
+    {0x43f200, 0xa, 0x513c3e, 1, 0, 1, 0xd, 0xc, 0xc},
+    {0x43f200, 0xc, 0x513c3f, 1, 0, 1, 0xd, 0xc, 0x1a},
+    {0x43f200, 0x1a, 0x513c40, 1, 0, 1, 0xd, 0xc, 0xa},
+    {0x43f200, 0xa, 0x513c41, 1, 0, 1, 0x12, 0xe, 0xc},
+    {0x43f200, 0xc, 0x513c42, 1, 0, 1, 0x12, 0xe, 0x1a},
+    {0x43f200, 0x1a, 0x513c43, 1, 0, 1, 0x12, 0xe, 0xa},
+    {0x43f200, 0xa, 0x513c44, 1, 0, 1, 0xd, 0xc, 0xc},
+    {0x43f200, 0xc, 0x513c45, 1, 0, 1, 0xd, 0xc, 0x1a},
+    {0x43f200, 0x1a, 0x513c46, 1, 0, 1, 0xd, 0xc, 0xa},
+    {0x43f200, 0xa, 0x513c47, 1, 0, 1, 0x12, 0xe, 0xc},
+    {0x43f200, 0xc, 0x513c48, 1, 0, 1, 0x12, 0xe, 0x1a},
+    {0x43f200, 0x1a, 0x513c49, 1, 0, 1, 0x12, 0xe, 0xa},
+    {0x43f200, 0xa, 0x513c4a, 1, 0, 1, 0xd, 0xc, 0xc},
+    {0x43f200, 0xc, 0x513c4b, 1, 0, 1, 0xd, 0xc, 0x1a},
+    {0x43f200, 0x1a, 0x513c4c, 1, 0, 1, 0xd, 0xc, 0xa},
+    {0x43f190, 0xa, 0x21a, 0, 0x54, 0, 0xa, 0, 0},
+    {0x43f190, 0xa, 0x210, 0, 0x54, 0, 0xa, 1, 0},
+    {0x43f190, 0xa, 0x206, 0, 0x54, 0, 0xa, 0, 0},
+};
+
+/* Original 0x43eab0: the game screen's panels laid out. The old layout freed (0x43fc50), the
+ * panel table 0x5410f8..0x541984 cleared and the running position 0x54406c started at 0; then
+ * each placement (the pictures named by 0x513c2d.., 0x43f200; the fixed pictures, 0x43f110; the
+ * three counters, 0x43f190) at the running position, moved on by the one before's height, and
+ * 10 more after the last. eax as the last placement left it, edx kept. */
+uint32_t vertrix_port_hud_layout_43eab0(PORT_SIGNATURE)
+{
+    enum
+    {
+        BELOW = 0x10
+    };
+    Port port;
+    uint32_t esi;
+    uint32_t eax;
+    uint32_t at;
+    unsigned index;
+    port_open_frame(&port, calls, services, globals, entry, BELOW);
+    port_set32(&port, entry->esp, -4u, entry->ebx);
+    port_set32(&port, entry->esp, -8u, entry->ecx);
+    port_set32(&port, entry->esp, -0xcu, entry->edx);
+    port_set32(&port, entry->esp, -0x10u, entry->esi);
+    esi = port_u32(&port, 0, 0x54406c);
+    eax = port_call_with(&port, 0x43fc50, entry->eax, entry->edx, entry->ebx, entry->ecx, esi,
+                         entry->edi, entry->ebp);
+    for (at = 0x5410f8; at <= 0x541984; at += 4)
+    {
+        port_set32(&port, 0, at, 0);
+    }
+    port_set32(&port, 0, 0x54406c, 0);
+    for (index = 0; index < sizeof placements / sizeof placements[0] && !port.env.failed; index++)
+    {
+        const Placement *place = &placements[index];
+        uint32_t position = port_u32(&port, 0, 0x54406c);
+        uint32_t pushed[1] = {place->pushed};
+        if (index > 0)
+        {
+            position += place->step;
+            esi = position;
+            port_set32(&port, 0, 0x54406c, position);
+        }
+        eax = port_call_registers(
+            &port, place->target, place->byte ? port_u8(&port, 0, place->eax) : place->eax,
+            place->at ? position : place->edx, place->ebx, place->ecx, esi, entry->edi, entry->ebp,
+            pushed, place->target == 0x43f190 ? 0 : 1);
+    }
+    port_set32(&port, 0, 0x54406c, port_u32(&port, 0, 0x54406c) + 0xa);
+    return port_return(&port, eax, entry->edx);
+}

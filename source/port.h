@@ -138,6 +138,13 @@ static inline void port_copy(Port *port, uint32_t to, uint32_t from, uint32_t co
     }
 }
 
+/* A store of `size` bytes (1, 2 or 4) from a table of fields of different widths. */
+static inline void port_set_sized(Port *port, uint32_t base, uint32_t offset, uint32_t size,
+                                  uint32_t value)
+{
+    lift_store(&port->env, base, offset, size, value);
+}
+
 /* x86 shifts: the count is taken modulo 32. */
 static inline uint32_t port_shl(uint32_t value, uint32_t count)
 {
@@ -161,19 +168,28 @@ static inline uint32_t port_call(Port *port, uint32_t target, uint32_t eax, uint
     return lift_call_arguments(&port->env, target, eax, edx, ebx, ecx, NULL, 0);
 }
 
-/* The same handing the callee esi, edi and ebp (some take arguments in them: 0x4e509c passes the
- * exponent to 0x4e5177 in edi). */
-static inline uint32_t port_call_with(Port *port, uint32_t target, uint32_t eax, uint32_t edx,
-                                      uint32_t ebx, uint32_t ecx, uint32_t esi, uint32_t edi,
-                                      uint32_t ebp)
+/* A call handing the callee every register (some take arguments in esi, edi or ebp: 0x4e509c passes
+ * the exponent to 0x4e5177 in edi) and `count` stack arguments, the nearest to the stack pointer
+ * first. */
+static inline uint32_t port_call_registers(Port *port, uint32_t target, uint32_t eax, uint32_t edx,
+                                           uint32_t ebx, uint32_t ecx, uint32_t esi, uint32_t edi,
+                                           uint32_t ebp, const uint32_t *stack, unsigned count)
 {
     uint32_t result;
     vertrix_lift_in_esi = esi;
     vertrix_lift_in_edi = edi;
     vertrix_lift_in_ebp = ebp;
-    result = lift_call_arguments(&port->env, target, eax, edx, ebx, ecx, NULL, 0);
+    result = lift_call_arguments(&port->env, target, eax, edx, ebx, ecx, stack, count);
     vertrix_lift_in_esi = vertrix_lift_in_edi = vertrix_lift_in_ebp = 0;
     return result;
+}
+
+/* The same with register arguments only. */
+static inline uint32_t port_call_with(Port *port, uint32_t target, uint32_t eax, uint32_t edx,
+                                      uint32_t ebx, uint32_t ecx, uint32_t esi, uint32_t edi,
+                                      uint32_t ebp)
+{
+    return port_call_registers(port, target, eax, edx, ebx, ecx, esi, edi, ebp, NULL, 0);
 }
 
 /* The same with `count` stack arguments, the nearest to the stack pointer first. */
@@ -205,13 +221,8 @@ static inline uint32_t port_forward_stack(Port *port, const LiftEntry *entry, ui
                                           uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx,
                                           uint32_t esi, const uint32_t *stack, unsigned count)
 {
-    uint32_t result;
-    vertrix_lift_in_esi = esi;
-    vertrix_lift_in_edi = entry->edi;
-    vertrix_lift_in_ebp = entry->ebp;
-    result = lift_call_arguments(&port->env, target, eax, edx, ebx, ecx, stack, count);
-    vertrix_lift_in_esi = vertrix_lift_in_edi = vertrix_lift_in_ebp = 0;
-    return result;
+    return port_call_registers(port, target, eax, edx, ebx, ecx, esi, entry->edi, entry->ebp, stack,
+                               count);
 }
 
 /* The routine's return: eax, and the edx the original leaves for its caller. */

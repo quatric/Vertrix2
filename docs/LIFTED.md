@@ -809,8 +809,8 @@ the hook (the oracle harnesses), the store is still the 0xf0000000 call. 1,500 t
 
 The lifted chunks are instruction-level C. A clean port rewrites one original routine as ordinary
 C: named fields and globals, structured loops, and calls by name. The dispatcher runs the port in
-place of the lifted copy: `PORTS` in `tools/dispatch_boundaries.py`, entry points in
-`source/port_*.c`.
+place of the lifted copy: `PORTS` in `tools/dispatch_boundaries.py`, entry points in the
+`source/*.c` that define `vertrix_port_*` routines.
 
 ### How a port is written
 
@@ -906,7 +906,7 @@ lifted copies fail or time out in the other mode:
 
 Two recovered natives were first tried as ports and dropped: 0x4daed8 (exp) and 0x4c9921 (power).
 They computed the right values but did not hand their helpers the original's incidental
-registers. They now run as ports written call by call (`source/port_float.c`), as do log
+registers. They now run as ports written call by call (`source/softfloats.c`), as do log
 (0x4c9e2f) and the double subtract (0x4db34a): each helper call gets the registers the original
 leaves in it, the caller's ebx and ecx carrying over a call as the lifted code assumes. The
 subtract's software add is written out in full; its coprocessor path reports through `lift_x87`

@@ -1,0 +1,32 @@
+#ifndef STATES_H
+#define STATES_H
+#include "port.h"
+
+/* Clean ports of player state, hold, attack and effect handlers (states.c). */
+uint32_t vertrix_port_number_owner_grow_450cd0(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_level_start_450df0(PORT_SIGNATURE);
+uint32_t vertrix_port_object_start_hold_450f80(PORT_SIGNATURE);
+uint32_t vertrix_port_player_place_piece_451c00(PORT_SIGNATURE);
+uint32_t vertrix_port_player_board_settle_4520f0(PORT_SIGNATURE);
+uint32_t vertrix_port_object_arm_hold_452250(PORT_SIGNATURE);
+uint32_t vertrix_port_player_hold_release_4523d0(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_progress_gate_4528e0(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_stone_arm_453460(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_check_bind_4554a0(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_check_bind_455600(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_pair_sound_453b90(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_attack_4547b0(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_attack_4549d0(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_attack_454c30(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_attack_455020(PORT_SIGNATURE);
+uint32_t vertrix_port_state_done_4552b0(PORT_SIGNATURE);
+uint32_t vertrix_port_state_done_455c30(PORT_SIGNATURE);
+uint32_t vertrix_port_state_done_455580(PORT_SIGNATURE);
+uint32_t vertrix_port_state_guard_455320(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_field_bind_455510(PORT_SIGNATURE);
+uint32_t vertrix_port_effect_slide_wait_455f10(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_sound_wait_456290(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_bonus_start_457170(PORT_SIGNATURE);
+uint32_t vertrix_port_actor_bonus_start_4572b0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_clear_wait_45bb80(PORT_SIGNATURE);
+#endif

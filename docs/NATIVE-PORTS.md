@@ -1,17 +1,20 @@
 # Native ports
 
-The generated ports (`port_rtl*.c`) are register-for-register: a `Regs` struct with the x86
-registers, an emulated push stack, `goto` labels at the original addresses and every frame local in
-the emulated stack. They are correct but read like the listing they came from. A native port says
-the same thing as ordinary C, and is verified the same way.
+The first generated ports were register-for-register: a `Regs` struct with the x86 registers, an
+emulated push stack, `goto` labels at the original addresses and every frame local in the emulated
+stack. They were correct but read like the listing they came from. All of them have been rewritten
+as native ports, which say the same thing as ordinary C and are verified the same way.
 
 ## Style
 
 `source/rtlmp3memorydecodes.c` (0x48b2f0) is the model.
 
-A native rewrite drops the `port_` prefix of its file (`source/rtlmp3memorydecodes.c`); the
-register-level ports keep it. `tools/gen_dispatch.py` and `tools/verify_port.py` find both by the
-`vertrix_port_` routines they declare.
+Port files have no prefix (`source/rtlmp3memorydecodes.c`); `tools/gen_dispatch.py` and
+`tools/verify_port.py` find them by the `vertrix_port_` routines they declare. Ports call through
+`port.h` only (`port_call`, `port_call_with`, `port_call_stack`, `port_call_registers` for a callee
+that takes esi, edi or ebp and stack arguments, `port_set_sized` for a store whose width comes
+from a table), never the lifted runtime's `lift_*` operations or its `vertrix_lift_in_*`
+registers; flags a caller reads are set in `vertrix_lift_fl` directly.
 
 - Name the values: entry registers become `const` locals named for what they hold (`stream`,
   `result`), and offsets, globals, table addresses and callees become an `enum` (`SAMPLE_LENGTH`,
@@ -113,9 +116,10 @@ the entry (a local a stubbed callee would fill: 0x426240's reach flags from 0x42
 such as 0x41fe10's enabled levels, which the original searches forever when all are 0), and
 `VERTRIX_RETURN_CHOICES="0x4e8a58:0,1,2,3,0x4e8b24"` draws a stubbed callee's eax from its values
 (0x4e8cc8 calls the signal handler 0x4e8a58 returns, so it must be another stub, not a pool
-object, which would run as code). `VERTRIX_EXTRA_SOURCES="port_runtime.c"` links a port source the
-harness leaves out, for a rewrite that runs another port's code directly where the original jumps
-into it (0x4ce780 into 0x4dbf80 in `port_runtime.c`). A routine passing ds (0x4dee73,
+object, which would run as code). `VERTRIX_EXTRA_SOURCES="name.c"` links a port source the
+include scan leaves out, one whose header the port does not include (0x4ce780 runs 0x4dbf80's code
+in `runtime.c` directly, where the original jumps into it; it includes `runtime.h`, so the scan
+links it). A routine passing ds (0x4dee73,
 0x4e628c: the selector to 0x4e6220) cannot be compared: the original's ds is 0x10 and the lifted
 copy's 0.
 `VERTRIX_CHECK_MISSING_STORES=1` also fails a case when the original changed a byte of the image's

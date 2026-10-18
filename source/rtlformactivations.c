@@ -85,12 +85,9 @@ uint32_t vertrix_port_rtl_form_activate_4d4700(PORT_SIGNATURE)
     {
         args[0] = port_u32(&port, form, CONTROL_HANDLE);
         args[1] = window;
-        vertrix_lift_in_esi = form;
-        vertrix_lift_in_edi = entry->edi;
-        vertrix_lift_in_ebp = entry->ebp;
         const uint32_t owned =
-            port_call_stack(&port, OWNED_BY, window, vertrix_lift_edx, window, ecx, args, 2);
-        vertrix_lift_in_esi = vertrix_lift_in_edi = vertrix_lift_in_ebp = 0;
+            port_call_registers(&port, OWNED_BY, window, vertrix_lift_edx, window, ecx, form,
+                                entry->edi, entry->ebp, args, 2);
         if (owned != 0)
         {
             args[0] = window;

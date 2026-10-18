@@ -1,4 +1,4 @@
-"""Verify a clean port (source/port_*.c, or a native rewrite without the prefix) against the original executing in Unicorn.
+"""Verify a native port (the source/*.c defining a vertrix_port_ routine) against the original executing in Unicorn.
 
 usage: verify_port.py ADDRESS FUNCTION [--cases N]
        verify_port.py --all [--cases N]   (every port in PORTS, tools/dispatch_boundaries.py)
@@ -116,8 +116,8 @@ def verify(address, function, cases, timeout=600):
                re.findall(r'^#include "(\w+)\.h"', sources[0].read_text(), re.M)
                if (ROOT / 'source' / (header + '.c')).exists() and header not in HARNESS
                and not header.startswith(('port', 'lift')) and header != sources[0].stem]
-    # VERTRIX_EXTRA_SOURCES="port_runtime.c" links a port source the include scan leaves out (a
-    # rewrite running another port's code directly, as the original jumps into it).
+    # VERTRIX_EXTRA_SOURCES="name.c" links a port source the include scan leaves out (one whose
+    # header the port does not include).
     natives += os.environ.get('VERTRIX_EXTRA_SOURCES', '').split()
     # The oracle hands the port the lifted copy's stack below esp (LiftEntry.garbage).
     (scratch / (name + '.c')).write_text(

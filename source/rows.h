@@ -1,0 +1,21 @@
+#ifndef ROWS_H
+#define ROWS_H
+#include "port.h"
+
+/* Clean ports of board cell scan, falling cell mark and player progress helpers (rows.c). */
+uint32_t vertrix_port_board_piece_shape_fits_42efa0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_settle_new_blocks_42f580(PORT_SIGNATURE);
+uint32_t vertrix_port_board_piece_can_fall_431b80(PORT_SIGNATURE);
+uint32_t vertrix_port_board_mark_floating_4328e0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_mark_falling_cells_432b10(PORT_SIGNATURE);
+uint32_t vertrix_port_board_burst_occupied_433040(PORT_SIGNATURE);
+uint32_t vertrix_port_board_has_type_one_extra_4334b0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_checker_marks_436850(PORT_SIGNATURE);
+uint32_t vertrix_port_board_checker_marks_4372c0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_mark_kind_count_436a10(PORT_SIGNATURE);
+uint32_t vertrix_port_board_mark_kind_match_436aa0(PORT_SIGNATURE);
+uint32_t vertrix_port_board_start_marked_4371b0(PORT_SIGNATURE);
+uint32_t vertrix_port_player_progress_update_43b720(PORT_SIGNATURE);
+uint32_t vertrix_port_player_timer_update_43b8a0(PORT_SIGNATURE);
+uint32_t vertrix_port_player_push_event_43bb60(PORT_SIGNATURE);
+#endif
