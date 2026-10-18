@@ -382,85 +382,6 @@
   ],
   "address": 4531488
  },
- "state_pair_453050": {
-  "callees": {
-   "0x42eca0": [
-    0,
-    false
-   ],
-   "0x42ecc0": [
-    0,
-    false
-   ],
-   "0x42edf0": [
-    0,
-    false
-   ],
-   "0x42eb60": [
-    0,
-    false
-   ],
-   "0x42ebe0": [
-    0,
-    false
-   ],
-   "virtual_4530fc": [
-    0,
-    false
-   ],
-   "0x43bbf0": [
-    0,
-    false
-   ]
-  },
-  "stack": 144,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   944
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   2,
-   3,
-   4,
-   5
-  ],
-  "virtual": [
-   [
-    344,
-    4,
-    0
-   ]
-  ],
-  "address": 4534352
- },
- "f484520": {
-  "callees": {
-   "virtual_484520": [
-    0,
-    false
-   ]
-  },
-  "stack": 68,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [
-   [
-    -1,
-    0,
-    0
-   ]
-  ],
-  "address": 4736288
- },
  "f486e20": {
   "callees": {
    "0x4872b0": [
@@ -468,7 +389,7 @@
     false
    ],
    "virtual_486e52": [
-    2,
+    3,
     false
    ],
    "0x485700": [
@@ -507,7 +428,7 @@
    [
     -1,
     80,
-    2
+    3
    ],
    [
     0,
@@ -521,68 +442,6 @@
    ]
   ],
   "address": 4746784
- },
- "f48ac10": {
-  "callees": {
-   "virtual_48ac26": [
-    0,
-    false
-   ],
-   "0x4d9f45": [
-    0,
-    false
-   ]
-  },
-  "stack": 288,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   0
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   199,
-   200,
-   201
-  ],
-  "virtual": [
-   [
-    -1,
-    12,
-    0
-   ]
-  ],
-  "address": 4762640
- },
- "f4b6240": {
-  "callees": {
-   "virtual_4b6309": [
-    0,
-    false
-   ]
-  },
-  "stack": 84,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   4
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   31999,
-   32000,
-   32001
-  ],
-  "virtual": [
-   [
-    344,
-    8,
-    0
-   ]
-  ],
-  "address": 4940352
  },
  "f4ce780": {
   "callees": {

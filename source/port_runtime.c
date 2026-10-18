@@ -14296,54 +14296,6 @@ uint32_t vertrix_port_actor_orbit_frame(PORT_SIGNATURE)
     return port_return(&port, result, entry->edx);
 }
 
-/* The attack effect shape of 0x454e90 and its three copies: the board (+0x3b0) gets 0x43bb60 with
- * 4, 0x43bae0 and the update `next`; its game's (+0x15c) flags +0xb80..+0xb88 are set, the object's
- * child (+0x15c) gets its method +4 (table +0x158) and 0x43bbf0 runs. */
-static uint32_t effect_attack(PORT_SIGNATURE, uint32_t next)
-{
-    Port port;
-    uint32_t object = entry->eax;
-    uint32_t board;
-    uint32_t child;
-    uint32_t game;
-    uint32_t table;
-    uint32_t result;
-    port_open(&port, calls, services, globals, entry);
-    board = port_u32(&port, object, 0x3b0);
-    child = port_u32(&port, object, 0x15c);
-    game = port_u32(&port, board, 0x15c);
-    port_call(&port, 0x43bb60, board, 4, object, board);
-    port_call(&port, 0x43bae0, board, vertrix_lift_edx, object, board);
-    port_call(&port, 0x4ac8f0, board, next, object, board);
-    port_set32(&port, game, 0xb80, 1);
-    port_set32(&port, game, 0xb84, 1);
-    port_set32(&port, game, 0xb88, 1);
-    table = port_u32(&port, child, 0x158);
-    port_call(&port, port_u32(&port, table, 4), child, vertrix_lift_edx, object, table);
-    result = port_call(&port, 0x43bbf0, object, vertrix_lift_edx, object, table);
-    return port_return(&port, result, entry->edx);
-}
-
-uint32_t vertrix_port_effect_attack_454e90(PORT_SIGNATURE)
-{
-    return effect_attack(calls, services, globals, entry, 0x454f00);
-}
-
-uint32_t vertrix_port_effect_attack_455b20(PORT_SIGNATURE)
-{
-    return effect_attack(calls, services, globals, entry, 0x455b90);
-}
-
-uint32_t vertrix_port_effect_attack_455ca0(PORT_SIGNATURE)
-{
-    return effect_attack(calls, services, globals, entry, 0x455d10);
-}
-
-uint32_t vertrix_port_effect_attack_45b9c0(PORT_SIGNATURE)
-{
-    return effect_attack(calls, services, globals, entry, 0x45ba30);
-}
-
 /* The pool destructor shape of 0x4d83f0 and its three copies: mode 4 destroys an array (each
  * element by `element` through 0x4ccb9f, the block freed by 0x4ca040); otherwise, under the guard
  * record `guard`, the table `table` is set, the pages released (`release`), the base table 0x517454

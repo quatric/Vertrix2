@@ -39,46 +39,6 @@
   "virtual": [],
   "address": 4251696
  },
- "surface_bounds": {
-  "callees": {
-   "0x478f10": [
-    0,
-    false
-   ]
-  },
-  "stack": 124,
-  "arguments": 1,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   43,
-   44,
-   45,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 4690640
- },
- "rtl_range_table_find": {
-  "callees": {},
-  "stack": 68,
-  "arguments": 4,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 5049136
- },
  "f4da3ba": {
   "callees": {
    "0x4e0f8b": [

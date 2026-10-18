@@ -248,3 +248,21 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x426240 | `rtlaifallbacks.c` | the AI fallback: lowest reachable column, then a rotation from a pair, the neighbours or random(3) |
 | 0x47ce10 | `rtlsurfaceblits.c` | blit a rectangle between surfaces, converting 1/2/3/4-byte pixels, locked or not |
 | 0x4bf940 | `rtljpegmarkerreads.c` | libjpeg read_markers with SOI, SOS, DHT, DQT and DRI inlined |
+| 0x454e90 | `rtlattackstarts.c` | start an attack on the opponent (stop, reset, animate, refresh, finish) |
+| 0x455b20 | `rtlattackstarts.c` | the same with the animation 0x455b90 |
+| 0x455ca0 | `rtlattackstarts.c` | the same with the animation 0x455d10 |
+| 0x45b9c0 | `rtlattackstarts.c` | the same with the animation 0x45ba30 |
+| 0x484520 | `rtlindirectcalls.c` | call the routine an object's first dword holds |
+| 0x4d0b30 | `rtlrangefinds.c` | find the entry of a range table whose keys match and range holds a value |
+| 0x4cd819 | `rtlcatchadjusts.c` | the record of a catch descriptor, or its routine's adjusted result |
+| 0x48ac10 | `rtlobjectjumps.c` | fill a buffer through an object's method, then long jump |
+| 0x4d8082 | `rtlsigncompares.c` | the runtime's signed compare by the carry trick, with its flags |
+| 0x429ba0 | `rtlactorgridupdates.c` | update an owner's actor chain and its 7x4 grid of actors |
+| 0x4d8b80 | `rtlblocklistdestroys.c` | a runtime object's destructor (blocks, vtables, free) |
+| 0x42b090 | `rtlpreviewframes.c` | copy the player's preview pieces' frames into a list |
+| 0x4d8c20 | `rtlnodepooltakes.c` | take a node from a pool (threading a new block when empty) and set it up |
+| 0x4b6240 | `rtldepthdraws.c` | draw a list's items from the least depth up |
+| 0x4b3140 | `rtlscreenobjectdestroys.c` | an object's destructor that destroys its child first |
+| 0x453050 | `rtlstatepairs.c` | clear both players' scenes when both are in the paired state |
+| 0x4792d0 | `rtlsurfaceboundses.c` | the box around a surface's set pixels |
+| 0x4193b0 | `rtlscreenshots.c` | save a screenshot under the first free name |

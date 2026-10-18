@@ -6,12 +6,9 @@
 
 enum
 {
-    LIFTED_RTL_SIGN_COMPARE_STACK = 64,
     LIFTED_F4D80D5_STACK = 84,
     LIFTED_F4D8198_STACK = 80,
     LIFTED_RTL_SINGLE_DIVIDE_SOFTWARE_FULL_STACK = 88,
-    LIFTED_OBJECT_DESTROY_G_STACK = 136,
-    LIFTED_NODE_POOL_TAKE_INITIALISED_STACK = 104,
     LIFTED_F4DB131_STACK = 88,
     LIFTED_F4DC2F0_STACK = 184,
     LIFTED_RTL_SEGMENT_DISPATCH_STACK = 84,
@@ -26,10 +23,6 @@ enum
     LIFTED_F4EA540_STACK = 104
 };
 
-/* Original 0x4d8082. */
-uint32_t lifted_rtl_sign_compare(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                 const VertrixGlobals *globals, const LiftEntry *entry);
-
 /* Original 0x4d80d5. */
 uint32_t lifted_f4d80d5(const VertrixCalls *calls, const VertrixFactoryServices *services,
                         const VertrixGlobals *globals, const LiftEntry *entry);
@@ -43,15 +36,6 @@ uint32_t lifted_rtl_single_divide_software_full(const VertrixCalls *calls,
                                                 const VertrixFactoryServices *services,
                                                 const VertrixGlobals *globals,
                                                 const LiftEntry *entry);
-
-/* Original 0x4d8b80. */
-uint32_t lifted_object_destroy_g(const VertrixCalls *calls, const VertrixFactoryServices *services,
-                                 const VertrixGlobals *globals, const LiftEntry *entry);
-
-/* Original 0x4d8c20. */
-uint32_t lifted_node_pool_take_initialised(const VertrixCalls *calls,
-                                           const VertrixFactoryServices *services,
-                                           const VertrixGlobals *globals, const LiftEntry *entry);
 
 /* Original 0x4db131. */
 uint32_t lifted_f4db131(const VertrixCalls *calls, const VertrixFactoryServices *services,

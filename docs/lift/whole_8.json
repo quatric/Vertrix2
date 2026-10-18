@@ -1,23 +1,4 @@
 {
- "player_preview_frames": {
-  "callees": {
-   "0x425de0": [
-    0,
-    false
-   ]
-  },
-  "stack": 84,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   348
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 4370576
- },
  "scene_layout": {
   "callees": {
    "0x4b14c0": [
@@ -59,56 +40,6 @@
   ],
   "virtual": [],
   "address": 4393264
- },
- "f4b3140": {
-  "callees": {
-   "virtual_4b31a8": [
-    0,
-    false
-   ],
-   "0x4b5420": [
-    0,
-    false
-   ],
-   "0x4ca050": [
-    0,
-    false
-   ],
-   "0x4ccb9f": [
-    0,
-    false
-   ],
-   "0x4ca040": [
-    0,
-    false
-   ]
-  },
-  "stack": 160,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   352
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [
-   1,
-   2,
-   3,
-   4,
-   5,
-   51,
-   52,
-   53
-  ],
-  "virtual": [
-   [
-    344,
-    0,
-    0
-   ]
-  ],
-  "address": 4927808
  },
  "f4c17da": {
   "callees": {

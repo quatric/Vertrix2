@@ -91,31 +91,6 @@
   ],
   "address": 5025328
  },
- "f4cd819": {
-  "callees": {
-   "virtual_4cd831": [
-    0,
-    false
-   ]
-  },
-  "stack": 72,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [
-   4
-  ],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [
-   [
-    -1,
-    12,
-    0
-   ]
-  ],
-  "address": 5036057
- },
  "f4ec970": {
   "callees": {
    "0x4e53b4": [
