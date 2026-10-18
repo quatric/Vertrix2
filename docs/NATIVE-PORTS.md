@@ -217,3 +217,4 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x45c9a0 | `rtltextfieldkeys.c` | a menu text field's key loop |
 | 0x4da6b6 | `rtlexceptionsteps.c` | rethrow the exception being handled from the innermost frame |
 | 0x4ec1ec | `rtlhandlerthunks.c` | the C++ frame handler (unwind cleanup, try-block matching) |
+| 0x4627a0 | `rtlkeysmenus.c` | build the key-configuration menu (keys, speeds, control, name) |
