@@ -105,6 +105,10 @@ def jump_table(seen, insn):
         writes_index = (len(prior.operands) > 0 and prior.operands[0].type == X.X86_OP_REG and
                         prior.operands[0].reg == mem.index and
                         prior.mnemonic not in ('cmp', 'test', 'push'))
+        if writes_index and prior.mnemonic == 'movzx' and prior.operands[1].type == X.X86_OP_REG:
+            # A zero extension keeps the bound of the narrower register's cmp (0x4e0b14:
+            # `cmp al, 0xd; ja ...; movzx eax, al` before `jmp [eax*4 + table]`).
+            continue
         if writes_index:
             # A mask bounds the index (0x402cc7: `and eax, 0xf` before `jmp [eax*4 + table]`).
             if prior.mnemonic == 'and' and prior.operands[1].type == X.X86_OP_IMM and \

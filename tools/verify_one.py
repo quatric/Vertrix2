@@ -242,5 +242,11 @@ import os  # noqa: E402
 
 spec['compare_edx'] = os.environ.get('VERTRIX_VERIFY_EDX') == '1'
 spec['compare_flags'] = os.environ.get('VERTRIX_VERIFY_FLAGS') == '1'
+# VERTRIX_RETURN_CHOICES="0x4e8a58:0,1,2,0x4e8b24" draws a stubbed callee's eax from its values (a
+# handler lookup whose result the routine calls must return a stub, not a pool object).
+for _item in os.environ.get('VERTRIX_RETURN_CHOICES', '').split(';'):
+    if _item:
+        _target, _values = _item.split(':')
+        spec.setdefault('choices', {})[int(_target, 0)] = [int(v, 0) for v in _values.split(',')]
 verify_lifted.run(name, spec, meta, scratch / (name + '.c'),
                   _hints if _hints.exists() else None)

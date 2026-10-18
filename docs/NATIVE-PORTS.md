@@ -110,8 +110,10 @@ output pointer into the pool, so what is stored there is compared), `VERTRIX_REG
 "edx:0,1,2"` does the same for registers, and `VERTRIX_FRAME_BYTES="0,1,1"` fills the frame below
 the entry (a local a stubbed callee would fill: 0x426240's reach flags from 0x4261b0), and
 `VERTRIX_GLOBAL_CHOICES="0x53bd0c:4:0,1"` draws a global from its values (a table read by index,
-such as 0x41fe10's enabled levels, which the original searches forever when all are 0). The
-settings that reach each routine's deep paths are kept as `tools/verify_cases/ADDR.sh`; source one
+such as 0x41fe10's enabled levels, which the original searches forever when all are 0), and
+`VERTRIX_RETURN_CHOICES="0x4e8a58:0,1,2,3,0x4e8b24"` draws a stubbed callee's eax from its values
+(0x4e8cc8 calls the signal handler 0x4e8a58 returns, so it must be another stub, not a pool
+object, which would run as code). The settings that reach each routine's deep paths are kept as `tools/verify_cases/ADDR.sh`; source one
 before `verify_port.py`. Check that a
 planted mistake fails before trusting a pass: 0x47ce10 passed with a wrong 5:6:5 shift until the
 pixel pointers were drawn into the pool (0x806000 + 0x1000 * i, four objects). 0x426240,
@@ -280,3 +282,15 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x4e3ac0 | `rtlcurrentdirectories.c` | the runtime's getcwd |
 | 0x4dabbe | `rtlcurrentdirectories.c` | a jump to getcwd |
 | 0x4e3ce0 | `rtlstreamflushes.c` | the runtime's stream flush (write out or seek back over the buffer, then commit) |
+| 0x4e0ae5 | `rtlunwindstates.c` | walk a frame's C++ unwind states towards the target, running object cleanups |
+| 0x4e0b7c | `rtlunwindstates.c` | start an unwind walk from a frame's first state |
+| 0x4e8cc8 | `rtlsignalraises.c` | the runtime's raise |
+| 0x4d1ae0 | `rtlwindowbroadcasts.c` | send a message to a window's children (or their controls), optionally deep |
+| 0x4e7fc4 | `rtlstreamcloses.c` | the runtime's stream close (flush, seek back, close, free, remove a temporary file) |
+| 0x4d4700 | `rtlformactivations.c` | a form's non-client activation and the activation of the windows it owns |
+| 0x4d5ab0 | `rtltooltiptexts.c` | fill a tooltip's text from its control's hint |
+| 0x4e0328 | `rtlhandleslots.c` | store a handle in the runtime's handle table (standard handles too) |
+| 0x4dbd20 | `rtlthreadslots.c` | store a value in the calling thread's slot record |
+| 0x4db131 | `rtlextendedroots.c` | the square root of an 80-bit extended value, by integer Newton steps |
+| 0x4cae30 | `rtlruntimeobjectdestroys.c` | the destructor of the runtime object with the table 0x518a94 |
+| 0x4cfa20 | `rtlsubclassprocs.c` | the procedure of a subclassed dialog window (init, activate, cursor, destroy) under a jump buffer |
