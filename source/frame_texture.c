@@ -51,8 +51,47 @@ int vertrix_frame_texture_validate(const VertrixSurface *frame, const uint32_t m
            texture->size == (size_t)width * height * 4;
 }
 
+/* A frame whose sides are multiples of 4 fills every tile: no padding to clear and no bounds to
+ * test per pixel. Each 4x4 tile is 32 bytes of alpha-red pairs, then 32 of green-blue pairs. */
+static void pack_whole(const VertrixSurface *frame, const unsigned slots[4],
+                       VertrixTexture *texture)
+{
+    const unsigned a = slots[3];
+    const unsigned r = slots[0];
+    const unsigned g = slots[1];
+    const unsigned b = slots[2];
+    uint8_t *out = texture->data;
+    for (uint32_t y = 0; y < frame->height; y += 4)
+    {
+        const uint8_t *rows = frame->data + (size_t)y * frame->stride;
+        for (uint32_t x = 0; x < frame->width; x += 4)
+        {
+            for (uint32_t row = 0; row < 4; ++row)
+            {
+                const uint8_t *pixel = rows + (size_t)row * frame->stride + (size_t)x * 4;
+                uint8_t *pair = out + row * 8;
+                for (uint32_t column = 0; column < 4; ++column)
+                {
+                    pair[0] = pixel[a];
+                    pair[1] = pixel[r];
+                    pair[32] = pixel[g];
+                    pair[33] = pixel[b];
+                    pixel += 4;
+                    pair += 2;
+                }
+            }
+            out += 64;
+        }
+    }
+}
+
 static void pack(const VertrixSurface *frame, const unsigned slots[4], VertrixTexture *texture)
 {
+    if (frame->width == texture->storage_width && frame->height == texture->storage_height)
+    {
+        pack_whole(frame, slots, texture);
+        return;
+    }
     memset(texture->data, 0, texture->size);
     size_t tile = 0;
     for (uint32_t y = 0; y < texture->storage_height; y += 4)

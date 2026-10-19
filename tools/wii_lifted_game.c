@@ -97,20 +97,15 @@ static void fail(const char *message)
 /* The back buffer is little-endian x86 memory (bytes B, G, R, unused); the frame texture reads
  * the bytes in that order with the masks below, so copy the bytes and make the unused one opaque.
  */
-static void gather(const LiftHost *host, uint32_t base)
+/* The frame to upload: the back buffer itself when it lies in one heap block (the frame draw
+ * ignores the unused fourth byte), else a copy gathered pixel by pixel. */
+static uint8_t *gather(const LiftHost *host, uint32_t base)
 {
-    /* The back buffer lies in one heap block: read it in place, one row at a time, rather than
-     * resolving every pixel's address. */
     const uint8_t *frame = lift_host_bytes(host, base, WIDTH * HEIGHT * 4);
     unsigned i;
     if (frame != NULL)
     {
-        memcpy(pixels, frame, sizeof pixels);
-        for (i = 0; i < WIDTH * HEIGHT; i++)
-        {
-            pixels[4 * i + 3] = 0xff;
-        }
-        return;
+        return (uint8_t *)frame;
     }
     for (i = 0; i < WIDTH * HEIGHT; i++)
     {
@@ -120,6 +115,7 @@ static void gather(const LiftHost *host, uint32_t base)
         pixels[4 * i + 2] = (uint8_t)(value >> 16);
         pixels[4 * i + 3] = 0xff;
     }
+    return pixels;
 }
 
 static void *game_main(void *unused)
@@ -187,7 +183,7 @@ static void *game_main(void *unused)
     lift_host_run(&host, 0x45dca0, 0, 0, 0, 0, &lifted); /* sprite banks */
     printf("done sprite banks at %u ms\n", (unsigned)ticks_to_millisecs(gettime()));
     base = lift_host_surface(&host, host.primary_surface, &width, &height, &pitch, &bytes);
-    gather(&host, base);
+    frame.data = gather(&host, base);
     if (!vertrix_wii_frame_texture_init(&frame, masks, GX_NEAR, &texture))
     {
         fail("Could not upload the display frame.");
@@ -405,7 +401,7 @@ static void *game_main(void *unused)
         if (host.frames_presented != before)
         {
             base = lift_host_surface(&host, host.primary_surface, &width, &height, &pitch, &bytes);
-            gather(&host, base);
+            frame.data = gather(&host, base);
             if (shown < 5)
             {
                 printf("frame %u: handler %x, %u ms\n", shown++, (unsigned)handler,
@@ -424,9 +420,9 @@ static void *game_main(void *unused)
                         fprintf(shot, "P6\n%d %d\n255\n", WIDTH, HEIGHT);
                         for (i = 0; i < WIDTH * HEIGHT; i++)
                         {
-                            fputc(pixels[4 * i + 2], shot);
-                            fputc(pixels[4 * i + 1], shot);
-                            fputc(pixels[4 * i + 0], shot);
+                            fputc(frame.data[4 * i + 2], shot);
+                            fputc(frame.data[4 * i + 1], shot);
+                            fputc(frame.data[4 * i + 0], shot);
                         }
                         fclose(shot);
                         printf("screenshot written\n");
