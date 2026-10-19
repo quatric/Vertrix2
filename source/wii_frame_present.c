@@ -1,5 +1,13 @@
 #include "wii_frame_present.h"
 
+static volatile uint32_t retraces;
+
+static void count_retrace(uint32_t count)
+{
+    (void)count;
+    retraces++;
+}
+
 int vertrix_wii_frame_presenter_init(const GXRModeObj *mode, void *first, void *second,
                                      VertrixWiiFramePresenter *output)
 {
@@ -8,7 +16,8 @@ int vertrix_wii_frame_presenter_init(const GXRModeObj *mode, void *first, void *
     {
         return 0;
     }
-    VertrixWiiFramePresenter result = {mode, {first, second}, 0};
+    VIDEO_SetPostRetraceCallback(count_retrace);
+    VertrixWiiFramePresenter result = {mode, {first, second}, 0, retraces - 1};
     *output = result;
     return 1;
 }
@@ -43,11 +52,15 @@ int vertrix_wii_frame_present(VertrixWiiFramePresenter *presenter, VertrixWiiTex
     guOrtho(projection, 0, 480, 0, 640, 0, 1);
     GX_LoadProjectionMtx(projection, GX_ORTHOGRAPHIC);
     vertrix_wii_frame_draw(texture, 0, 0, 640, 480);
+    if (retraces == presenter->flipped)
+    {
+        VIDEO_WaitVSync();
+    }
     GX_CopyDisp(presenter->buffers[presenter->next], GX_FALSE);
     GX_DrawDone();
     VIDEO_SetNextFramebuffer(presenter->buffers[presenter->next]);
     VIDEO_Flush();
-    VIDEO_WaitVSync();
+    presenter->flipped = retraces;
     presenter->next ^= 1;
     return 1;
 }

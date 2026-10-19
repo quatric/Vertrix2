@@ -7,6 +7,7 @@ typedef struct
     const GXRModeObj *mode;
     void *buffers[2];
     unsigned next;
+    uint32_t flipped; /* the retrace count when the last frame was scheduled */
 } VertrixWiiFramePresenter;
 
 /* Caller initializes GX and VIDEO, configures display copy/filter/scaling for
@@ -15,7 +16,9 @@ typedef struct
 int vertrix_wii_frame_presenter_init(const GXRModeObj *mode, void *first, void *second,
                                      VertrixWiiFramePresenter *output);
 /* Present the completed original 640x480 frame, filling the configured viewport.
- * Waits for the copy before scheduling the XFB and waits for vertical sync before
- * reusing the previous displayed buffer. No gameplay clock advancement here. */
+ * Waits for the copy before scheduling the XFB. The buffer it copies into was shown
+ * two frames ago; it waits for vertical sync first only when no retrace has passed
+ * since the last frame was scheduled, so that buffer may still be on screen. A slow
+ * game is not held back to the next retrace. No gameplay clock advancement here. */
 int vertrix_wii_frame_present(VertrixWiiFramePresenter *presenter, VertrixWiiTexture *texture);
 #endif

@@ -27,6 +27,8 @@ void GX_DrawDone(void);
 void VIDEO_SetNextFramebuffer(void *);
 void VIDEO_Flush(void);
 void VIDEO_WaitVSync(void);
+typedef void (*VIRetraceCallback)(unsigned);
+VIRetraceCallback VIDEO_SetPostRetraceCallback(VIRetraceCallback);
 '''
 HARNESS = r'''
 #include "wii_frame_present.h"
@@ -36,6 +38,7 @@ HARNESS = r'''
     static unsigned events[32],
     count, field, waits;
 static void *copied, *scheduled;
+static VIRetraceCallback retrace;
 static GXRModeObj mode;
 static void event(unsigned n)
 {
@@ -122,9 +125,15 @@ void VIDEO_Flush(void)
 }
 void VIDEO_WaitVSync(void)
 {
-    assert(events[count - 1] == 13);
+    assert(events[count - 1] == 9);
     waits++;
     event(14);
+    retrace(0);
+}
+VIRetraceCallback VIDEO_SetPostRetraceCallback(VIRetraceCallback callback)
+{
+    retrace = callback;
+    return NULL;
 }
 int main(void)
 {
@@ -141,6 +150,7 @@ int main(void)
     mode.efbHeight = 480;
     mode.xfbHeight = 480;
     assert(vertrix_wii_frame_presenter_init(&mode, buffers[0], buffers[1], &presenter));
+    unsigned expected_waits = 0;
     for (unsigned i = 0; i < 2048; i++)
     {
         count = 0;
@@ -148,15 +158,25 @@ int main(void)
         mode.field_rendering = (i / 2) & 1;
         mode.fbWidth = (i & 4) ? 640 : 608;
         mode.efbHeight = (i & 8) ? 480 : 240;
+        /* A retrace passes before every third frame; the others reuse a buffer that may still be
+         * shown and wait first. The first frame has nothing on screen to wait for. */
+        if (i % 3 == 0)
+            retrace(0);
+        unsigned wait = i != 0 && i % 3 != 0;
+        expected_waits += wait;
         assert(vertrix_wii_frame_present(&presenter, &texture));
         assert(presenter.next == ((i + 1) & 1) && copied == buffers[i & 1] && scheduled == copied);
         unsigned offset = mode.field_rendering ? 1 : 0;
-        assert(count == 13 + offset);
+        assert(count == 12 + offset + wait);
         if (offset)
             assert(events[0] == 15);
         assert(events[offset] == (offset ? 2 : 1));
-        for (unsigned j = 1; j < 13; j++)
+        for (unsigned j = 1; j < 8; j++)
             assert(events[offset + j] == j + 2);
+        if (wait)
+            assert(events[offset + 8] == 14);
+        for (unsigned j = 8; j < 12; j++)
+            assert(events[offset + wait + j] == j + 2);
         count = 0;
         VertrixWiiFramePresenter before = presenter;
         texture.u_limit = NAN;
@@ -174,7 +194,7 @@ int main(void)
         assert(!vertrix_wii_frame_presenter_init(&mode, buffers[0], buffers[0], &presenter));
         assert(!memcmp(&before, &presenter, sizeof(before)));
     }
-    assert(waits == 2048);
+    assert(waits == expected_waits);
     assert(!vertrix_wii_frame_present(NULL, &texture));
     assert(!vertrix_wii_frame_present(&presenter, NULL));
     return 0;
@@ -195,7 +215,7 @@ def main():
     subprocess.run(['cc', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-I', str(build), '-I', str(root / 'source'), str(build / 'harness.c'), str(root / 'source/wii_frame_present.c'), '-o', str(executable)], check=True)
     subprocess.run([str(executable)], check=True)
     subprocess.run(['make', '-s', '-C', str(root), 'wii-frame-present', f'BUILD={build / "powerpc"}'], check=True)
-    report = {'status': 'passed', 'recorded_presentations': 2048, 'invalid_preservation_cases': 8192, 'scope': 'Host records projection setup, progressive/field viewport selection, ' 'draw/copy/completion/display/flush/vsync ordering and alternating XFBs. ' 'Actual PowerPC/libogc compilation passes. GPU execution, allocated XFB ' 'sizes, video/copy initialization, timing and complete game remain unverified.'}
+    report = {'status': 'passed', 'recorded_presentations': 2048, 'invalid_preservation_cases': 8192, 'scope': 'Host records projection setup, progressive/field viewport selection, ' 'draw/vsync-when-no-retrace-passed/copy/completion/display/flush ordering and alternating XFBs. ' 'Actual PowerPC/libogc compilation passes. GPU execution, allocated XFB ' 'sizes, video/copy initialization, timing and complete game remain unverified.'}
     (build / 'wii-frame-present-verification.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))
 if __name__ == '__main__':

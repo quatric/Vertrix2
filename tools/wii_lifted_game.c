@@ -235,7 +235,12 @@ static void *game_main(void *unused)
                  * the mouse object (x, y words at +0x48) and A also presses mouse button 0. */
                 ir_t ir;
                 WPAD_IR(0, &ir);
+#ifndef VERTRIX_AUTOPLAY
+                /* the scripted walk below places the pointer; an emulator's idle IR must not */
                 if (ir.valid)
+#else
+                if (0)
+#endif
                 {
                     int px = (int)ir.x < 0 ? 0 : (int)ir.x > 639 ? 639 : (int)ir.x;
                     int py = (int)ir.y < 0 ? 0 : (int)ir.y > 479 ? 479 : (int)ir.y;
