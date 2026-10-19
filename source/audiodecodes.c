@@ -77,7 +77,49 @@ typedef struct Dct
     uint32_t edx;
     /* The original's esp: its first local is pass 1's table, the third pass 4's first cosine. */
     uint32_t frame;
+    /* The samples, both work buffers and both outputs in place where they can be (dct_window). */
+    PortWindow windows[5];
 } Dct;
+
+/* A window on a buffer in an enclosing frame or a flat block, or none. */
+static PortWindow dct_window(Port *port, uint32_t address, uint32_t size)
+{
+    PortWindow window = port_frame_window(port, address, size);
+    return window.memory != NULL ? window : port_window(port, address, size);
+}
+
+static uint8_t *dct_bytes(Dct *dct, uint32_t address)
+{
+    unsigned i;
+    for (i = 0; i < sizeof dct->windows / sizeof dct->windows[0]; i++)
+    {
+        uint8_t *at = port_window_at(&dct->windows[i], address, 4);
+        if (at != NULL)
+        {
+            return at;
+        }
+    }
+    return NULL;
+}
+
+static uint32_t dct_load(Dct *dct, uint32_t base, uint32_t offset)
+{
+    const uint8_t *at = dct_bytes(dct, base + offset);
+    return at != NULL ? lift_get(at, 4) : port_u32(&dct->port, base, offset);
+}
+
+static void dct_store(Dct *dct, uint32_t base, uint32_t offset, uint32_t value)
+{
+    uint8_t *at = dct_bytes(dct, base + offset);
+    if (at != NULL)
+    {
+        lift_put(at, 4, value);
+    }
+    else
+    {
+        port_set32(&dct->port, base, offset, value);
+    }
+}
 
 static uint32_t dct_call(Dct *dct, uint32_t target, uint32_t eax, uint32_t edx)
 {
@@ -88,12 +130,12 @@ static uint32_t dct_call(Dct *dct, uint32_t target, uint32_t eax, uint32_t edx)
 
 static uint32_t dct_at(Dct *dct, uint32_t buffer, unsigned index)
 {
-    return port_u32(&dct->port, buffer, index * 4);
+    return dct_load(dct, buffer, index * 4);
 }
 
 static void dct_set(Dct *dct, uint32_t buffer, unsigned index, uint32_t value)
 {
-    port_set32(&dct->port, buffer, index * 4, value);
+    dct_store(dct, buffer, index * 4, value);
 }
 
 /* to[low] = from[low] + from[high]; to[high] = (from[low] - from[high]) * cosine, the difference
@@ -144,8 +186,8 @@ static void dct_pass(Dct *dct, uint32_t from, uint32_t to, unsigned size, uint32
 /* out[offset] = first[a] + first[b]. */
 static void dct_sum(Dct *dct, uint32_t out, uint32_t offset, unsigned a, unsigned b)
 {
-    port_set32(&dct->port, out, offset,
-               dct_call(dct, SINGLE_ADD, dct_at(dct, dct->first, a), dct_at(dct, dct->first, b)));
+    dct_store(dct, out, offset,
+              dct_call(dct, SINGLE_ADD, dct_at(dct, dct->first, a), dct_at(dct, dct->first, b)));
 }
 
 static void dct_accumulate(Dct *dct, unsigned a, unsigned b)
@@ -157,7 +199,7 @@ static void dct_accumulate(Dct *dct, unsigned a, unsigned b)
 static uint32_t dct_copy(Dct *dct, uint32_t out, uint32_t offset, unsigned index)
 {
     uint32_t value = dct_at(dct, dct->first, index);
-    port_set32(&dct->port, out, offset, value);
+    dct_store(dct, out, offset, value);
     return value;
 }
 
@@ -180,6 +222,11 @@ uint32_t vertrix_port_synth_dct(PORT_SIGNATURE)
     dct.first = entry->ebx;
     dct.second = entry->ecx;
     dct.edx = entry->edx;
+    dct.windows[0] = dct_window(&dct.port, samples, DCT_POINTS * 4);
+    dct.windows[1] = dct_window(&dct.port, dct.first, DCT_POINTS * 4);
+    dct.windows[2] = dct_window(&dct.port, dct.second, DCT_POINTS * 4);
+    dct.windows[3] = dct_window(&dct.port, low, 0x404);
+    dct.windows[4] = dct_window(&dct.port, high, 0x384);
     /* Pass 1, samples into the first buffer: 16 pairs from the ends inwards. */
     port_set32(&dct.port, dct.frame, 0, port_u32(&dct.port, 0, DCT_COSINES));
     for (i = 0; i < DCT_POINTS / 2; i++)
@@ -223,7 +270,7 @@ uint32_t vertrix_port_synth_dct(PORT_SIGNATURE)
     dct_copy(&dct, low, 0x300, 4);
     dct_copy(&dct, low, 0x200, 2);
     dct_copy(&dct, low, 0x100, 6);
-    port_set32(&dct.port, high, 0, dct_copy(&dct, low, 0, 1));
+    dct_store(&dct, high, 0, dct_copy(&dct, low, 0, 1));
     dct_copy(&dct, high, 0x100, 5);
     dct_copy(&dct, high, 0x200, 3);
     dct_copy(&dct, high, 0x300, 7);
