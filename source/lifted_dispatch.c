@@ -90,7 +90,6 @@
 #include "library.h"
 #include "lift_runtime.h"
 #include "lifted_unverified.h"
-#include "lifted_whole_12.h"
 #include "lifted_whole_13.h"
 #include "lifted_whole_21.h"
 #include "lifted_whole_40.h"
@@ -240,6 +239,7 @@
 #include "rtlfileopens.h"
 #include "rtlfiles.h"
 #include "rtlfixedtexts.h"
+#include "rtlfloatformats.h"
 #include "rtlflushes.h"
 #include "rtlflyins.h"
 #include "rtlfontchartables.h"
@@ -4359,7 +4359,7 @@ static const LiftedRoutine routines[] = {
     {0x4ec8d0, vertrix_port_exit_list_init, 0, 0},
     {0x4ec910, vertrix_port_thread_set_flag, 0, 0},
     {0x4ec940, vertrix_port_stream_reset_text, 0, 0},
-    {0x4ec970, lifted_f4ec970, 152, 0},
+    {0x4ec970, vertrix_port_rtl_float_format_4ec970, 0, 0},
     {0x4eca85, vertrix_port_store_pair_4ed79f_4eca85, 0, 0},
     {0x4ecaa0, vertrix_port_crt_console_read_4ecaa0, 0, 0},
     {0x4ecb50, vertrix_port_error_set_code, 0, 0},
