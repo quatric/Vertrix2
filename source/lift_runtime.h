@@ -143,6 +143,12 @@ static inline uint8_t *lift_flat(uint32_t address, unsigned size, int load)
     return NULL;
 }
 
+/* The bytes of an enclosing routine's frame (one of vertrix_lift_frames, the innermost first) that
+ * hold `span` bytes at `address`, or NULL. Set by the host, whose slower paths end in the same walk
+ * for such an address: frames lie in the dispatcher's stack arena, which no object or global
+ * covers. A load reads a whole dword there, as the host's read of a global does. */
+__attribute__((weak)) uint8_t *(*vertrix_lift_frame_hook)(uint32_t address, unsigned span);
+
 /* An x87 instruction: the port has no coprocessor, so the runtime's x87 paths must not run. */
 static inline void lift_x87(LiftEnv *env, uint32_t address)
 {
@@ -295,6 +301,14 @@ static inline uint32_t lift_load(LiftEnv *env, uint32_t base, uint32_t offset, u
             return lift_get(flat, size);
         }
     }
+    if (vertrix_lift_frame_hook != NULL)
+    {
+        const uint8_t *frame = vertrix_lift_frame_hook(address, 4);
+        if (frame != NULL)
+        {
+            return lift_get(frame, 4) & lift_mask(size);
+        }
+    }
     if (base != 0 && env->services->resolve(base, &storage, &length, env->services->context) &&
         vertrix_actor_storage_read(storage, length, offset, size, &value))
     {
@@ -344,6 +358,10 @@ static inline void lift_store(LiftEnv *env, uint32_t base, uint32_t offset, unsi
     else if (lift_flat(address, size, 0) != NULL)
     {
         lift_put(lift_flat(address, size, 0), size, value);
+    }
+    else if (vertrix_lift_frame_hook != NULL && vertrix_lift_frame_hook(address, size) != NULL)
+    {
+        lift_put(vertrix_lift_frame_hook(address, size), size, value);
     }
     else if (base == 0)
     {

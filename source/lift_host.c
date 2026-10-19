@@ -1935,6 +1935,7 @@ void lift_host_init(LiftHost *host, uint8_t *image, const uint8_t *original, uin
         vertrix_lift_arithmetic_context = host;
     }
     vertrix_mpeg_tables_memo = 1;
+    vertrix_lift_frame_hook = host_frame_bytes;
     {
         static const uint32_t image_size = LIFT_HOST_IMAGE_SIZE;
         vertrix_lift_flat[0] =
