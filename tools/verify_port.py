@@ -268,8 +268,8 @@ def verify(address, function, cases, timeout=600):
             failed = True
         else:
             modes[mode] = 'not usable (the lifted copy fails it too)'
-            print('%s %s: not usable, the lifted copy fails it too (%s)' % (name, mode,
-                                                                           lifted_detail))
+            print('%s %s: not usable, the lifted copy fails it too (%s; the port: %s)'
+                  % (name, mode, lifted_detail, port_detail))
     if passed == 0:
         print('%s: no mode passed' % name)
         failed = True

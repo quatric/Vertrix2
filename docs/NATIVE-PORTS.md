@@ -373,3 +373,4 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x4e6c37 | `rtlterminatehandlers.c` | terminate(): the thread's handler, else the current exception's text reported, else the quiet or noisy exit with its buffers freed (`tools/verify_cases/4e6c37.sh`) |
 | 0x4ec650, 0x4ec68c | `rtlheapexpands.c` | _expand() under the heap lock, and the in-place resize: shrink and free the rest, or grow over the free blocks after it (`tools/verify_cases/4ec68c.sh` builds the blocks from pool objects) |
 | 0x4dfac0 | `rtlwidetexts.c` | printf's wide string: each character through wctomb, its bytes to the output procedure while the count allows (`tools/verify_cases/4dfac0.sh`) |
+| 0x4e63b0 | `rtllongtexts.c` | _ui64toa: the digits by division, copied out reversed; the lift took the divisor for the remainder 0x4e88bf leaves in ecx:ebx, so the port divides itself (`tools/verify_cases/4e63b0.sh` runs the original's divide, `VERTRIX_RUN_CALLEES`) |

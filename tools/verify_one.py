@@ -6,6 +6,11 @@ from pathlib import Path
 scratch, name, cases = Path(sys.argv[1]), sys.argv[2], sys.argv[3]
 SMALL = len(sys.argv) > 4 and sys.argv[4] == 'small'
 meta = json.loads((scratch / (name + '.json')).read_text())
+# VERTRIX_RUN_CALLEES="0x4e88bf,...": these callees are not stubbed; the original runs their code,
+# for a port that does their work itself because it reads results the lift does not carry (the
+# remainder 0x4e88bf leaves in ecx:ebx).
+for _target in filter(None, __import__('os').environ.get('VERTRIX_RUN_CALLEES', '').split(',')):
+    meta['callees'].pop('0x%x' % int(_target, 0), None)
 sys.argv = ['verify_one', str(Path(__file__).resolve().parents[1] / 'Vertrix2.exe'), '--build-dir',
             str(Path(__file__).resolve().parents[1] / 'build' / 'batch'), '--cases', cases]
 import verify_lifted  # noqa: E402

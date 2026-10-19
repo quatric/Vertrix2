@@ -334,6 +334,7 @@
 #include "rtllockkeystates.h"
 #include "rtllocks.h"
 #include "rtllongdivides.h"
+#include "rtllongtexts.h"
 #include "rtllookups.h"
 #include "rtlloops.h"
 #include "rtlmenupanels.h"
@@ -4213,7 +4214,7 @@ static const LiftedRoutine routines[] = {
     {0x4e62e0, vertrix_port_rtl_char_widen_4e62e0, 0, 0},
     {0x4e6320, vertrix_port_rtl_utoa_4e6320, 0, 0},
     {0x4e636c, vertrix_port_rtl_itoa_4e636c, 0, 0},
-    {0x4e63b0, lifted_f4e63b0, 156, 0},
+    {0x4e63b0, vertrix_port_rtl_long_text_4e63b0, 0, 0},
     {0x4e64a0, vertrix_port_crt_unsigned_text_4e64a0, 0, 0},
     {0x4e6510, vertrix_port_crt_text_to_wide_4e6510, 0, 0},
     {0x4e65b0, vertrix_port_rtl_text_duplicate_4e65b0, 0, 0},
