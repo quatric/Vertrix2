@@ -394,6 +394,7 @@
 #include "rtlrangerecords.h"
 #include "rtlranges.h"
 #include "rtlreads.h"
+#include "rtlreallocs.h"
 #include "rtlreals.h"
 #include "rtlrecordreleases.h"
 #include "rtlrecords.h"
@@ -469,6 +470,7 @@
 #include "rtltextfieldkeys.h"
 #include "rtltextloads.h"
 #include "rtltextwraps.h"
+#include "rtlthreaddatagrows.h"
 #include "rtlthreaddatas.h"
 #include "rtlthreaddataseconds.h"
 #include "rtlthreadslotgets.h"
@@ -4267,7 +4269,7 @@ static const LiftedRoutine routines[] = {
     {0x4e8310, vertrix_port_record_address_4e8310, 0, 0},
     {0x4e8330, vertrix_port_rtl_stream_write_text_4e8330, 0, 0},
     {0x4e8400, vertrix_port_thread_data_4e8400, 0, 0},
-    {0x4e843c, lifted_f4e843c, 136, 0},
+    {0x4e843c, vertrix_port_rtl_thread_data_grow_4e843c, 0, 0},
     {0x4e8510, vertrix_port_thread_list_add, 0, 0},
     {0x4e8574, vertrix_port_rtl_table_remove_4e8574, 0, 0},
     {0x4e85c0, vertrix_port_threads_mark_all, 0, 0},
@@ -4341,7 +4343,7 @@ static const LiftedRoutine routines[] = {
     {0x4ebce8, vertrix_port_rtl_file_seek_4ebce8, 0, 0},
     {0x4ebe60, vertrix_port_rtl_stream_tell_4ebe60, 0, 0},
     {0x4ebec0, vertrix_port_rtl_stream_read_4ebec0, 0, 0},
-    {0x4ec0e0, lifted_f4ec0e0, 120, 0},
+    {0x4ec0e0, vertrix_port_rtl_realloc_4ec0e0, 0, 0},
     {0x4ec160, vertrix_port_clear_allocate, 0, 0},
     {0x4ec180, vertrix_port_rtl_memory_compare_4ec180, 0, 0},
     {0x4ec1a0, vertrix_port_time_now, 0, 0},

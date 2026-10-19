@@ -18309,6 +18309,11 @@
   "lifted": "lifted_f4e8400",
   "chunk": "whole_6"
  },
+ "0x4e843c": {
+  "port": "vertrix_port_rtl_thread_data_grow_4e843c",
+  "lifted": "lifted_f4e843c",
+  "chunk": "whole_13"
+ },
  "0x4e8510": {
   "port": "vertrix_port_thread_list_add",
   "lifted": "lifted_f4e8510",
@@ -18662,6 +18667,11 @@
  "0x4ebec0": {
   "port": "vertrix_port_rtl_stream_read_4ebec0",
   "lifted": "lifted_f4ebec0",
+  "chunk": "whole_7"
+ },
+ "0x4ec0e0": {
+  "port": "vertrix_port_rtl_realloc_4ec0e0",
+  "lifted": "lifted_f4ec0e0",
   "chunk": "whole_7"
  },
  "0x4ec160": {

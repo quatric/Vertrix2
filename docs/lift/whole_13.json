@@ -179,58 +179,6 @@
   "virtual": [],
   "address": 5110564
  },
- "f4e843c": {
-  "callees": {
-   "slot_507cc8": [
-    0,
-    false
-   ],
-   "0x4f1ba0": [
-    0,
-    false
-   ],
-   "0x4ec0e0": [
-    0,
-    false
-   ],
-   "0x4e628c": [
-    0,
-    false
-   ],
-   "0x4ec160": [
-    0,
-    false
-   ],
-   "0x4f1ce0": [
-    2,
-    false
-   ],
-   "slot_507ccc": [
-    0,
-    false
-   ]
-  },
-  "stack": 136,
-  "arguments": 0,
-  "pointer_callees": [
-   "0x4ec160"
-  ],
-  "pointer_fields": [
-   0,
-   8
-  ],
-  "pointer_globals": [
-   6064800
-  ],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 5145660
- },
  "f4e969c": {
   "callees": {
    "0x4e9670": [

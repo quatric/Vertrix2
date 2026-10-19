@@ -377,3 +377,5 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x4ec970 | `rtlfloatformats.c` | printf's %e, %f and %g: the mode from the letter, the double taken and converted (0x4e53b4, 0x4eccb9), then the sign (`tools/verify_cases/4ec970.sh` logs the conversion's parameter block) |
 | 0x4e7f18 | `rtltempnames.c` | the temporary file name: the directory, "t", the process id as four hex digits, "_", the number's two and ".tmp" (`tools/verify_cases/4e7f18.sh`) |
 | 0x4e6250 | `rtlfatalwrites.c` | the fatal message to the error output (WriteFile), then exit(code), run in place through `vertrix_rtl_exit` (`tools/verify_cases/4e6250.sh` stops the original at ExitProcess, `VERTRIX_STOP_CALLEES`) |
+| 0x4ec0e0 | `rtlreallocs.c` | realloc(): malloc for none, free for size 0, in place by _expand, else a new block with the old bytes, or the old size put back (`tools/verify_cases/4ec0e0.sh`) |
+| 0x4e843c | `rtlthreaddatagrows.c` | the calling thread's data grown to the current size: reallocated when owned, else copied into new data, then marked and stored with TlsSetValue under the lock (`tools/verify_cases/4e843c.sh`) |
