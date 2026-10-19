@@ -168,6 +168,36 @@ static inline PortWindow port_window(Port *port, uint32_t address, uint64_t size
     return window;
 }
 
+/* A window on `size` bytes of an enclosing routine's frame (a decoder's state in its caller's
+ * locals), memory NULL unless the dword-wide reach of every access in it lies in one such frame
+ * (vertrix_lift_frame_hook) and outside the port's own frame and every flat block: lift_load and
+ * lift_store then end at the same bytes. Valid while that frame lives. */
+static inline PortWindow port_frame_window(Port *port, uint32_t address, uint32_t size)
+{
+    PortWindow window = {address, 0, NULL};
+    const LiftEnv *env = &port->env;
+    uint32_t reach = size + 3; /* a load there reads a whole dword */
+    unsigned i;
+    if (size == 0 || reach < size || address + reach < address || vertrix_lift_frame_hook == NULL ||
+        (address < env->high && address + reach > env->low) ||
+        (address < env->passed_high && address + reach > env->passed_low))
+    {
+        return window;
+    }
+    for (i = 0; i < 3; i++)
+    {
+        const LiftFlatRegion *region = &vertrix_lift_flat[i];
+        if (region->memory != NULL && *region->memory != NULL &&
+            address < region->base + *region->top && address + reach > region->base)
+        {
+            return window;
+        }
+    }
+    window.memory = vertrix_lift_frame_hook(address, reach);
+    window.size = window.memory != NULL ? size : 0;
+    return window;
+}
+
 /* The memory of the `size` bytes at `address` when they lie in the window, else NULL. */
 static inline uint8_t *port_window_at(const PortWindow *window, uint32_t address, uint64_t size)
 {

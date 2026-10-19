@@ -14,6 +14,9 @@ enum
     BUFFER_SECOND = 0x440,
     BUFFER_ROW = 0x40,
     WINDOW_END = 0x52e7c4,
+    /* The span of the window's table the filter reads (0x52e7c4 less 16 phases, 31 rows on). */
+    WINDOW_TABLE = 0x52e700,
+    WINDOW_TABLE_BYTES = 0x1100,
     WINDOW_ROW = 0x80,
     OUTPUT_STEP = 0x4056b0,
     OUTPUT_ADVANCE = 0x80,
@@ -384,6 +387,8 @@ uint32_t vertrix_port_synth_filter(PORT_SIGNATURE)
     uint32_t step;
     uint32_t row;
     unsigned tap;
+    PortWindow buffers;
+    PortWindow table;
     port_open(&synth.port, calls, services, globals, entry);
     synth.output = port_u32(&synth.port, offset_address, 0) + entry->ebx;
     synth.clipped = 0;
@@ -420,18 +425,23 @@ uint32_t vertrix_port_synth_filter(PORT_SIGNATURE)
                   channel + BUFFER_SECOND + phase * 4 + 4, synth.ebx, synth.ecx);
     }
     port_set32(&synth.port, port_u32(&synth.port, 0, DECODER), DECODER_PHASE, phase);
+    /* Both halves of the channel's buffer, in the decoder the caller keeps in its frame, and the
+     * window's table, read in place. */
+    buffers = port_frame_window(&synth.port, channel, 2 * BUFFER_SECOND);
+    table = port_window(&synth.port, WINDOW_TABLE, WINDOW_TABLE_BYTES);
     window = WINDOW_END - start * 4;
     step = port_u32(&synth.port, 0, OUTPUT_STEP) * 2;
     /* The first 16 samples: the window's taps against the buffer's, alternately subtracted and
      * added. */
     for (row = TAPS; row != 0;)
     {
-        uint32_t sum = synth_product(&synth, port_u32(&synth.port, window, 0),
-                                     port_u32(&synth.port, buffer, 0));
+        uint32_t sum = synth_product(&synth, port_window_u32(&synth.port, &table, window, 0),
+                                     port_window_u32(&synth.port, &buffers, buffer, 0));
         for (tap = 1; tap < TAPS; tap++)
         {
-            uint32_t product = synth_product(&synth, port_u32(&synth.port, window, tap * 4),
-                                             port_u32(&synth.port, buffer, tap * 4));
+            uint32_t product =
+                synth_product(&synth, port_window_u32(&synth.port, &table, window, tap * 4),
+                              port_window_u32(&synth.port, &buffers, buffer, tap * 4));
             sum = synth_call(&synth, (tap & 1) ? SINGLE_SUBTRACT : SINGLE_ADD, sum, product);
         }
         synth_sample(&synth, sum);
@@ -443,13 +453,14 @@ uint32_t vertrix_port_synth_filter(PORT_SIGNATURE)
     }
     /* The middle sample: the even taps added. */
     {
-        uint32_t sum = synth_product(&synth, port_u32(&synth.port, window, 0),
-                                     port_u32(&synth.port, buffer, 0));
+        uint32_t sum = synth_product(&synth, port_window_u32(&synth.port, &table, window, 0),
+                                     port_window_u32(&synth.port, &buffers, buffer, 0));
         synth.ecx = sum;
         for (tap = 2; tap < TAPS; tap += 2)
         {
-            uint32_t product = synth_product(&synth, port_u32(&synth.port, window, tap * 4),
-                                             port_u32(&synth.port, buffer, tap * 4));
+            uint32_t product =
+                synth_product(&synth, port_window_u32(&synth.port, &table, window, tap * 4),
+                              port_window_u32(&synth.port, &buffers, buffer, tap * 4));
             sum = synth_call(&synth, SINGLE_ADD, sum, product);
         }
         synth_sample(&synth, sum);
@@ -464,14 +475,15 @@ uint32_t vertrix_port_synth_filter(PORT_SIGNATURE)
      * every product subtracted. */
     for (row = TAPS - 1; row != 0;)
     {
-        uint32_t sum =
-            synth_call(&synth, SINGLE_NEGATE, port_u32(&synth.port, window, -4u), synth.edx);
-        sum = synth_product(&synth, sum, port_u32(&synth.port, buffer, 0));
+        uint32_t sum = synth_call(&synth, SINGLE_NEGATE,
+                                  port_window_u32(&synth.port, &table, window, -4u), synth.edx);
+        sum = synth_product(&synth, sum, port_window_u32(&synth.port, &buffers, buffer, 0));
         for (tap = 1; tap < TAPS; tap++)
         {
             uint32_t at = tap == TAPS - 1 ? 0 : -4u - tap * 4;
-            uint32_t product = synth_product(&synth, port_u32(&synth.port, window, at),
-                                             port_u32(&synth.port, buffer, tap * 4));
+            uint32_t product =
+                synth_product(&synth, port_window_u32(&synth.port, &table, window, at),
+                              port_window_u32(&synth.port, &buffers, buffer, tap * 4));
             sum = synth_call(&synth, SINGLE_SUBTRACT, sum, product);
         }
         synth_sample(&synth, sum);
