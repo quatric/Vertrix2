@@ -834,14 +834,17 @@ play from 54.8 s to 35.5 s, with every frame identical.
 #### Second round
 
 Same setup, with a timing print per 3 s for each main-loop handler (title 0x41b820, play
-0x424990). Logic is the handler's own time per pass, without the 7 ms upload.
+0x424990). Logic is the handler's own time per pass, without the upload. The first print of
+each handler is left out, since the handler started partway through those 3 s. The numbers in
+the step list below, and in the commit messages up to `8bb7811`, still count it, so they run a
+little low.
 
 | | `6c94210` | `e248d8f` |
 |---|---|---|
 | Boot to the title menu | 304.1 s | 112.2 s |
-| Title menu | 8.5 passes/s, 82.5 ms logic | 17.3 passes/s, 45.6 ms logic |
-| Play | 16.8 passes/s, 42.8 ms logic | 34.7 passes/s, 20.6 ms logic |
-| Timer thread (sound mixing), per 3 s of play | 597 ms | 144 ms |
+| Title menu | 8.5 passes/s, 82.0 ms logic | 18.0 passes/s, 45.7 ms logic |
+| Play | 17.2 passes/s, 39.7 ms logic | 35.1 passes/s, 20.3 ms logic |
+| Timer thread (sound mixing), per 3 s of play | 616 ms | 140 ms |
 
 Boot to the title, step by step:
 
@@ -870,10 +873,55 @@ During play:
   window (play 34.7, title 17.3).
 
 Each step kept the host gate and a 12,000-tick `GAMEKEYS=1 CONTINUE=yes` play run frame for frame
-identical. The rest of the boot is still the MP3 decode itself. A title pass next spends most in
-the projection (0x43e320), the half-tone rectangle (0x492dc0) and the surface mask (0x4ab200). The
-per-pixel blend ports (0x48d720, 0x48d740, 0x48e190) are dispatched about 10,000 times a play
-pass, so `lift_begin` and the dispatcher cost more there than the work.
+identical.
+
+#### Third round
+
+| | `e248d8f` | `9958a66` |
+|---|---|---|
+| Boot to the title menu | 112.2 s | 93.1 s |
+| Title menu | 18.0 passes/s, 45.7 ms logic | 19.2 to 19.9 passes/s, 43.5 to 45.3 ms logic |
+| Play | 35.1 passes/s, 20.3 ms logic | 47.1 passes/s, 16.5 ms logic |
+| Upload of one frame | 7.0 ms | 3.7 ms |
+
+The title's logic time moves by about 2 ms from one run to the next, even with changes it never
+runs. What changed:
+
+- `08f9de9` (play to 36.3 passes/s): the row loops run the blend port the dispatcher would run for
+  the pixel operation at [0x5bb72c] as its own C, on the loop's Port, without the call boundary
+  (`vertrix_lifted_function`, `pixel_call`).
+- `92182d9` (play to 37.6, title 18.2): every port in `blend.c` reaches its globals through one
+  window.
+- `e36c7e4` (upload 7.0 ms to 3.7 ms, play to 43.9): the frame texture is packed two pixels to a
+  word for the frame's own byte order.
+- `8bb7811` (play to 46.0, title 19.0): the BltFast and the Flip of every frame copy the whole
+  surface in one run, through `lfd`/`stfd` on the Wii.
+- `b11f221` (boot 112.0 s to 101.6 s): the synthesis filter (0x405720) reads its buffers in
+  place. They lie in the decoder, a local of 0x48b2f0, which every load used to reach by walking
+  the frames (`port_frame_window`).
+- `7ae023c` (boot to 94.0 s), `d1de7e4` (to 93.1 s): the same for the synthesis DCT (0x404730)
+  and the long IMDCT (0x4088e0) (`PortWindows`).
+- `57402b4` (title to 19.9): the call-free blend loops (the half rectangle 0x492dc0, the
+  rectangle fills, the alpha columns, the image blits, the surface mask 0x4ab200) reach pixels
+  and tables through windows on the whole flat blocks (`port_windows_flat`).
+- `9958a66` (play to 47.1): the same for the row loops, whose rare calls out close the windows
+  and open them again.
+
+Tried and left out:
+
+- A globals window in every Port, checked by `port_u8` to `port_set32`: the title got 3 ms slower
+  and the boot 2.4 s. The check on every other access costs more than it saves.
+- Running the single multiply and add in `lift_call_arguments` without the hook: play got
+  slower, from the code at every call site. In the decoder's own helpers it gained nothing.
+- Caching the decoded sounds on the SD card. The decode allocates and frees through the host and
+  copies through it (0x4eb5e0), changing state that no store hook sees. An exact replay would need
+  a snapshot of all emulated memory around each of the 63 decodes.
+- Not copying the back buffer on Flip. The emulated Flip keeps the back buffer's contents, and the
+  game locks the back buffer again before the primary is next read, so the copy cannot be put off.
+
+The rest of the boot (0x41a6c0, about 59 s) is the decoder's emulated float arithmetic: the
+synthesis filter alone is 46% of it. A title pass spends most in the actor gate (0x4ae3e0), the
+projection (0x43e320, mostly its float calls) and the surface blits.
 
 ## Clean ports
 
