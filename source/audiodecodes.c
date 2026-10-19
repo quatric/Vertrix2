@@ -79,6 +79,7 @@ typedef struct Dct
     uint32_t frame;
     /* The samples, both work buffers and both outputs in place where they can be (dct_window). */
     PortWindow windows[5];
+    PortWindow globals; /* the image's globals, for port_single */
 } Dct;
 
 /* A window on a buffer in an enclosing frame or a flat block, or none. */
@@ -123,7 +124,7 @@ static void dct_store(Dct *dct, uint32_t base, uint32_t offset, uint32_t value)
 
 static uint32_t dct_call(Dct *dct, uint32_t target, uint32_t eax, uint32_t edx)
 {
-    dct->result = port_call(&dct->port, target, eax, edx, dct->first, dct->second);
+    dct->result = port_single(&dct->port, &dct->globals, target, eax, edx, dct->first, dct->second);
     dct->edx = vertrix_lift_edx;
     return dct->result;
 }
@@ -222,6 +223,7 @@ uint32_t vertrix_port_synth_dct(PORT_SIGNATURE)
     dct.first = entry->ebx;
     dct.second = entry->ecx;
     dct.edx = entry->edx;
+    dct.globals = port_window(&dct.port, 0x503ea0, 8);
     dct.windows[0] = dct_window(&dct.port, samples, DCT_POINTS * 4);
     dct.windows[1] = dct_window(&dct.port, dct.first, DCT_POINTS * 4);
     dct.windows[2] = dct_window(&dct.port, dct.second, DCT_POINTS * 4);
@@ -376,11 +378,13 @@ typedef struct Synth
     uint32_t edx;
     uint32_t output;
     uint32_t clipped;
+    PortWindow globals; /* the image's globals, for port_single */
 } Synth;
 
 static uint32_t synth_call(Synth *synth, uint32_t target, uint32_t eax, uint32_t edx)
 {
-    uint32_t result = port_call(&synth->port, target, eax, edx, synth->ebx, synth->ecx);
+    uint32_t result =
+        port_single(&synth->port, &synth->globals, target, eax, edx, synth->ebx, synth->ecx);
     synth->edx = vertrix_lift_edx;
     return result;
 }
@@ -437,6 +441,7 @@ uint32_t vertrix_port_synth_filter(PORT_SIGNATURE)
     PortWindow buffers;
     PortWindow table;
     port_open(&synth.port, calls, services, globals, entry);
+    synth.globals = port_window(&synth.port, 0x503ea0, 8);
     synth.output = port_u32(&synth.port, offset_address, 0) + entry->ebx;
     synth.clipped = 0;
     decoder = port_u32(&synth.port, 0, DECODER);

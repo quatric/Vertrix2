@@ -1,6 +1,7 @@
 #ifndef VERTRIX_PORT_H
 #define VERTRIX_PORT_H
 #include "lift_runtime.h"
+#include "rtl_single_multiply.h"
 
 /* Support for the clean ports: original routines rewritten by hand as ordinary C, which the lifted
  * dispatcher runs in place of their lifted copies (PORTS in tools/dispatch_boundaries.py).
@@ -450,6 +451,29 @@ static inline uint32_t port_call(Port *port, uint32_t target, uint32_t eax, uint
                                  uint32_t ebx, uint32_t ecx)
 {
     return lift_call_arguments(&port->env, target, eax, edx, ebx, ecx, NULL, 0);
+}
+
+/* port_call for a single-precision RTL helper (0x4d8177 multiply, 0x4d80a6 add, 0x4d809c
+ * subtract) from a loop that runs it many times. When the host serves it by the RTL's software
+ * routine (vertrix_lift_single_software) and the helper cache holds that routine, the routine's
+ * arithmetic runs here, with the eax, edx and vertrix_lift_edx the call leaves; anything else,
+ * an overflow among them, is the call. */
+static inline uint32_t port_single(Port *port, const PortWindow *globals, uint32_t target,
+                                   uint32_t eax, uint32_t edx, uint32_t ebx, uint32_t ecx)
+{
+    uint32_t result, out;
+    if (vertrix_lift_single_software && vertrix_lift_arithmetic_hook != NULL &&
+        (target == 0x4d8177 ? port_window_u32(port, globals, 0, 0x503ea4) == 0x4d8198 &&
+                                  vertrix_rtl_single_multiply_quick(eax, edx, ecx, &result, &out)
+         : target == 0x4d80a6 || target == 0x4d809c
+             ? port_window_u32(port, globals, 0, 0x503ea0) == 0x4d80d5 &&
+                   vertrix_rtl_single_add_quick(eax, edx, target == 0x4d809c, &result, &out)
+             : 0))
+    {
+        vertrix_lift_edx = out;
+        return result;
+    }
+    return port_call(port, target, eax, edx, ebx, ecx);
 }
 
 /* A call handing the callee every register (some take arguments in esi, edi or ebp: 0x4e509c passes

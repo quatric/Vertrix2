@@ -44,11 +44,12 @@ typedef struct Imdct
     uint32_t edx;
     /* The input, both overlaps, the window, the output and the constants in place. */
     PortWindows windows;
+    PortWindow globals; /* the image's globals, for port_single */
 } Imdct;
 
 static uint32_t op(Imdct *m, uint32_t target, uint32_t eax, uint32_t edx)
 {
-    m->result = port_call(&m->port, target, eax, edx, m->ebx, m->ecx);
+    m->result = port_single(&m->port, &m->globals, target, eax, edx, m->ebx, m->ecx);
     m->edx = vertrix_lift_edx;
     return m->result;
 }
@@ -178,6 +179,7 @@ uint32_t vertrix_port_imdct_long(PORT_SIGNATURE)
     m.ecx = entry->ecx;
     m.output = entry->arguments[0];
     m.edx = entry->edx;
+    m.globals = port_window(&m.port, 0x503ea0, 8);
     m.windows.count = 0;
     port_windows_add(&m.port, &m.windows, m.input, SAMPLES * 4);
     port_windows_add(&m.port, &m.windows, m.previous, SAMPLES * 4);

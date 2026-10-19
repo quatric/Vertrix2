@@ -100,6 +100,10 @@ __attribute__((weak)) uint32_t (*vertrix_lift_arithmetic_hook)(void *context, ui
                                                                uint32_t ebx, uint32_t ecx,
                                                                uint32_t *out);
 __attribute__((weak)) void *vertrix_lift_arithmetic_context;
+/* Set by the host with the hook when the hook serves the single multiply (0x4d8177), add (0x4d80a6)
+ * and subtract (0x4d809c) by the RTL's software routines whenever the helper cache holds them,
+ * 0x4d8198 at 0x503ea4 and 0x4d80d5 at 0x503ea0 (port_single). */
+__attribute__((weak)) int vertrix_lift_single_software;
 
 static inline int lift_arithmetic_target(uint32_t target)
 {

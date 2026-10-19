@@ -1,11 +1,6 @@
 #include "rtl_float.h"
 #include <stddef.h>
 
-static uint32_t rol(uint32_t value, unsigned count)
-{
-    return (value << count) | (value >> (32 - count));
-}
-
 /* Exact unsigned magnitude in units of the smallest single subnormal, 2^-149. */
 typedef struct
 {
@@ -209,107 +204,24 @@ static uint32_t hardware_add(uint32_t a, uint32_t b, uint32_t control)
 
 static int software_add(VertrixRtlFloatState *s, VertrixRtlFloatCall call, void *context)
 {
-    uint32_t a = s->eax, b = s->edx;
-    uint8_t signs = (uint8_t)((a >> 31) * 5 + (b >> 31));
-    a = rol(a << 1, 8);
-    b = rol(b << 1, 8);
-    uint8_t exponent_a = (uint8_t)a, exponent_b = (uint8_t)b;
-    a = 0x80000000u | ((a & 0xffffff00u) >> 1);
-    b = 0x80000000u | ((b & 0xffffff00u) >> 1);
-    uint8_t exponent = exponent_a;
-    uint8_t gap = (uint8_t)(exponent_a - exponent_b);
-    if (exponent_a != exponent_b)
+    uint32_t a, b;
+    if (vertrix_rtl_single_add_values(s->eax, s->edx, &a, &b))
     {
-        if (exponent_a < exponent_b)
-        {
-            exponent = exponent_b;
-            gap = (uint8_t)(exponent_b - exponent_a);
-            uint32_t swap = a;
-            a = b;
-            b = swap;
-            signs ^= 4;
-        }
-        b = (int8_t)gap < 32 ? b >> (gap & 31) : 0;
+        s->eax = a;
+        s->edx = b;
+        return 1;
     }
-    unsigned opposite = signs & 1;
-    signs >>= 1;
-    if (!opposite)
-    {
-        uint32_t sum = a + b;
-        unsigned carry = sum < a;
-        a = sum;
-        if (carry)
-        {
-            a = 0x80000000u | (a >> 1);
-            exponent++;
-            if (!exponent)
-            {
-                a = ((uint32_t)(signs & 1) << 31) | (a >> 1);
-                s->eax = a;
-                s->edx = b;
-                if (!call)
-                {
-                    return 0;
-                }
-                uint32_t saved = a;
-                call(0x4dae94, s, context);
-                s->eax = 0x84;
-                call(0x4e7280, s, context);
-                s->eax = (saved & 0x80000000u) | 0x7f800000u;
-                return 1;
-            }
-        }
-    }
-    else
-    {
-        signs >>= 1;
-        uint32_t difference = a - b;
-        if (a < b)
-        {
-            signs++;
-            a = 0u - difference;
-        }
-        else
-        {
-            a = difference;
-            if (!a)
-            {
-                s->eax = 0;
-                s->edx = b;
-                return 1;
-            }
-        }
-    }
-    uint32_t rounded = a + 0x80;
-    unsigned carry = rounded < a;
-    a = rounded & 0xffffff00u;
-    if (carry)
-    {
-        exponent++;
-    }
-    else
-    {
-        for (;;)
-        {
-            carry = a >> 31;
-            a <<= 1;
-            if (carry)
-            {
-                break;
-            }
-            exponent--;
-            if (!exponent)
-            {
-                s->eax = 0;
-                s->edx = b;
-                return 1;
-            }
-        }
-    }
-    a = (a & 0xffffff00u) | exponent;
-    a = rol(a, 24);
-    s->eax = ((uint32_t)(signs & 1) << 31) | (a >> 1);
+    s->eax = a;
     s->edx = b;
+    if (!call)
+    {
+        return 0;
+    }
+    uint32_t saved = a;
+    call(0x4dae94, s, context);
+    s->eax = 0x84;
+    call(0x4e7280, s, context);
+    s->eax = (saved & 0x80000000u) | 0x7f800000u;
     return 1;
 }
 
@@ -369,26 +281,7 @@ static int single(VertrixRtlFloatState *state, VertrixRtlFloatCall call, void *c
 
 int vertrix_rtl_single_add_software(VertrixRtlFloatState *state, int subtract)
 {
-    VertrixRtlFloatState s = *state;
-    if (subtract && s.edx)
-    {
-        s.edx ^= 0x80000000u;
-    }
-    if (!s.edx || !s.eax)
-    {
-        if (!s.eax)
-        {
-            s.eax = s.edx;
-        }
-        *state = s;
-        return 1;
-    }
-    if (!software_add(&s, NULL, NULL))
-    {
-        return 0;
-    }
-    *state = s;
-    return 1;
+    return vertrix_rtl_single_add_quick(state->eax, state->edx, subtract, &state->eax, &state->edx);
 }
 
 int vertrix_rtl_single_subtract_full(VertrixRtlFloatState *state, VertrixRtlFloatCall call,

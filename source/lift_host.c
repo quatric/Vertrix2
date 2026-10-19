@@ -1985,6 +1985,7 @@ void lift_host_init(LiftHost *host, uint8_t *image, const uint8_t *original, uin
     {
         vertrix_lift_arithmetic_hook = host_arithmetic_hook;
         vertrix_lift_arithmetic_context = host;
+        vertrix_lift_single_software = 1;
     }
     vertrix_mpeg_tables_memo = 1;
     vertrix_lift_frame_hook = host_frame_bytes;

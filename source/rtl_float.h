@@ -33,4 +33,134 @@ int vertrix_rtl_single_add_full(VertrixRtlFloatState *state, VertrixRtlFloatCall
  * helper 0x4d80d5: the registers of the original's outputs in state, its cached helpers untouched.
  * Returns zero, the state unchanged, where the result overflows and needs the error boundary. */
 int vertrix_rtl_single_add_software(VertrixRtlFloatState *state, int subtract);
+
+static inline uint32_t vertrix_rtl_rotate(uint32_t value, unsigned shift)
+{
+    return (value << shift) | (value >> (32 - shift));
+}
+
+/* The arithmetic of the software add helper 0x4d80d5 on the nonzero singles a and b: 1 with the
+ * sum in *eax and the edx it leaves in *edx; 0 where the sum overflows, with the eax and edx its
+ * error tail starts from. */
+static inline int vertrix_rtl_single_add_values(uint32_t a, uint32_t b, uint32_t *eax,
+                                                uint32_t *edx)
+{
+    uint8_t signs = (uint8_t)((a >> 31) * 5 + (b >> 31));
+    a = vertrix_rtl_rotate(a << 1, 8);
+    b = vertrix_rtl_rotate(b << 1, 8);
+    uint8_t exponent_a = (uint8_t)a, exponent_b = (uint8_t)b;
+    a = 0x80000000u | ((a & 0xffffff00u) >> 1);
+    b = 0x80000000u | ((b & 0xffffff00u) >> 1);
+    uint8_t exponent = exponent_a;
+    uint8_t gap = (uint8_t)(exponent_a - exponent_b);
+    if (exponent_a != exponent_b)
+    {
+        if (exponent_a < exponent_b)
+        {
+            exponent = exponent_b;
+            gap = (uint8_t)(exponent_b - exponent_a);
+            uint32_t swap = a;
+            a = b;
+            b = swap;
+            signs ^= 4;
+        }
+        b = (int8_t)gap < 32 ? b >> (gap & 31) : 0;
+    }
+    unsigned opposite = signs & 1;
+    signs >>= 1;
+    if (!opposite)
+    {
+        uint32_t sum = a + b;
+        unsigned carry = sum < a;
+        a = sum;
+        if (carry)
+        {
+            a = 0x80000000u | (a >> 1);
+            exponent++;
+            if (!exponent)
+            {
+                *eax = ((uint32_t)(signs & 1) << 31) | (a >> 1);
+                *edx = b;
+                return 0;
+            }
+        }
+    }
+    else
+    {
+        signs >>= 1;
+        uint32_t difference = a - b;
+        if (a < b)
+        {
+            signs++;
+            a = 0u - difference;
+        }
+        else
+        {
+            a = difference;
+            if (!a)
+            {
+                *eax = 0;
+                *edx = b;
+                return 1;
+            }
+        }
+    }
+    uint32_t rounded = a + 0x80;
+    unsigned carry = rounded < a;
+    a = rounded & 0xffffff00u;
+    if (carry)
+    {
+        exponent++;
+    }
+    else
+    {
+        for (;;)
+        {
+            carry = a >> 31;
+            a <<= 1;
+            if (carry)
+            {
+                break;
+            }
+            exponent--;
+            if (!exponent)
+            {
+                *eax = 0;
+                *edx = b;
+                return 1;
+            }
+        }
+    }
+    a = (a & 0xffffff00u) | exponent;
+    a = vertrix_rtl_rotate(a, 24);
+    *eax = ((uint32_t)(signs & 1) << 31) | (a >> 1);
+    *edx = b;
+    return 1;
+}
+
+/* vertrix_rtl_single_add_software on registers: the zero early returns, then 0x4d80d5. Returns
+ * zero, *eax and *edx unchanged, where the sum overflows. */
+static inline int vertrix_rtl_single_add_quick(uint32_t eax, uint32_t edx, int subtract,
+                                               uint32_t *out_eax, uint32_t *out_edx)
+{
+    uint32_t a, b;
+    if (subtract && edx)
+    {
+        edx ^= 0x80000000u;
+    }
+    if (!edx || !eax)
+    {
+        *out_eax = eax ? eax : edx;
+        *out_edx = edx;
+        return 1;
+    }
+    if (!vertrix_rtl_single_add_values(eax, edx, &a, &b))
+    {
+        return 0;
+    }
+    *out_eax = a;
+    *out_edx = b;
+    return 1;
+}
+
 #endif
