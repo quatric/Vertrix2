@@ -17,6 +17,7 @@ int lift_host_trace_files;
 #include "rtl_float.h"
 #include "rtl_single_divide.h"
 #include "rtl_single_multiply.h"
+#include "rtlmpegtableinits.h"
 
 static int in_image(uint32_t address, unsigned size)
 {
@@ -1933,6 +1934,7 @@ void lift_host_init(LiftHost *host, uint8_t *image, const uint8_t *original, uin
         vertrix_lift_arithmetic_hook = host_arithmetic_hook;
         vertrix_lift_arithmetic_context = host;
     }
+    vertrix_mpeg_tables_memo = 1;
     {
         static const uint32_t image_size = LIFT_HOST_IMAGE_SIZE;
         vertrix_lift_flat[0] =

@@ -5,5 +5,7 @@
 
 /* Builds the MPEG layer III decoder's tables (mpg123's init_layer3); eax is the subband limit. */
 uint32_t vertrix_port_mpeg_tables_init_406170(PORT_SIGNATURE);
+/* Set by the host: a repeat with the same registers replays the first call's stores. */
+extern int vertrix_mpeg_tables_memo;
 
 #endif

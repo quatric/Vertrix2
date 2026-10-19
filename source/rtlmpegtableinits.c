@@ -80,6 +80,43 @@ enum
     N_SLEN2 = 0x51f020,
 };
 
+/* vertrix_mpeg_tables_memo: the decoder calls the routine again for every MP3 file, and every call
+ * with the same registers builds the same tables (the soft-float routines depend only on their
+ * operands and the helper cache, set by then; a host check over all 63 calls of the startup found
+ * the memory after each repeat equal to the memory before it). So the first call's stores are
+ * kept, and a repeat replays them instead of computing them again. */
+enum
+{
+    MEMO_STORES = 16384
+};
+
+static struct
+{
+    int recording;
+    int ready;
+    uint32_t eax, edx, ebx, ecx;
+    LiftFlags flags;
+    unsigned count;
+    uint32_t address[MEMO_STORES];
+    uint32_t value[MEMO_STORES];
+} memo;
+
+static void table_set32(Port *port, uint32_t base, uint32_t offset, uint32_t value)
+{
+    port_set32(port, base, offset, value);
+    if (memo.recording)
+    {
+        if (memo.count == MEMO_STORES)
+        {
+            memo.recording = 0;
+            return;
+        }
+        memo.address[memo.count] = base + offset;
+        memo.value[memo.count] = value;
+        memo.count++;
+    }
+}
+
 /* A double as the runtime passes it: low and high words. */
 typedef struct
 {
@@ -163,7 +200,7 @@ static uint32_t to_float(Math *m, Double value)
 
 static void store(Math *m, uint32_t at, Double value)
 {
-    port_set32(m->port, at, 0, to_float(m, value));
+    table_set32(m->port, at, 0, to_float(m, value));
 }
 
 /* cos(n * pi / divisor) */
@@ -210,12 +247,12 @@ static void windows(Math *m)
         uint32_t single;
         Double value = divide(m, half_sin(m, i + 1, PI_72), cos_pi(m, i + 19, D72));
         single = to_float(m, value);
-        port_set32(m->port, WINDOWS + 0x90 + 4 * k, 0, single);
-        port_set32(m->port, WINDOWS + 4 * k, 0, single);
+        table_set32(m->port, WINDOWS + 0x90 + 4 * k, 0, single);
+        table_set32(m->port, WINDOWS + 4 * k, 0, single);
         value = divide(m, half_sin(m, i + 37, PI_72), cos_pi(m, i + 55, D72));
         single = to_float(m, value);
-        port_set32(m->port, WINDOWS + 0x1f8 + 4 * k, 0, single);
-        port_set32(m->port, WINDOWS + 0x48 + 4 * k, 0, single);
+        table_set32(m->port, WINDOWS + 0x1f8 + 4 * k, 0, single);
+        table_set32(m->port, WINDOWS + 0x48 + 4 * k, 0, single);
     }
     for (uint32_t k = 0; k < 6; k++)
     {
@@ -225,8 +262,8 @@ static void windows(Math *m)
         store(m, WINDOWS + 0x1e0 + at, divide(m, HALF, cos_pi(m, i + 43, D72)));
         const Double c = cos_pi(m, i + 67, D72);
         store(m, WINDOWS + 0xf0 + at, divide(m, half_sin(m, i + 13, PI_24), c));
-        port_set32(m->port, WINDOWS + 0x1b0 + at, 0, 0);
-        port_set32(m->port, WINDOWS + 0x108 + at, 0, 0);
+        table_set32(m->port, WINDOWS + 0x1b0 + at, 0, 0);
+        table_set32(m->port, WINDOWS + 0x108 + at, 0, 0);
         m->edx = 0; /* the zero stored */
         const Double d = cos_pi(m, i + 31, D72);
         store(m, WINDOWS + 0x1c8 + at, divide(m, half_sin(m, i + 1, PI_24), d));
@@ -273,15 +310,15 @@ static void odd_windows(Math *m)
         const uint32_t window = k * WINDOW_BYTES;
         for (int32_t i = 0; i < count; i += 2)
         {
-            port_set32(m->port, WINDOWS_ODD + window + 4 * i, 0,
-                       port_u32(m->port, WINDOWS + window + 4 * i, 0));
+            table_set32(m->port, WINDOWS_ODD + window + 4 * i, 0,
+                        port_u32(m->port, WINDOWS + window + 4 * i, 0));
         }
         int32_t i = 1;
         for (; i < count; i += 2)
         {
-            port_set32(m->port, WINDOWS_ODD + window + 4 * i, 0,
-                       port_call(m->port, NEGATE, port_u32(m->port, WINDOWS + window + 4 * i, 0), 0,
-                                 0, 0));
+            table_set32(m->port, WINDOWS_ODD + window + 4 * i, 0,
+                        port_call(m->port, NEGATE, port_u32(m->port, WINDOWS + window + 4 * i, 0),
+                                  0, 0, 0));
         }
         m->ebx = 4 * k;
         m->ecx = (uint32_t)i;
@@ -336,7 +373,7 @@ static int32_t s16(Port *port, uint32_t at)
 
 static uint32_t put(Port *port, uint32_t at, uint32_t value)
 {
-    port_set32(port, at, 0, value);
+    table_set32(port, at, 0, value);
     return at + 4;
 }
 
@@ -367,7 +404,7 @@ static void band_maps(Port *port, uint32_t limit)
         const uint32_t maps = MAP + 12 * j;
         /* Mixed blocks: eight long bands, then the short ones from band 3. */
         uint32_t out = MAP_MIXED + j * MAP_MIXED_BYTES;
-        port_set32(port, maps, 0, out);
+        table_set32(port, maps, 0, out);
         uint32_t start = 0;
         for (uint32_t i = 0; i < 8; i++)
         {
@@ -379,21 +416,21 @@ static void band_maps(Port *port, uint32_t limit)
             start += (uint32_t)diff;
         }
         out = short_bands(port, out, info + BAND_SHORT_DIFF + 6, 3, start);
-        port_set32(port, ends, 0, out);
+        table_set32(port, ends, 0, out);
         /* Short blocks. */
         out = MAP_SHORT + j * MAP_SHORT_BYTES;
-        port_set32(port, maps, 4, out);
+        table_set32(port, maps, 4, out);
         out = short_bands(port, out, info + BAND_SHORT_DIFF, 0, 0);
-        port_set32(port, ends, 4, out);
+        table_set32(port, ends, 4, out);
         /* Long blocks: width and band. */
         out = MAP_LONG + j * MAP_LONG_BYTES;
-        port_set32(port, maps, 8, out);
+        table_set32(port, maps, 8, out);
         for (uint32_t i = 0; i < 22; i++)
         {
             out = put(port, out, (uint32_t)(s16(port, info + BAND_LONG_DIFF + 2 * i) >> 1));
             out = put(port, out, i);
         }
-        port_set32(port, ends, 8, out);
+        table_set32(port, ends, 8, out);
     }
     /* The last subband of each band, at most the limit. */
     for (uint32_t j = 0; j < BANDS; j++)
@@ -406,7 +443,7 @@ static void band_maps(Port *port, uint32_t limit)
             {
                 last = (int32_t)limit;
             }
-            port_set32(port, LONG_LIMIT + j * LONG_LIMIT_BYTES, 4 * i, (uint32_t)last);
+            table_set32(port, LONG_LIMIT + j * LONG_LIMIT_BYTES, 4 * i, (uint32_t)last);
         }
         for (uint32_t i = 0; i < 14; i++)
         {
@@ -415,7 +452,7 @@ static void band_maps(Port *port, uint32_t limit)
             {
                 last = (int32_t)limit;
             }
-            port_set32(port, SHORT_LIMIT + j * SHORT_LIMIT_BYTES, 4 * i, (uint32_t)last);
+            table_set32(port, SHORT_LIMIT + j * SHORT_LIMIT_BYTES, 4 * i, (uint32_t)last);
         }
     }
 }
@@ -429,8 +466,8 @@ static void scale_lengths(Port *port)
         {
             for (uint32_t k = 0; k < 6; k++)
             {
-                port_set32(port, N_SLEN2 + 0x800 + 0x90 * i + 0x18 * j, 4 * k,
-                           i | (j << 3) | (k << 6) | 0x3000);
+                table_set32(port, N_SLEN2 + 0x800 + 0x90 * i + 0x18 * j, 4 * k,
+                            i | (j << 3) | (k << 6) | 0x3000);
             }
         }
     }
@@ -440,8 +477,8 @@ static void scale_lengths(Port *port)
         {
             for (uint32_t k = 0; k < 4; k++)
             {
-                port_set32(port, N_SLEN2 + 0xad0 + 0x40 * i + 0x10 * j, 4 * k,
-                           i | (j << 3) | (k << 6) | 0x4000);
+                table_set32(port, N_SLEN2 + 0xad0 + 0x40 * i + 0x10 * j, 4 * k,
+                            i | (j << 3) | (k << 6) | 0x4000);
             }
         }
     }
@@ -450,8 +487,8 @@ static void scale_lengths(Port *port)
         for (uint32_t j = 0; j < 3; j++)
         {
             const uint32_t value = i | (j << 3);
-            port_set32(port, N_SLEN2 + 0xbd0 + 0xc * i, 4 * j, value | 0x5000);
-            port_set32(port, I_SLEN2 + 0xc * i, 4 * j, value | 0xa000);
+            table_set32(port, N_SLEN2 + 0xbd0 + 0xc * i, 4 * j, value | 0x5000);
+            table_set32(port, I_SLEN2 + 0xc * i, 4 * j, value | 0xa000);
         }
     }
     for (uint32_t i = 0; i < 5; i++)
@@ -462,8 +499,8 @@ static void scale_lengths(Port *port)
             {
                 for (uint32_t l = 0; l < 4; l++)
                 {
-                    port_set32(port, N_SLEN2 + 0x140 * i + 0x40 * j + 0x10 * k, 4 * l,
-                               i | (j << 3) | (k << 6) | (l << 9));
+                    table_set32(port, N_SLEN2 + 0x140 * i + 0x40 * j + 0x10 * k, 4 * l,
+                                i | (j << 3) | (k << 6) | (l << 9));
                 }
             }
         }
@@ -474,8 +511,8 @@ static void scale_lengths(Port *port)
         {
             for (uint32_t k = 0; k < 4; k++)
             {
-                port_set32(port, N_SLEN2 + 0x640 + 0x50 * i + 0x10 * j, 4 * k,
-                           i | (j << 3) | (k << 6) | 0x1000);
+                table_set32(port, N_SLEN2 + 0x640 + 0x50 * i + 0x10 * j, 4 * k,
+                            i | (j << 3) | (k << 6) | 0x1000);
             }
         }
     }
@@ -483,10 +520,24 @@ static void scale_lengths(Port *port)
 
 /* Original 0x406170 (eax = the subband limit). The soft-float routines that take one operand still
  * read ebx:ecx, as the original leaves them; the first conversion gets the caller's ecx. */
+int vertrix_mpeg_tables_memo;
+
 uint32_t vertrix_port_mpeg_tables_init_406170(PORT_SIGNATURE)
 {
     Port port;
     port_open(&port, calls, services, globals, entry);
+    if (memo.ready && entry->eax == memo.eax && entry->edx == memo.edx && entry->ebx == memo.ebx &&
+        entry->ecx == memo.ecx)
+    {
+        for (unsigned i = 0; i < memo.count; i++)
+        {
+            port_set32(&port, memo.address[i], 0, memo.value[i]);
+        }
+        vertrix_lift_fl = memo.flags;
+        return port_return(&port, 0, 0);
+    }
+    memo.recording = vertrix_mpeg_tables_memo && !memo.ready;
+    memo.count = 0;
     Math m = {&port, entry->edx, entry->ebx, entry->ecx};
     powers(&m);
     windows(&m);
@@ -495,5 +546,15 @@ uint32_t vertrix_port_mpeg_tables_init_406170(PORT_SIGNATURE)
     stereo_ratios(&m);
     band_maps(&port, entry->eax);
     scale_lengths(&port);
+    if (memo.recording && !port.env.failed)
+    {
+        memo.ready = 1;
+        memo.eax = entry->eax;
+        memo.edx = entry->edx;
+        memo.ebx = entry->ebx;
+        memo.ecx = entry->ecx;
+        memo.flags = vertrix_lift_fl;
+    }
+    memo.recording = 0;
     return port_return(&port, 0, 0);
 }
