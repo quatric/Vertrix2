@@ -158,6 +158,15 @@ static Walk walk_rows(const Blit *blit, Conversion conversion, uint32_t target_g
     for (uint32_t height = blit->height; height != 0 && !port->env.failed; height--)
     {
         uint32_t count = blit->width;
+        if (conversion == COPY_32 && target_step == 4 && source_step == 4 && !port->env.failed &&
+            port_move_dwords(port, walk.target, walk.source, count))
+        {
+            /* the row in place: the same bytes the loop below leaves */
+            walk.target += count * 4;
+            walk.source += count * 4;
+            walk.pixels = 1;
+            count = 0;
+        }
         for (; count != 0 && !port->env.failed; count--)
         {
             convert(port, conversion, walk.target, walk.source);
@@ -192,6 +201,14 @@ static Walk walk_dwords(const Blit *blit, uint32_t target_global, uint32_t sourc
         uint32_t to = walk.target;
         uint32_t from = walk.source;
         uint32_t left = count;
+        if (!port->env.failed && port_move_dwords(port, to, from, left))
+        {
+            /* the row in place: the same bytes the loop below leaves */
+            to += left * 4;
+            from += left * 4;
+            walk.pixels = 1;
+            left = 0;
+        }
         for (; left != 0 && !port->env.failed; left--)
         {
             port_set32(port, to, 0, port_u32(port, from, 0));

@@ -749,10 +749,16 @@ uint32_t vertrix_port_mix_clamp(PORT_SIGNATURE)
     uint32_t out = entry->arguments[0];
     uint32_t in = entry->arguments[1];
     int32_t count = (int32_t)entry->arguments[2];
+    PortWindow from;
+    PortWindow to;
     port_open(&port, calls, services, globals, entry);
+    /* The mix and the samples in place where they can be (one value at least: the loop tests its
+     * count at the end). */
+    from = port_window(&port, in, (uint64_t)(count > 0 ? count : 1) * 4);
+    to = port_window(&port, out, (uint64_t)(count > 0 ? count : 1) * 2);
     do
     {
-        int32_t value = (int32_t)port_u32(&port, in, 0);
+        int32_t value = (int32_t)port_window_u32(&port, &from, in, 0);
         if (value < -0x8000)
         {
             value = -0x8000;
@@ -761,7 +767,7 @@ uint32_t vertrix_port_mix_clamp(PORT_SIGNATURE)
         {
             value = 0x7fff;
         }
-        port_set16(&port, out, 0, (uint32_t)value);
+        port_window_set16(&port, &to, out, 0, (uint32_t)value);
         in += 4;
         out += 2;
     } while (--count > 0);

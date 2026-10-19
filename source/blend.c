@@ -882,13 +882,16 @@ uint32_t vertrix_port_blit_keyed(PORT_SIGNATURE)
     target_skip = port_u32(&port, 0, TARGET_SKIP);
     for (; runs != 0; runs = (runs - 1) & 0xffff)
     {
+        /* Each row's pixels in place where they can be. */
+        PortWindow from = port_window(&port, source, (uint64_t)run * PIXEL_SIZE);
+        PortWindow to = port_window(&port, target, (uint64_t)run * PIXEL_SIZE);
         uint32_t left;
         for (left = run; left != 0; left = (left - 1) & 0xffff)
         {
-            uint32_t pixel = port_u32(&port, source, 0);
+            uint32_t pixel = port_window_u32(&port, &from, source, 0);
             if ((pixel >> KEY_SHIFT) != 0)
             {
-                port_set32(&port, target, 0, pixel);
+                port_window_set32(&port, &to, target, 0, pixel);
             }
             source += PIXEL_SIZE;
             target += PIXEL_SIZE;

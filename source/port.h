@@ -208,11 +208,48 @@ static inline void port_window_set32(Port *port, const PortWindow *window, uint3
     }
 }
 
+static inline void port_window_set16(Port *port, const PortWindow *window, uint32_t base,
+                                     uint32_t offset, uint32_t value)
+{
+    uint8_t *at = port_window_at(window, base + offset, 2);
+    if (at != NULL)
+    {
+        lift_put(at, 2, value);
+    }
+    else
+    {
+        port_set16(port, base, offset, value);
+    }
+}
+
 /* memcpy inside the original's address space as its rep movsd / rep movsb pair does it: count / 4
  * dwords forwards, then the count % 4 bytes left. */
+/* `count` dwords from `from` to `to` in place, as a forward copy a dword at a time leaves them,
+ * when both runs lie in windows (port_window). Such a copy reads every dword before it is
+ * overwritten unless the target starts inside the source, so memmove gives the same bytes; returns
+ * 0 and copies nothing otherwise. */
+static inline int port_move_dwords(Port *port, uint32_t to, uint32_t from, uint32_t count)
+{
+    uint64_t bytes = (uint64_t)count * 4;
+    PortWindow target;
+    PortWindow source;
+    if (count == 0 || (to > from && to < from + bytes))
+    {
+        return 0;
+    }
+    target = port_window(port, to, bytes);
+    source = port_window(port, from, bytes);
+    if (target.memory == NULL || source.memory == NULL)
+    {
+        return 0;
+    }
+    memmove(target.memory, source.memory, (size_t)bytes);
+    return 1;
+}
+
 static inline void port_copy(Port *port, uint32_t to, uint32_t from, uint32_t count)
 {
-    uint32_t done = 0;
+    uint32_t done = port_move_dwords(port, to, from, count / 4) ? count & ~3u : 0;
     for (; done + 4 <= count && !port->env.failed; done += 4)
     {
         port_set32(port, to + done, 0, port_u32(port, from + done, 0));
