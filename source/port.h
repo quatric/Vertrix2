@@ -187,6 +187,27 @@ static inline uint32_t port_window_u8(Port *port, const PortWindow *window, uint
     return at != NULL ? *at : port_u8(port, base, offset);
 }
 
+static inline uint32_t port_window_u16(Port *port, const PortWindow *window, uint32_t base,
+                                       uint32_t offset)
+{
+    const uint8_t *at = port_window_at(window, base + offset, 2);
+    return at != NULL ? lift_get(at, 2) : port_u16(port, base, offset);
+}
+
+static inline void port_window_set8(Port *port, const PortWindow *window, uint32_t base,
+                                    uint32_t offset, uint32_t value)
+{
+    uint8_t *at = port_window_at(window, base + offset, 1);
+    if (at != NULL)
+    {
+        *at = (uint8_t)value;
+    }
+    else
+    {
+        port_set8(port, base, offset, value);
+    }
+}
+
 static inline uint32_t port_window_u32(Port *port, const PortWindow *window, uint32_t base,
                                        uint32_t offset)
 {

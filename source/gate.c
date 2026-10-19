@@ -165,25 +165,51 @@ static int16_t s16(uint32_t value)
     return (int16_t)(value & 0xffff);
 }
 
+/* The globals the gate reads and writes (the screen pointer up to the working block), in place
+ * where they can be: set on entry. It stays valid across the gate's calls, as the image the
+ * globals lie in never moves; a nested gate sets the same window. */
+enum
+{
+    GLOBALS_LOW = 0x544000,
+    GLOBALS_HIGH = 0x5bc100
+};
+
+static PortWindow gate_globals;
+
 static uint32_t w(Port *port, uint32_t address)
 {
-    return port_u16(port, 0, address);
+    return port_window_u16(port, &gate_globals, 0, address);
 }
 
 static uint32_t b(Port *port, uint32_t address)
 {
-    return port_u8(port, 0, address);
+    return port_window_u8(port, &gate_globals, 0, address);
 }
 
 static uint32_t d(Port *port, uint32_t address)
 {
-    return port_u32(port, 0, address);
+    return port_window_u32(port, &gate_globals, 0, address);
 }
 
 /* The word at `address` sign-extended (the original's `mov r, [address - 2]; sar r, 16`). */
 static uint32_t sw(Port *port, uint32_t address)
 {
-    return (uint32_t)((int32_t)port_u32(port, 0, address - 2) >> 16);
+    return (uint32_t)((int32_t)port_window_u32(port, &gate_globals, 0, address - 2) >> 16);
+}
+
+static void put8(Port *port, uint32_t address, uint32_t value)
+{
+    port_window_set8(port, &gate_globals, 0, address, value);
+}
+
+static void put16(Port *port, uint32_t address, uint32_t value)
+{
+    port_window_set16(port, &gate_globals, 0, address, value);
+}
+
+static void put32(Port *port, uint32_t address, uint32_t value)
+{
+    port_window_set32(port, &gate_globals, 0, address, value);
 }
 
 /* `cdq; idiv divisor`: the quotient and remainder, both unchanged when it would fault. */
@@ -202,7 +228,7 @@ static uint32_t clamp_below(Port *port, uint32_t address, uint32_t *value, uint3
     if (s16(*value) >= s16(limit))
     {
         uint32_t eax = limit - 1;
-        port_set16(port, 0, address, eax);
+        put16(port, address, eax);
         return eax;
     }
     return *value;
@@ -224,6 +250,7 @@ uint32_t vertrix_port_actor_gate(PORT_SIGNATURE)
     uint32_t screen = 0;
     uint32_t local;
     port_open(p, calls, services, globals, entry);
+    gate_globals = port_window(p, GLOBALS_LOW, GLOBALS_HIGH - GLOBALS_LOW);
     si = w(p, G_SAVED_SI);
     di = w(p, G_SAVED_DI);
     edx = port_u32(p, actor, ACTOR_SPAN);
@@ -238,7 +265,7 @@ uint32_t vertrix_port_actor_gate(PORT_SIGNATURE)
     di = w(p, G_SAVED_DI);
     si = w(p, G_SAVED_SI);
     image = eax = port_u32(p, actor, ACTOR_IMAGE);
-    port_set32(p, 0, G_IMAGE, image);
+    put32(p, G_IMAGE, image);
     if (image == 0)
     {
         goto done;
@@ -250,71 +277,71 @@ uint32_t vertrix_port_actor_gate(PORT_SIGNATURE)
     }
     /* The actor, its image and the target. */
     edx = set8(edx, port_u8(p, image, IMAGE_FLAGS));
-    port_set8(p, 0, G_IMAGE_FLAGS, edx);
+    put8(p, G_IMAGE_FLAGS, edx);
     edx = ebx;
     ebx = set8(ebx, port_u8(p, ebx, TARGET_DEPTH));
     edx = set8(edx, port_u8(p, edx, TARGET_KIND));
-    port_set8(p, 0, G_TARGET_DEPTH, ebx);
-    port_set8(p, 0, G_TARGET_KIND, edx);
+    put8(p, G_TARGET_DEPTH, ebx);
+    put8(p, G_TARGET_KIND, edx);
     if ((edx & 0xff) == TARGET_HIDDEN)
     {
         goto hidden;
     }
     edx = set16(actor, port_u16(p, actor, ACTOR_X));
-    port_set16(p, 0, G_ACTOR_X, edx);
-    port_set16(p, 0, G_PIXEL_X, edx);
+    put16(p, G_ACTOR_X, edx);
+    put16(p, G_PIXEL_X, edx);
     edx = set16(actor, port_u16(p, actor, ACTOR_Y));
-    port_set16(p, 0, G_ACTOR_Y, edx);
-    port_set16(p, 0, G_PIXEL_Y, edx);
+    put16(p, G_ACTOR_Y, edx);
+    put16(p, G_PIXEL_Y, edx);
     edx = set16(edx, w(p, G_ACTOR_X));
-    port_set16(p, 0, G_LEFT, edx);
+    put16(p, G_LEFT, edx);
     edx = set16(edx, w(p, G_ACTOR_Y));
-    port_set16(p, 0, G_TOP, edx);
+    put16(p, G_TOP, edx);
     edx = set16(actor, port_u16(p, actor, ACTOR_DEPTH));
-    port_set16(p, 0, G_DEPTH, edx);
+    put16(p, G_DEPTH, edx);
     edx = set16(edx, port_u16(p, image, IMAGE_ORIGIN_X));
-    port_set16(p, 0, G_ORIGIN_X, edx);
+    put16(p, G_ORIGIN_X, edx);
     edx = set16(edx, port_u16(p, image, IMAGE_ORIGIN_Y));
-    port_set16(p, 0, G_ORIGIN_Y, edx);
+    put16(p, G_ORIGIN_Y, edx);
     edx = set16(edx, port_u16(p, image, IMAGE_WIDTH));
-    port_set16(p, 0, G_IMAGE_WIDTH, edx);
+    put16(p, G_IMAGE_WIDTH, edx);
     edx = set16(edx, port_u16(p, image, IMAGE_HEIGHT));
     eax = set8(image, port_u8(p, image, IMAGE_MODE));
-    port_set8(p, 0, G_IMAGE_MODE, eax);
+    put8(p, G_IMAGE_MODE, eax);
     eax = set8(actor, port_u8(p, actor, ACTOR_TRANSPARENT));
-    port_set8(p, 0, G_TRANSPARENT, eax);
-    port_set32(p, 0, G_SOURCE_OFFSET, 0);
-    port_set16(p, 0, G_IMAGE_HEIGHT, edx);
+    put8(p, G_TRANSPARENT, eax);
+    put32(p, G_SOURCE_OFFSET, 0);
+    put16(p, G_IMAGE_HEIGHT, edx);
     eax = set8(actor, port_u8(p, actor, ACTOR_BLEND_SOURCE));
     edx = set8(actor, port_u8(p, actor, ACTOR_UNCOVERED));
-    port_set8(p, 0, G_BLEND_SOURCE, eax);
-    port_set8(p, 0, G_UNCOVERED, edx);
+    put8(p, G_BLEND_SOURCE, eax);
+    put8(p, G_UNCOVERED, edx);
     eax = set8(actor, port_u8(p, actor, ACTOR_BLEND_KIND));
-    port_set8(p, 0, G_BLEND_KIND, eax);
+    put8(p, G_BLEND_KIND, eax);
     edx = set8(actor, port_u8(p, actor, ACTOR_CLIP_MODE));
     eax = set8(actor, port_u8(p, actor, ACTOR_OPACITY));
-    port_set8(p, 0, G_CLIP_MODE, edx);
-    port_set8(p, 0, G_OPACITY, eax);
+    put8(p, G_CLIP_MODE, edx);
+    put8(p, G_OPACITY, eax);
     if ((eax & 0xff) == OPAQUE)
     {
         /* Fully opaque: no transparency. */
         ebx = set8(ebx, 0);
-        port_set8(p, 0, G_TRANSPARENT, 0);
+        put8(p, G_TRANSPARENT, 0);
     }
     eax = set8(actor, port_u8(p, actor, ACTOR_MIRROR));
-    port_set8(p, 0, G_MIRROR, eax);
+    put8(p, G_MIRROR, eax);
     eax = set8(actor, port_u8(p, actor, ACTOR_FLIP));
     edx = gate;
-    port_set8(p, 0, G_FLIP, eax);
+    put8(p, G_FLIP, eax);
     if (gate == 0)
     {
         /* On the screen: its size, and the actor relative to its scrolled view. */
         screen = eax = d(p, SCREEN);
         edx = set16(edx, port_u16(p, screen, SCREEN_WIDTH));
-        port_set16(p, 0, G_SCREEN_WIDTH, edx);
+        put16(p, G_SCREEN_WIDTH, edx);
         edx = set16(edx, port_u16(p, screen, SCREEN_HEIGHT));
         ebx = set16(ebx, w(p, G_LEFT));
-        port_set16(p, 0, G_SCREEN_HEIGHT, edx);
+        put16(p, G_SCREEN_HEIGHT, edx);
         edx = set16(edx, port_u16(p, screen, SCREEN_LEFT));
         ecx = set16(ecx, w(p, G_TOP));
         ebx -= edx;
@@ -322,14 +349,14 @@ uint32_t vertrix_port_actor_gate(PORT_SIGNATURE)
         eax = set16(eax, port_u16(p, screen, SCREEN_DEPTH));
         ecx -= edx;
         edx = set16(edx, w(p, G_DEPTH));
-        port_set16(p, 0, G_LEFT, ebx);
+        put16(p, G_LEFT, ebx);
         edx += eax;
-        port_set16(p, 0, G_TOP, ecx);
-        port_set16(p, 0, G_DEPTH, edx);
+        put16(p, G_TOP, ecx);
+        put16(p, G_DEPTH, edx);
     }
     ebx = set8h(ebx, 0xd);
     ecx = gate;
-    port_set8(p, 0, G_CODE, 0xd);
+    put8(p, G_CODE, 0xd);
     if (gate == 0)
     {
         /* The actor's pixel, clamped into the screen. */
@@ -337,7 +364,7 @@ uint32_t vertrix_port_actor_gate(PORT_SIGNATURE)
         if ((int32_t)eax < 0)
         {
             ecx = 0;
-            port_set16(p, 0, G_PIXEL_X, 0);
+            put16(p, G_PIXEL_X, 0);
         }
         else
         {
@@ -348,7 +375,7 @@ uint32_t vertrix_port_actor_gate(PORT_SIGNATURE)
         if ((int32_t)eax < 0)
         {
             ebx = 0;
-            port_set16(p, 0, G_PIXEL_Y, 0);
+            put16(p, G_PIXEL_Y, 0);
         }
         else
         {
@@ -360,7 +387,7 @@ uint32_t vertrix_port_actor_gate(PORT_SIGNATURE)
         edx *= eax;
         eax = sw(p, G_PIXEL_X);
         edx += eax;
-        port_set32(p, 0, G_PIXEL_INDEX, edx);
+        put32(p, G_PIXEL_INDEX, edx);
     }
     /* The scale: the screen's scale map under the actor, its fixed scale, or the actor's. */
     if (gate != 1 && port_u8(p, actor, ACTOR_SCREEN_SCALE) != 0)
@@ -381,10 +408,10 @@ uint32_t vertrix_port_actor_gate(PORT_SIGNATURE)
     {
         eax = set8(actor, port_u8(p, actor, ACTOR_SCALE));
     }
-    port_set8(p, 0, G_SCALE, eax);
+    put8(p, G_SCALE, eax);
     eax = b(p, G_SCALE) != SCALE_FULL;
     ecx = gate;
-    port_set32(p, 0, G_SCALED, eax);
+    put32(p, G_SCALED, eax);
     /* The tint: the screen's tint map under the actor, its fixed tint, or the actor's. */
     if (gate != 1 && port_u8(p, actor, ACTOR_SCREEN_TINT) != 0)
     {
@@ -393,8 +420,8 @@ uint32_t vertrix_port_actor_gate(PORT_SIGNATURE)
         {
             edx = set16(edx, (uint32_t)(int8_t)port_u8(p, screen, SCREEN_TINT_LEVEL));
             eax = set8(screen, port_u8(p, screen, SCREEN_TINT));
-            port_set16(p, 0, G_TINT_LEVEL, edx);
-            port_set8(p, 0, G_TINT, eax);
+            put16(p, G_TINT_LEVEL, edx);
+            put8(p, G_TINT, eax);
         }
         else
         {
@@ -403,23 +430,23 @@ uint32_t vertrix_port_actor_gate(PORT_SIGNATURE)
             ebx = d(p, G_PIXEL_INDEX);
             eax = port_u32(p, port_u32(p, screen, SCREEN_TINT_MAP), 0) + ebx;
             eax = set8(eax, port_u8(p, eax, 0));
-            port_set8(p, 0, G_TINT_CODE, eax);
+            put8(p, G_TINT_CODE, eax);
             eax = b(p, G_TINT_CODE) >> 3;
-            port_set8(p, 0, G_TINT, eax);
+            put8(p, G_TINT, eax);
             eax = set8(eax, ((b(p, G_TINT_CODE) & 7) - 5) & 0xff);
             edx = set16(edx, (uint32_t)(int8_t)eax);
             eax = (uint32_t)(int8_t)eax;
-            port_set16(p, 0, G_TINT_LEVEL, edx);
+            put16(p, G_TINT_LEVEL, edx);
             eax = (int32_t)eax >= 0 ? edx * 0x28 : edx * 0x14;
-            port_set16(p, 0, G_TINT_LEVEL, eax);
+            put16(p, G_TINT_LEVEL, eax);
         }
     }
     else
     {
         eax = set8(actor, port_u8(p, actor, ACTOR_TINT));
-        port_set8(p, 0, G_TINT, eax);
+        put8(p, G_TINT, eax);
         eax = set16(actor, port_u16(p, actor, ACTOR_TINT_LEVEL));
-        port_set16(p, 0, G_TINT_LEVEL, eax);
+        put16(p, G_TINT_LEVEL, eax);
     }
     if (d(p, G_SCALED) != 0)
     {
@@ -428,36 +455,36 @@ uint32_t vertrix_port_actor_gate(PORT_SIGNATURE)
         ecx = w(p, G_IMAGE_WIDTH);
         eax = b(p, G_SCALE);
         edx = (uint32_t)((int32_t)ecx >> 4) * eax;
-        port_set16(p, 0, G_WIDTH, edx);
+        put16(p, G_WIDTH, edx);
         local = eax << 4;
         edx = ((ecx & 0xf) & 0xffff) + local;
         edx = port_u8(p, SCALE_REMAINDERS, edx);
         ebx = set16(ebx, w(p, G_WIDTH)) + edx;
-        port_set16(p, 0, G_WIDTH, ebx);
+        put16(p, G_WIDTH, ebx);
         ebx = w(p, G_IMAGE_HEIGHT);
         edx = (uint32_t)((int32_t)ebx >> 4);
         eax *= edx;
-        port_set16(p, 0, G_HEIGHT, eax);
+        put16(p, G_HEIGHT, eax);
         eax = ((ebx & 0xf) & 0xffff) + local;
         eax = port_u8(p, SCALE_REMAINDERS, eax);
         edx = set16(edx, w(p, G_HEIGHT)) + eax;
         eax = d(p, G_BOTTOM);
-        port_set16(p, 0, G_HEIGHT, edx);
+        put16(p, G_HEIGHT, edx);
         edx = sw(p, G_ORIGIN_X);
         eax = sw(p, G_WIDTH);
         divide(edx * eax, ecx, &eax, &edx);
-        port_set16(p, 0, G_ORIGIN_X, eax);
+        put16(p, G_ORIGIN_X, eax);
         edx = sw(p, G_HEIGHT);
         eax = sw(p, G_ORIGIN_Y);
         divide(edx * eax, ebx, &eax, &edx);
-        port_set16(p, 0, G_ORIGIN_Y, eax);
+        put16(p, G_ORIGIN_Y, eax);
     }
     else
     {
         eax = set16(eax, w(p, G_IMAGE_WIDTH));
-        port_set16(p, 0, G_WIDTH, eax);
+        put16(p, G_WIDTH, eax);
         eax = set16(eax, w(p, G_IMAGE_HEIGHT));
-        port_set16(p, 0, G_HEIGHT, eax);
+        put16(p, G_HEIGHT, eax);
     }
     ebx = set16(ebx, w(p, G_WIDTH));
     if ((ebx & 0xffff) == 0)
@@ -472,29 +499,29 @@ uint32_t vertrix_port_actor_gate(PORT_SIGNATURE)
     /* The rectangle: the position less the origin (and the depth for the top). */
     eax = set16(eax, w(p, G_ORIGIN_X));
     edx = set16(edx, w(p, G_LEFT));
-    port_set16(p, 0, G_VISIBLE_WIDTH, ebx);
+    put16(p, G_VISIBLE_WIDTH, ebx);
     ebx = set16(ebx, w(p, G_TOP));
     edx -= eax;
     eax = set16(eax, w(p, G_ORIGIN_Y));
-    port_set16(p, 0, G_VISIBLE_HEIGHT, ecx);
+    put16(p, G_VISIBLE_HEIGHT, ecx);
     ebx -= eax;
     eax = set16(eax, w(p, G_DEPTH));
     ecx = ebx;
-    port_set16(p, 0, G_LEFT, edx);
+    put16(p, G_LEFT, edx);
     ecx -= eax;
     eax = set16(edx, edx + w(p, G_WIDTH));
-    port_set16(p, 0, G_TOP, ebx);
+    put16(p, G_TOP, ebx);
     eax--;
     ebx = set16(ebx, w(p, G_HEIGHT));
-    port_set16(p, 0, G_RIGHT, eax);
+    put16(p, G_RIGHT, eax);
     eax = ecx + ebx;
-    port_set16(p, 0, G_TOP, ecx);
+    put16(p, G_TOP, ecx);
     eax--;
-    port_set16(p, 0, G_CLIP_TOP_START, ecx);
-    port_set16(p, 0, G_BOTTOM, eax);
+    put16(p, G_CLIP_TOP_START, ecx);
+    put16(p, G_BOTTOM, eax);
     eax = set16(eax, w(p, G_LEFT));
     ebx = set8(ebx, b(p, G_CLIP_MODE));
-    port_set16(p, 0, G_CLIP_RIGHT_START, eax);
+    put16(p, G_CLIP_RIGHT_START, eax);
     /* The clip box: the target's, the actor's own, or none. */
     if ((ebx & 0xff) != CLIP_NONE)
     {
@@ -509,25 +536,25 @@ uint32_t vertrix_port_actor_gate(PORT_SIGNATURE)
                 ecx = 0;
             }
             eax = d(p, TARGET);
-            port_set16(p, 0, G_CLIP_LEFT, 0);
-            port_set16(p, 0, G_CLIP_TOP, 0);
+            put16(p, G_CLIP_LEFT, 0);
+            put16(p, G_CLIP_TOP, 0);
             edx = set16(edx, port_u16(p, eax, TARGET_WIDTH));
             eax = set16(eax, port_u16(p, eax, TARGET_HEIGHT));
             edx--;
             eax--;
-            port_set16(p, 0, G_CLIP_RIGHT, edx);
-            port_set16(p, 0, G_CLIP_BOTTOM, eax);
+            put16(p, G_CLIP_RIGHT, edx);
+            put16(p, G_CLIP_BOTTOM, eax);
         }
         else if ((ebx & 0xff) == CLIP_BOX)
         {
             eax = set16(actor, port_u16(p, actor, ACTOR_CLIP_BOX));
-            port_set16(p, 0, G_CLIP_LEFT, eax);
+            put16(p, G_CLIP_LEFT, eax);
             eax = set16(actor, port_u16(p, actor, ACTOR_CLIP_BOX + 2));
-            port_set16(p, 0, G_CLIP_RIGHT, eax);
+            put16(p, G_CLIP_RIGHT, eax);
             eax = set16(actor, port_u16(p, actor, ACTOR_CLIP_BOX + 4));
-            port_set16(p, 0, G_CLIP_TOP, eax);
+            put16(p, G_CLIP_TOP, eax);
             eax = set16(actor, port_u16(p, actor, ACTOR_CLIP_BOX + 6));
-            port_set16(p, 0, G_CLIP_BOTTOM, eax);
+            put16(p, G_CLIP_BOTTOM, eax);
         }
         /* Outside the box altogether: nothing to paint. */
         eax = set16(eax, w(p, G_LEFT));
@@ -552,7 +579,7 @@ uint32_t vertrix_port_actor_gate(PORT_SIGNATURE)
         }
     }
     eax = set8(eax, 0);
-    port_set8(p, 0, G_CLIPPED, 0);
+    put8(p, G_CLIPPED, 0);
     if (b(p, G_CLIP_MODE) != CLIP_NONE)
     {
         /* Cut the rectangle to the box, skipping the source rows and columns cut off. */
@@ -566,12 +593,12 @@ uint32_t vertrix_port_actor_gate(PORT_SIGNATURE)
                 edx -= eax;
                 eax = sw(p, G_WIDTH);
                 eax *= edx;
-                port_set32(p, 0, G_SOURCE_OFFSET, d(p, G_SOURCE_OFFSET) + eax);
+                put32(p, G_SOURCE_OFFSET, d(p, G_SOURCE_OFFSET) + eax);
             }
             eax = set16(eax, w(p, G_CLIP_TOP));
             edx = set8(edx, 1);
-            port_set16(p, 0, G_TOP, eax);
-            port_set8(p, 0, G_CLIPPED, 1);
+            put16(p, G_TOP, eax);
+            put8(p, G_CLIPPED, 1);
         }
         eax = set16(eax, w(p, G_LEFT));
         if (s16(eax) < s16(w(p, G_CLIP_LEFT)))
@@ -581,32 +608,32 @@ uint32_t vertrix_port_actor_gate(PORT_SIGNATURE)
                 edx = sw(p, G_CLIP_LEFT);
                 eax = sw(p, G_LEFT);
                 edx -= eax;
-                port_set32(p, 0, G_SOURCE_OFFSET, d(p, G_SOURCE_OFFSET) + edx);
+                put32(p, G_SOURCE_OFFSET, d(p, G_SOURCE_OFFSET) + edx);
             }
             eax = set16(eax, w(p, G_CLIP_LEFT));
             edx = set8h(edx, 1);
-            port_set16(p, 0, G_LEFT, eax);
-            port_set8(p, 0, G_CLIPPED, 1);
+            put16(p, G_LEFT, eax);
+            put8(p, G_CLIPPED, 1);
         }
         eax = set16(eax, w(p, G_BOTTOM));
         edx = set16(edx, w(p, G_CLIP_BOTTOM));
         if (s16(eax) > s16(edx))
         {
             ebx = set8(ebx, 1);
-            port_set16(p, 0, G_BOTTOM, edx);
-            port_set8(p, 0, G_CLIPPED, 1);
+            put16(p, G_BOTTOM, edx);
+            put8(p, G_CLIPPED, 1);
         }
         eax = set16(eax, w(p, G_RIGHT));
         ebx = set16(ebx, w(p, G_CLIP_RIGHT));
         if (s16(eax) > s16(ebx))
         {
-            port_set16(p, 0, G_RIGHT, ebx);
-            port_set8(p, 0, G_CLIPPED, 1);
+            put16(p, G_RIGHT, ebx);
+            put8(p, G_CLIPPED, 1);
         }
     }
     edx = 0;
     ecx = set8(ecx, b(p, G_CLIPPED));
-    port_set32(p, 0, G_SOURCE_SKIP, 0);
+    put32(p, G_SOURCE_SKIP, 0);
     if ((ecx & 0xff) != 0)
     {
         /* The visible size, and the source pixels skipped at the end of each row. */
@@ -614,16 +641,16 @@ uint32_t vertrix_port_actor_gate(PORT_SIGNATURE)
         eax = set16(eax, eax - w(p, G_LEFT));
         eax++;
         edx = w(p, G_TOP);
-        port_set16(p, 0, G_VISIBLE_WIDTH, eax);
+        put16(p, G_VISIBLE_WIDTH, eax);
         eax = set16(eax, w(p, G_BOTTOM));
         eax -= edx;
         eax++;
         edx = sw(p, G_WIDTH);
-        port_set16(p, 0, G_VISIBLE_HEIGHT, eax);
+        put16(p, G_VISIBLE_HEIGHT, eax);
         eax = sw(p, G_VISIBLE_WIDTH);
         edx -= eax;
         ebx = set16(ebx, w(p, G_VISIBLE_WIDTH));
-        port_set32(p, 0, G_SOURCE_SKIP, edx);
+        put32(p, G_SOURCE_SKIP, edx);
         if ((ebx & 0xffff) == 0 || w(p, G_VISIBLE_HEIGHT) == 0)
         {
             goto hidden;
@@ -636,62 +663,62 @@ uint32_t vertrix_port_actor_gate(PORT_SIGNATURE)
         eax = b(p, G_SCALE);
         edx = SCALE_ROWS + (eax << 10);
         ecx = set8h(ecx, b(p, G_CLIPPED));
-        port_set32(p, 0, G_SCALE_COLUMNS, edx);
-        port_set32(p, 0, G_SCALE_ROWS, edx);
+        put32(p, G_SCALE_COLUMNS, edx);
+        put32(p, G_SCALE_ROWS, edx);
         if ((ecx & 0xff00) != 0)
         {
             eax = set16(eax, w(p, G_TOP));
             edx = set16(edx, w(p, G_CLIP_TOP_START));
             eax = set16(eax, eax - edx);
-            port_set16(p, 0, G_COUNT, eax);
+            put16(p, G_COUNT, eax);
             if ((eax & 0xffff) != 0)
             {
                 ecx = 0;
-                port_set16(p, 0, G_SCALE_SKIP, 0);
+                put16(p, G_SCALE_SKIP, 0);
                 do
                 {
                     eax = d(p, G_SCALE_COLUMNS) + 1;
                     edx = set8h(edx, 0);
                     edx = set8(edx, port_u8(p, eax, -1u));
-                    port_set32(p, 0, G_SCALE_COLUMNS, eax);
+                    put32(p, G_SCALE_COLUMNS, eax);
                     eax = set16(eax, w(p, G_SCALE_SKIP));
                     eax += edx;
                     edx = set16(edx, w(p, G_COUNT));
-                    port_set16(p, 0, G_SCALE_SKIP, eax);
+                    put16(p, G_SCALE_SKIP, eax);
                     edx = set16(edx, edx - 1);
-                    port_set16(p, 0, G_COUNT, edx);
+                    put16(p, G_COUNT, edx);
                 } while ((edx & 0xffff) != 0);
                 edx = eax & 0xffff;
                 eax = w(p, G_IMAGE_WIDTH);
                 eax *= edx;
-                port_set32(p, 0, G_SOURCE_OFFSET, d(p, G_SOURCE_OFFSET) + eax);
+                put32(p, G_SOURCE_OFFSET, d(p, G_SOURCE_OFFSET) + eax);
             }
             eax = set16(eax, w(p, G_LEFT));
             ecx = set16(ecx, w(p, G_CLIP_RIGHT_START));
             eax = set16(eax, eax - ecx);
-            port_set16(p, 0, G_COUNT, eax);
+            put16(p, G_COUNT, eax);
             if ((eax & 0xffff) != 0)
             {
                 do
                 {
                     eax = d(p, G_SCALE_ROWS) + 1;
                     edx = port_u8(p, eax, -1u);
-                    port_set32(p, 0, G_SCALE_ROWS, eax);
+                    put32(p, G_SCALE_ROWS, eax);
                     eax = d(p, G_SOURCE_OFFSET) + edx;
                     edx = set16(edx, w(p, G_COUNT));
-                    port_set32(p, 0, G_SOURCE_OFFSET, eax);
+                    put32(p, G_SOURCE_OFFSET, eax);
                     edx = set16(edx, edx - 1);
-                    port_set16(p, 0, G_COUNT, edx);
+                    put16(p, G_COUNT, edx);
                 } while ((edx & 0xffff) != 0);
             }
         }
         eax = d(p, G_SCALE_COLUMNS);
         ecx = 0;
-        port_set32(p, 0, G_COVER, eax);
+        put32(p, G_COVER, eax);
         eax = set16(eax, w(p, G_VISIBLE_HEIGHT));
-        port_set16(p, 0, G_SCALE_SUM, 0);
+        put16(p, G_SCALE_SUM, 0);
         eax = set16(eax, eax - 1);
-        port_set16(p, 0, G_COUNT, eax);
+        put16(p, G_COUNT, eax);
         if ((eax & 0xffff) != 0)
         {
             do
@@ -703,18 +730,18 @@ uint32_t vertrix_port_actor_gate(PORT_SIGNATURE)
                 edx = set8(edx, port_u8(p, eax, 0));
                 eax++;
                 ebx += edx;
-                port_set32(p, 0, G_COVER, eax);
-                port_set16(p, 0, G_SCALE_SUM, ebx);
+                put32(p, G_COVER, eax);
+                put16(p, G_SCALE_SUM, ebx);
                 ecx = set16(ecx, ecx - 1);
-                port_set16(p, 0, G_COUNT, ecx);
+                put16(p, G_COUNT, ecx);
             } while ((ecx & 0xffff) != 0);
         }
     }
     edx = gate;
-    port_set16(p, 0, G_SAVED_SI, si);
+    put16(p, G_SAVED_SI, si);
     eax = set8(eax, 0);
-    port_set16(p, 0, G_SAVED_DI, di);
-    port_set8(p, 0, G_COVERED, 0);
+    put16(p, G_SAVED_DI, di);
+    put8(p, G_COVERED, 0);
     if (gate == 0)
     {
         screen = eax = d(p, SCREEN);
@@ -731,13 +758,13 @@ uint32_t vertrix_port_actor_gate(PORT_SIGNATURE)
         ebx = set16(ebx, w(p, G_HEIGHT));
         eax = eax - edx + ebx - 1;
         ecx = set16(ecx, w(p, G_DEPTH));
-        port_set16(p, 0, G_COVER_BOTTOM, eax);
+        put16(p, G_COVER_BOTTOM, eax);
         eax -= ecx;
         edx = set16(edx, w(p, G_ACTOR_Y));
-        port_set16(p, 0, G_COVER_TOP, eax);
+        put16(p, G_COVER_TOP, eax);
         if (s16(edx) < s16(w(p, G_COVER_BOTTOM)))
         {
-            port_set16(p, 0, G_COVER_BOTTOM, edx);
+            put16(p, G_COVER_BOTTOM, edx);
         }
         eax = sw(p, G_COVER_BOTTOM);
         di = w(p, G_SAVED_DI);
@@ -745,7 +772,7 @@ uint32_t vertrix_port_actor_gate(PORT_SIGNATURE)
         if ((int32_t)eax < 0)
         {
             ecx = 0;
-            port_set16(p, 0, G_COVER_BOTTOM, 0);
+            put16(p, G_COVER_BOTTOM, 0);
         }
         else
         {
@@ -756,7 +783,7 @@ uint32_t vertrix_port_actor_gate(PORT_SIGNATURE)
         if ((int32_t)eax < 0)
         {
             ebx = 0;
-            port_set16(p, 0, G_COVER_TOP, 0);
+            put16(p, G_COVER_TOP, 0);
         }
         else
         {
@@ -765,9 +792,9 @@ uint32_t vertrix_port_actor_gate(PORT_SIGNATURE)
         }
         eax = set16(eax, w(p, G_COVER_BOTTOM) - w(p, G_COVER_TOP));
         eax++;
-        port_set16(p, 0, G_COVER_ROWS, eax);
-        port_set16(p, 0, G_COLUMN_COUNT, 0);
-        port_set16(p, 0, G_COUNT, 0);
+        put16(p, G_COVER_ROWS, eax);
+        put16(p, G_COLUMN_COUNT, 0);
+        put16(p, G_COUNT, 0);
         screen = eax = d(p, SCREEN);
         ecx = sw(p, G_LEFT);
         edx = port_u32(p, port_u32(p, screen, SCREEN_COVER), 0);
@@ -780,7 +807,7 @@ uint32_t vertrix_port_actor_gate(PORT_SIGNATURE)
         eax *= edx;
         ecx += eax;
         eax = sw(p, G_COVER_ROWS);
-        port_set32(p, 0, G_COVER, ecx);
+        put32(p, G_COVER, ecx);
         if ((int32_t)eax > 1)
         {
             /* A column is covered when its cover runs unbroken from the bottom row up. */
@@ -796,7 +823,7 @@ uint32_t vertrix_port_actor_gate(PORT_SIGNATURE)
                 if ((port_u8(p, eax, 0) & ebx & 0xff) != 0)
                 {
                     si = w(p, G_COVER_ROWS);
-                    port_set32(p, 0, G_COVER_COLUMN, eax);
+                    put32(p, G_COVER_COLUMN, eax);
                     while (si != 0)
                     {
                         eax = d(p, G_COVER_COLUMN);
@@ -807,19 +834,19 @@ uint32_t vertrix_port_actor_gate(PORT_SIGNATURE)
                         edx = sw(p, G_SCREEN_WIDTH);
                         eax -= edx;
                         si = (si - 1) & 0xffff;
-                        port_set32(p, 0, G_COVER_COLUMN, eax);
+                        put32(p, G_COVER_COLUMN, eax);
                     }
                     if (si == 0)
                     {
                         edx = 1;
                         ecx = set16(ecx, w(p, G_COLUMN_COUNT)) + edx;
                         eax = sw(p, G_COUNT);
-                        port_set16(p, 0, G_COLUMN_COUNT, ecx);
-                        port_set16(p, 0, G_COLUMNS + eax * 2, edx);
+                        put16(p, G_COLUMN_COUNT, ecx);
+                        put16(p, G_COLUMNS + eax * 2, edx);
                     }
                 }
-                port_set32(p, 0, G_COVER, d(p, G_COVER) + 1);
-                port_set16(p, 0, G_COUNT, w(p, G_COUNT) + 1);
+                put32(p, G_COVER, d(p, G_COVER) + 1);
+                put16(p, G_COUNT, w(p, G_COUNT) + 1);
             }
         }
         else
@@ -837,25 +864,25 @@ uint32_t vertrix_port_actor_gate(PORT_SIGNATURE)
                 if ((port_u8(p, eax, 0) & COVER_BITS) != 0)
                 {
                     eax = sw(p, G_COUNT);
-                    port_set16(p, 0, G_COLUMNS + eax * 2, ecx);
-                    port_set16(p, 0, G_COLUMN_COUNT, w(p, G_COLUMN_COUNT) + ecx);
+                    put16(p, G_COLUMNS + eax * 2, ecx);
+                    put16(p, G_COLUMN_COUNT, w(p, G_COLUMN_COUNT) + ecx);
                 }
                 ebx = d(p, G_COVER) + 1;
                 edx = set16(edx, w(p, G_COUNT)) + 1;
-                port_set32(p, 0, G_COVER, ebx);
-                port_set16(p, 0, G_COUNT, edx);
+                put32(p, G_COVER, ebx);
+                put16(p, G_COUNT, edx);
             }
         }
         eax = set16(eax, w(p, G_COLUMN_COUNT));
         edx = set16(edx, w(p, G_VISIBLE_WIDTH));
-        port_set16(p, 0, G_SAVED_SI, si);
-        port_set16(p, 0, G_SAVED_DI, di);
+        put16(p, G_SAVED_SI, si);
+        put16(p, G_SAVED_DI, di);
         if ((eax & 0xffff) == (edx & 0xffff) || (eax & 0xffff) != 0)
         {
             ecx = set8(ecx, 1);
             di = w(p, G_SAVED_DI);
             si = w(p, G_SAVED_SI);
-            port_set8(p, 0, G_COVERED, 1);
+            put8(p, G_COVERED, 1);
             goto covered;
         }
     }
@@ -883,9 +910,9 @@ covered:
     edx = G_COLUMNS;
     ecx += eax;
     eax = set16(eax, w(p, G_VISIBLE_WIDTH));
-    port_set32(p, 0, G_MASK_COLUMN, ecx);
-    port_set32(p, 0, G_COLUMN, edx);
-    port_set16(p, 0, G_COLUMN_COUNT, eax);
+    put32(p, G_MASK_COLUMN, ecx);
+    put32(p, G_COLUMN, edx);
+    put16(p, G_COLUMN_COUNT, eax);
     while ((eax & 0xffff) != 0)
     {
         eax = d(p, G_COLUMN);
@@ -894,7 +921,7 @@ covered:
             di = w(p, G_VISIBLE_HEIGHT);
             edx = d(p, G_MASK_COLUMN);
             port_set16(p, eax, 0, 0);
-            port_set32(p, 0, G_MASK_ROW, edx);
+            put32(p, G_MASK_ROW, edx);
             while (di != 0)
             {
                 eax = d(p, G_MASK_ROW);
@@ -907,7 +934,7 @@ covered:
                 ebx = set16(ebx, port_u16(p, edx, 0));
                 eax -= ecx;
                 ebx++;
-                port_set32(p, 0, G_MASK_ROW, eax);
+                put32(p, G_MASK_ROW, eax);
                 port_set16(p, edx, 0, ebx);
                 di = (di - 1) & 0xffff;
             }
@@ -915,10 +942,10 @@ covered:
         ecx = d(p, G_MASK_COLUMN) + 1;
         ebx = d(p, G_COLUMN) + 2;
         eax = set16(eax, w(p, G_COLUMN_COUNT));
-        port_set32(p, 0, G_MASK_COLUMN, ecx);
-        port_set32(p, 0, G_COLUMN, ebx);
+        put32(p, G_MASK_COLUMN, ecx);
+        put32(p, G_COLUMN, ebx);
         eax = set16(eax, eax - 1);
-        port_set16(p, 0, G_COLUMN_COUNT, eax);
+        put16(p, G_COLUMN_COUNT, eax);
     }
     screen = eax = d(p, SCREEN);
     ecx = sw(p, G_LEFT);
@@ -933,34 +960,34 @@ covered:
     edx = sw(p, G_SCREEN_WIDTH);
     eax *= edx;
     ecx += eax;
-    port_set32(p, 0, G_MASK_COLUMN, ecx);
-    port_set32(p, 0, G_MASK_ROW, ecx);
+    put32(p, G_MASK_COLUMN, ecx);
+    put32(p, G_MASK_ROW, ecx);
 pointers:
     /* The source pixels and the target's: its width, pitch and the first pixel's address. */
     eax = d(p, G_SOURCE_OFFSET) << 2;
     edx = port_u32(p, d(p, G_IMAGE), 0) + eax;
     eax = d(p, TARGET);
-    port_set32(p, 0, G_SOURCE, edx);
-    port_set32(p, 0, G_SOURCE_COPY, edx);
+    put32(p, G_SOURCE, edx);
+    put32(p, G_SOURCE_COPY, edx);
     edx = set16(edx, port_u16(p, eax, TARGET_WIDTH));
-    port_set16(p, 0, G_TARGET_WIDTH, edx);
+    put16(p, G_TARGET_WIDTH, edx);
     edx = w(p, G_IMAGE_WIDTH);
-    port_set32(p, 0, G_IMAGE_STRIDE, edx);
+    put32(p, G_IMAGE_STRIDE, edx);
     edx = sw(p, G_TARGET_WIDTH);
     ecx = sw(p, G_TARGET_WIDTH);
-    port_set32(p, 0, G_TARGET_FULL_WIDTH, edx);
+    put32(p, G_TARGET_FULL_WIDTH, edx);
     edx = sw(p, G_VISIBLE_WIDTH);
     ecx -= edx;
     edx = port_u32(p, eax, TARGET_PITCH);
-    port_set32(p, 0, G_TARGET_PITCH, edx);
+    put32(p, G_TARGET_PITCH, edx);
     edx = b(p, G_TARGET_DEPTH) * ecx;
-    port_set32(p, 0, G_TARGET_STRIDE, ecx);
+    put32(p, G_TARGET_STRIDE, ecx);
     ecx = port_u32(p, eax, TARGET_BITS);
     edx += ecx;
-    port_set16(p, 0, G_SAVED_SI, si);
-    port_set32(p, 0, G_TARGET_SKIP, edx);
+    put16(p, G_SAVED_SI, si);
+    put32(p, G_TARGET_SKIP, edx);
     edx = set8h(edx, b(p, G_TARGET_DEPTH));
-    port_set16(p, 0, G_SAVED_DI, di);
+    put16(p, G_SAVED_DI, di);
     /* The target's first pixel, kept for the depth 0x4af560 paints at. */
     {
         uint32_t depth = (edx >> 8) & 0xff;
@@ -974,8 +1001,8 @@ pointers:
             edx = sw(p, G_LEFT);
             eax = port_call(p, SURFACE_OFFSET, eax, edx, ebx, ecx);
             edx = vertrix_lift_edx;
-            port_set32(p, 0, slot, eax);
-            port_set32(p, 0, copy, eax);
+            put32(p, slot, eax);
+            put32(p, copy, eax);
         }
     }
     if (port_u32(p, actor, ACTOR_SPAN) == 0)
@@ -994,7 +1021,7 @@ pointers:
 hidden:
     eax = 0;
 done:
-    port_set16(p, 0, G_SAVED_DI, di);
-    port_set16(p, 0, G_SAVED_SI, si);
+    put16(p, G_SAVED_DI, di);
+    put16(p, G_SAVED_SI, si);
     return port_return(p, eax, edx);
 }
