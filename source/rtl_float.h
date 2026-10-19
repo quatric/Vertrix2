@@ -29,4 +29,8 @@ int vertrix_rtl_single_subtract_full(VertrixRtlFloatState *state, VertrixRtlFloa
 /* Original 0x4d80a6: the same addition entry, without subtraction's initial EDX sign toggle. */
 int vertrix_rtl_single_add_full(VertrixRtlFloatState *state, VertrixRtlFloatCall call,
                                 void *context);
+/* The same entries (subtract nonzero for 0x4d809c) once the helper cache holds the software
+ * helper 0x4d80d5: the registers of the original's outputs in state, its cached helpers untouched.
+ * Returns zero, the state unchanged, where the result overflows and needs the error boundary. */
+int vertrix_rtl_single_add_software(VertrixRtlFloatState *state, int subtract);
 #endif

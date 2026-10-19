@@ -36,6 +36,25 @@ static int in_heap2(const LiftHost *host, uint32_t address, unsigned size)
            (uint64_t)address + size <= (uint64_t)LIFT_HOST_HEAP2_BASE + host->heap2_top;
 }
 
+/* vertrix_lift_frame_hook: the frames of the lifted routines now executing, the innermost first. */
+static uint8_t *host_frame_bytes(uint32_t address, unsigned size)
+{
+    unsigned frame = vertrix_lifted_depth();
+    while (frame-- > 0)
+    {
+        const LiftEnv *env = frame < LIFT_FRAME_LIMIT ? vertrix_lift_frames[frame] : NULL;
+        if (env != NULL && lift_in_stack(env, address, size))
+        {
+            return env->stack + (address - env->low);
+        }
+        if (env != NULL && lift_in_passed(env, address, size))
+        {
+            return ((LiftEnv *)env)->passed + (address - env->passed_low);
+        }
+    }
+    return NULL;
+}
+
 static uint8_t *bytes_at(const LiftHost *host, uint32_t address, unsigned size)
 {
     if (in_heap2(host, address, size))
@@ -50,22 +69,7 @@ static uint8_t *bytes_at(const LiftHost *host, uint32_t address, unsigned size)
     {
         return host->heap + (address - LIFT_HOST_HEAP_BASE);
     }
-    {
-        unsigned frame = vertrix_lifted_depth();
-        while (frame-- > 0)
-        {
-            const LiftEnv *env = frame < LIFT_FRAME_LIMIT ? vertrix_lift_frames[frame] : NULL;
-            if (env != NULL && lift_in_stack(env, address, size))
-            {
-                return env->stack + (address - env->low);
-            }
-            if (env != NULL && lift_in_passed(env, address, size))
-            {
-                return ((LiftEnv *)env)->passed + (address - env->passed_low);
-            }
-        }
-    }
-    return NULL;
+    return host_frame_bytes(address, size);
 }
 
 const uint8_t *lift_host_bytes(const LiftHost *host, uint32_t address, uint32_t size)
@@ -1482,13 +1486,28 @@ typedef struct
     int cache_published;
 } HostSingleContext;
 
+/* The float helpers' globals lie in the image, which is always mapped: read in place. */
+static uint32_t host_image_get(const LiftHost *host, uint32_t address, unsigned size)
+{
+    return lift_get(host->image + (address - LIFT_HOST_IMAGE_BASE), size);
+}
+
+/* A store of the value the global already holds changes nothing, so only a new value is written. */
+static void host_image_update(LiftHost *host, uint32_t address, uint32_t value)
+{
+    if (host_image_get(host, address, 4) != value)
+    {
+        host_write(host, address, 4, value);
+    }
+}
+
 static void host_single_publish(HostSingleContext *context, const VertrixRtlFloatState *state)
 {
     if (!context->cache_published)
     {
-        host_write(context->host, 0x503ea0, 4, state->helper);
-        host_write(context->host, 0x503ea4, 4, state->multiply);
-        host_write(context->host, 0x503ea8, 4, state->divide);
+        host_image_update(context->host, 0x503ea0, state->helper);
+        host_image_update(context->host, 0x503ea4, state->multiply);
+        host_image_update(context->host, 0x503ea8, state->divide);
         context->cache_published = 1;
     }
 }
@@ -1529,53 +1548,90 @@ static void host_single_exception(uint32_t target, VertrixRtlFloatState *state, 
     host_single_refresh(state, host);
 }
 
-static uint32_t host_rtl_arithmetic(VertrixCallSite *site, LiftHost *host)
+/* One float helper call on `state` (registers in, registers out); 0 when unsupported, the state
+ * then unchanged. */
+static int host_rtl_run(LiftHost *host, uint32_t target, VertrixRtlFloatState *state)
 {
-    VertrixRtlFloatState state = {site->eax,
-                                  site->edx,
-                                  site->ebx,
-                                  site->ecx,
-                                  lift_host_read(host, 0x503ea0, 4),
-                                  lift_host_read(host, 0x503ea4, 4),
-                                  lift_host_read(host, 0x503ea8, 4),
-                                  lift_host_read(host, 0x5054a1, 1),
-                                  lift_host_read(host, 0x508798, 1),
-                                  host->rtl_single_control};
     HostSingleContext context = {host, 0};
     VertrixRtlFloatCall call = host->rtl_single_exception ? host_single_exception : NULL;
     int ok;
-    switch (site->target)
+    state->helper = host_image_get(host, 0x503ea0, 4);
+    state->multiply = host_image_get(host, 0x503ea4, 4);
+    state->divide = host_image_get(host, 0x503ea8, 4);
+    state->hardware = host_image_get(host, 0x5054a1, 1);
+    state->capability = host_image_get(host, 0x508798, 1);
+    state->control = host->rtl_single_control;
+    switch (target)
     {
         case 0x4db350:
-            ok = vertrix_rtl_double_add_full(&state, call, &context);
+            ok = vertrix_rtl_double_add_full(state, call, &context);
             break;
         case 0x4db507:
-            ok = vertrix_rtl_double_multiply_full(&state, call, &context);
+            ok = vertrix_rtl_double_multiply_full(state, call, &context);
             break;
         case 0x4d809c:
-            ok = vertrix_rtl_single_subtract_full(&state, call, &context);
+            ok = vertrix_rtl_single_subtract_full(state, call, &context);
             break;
         case 0x4d80a6:
-            ok = vertrix_rtl_single_add_full(&state, call, &context);
+            ok = vertrix_rtl_single_add_full(state, call, &context);
             break;
         case 0x4d8177:
-            ok = vertrix_rtl_single_multiply_full(&state, call, &context);
+            ok = vertrix_rtl_single_multiply_full(state, call, &context);
             break;
         default:
-            ok = vertrix_rtl_single_divide_full(&state, call, &context);
+            ok = vertrix_rtl_single_divide_full(state, call, &context);
             break;
     }
     if (!ok)
     {
         host->rtl_single_failures++;
+        return 0;
+    }
+    host_single_publish(&context, state);
+    return 1;
+}
+
+static uint32_t host_rtl_arithmetic(VertrixCallSite *site, LiftHost *host)
+{
+    VertrixRtlFloatState state = {site->eax, site->edx, site->ebx, site->ecx, 0, 0, 0, 0, 0, 0};
+    if (!host_rtl_run(host, site->target, &state))
+    {
         site->out_value = site->edx;
         return site->eax;
     }
-    host_single_publish(&context, &state);
     site->edx = state.edx;
     site->ebx = state.ebx;
     site->ecx = state.ecx;
     site->out_value = state.edx;
+    return state.eax;
+}
+
+/* vertrix_lift_arithmetic_hook: the same without the call boundary. */
+static uint32_t host_arithmetic_hook(void *context, uint32_t target, uint32_t eax, uint32_t edx,
+                                     uint32_t ebx, uint32_t ecx, uint32_t *out)
+{
+    VertrixRtlFloatState state = {eax, edx, ebx, ecx, 0, 0, 0, 0, 0, 0};
+    /* Once the helper cache holds the software helpers, the full entries compute the same
+     * registers and leave the cache as it is; only an overflow takes the full path. */
+    if (target == 0x4d8177 && host_image_get(context, 0x503ea4, 4) == 0x4d8198 &&
+        vertrix_rtl_single_multiply_software(&state))
+    {
+        *out = state.edx;
+        return state.eax;
+    }
+    if ((target == 0x4d80a6 || target == 0x4d809c) &&
+        host_image_get(context, 0x503ea0, 4) == 0x4d80d5 &&
+        vertrix_rtl_single_add_software(&state, target == 0x4d809c))
+    {
+        *out = state.edx;
+        return state.eax;
+    }
+    if (!host_rtl_run(context, target, &state))
+    {
+        *out = edx;
+        return eax;
+    }
+    *out = state.edx;
     return state.eax;
 }
 
@@ -1870,6 +1926,13 @@ void lift_host_init(LiftHost *host, uint8_t *image, const uint8_t *original, uin
     host->services.allocate = host_allocate;
     host->services.context = host;
     vertrix_lifted_calls_init(&host->calls, &host->inner, &host->services, &host->globals);
+    if (!vertrix_lifted_has(0x4d809c) && !vertrix_lifted_has(0x4d80a6) &&
+        !vertrix_lifted_has(0x4d8177) && !vertrix_lifted_has(0x4d81fe) &&
+        !vertrix_lifted_has(0x4db350) && !vertrix_lifted_has(0x4db507))
+    {
+        vertrix_lift_arithmetic_hook = host_arithmetic_hook;
+        vertrix_lift_arithmetic_context = host;
+    }
     {
         static const uint32_t image_size = LIFT_HOST_IMAGE_SIZE;
         vertrix_lift_flat[0] =

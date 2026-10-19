@@ -172,6 +172,23 @@ static uint32_t hardware_multiply(uint32_t a, uint32_t b, uint32_t control)
     return (sign << 31) | ((uint32_t)exponent << 23) | (fraction & 0x7fffff);
 }
 
+int vertrix_rtl_single_multiply_software(VertrixRtlFloatState *state)
+{
+    VertrixRtlFloatState s = *state;
+    if (!s.eax || !s.edx)
+    {
+        s.eax = 0;
+        *state = s;
+        return 1;
+    }
+    if (!software_multiply(&s, NULL, NULL))
+    {
+        return 0;
+    }
+    *state = s;
+    return 1;
+}
+
 int vertrix_rtl_single_multiply_full(VertrixRtlFloatState *state, VertrixRtlFloatCall call,
                                      void *context)
 {

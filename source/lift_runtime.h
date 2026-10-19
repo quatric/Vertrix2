@@ -87,6 +87,21 @@ __attribute__((weak)) uint32_t vertrix_lift_in_esi, vertrix_lift_in_edi, vertrix
 __attribute__((weak)) void (*vertrix_lift_store_hook)(void *context, uint32_t address,
                                                       unsigned size, uint32_t value);
 __attribute__((weak)) void *vertrix_lift_store_context;
+/* The runtime's float helpers (0x4d809c, 0x4d80a6, 0x4d8177, 0x4d81fe, 0x4db350, 0x4db507), served
+ * by the host without the call boundary: the MP3 decoder calls them for every sample. Returns eax
+ * and the edx in `out`, as the boundary call does. The host sets it only while the dispatcher has
+ * no routine at any of these addresses, so the boundary call would reach the host anyway. */
+__attribute__((weak)) uint32_t (*vertrix_lift_arithmetic_hook)(void *context, uint32_t target,
+                                                               uint32_t eax, uint32_t edx,
+                                                               uint32_t ebx, uint32_t ecx,
+                                                               uint32_t *out);
+__attribute__((weak)) void *vertrix_lift_arithmetic_context;
+
+static inline int lift_arithmetic_target(uint32_t target)
+{
+    return target == 0x4d809c || target == 0x4d80a6 || target == 0x4d8177 || target == 0x4d81fe ||
+           target == 0x4db350 || target == 0x4db507;
+}
 
 static inline void lift_put(uint8_t *bytes, unsigned size, uint32_t value);
 
@@ -355,6 +370,13 @@ static inline uint32_t lift_call_arguments(LiftEnv *env, uint32_t target, uint32
     uint32_t out = 0;
     uint32_t result;
     vertrix_lift_edx = edx; /* a callee that returns a pair leaves its edx here */
+    if (vertrix_lift_arithmetic_hook != NULL && lift_arithmetic_target(target))
+    {
+        result = vertrix_lift_arithmetic_hook(vertrix_lift_arithmetic_context, target, eax, edx,
+                                              ebx, ecx, &out);
+        vertrix_lift_edx = out;
+        return result;
+    }
     result = vertrix_calln(env->calls, target, eax, edx, ebx, ecx, stack, count, &out);
     /* A lifted callee has already stored through eax and leaves out 0; only the native ones
      * report the string in out. (Storing out when a lifted assignment kept its buffer wrote 0

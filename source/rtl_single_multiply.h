@@ -12,4 +12,8 @@
  * or missing required error boundary return zero and preserve state. */
 int vertrix_rtl_single_multiply_full(VertrixRtlFloatState *state, VertrixRtlFloatCall call,
                                      void *context);
+/* The same once the helper cache holds the software helper 0x4d8198: the original's register
+ * outputs in state. Returns zero, the state unchanged, where the result overflows and needs the
+ * error boundary. */
+int vertrix_rtl_single_multiply_software(VertrixRtlFloatState *state);
 #endif

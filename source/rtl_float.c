@@ -367,6 +367,30 @@ static int single(VertrixRtlFloatState *state, VertrixRtlFloatCall call, void *c
     return 1;
 }
 
+int vertrix_rtl_single_add_software(VertrixRtlFloatState *state, int subtract)
+{
+    VertrixRtlFloatState s = *state;
+    if (subtract && s.edx)
+    {
+        s.edx ^= 0x80000000u;
+    }
+    if (!s.edx || !s.eax)
+    {
+        if (!s.eax)
+        {
+            s.eax = s.edx;
+        }
+        *state = s;
+        return 1;
+    }
+    if (!software_add(&s, NULL, NULL))
+    {
+        return 0;
+    }
+    *state = s;
+    return 1;
+}
+
 int vertrix_rtl_single_subtract_full(VertrixRtlFloatState *state, VertrixRtlFloatCall call,
                                      void *context)
 {
