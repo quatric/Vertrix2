@@ -156,6 +156,7 @@
 #include "rtlactorspans.h"
 #include "rtlactortableupdates.h"
 #include "rtlaiboardcompares.h"
+#include "rtlaiboardjudges.h"
 #include "rtlaibombsearches.h"
 #include "rtlaichainsearches.h"
 #include "rtlaicompares.h"
@@ -1024,6 +1025,7 @@ static const LiftedRoutine routines[] = {
     {0x4270a0, vertrix_port_ai_search_4270a0, 404, 0},
     {0x427380, vertrix_port_ai_bomb_search_427380, 0, 0},
     {0x427850, vertrix_port_ai_compare_player_boards_427850, 332, 0},
+    {0x4279b0, vertrix_port_ai_board_judge_4279b0, 0, 0},
     {0x427ae0, vertrix_port_object_compare_regions_427ae0, 0, 0},
     {0x427c10, vertrix_port_ai_features_427c10, 0, 0},
     {0x427e10, vertrix_port_ai_mode_flags_427e10, 0, 0},

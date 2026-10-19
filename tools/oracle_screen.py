@@ -2,7 +2,8 @@
 from unicorn import (UC_HOOK_MEM_READ_UNMAPPED, UC_HOOK_MEM_WRITE, UC_HOOK_MEM_WRITE_UNMAPPED,
                      UcError)
 from unicorn.x86_const import (UC_X86_REG_CS, UC_X86_REG_DS, UC_X86_REG_EDX, UC_X86_REG_EFLAGS,
-                               UC_X86_REG_EIP, UC_X86_REG_ES, UC_X86_REG_FS, UC_X86_REG_GDTR,
+                               UC_X86_REG_EIP, UC_X86_REG_ES, UC_X86_REG_ESP, UC_X86_REG_FS,
+                               UC_X86_REG_GDTR,
                                UC_X86_REG_SS)
 import ctypes as c
 import json
@@ -38,6 +39,23 @@ class Services(c.Structure):
     from oracle_kit import Resolve
     _fields_ = [('resolve', Resolve), ('allocate', c.c_void_p), ('draw', c.c_void_p),
                 ('range', c.c_void_p), ('context', c.c_void_p)]
+
+
+class LiftEnvView(c.Structure):
+    """The start of the runtime's LiftEnv: where a running frame's bytes are."""
+    _fields_ = [('calls', c.c_void_p), ('services', c.c_void_p), ('globals', c.c_void_p),
+                ('stack', c.POINTER(c.c_uint8)), ('low', U), ('high', U)]
+
+
+def frame_bytes(native, address, count):
+    """`count` bytes at `address` in a frame the native code registered (vertrix_lift_frames), or
+    None when no frame holds them."""
+    frames = (c.POINTER(LiftEnvView) * 17).in_dll(native, 'vertrix_lift_frames')
+    for env in frames:
+        if env and env.contents.low <= address and address + count <= env.contents.high:
+            base = address - env.contents.low
+            return bytes(env.contents.stack[base + i] for i in range(count))
+    return None
 
 
 def site_log(s, count):
@@ -190,7 +208,21 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
     returns, native_log, replay, replay_out, native_stores = [], [], [], [], []
     flag_draws, flag_replay = [], []
     lift_fl = LiftFlags.in_dll(native, 'vertrix_lift_fl') if flag_targets else None
-    native_extras = native_extras_arg or {}
+    native_extras = dict(native_extras_arg or {})
+    # VERTRIX_CALL_BYTES="0x428110:edx:0x41,ebx:0x41": a stubbed callee's call also logs the
+    # bytes its pointer registers address in the routine's own frame, so a local the routine fills
+    # for the callee (0x4279b0 copies two boards for 0x428110) is compared, not just its address.
+    for item in os.environ.get('VERTRIX_CALL_BYTES', '').split(';'):
+        if item:
+            target, pointers = item.split(':', 1)
+            spec = [(('eax', 'edx', 'ebx', 'ecx').index(register), int(count, 0))
+                    for register, count in (p.split(':') for p in pointers.split(','))]
+            extras = dict(extras or {})
+            extras[int(target, 0)] = lambda cpu, regs, args, spec=spec: tuple(
+                bytes(cpu.mem_read(regs[r], n)) if 0 < regs[r] - cpu.reg_read(UC_X86_REG_ESP)
+                < 0x10000 else None for r, n in spec)
+            native_extras[int(target, 0)] = lambda s, spec=spec: tuple(
+                frame_bytes(native, (s.eax, s.edx, s.ebx, s.ecx)[r], n) for r, n in spec)
 
     def handler(target, eax, edx, ebx, ecx, stack):
         if target in flag_targets:

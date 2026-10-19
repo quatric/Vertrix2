@@ -23,7 +23,10 @@ Pushes are reads only where the pushed value is read back:
   arithmetic and the ret counts of callees), and an esp access at an unknown depth counts as
   reading every slot.
 """
+import bisect
+import re
 import sys
+from pathlib import Path
 
 from capstone import CS_AC_READ, CS_AC_WRITE
 from capstone import x86_const as X
@@ -532,7 +535,7 @@ def inputs(start, depth=0):
     return result
 
 
-def _inputs(start, depth, entry=True):
+def _inputs(start, depth, entry=True, at_return=()):
     seen = _trace(start)
     prologue = _prologue(seen, start) if entry else {}
     slots = sorted(s for s in prologue.values() if s is not None)
@@ -548,6 +551,7 @@ def _inputs(start, depth, entry=True):
         used, defined = set(), set()
         if mnemonic == 'ret':
             successors[address] = ()
+            used = _halves(at_return)
         elif mnemonic == 'jmp':
             op = insn.operands[0]
             if op.type == X.X86_OP_IMM and op.imm in seen:
@@ -622,13 +626,26 @@ def _inputs(start, depth, entry=True):
     return frozenset(n for n in NAMES if _halves((n,)) & live[start])
 
 
-def live_at(address):
+def live_at(address, at_return=()):
     """The registers (of the four) read before written from `address` on, inside a routine (a
-    call's return address): no prologue there."""
+    call's return address): no prologue there. Those in `at_return` count as read by its `ret`."""
     try:
-        return _inputs(address, 0, entry=False)
+        return _inputs(address, 0, entry=False, at_return=at_return)
     except (NotImplementedError, ValueError, IndexError):
         return ALL
+
+
+_starts = None
+
+
+def _enclosing(site):
+    """The start of the dispatched routine holding `site` (the nearest at or below it), or None."""
+    global _starts
+    if _starts is None:
+        text = (Path(__file__).resolve().parents[1] / 'source' / 'lifted_dispatch.c').read_text()
+        _starts = sorted(int(a, 16) for a in re.findall(r'^    \{(0x[0-9a-f]+), ', text, re.M))
+    index = bisect.bisect_right(_starts, site) - 1
+    return _starts[index] if index >= 0 else None
 
 
 _image = None
@@ -641,7 +658,7 @@ def _code():
     return _image
 
 
-def returned_read(start, name='edx'):
+def returned_read(start, name='edx', _outer=None):
     """Whether a caller of the routine at `start` may read the register it leaves (eax: its result;
     edx: the high half of a 64-bit result, or what a routine that keeps it leaves). Every direct call site is followed from its return address; a tail
     jump to the routine, or its address held anywhere in the image (a method table, a pointer
@@ -661,6 +678,16 @@ def returned_read(start, name='edx'):
             continue
         if opcode == 0xe9 or name in live_at(site + 5):
             return True
+        # Left unchanged to a ret, the register is the caller's own result (0x43ab60 pops two
+        # registers and returns 0x4279b0's eax, which 0x452e00 tests): read if the caller's
+        # callers read it. A cycle or an unknown caller counts as read.
+        if name in live_at(site + 5, at_return=(name,)):
+            outer = _outer if _outer is not None else set()
+            enclosing = _enclosing(site)
+            if enclosing is None or enclosing in outer or len(outer) > 16:
+                return True
+            if returned_read(enclosing, name, outer | {start}):
+                return True
     return False
 
 

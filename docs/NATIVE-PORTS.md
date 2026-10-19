@@ -137,7 +137,13 @@ copy's 0.
 data that the port never stored: the store comparison alone only checks the stores the port makes,
 so a dropped store passed it (0x480730 passed without the last word of each percent row). Use it
 for routines that write globals (0x480730, 0x4ceaa0, 0x474560, 0x474910, 0x423960).
-`VERTRIX_ORACLE_LIMIT` raises the original's instruction budget (0x480730 runs 1.6 million). `VERTRIX_MODES=wide` compares the wide registers only, for a routine the small ones leave with
+`VERTRIX_ORACLE_LIMIT` raises the original's instruction budget (0x480730 runs 1.6 million). `VERTRIX_CALL_BYTES="0x428110:edx:0x41,ebx:0x41"` also logs, with each call to the
+named stub, the bytes its pointer registers address in the routine's frame (the original's from
+Unicorn, the port's from its registered frame), so a local the routine fills only for a stubbed
+callee is compared (0x4279b0's two board copies passed a short copy without it). A caller that
+returns a callee's eax unchanged (0x43ab60 pops two registers and returns 0x4279b0's result)
+reads it when its own callers do: `tools/register_inputs.py` follows such wrappers up, so the
+eax is compared (before, 0x4279b0's result was not compared at all). `VERTRIX_MODES=wide` compares the wide registers only, for a routine the small ones leave with
 nowhere to go (0x4c17da calls through cinfo's method and error manager pointers; with small
 registers its original returned in 3 of 128 cases and the run took hours). Stores are compared at the end
 only, so where stubs hand several objects one address a later object's store hides an earlier
@@ -358,3 +364,4 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x465af0 | `rtlplaypanels.c` | the play screen's bars, panels, cell grid, texts, indicators and markers |
 | 0x43e320 | `rtlactorprojections.c` | the actors' projection to the screen (position over depth, level from depth) |
 | 0x4c17da | `rtljpegmasters.c` | libjpeg's jinit_master_decompress (range limit table, master_selection) |
+| 0x4279b0 | `rtlaiboardjudges.c` | the AI's judgement whether to answer now (both boards compared, features taken, moves rated) |
