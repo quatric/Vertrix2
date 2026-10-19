@@ -805,6 +805,37 @@ The global stores no longer go through the boundary at all. `lift_global_store` 
 the hook (the oracle harnesses), the store is still the 0xf0000000 call. 1,500 ticks then took
 14.6 s.
 
+### Speed on the Wii
+
+Measured in Dolphin 2609-7 at the Wii's own CPU speed (no overclock), with the unattended build
+(`VERTRIX_AUTOPLAY`) and a timing print per 3 s of the main loop. The game's logic follows the
+clock, not the frame count: with no input a round lasts 31.9 s of game time at 14 ms per pass
+and 30.4 s at 50 ms per pass. A lower frame rate makes play choppier, not slower.
+
+| | Before | After `6c94210` |
+|---|---|---|
+| Boot to the title menu | over 8 min (est.) | 5 min 4 s |
+| Title menu | about 3 to 5 frames/s | about 8 frames/s |
+| Play | (not reached) | about 18 to 20 frames/s |
+| Upload of one frame | 21 ms | 7 ms |
+
+A pass during play now takes about 37 ms of game logic and 7 ms of upload; the timer thread's
+sound mixing adds about 17%. What changed:
+
+- `c7066fc`: lifted loads and stores reach the heaps and the image directly
+  (`vertrix_lift_flat`), after the routine's own frame.
+- `36b6fee`: words are loaded and stored whole (`lwbrx`/`stwbrx` on the Wii).
+- `a46a52c`: the presenter waits for a retrace only when none has passed since the last frame.
+- `2f944b1`, `6c94210`: the frame is packed into the GX texture straight from the back buffer.
+
+On the Mac the first two took the load to the title from 15.6 s to 10.4 s and 12,000 ticks of
+play from 54.8 s to 35.5 s, with every frame identical.
+
+The load is mostly the MP3 sound effects, decoded at startup through the x87 helpers in
+software (`single`, `vertrix_rtl_single_multiply_full`, `vertrix_rtl_double_*`). Per pass in
+play, `lift_load` and `lift_store` themselves are still the largest cost, then the dispatcher's
+`find`.
+
 ## Clean ports
 
 The lifted chunks are instruction-level C. A clean port rewrites one original routine as ordinary
