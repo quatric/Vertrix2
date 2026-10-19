@@ -831,10 +831,49 @@ sound mixing adds about 17%. What changed:
 On the Mac the first two took the load to the title from 15.6 s to 10.4 s and 12,000 ticks of
 play from 54.8 s to 35.5 s, with every frame identical.
 
-The load is mostly the MP3 sound effects, decoded at startup through the x87 helpers in
-software (`single`, `vertrix_rtl_single_multiply_full`, `vertrix_rtl_double_*`). Per pass in
-play, `lift_load` and `lift_store` themselves are still the largest cost, then the dispatcher's
-`find`.
+#### Second round
+
+Same setup, with a timing print per 3 s for each main-loop handler (title 0x41b820, play
+0x424990). Logic is the handler's own time per pass, without the 7 ms upload.
+
+| | `6c94210` | `e248d8f` |
+|---|---|---|
+| Boot to the title menu | 304.1 s | 112.2 s |
+| Title menu | 8.5 passes/s, 82.5 ms logic | 17.3 passes/s, 45.6 ms logic |
+| Play | 16.8 passes/s, 42.8 ms logic | 34.7 passes/s, 20.6 ms logic |
+| Timer thread (sound mixing), per 3 s of play | 597 ms | 144 ms |
+
+Boot to the title, step by step:
+
+- `75aeada` (304.1 s to 208.5 s): the x87 helpers (0x4d809c, 0x4d80a6, 0x4d8177, 0x4d81fe,
+  0x4db350, 0x4db507) are served by a hook in `lift_call_arguments`. The single add and multiply
+  run their software paths directly, without the host call boundary.
+- `446c624` (to 164.4 s): the MPEG table setup records its stores for the first MP3 and replays
+  them for every later MP3 with the same registers.
+- `aac4c5d` (to 151.8 s): a load or store into an enclosing routine's frame reaches it through
+  `vertrix_lift_frame_hook`, not through `resolve` and the globals.
+- `e56def1` (to 150.1 s): the frame and flat checks use 32-bit arithmetic, image region first.
+- `66c9e85` (to 125.8 s): the surface glow spreads in place inside the surface's flat block
+  (`PortWindow`).
+
+During play:
+
+- `2bff167`: the channel mixer reads and writes its buffers in place (timer 597 ms to 218 ms per
+  3 s, play 16.8 to 20.2 passes/s).
+- `919fc9f`: a routine's passed arguments are copied into its frame only when something reads
+  them (play to 21.3 passes/s, boot to 119.9 s).
+- `b01a819`: the emulated surface copies (Blt, Flip) move whole rows with `memmove`. They were a
+  third of a play pass (play to 30.7 passes/s, title to 14.9).
+- `1a11464`: the mix clamp, the keyed blit and the remaining surface copies work in place (play
+  32.4, title 16.4, boot 112.2 s, timer 148 ms).
+- `e248d8f`: the actor gate (0x4ae3e0, a sixth of a title pass) reaches its globals through one
+  window (play 34.7, title 17.3).
+
+Each step kept the host gate and a 12,000-tick `GAMEKEYS=1 CONTINUE=yes` play run frame for frame
+identical. The rest of the boot is still the MP3 decode itself. A title pass next spends most in
+the projection (0x43e320), the half-tone rectangle (0x492dc0) and the surface mask (0x4ab200). The
+per-pixel blend ports (0x48d720, 0x48d740, 0x48e190) are dispatched about 10,000 times a play
+pass, so `lift_begin` and the dispatcher cost more there than the work.
 
 ## Clean ports
 
