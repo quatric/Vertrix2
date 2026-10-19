@@ -72,6 +72,17 @@ It also reports esi, edi and ebp, which no call compares: a port passes 0 there 
 callee listed as reading one needs a look. So far each such read has been the runtime's error path
 (0x4eb4d4) or the exception machinery, not an argument.
 
+The flags a port leaves (`vertrix_lift_fl`) compare when a caller branches on them right after
+the call (`VERTRIX_VERIFY_FLAGS`, `flag_readers` in `tools/verify_port.py`). It finds lifted
+callers (a `fl.` read after `lift_call(&env, 0xADDR, ...)`) and native ones: a port that reads
+`vertrix_lift_fl` after a call naming the address, by its constant or by an enum or `#define`
+name equal to it, directly or through the file's own helpers (one that returns right after the
+call, or one such as `less_or_equal` in `rtlpalettehues.c` that reads the flags). A port that
+forwards to the address (`return port_forward...`, a tail jump) leaves its flags, so that port's
+readers count too. Native readers are why the double compare 0x4eb57c (the float ports, the
+palette and projection compares, the sample clip in `audiodecodes.c`) and the signed compare
+0x4d8082 (`rtlpalettehues.c`) have their flags compared.
+
 A virtual call, or a call through a procedure variable (an address read from a table or a field),
 goes to a stub in the verifier, which compares all four registers: the port hands over what the
 original leaves in them and says so (0x4d5bf8, 0x4dee00 in `handlemaps.c`; the libjpeg

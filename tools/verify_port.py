@@ -13,6 +13,7 @@ The returned edx is compared as well, and when a lifted caller branches on the f
 leaves (vertrix_lift_fl) right after the call, so are the flags: such a port sets them.
 """
 import argparse
+import bisect
 import json
 import os
 import re
@@ -40,12 +41,20 @@ import lift  # noqa: E402
 import register_inputs  # noqa: E402
 
 
-def flag_readers(address):
+LIFTED_TEXTS = []
+
+
+def lifted_flag_readers(address):
     """The lifted routines that read the flags right after calling `address`."""
     call = re.compile(r'lift_call\(&env, 0x%xu,' % address)
     readers = []
-    for path in sorted((ROOT / 'source').glob('lifted_*.c')):
-        lines = path.read_text().splitlines()
+    if not LIFTED_TEXTS:
+        for path in sorted((ROOT / 'source').glob('lifted_*.c')):
+            text = path.read_text()
+            LIFTED_TEXTS.append((text, text.splitlines()))
+    for text, lines in LIFTED_TEXTS:
+        if 'lift_call(&env, 0x%xu,' % address not in text:
+            continue
         routine = None
         for index, line in enumerate(lines):
             if line.startswith('uint32_t lifted_'):
@@ -68,6 +77,115 @@ def flag_readers(address):
                         break
                     live = r'\bfl\.cf\b'
     return readers
+
+
+# A native port's flag read: vertrix_lift_fl used other than as the target of a store.
+FLAG_READ = re.compile(r'\bvertrix_lift_fl\b(?!\s*(\.\w+\s*)?=[^=])')
+NATIVE_CALL = re.compile(r'\b\w*(call|forward)\w*\(')
+FUNCTION = re.compile(r'^(?:static\s+)?(?:inline\s+)?(?:const\s+)?\w+[\s*]+(\w+)\(')
+
+
+NATIVE_TEXTS = {}
+NATIVE_CONSTANTS = {}
+
+
+def native_text(path):
+    """A native source's text, lowercased text, lines, functions and flag-reading helpers."""
+    if path not in NATIVE_TEXTS:
+        text = path.read_text()
+        lines = text.splitlines()
+        functions = native_functions(lines)
+        helpers = {name for name, first, last in functions
+                   if not name.startswith('vertrix_port_') and
+                   any(FLAG_READ.search(line) for line in lines[first + 1:last])}
+        starts = [0]
+        for line in lines:
+            starts.append(starts[-1] + len(line) + 1)
+        NATIVE_TEXTS[path] = text, text.lower(), lines, functions, helpers, starts
+    return NATIVE_TEXTS[path]
+
+
+def native_functions(lines):
+    """(name, first line, last line) of each function defined in a source's lines."""
+    functions = []
+    for index, line in enumerate(lines):
+        found = FUNCTION.match(line)
+        if found and not line.rstrip().endswith(';'):
+            functions.append([found.group(1), index, len(lines) - 1])
+        elif line.startswith('}') and functions and functions[-1][2] == len(lines) - 1:
+            functions[-1][2] = index
+    return functions
+
+
+def native_flag_readers(address, seen=None):
+    """The native ports that read vertrix_lift_fl after calling `address`, named by the address
+    constant or by an enum or #define name equal to it, directly or through a file's own helper
+    (one that ends right after the call, or one that reads the flags itself). A port that forwards
+    to `address` (a tail jump) leaves its flags, so the readers of that port count as well."""
+    seen = set() if seen is None else seen
+    if address in seen:
+        return []
+    seen.add(address)
+    readers = []
+    forwarders = []
+    if not NATIVE_TEXTS:
+        for path in sorted((ROOT / 'source').glob('*.c')):
+            if not path.name.startswith('lifted_'):
+                native_text(path)
+                for constant in re.findall(r'\b0x0*([0-9a-f]+)', NATIVE_TEXTS[path][1]):
+                    NATIVE_CONSTANTS.setdefault(int(constant, 16), {})[path] = True
+    # The routine is named by its address in any source that calls it (an enum or #define name
+    # stands for the constant, a helper for a call naming one).
+    for path in NATIVE_CONSTANTS.get(address, []):
+        text, lower, lines, functions, helpers, starts = NATIVE_TEXTS[path]
+        names = {found.group(1) for found in re.finditer(
+            r'^\s*(?:#define\s+)?([A-Z_][A-Z0-9_]*)\s*=?\s*0x0*(?i:%x)u?\b' % address, text,
+            re.M)}
+        firsts = [first for name, first, last in functions]
+        # Helpers whose body reads the flags: calling one reads them.
+        helper_call = re.compile(r'\b(%s)\(' % '|'.join(sorted(helpers))) if helpers else None
+        targets = names
+        found_new = True
+        while found_new:
+            found_new = False
+            token = re.compile(r'\b(0x0*(?i:%x)%s)u?\b'
+                               % (address, ''.join('|' + target for target in sorted(targets))))
+            for index in sorted({bisect.bisect_right(starts, found.start()) - 1
+                                 for found in token.finditer(text)}):
+                line = lines[index]
+                owner = bisect.bisect_right(firsts, index) - 1
+                if owner < 0 or index >= functions[owner][2] or not NATIVE_CALL.search(line):
+                    continue
+                name, first, last = functions[owner]
+                opening = lines[index - 1] if not lines[index - 1].rstrip().endswith(
+                    (';', '{', '}')) else ''
+                if 'return port_forward' in opening + line:
+                    forwarders.append(name)
+                    continue
+                for after in lines[index + 1:last + 1]:
+                    if FLAG_READ.search(after) or (helper_call and helper_call.search(after)):
+                        readers.append('%s:%s' % (path.stem, name))
+                        break
+                    if after.startswith('}') or after.lstrip().startswith('return '):
+                        # A helper that returns right after the call: its callers call
+                        # `address` too.
+                        if not name.startswith('vertrix_port_') and name not in targets:
+                            targets.add(name)
+                            found_new = True
+                        break
+                    if NATIVE_CALL.search(after) or 'return ' in after or 'goto ' in after:
+                        break
+    for name in forwarders:
+        found = re.search(r'_([0-9a-f]+)$', name)
+        if name.startswith('vertrix_port_') and found:
+            readers += native_flag_readers(int(found.group(1), 16), seen)
+            readers += lifted_flag_readers(int(found.group(1), 16))
+    return readers
+
+
+def flag_readers(address):
+    """The routines, lifted and native, that read the flags right after calling `address`."""
+    return lifted_flag_readers(address) + native_flag_readers(address)
 
 
 def run_mode(directory, name, cases, mode, flags, timeout, natives=(), edx=True, eax=True):
