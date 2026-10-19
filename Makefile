@@ -129,6 +129,23 @@ $(BUILD)/vertrix2-platform-check.elf: $(BUILD)/wii_platform_check.o $(BUILD)/lib
 $(BUILD)/vertrix2-platform-check.dol: $(BUILD)/vertrix2-platform-check.elf
 	/opt/devkitpro/tools/bin/elf2dol $< $@
 
+# Input from every controller, keyboard and mouse (libwiiinput), and the update check on the
+# releases page (libwiiupdate); both are submodules (git submodule update --init).
+INPUT_SOURCES := $(wildcard libwiiinput/source/*.c)
+INPUT_OBJECTS := $(patsubst libwiiinput/source/%.c,$(BUILD)/libwiiinput/%.o,$(INPUT_SOURCES))
+WII_INCLUDES := -Ilibwiiinput/include -Ilibwiiupdate/include
+APP_VERSION := $(shell sed -n 's:.*<version>\(.*\)</version>.*:\1:p' wii-game/meta.xml)
+
+$(BUILD)/libwiiinput/%.o: libwiiinput/source/%.c libwiiinput/source/libinput_internal.h libwiiinput/include/input_wii.h
+	@mkdir -p $(dir $@)
+	$(PPC_CC) -O2 -Wall -Wextra -DGEKKO -DHW_RVL -mrvl -mcpu=750 -meabi -mhard-float -Ilibwiiinput/include -I$(LIBOGC)/include -c $< -o $@
+
+$(BUILD)/libwiiinput.a: $(INPUT_OBJECTS)
+	$(PPC_AR) rcs $@ $^
+
+libwiiupdate/lib/libwiiupdate.a: $(wildcard libwiiupdate/source/* libwiiupdate/include/* libwiiupdate/config/*)
+	$(MAKE) -C libwiiupdate DEVKITPPC=$(DEVKITPPC) LIBOGC=$(LIBOGC)
+
 # Playable single-player board composed from the recovered routines.
 .PHONY: wii-game
 wii-game: $(BUILD)/vertrix2.dol
@@ -140,13 +157,13 @@ $(BUILD)/wii_game_art.o: source/wii_game_art.c $(wildcard source/*.h) | $(BUILD)
 	$(PPC_CC) $(CFLAGS) -DGEKKO -DHW_RVL -D__wii__ -I$(LIBOGC)/include -I/opt/devkitpro/portlibs/ppc/include -c $< -o $@
 
 $(BUILD)/wii_input.o: source/wii_input.c $(wildcard source/*.h) | $(BUILD)
-	$(PPC_CC) $(CFLAGS) -DGEKKO -DHW_RVL -D__wii__ -I$(LIBOGC)/include -c $< -o $@
+	$(PPC_CC) $(CFLAGS) -DGEKKO -DHW_RVL -D__wii__ -I$(LIBOGC)/include $(WII_INCLUDES) -c $< -o $@
 
 $(BUILD)/wii_sfx.o: source/wii_sfx.c $(wildcard source/*.h) | $(BUILD)
 	$(PPC_CC) $(CFLAGS) -DGEKKO -DHW_RVL -D__wii__ -I$(LIBOGC)/include -c $< -o $@
 
-$(BUILD)/vertrix2.elf: $(BUILD)/wii_game.o $(BUILD)/wii_game_art.o $(BUILD)/wii_input.o $(BUILD)/wii_music.o $(BUILD)/wii_sfx.o $(BUILD)/libvertrix-wii-music-deps.a $(BUILD)/libvertrix-wii-video.a $(BUILD)/libvertrix-wii-archive.a $(BUILD)/libvertrix-recovered.a
-	$(PPC_CC) -mrvl $(CFLAGS) $^ -L$(LIBOGC)/lib/wii -L/opt/devkitpro/portlibs/ppc/lib -ljpeg -lmad -lasnd -lfat -lwiiuse -lbte -logc -lm -Wl,-Map,$(BUILD)/vertrix2.map -o $@
+$(BUILD)/vertrix2.elf: $(BUILD)/wii_game.o $(BUILD)/wii_game_art.o $(BUILD)/wii_input.o $(BUILD)/wii_music.o $(BUILD)/wii_sfx.o $(BUILD)/libvertrix-wii-music-deps.a $(BUILD)/libvertrix-wii-video.a $(BUILD)/libvertrix-wii-archive.a $(BUILD)/libvertrix-recovered.a $(BUILD)/libwiiinput.a
+	$(PPC_CC) -mrvl $(CFLAGS) $^ -L$(LIBOGC)/lib/wii -L/opt/devkitpro/portlibs/ppc/lib -ljpeg -lmad -lasnd -lfat -lwiikeyboard -lwiiuse -lbte -logc -lm -Wl,-Map,$(BUILD)/vertrix2.map -o $@
 
 $(BUILD)/vertrix2.dol: $(BUILD)/vertrix2.elf
 	/opt/devkitpro/tools/bin/elf2dol $< $@
@@ -188,11 +205,11 @@ wii-sync: $(BUILD)/vertrix2.dol
 .PHONY: wii-lifted-game wii-sync-lifted
 wii-lifted-game: $(BUILD)/vertrix2-lifted.dol
 
-$(BUILD)/wii_lifted_game.o: tools/wii_lifted_game.c tools/jpeg_decode.h $(wildcard source/*.h) | $(BUILD)
-	$(PPC_CC) $(CFLAGS) -DGEKKO -DHW_RVL -D__wii__ -I$(LIBOGC)/include -I/opt/devkitpro/portlibs/ppc/include -Isource -Itools -c $< -o $@
+$(BUILD)/wii_lifted_game.o: tools/wii_lifted_game.c tools/jpeg_decode.h wii-game/meta.xml $(wildcard source/*.h) | $(BUILD)
+	$(PPC_CC) $(CFLAGS) -DGEKKO -DHW_RVL -D__wii__ -DAPP_VERSION=\"$(APP_VERSION)\" -I$(LIBOGC)/include -I/opt/devkitpro/portlibs/ppc/include $(WII_INCLUDES) -Isource -Itools -c $< -o $@
 
-$(BUILD)/vertrix2-lifted.elf: $(BUILD)/wii_lifted_game.o $(BUILD)/image_bin.o $(BUILD)/libvertrix-wii-audio.a $(BUILD)/libvertrix-wii-video.a $(BUILD)/libvertrix-wii-archive.a $(BUILD)/libvertrix-recovered.a
-	$(PPC_CC) -mrvl $(CFLAGS) $^ -L$(LIBOGC)/lib/wii -L/opt/devkitpro/portlibs/ppc/lib -ljpeg -lasnd -lfat -lwiiuse -lbte -logc -lm -o $@
+$(BUILD)/vertrix2-lifted.elf: $(BUILD)/wii_lifted_game.o $(BUILD)/image_bin.o $(BUILD)/libvertrix-wii-audio.a $(BUILD)/libvertrix-wii-video.a $(BUILD)/libvertrix-wii-archive.a $(BUILD)/libvertrix-recovered.a $(BUILD)/libwiiinput.a libwiiupdate/lib/libwiiupdate.a
+	$(PPC_CC) -mrvl $(CFLAGS) $^ -L$(LIBOGC)/lib/wii -L/opt/devkitpro/portlibs/ppc/lib -ljpeg -lasnd -lfat -lwiikeyboard -lwiiuse -lbte -logc -lm -o $@
 
 $(BUILD)/vertrix2-lifted.dol: $(BUILD)/vertrix2-lifted.elf
 	/opt/devkitpro/tools/bin/elf2dol $< $@

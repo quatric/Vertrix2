@@ -1139,6 +1139,45 @@ output at all, even for the older known-good `wii-game/boot.dol`, so there is no
 The Makefile now rebuilds `libvertrix-recovered.a` from scratch (a stale member had defined the
 same lifted symbols twice).
 
+## Controllers and the update check on the Wii
+
+`tools/wii_lifted_game.c` reads input through [libwiiinput](https://github.com/quatric/libwiiinput)
+and checks for new releases with [libwiiupdate](https://github.com/quatric/libwiiupdate). Both are
+submodules (`git submodule update --init`); the Makefile builds them into `build/libwiiinput.a` and
+`libwiiupdate/lib/libwiiupdate.a`, and links `-lwiikeyboard` for the USB keyboard.
+
+- **Controllers.** Wii Remote, Nunchuk, Classic Controller and GameCube pad all fold into one
+  button mask. The original's DirectInput keys come from it as before: the D-pad (or any stick past
+  half way) is the arrow keys, A Enter, B Space, 1 and 2 Z and X, minus Escape. A also presses the
+  mouse button. HOME exits to the loader.
+- **USB keyboard.** Every key goes to the original as its DirectInput scan code (letters, digits,
+  arrows, F1-F12, Enter, Escape, Space, Shift, Ctrl, Alt and the rest of the main block). The
+  keyboard's own controller mapping is cleared so a key is not pressed twice.
+- **Pointer and USB mouse.** The remote's IR pointer and a USB mouse drive one cursor; its position
+  goes into the original's mouse object (x, y at 0x5588f8+0x48) when it moves more than a few
+  pixels. The left and right mouse buttons are DirectInput mouse buttons 0 and 1.
+- **Polling.** `INPUT_Update` runs at most every 4 ms. The loop turns far faster than the remote
+  reports, and polling every pass only repeated the same state.
+- **Update check.** `WIIUPDATE_Start("quatric", "Vertrix2", APP_VERSION)` runs once the heaps are
+  set up; `APP_VERSION` is `<version>` in `wii-game/meta.xml`. The check's thread has priority 40
+  and the game thread 64. Because the game rarely waits for a retrace while it is behind on frames,
+  a check below it would never finish. So the game thread drops to 30 while the check is running
+  (that happens during the load, when there are no frames to drop) and while the popup is open,
+  and goes back to 64 after. The popup (`WIIUPDATE_Popup`) is drawn over a copy of the frame in
+  libogc's 8x16 console font and takes the controller buttons while it is open. A installs the
+  update and exits to the loader; B closes it. While quatric/Vertrix2 is private, the anonymous request gets 404 and
+  the check ends quietly as failed.
+- **Frame time.** In Dolphin, 600 gameplay frames took 12,762 ms before the change and 12,742 ms
+  after, and gameplay starts at 95.25 s and 95.26 s. The keyboard thread (priority 127) blocks in IOS
+  between reports and looks for a keyboard only four times a second.
+- **libogc's report writer edits its input.** `SYS_STDIO_Report`'s writer
+  (`__uart_stdio_write`) turns `\n` into `\r` in the buffer it is given, before it looks for a
+  UART. newlib hands it string constants directly: `puts`' `"\n"`, which the linker shares with
+  every constant ending in a newline. The first `printf("...\n")` changed the last byte of
+  libwiiupdate's HTTP request template to `\r`, and GitHub answered 400 to every check. The
+  game's stdout wrapper (`tee_write`) now passes only a copy to the libogc writer, and it is
+  installed whether or not the SD log opens.
+
 ## Names
 
 `tools/gen_names.py` reads bounded original-address annotations from recovered headers into

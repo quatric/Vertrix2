@@ -3,6 +3,6 @@
     <name>Vertrix2</name>
     <coder>quatric</coder>
     <version>0.2</version>
-    <short_description>Playable single-player board</short_description>
-    <long_description>One playable board built from the recovered Vertrix 2 routines, drawn with the original block artwork. Needs the original Vertrix2.vf in sd:/apps/vertrix2/. Menus, opponents, bonuses and sound are not recovered yet. HOME on Wii Remote 1 exits.</long_description>
+    <short_description>Vertrix 2 for the Wii</short_description>
+    <long_description>Vertrix 2 on the Wii. Needs the original Vertrix2.vf in sd:/apps/vertrix2/. Plays with a Wii Remote (pointer and buttons), Nunchuk, Classic Controller, GameCube pad, or a USB keyboard and mouse. HOME exits. Checks github.com/quatric/Vertrix2 for new releases at startup.</long_description>
 </app>

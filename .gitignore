@@ -3,3 +3,4 @@ build/
 *.dylib
 __pycache__/
 *.pyc
+build-auto/
