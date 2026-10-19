@@ -123,6 +123,91 @@ static inline void port_set32(Port *port, uint32_t base, uint32_t offset, uint32
     lift_store(&port->env, base, offset, 4, value);
 }
 
+/* The host memory behind the `size` bytes at `address` when they lie in one block the host maps
+ * directly (vertrix_lift_flat) and outside the port's frame: every port_u8 to port_set32 inside
+ * them then reaches these bytes, so a loop over a whole buffer may read and write it in place. NULL
+ * otherwise (the verifier maps no such block). The pointer stays valid until the port calls out. */
+static inline uint8_t *port_flat(Port *port, uint32_t address, uint32_t size)
+{
+    const LiftEnv *env = &port->env;
+    uint8_t *first;
+    if (size == 0 || address + size < address ||
+        (address < env->high && address + size > env->low) ||
+        (address < env->passed_high && address + size > env->passed_low))
+    {
+        return NULL;
+    }
+    first = lift_flat(address, size, 1);
+    /* the last byte as a load of any size reads it (the image is read a dword at a time) */
+    if (first == NULL || lift_flat(address + size - 1, 1, 1) != first + size - 1)
+    {
+        return NULL;
+    }
+    return first;
+}
+
+/* A window of the original's memory that a loop reads and writes in place where port_flat allows
+ * (memory NULL otherwise). Its accessors serve an access inside the window from that memory and
+ * any other through port_u8 to port_set32, so they behave as those do. Valid until the port calls
+ * out. */
+typedef struct PortWindow
+{
+    uint32_t address;
+    uint32_t size;
+    uint8_t *memory;
+} PortWindow;
+
+static inline PortWindow port_window(Port *port, uint32_t address, uint64_t size)
+{
+    PortWindow window = {address, 0, NULL};
+    if (size != 0 && size <= 0x7fffffffu)
+    {
+        window.size = (uint32_t)size;
+        window.memory = port_flat(port, address, window.size);
+    }
+    return window;
+}
+
+/* The memory of the `size` bytes at `address` when they lie in the window, else NULL. */
+static inline uint8_t *port_window_at(const PortWindow *window, uint32_t address, uint64_t size)
+{
+    uint32_t within = address - window->address;
+    if (window->memory == NULL || address < window->address || within > window->size ||
+        size > window->size - within)
+    {
+        return NULL;
+    }
+    return window->memory + within;
+}
+
+static inline uint32_t port_window_u8(Port *port, const PortWindow *window, uint32_t base,
+                                      uint32_t offset)
+{
+    const uint8_t *at = port_window_at(window, base + offset, 1);
+    return at != NULL ? *at : port_u8(port, base, offset);
+}
+
+static inline uint32_t port_window_u32(Port *port, const PortWindow *window, uint32_t base,
+                                       uint32_t offset)
+{
+    const uint8_t *at = port_window_at(window, base + offset, 4);
+    return at != NULL ? lift_get(at, 4) : port_u32(port, base, offset);
+}
+
+static inline void port_window_set32(Port *port, const PortWindow *window, uint32_t base,
+                                     uint32_t offset, uint32_t value)
+{
+    uint8_t *at = port_window_at(window, base + offset, 4);
+    if (at != NULL)
+    {
+        lift_put(at, 4, value);
+    }
+    else
+    {
+        port_set32(port, base, offset, value);
+    }
+}
+
 /* memcpy inside the original's address space as its rep movsd / rep movsb pair does it: count / 4
  * dwords forwards, then the count % 4 bytes left. */
 static inline void port_copy(Port *port, uint32_t to, uint32_t from, uint32_t count)
