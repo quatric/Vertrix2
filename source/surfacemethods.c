@@ -1,5 +1,7 @@
 #include "surfacemethods.h"
 
+#include "pixel_format.h"
+
 enum
 {
     SURFACE_PIXELS = 0x00,
@@ -393,6 +395,7 @@ uint32_t vertrix_port_image_color_order(PORT_SIGNATURE)
     uint32_t pixel;
     uint32_t ebx = 0xff00;
     uint32_t argument = 0xff000000u;
+    int repack_index;
     port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
     chain = port.env.chain;
     port_set32(&port, ebp, -0x14u, image);
@@ -415,14 +418,25 @@ uint32_t vertrix_port_image_color_order(PORT_SIGNATURE)
         port_call(&port, FORMAT_RELEASE, ebp - FORMAT, 0, ebx, port_u32(&port, image, 8));
         return port_return(&port, chain, vertrix_lift_edx);
     }
-    /* Each 32-bit pixel converted from the source format into the screen's order. */
+    /* Each 32-bit pixel converted from the source format into the screen's order, 0x481e10 run as
+     * its C when the dispatcher would run that port. */
     pixel = port_u32(&port, image, 0);
+    repack_index = port_dispatches(&port, FORMAT_COLOR, vertrix_port_pixel_repack, 0);
     for (; count != 0; count--)
     {
+        uint32_t packed;
         ebx = port_u32(&port, pixel, 0);
         pixel += 4;
-        port_set32(&port, pixel, -4u,
-                   port_call(&port, FORMAT_COLOR, ebp - FORMAT, source, ebx, pixel));
+        if (repack_index < 0)
+        {
+            packed = port_call(&port, FORMAT_COLOR, ebp - FORMAT, source, ebx, pixel);
+        }
+        else
+        {
+            vertrix_lift_frame_index = (unsigned)repack_index;
+            packed = vertrix_pixel_repack_on(&port, ebp - FORMAT, source, ebx);
+        }
+        port_set32(&port, pixel, -4u, packed);
     }
     port_set32(&port, ebp, -0x1cu, 0);
     port_call(&port, FORMAT_RELEASE, ebp - FORMAT, 0, ebx, pixel);
