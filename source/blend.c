@@ -438,12 +438,24 @@ static uint32_t pixel_call(Port *port, PixelOperation *operation, uint32_t eax, 
         vertrix_lift_edx = edx; /* as the blend's port_return leaves it */
         return eax;
     }
-    return port_call(port, target, eax, edx, ebx, ecx);
+    {
+        /* The call may allocate or release: the flat windows are opened again after it. */
+        PortWindows *reach = (PortWindows *)blend_reach;
+        blend_reach = NULL;
+        eax = port_call(port, target, eax, edx, ebx, ecx);
+        if (reach != NULL)
+        {
+            port_windows_flat(port, reach);
+            blend_reach = reach;
+        }
+        return eax;
+    }
 }
 
 /* 0x492400's row with the target pixel at `target_pixel`, `step` bytes each. */
 static uint32_t render_row32_at(PORT_SIGNATURE, uint32_t target_pixel, uint32_t step)
 {
+    PortWindows flat;
     PixelOperation operation = {0, NULL, 0};
     Port port;
     uint32_t eax = entry->eax;
@@ -453,6 +465,8 @@ static uint32_t render_row32_at(PORT_SIGNATURE, uint32_t target_pixel, uint32_t 
     uint32_t count;
     port_open(&port, calls, services, globals, entry);
     blend_globals = port_window(&port, GLOBALS_LOW, GLOBALS_HIGH - GLOBALS_LOW);
+    port_windows_flat(&port, &flat);
+    blend_reach = &flat;
     count = port_window_u16(&port, &blend_globals, 0, ROW_COUNT);
     while (count != 0)
     {
@@ -467,6 +481,7 @@ static uint32_t render_row32_at(PORT_SIGNATURE, uint32_t target_pixel, uint32_t 
         count = (count - 1) & 0xffff;
     }
     port_window_set16(&port, &blend_globals, 0, ROW_COUNT, count);
+    blend_reach = NULL;
     return port_return(&port, eax, entry->edx);
 }
 
@@ -583,6 +598,7 @@ uint32_t vertrix_port_blend_shade(PORT_SIGNATURE)
 /* 0x492550's row with the target pixel at `target_pixel`, `step` bytes each. */
 static uint32_t render_sampled_row32_at(PORT_SIGNATURE, uint32_t target_pixel, uint32_t step)
 {
+    PortWindows flat;
     PixelOperation operation = {0, NULL, 0};
     Port port;
     uint32_t eax = entry->eax;
@@ -591,6 +607,8 @@ static uint32_t render_sampled_row32_at(PORT_SIGNATURE, uint32_t target_pixel, u
     uint32_t count;
     port_open(&port, calls, services, globals, entry);
     blend_globals = port_window(&port, GLOBALS_LOW, GLOBALS_HIGH - GLOBALS_LOW);
+    port_windows_flat(&port, &flat);
+    blend_reach = &flat;
     source = port_window_u32(&port, &blend_globals, 0, SOURCE_PIXEL);
     count = port_window_u16(&port, &blend_globals, 0, ROW_COUNT);
     do
@@ -616,6 +634,7 @@ static uint32_t render_sampled_row32_at(PORT_SIGNATURE, uint32_t target_pixel, u
     } while (count != 0);
     port_window_set16(&port, &blend_globals, 0, ROW_COUNT, count);
     port_window_set32(&port, &blend_globals, 0, SOURCE_PIXEL, source);
+    blend_reach = NULL;
     return port_return(&port, eax, entry->edx);
 }
 
@@ -637,6 +656,7 @@ uint32_t vertrix_port_render_sampled_row32_4a2330(PORT_SIGNATURE)
 /* 0x492280's row with the target pixel at `target_pixel`, `step` bytes each. */
 static uint32_t render_keyed_row32_at(PORT_SIGNATURE, uint32_t target_pixel, uint32_t step)
 {
+    PortWindows flat;
     PixelOperation operation = {0, NULL, 0};
     Port port;
     uint32_t eax = entry->eax;
@@ -645,6 +665,8 @@ static uint32_t render_keyed_row32_at(PORT_SIGNATURE, uint32_t target_pixel, uin
     uint32_t count;
     port_open(&port, calls, services, globals, entry);
     blend_globals = port_window(&port, GLOBALS_LOW, GLOBALS_HIGH - GLOBALS_LOW);
+    port_windows_flat(&port, &flat);
+    blend_reach = &flat;
     source = port_window_u32(&port, &blend_globals, 0, SOURCE_PIXEL);
     count = port_window_u16(&port, &blend_globals, 0, ROW_COUNT);
     while (count != 0)
@@ -666,6 +688,7 @@ static uint32_t render_keyed_row32_at(PORT_SIGNATURE, uint32_t target_pixel, uin
     }
     port_window_set32(&port, &blend_globals, 0, SOURCE_PIXEL, source);
     port_window_set16(&port, &blend_globals, 0, ROW_COUNT, count);
+    blend_reach = NULL;
     return port_return(&port, eax, entry->edx);
 }
 
@@ -866,8 +889,11 @@ static uint32_t source_alpha(Port *port)
 
 static uint32_t mask_row(Port *port, const LiftEntry *entry, int alpha, uint32_t target_pixel)
 {
+    PortWindows flat;
     PixelOperation operation = {0, NULL, 0};
     MaskRegisters r = {entry->eax, 0, entry->ebx, entry->ecx};
+    port_windows_flat(port, &flat);
+    blend_reach = &flat;
     r.edx = port_window_u32(port, &blend_globals, 0, MASK_PIXEL);
     for (;;)
     {
@@ -905,6 +931,7 @@ static uint32_t mask_row(Port *port, const LiftEntry *entry, int alpha, uint32_t
         mask_draw_step(port, &r, target_pixel);
     }
     port_window_set32(port, &blend_globals, 0, MASK_PIXEL, r.edx);
+    blend_reach = NULL;
     return r.eax;
 }
 
@@ -955,6 +982,7 @@ uint32_t vertrix_port_render_mask_alpha_row(PORT_SIGNATURE)
  * the stride and the mask by its stride. */
 static uint32_t mask_row_back(PORT_SIGNATURE, uint32_t target_pixel)
 {
+    PortWindows flat;
     PixelOperation operation = {0, NULL, 0};
     Port port;
     uint32_t eax = entry->eax;
@@ -963,6 +991,8 @@ static uint32_t mask_row_back(PORT_SIGNATURE, uint32_t target_pixel)
     uint32_t ecx;
     port_open(&port, calls, services, globals, entry);
     blend_globals = port_window(&port, GLOBALS_LOW, GLOBALS_HIGH - GLOBALS_LOW);
+    port_windows_flat(&port, &flat);
+    blend_reach = &flat;
     ecx = port_window_u32(&port, &blend_globals, 0, MASK_PIXEL);
     for (;;)
     {
@@ -1016,6 +1046,7 @@ static uint32_t mask_row_back(PORT_SIGNATURE, uint32_t target_pixel)
         ecx -= eax;
     }
     port_window_set32(&port, &blend_globals, 0, MASK_PIXEL, ecx);
+    blend_reach = NULL;
     return port_return(&port, eax, entry->edx);
 }
 
@@ -4755,6 +4786,7 @@ static uint32_t source_alpha_byte(Port *port)
 /* 0x4925d0's keyed masked row with the target pixel at `target_pixel`. */
 static uint32_t keyed_mask_row_back(PORT_SIGNATURE, uint32_t target_pixel)
 {
+    PortWindows flat;
     PixelOperation operation = {0, NULL, 0};
     Port port;
     uint32_t eax = entry->eax;
@@ -4763,6 +4795,8 @@ static uint32_t keyed_mask_row_back(PORT_SIGNATURE, uint32_t target_pixel)
     uint32_t ecx;
     port_open(&port, calls, services, globals, entry);
     blend_globals = port_window(&port, GLOBALS_LOW, GLOBALS_HIGH - GLOBALS_LOW);
+    port_windows_flat(&port, &flat);
+    blend_reach = &flat;
     ecx = port_window_u32(&port, &blend_globals, 0, MASK_PIXEL);
     for (;;)
     {
@@ -4826,6 +4860,7 @@ static uint32_t keyed_mask_row_back(PORT_SIGNATURE, uint32_t target_pixel)
         ecx -= eax;
     }
     port_window_set32(&port, &blend_globals, 0, MASK_PIXEL, ecx);
+    blend_reach = NULL;
     return port_return(&port, eax, entry->edx);
 }
 
