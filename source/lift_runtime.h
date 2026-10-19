@@ -129,11 +129,12 @@ static inline uint8_t *lift_flat(uint32_t address, unsigned size, int load)
         uint32_t span = load && region->whole > size ? region->whole : size;
         uint32_t within = address - region->base;
         uint32_t top;
-        if (region->memory == NULL || address < region->base)
+        if (region->memory == NULL)
         {
             continue;
         }
-        /* address + span <= base + top, without the sum overflowing */
+        /* address + span <= base + top, without the sum overflowing; an address below the base
+         * wraps `within` past every top (a region ends below 4 GB) */
         top = *region->top;
         if (span <= top && within <= top - span && *region->memory != NULL)
         {
@@ -270,14 +271,20 @@ static inline void lift_put(uint8_t *bytes, unsigned size, uint32_t value)
     }
 }
 
+/* address..address + size inside low..high, in 32-bit arithmetic without the sum overflowing. */
+static inline int lift_within(uint32_t address, unsigned size, uint32_t low, uint32_t high)
+{
+    return address >= low && size <= high && address <= high - size;
+}
+
 static inline int lift_in_stack(const LiftEnv *env, uint32_t address, unsigned size)
 {
-    return address >= env->low && (uint64_t)address + size <= env->high;
+    return lift_within(address, size, env->low, env->high);
 }
 
 static inline int lift_in_passed(const LiftEnv *env, uint32_t address, unsigned size)
 {
-    return address >= env->passed_low && (uint64_t)address + size <= env->passed_high;
+    return lift_within(address, size, env->passed_low, env->passed_high);
 }
 
 static inline uint32_t lift_load(LiftEnv *env, uint32_t base, uint32_t offset, unsigned size)
@@ -342,6 +349,7 @@ static inline void lift_store(LiftEnv *env, uint32_t base, uint32_t offset, unsi
                               uint32_t value)
 {
     uint32_t address = base + offset;
+    uint8_t *flat;
     if (vertrix_debug_watch != 0 && vertrix_debug_watch >= address &&
         vertrix_debug_watch < address + size)
     {
@@ -355,9 +363,9 @@ static inline void lift_store(LiftEnv *env, uint32_t base, uint32_t offset, unsi
     {
         lift_put(env->passed + (address - env->passed_low), size, value);
     }
-    else if (lift_flat(address, size, 0) != NULL)
+    else if ((flat = lift_flat(address, size, 0)) != NULL)
     {
-        lift_put(lift_flat(address, size, 0), size, value);
+        lift_put(flat, size, value);
     }
     else if (vertrix_lift_frame_hook != NULL && vertrix_lift_frame_hook(address, size) != NULL)
     {

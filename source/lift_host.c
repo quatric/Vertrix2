@@ -1938,9 +1938,10 @@ void lift_host_init(LiftHost *host, uint8_t *image, const uint8_t *original, uin
     vertrix_lift_frame_hook = host_frame_bytes;
     {
         static const uint32_t image_size = LIFT_HOST_IMAGE_SIZE;
-        vertrix_lift_flat[0] =
+        /* The blocks do not overlap, so the order only sets the cost: the globals first. */
+        vertrix_lift_flat[0] = (LiftFlatRegion){LIFT_HOST_IMAGE_BASE, &image_size, &host->image, 4};
+        vertrix_lift_flat[1] =
             (LiftFlatRegion){LIFT_HOST_HEAP2_BASE, &host->heap2_top, &host->heap2, 0};
-        vertrix_lift_flat[1] = (LiftFlatRegion){LIFT_HOST_IMAGE_BASE, &image_size, &host->image, 4};
         vertrix_lift_flat[2] =
             (LiftFlatRegion){LIFT_HOST_HEAP_BASE, &host->heap_top, &host->heap, 0};
     }
