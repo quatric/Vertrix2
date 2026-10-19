@@ -1062,11 +1062,41 @@ static uint32_t kernel_sample(Port *port, uint32_t index, int sixteen)
     return sixteen ? port_u8(port, 0, index * 2 + 1) : port_u8(port, index, 0);
 }
 
-/* A volume table entry: the table's address over four with its low byte the sample, times four
- * (tables are 1 KiB aligned). */
-static uint32_t kernel_gain(Port *port, uint32_t table, uint32_t sample)
+/* The same through a window (port_window) of the samples. */
+static uint32_t kernel_sample_in(Port *port, const PortWindow *samples, uint32_t index, int sixteen)
 {
-    return port_u32(port, 0, (((table >> 2) & 0xffffff00u) | sample) * 4);
+    return sixteen ? port_window_u8(port, samples, 0, index * 2 + 1)
+                   : port_window_u8(port, samples, index, 0);
+}
+
+/* A volume table entry, through a window of the table: the table's address over four with its low
+ * byte the sample, times four (tables are 1 KiB aligned). */
+static uint32_t kernel_gain_in(Port *port, const PortWindow *gains, uint32_t table, uint32_t sample)
+{
+    return port_window_u32(port, gains, 0, (((table >> 2) & 0xffffff00u) | sample) * 4);
+}
+
+/* The window over a volume table (1 KiB). */
+static PortWindow kernel_gains(Port *port, uint32_t table)
+{
+    return port_window(port, ((table >> 2) & 0xffffff00u) * 4, 0x400);
+}
+
+/* The window over the samples the mix may read: the index moves by the whole step, or one more,
+ * for each of `frames` frames. */
+static PortWindow kernel_samples(Port *port, uint32_t index, uint32_t frames, uint32_t step_whole,
+                                 int sixteen)
+{
+    int64_t step = (int32_t)step_whole;
+    int64_t low = (int64_t)index + (step < 0 ? (int64_t)frames * step : 0);
+    int64_t high = (int64_t)index + (step + 1 > 0 ? (int64_t)frames * (step + 1) : 0);
+    PortWindow none = {0, 0, NULL};
+    if (low < 0 || high >= 0x7fffffff)
+    {
+        return none;
+    }
+    return sixteen ? port_window(port, (uint32_t)low * 2 + 1, (uint64_t)(high - low) * 2 + 1)
+                   : port_window(port, (uint32_t)low, (uint64_t)(high - low) + 1);
 }
 
 static uint32_t mix_stereo_kernel(Port *port, const LiftEntry *entry, int sixteen)
@@ -1129,33 +1159,43 @@ static uint32_t mix_stereo_kernel(Port *port, const LiftEntry *entry, int sixtee
     blocks = count >> 4;
     port_set32(port, 0, KERNEL_BLOCKS, blocks);
     frames = (count & 15) + blocks * 16;
-    while (frames-- != 0)
     {
-        if (both)
+        /* The output, the tables and the samples in place where they can be. */
+        PortWindow out = port_window(port, output, (uint64_t)frames * 8);
+        PortWindow left_gains = kernel_gains(port, left);
+        PortWindow right_gains = both ? kernel_gains(port, right) : left_gains;
+        PortWindow samples = kernel_samples(port, index, frames, step_whole, sixteen);
+        while (frames-- != 0)
         {
-            uint32_t value = kernel_gain(port, left, sample);
-            uint32_t next = port_u32(port, output, 4);
-            port_set32(port, output, 0, value + port_u32(port, output, 0));
-            value = kernel_gain(port, right, sample);
-            sample = kernel_sample(port, index, sixteen);
-            port_set32(port, output, 4, value + next);
+            if (both)
+            {
+                uint32_t value = kernel_gain_in(port, &left_gains, left, sample);
+                uint32_t next = port_window_u32(port, &out, output, 4);
+                port_window_set32(port, &out, output, 0,
+                                  value + port_window_u32(port, &out, output, 0));
+                value = kernel_gain_in(port, &right_gains, right, sample);
+                sample = kernel_sample_in(port, &samples, index, sixteen);
+                port_window_set32(port, &out, output, 4, value + next);
+            }
+            else if (center)
+            {
+                uint32_t value = kernel_gain_in(port, &left_gains, left, sample);
+                uint32_t sum = port_window_u32(port, &out, output, 0) + value;
+                sample = kernel_sample_in(port, &samples, index, sixteen);
+                port_window_set32(port, &out, output, 0, sum);
+                port_window_set32(port, &out, output, 4,
+                                  port_window_u32(port, &out, output, 4) + value);
+            }
+            else
+            {
+                uint32_t sum = port_window_u32(port, &out, output, 0) +
+                               kernel_gain_in(port, &left_gains, left, sample);
+                sample = kernel_sample_in(port, &samples, index, sixteen);
+                port_window_set32(port, &out, output, 0, sum);
+            }
+            KERNEL_ADVANCE();
+            output += 8;
         }
-        else if (center)
-        {
-            uint32_t value = kernel_gain(port, left, sample);
-            uint32_t sum = port_u32(port, output, 0) + value;
-            sample = kernel_sample(port, index, sixteen);
-            port_set32(port, output, 0, sum);
-            port_set32(port, output, 4, port_u32(port, output, 4) + value);
-        }
-        else
-        {
-            uint32_t sum = port_u32(port, output, 0) + kernel_gain(port, left, sample);
-            sample = kernel_sample(port, index, sixteen);
-            port_set32(port, output, 0, sum);
-        }
-        KERNEL_ADVANCE();
-        output += 8;
     }
 #undef KERNEL_ADVANCE
     port_set32(port, 0, KERNEL_BLOCKS, 0xffffffffu);
