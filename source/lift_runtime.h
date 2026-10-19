@@ -154,6 +154,18 @@ static inline uint8_t *lift_flat(uint32_t address, unsigned size, int load)
  * covers. A load reads a whole dword there, as the host's read of a global does. */
 __attribute__((weak)) uint8_t *(*vertrix_lift_frame_hook)(uint32_t address, unsigned span);
 
+/* A routine as the dispatcher runs it. */
+typedef uint32_t (*LiftRoutine)(const VertrixCalls *calls, const VertrixFactoryServices *services,
+                                const VertrixGlobals *globals, const LiftEntry *entry);
+
+/* The routine the dispatcher would run now for a call through `calls` to `target` with no stack
+ * arguments, and the frame index it would give it; NULL when the call would not reach one (calls
+ * that are not the dispatcher's, or debugging hooks that watch every dispatch). Set by the host: a
+ * port may then run a callee it knows by that routine's own C (the per-pixel operations of the row
+ * loops) without the call boundary. */
+__attribute__((weak)) LiftRoutine (*vertrix_lift_routine_hook)(const VertrixCalls *calls,
+                                                               uint32_t target, unsigned *index);
+
 /* An x87 instruction: the port has no coprocessor, so the runtime's x87 paths must not run. */
 static inline void lift_x87(LiftEnv *env, uint32_t address)
 {

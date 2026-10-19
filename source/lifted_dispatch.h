@@ -22,6 +22,19 @@ void vertrix_lifted_allow_unverified(int allowed);
 /* The lifted routine for an original address, or 0 when the routine stays a call boundary. */
 int vertrix_lifted_has(uint32_t target);
 
+struct LiftEntry;
+typedef uint32_t (*VertrixLiftedFunction)(const VertrixCalls *calls,
+                                          const VertrixFactoryServices *services,
+                                          const VertrixGlobals *globals,
+                                          const struct LiftEntry *entry);
+
+/* The function a call through `calls` to `target` with no stack arguments would run now, and the
+ * frame index vertrix_lifted_dispatch would set; NULL when `calls` is not a VertrixLiftedCalls,
+ * when the call would not reach a routine, or when the trace or the after hook watches every
+ * dispatch (vertrix_lift_routine_hook). */
+VertrixLiftedFunction vertrix_lifted_function(const VertrixCalls *calls, uint32_t target,
+                                              unsigned *index);
+
 /* Run the lifted routine for site->target with the registers and stack arguments of the site.
  * Returns 1 and stores the routine's eax in *result when there is one. */
 int vertrix_lifted_dispatch(const VertrixCalls *calls, const VertrixFactoryServices *services,

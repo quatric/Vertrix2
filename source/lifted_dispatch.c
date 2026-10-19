@@ -4480,6 +4480,22 @@ int vertrix_lifted_has(uint32_t target)
     return find(target) != NULL;
 }
 
+static uint32_t lifted_call(VertrixCallSite *site, void *context);
+
+VertrixLiftedFunction vertrix_lifted_function(const VertrixCalls *calls, uint32_t target,
+                                              unsigned *index)
+{
+    const LiftedRoutine *routine = calls->call == lifted_call ? find(target) : NULL;
+    if (routine == NULL || depth >= LIFTED_MAX_DEPTH || trace_enabled ||
+        vertrix_lifted_after_hook != NULL ||
+        arena[depth] - routine->stack - LIFTED_ARENA_GAP < LIFTED_ARENA_BOTTOM)
+    {
+        return NULL;
+    }
+    *index = depth;
+    return routine->function;
+}
+
 int vertrix_lifted_dispatch(const VertrixCalls *calls, const VertrixFactoryServices *services,
                             const VertrixGlobals *globals, const VertrixCallSite *site,
                             uint32_t *result)

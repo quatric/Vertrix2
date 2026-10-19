@@ -125,111 +125,156 @@ static uint32_t average(uint32_t first, uint32_t second)
     return ((first >> 1) & HALF) + ((second >> 1) & HALF);
 }
 
+static uint32_t blend_copy_body(Port *port)
+{
+    uint32_t colour;
+    colour = source_colour(port);
+    port_set32(port, port_u32(port, 0, TARGET_PIXEL), 0, colour);
+    return colour;
+}
+
 uint32_t vertrix_port_blend_copy(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = source_colour(&port);
-    port_set32(&port, port_u32(&port, 0, TARGET_PIXEL), 0, colour);
-    return port_return(&port, colour, entry->edx);
+    return port_return(&port, blend_copy_body(&port), entry->edx);
+}
+
+static uint32_t blend_remap_body(Port *port)
+{
+    uint32_t colour;
+    colour = remap(port, source_colour(port));
+    port_set32(port, port_u32(port, 0, TARGET_PIXEL), 0, colour);
+    return colour;
 }
 
 uint32_t vertrix_port_blend_remap(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = remap(&port, source_colour(&port));
-    port_set32(&port, port_u32(&port, 0, TARGET_PIXEL), 0, colour);
-    return port_return(&port, colour, entry->edx);
+    return port_return(&port, blend_remap_body(&port), entry->edx);
+}
+
+static uint32_t blend_add_body(Port *port)
+{
+    uint32_t target;
+    target = port_u32(port, 0, TARGET_PIXEL);
+    add_saturate(port, target, source_colour(port));
+    return target;
 }
 
 uint32_t vertrix_port_blend_add(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t target;
     port_open(&port, calls, services, globals, entry);
-    target = port_u32(&port, 0, TARGET_PIXEL);
-    add_saturate(&port, target, source_colour(&port));
-    return port_return(&port, target, entry->edx);
+    return port_return(&port, blend_add_body(&port), entry->edx);
+}
+
+static uint32_t blend_subtract_body(Port *port)
+{
+    uint32_t target;
+    target = port_u32(port, 0, TARGET_PIXEL);
+    subtract_saturate(port, target, source_colour(port));
+    return target;
 }
 
 uint32_t vertrix_port_blend_subtract(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t target;
     port_open(&port, calls, services, globals, entry);
-    target = port_u32(&port, 0, TARGET_PIXEL);
-    subtract_saturate(&port, target, source_colour(&port));
-    return port_return(&port, target, entry->edx);
+    return port_return(&port, blend_subtract_body(&port), entry->edx);
+}
+
+static uint32_t blend_average_remap_body(Port *port)
+{
+    uint32_t source;
+    uint32_t target;
+    uint32_t mixed;
+    source = port_u32(port, 0, SOURCE_PIXEL);
+    target = port_u32(port, 0, TARGET_PIXEL);
+    mixed = average(port_u32(port, source, 0), port_u32(port, target, 0));
+    port_set32(port, target, 0, mixed);
+    port_set32(port, target, 0, remap(port, port_u32(port, target, 0)));
+    return target;
 }
 
 uint32_t vertrix_port_blend_average_remap(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t source;
-    uint32_t target;
-    uint32_t mixed;
     port_open(&port, calls, services, globals, entry);
-    source = port_u32(&port, 0, SOURCE_PIXEL);
-    target = port_u32(&port, 0, TARGET_PIXEL);
-    mixed = average(port_u32(&port, source, 0), port_u32(&port, target, 0));
-    port_set32(&port, target, 0, mixed);
-    port_set32(&port, target, 0, remap(&port, port_u32(&port, target, 0)));
-    return port_return(&port, target, entry->edx);
+    return port_return(&port, blend_average_remap_body(&port), entry->edx);
+}
+
+static uint32_t blend_remap_add_body(Port *port)
+{
+    uint32_t colour;
+    uint32_t target;
+    colour = remap(port, source_colour(port));
+    target = port_u32(port, 0, TARGET_PIXEL);
+    port_set32(port, 0, REMAPPED, colour);
+    add_saturate(port, target, colour);
+    return target;
 }
 
 uint32_t vertrix_port_blend_remap_add(PORT_SIGNATURE)
 {
     Port port;
+    port_open(&port, calls, services, globals, entry);
+    return port_return(&port, blend_remap_add_body(&port), entry->edx);
+}
+
+static uint32_t blend_remap_subtract_body(Port *port)
+{
     uint32_t colour;
     uint32_t target;
-    port_open(&port, calls, services, globals, entry);
-    colour = remap(&port, source_colour(&port));
-    target = port_u32(&port, 0, TARGET_PIXEL);
-    port_set32(&port, 0, REMAPPED, colour);
-    add_saturate(&port, target, colour);
-    return port_return(&port, target, entry->edx);
+    colour = remap(port, source_colour(port));
+    target = port_u32(port, 0, TARGET_PIXEL);
+    port_set32(port, 0, REMAPPED, colour);
+    subtract_saturate(port, target, colour);
+    return target;
 }
 
 uint32_t vertrix_port_blend_remap_subtract(PORT_SIGNATURE)
 {
     Port port;
+    port_open(&port, calls, services, globals, entry);
+    return port_return(&port, blend_remap_subtract_body(&port), entry->edx);
+}
+
+static uint32_t blend_tint_average_body(Port *port)
+{
     uint32_t colour;
     uint32_t target;
-    port_open(&port, calls, services, globals, entry);
-    colour = remap(&port, source_colour(&port));
-    target = port_u32(&port, 0, TARGET_PIXEL);
-    port_set32(&port, 0, REMAPPED, colour);
-    subtract_saturate(&port, target, colour);
-    return port_return(&port, target, entry->edx);
+    colour = remap_tint(port, source_colour(port));
+    target = port_u32(port, 0, TARGET_PIXEL);
+    port_set32(port, 0, REMAPPED, colour);
+    port_set32(port, target, 0, average(port_u32(port, target, 0), colour));
+    return target;
 }
 
 uint32_t vertrix_port_blend_tint_average(PORT_SIGNATURE)
 {
     Port port;
+    port_open(&port, calls, services, globals, entry);
+    return port_return(&port, blend_tint_average_body(&port), entry->edx);
+}
+
+static uint32_t blend_tint_add_body(Port *port)
+{
     uint32_t colour;
     uint32_t target;
-    port_open(&port, calls, services, globals, entry);
-    colour = remap_tint(&port, source_colour(&port));
-    target = port_u32(&port, 0, TARGET_PIXEL);
-    port_set32(&port, 0, REMAPPED, colour);
-    port_set32(&port, target, 0, average(port_u32(&port, target, 0), colour));
-    return port_return(&port, target, entry->edx);
+    colour = remap_tint(port, source_colour(port));
+    target = port_u32(port, 0, TARGET_PIXEL);
+    port_set32(port, 0, REMAPPED, colour);
+    add_saturate(port, target, colour);
+    return target;
 }
 
 uint32_t vertrix_port_blend_tint_add(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
-    uint32_t target;
     port_open(&port, calls, services, globals, entry);
-    colour = remap_tint(&port, source_colour(&port));
-    target = port_u32(&port, 0, TARGET_PIXEL);
-    port_set32(&port, 0, REMAPPED, colour);
-    add_saturate(&port, target, colour);
-    return port_return(&port, target, entry->edx);
+    return port_return(&port, blend_tint_add_body(&port), entry->edx);
 }
 
 /* A colour remapped half way to the fixed channels (described at 0x48d8c0 in blend.h). */
@@ -250,19 +295,63 @@ static uint32_t half_tint(Port *port, uint32_t colour)
     return (red << 16) | (green << 8) | blue;
 }
 
+static uint32_t blend_half_tint_body(Port *port)
+{
+    uint32_t colour;
+    colour = half_tint(port, source_colour(port));
+    port_set32(port, port_u32(port, 0, TARGET_PIXEL), 0, colour);
+    return colour;
+}
+
 uint32_t vertrix_port_blend_half_tint(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = half_tint(&port, source_colour(&port));
-    port_set32(&port, port_u32(&port, 0, TARGET_PIXEL), 0, colour);
-    return port_return(&port, colour, entry->edx);
+    return port_return(&port, blend_half_tint_body(&port), entry->edx);
+}
+
+/* A row loop's per-pixel operation, the routine at [0x5bb72c]. When the dispatcher would run one
+ * of the blend ports below for it, the loop runs that port's own C on its own Port: the blend
+ * reads and writes only globals and pixels, which resolve the same from either frame, and the call
+ * boundary cost more than the blend. Anything else is called as before. */
+typedef uint32_t (*PixelBody)(Port *port);
+
+typedef struct PixelOperation
+{
+    uint32_t target; /* the routine looked up last (0: none yet) */
+    PixelBody body;
+    unsigned index; /* the frame index the dispatcher would set for it */
+} PixelOperation;
+
+static PixelBody pixel_body(LiftRoutine routine);
+
+static uint32_t pixel_call(Port *port, PixelOperation *operation, uint32_t eax, uint32_t edx,
+                           uint32_t ebx, uint32_t ecx)
+{
+    uint32_t target = port_u32(port, 0, PIXEL_OPERATION);
+    if (target != operation->target)
+    {
+        LiftRoutine routine =
+            vertrix_lift_routine_hook != NULL
+                ? vertrix_lift_routine_hook(port->env.calls, target, &operation->index)
+                : NULL;
+        operation->target = target;
+        operation->body = routine != NULL ? pixel_body(routine) : NULL;
+    }
+    if (operation->body != NULL)
+    {
+        vertrix_lift_frame_index = operation->index;
+        eax = operation->body(port);
+        vertrix_lift_edx = edx; /* as the blend's port_return leaves it */
+        return eax;
+    }
+    return port_call(port, target, eax, edx, ebx, ecx);
 }
 
 /* 0x492400's row with the target pixel at `target_pixel`, `step` bytes each. */
 static uint32_t render_row32_at(PORT_SIGNATURE, uint32_t target_pixel, uint32_t step)
 {
+    PixelOperation operation = {0, NULL, 0};
     Port port;
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
@@ -274,8 +363,7 @@ static uint32_t render_row32_at(PORT_SIGNATURE, uint32_t target_pixel, uint32_t 
     while (count != 0)
     {
         port_set16(&port, 0, ROW_COUNT, count);
-        eax = port_call(&port, port_u32(&port, 0, PIXEL_OPERATION), eax,
-                        (edx & 0xffff0000u) | count, ebx, ecx);
+        eax = pixel_call(&port, &operation, eax, (edx & 0xffff0000u) | count, ebx, ecx);
         edx = vertrix_lift_edx;
         count = port_u16(&port, 0, ROW_COUNT);
         ecx = port_u32(&port, 0, SOURCE_PIXEL) + PIXEL_SIZE;
@@ -324,35 +412,43 @@ static uint32_t levels_mix(Port *port, uint32_t source, uint32_t target)
     return levels_mix_values(port, port_u32(port, source, 0), port_u32(port, target, 0));
 }
 
-uint32_t vertrix_port_blend_levels_remap(PORT_SIGNATURE)
+static uint32_t blend_levels_remap_body(Port *port)
 {
-    Port port;
     uint32_t target;
     uint32_t mixed;
     uint32_t entries;
+    target = port_u32(port, 0, TARGET_PIXEL);
+    mixed = levels_mix(port, port_u32(port, 0, SOURCE_PIXEL), target);
+    entries = port_u32(port, 0, COLOUR_ENTRIES);
+    port_set32(port, target, 0, mixed);
+    port_set32(port, target, 0, remap_entry(port, port_u32(port, entries, entry_index(mixed) * 4)));
+    return target;
+}
+
+uint32_t vertrix_port_blend_levels_remap(PORT_SIGNATURE)
+{
+    Port port;
     port_open(&port, calls, services, globals, entry);
-    target = port_u32(&port, 0, TARGET_PIXEL);
-    mixed = levels_mix(&port, port_u32(&port, 0, SOURCE_PIXEL), target);
-    entries = port_u32(&port, 0, COLOUR_ENTRIES);
-    port_set32(&port, target, 0, mixed);
-    port_set32(&port, target, 0,
-               remap_entry(&port, port_u32(&port, entries, entry_index(mixed) * 4)));
-    return port_return(&port, target, entry->edx);
+    return port_return(&port, blend_levels_remap_body(&port), entry->edx);
+}
+
+static uint32_t blend_levels_body(Port *port)
+{
+    uint32_t target;
+    target = port_u32(port, 0, TARGET_PIXEL);
+    port_set32(port, target, 0, levels_mix(port, port_u32(port, 0, SOURCE_PIXEL), target));
+    return target;
 }
 
 uint32_t vertrix_port_blend_levels(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t target;
     port_open(&port, calls, services, globals, entry);
-    target = port_u32(&port, 0, TARGET_PIXEL);
-    port_set32(&port, target, 0, levels_mix(&port, port_u32(&port, 0, SOURCE_PIXEL), target));
-    return port_return(&port, target, entry->edx);
+    return port_return(&port, blend_levels_body(&port), entry->edx);
 }
 
-uint32_t vertrix_port_blend_shade(PORT_SIGNATURE)
+static uint32_t blend_shade_body(Port *port)
 {
-    Port port;
     uint32_t entries;
     uint32_t colour_entry;
     uint32_t target;
@@ -361,26 +457,32 @@ uint32_t vertrix_port_blend_shade(PORT_SIGNATURE)
     uint32_t map;
     uint32_t red;
     uint32_t green;
+    entries = port_u32(port, 0, COLOUR_ENTRIES);
+    colour_entry = port_u32(port, entries, entry_index(source_colour(port)) * 4);
+    port_set32(port, 0, ENTRY, colour_entry);
+    target = port_u32(port, 0, TARGET_PIXEL);
+    shade = port_u8(port, entries, entry_index(port_u32(port, target, 0)) * 4);
+    level = port_u16(port, port_u32(port, 0, SHADE_LEVELS), (colour_entry & 0xff) * 2) +
+            port_u16(port, port_u32(port, 0, SHADE_STEPS), shade * 2);
+    map = port_u32(port, port_u32(port, 0, CHANNEL_MAPS), (uint32_t)((int32_t)(int16_t)level * 4));
+    port_set32(port, 0, MAP, map);
+    red = port_u8(port, map, colour_entry >> 24) << 16;
+    green = port_u8(port, map, (colour_entry >> 16) & 0xff) << 8;
+    port_set32(port, target, 0, red | green | port_u8(port, map, (colour_entry >> 8) & 0xff));
+    return target;
+}
+
+uint32_t vertrix_port_blend_shade(PORT_SIGNATURE)
+{
+    Port port;
     port_open(&port, calls, services, globals, entry);
-    entries = port_u32(&port, 0, COLOUR_ENTRIES);
-    colour_entry = port_u32(&port, entries, entry_index(source_colour(&port)) * 4);
-    port_set32(&port, 0, ENTRY, colour_entry);
-    target = port_u32(&port, 0, TARGET_PIXEL);
-    shade = port_u8(&port, entries, entry_index(port_u32(&port, target, 0)) * 4);
-    level = port_u16(&port, port_u32(&port, 0, SHADE_LEVELS), (colour_entry & 0xff) * 2) +
-            port_u16(&port, port_u32(&port, 0, SHADE_STEPS), shade * 2);
-    map =
-        port_u32(&port, port_u32(&port, 0, CHANNEL_MAPS), (uint32_t)((int32_t)(int16_t)level * 4));
-    port_set32(&port, 0, MAP, map);
-    red = port_u8(&port, map, colour_entry >> 24) << 16;
-    green = port_u8(&port, map, (colour_entry >> 16) & 0xff) << 8;
-    port_set32(&port, target, 0, red | green | port_u8(&port, map, (colour_entry >> 8) & 0xff));
-    return port_return(&port, target, entry->edx);
+    return port_return(&port, blend_shade_body(&port), entry->edx);
 }
 
 /* 0x492550's row with the target pixel at `target_pixel`, `step` bytes each. */
 static uint32_t render_sampled_row32_at(PORT_SIGNATURE, uint32_t target_pixel, uint32_t step)
 {
+    PixelOperation operation = {0, NULL, 0};
     Port port;
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
@@ -397,8 +499,8 @@ static uint32_t render_sampled_row32_at(PORT_SIGNATURE, uint32_t target_pixel, u
         port_set16(&port, 0, ROW_COUNT, count);
         if (eax != 0)
         {
-            eax = port_call(&port, port_u32(&port, 0, PIXEL_OPERATION), eax, edx,
-                            (entry->ebx & 0xffff0000u) | count, source);
+            eax =
+                pixel_call(&port, &operation, eax, edx, (entry->ebx & 0xffff0000u) | count, source);
         }
         eax = port_u32(&port, 0, SAMPLE_STEPS);
         source = port_u32(&port, 0, SOURCE_PIXEL) + (port_u8(&port, eax, 0) << 2);
@@ -432,6 +534,7 @@ uint32_t vertrix_port_render_sampled_row32_4a2330(PORT_SIGNATURE)
 /* 0x492280's row with the target pixel at `target_pixel`, `step` bytes each. */
 static uint32_t render_keyed_row32_at(PORT_SIGNATURE, uint32_t target_pixel, uint32_t step)
 {
+    PixelOperation operation = {0, NULL, 0};
     Port port;
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
@@ -448,8 +551,8 @@ static uint32_t render_keyed_row32_at(PORT_SIGNATURE, uint32_t target_pixel, uin
         port_set32(&port, 0, SOURCE_PIXEL, source);
         if (eax != 0)
         {
-            eax = port_call(&port, port_u32(&port, 0, PIXEL_OPERATION), eax,
-                            (edx & 0xffff0000u) | count, entry->ebx, source);
+            eax =
+                pixel_call(&port, &operation, eax, (edx & 0xffff0000u) | count, entry->ebx, source);
         }
         edx = port_u32(&port, 0, target_pixel) + step;
         source = port_u32(&port, 0, SOURCE_PIXEL);
@@ -653,6 +756,7 @@ static uint32_t source_alpha(Port *port)
 
 static uint32_t mask_row(Port *port, const LiftEntry *entry, int alpha, uint32_t target_pixel)
 {
+    PixelOperation operation = {0, NULL, 0};
     MaskRegisters r = {entry->eax, 0, entry->ebx, entry->ecx};
     r.edx = port_u32(port, 0, MASK_PIXEL);
     for (;;)
@@ -672,8 +776,7 @@ static uint32_t mask_row(Port *port, const LiftEntry *entry, int alpha, uint32_t
             }
             if (!alpha || r.eax != 0)
             {
-                r.eax =
-                    port_call(port, port_u32(port, 0, PIXEL_OPERATION), r.eax, r.edx, r.ebx, r.ecx);
+                r.eax = pixel_call(port, &operation, r.eax, r.edx, r.ebx, r.ecx);
             }
         }
         mask_skip_step(port, &r, target_pixel);
@@ -687,7 +790,7 @@ static uint32_t mask_row(Port *port, const LiftEntry *entry, int alpha, uint32_t
         port_set32(port, 0, MASK_PIXEL, r.edx);
         if (!alpha || r.eax != 0)
         {
-            r.eax = port_call(port, port_u32(port, 0, PIXEL_OPERATION), r.eax, r.edx, r.ebx, r.ecx);
+            r.eax = pixel_call(port, &operation, r.eax, r.edx, r.ebx, r.ecx);
         }
         mask_draw_step(port, &r, target_pixel);
     }
@@ -740,6 +843,7 @@ uint32_t vertrix_port_render_mask_alpha_row(PORT_SIGNATURE)
  * the stride and the mask by its stride. */
 static uint32_t mask_row_back(PORT_SIGNATURE, uint32_t target_pixel)
 {
+    PixelOperation operation = {0, NULL, 0};
     Port port;
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
@@ -761,7 +865,7 @@ static uint32_t mask_row_back(PORT_SIGNATURE, uint32_t target_pixel)
         port_set32(&port, 0, MASK_PIXEL, ecx);
         if ((edx & 1) == 0)
         {
-            eax = port_call(&port, port_u32(&port, 0, PIXEL_OPERATION), eax, edx, ebx, ecx);
+            eax = pixel_call(&port, &operation, eax, edx, ebx, ecx);
             edx = vertrix_lift_edx;
         }
         steps = port_u32(&port, 0, SAMPLE_STEPS);
@@ -783,7 +887,7 @@ static uint32_t mask_row_back(PORT_SIGNATURE, uint32_t target_pixel)
         uint32_t steps;
         uint32_t count;
         port_set32(&port, 0, MASK_PIXEL, ecx);
-        eax = port_call(&port, port_u32(&port, 0, PIXEL_OPERATION), eax, edx, ebx, ecx);
+        eax = pixel_call(&port, &operation, eax, edx, ebx, ecx);
         steps = port_u32(&port, 0, SAMPLE_STEPS);
         edx = port_u8(&port, steps, 0) * port_u32(&port, 0, ROW_SCALE);
         ecx = port_u32(&port, 0, MASK_PIXEL);
@@ -821,16 +925,21 @@ uint32_t vertrix_port_render_mask_row_back_4aa240(PORT_SIGNATURE)
     return mask_row_back(calls, services, globals, entry, 0x5bb778);
 }
 
+static uint32_t blend_average_body(Port *port)
+{
+    uint32_t target;
+    uint32_t source;
+    source = port_u32(port, 0, SOURCE_PIXEL);
+    target = port_u32(port, 0, TARGET_PIXEL);
+    port_set32(port, target, 0, average(port_u32(port, source, 0), port_u32(port, target, 0)));
+    return target;
+}
+
 uint32_t vertrix_port_blend_average(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t target;
-    uint32_t source;
     port_open(&port, calls, services, globals, entry);
-    source = port_u32(&port, 0, SOURCE_PIXEL);
-    target = port_u32(&port, 0, TARGET_PIXEL);
-    port_set32(&port, target, 0, average(port_u32(&port, source, 0), port_u32(&port, target, 0)));
-    return port_return(&port, target, entry->edx);
+    return port_return(&port, blend_average_body(&port), entry->edx);
 }
 
 uint32_t vertrix_port_blit_copy(PORT_SIGNATURE)
@@ -908,30 +1017,40 @@ static uint32_t levels_mix_colour(Port *port, uint32_t colour, uint32_t target)
     return levels_mix_values(port, colour, port_u32(port, target, 0));
 }
 
+static uint32_t blend_remap_levels_body(Port *port)
+{
+    uint32_t colour;
+    uint32_t target;
+    colour = remap(port, source_colour(port));
+    target = port_u32(port, 0, TARGET_PIXEL);
+    port_set32(port, 0, REMAPPED, colour);
+    port_set32(port, target, 0, levels_mix_colour(port, port_u32(port, 0, REMAPPED), target));
+    return target;
+}
+
 uint32_t vertrix_port_blend_remap_levels(PORT_SIGNATURE)
 {
     Port port;
+    port_open(&port, calls, services, globals, entry);
+    return port_return(&port, blend_remap_levels_body(&port), entry->edx);
+}
+
+static uint32_t blend_tint_levels_body(Port *port)
+{
     uint32_t colour;
     uint32_t target;
-    port_open(&port, calls, services, globals, entry);
-    colour = remap(&port, source_colour(&port));
-    target = port_u32(&port, 0, TARGET_PIXEL);
-    port_set32(&port, 0, REMAPPED, colour);
-    port_set32(&port, target, 0, levels_mix_colour(&port, port_u32(&port, 0, REMAPPED), target));
-    return port_return(&port, target, entry->edx);
+    colour = remap_tint(port, source_colour(port));
+    target = port_u32(port, 0, TARGET_PIXEL);
+    port_set32(port, 0, REMAPPED, colour);
+    port_set32(port, target, 0, levels_mix_colour(port, port_u32(port, 0, REMAPPED), target));
+    return target;
 }
 
 uint32_t vertrix_port_blend_tint_levels(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
-    uint32_t target;
     port_open(&port, calls, services, globals, entry);
-    colour = remap_tint(&port, source_colour(&port));
-    target = port_u32(&port, 0, TARGET_PIXEL);
-    port_set32(&port, 0, REMAPPED, colour);
-    port_set32(&port, target, 0, levels_mix_colour(&port, port_u32(&port, 0, REMAPPED), target));
-    return port_return(&port, target, entry->edx);
+    return port_return(&port, blend_tint_levels_body(&port), entry->edx);
 }
 
 uint32_t vertrix_port_rectangle_half32(PORT_SIGNATURE)
@@ -3425,103 +3544,153 @@ static uint32_t put32(Port *port, uint32_t colour)
     return target;
 }
 
+static uint32_t blend_subtract_from_body(Port *port)
+{
+    uint32_t colour;
+    colour = subtract_saturated(port, source_colour(port), target32(port));
+    return put32(port, colour & CHANNELS);
+}
+
 uint32_t vertrix_port_blend_subtract_from(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = subtract_saturated(&port, source_colour(&port), target32(&port));
-    return port_return(&port, put32(&port, colour & CHANNELS), entry->edx);
+    return port_return(&port, blend_subtract_from_body(&port), entry->edx);
+}
+
+static uint32_t blend_invert_body(Port *port)
+{
+    uint32_t colour;
+    colour = ~source_colour(port) & CHANNELS;
+    put32(port, colour);
+    return colour;
 }
 
 uint32_t vertrix_port_blend_invert(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = ~source_colour(&port) & CHANNELS;
-    put32(&port, colour);
-    return port_return(&port, colour, entry->edx);
+    return port_return(&port, blend_invert_body(&port), entry->edx);
+}
+
+static uint32_t blend_invert_target_body(Port *port)
+{
+    return put32(port, ~target32(port) & CHANNELS);
 }
 
 uint32_t vertrix_port_blend_invert_target(PORT_SIGNATURE)
 {
     Port port;
     port_open(&port, calls, services, globals, entry);
-    return port_return(&port, put32(&port, ~target32(&port) & CHANNELS), entry->edx);
+    return port_return(&port, blend_invert_target_body(&port), entry->edx);
+}
+
+static uint32_t blend_half_plus_body(Port *port)
+{
+    uint32_t colour;
+    colour = half_plus(port, source_colour(port));
+    put32(port, colour);
+    return colour;
 }
 
 uint32_t vertrix_port_blend_half_plus(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = half_plus(&port, source_colour(&port));
-    put32(&port, colour);
-    return port_return(&port, colour, entry->edx);
+    return port_return(&port, blend_half_plus_body(&port), entry->edx);
+}
+
+static uint32_t blend_half_plus_remap_body(Port *port)
+{
+    uint32_t colour;
+    colour = half_plus(port, source_colour(port));
+    put32(port, colour);
+    colour = remap(port, target32(port));
+    return put32(port, colour);
 }
 
 uint32_t vertrix_port_blend_half_plus_remap(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = half_plus(&port, source_colour(&port));
-    put32(&port, colour);
-    colour = remap(&port, target32(&port));
-    return port_return(&port, put32(&port, colour), entry->edx);
+    return port_return(&port, blend_half_plus_remap_body(&port), entry->edx);
+}
+
+static uint32_t blend_target_cross_remap_body(Port *port)
+{
+    uint32_t colour;
+    colour = cross_remap(port, target32(port), source_colour(port));
+    return put32(port, colour);
 }
 
 uint32_t vertrix_port_blend_target_cross_remap(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = cross_remap(&port, target32(&port), source_colour(&port));
-    return port_return(&port, put32(&port, colour), entry->edx);
+    return port_return(&port, blend_target_cross_remap_body(&port), entry->edx);
+}
+
+static uint32_t blend_remap_average_body(Port *port)
+{
+    uint32_t colour;
+    colour = remap(port, source_colour(port));
+    port_set32(port, 0, REMAPPED, colour);
+    colour = average(target32(port), colour);
+    return put32(port, colour);
 }
 
 uint32_t vertrix_port_blend_remap_average(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = remap(&port, source_colour(&port));
-    port_set32(&port, 0, REMAPPED, colour);
-    colour = average(target32(&port), colour);
-    return port_return(&port, put32(&port, colour), entry->edx);
+    return port_return(&port, blend_remap_average_body(&port), entry->edx);
+}
+
+static uint32_t blend_remap_subtract_from_body(Port *port)
+{
+    uint32_t colour;
+    colour = remap(port, source_colour(port));
+    port_set32(port, 0, REMAPPED, colour);
+    colour = subtract_saturated(port, colour, target32(port));
+    return put32(port, colour & CHANNELS);
 }
 
 uint32_t vertrix_port_blend_remap_subtract_from(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = remap(&port, source_colour(&port));
-    port_set32(&port, 0, REMAPPED, colour);
-    colour = subtract_saturated(&port, colour, target32(&port));
-    return port_return(&port, put32(&port, colour & CHANNELS), entry->edx);
+    return port_return(&port, blend_remap_subtract_from_body(&port), entry->edx);
+}
+
+static uint32_t blend_remap_invert_body(Port *port)
+{
+    uint32_t colour;
+    colour = remap(port, source_colour(port));
+    port_set32(port, 0, REMAPPED, colour);
+    put32(port, ~colour & CHANNELS);
+    return ~colour & CHANNELS;
 }
 
 uint32_t vertrix_port_blend_remap_invert(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = remap(&port, source_colour(&port));
-    port_set32(&port, 0, REMAPPED, colour);
-    put32(&port, ~colour & CHANNELS);
-    return port_return(&port, ~colour & CHANNELS, entry->edx);
+    return port_return(&port, blend_remap_invert_body(&port), entry->edx);
+}
+
+static uint32_t blend_target_remap_invert_body(Port *port)
+{
+    uint32_t colour;
+    colour = remap(port, target32(port));
+    port_set32(port, 0, REMAPPED, colour);
+    return put32(port, ~colour & CHANNELS);
 }
 
 uint32_t vertrix_port_blend_target_remap_invert(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = remap(&port, target32(&port));
-    port_set32(&port, 0, REMAPPED, colour);
-    return port_return(&port, put32(&port, ~colour & CHANNELS), entry->edx);
+    return port_return(&port, blend_target_remap_invert_body(&port), entry->edx);
 }
 
 /* The fixed channels through the map numbered by the mean of two colours' entry bytes (the map
@@ -3538,35 +3707,50 @@ static uint32_t mean_map_tint(Port *port, uint32_t first, uint32_t second)
            port_u8(port, map, port_u16(port, 0, TINT_BLUE));
 }
 
+static uint32_t blend_mean_map_tint_body(Port *port)
+{
+    uint32_t colour;
+    colour = mean_map_tint(port, source_colour(port), target32(port));
+    return put32(port, colour);
+}
+
 uint32_t vertrix_port_blend_mean_map_tint(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = mean_map_tint(&port, source_colour(&port), target32(&port));
-    return port_return(&port, put32(&port, colour), entry->edx);
+    return port_return(&port, blend_mean_map_tint_body(&port), entry->edx);
+}
+
+static uint32_t blend_quarters_plus_body(Port *port)
+{
+    uint32_t colour;
+    colour = ((source_colour(port) >> 2) & 0x3f3f3f) + ((target32(port) >> 2) & 0x3f3f3f);
+    colour += port_u32(port, 0, ADDED_COLOUR);
+    return put32(port, colour);
 }
 
 uint32_t vertrix_port_blend_quarters_plus(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = ((source_colour(&port) >> 2) & 0x3f3f3f) + ((target32(&port) >> 2) & 0x3f3f3f);
-    colour += port_u32(&port, 0, ADDED_COLOUR);
-    return port_return(&port, put32(&port, colour), entry->edx);
+    return port_return(&port, blend_quarters_plus_body(&port), entry->edx);
+}
+
+static uint32_t blend_entry_mean_tint_body(Port *port)
+{
+    uint32_t map;
+    uint32_t other;
+    uint32_t colour;
+    map = entry_pair(port, target32(port), &other);
+    colour = entry_mean_tint(port, map, port_u32(port, 0, ENTRY), other);
+    return put32(port, colour);
 }
 
 uint32_t vertrix_port_blend_entry_mean_tint(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t map;
-    uint32_t other;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    map = entry_pair(&port, target32(&port), &other);
-    colour = entry_mean_tint(&port, map, port_u32(&port, 0, ENTRY), other);
-    return port_return(&port, put32(&port, colour), entry->edx);
+    return port_return(&port, blend_entry_mean_tint_body(&port), entry->edx);
 }
 
 enum
@@ -3774,15 +3958,20 @@ uint32_t vertrix_port_blend_target_cross_half_tint(PORT_SIGNATURE)
     return cross32(calls, services, globals, entry, CROSS_HALF_TINT, 1);
 }
 
+static uint32_t blend_quarters_plus_remap_body(Port *port)
+{
+    uint32_t colour;
+    colour = ((source_colour(port) >> 2) & 0x3f3f3f) + ((target32(port) >> 2) & 0x3f3f3f);
+    put32(port, colour + port_u32(port, 0, ADDED_COLOUR));
+    colour = remap(port, target32(port));
+    return put32(port, colour);
+}
+
 uint32_t vertrix_port_blend_quarters_plus_remap(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = ((source_colour(&port) >> 2) & 0x3f3f3f) + ((target32(&port) >> 2) & 0x3f3f3f);
-    put32(&port, colour + port_u32(&port, 0, ADDED_COLOUR));
-    colour = remap(&port, target32(&port));
-    return port_return(&port, put32(&port, colour), entry->edx);
+    return port_return(&port, blend_quarters_plus_remap_body(&port), entry->edx);
 }
 
 uint32_t vertrix_port_blend_half_plus_remap_add(PORT_SIGNATURE)
@@ -3800,28 +3989,38 @@ uint32_t vertrix_port_blend_half_plus_remap_subtract_from(PORT_SIGNATURE)
     return made_mix32(calls, services, globals, entry, COLOUR_HALF_PLUS_REMAP, MIX_SUBTRACT_FROM);
 }
 
+static uint32_t blend_invert_half_plus_remap_body(Port *port)
+{
+    uint32_t colour;
+    colour = half_plus(port, ~source_colour(port) & CHANNELS);
+    port_set32(port, 0, REMAPPED, colour);
+    colour = remap(port, colour);
+    put32(port, colour);
+    return colour;
+}
+
 uint32_t vertrix_port_blend_invert_half_plus_remap(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = half_plus(&port, ~source_colour(&port) & CHANNELS);
-    port_set32(&port, 0, REMAPPED, colour);
-    colour = remap(&port, colour);
-    put32(&port, colour);
-    return port_return(&port, colour, entry->edx);
+    return port_return(&port, blend_invert_half_plus_remap_body(&port), entry->edx);
+}
+
+static uint32_t blend_invert_target_half_plus_remap_body(Port *port)
+{
+    uint32_t colour;
+    colour = half_plus(port, ~target32(port) & CHANNELS);
+    port_set32(port, 0, REMAPPED, colour);
+    colour = remap(port, colour);
+    put32(port, colour);
+    return colour;
 }
 
 uint32_t vertrix_port_blend_invert_target_half_plus_remap(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = half_plus(&port, ~target32(&port) & CHANNELS);
-    port_set32(&port, 0, REMAPPED, colour);
-    colour = remap(&port, colour);
-    put32(&port, colour);
-    return port_return(&port, colour, entry->edx);
+    return port_return(&port, blend_invert_target_half_plus_remap_body(&port), entry->edx);
 }
 
 static uint32_t cross_half_plus_remap32(PORT_SIGNATURE, int target_map)
@@ -3853,118 +4052,168 @@ uint32_t vertrix_port_blend_target_cross_half_plus_remap(PORT_SIGNATURE)
     return cross_half_plus_remap32(calls, services, globals, entry, 1);
 }
 
+static uint32_t blend_levels_bias_body(Port *port)
+{
+    uint32_t colour;
+    colour = levels_bias_values(port, source_colour(port), target32(port));
+    return put32(port, colour);
+}
+
 uint32_t vertrix_port_blend_levels_bias(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = levels_bias_values(&port, source_colour(&port), target32(&port));
-    return port_return(&port, put32(&port, colour), entry->edx);
+    return port_return(&port, blend_levels_bias_body(&port), entry->edx);
+}
+
+static uint32_t blend_entry_levels_tint_body(Port *port)
+{
+    uint32_t map;
+    uint32_t other;
+    uint32_t colour;
+    map = entry_pair(port, target32(port), &other);
+    colour = entry_levels_tint(port, map, port_u32(port, 0, ENTRY), other);
+    return put32(port, colour);
 }
 
 uint32_t vertrix_port_blend_entry_levels_tint(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t map;
-    uint32_t other;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    map = entry_pair(&port, target32(&port), &other);
-    colour = entry_levels_tint(&port, map, port_u32(&port, 0, ENTRY), other);
-    return port_return(&port, put32(&port, colour), entry->edx);
+    return port_return(&port, blend_entry_levels_tint_body(&port), entry->edx);
+}
+
+static uint32_t blend_paired_body(Port *port)
+{
+    uint32_t colour;
+    colour = paired_remap(port, source_colour(port));
+    put32(port, colour);
+    return colour;
 }
 
 uint32_t vertrix_port_blend_paired(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = paired_remap(&port, source_colour(&port));
-    put32(&port, colour);
-    return port_return(&port, colour, entry->edx);
+    return port_return(&port, blend_paired_body(&port), entry->edx);
+}
+
+static uint32_t blend_fixed_entry_body(Port *port)
+{
+    uint32_t colour;
+    colour = fixed_entry_remap(port, source_colour(port));
+    put32(port, colour);
+    return colour;
 }
 
 uint32_t vertrix_port_blend_fixed_entry(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = fixed_entry_remap(&port, source_colour(&port));
-    put32(&port, colour);
-    return port_return(&port, colour, entry->edx);
+    return port_return(&port, blend_fixed_entry_body(&port), entry->edx);
+}
+
+static uint32_t blend_half_plus_paired_body(Port *port)
+{
+    uint32_t colour;
+    colour = half_plus(port, source_colour(port));
+    port_set32(port, 0, REMAPPED, colour);
+    return put32(port, paired_remap(port, colour));
 }
 
 uint32_t vertrix_port_blend_half_plus_paired(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = half_plus(&port, source_colour(&port));
-    port_set32(&port, 0, REMAPPED, colour);
-    return port_return(&port, put32(&port, paired_remap(&port, colour)), entry->edx);
+    return port_return(&port, blend_half_plus_paired_body(&port), entry->edx);
+}
+
+static uint32_t blend_half_tint_fixed_body(Port *port)
+{
+    uint32_t colour;
+    uint32_t target;
+    uint32_t map;
+    uint32_t fixed;
+    colour = half_tint(port, source_colour(port));
+    map = port_u32(port, 0, MAP);
+    target = put32(port, colour);
+    /* The entry index is taken from the stored pixel but for its red bits. */
+    colour = (colour & 0xfc0000) | (port_u32(port, target, 0) & 0xfcfc);
+    fixed = port_u8(port, port_u32(port, 0, FIXED_SELECTS), entry_index(colour));
+    fixed = port_u32(port, port_u32(port, port_u32(port, 0, FIXED_ENTRIES), fixed * 4), 0);
+    port_set32(port, 0, ENTRY, fixed);
+    colour = (port_u8(port, map, fixed >> 24) << 16) |
+             (port_u8(port, map, (fixed >> 16) & 0xff) << 8) |
+             port_u8(port, map, (fixed >> 8) & 0xff);
+    port_set32(port, target, 0, colour);
+    return colour;
 }
 
 uint32_t vertrix_port_blend_half_tint_fixed(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
-    uint32_t target;
-    uint32_t map;
-    uint32_t fixed;
     port_open(&port, calls, services, globals, entry);
-    colour = half_tint(&port, source_colour(&port));
-    map = port_u32(&port, 0, MAP);
-    target = put32(&port, colour);
-    /* The entry index is taken from the stored pixel but for its red bits. */
-    colour = (colour & 0xfc0000) | (port_u32(&port, target, 0) & 0xfcfc);
-    fixed = port_u8(&port, port_u32(&port, 0, FIXED_SELECTS), entry_index(colour));
-    fixed = port_u32(&port, port_u32(&port, port_u32(&port, 0, FIXED_ENTRIES), fixed * 4), 0);
-    port_set32(&port, 0, ENTRY, fixed);
-    colour = (port_u8(&port, map, fixed >> 24) << 16) |
-             (port_u8(&port, map, (fixed >> 16) & 0xff) << 8) |
-             port_u8(&port, map, (fixed >> 8) & 0xff);
-    port_set32(&port, target, 0, colour);
-    return port_return(&port, colour, entry->edx);
+    return port_return(&port, blend_half_tint_fixed_body(&port), entry->edx);
+}
+
+static uint32_t blend_mean_map_paired_body(Port *port)
+{
+    uint32_t colour;
+    colour = mean_map_paired(port, source_colour(port), target32(port));
+    return put32(port, colour);
 }
 
 uint32_t vertrix_port_blend_mean_map_paired(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = mean_map_paired(&port, source_colour(&port), target32(&port));
-    return port_return(&port, put32(&port, colour), entry->edx);
+    return port_return(&port, blend_mean_map_paired_body(&port), entry->edx);
+}
+
+static uint32_t blend_average_paired_body(Port *port)
+{
+    uint32_t colour;
+    colour = average(source_colour(port), target32(port));
+    port_set32(port, 0, REMAPPED, colour);
+    colour = paired_remap(port, colour);
+    put32(port, colour);
+    return colour;
 }
 
 uint32_t vertrix_port_blend_average_paired(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = average(source_colour(&port), target32(&port));
-    port_set32(&port, 0, REMAPPED, colour);
-    colour = paired_remap(&port, colour);
-    put32(&port, colour);
-    return port_return(&port, colour, entry->edx);
+    return port_return(&port, blend_average_paired_body(&port), entry->edx);
+}
+
+static uint32_t blend_fixed_entry_mean_body(Port *port)
+{
+    uint32_t colour;
+    colour = fixed_entry_mean(port, source_colour(port), target32(port));
+    return put32(port, colour);
 }
 
 uint32_t vertrix_port_blend_fixed_entry_mean(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = fixed_entry_mean(&port, source_colour(&port), target32(&port));
-    return port_return(&port, put32(&port, colour), entry->edx);
+    return port_return(&port, blend_fixed_entry_mean_body(&port), entry->edx);
+}
+
+static uint32_t blend_paired_average_body(Port *port)
+{
+    uint32_t colour;
+    colour = paired_remap(port, source_colour(port));
+    port_set32(port, 0, REMAPPED, colour);
+    return put32(port, average(target32(port), colour));
 }
 
 uint32_t vertrix_port_blend_paired_average(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = paired_remap(&port, source_colour(&port));
-    port_set32(&port, 0, REMAPPED, colour);
-    return port_return(&port, put32(&port, average(target32(&port), colour)), entry->edx);
+    return port_return(&port, blend_paired_average_body(&port), entry->edx);
 }
 
 uint32_t vertrix_port_blend_paired_subtract(PORT_SIGNATURE)
@@ -3977,86 +4226,126 @@ uint32_t vertrix_port_blend_paired_subtract_from(PORT_SIGNATURE)
     return made_mix32(calls, services, globals, entry, COLOUR_PAIRED, MIX_SUBTRACT_FROM);
 }
 
+static uint32_t blend_paired_invert_body(Port *port)
+{
+    uint32_t colour;
+    colour = paired_remap(port, source_colour(port));
+    port_set32(port, 0, REMAPPED, colour);
+    put32(port, ~colour & CHANNELS);
+    return ~colour & CHANNELS;
+}
+
 uint32_t vertrix_port_blend_paired_invert(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = paired_remap(&port, source_colour(&port));
-    port_set32(&port, 0, REMAPPED, colour);
-    put32(&port, ~colour & CHANNELS);
-    return port_return(&port, ~colour & CHANNELS, entry->edx);
+    return port_return(&port, blend_paired_invert_body(&port), entry->edx);
+}
+
+static uint32_t blend_target_paired_invert_body(Port *port)
+{
+    uint32_t colour;
+    colour = paired_remap(port, target32(port));
+    port_set32(port, 0, REMAPPED, colour);
+    return put32(port, ~colour & CHANNELS);
 }
 
 uint32_t vertrix_port_blend_target_paired_invert(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = paired_remap(&port, target32(&port));
-    port_set32(&port, 0, REMAPPED, colour);
-    return port_return(&port, put32(&port, ~colour & CHANNELS), entry->edx);
+    return port_return(&port, blend_target_paired_invert_body(&port), entry->edx);
+}
+
+static uint32_t blend_paired_cross_body(Port *port)
+{
+    uint32_t colour;
+    colour = paired_cross(port, source_colour(port), target32(port));
+    return put32(port, colour);
 }
 
 uint32_t vertrix_port_blend_paired_cross(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = paired_cross(&port, source_colour(&port), target32(&port));
-    return port_return(&port, put32(&port, colour), entry->edx);
+    return port_return(&port, blend_paired_cross_body(&port), entry->edx);
+}
+
+static uint32_t blend_target_paired_cross_body(Port *port)
+{
+    uint32_t colour;
+    colour = paired_cross(port, target32(port), source_colour(port));
+    return put32(port, colour);
 }
 
 uint32_t vertrix_port_blend_target_paired_cross(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = paired_cross(&port, target32(&port), source_colour(&port));
-    return port_return(&port, put32(&port, colour), entry->edx);
+    return port_return(&port, blend_target_paired_cross_body(&port), entry->edx);
+}
+
+static uint32_t blend_shade_paired_body(Port *port)
+{
+    uint32_t colour;
+    colour = shade_paired(port, source_colour(port), target32(port));
+    return put32(port, colour);
 }
 
 uint32_t vertrix_port_blend_shade_paired(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = shade_paired(&port, source_colour(&port), target32(&port));
-    return port_return(&port, put32(&port, colour), entry->edx);
+    return port_return(&port, blend_shade_paired_body(&port), entry->edx);
+}
+
+static uint32_t blend_levels_paired_body(Port *port)
+{
+    uint32_t colour;
+    uint32_t target;
+    colour = levels_mix_values(port, source_colour(port), target32(port));
+    target = put32(port, colour);
+    /* The entry index is taken from the stored pixel for its blue bits. */
+    colour = (colour & 0xfcfc00) | (port_u32(port, target, 0) & 0xfc);
+    port_set32(port, target, 0, paired_remap(port, colour));
+    return target;
 }
 
 uint32_t vertrix_port_blend_levels_paired(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
-    uint32_t target;
     port_open(&port, calls, services, globals, entry);
-    colour = levels_mix_values(&port, source_colour(&port), target32(&port));
-    target = put32(&port, colour);
-    /* The entry index is taken from the stored pixel for its blue bits. */
-    colour = (colour & 0xfcfc00) | (port_u32(&port, target, 0) & 0xfc);
-    port_set32(&port, target, 0, paired_remap(&port, colour));
-    return port_return(&port, target, entry->edx);
+    return port_return(&port, blend_levels_paired_body(&port), entry->edx);
+}
+
+static uint32_t blend_fixed_entry_levels_body(Port *port)
+{
+    uint32_t colour;
+    colour = fixed_entry_levels(port, source_colour(port), target32(port));
+    return put32(port, colour);
 }
 
 uint32_t vertrix_port_blend_fixed_entry_levels(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = fixed_entry_levels(&port, source_colour(&port), target32(&port));
-    return port_return(&port, put32(&port, colour), entry->edx);
+    return port_return(&port, blend_fixed_entry_levels_body(&port), entry->edx);
+}
+
+static uint32_t blend_paired_levels_body(Port *port)
+{
+    uint32_t colour;
+    colour = paired_remap(port, source_colour(port));
+    port_set32(port, 0, REMAPPED, colour);
+    colour = levels_mix_values(port, colour, target32(port));
+    return put32(port, colour);
 }
 
 uint32_t vertrix_port_blend_paired_levels(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t colour;
     port_open(&port, calls, services, globals, entry);
-    colour = paired_remap(&port, source_colour(&port));
-    port_set32(&port, 0, REMAPPED, colour);
-    colour = levels_mix_values(&port, colour, target32(&port));
-    return port_return(&port, put32(&port, colour), entry->edx);
+    return port_return(&port, blend_paired_levels_body(&port), entry->edx);
 }
 
 enum
@@ -4144,6 +4433,7 @@ static uint32_t source_alpha_byte(Port *port)
 /* 0x4925d0's keyed masked row with the target pixel at `target_pixel`. */
 static uint32_t keyed_mask_row_back(PORT_SIGNATURE, uint32_t target_pixel)
 {
+    PixelOperation operation = {0, NULL, 0};
     Port port;
     uint32_t eax = entry->eax;
     uint32_t edx = entry->edx;
@@ -4168,7 +4458,7 @@ static uint32_t keyed_mask_row_back(PORT_SIGNATURE, uint32_t target_pixel)
             eax = source_alpha_byte(&port);
             if ((eax & 0xff) != 0)
             {
-                eax = port_call(&port, port_u32(&port, 0, PIXEL_OPERATION), eax, edx, ebx, ecx);
+                eax = pixel_call(&port, &operation, eax, edx, ebx, ecx);
                 edx = vertrix_lift_edx;
             }
         }
@@ -4194,7 +4484,7 @@ static uint32_t keyed_mask_row_back(PORT_SIGNATURE, uint32_t target_pixel)
         port_set32(&port, 0, MASK_PIXEL, ecx);
         if ((eax & 0xff) != 0)
         {
-            eax = port_call(&port, port_u32(&port, 0, PIXEL_OPERATION), eax, edx, ebx, ecx);
+            eax = pixel_call(&port, &operation, eax, edx, ebx, ecx);
             edx = vertrix_lift_edx;
         }
         steps = port_u32(&port, 0, SAMPLE_STEPS);
@@ -5251,4 +5541,74 @@ uint32_t vertrix_port_image_copy8_4abb30(PORT_SIGNATURE)
 uint32_t vertrix_port_image_alpha8_4abbd0(PORT_SIGNATURE)
 {
     return image_blit(calls, services, globals, entry, IMAGE_ALPHA, PIXEL_332);
+}
+
+static PixelBody pixel_body(LiftRoutine routine)
+{
+    static const struct
+    {
+        LiftRoutine routine;
+        PixelBody body;
+    } bodies[] = {
+        {vertrix_port_blend_copy, blend_copy_body},
+        {vertrix_port_blend_remap, blend_remap_body},
+        {vertrix_port_blend_add, blend_add_body},
+        {vertrix_port_blend_subtract, blend_subtract_body},
+        {vertrix_port_blend_average_remap, blend_average_remap_body},
+        {vertrix_port_blend_remap_add, blend_remap_add_body},
+        {vertrix_port_blend_remap_subtract, blend_remap_subtract_body},
+        {vertrix_port_blend_tint_average, blend_tint_average_body},
+        {vertrix_port_blend_tint_add, blend_tint_add_body},
+        {vertrix_port_blend_half_tint, blend_half_tint_body},
+        {vertrix_port_blend_levels_remap, blend_levels_remap_body},
+        {vertrix_port_blend_levels, blend_levels_body},
+        {vertrix_port_blend_shade, blend_shade_body},
+        {vertrix_port_blend_average, blend_average_body},
+        {vertrix_port_blend_remap_levels, blend_remap_levels_body},
+        {vertrix_port_blend_tint_levels, blend_tint_levels_body},
+        {vertrix_port_blend_subtract_from, blend_subtract_from_body},
+        {vertrix_port_blend_invert, blend_invert_body},
+        {vertrix_port_blend_invert_target, blend_invert_target_body},
+        {vertrix_port_blend_half_plus, blend_half_plus_body},
+        {vertrix_port_blend_half_plus_remap, blend_half_plus_remap_body},
+        {vertrix_port_blend_target_cross_remap, blend_target_cross_remap_body},
+        {vertrix_port_blend_remap_average, blend_remap_average_body},
+        {vertrix_port_blend_remap_subtract_from, blend_remap_subtract_from_body},
+        {vertrix_port_blend_remap_invert, blend_remap_invert_body},
+        {vertrix_port_blend_target_remap_invert, blend_target_remap_invert_body},
+        {vertrix_port_blend_mean_map_tint, blend_mean_map_tint_body},
+        {vertrix_port_blend_quarters_plus, blend_quarters_plus_body},
+        {vertrix_port_blend_entry_mean_tint, blend_entry_mean_tint_body},
+        {vertrix_port_blend_quarters_plus_remap, blend_quarters_plus_remap_body},
+        {vertrix_port_blend_invert_half_plus_remap, blend_invert_half_plus_remap_body},
+        {vertrix_port_blend_invert_target_half_plus_remap,
+         blend_invert_target_half_plus_remap_body},
+        {vertrix_port_blend_levels_bias, blend_levels_bias_body},
+        {vertrix_port_blend_entry_levels_tint, blend_entry_levels_tint_body},
+        {vertrix_port_blend_paired, blend_paired_body},
+        {vertrix_port_blend_fixed_entry, blend_fixed_entry_body},
+        {vertrix_port_blend_half_plus_paired, blend_half_plus_paired_body},
+        {vertrix_port_blend_half_tint_fixed, blend_half_tint_fixed_body},
+        {vertrix_port_blend_mean_map_paired, blend_mean_map_paired_body},
+        {vertrix_port_blend_average_paired, blend_average_paired_body},
+        {vertrix_port_blend_fixed_entry_mean, blend_fixed_entry_mean_body},
+        {vertrix_port_blend_paired_average, blend_paired_average_body},
+        {vertrix_port_blend_paired_invert, blend_paired_invert_body},
+        {vertrix_port_blend_target_paired_invert, blend_target_paired_invert_body},
+        {vertrix_port_blend_paired_cross, blend_paired_cross_body},
+        {vertrix_port_blend_target_paired_cross, blend_target_paired_cross_body},
+        {vertrix_port_blend_shade_paired, blend_shade_paired_body},
+        {vertrix_port_blend_levels_paired, blend_levels_paired_body},
+        {vertrix_port_blend_fixed_entry_levels, blend_fixed_entry_levels_body},
+        {vertrix_port_blend_paired_levels, blend_paired_levels_body},
+    };
+    unsigned i;
+    for (i = 0; i < sizeof bodies / sizeof bodies[0]; i++)
+    {
+        if (bodies[i].routine == routine)
+        {
+            return bodies[i].body;
+        }
+    }
+    return NULL;
 }

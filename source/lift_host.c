@@ -1944,6 +1944,7 @@ void lift_host_init(LiftHost *host, uint8_t *image, const uint8_t *original, uin
     }
     vertrix_mpeg_tables_memo = 1;
     vertrix_lift_frame_hook = host_frame_bytes;
+    vertrix_lift_routine_hook = vertrix_lifted_function;
     {
         static const uint32_t image_size = LIFT_HOST_IMAGE_SIZE;
         /* The blocks do not overlap, so the order only sets the cost: the globals first. */
