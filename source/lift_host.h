@@ -134,6 +134,8 @@ void lift_host_thread_step(LiftHost *host, int *lifted);
 
 uint32_t lift_host_surface(const LiftHost *host, uint32_t surface, uint32_t *width,
                            uint32_t *height, uint32_t *pitch, uint32_t *bytes_per_pixel);
+/* The host memory behind `size` bytes at `address`, or NULL when they do not lie in one block. */
+const uint8_t *lift_host_bytes(const LiftHost *host, uint32_t address, uint32_t size);
 
 /* `image` is copied into the writable image; the heap arena is supplied by the caller. */
 /* Gives the large buffers a second block of memory at LIFT_HOST_HEAP2_BASE. */

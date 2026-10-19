@@ -99,7 +99,19 @@ static void fail(const char *message)
  */
 static void gather(const LiftHost *host, uint32_t base)
 {
+    /* The back buffer lies in one heap block: read it in place, one row at a time, rather than
+     * resolving every pixel's address. */
+    const uint8_t *frame = lift_host_bytes(host, base, WIDTH * HEIGHT * 4);
     unsigned i;
+    if (frame != NULL)
+    {
+        memcpy(pixels, frame, sizeof pixels);
+        for (i = 0; i < WIDTH * HEIGHT; i++)
+        {
+            pixels[4 * i + 3] = 0xff;
+        }
+        return;
+    }
     for (i = 0; i < WIDTH * HEIGHT; i++)
     {
         uint32_t value = lift_host_read(host, base + 4 * i, 4);

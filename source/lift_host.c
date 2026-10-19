@@ -68,6 +68,11 @@ static uint8_t *bytes_at(const LiftHost *host, uint32_t address, unsigned size)
     return NULL;
 }
 
+const uint8_t *lift_host_bytes(const LiftHost *host, uint32_t address, uint32_t size)
+{
+    return bytes_at(host, address, size);
+}
+
 uint32_t lift_host_read(const LiftHost *host, uint32_t address, unsigned size)
 {
     const uint8_t *bytes = bytes_at(host, address, size);
