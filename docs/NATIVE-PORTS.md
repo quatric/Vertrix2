@@ -379,3 +379,5 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x4e6250 | `rtlfatalwrites.c` | the fatal message to the error output (WriteFile), then exit(code), run in place through `vertrix_rtl_exit` (`tools/verify_cases/4e6250.sh` stops the original at ExitProcess, `VERTRIX_STOP_CALLEES`) |
 | 0x4ec0e0 | `rtlreallocs.c` | realloc(): malloc for none, free for size 0, in place by _expand, else a new block with the old bytes, or the old size put back (`tools/verify_cases/4ec0e0.sh`) |
 | 0x4e843c | `rtlthreaddatagrows.c` | the calling thread's data grown to the current size: reallocated when owned, else copied into new data, then marked and stored with TlsSetValue under the lock (`tools/verify_cases/4e843c.sh`) |
+| 0x4e9e30 | `rtltempdirectories.c` | the temporary directory, found once: the first short enough of the variables at 0x50b0ec (getenv), else the current directory, ended with a backslash (`tools/verify_cases/4e9e30.sh`) |
+| 0x4e969c | `rtltzoffsets.c` | a zone in TZ: its name (at most 0x80 characters) and its signed hh[:mm[:ss]] offset in seconds, the digits read in place (`tools/verify_cases/4e969c.sh`) |

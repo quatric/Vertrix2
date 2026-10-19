@@ -463,6 +463,7 @@
 #include "rtlswaps.h"
 #include "rtlswings.h"
 #include "rtltables.h"
+#include "rtltempdirectories.h"
 #include "rtltempnames.h"
 #include "rtlterminatehandlers.h"
 #include "rtlterminates.h"
@@ -480,6 +481,7 @@
 #include "rtltitleletters.h"
 #include "rtltooltiptexts.h"
 #include "rtltypesizes.h"
+#include "rtltzoffsets.h"
 #include "rtltzrules.h"
 #include "rtluiscreenactors.h"
 #include "rtlunwindstates.h"
@@ -4306,12 +4308,12 @@ static const LiftedRoutine routines[] = {
     {0x4e949c, vertrix_port_triple_below_4e949c, 0, 0},
     {0x4e960c, vertrix_port_tzset, 0, 0},
     {0x4e9670, vertrix_port_parse_decimal_4e9670, 0, 0},
-    {0x4e969c, lifted_f4e969c, 120, 0},
+    {0x4e969c, vertrix_port_rtl_tz_offset_4e969c, 0, 0},
     {0x4e97b4, vertrix_port_rtl_tz_rule_parse_4e97b4, 0, 0},
     {0x4e9a30, vertrix_port_rtl_heap_free_block_4e9a30, 0, 0},
     {0x4e9d00, vertrix_port_zero_4ea130, 0, 0},
     {0x4e9d10, vertrix_port_import_call_4e9d10, 0, 0},
-    {0x4e9e30, lifted_f4e9e30, 108, 0},
+    {0x4e9e30, vertrix_port_rtl_temp_directory_4e9e30, 0, 0},
     {0x4e9f00, vertrix_port_rtl_handle_call_4e9f00, 0, 0},
     {0x4e9f10, vertrix_port_rtl_environ_parse_4e9f10, 0, 0},
     {0x4ea0d0, vertrix_port_rtl_path_make_4ea0d0, 0, 0},

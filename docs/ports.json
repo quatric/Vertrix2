@@ -18494,6 +18494,11 @@
   "lifted": "lifted_f4e9670",
   "chunk": "whole_6"
  },
+ "0x4e969c": {
+  "port": "vertrix_port_rtl_tz_offset_4e969c",
+  "lifted": "lifted_f4e969c",
+  "chunk": "whole_13"
+ },
  "0x4e97b4": {
   "port": "vertrix_port_rtl_tz_rule_parse_4e97b4",
   "lifted": "lifted_f4e97b4",
@@ -18513,6 +18518,11 @@
   "port": "vertrix_port_import_call_4e9d10",
   "lifted": "lifted_f4e9d10",
   "chunk": "whole_6"
+ },
+ "0x4e9e30": {
+  "port": "vertrix_port_rtl_temp_directory_4e9e30",
+  "lifted": "lifted_f4e9e30",
+  "chunk": "whole_13"
  },
  "0x4e9f00": {
   "port": "vertrix_port_rtl_handle_call_4e9f00",
