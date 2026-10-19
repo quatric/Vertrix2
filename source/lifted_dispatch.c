@@ -233,6 +233,7 @@
 #include "rtlextendedroots.h"
 #include "rtlextras.h"
 #include "rtlfatalerrors.h"
+#include "rtlfatalwrites.h"
 #include "rtlfaults.h"
 #include "rtlfightbanners.h"
 #include "rtlfigures.h"
@@ -461,6 +462,7 @@
 #include "rtlswaps.h"
 #include "rtlswings.h"
 #include "rtltables.h"
+#include "rtltempnames.h"
 #include "rtlterminatehandlers.h"
 #include "rtlterminates.h"
 #include "rtltextboxdraws.h"
@@ -4209,6 +4211,7 @@ static const LiftedRoutine routines[] = {
     {0x4e5b0c, vertrix_port_rtl_locks_init_4e5b0c, 0, 0},
     {0x4e5bec, vertrix_port_rtl_object_flush_4e5bec, 0, 0},
     {0x4e5ef0, vertrix_port_rtl_code_page_reset_4e5ef0, 0, 0},
+    {0x4e6250, vertrix_port_rtl_fatal_write_4e6250, 0, 0},
     {0x4e628c, vertrix_port_rtl_error_message_4e628c, 0, 0},
     {0x4e62b0, vertrix_port_heap_reserve, 0, 0},
     {0x4e62e0, vertrix_port_rtl_char_widen_4e62e0, 0, 0},
@@ -4256,7 +4259,7 @@ static const LiftedRoutine routines[] = {
     {0x4e7eb0, vertrix_port_rtl_stream_close_4e7eb0, 0, 0},
     {0x4e7ef4, vertrix_port_call_4e7fc4_4e7e44_4e7ef4, 0, 0},
     {0x4e7f0c, vertrix_port_hex_digit_4e7f0c, 0, 0},
-    {0x4e7f18, lifted_f4e7f18, 116, 0},
+    {0x4e7f18, vertrix_port_rtl_temp_name_4e7f18, 0, 0},
     {0x4e7fc4, vertrix_port_rtl_stream_close_4e7fc4, 296, 0},
     {0x4e8098, vertrix_port_environment_table_build, 0, 0},
     {0x4e81d0, vertrix_port_rtl_text_compare_4e81d0, 0, 0},
@@ -4404,7 +4407,6 @@ static const LiftedRoutine routines[] = {
 static const LiftedRoutine unverified_routines[] = {
     {0, NULL, 0, 0},
     {0x4d9f06, lifted_rtl_jump_capture, 72, 0},
-    {0x4e6250, lifted_f4e6250, 156, 0},
     {0x4e6d16, lifted_f4e6d16, 216, 0},
 };
 

@@ -31,31 +31,29 @@ static uint32_t report(Port *port, const LiftEntry *entry, uint32_t text, uint32
     return port_return(port, result, edx);
 }
 
-/* exit(1) from 0x4e078c: with the message flag clear (0x5c7b90), the banner (0x4e6b2c), the error
+/* exit(code), 0x4e078c: with the message flag clear (0x5c7b90), the banner (0x4e6b2c), the error
  * text 0xf (0x4e6bac) and the message hook (0x507cd8); with it set, the exit hook (0x507ce4) when
- * there is one. Then ExitProcess(1), which under the verifier returns, so the original runs on into
- * 0x4e07d0, the release of the two buffers (0x5c7b94, 0x5c7b98, each freed by 0x4ea190 and
- * cleared), and returns from there. */
-static uint32_t exit_one(Port *port, const LiftEntry *entry, uint32_t edx)
+ * there is one. Then ExitProcess(code), which under the verifier returns, so the original runs on
+ * into 0x4e07d0, the release of the two buffers (0x5c7b94, 0x5c7b98, each freed by 0x4ea190 and
+ * cleared), and returns from there with the edx ExitProcess left. */
+uint32_t vertrix_rtl_exit(Port *port, uint32_t code, uint32_t edx, uint32_t ecx)
 {
-    const uint32_t ecx = entry->ecx;
-    uint32_t eax = 1;
+    uint32_t eax = code;
     if (port_u32(port, QUIET_EXIT, 0) == 0)
     {
-        port_call(port, ERROR_BANNER, 1, edx, 1, ecx);
-        eax = port_call(port, ERROR_TEXT, 0, 0xf, 1, ecx);
-        eax = port_call(port, port_u32(port, MESSAGE_HOOK, 0), eax, vertrix_lift_edx, 1, ecx);
+        port_call(port, ERROR_BANNER, code, edx, code, ecx);
+        eax = port_call(port, ERROR_TEXT, 0, 0xf, code, ecx);
+        eax = port_call(port, port_u32(port, MESSAGE_HOOK, 0), eax, vertrix_lift_edx, code, ecx);
         edx = vertrix_lift_edx;
     }
     else if (port_u32(port, EXIT_HOOK, 0) != 0)
     {
-        eax = port_call(port, port_u32(port, EXIT_HOOK, 0), 0, 0xff, 1, ecx);
+        eax = port_call(port, port_u32(port, EXIT_HOOK, 0), 0, 0xff, code, ecx);
         edx = vertrix_lift_edx;
     }
-    const uint32_t code = 1;
-    eax = port_call_stack(port, EXIT_PROCESS, eax, edx, 1, ecx, &code, 1);
+    eax = port_call_stack(port, EXIT_PROCESS, eax, edx, code, ecx, &code, 1);
     const uint32_t kept_edx = vertrix_lift_edx;
-    uint32_t ebx = 1;
+    uint32_t ebx = code;
     const uint32_t first = port_u32(port, BUFFER_FIRST, 0);
     if (first != 0)
     {
@@ -98,5 +96,5 @@ uint32_t vertrix_port_rtl_terminate_4e6c37(PORT_SIGNATURE)
     {
         return report(&port, entry, text, edx);
     }
-    return exit_one(&port, entry, edx);
+    return vertrix_rtl_exit(&port, 1, edx, entry->ecx);
 }

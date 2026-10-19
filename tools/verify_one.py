@@ -89,6 +89,12 @@ def vtable_patch(rng, handle, data):
 slots = [int(k[5:], 16) for k in meta['callees'] if k.startswith('slot_')]
 for index, slot in enumerate(slots):
     meta['callees']['0x%x' % (0x700800 + 16 * index)] = meta['callees'][ 'slot_%x' % slot]
+# VERTRIX_STOP_CALLEES="0x4f1b4c,...": these callees (an import slot or a routine) end the original's
+# run when it calls them, as if the routine returned there: they never return in the game, and
+# the original then runs on into what follows them only under the verifier.
+Stubs.stops = {0x700800 + 16 * slots.index(_stop) if _stop in slots else _stop
+               for _stop in (int(_text, 0) for _text in __import__('os').environ.get(
+                   'VERTRIX_STOP_CALLEES', '').split(',') if _text)}
 
 
 pointer_globals = [g for g in meta.get('pointer_globals', []) if g not in slots]

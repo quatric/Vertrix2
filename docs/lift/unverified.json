@@ -11,56 +11,6 @@
   "virtual": [],
   "address": 5086982
  },
- "f4e6250": {
-  "callees": {
-   "slot_507ce4": [
-    0,
-    false
-   ],
-   "0x4e6b2c": [
-    0,
-    false
-   ],
-   "0x4e6bac": [
-    0,
-    false
-   ],
-   "slot_507cd8": [
-    0,
-    false
-   ],
-   "0x4f1b4c": [
-    1,
-    false
-   ],
-   "0x4ea190": [
-    0,
-    false
-   ],
-   "0x4f1d08": [
-    5,
-    false
-   ]
-  },
-  "stack": 156,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [
-   5274764
-  ],
-  "pointer_maybe": [],
-  "constants": [
-   0,
-   1,
-   3,
-   4,
-   5,
-   4294967295
-  ],
-  "virtual": [],
-  "address": 5136976
- },
  "f4e6d16": {
   "callees": {
    "0x4e6cf2": [

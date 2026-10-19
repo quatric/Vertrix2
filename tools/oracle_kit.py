@@ -25,12 +25,18 @@ def build(build_dir, name, sources):
     return c.CDLL(str(library))
 
 
+# The original's return boundary (original.RETURN).
+STOP_RETURN = 0x700000
+
+
 class Stubs:
     """Replace unrecovered callees with data-driven stubs that log their register arguments.
 
     handler(address, eax, edx, ebx, ecx, stack_args) returns the new eax (or None to keep it).
     The hooked callee is skipped: its return address is popped together with stack_bytes.
     """
+
+    stops = set()
 
     # Call site address -> stack argument count, for stubs shared by calls with different counts
     # (every fake object shares one vtable, so slot 0xc serves IDirectSound and its buffers).
@@ -71,7 +77,9 @@ class Stubs:
         if result is not None:
             cpu.reg_write(UC_X86_REG_EAX, result & 0xffffffff)
         cpu.reg_write(UC_X86_REG_ESP, esp + 4 + (0 if address in self.cdecl else 4 * popped))
-        cpu.reg_write(UC_X86_REG_EIP, stack[0])
+        # A callee that never returns in the game (ExitProcess) ends the original's run there, as
+        # its return from the routine (VERTRIX_STOP_CALLEES).
+        cpu.reg_write(UC_X86_REG_EIP, STOP_RETURN if address in self.stops else stack[0])
 
 
     def _site_count(self, cpu, back, count):

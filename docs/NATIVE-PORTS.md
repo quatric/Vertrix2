@@ -375,3 +375,5 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x4dfac0 | `rtlwidetexts.c` | printf's wide string: each character through wctomb, its bytes to the output procedure while the count allows (`tools/verify_cases/4dfac0.sh`) |
 | 0x4e63b0 | `rtllongtexts.c` | _ui64toa: the digits by division, copied out reversed; the lift took the divisor for the remainder 0x4e88bf leaves in ecx:ebx, so the port divides itself (`tools/verify_cases/4e63b0.sh` runs the original's divide, `VERTRIX_RUN_CALLEES`) |
 | 0x4ec970 | `rtlfloatformats.c` | printf's %e, %f and %g: the mode from the letter, the double taken and converted (0x4e53b4, 0x4eccb9), then the sign (`tools/verify_cases/4ec970.sh` logs the conversion's parameter block) |
+| 0x4e7f18 | `rtltempnames.c` | the temporary file name: the directory, "t", the process id as four hex digits, "_", the number's two and ".tmp" (`tools/verify_cases/4e7f18.sh`) |
+| 0x4e6250 | `rtlfatalwrites.c` | the fatal message to the error output (WriteFile), then exit(code), run in place through `vertrix_rtl_exit` (`tools/verify_cases/4e6250.sh` stops the original at ExitProcess, `VERTRIX_STOP_CALLEES`) |
