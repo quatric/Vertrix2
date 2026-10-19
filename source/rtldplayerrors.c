@@ -107,6 +107,6 @@ uint32_t vertrix_port_dplay_error_name_480080(PORT_SIGNATURE)
         }
     }
     const uint32_t arguments[3] = {UNKNOWN_TEXT, UNKNOWN_FORMAT, code};
-    port_call_stack(&port, port_u32(&port, WSPRINTF, 0), 0, 0, 0, 0, arguments, 3);
+    port_call_stack(&port, WSPRINTF, 0, 0, 0, 0, arguments, 3);
     return port_return(&port, UNKNOWN_TEXT, 0);
 }

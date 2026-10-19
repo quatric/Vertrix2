@@ -66,9 +66,8 @@ uint32_t vertrix_port_rtl_object_notify_owner_4d7140(PORT_SIGNATURE)
     if (owner != 0 && (port_u8(&port, window, WINDOW_STYLE_HIGH) & 1))
     {
         const uint32_t parent_arguments[3] = {port_u32(&port, window, WINDOW_HWND), 0, 0};
-        const uint32_t hwnd =
-            port_call_registers(&port, port_u32(&port, GET_PARENT, 0), owner, edx, owner, ecx,
-                                window, edi, entry->ebp, parent_arguments, 3);
+        const uint32_t hwnd = port_call_registers(&port, GET_PARENT, owner, edx, owner, ecx, window,
+                                                  edi, entry->ebp, parent_arguments, 3);
         edx = vertrix_lift_edx;
         const uint32_t parent = port_call_registers(&port, FROM_HANDLE, hwnd, edx, owner, ecx,
                                                     window, edi, entry->ebp, &hwnd, 1);

@@ -186,8 +186,8 @@ uint32_t vertrix_port_rtl_format_spec_4cdbe0(PORT_SIGNATURE)
             case 'S' | SHORT:
             {
                 const uint32_t pointer = port_u32(&port, argument(&scan, 4), 0);
-                item = at_least_one((int32_t)port_call_stack(&port, port_u32(&port, LSTRLEN, 0), 0,
-                                                             0, 0, scan.ecx, &pointer, 1));
+                item = at_least_one(
+                    (int32_t)port_call_stack(&port, LSTRLEN, 0, 0, 0, scan.ecx, &pointer, 1));
                 break;
             }
             case 'S':
