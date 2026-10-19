@@ -111,11 +111,18 @@ static inline uint8_t *lift_flat(uint32_t address, unsigned size, int load)
     for (i = 0; i < 3; i++)
     {
         const LiftFlatRegion *region = &vertrix_lift_flat[i];
-        unsigned span = load && region->whole > size ? region->whole : size;
-        if (region->memory != NULL && *region->memory != NULL && address >= region->base &&
-            (uint64_t)address + span <= (uint64_t)region->base + *region->top)
+        uint32_t span = load && region->whole > size ? region->whole : size;
+        uint32_t within = address - region->base;
+        uint32_t top;
+        if (region->memory == NULL || address < region->base)
         {
-            return *region->memory + (address - region->base);
+            continue;
+        }
+        /* address + span <= base + top, without the sum overflowing */
+        top = *region->top;
+        if (span <= top && within <= top - span && *region->memory != NULL)
+        {
+            return *region->memory + within;
         }
     }
     return NULL;
@@ -178,10 +185,42 @@ static inline uint32_t lift_mask(unsigned size)
     return size >= 4 ? 0xffffffffu : (1u << (8 * size)) - 1u;
 }
 
+/* x86 memory is little-endian; the Wii is big-endian. A word is copied whole and swapped where
+ * needed, which compilers turn into one load or store (lwbrx and stwbrx on the Wii). */
+static inline uint32_t lift_little32(uint32_t value)
+{
+#if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+    return __builtin_bswap32(value);
+#else
+    return value;
+#endif
+}
+
+static inline uint16_t lift_little16(uint16_t value)
+{
+#if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+    return __builtin_bswap16(value);
+#else
+    return value;
+#endif
+}
+
 static inline uint32_t lift_get(const uint8_t *bytes, unsigned size)
 {
     uint32_t value = 0;
     unsigned i;
+    if (size == 4)
+    {
+        uint32_t word;
+        memcpy(&word, bytes, 4);
+        return lift_little32(word);
+    }
+    if (size == 2)
+    {
+        uint16_t half;
+        memcpy(&half, bytes, 2);
+        return lift_little16(half);
+    }
     for (i = 0; i < size; i++)
     {
         value |= (uint32_t)bytes[i] << (8 * i);
@@ -192,6 +231,18 @@ static inline uint32_t lift_get(const uint8_t *bytes, unsigned size)
 static inline void lift_put(uint8_t *bytes, unsigned size, uint32_t value)
 {
     unsigned i;
+    if (size == 4)
+    {
+        uint32_t word = lift_little32(value);
+        memcpy(bytes, &word, 4);
+        return;
+    }
+    if (size == 2)
+    {
+        uint16_t half = lift_little16((uint16_t)value);
+        memcpy(bytes, &half, 2);
+        return;
+    }
     for (i = 0; i < size; i++)
     {
         bytes[i] = (uint8_t)(value >> (8 * i));
