@@ -42,6 +42,8 @@ typedef struct Imdct
     uint32_t ecx;
     uint32_t result;
     uint32_t edx;
+    /* The input, both overlaps, the window, the output and the constants in place. */
+    PortWindows windows;
 } Imdct;
 
 static uint32_t op(Imdct *m, uint32_t target, uint32_t eax, uint32_t edx)
@@ -68,17 +70,17 @@ static uint32_t sub(Imdct *m, uint32_t a, uint32_t b)
 
 static uint32_t in(Imdct *m, unsigned index)
 {
-    return port_u32(&m->port, m->input, index * 4);
+    return port_windows_u32(&m->port, &m->windows, m->input, index * 4);
 }
 
 static uint32_t constant(Imdct *m, uint32_t address)
 {
-    return port_u32(&m->port, 0, address);
+    return port_windows_u32(&m->port, &m->windows, 0, address);
 }
 
 static uint32_t weight(Imdct *m, unsigned index)
 {
-    return port_u32(&m->port, m->window, index * 4);
+    return port_windows_u32(&m->port, &m->windows, m->window, index * 4);
 }
 
 /* sum + y and sum - y, windowed: the first into the overlap at j and 17 - j, the second into the
@@ -89,16 +91,20 @@ static void half(Imdct *m, uint32_t sum, uint32_t y, unsigned j)
     uint32_t u = add(m, sum, y);
     uint32_t v;
     uint32_t product;
-    port_set32(&m->port, m->overlap, j * 4, mul(m, u, weight(m, WINDOW_OVERLAP + j)));
-    port_set32(&m->port, m->overlap, k * 4, mul(m, u, weight(m, WINDOW_OVERLAP + k)));
+    port_windows_set32(&m->port, &m->windows, m->overlap, j * 4,
+                       mul(m, u, weight(m, WINDOW_OVERLAP + j)));
+    port_windows_set32(&m->port, &m->windows, m->overlap, k * 4,
+                       mul(m, u, weight(m, WINDOW_OVERLAP + k)));
     v = sub(m, sum, y);
     /* The previous overlap is read after each product, as the original does. */
     product = mul(m, v, weight(m, k));
-    port_set32(&m->port, m->output, k * OUTPUT_STEP,
-               add(m, port_u32(&m->port, m->previous, k * 4), product));
+    port_windows_set32(
+        &m->port, &m->windows, m->output, k * OUTPUT_STEP,
+        add(m, port_windows_u32(&m->port, &m->windows, m->previous, k * 4), product));
     product = mul(m, v, weight(m, j));
-    port_set32(&m->port, m->output, j * OUTPUT_STEP,
-               add(m, port_u32(&m->port, m->previous, j * 4), product));
+    port_windows_set32(
+        &m->port, &m->windows, m->output, j * OUTPUT_STEP,
+        add(m, port_windows_u32(&m->port, &m->windows, m->previous, j * 4), product));
 }
 
 /* The butterfly of the even part (a, c) and the odd part (b, d). */
@@ -172,14 +178,21 @@ uint32_t vertrix_port_imdct_long(PORT_SIGNATURE)
     m.ecx = entry->ecx;
     m.output = entry->arguments[0];
     m.edx = entry->edx;
+    m.windows.count = 0;
+    port_windows_add(&m.port, &m.windows, m.input, SAMPLES * 4);
+    port_windows_add(&m.port, &m.windows, m.previous, SAMPLES * 4);
+    port_windows_add(&m.port, &m.windows, m.overlap, SAMPLES * 4);
+    port_windows_add(&m.port, &m.windows, m.window, 2 * SAMPLES * 4);
+    port_windows_add(&m.port, &m.windows, m.output, (SAMPLES - 1) * OUTPUT_STEP + 4);
+    port_windows_add(&m.port, &m.windows, COS_A, TWIDDLE_8 + 4 - COS_A);
     /* x[i] += x[i - 1] from the top, then the odd ones x[i] += x[i - 2]. */
     for (i = SAMPLES - 1; i != 0; i--)
     {
-        port_set32(&m.port, m.input, i * 4, add(&m, in(&m, i), in(&m, i - 1)));
+        port_windows_set32(&m.port, &m.windows, m.input, i * 4, add(&m, in(&m, i), in(&m, i - 1)));
     }
     for (i = SAMPLES - 1; i > 1; i -= 2)
     {
-        port_set32(&m.port, m.input, i * 4, add(&m, in(&m, i), in(&m, i - 2)));
+        port_windows_set32(&m.port, &m.windows, m.input, i * 4, add(&m, in(&m, i), in(&m, i - 2)));
     }
     six = mul(&m, in(&m, 6), constant(&m, COS_C));
     twelve = mul(&m, in(&m, 12), constant(&m, COS_F));

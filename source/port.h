@@ -198,6 +198,67 @@ static inline PortWindow port_frame_window(Port *port, uint32_t address, uint32_
     return window;
 }
 
+/* Up to eight windows on the buffers a loop works on, each on an enclosing frame
+ * (port_frame_window) or a flat block (port_window); its accessors serve an access in any of them
+ * in place and any other through port_u32 and port_set32. */
+typedef struct PortWindows
+{
+    PortWindow window[8];
+    unsigned count;
+} PortWindows;
+
+static inline uint8_t *port_window_at(const PortWindow *window, uint32_t address, uint64_t size);
+
+static inline void port_windows_add(Port *port, PortWindows *windows, uint32_t address,
+                                    uint32_t size)
+{
+    PortWindow window = port_frame_window(port, address, size);
+    if (window.memory == NULL)
+    {
+        window = port_window(port, address, size);
+    }
+    if (window.memory != NULL &&
+        windows->count < sizeof windows->window / sizeof windows->window[0])
+    {
+        windows->window[windows->count++] = window;
+    }
+}
+
+static inline uint8_t *port_windows_at(const PortWindows *windows, uint32_t address)
+{
+    unsigned i;
+    for (i = 0; i < windows->count; i++)
+    {
+        uint8_t *at = port_window_at(&windows->window[i], address, 4);
+        if (at != NULL)
+        {
+            return at;
+        }
+    }
+    return NULL;
+}
+
+static inline uint32_t port_windows_u32(Port *port, const PortWindows *windows, uint32_t base,
+                                        uint32_t offset)
+{
+    const uint8_t *at = port_windows_at(windows, base + offset);
+    return at != NULL ? lift_get(at, 4) : port_u32(port, base, offset);
+}
+
+static inline void port_windows_set32(Port *port, const PortWindows *windows, uint32_t base,
+                                      uint32_t offset, uint32_t value)
+{
+    uint8_t *at = port_windows_at(windows, base + offset);
+    if (at != NULL)
+    {
+        lift_put(at, 4, value);
+    }
+    else
+    {
+        port_set32(port, base, offset, value);
+    }
+}
+
 /* The memory of the `size` bytes at `address` when they lie in the window, else NULL. */
 static inline uint8_t *port_window_at(const PortWindow *window, uint32_t address, uint64_t size)
 {
