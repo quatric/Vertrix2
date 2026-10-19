@@ -85,11 +85,65 @@ static void pack_whole(const VertrixSurface *frame, const unsigned slots[4],
     }
 }
 
+static uint32_t little32(const uint8_t *bytes)
+{
+    uint32_t word;
+    memcpy(&word, bytes, 4);
+#if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+    word = __builtin_bswap32(word);
+#endif
+    return word;
+}
+
+static void put_big32(uint8_t *bytes, uint32_t word)
+{
+#if !defined(__BYTE_ORDER__) || __BYTE_ORDER__ != __ORDER_BIG_ENDIAN__
+    word = __builtin_bswap32(word);
+#endif
+    memcpy(bytes, &word, 4);
+}
+
+/* pack_whole for the frame's own layout, bytes B, G, R and the unused one (slots 2, 1, 0, 3): a
+ * pixel read as a little-endian word is unused << 24 | R << 16 | G << 8 | B, so its alpha-red pair
+ * is the high half and its green-blue pair the low half, two pixels to a stored word. */
+static void pack_whole_bgrx(const VertrixSurface *frame, VertrixTexture *texture)
+{
+    uint8_t *out = texture->data;
+    for (uint32_t y = 0; y < frame->height; y += 4)
+    {
+        const uint8_t *rows = frame->data + (size_t)y * frame->stride;
+        for (uint32_t x = 0; x < frame->width; x += 4)
+        {
+            for (uint32_t row = 0; row < 4; ++row)
+            {
+                const uint8_t *pixel = rows + (size_t)row * frame->stride + (size_t)x * 4;
+                const uint32_t p0 = little32(pixel);
+                const uint32_t p1 = little32(pixel + 4);
+                const uint32_t p2 = little32(pixel + 8);
+                const uint32_t p3 = little32(pixel + 12);
+                uint8_t *pair = out + row * 8;
+                put_big32(pair, (p0 & 0xffff0000u) | (p1 >> 16));
+                put_big32(pair + 4, (p2 & 0xffff0000u) | (p3 >> 16));
+                put_big32(pair + 32, (p0 << 16) | (p1 & 0xffffu));
+                put_big32(pair + 36, (p2 << 16) | (p3 & 0xffffu));
+            }
+            out += 64;
+        }
+    }
+}
+
 static void pack(const VertrixSurface *frame, const unsigned slots[4], VertrixTexture *texture)
 {
     if (frame->width == texture->storage_width && frame->height == texture->storage_height)
     {
-        pack_whole(frame, slots, texture);
+        if (slots[0] == 2 && slots[1] == 1 && slots[2] == 0 && slots[3] == 3)
+        {
+            pack_whole_bgrx(frame, texture);
+        }
+        else
+        {
+            pack_whole(frame, slots, texture);
+        }
         return;
     }
     memset(texture->data, 0, texture->size);
