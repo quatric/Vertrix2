@@ -96,7 +96,6 @@
 #include "lifted_whole_40.h"
 #include "lifted_whole_7.h"
 #include "lifted_whole_8.h"
-#include "lifted_whole_9.h"
 #include "lists.h"
 #include "loops.h"
 #include "mainstarts.h"
@@ -275,6 +274,7 @@
 #include "rtlhandleslots.h"
 #include "rtlhandshakes.h"
 #include "rtlheadsanims.h"
+#include "rtlheapexpands.h"
 #include "rtlheapfrees.h"
 #include "rtlhighscoremenus.h"
 #include "rtlhooks.h"
@@ -460,6 +460,7 @@
 #include "rtlswaps.h"
 #include "rtlswings.h"
 #include "rtltables.h"
+#include "rtlterminatehandlers.h"
 #include "rtlterminates.h"
 #include "rtltextboxdraws.h"
 #include "rtltextfieldkeys.h"
@@ -485,6 +486,7 @@
 #include "rtlwalks.h"
 #include "rtlwavestreamloads.h"
 #include "rtlwidestringconverts.h"
+#include "rtlwidetexts.h"
 #include "rtlwindowbroadcasts.h"
 #include "rtlwindowpoints.h"
 #include "rtlwindows.h"
@@ -4082,7 +4084,7 @@ static const LiftedRoutine routines[] = {
     {0x4df978, vertrix_port_rtl_format_fixed_point_4df978, 0, 0},
     {0x4dfa74, vertrix_port_call_global_509794_4dfa74, 0, 0},
     {0x4dfa7c, vertrix_port_format_zero_pad, 0, 0},
-    {0x4dfac0, lifted_f4dfac0, 92, 0},
+    {0x4dfac0, vertrix_port_rtl_wide_text_4dfac0, 0, 0},
     {0x4dfb24, lifted_f4dfb24, 168, 0},
     {0x4e012c, vertrix_port_text_map_bytes_4e012c, 0, 0},
     {0x4e0150, vertrix_port_crt_file_seek_4e0150, 0, 0},
@@ -4228,7 +4230,7 @@ static const LiftedRoutine routines[] = {
     {0x4e6bac, vertrix_port_rtl_table_run_4e6bac, 0, 0},
     {0x4e6bff, vertrix_port_rtl_bit_test_4e6bff, 0, 0},
     {0x4e6c1d, vertrix_port_rtl_bit_clear_4e6c1d, 0, 0},
-    {0x4e6c37, lifted_f4e6c37, 132, 0},
+    {0x4e6c37, vertrix_port_rtl_terminate_4e6c37, 0, 0},
     {0x4e6c98, vertrix_port_rtl_type_size_4e6c98, 0, 0},
     {0x4e6cd4, vertrix_port_thunk_target_4e6cd4, 0, 0},
     {0x4e6cf2, vertrix_port_stream_record_reset_4e6cf2, 0, 0},
@@ -4349,8 +4351,8 @@ static const LiftedRoutine routines[] = {
     {0x4ec3e0, vertrix_port_rtl_handle_read_4ec3e0, 0, 0},
     {0x4ec578, vertrix_port_crt_stream_fill_4ec578, 0, 0},
     {0x4ec640, vertrix_port_rtl_block_header_4ec640, 0, 0},
-    {0x4ec650, lifted_f4ec650, 96, 0},
-    {0x4ec68c, lifted_f4ec68c, 96, 0},
+    {0x4ec650, vertrix_port_rtl_expand_4ec650, 0, 0},
+    {0x4ec68c, vertrix_port_rtl_expand_block_4ec68c, 0, 0},
     {0x4ec850, vertrix_port_local_time, 0, 0},
     {0x4ec8c0, vertrix_port_nothing_404580, 0, 0},
     {0x4ec8d0, vertrix_port_exit_list_init, 0, 0},
