@@ -165,4 +165,12 @@ uint32_t vertrix_port_double_remainder(PORT_SIGNATURE);
  * on the coefficients (the odd series of the sine). */
 uint32_t vertrix_port_double_polynomial_odd(PORT_SIGNATURE);
 
+/* The register arithmetic of 0x4eb57c, 0x4eb526, 0x4d67f0 and 0x4eb5b4 above, which those ports
+ * run: eax returned, the edx each leaves in *edx (0x4d67f0 and 0x4eb5b4 leave edx as it was), and
+ * the compare's flags in *flags. */
+uint32_t vertrix_soft_double_compare(uint32_t low, uint32_t high, uint32_t other_low,
+                                     uint32_t other_high, uint32_t *edx, LiftFlags *flags);
+uint32_t vertrix_soft_single_to_double(uint32_t low, uint32_t *edx);
+uint32_t vertrix_soft_float_to_integer(uint32_t bits, uint32_t limit);
+uint32_t vertrix_soft_single_negate(uint32_t value);
 #endif

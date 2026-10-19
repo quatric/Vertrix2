@@ -52,17 +52,12 @@ enum
     TRIG_SINE = 0x518770
 };
 
-uint32_t vertrix_port_double_compare(PORT_SIGNATURE)
+uint32_t vertrix_soft_double_compare(uint32_t low, uint32_t high, uint32_t other_low,
+                                     uint32_t other_high, uint32_t *edx, LiftFlags *flags)
 {
-    Port port;
     LiftFlags fl = {0, 0, 0, 0, 0, 0};
-    uint32_t low = entry->eax;
-    uint32_t high = entry->edx;
-    uint32_t other_low = entry->ebx;
-    uint32_t other_high = entry->ecx;
     uint32_t negative;
     uint32_t answer;
-    port_open(&port, calls, services, globals, entry);
     if ((high & EXPONENT) == 0)
     {
         high = 0;
@@ -79,8 +74,9 @@ uint32_t vertrix_port_double_compare(PORT_SIGNATURE)
             /* The flags of the equal low dwords' subtraction: zero and parity. */
             fl.zf = 1;
             fl.pf = 1;
-            vertrix_lift_fl = fl;
-            return port_return(&port, 0, high);
+            *flags = fl;
+            *edx = high;
+            return 0;
         }
         /* rcr puts "below" (unsigned) on top of the other high dword; its top bit against the sign
          * gives the answer. */
@@ -94,24 +90,35 @@ uint32_t vertrix_port_double_compare(PORT_SIGNATURE)
     fl.sf = negative;
     fl.cf = negative;
     fl.pf = negative;
-    vertrix_lift_fl = fl;
-    return port_return(&port, answer, high);
+    *flags = fl;
+    *edx = high;
+    return answer;
 }
 
-uint32_t vertrix_port_single_to_double(PORT_SIGNATURE)
+uint32_t vertrix_port_double_compare(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t low = entry->eax;
+    uint32_t edx;
+    uint32_t answer;
+    port_open(&port, calls, services, globals, entry);
+    answer = vertrix_soft_double_compare(entry->eax, entry->edx, entry->ebx, entry->ecx, &edx,
+                                         &vertrix_lift_fl);
+    return port_return(&port, answer, edx);
+}
+
+uint32_t vertrix_soft_single_to_double(uint32_t low, uint32_t *edx)
+{
     uint32_t high = low & SINGLE_MAGNITUDE;
     uint32_t sign;
-    port_open(&port, calls, services, globals, entry);
     if (high == 0)
     {
-        return port_return(&port, low, 0);
+        *edx = 0;
+        return low;
     }
     if (high == SINGLE_INFINITY)
     {
-        return port_return(&port, 0, low | EXPONENT);
+        *edx = low | EXPONENT;
+        return 0;
     }
     if ((high & SINGLE_INFINITY) == 0)
     {
@@ -131,11 +138,22 @@ uint32_t vertrix_port_single_to_double(PORT_SIGNATURE)
     high = (sign << 31) | (high >> 1);
     low &= 0xe;
     low = (low >> 4) | (low << 28);
-    return port_return(&port, low, high + REBIAS);
+    *edx = high + REBIAS;
+    return low;
+}
+
+uint32_t vertrix_port_single_to_double(PORT_SIGNATURE)
+{
+    Port port;
+    uint32_t edx;
+    uint32_t low;
+    port_open(&port, calls, services, globals, entry);
+    low = vertrix_soft_single_to_double(entry->eax, &edx);
+    return port_return(&port, low, edx);
 }
 
 /* The body of 0x4d67f0: `limit` is cl. */
-static uint32_t float_to_integer(uint32_t bits, uint32_t limit)
+uint32_t vertrix_soft_float_to_integer(uint32_t bits, uint32_t limit)
 {
     uint32_t exponent;
     uint32_t significand;
@@ -167,7 +185,7 @@ uint32_t vertrix_port_float_to_integer(PORT_SIGNATURE)
 {
     Port port;
     port_open(&port, calls, services, globals, entry);
-    return port_return(&port, float_to_integer(entry->eax, entry->ecx), entry->edx);
+    return port_return(&port, vertrix_soft_float_to_integer(entry->eax, entry->ecx), entry->edx);
 }
 
 uint32_t vertrix_port_float_to_signed(PORT_SIGNATURE)
@@ -177,7 +195,8 @@ uint32_t vertrix_port_float_to_signed(PORT_SIGNATURE)
     port_open(&port, calls, services, globals, entry);
     if ((int32_t)entry->eax >= 0)
     {
-        return port_return(&port, float_to_integer(entry->eax, entry->ecx), entry->edx);
+        return port_return(&port, vertrix_soft_float_to_integer(entry->eax, entry->ecx),
+                           entry->edx);
     }
     value = port_call(&port, FLOAT_TO_INTEGER, entry->eax, entry->edx, entry->ebx, entry->ecx);
     return port_return(&port, 0u - value, vertrix_lift_edx);
@@ -237,12 +256,17 @@ uint32_t vertrix_port_double_sign(PORT_SIGNATURE)
     return port_return(&port, high == 0 ? 0u : high < 0 ? 0xffffffffu : 1u, entry->edx);
 }
 
+uint32_t vertrix_soft_single_negate(uint32_t value)
+{
+    return value == 0 ? 0 : value ^ SIGN;
+}
+
 uint32_t vertrix_port_single_negate(PORT_SIGNATURE)
 {
     Port port;
     uint32_t value = entry->eax;
     port_open(&port, calls, services, globals, entry);
-    return port_return(&port, value == 0 ? 0 : value ^ SIGN, entry->edx);
+    return port_return(&port, vertrix_soft_single_negate(value), entry->edx);
 }
 
 uint32_t vertrix_port_double_to_single(PORT_SIGNATURE)

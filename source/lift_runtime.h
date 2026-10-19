@@ -73,7 +73,9 @@ typedef struct LiftEnv
  * dispatcher sets the index before it runs a routine. Weak: every translation unit shares them. */
 enum
 {
-    LIFT_FRAME_LIMIT = 17
+    LIFT_FRAME_LIMIT = 17,
+    /* The most lifted routines the dispatcher runs at once (LIFTED_MAX_DEPTH). */
+    LIFT_DISPATCH_DEPTH = 16
 };
 __attribute__((weak)) const LiftEnv *vertrix_lift_frames[LIFT_FRAME_LIMIT];
 __attribute__((weak)) unsigned vertrix_lift_frame_index;

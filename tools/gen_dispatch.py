@@ -114,7 +114,7 @@ enum
     LIFTED_ARENA_TOP = 0x7f0000,
     LIFTED_ARENA_BOTTOM = 0x7b0000,
     LIFTED_ARENA_GAP = 0x100, /* above a frame: its return slot and the arguments passed on */
-    LIFTED_MAX_DEPTH = 16,
+    LIFTED_MAX_DEPTH = LIFT_DISPATCH_DEPTH,
     LIFTED_MAX_STACK = %d,
     LIFTED_MAX_ARGUMENTS = 17
 };

@@ -1,5 +1,7 @@
 #include "audiodecodes.h"
 
+#include "softfloats.h"
+
 enum
 {
     SYNTH_WINDOW = 0x404730,
@@ -42,6 +44,8 @@ enum
     SINGLE_TO_DOUBLE = 0x4eb526,
     DOUBLE_COMPARE = 0x4eb57c,
     SINGLE_TO_INT32 = 0x4d67a8,
+    FLOAT_TO_SIGNED = 0x4d67e4,
+    FLOAT_TO_INTEGER = 0x4d67f0,
     /* The high dwords of 32767.0 and -32768.0 (their low dwords are 0). */
     SAMPLE_MAX_HIGH = 0x40dfffc0,
     SAMPLE_MIN_HIGH = 0xc0e00000,
@@ -379,10 +383,86 @@ typedef struct Synth
     uint32_t output;
     uint32_t clipped;
     PortWindow globals; /* the image's globals, for port_single */
+    /* The frame index the dispatcher gives a callee of this routine, when it would run the clean
+     * ports of the conversions and the compare for them (synth_direct); else -1. */
+    int direct;
 } Synth;
+
+/* The conversions and the compare the filter calls for every sample run their ports' register
+ * arithmetic here when the dispatcher would run those ports, leaving eax, edx, the flags and the
+ * frame index as the dispatched calls do: 0x4d67a8 calls 0x4d67e4, which calls 0x4d67f0 for a
+ * negative single, each a level deeper. */
+static int synth_direct(const Port *port)
+{
+    static const struct
+    {
+        uint32_t target;
+        LiftRoutine routine;
+    } ports[] = {{SINGLE_TO_DOUBLE, vertrix_port_single_to_double},
+                 {DOUBLE_COMPARE, vertrix_port_double_compare},
+                 {SINGLE_TO_INT32, vertrix_port_float_to_int32},
+                 {FLOAT_TO_SIGNED, vertrix_port_float_to_signed},
+                 {FLOAT_TO_INTEGER, vertrix_port_float_to_integer},
+                 {SINGLE_NEGATE, vertrix_port_single_negate}};
+    unsigned index = 0;
+    unsigned i;
+    if (vertrix_lift_routine_hook == NULL)
+    {
+        return -1;
+    }
+    for (i = 0; i < sizeof ports / sizeof ports[0]; i++)
+    {
+        if (vertrix_lift_routine_hook(port->env.calls, ports[i].target, &index) != ports[i].routine)
+        {
+            return -1;
+        }
+    }
+    /* the nested calls run two levels deeper */
+    return index + 2 < LIFT_DISPATCH_DEPTH ? (int)index : -1;
+}
+
+static int synth_converted(Synth *synth, uint32_t target, uint32_t eax, uint32_t edx,
+                           uint32_t *result)
+{
+    unsigned index = (unsigned)synth->direct;
+    switch (target)
+    {
+        case SINGLE_TO_DOUBLE:
+            *result = vertrix_soft_single_to_double(eax, &edx);
+            break;
+        case DOUBLE_COMPARE:
+            *result = vertrix_soft_double_compare(eax, edx, synth->ebx, synth->ecx, &edx,
+                                                  &vertrix_lift_fl);
+            break;
+        case SINGLE_TO_INT32:
+            /* 0x4d67e4 with cl = 0x9e, at the next level; a negative single goes on to 0x4d67f0. */
+            *result = vertrix_soft_float_to_integer(eax, (synth->ecx & 0xffffff00u) | 0x9e);
+            if ((int32_t)eax < 0)
+            {
+                *result = 0u - *result;
+                index++;
+            }
+            index++;
+            break;
+        case SINGLE_NEGATE:
+            *result = vertrix_soft_single_negate(eax);
+            break;
+        default:
+            return 0;
+    }
+    vertrix_lift_frame_index = index;
+    vertrix_lift_edx = edx;
+    return 1;
+}
 
 static uint32_t synth_call(Synth *synth, uint32_t target, uint32_t eax, uint32_t edx)
 {
+    uint32_t converted;
+    if (synth->direct >= 0 && synth_converted(synth, target, eax, edx, &converted))
+    {
+        synth->edx = vertrix_lift_edx;
+        return converted;
+    }
     uint32_t result =
         port_single(&synth->port, &synth->globals, target, eax, edx, synth->ebx, synth->ecx);
     synth->edx = vertrix_lift_edx;
@@ -442,6 +522,7 @@ uint32_t vertrix_port_synth_filter(PORT_SIGNATURE)
     PortWindow table;
     port_open(&synth.port, calls, services, globals, entry);
     synth.globals = port_window(&synth.port, 0x503ea0, 8);
+    synth.direct = synth_direct(&synth.port);
     synth.output = port_u32(&synth.port, offset_address, 0) + entry->ebx;
     synth.clipped = 0;
     decoder = port_u32(&synth.port, 0, DECODER);
