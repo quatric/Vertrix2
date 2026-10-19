@@ -1252,6 +1252,14 @@ static void host_surface_copy(LiftHost *host, uint32_t target, uint32_t tx, uint
             length = (uint32_t)(to - from) * sb;
             in = bytes_at(host, spixels + y * sp + (uint32_t)from * sb, length);
             out = bytes_at(host, tpixels + dy * tp + (uint32_t)(from + shift) * tb, length);
+            if (in != NULL && out != NULL &&
+                ((uintptr_t)out <= (uintptr_t)in || (uintptr_t)out >= (uintptr_t)in + length))
+            {
+                /* A forward copy reads each byte before it is overwritten unless the target
+                 * starts inside the source, so memmove gives the same bytes. */
+                memmove(out, in, length);
+                continue;
+            }
             if (in != NULL && out != NULL)
             {
                 /* Forward, a byte at a time, as before: a copy within one surface overlaps the
