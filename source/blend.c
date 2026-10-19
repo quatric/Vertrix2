@@ -54,6 +54,71 @@ enum
  * the calls a port makes. */
 static PortWindow blend_globals;
 
+/* The flat blocks in place for the routines below that make no call (port_windows_flat), set while
+ * one of them runs and NULL otherwise; blend_u8 to blend_set32 go through it when it is set. */
+static const PortWindows *blend_reach;
+
+__attribute__((noinline)) static uint32_t reach_get(Port *port, uint32_t base, uint32_t offset,
+                                                    unsigned size)
+{
+    return port_windows_get(port, blend_reach, base, offset, size);
+}
+
+__attribute__((noinline)) static void reach_put(Port *port, uint32_t base, uint32_t offset,
+                                                unsigned size, uint32_t value)
+{
+    port_windows_put(port, blend_reach, base, offset, size, value);
+}
+
+static inline uint32_t blend_get(Port *port, uint32_t base, uint32_t offset, unsigned size)
+{
+    return blend_reach != NULL ? reach_get(port, base, offset, size)
+                               : lift_load(&port->env, base, offset, size);
+}
+
+static inline void blend_put(Port *port, uint32_t base, uint32_t offset, unsigned size,
+                             uint32_t value)
+{
+    if (blend_reach != NULL)
+    {
+        reach_put(port, base, offset, size, value);
+    }
+    else
+    {
+        lift_store(&port->env, base, offset, size, value);
+    }
+}
+
+static inline uint32_t blend_u8(Port *port, uint32_t base, uint32_t offset)
+{
+    return blend_get(port, base, offset, 1);
+}
+
+static inline uint32_t blend_u16(Port *port, uint32_t base, uint32_t offset)
+{
+    return blend_get(port, base, offset, 2);
+}
+
+static inline uint32_t blend_u32(Port *port, uint32_t base, uint32_t offset)
+{
+    return blend_get(port, base, offset, 4);
+}
+
+static inline void blend_set8(Port *port, uint32_t base, uint32_t offset, uint32_t value)
+{
+    blend_put(port, base, offset, 1, value);
+}
+
+static inline void blend_set16(Port *port, uint32_t base, uint32_t offset, uint32_t value)
+{
+    blend_put(port, base, offset, 2, value);
+}
+
+static inline void blend_set32(Port *port, uint32_t base, uint32_t offset, uint32_t value)
+{
+    blend_put(port, base, offset, 4, value);
+}
+
 /* The entry index of a colour: the top six bits of each channel, red highest. */
 static uint32_t entry_index(uint32_t colour)
 {
@@ -68,35 +133,35 @@ static uint32_t remap_entry(Port *port, uint32_t entry)
     uint32_t green;
     port_window_set32(port, &blend_globals, 0, ENTRY, entry);
     map =
-        port_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS), (entry & 0xff) * 4);
+        blend_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS), (entry & 0xff) * 4);
     port_window_set32(port, &blend_globals, 0, MAP, map);
-    red = port_u8(port, map, entry >> 24) << 16;
-    green = port_u8(port, map, (entry >> 16) & 0xff) << 8;
-    return red | green | port_u8(port, map, (entry >> 8) & 0xff);
+    red = blend_u8(port, map, entry >> 24) << 16;
+    green = blend_u8(port, map, (entry >> 16) & 0xff) << 8;
+    return red | green | blend_u8(port, map, (entry >> 8) & 0xff);
 }
 
 static uint32_t remap(Port *port, uint32_t colour)
 {
     uint32_t entries = port_window_u32(port, &blend_globals, 0, COLOUR_ENTRIES);
-    return remap_entry(port, port_u32(port, entries, entry_index(colour) * 4));
+    return remap_entry(port, blend_u32(port, entries, entry_index(colour) * 4));
 }
 
 static uint32_t remap_tint(Port *port, uint32_t colour)
 {
-    uint32_t select = port_u8(port, port_window_u32(port, &blend_globals, 0, COLOUR_ENTRIES),
-                              entry_index(colour) * 4);
+    uint32_t select = blend_u8(port, port_window_u32(port, &blend_globals, 0, COLOUR_ENTRIES),
+                               entry_index(colour) * 4);
     uint32_t map =
-        port_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS), select * 4);
-    uint32_t red = port_u8(port, map, port_window_u16(port, &blend_globals, 0, TINT_RED)) << 16;
+        blend_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS), select * 4);
+    uint32_t red = blend_u8(port, map, port_window_u16(port, &blend_globals, 0, TINT_RED)) << 16;
     uint32_t green;
     port_window_set32(port, &blend_globals, 0, MAP, map);
-    green = port_u8(port, map, port_window_u16(port, &blend_globals, 0, TINT_GREEN)) << 8;
-    return red | green | port_u8(port, map, port_window_u16(port, &blend_globals, 0, TINT_BLUE));
+    green = blend_u8(port, map, port_window_u16(port, &blend_globals, 0, TINT_GREEN)) << 8;
+    return red | green | blend_u8(port, map, port_window_u16(port, &blend_globals, 0, TINT_BLUE));
 }
 
 static uint32_t source_colour(Port *port)
 {
-    return port_u32(port, port_window_u32(port, &blend_globals, 0, SOURCE_PIXEL), 0);
+    return blend_u32(port, port_window_u32(port, &blend_globals, 0, SOURCE_PIXEL), 0);
 }
 
 /* The sum of two colours with each channel saturating at 0xff (the raw sum goes to 0x54d624). */
@@ -120,15 +185,15 @@ static uint32_t subtract_saturated(Port *port, uint32_t first, uint32_t second)
 /* Add `colour` to the target pixel at `target`, each channel saturating at 0xff. */
 static void add_saturate(Port *port, uint32_t target, uint32_t colour)
 {
-    uint32_t sum = add_saturated(port, port_u32(port, target, 0), colour);
-    port_set32(port, target, 0, sum & CHANNELS);
+    uint32_t sum = add_saturated(port, blend_u32(port, target, 0), colour);
+    blend_set32(port, target, 0, sum & CHANNELS);
 }
 
 /* Subtract `colour` from the target pixel at `target`, each channel stopping at 0. */
 static void subtract_saturate(Port *port, uint32_t target, uint32_t colour)
 {
-    uint32_t difference = subtract_saturated(port, port_u32(port, target, 0), colour);
-    port_set32(port, target, 0, difference & CHANNELS);
+    uint32_t difference = subtract_saturated(port, blend_u32(port, target, 0), colour);
+    blend_set32(port, target, 0, difference & CHANNELS);
 }
 
 static uint32_t average(uint32_t first, uint32_t second)
@@ -140,7 +205,7 @@ static uint32_t blend_copy_body(Port *port)
 {
     uint32_t colour;
     colour = source_colour(port);
-    port_set32(port, port_window_u32(port, &blend_globals, 0, TARGET_PIXEL), 0, colour);
+    blend_set32(port, port_window_u32(port, &blend_globals, 0, TARGET_PIXEL), 0, colour);
     return colour;
 }
 
@@ -156,7 +221,7 @@ static uint32_t blend_remap_body(Port *port)
 {
     uint32_t colour;
     colour = remap(port, source_colour(port));
-    port_set32(port, port_window_u32(port, &blend_globals, 0, TARGET_PIXEL), 0, colour);
+    blend_set32(port, port_window_u32(port, &blend_globals, 0, TARGET_PIXEL), 0, colour);
     return colour;
 }
 
@@ -207,9 +272,9 @@ static uint32_t blend_average_remap_body(Port *port)
     uint32_t mixed;
     source = port_window_u32(port, &blend_globals, 0, SOURCE_PIXEL);
     target = port_window_u32(port, &blend_globals, 0, TARGET_PIXEL);
-    mixed = average(port_u32(port, source, 0), port_u32(port, target, 0));
-    port_set32(port, target, 0, mixed);
-    port_set32(port, target, 0, remap(port, port_u32(port, target, 0)));
+    mixed = average(blend_u32(port, source, 0), blend_u32(port, target, 0));
+    blend_set32(port, target, 0, mixed);
+    blend_set32(port, target, 0, remap(port, blend_u32(port, target, 0)));
     return target;
 }
 
@@ -266,7 +331,7 @@ static uint32_t blend_tint_average_body(Port *port)
     colour = remap_tint(port, source_colour(port));
     target = port_window_u32(port, &blend_globals, 0, TARGET_PIXEL);
     port_window_set32(port, &blend_globals, 0, REMAPPED, colour);
-    port_set32(port, target, 0, average(port_u32(port, target, 0), colour));
+    blend_set32(port, target, 0, average(blend_u32(port, target, 0), colour));
     return target;
 }
 
@@ -305,18 +370,18 @@ static uint32_t half_tint(Port *port, uint32_t colour)
     uint32_t red;
     uint32_t green;
     uint32_t blue;
-    entry_value = port_u32(port, port_window_u32(port, &blend_globals, 0, COLOUR_ENTRIES),
-                           entry_index(colour) * 4);
+    entry_value = blend_u32(port, port_window_u32(port, &blend_globals, 0, COLOUR_ENTRIES),
+                            entry_index(colour) * 4);
     port_window_set32(port, &blend_globals, 0, ENTRY, entry_value);
-    map = port_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS),
-                   (entry_value & 0xff) * 4);
+    map = blend_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS),
+                    (entry_value & 0xff) * 4);
     port_window_set32(port, &blend_globals, 0, MAP, map);
-    red = port_u8(port, map,
-                  ((entry_value >> 24) + port_window_u16(port, &blend_globals, 0, TINT_RED)) >> 1);
-    green = port_u8(
+    red = blend_u8(port, map,
+                   ((entry_value >> 24) + port_window_u16(port, &blend_globals, 0, TINT_RED)) >> 1);
+    green = blend_u8(
         port, map,
         (((entry_value >> 16) & 0xff) + port_window_u16(port, &blend_globals, 0, TINT_GREEN)) >> 1);
-    blue = port_u8(
+    blue = blend_u8(
         port, map,
         (((entry_value >> 8) & 0xff) + port_window_u16(port, &blend_globals, 0, TINT_BLUE)) >> 1);
     return (red << 16) | (green << 8) | blue;
@@ -326,7 +391,7 @@ static uint32_t blend_half_tint_body(Port *port)
 {
     uint32_t colour;
     colour = half_tint(port, source_colour(port));
-    port_set32(port, port_window_u32(port, &blend_globals, 0, TARGET_PIXEL), 0, colour);
+    blend_set32(port, port_window_u32(port, &blend_globals, 0, TARGET_PIXEL), 0, colour);
     return colour;
 }
 
@@ -427,18 +492,18 @@ static uint32_t levels_mix_values(Port *port, uint32_t source, uint32_t target)
 {
     uint32_t source_levels = port_window_u32(port, &blend_globals, 0, SOURCE_LEVELS);
     uint32_t target_levels = port_window_u32(port, &blend_globals, 0, TARGET_LEVELS);
-    uint32_t red = port_u8(port, source_levels, (source >> 16) & 0xff) +
-                   port_u8(port, target_levels, (target >> 16) & 0xff);
-    uint32_t green = port_u8(port, source_levels, (source >> 8) & 0xff) +
-                     port_u8(port, target_levels, (target >> 8) & 0xff);
+    uint32_t red = blend_u8(port, source_levels, (source >> 16) & 0xff) +
+                   blend_u8(port, target_levels, (target >> 16) & 0xff);
+    uint32_t green = blend_u8(port, source_levels, (source >> 8) & 0xff) +
+                     blend_u8(port, target_levels, (target >> 8) & 0xff);
     uint32_t blue =
-        port_u8(port, source_levels, source & 0xff) + port_u8(port, target_levels, target & 0xff);
+        blend_u8(port, source_levels, source & 0xff) + blend_u8(port, target_levels, target & 0xff);
     return (red << 16) | (green << 8) | blue;
 }
 
 static uint32_t levels_mix(Port *port, uint32_t source, uint32_t target)
 {
-    return levels_mix_values(port, port_u32(port, source, 0), port_u32(port, target, 0));
+    return levels_mix_values(port, blend_u32(port, source, 0), blend_u32(port, target, 0));
 }
 
 static uint32_t blend_levels_remap_body(Port *port)
@@ -449,8 +514,9 @@ static uint32_t blend_levels_remap_body(Port *port)
     target = port_window_u32(port, &blend_globals, 0, TARGET_PIXEL);
     mixed = levels_mix(port, port_window_u32(port, &blend_globals, 0, SOURCE_PIXEL), target);
     entries = port_window_u32(port, &blend_globals, 0, COLOUR_ENTRIES);
-    port_set32(port, target, 0, mixed);
-    port_set32(port, target, 0, remap_entry(port, port_u32(port, entries, entry_index(mixed) * 4)));
+    blend_set32(port, target, 0, mixed);
+    blend_set32(port, target, 0,
+                remap_entry(port, blend_u32(port, entries, entry_index(mixed) * 4)));
     return target;
 }
 
@@ -466,8 +532,8 @@ static uint32_t blend_levels_body(Port *port)
 {
     uint32_t target;
     target = port_window_u32(port, &blend_globals, 0, TARGET_PIXEL);
-    port_set32(port, target, 0,
-               levels_mix(port, port_window_u32(port, &blend_globals, 0, SOURCE_PIXEL), target));
+    blend_set32(port, target, 0,
+                levels_mix(port, port_window_u32(port, &blend_globals, 0, SOURCE_PIXEL), target));
     return target;
 }
 
@@ -490,19 +556,19 @@ static uint32_t blend_shade_body(Port *port)
     uint32_t red;
     uint32_t green;
     entries = port_window_u32(port, &blend_globals, 0, COLOUR_ENTRIES);
-    colour_entry = port_u32(port, entries, entry_index(source_colour(port)) * 4);
+    colour_entry = blend_u32(port, entries, entry_index(source_colour(port)) * 4);
     port_window_set32(port, &blend_globals, 0, ENTRY, colour_entry);
     target = port_window_u32(port, &blend_globals, 0, TARGET_PIXEL);
-    shade = port_u8(port, entries, entry_index(port_u32(port, target, 0)) * 4);
-    level = port_u16(port, port_window_u32(port, &blend_globals, 0, SHADE_LEVELS),
-                     (colour_entry & 0xff) * 2) +
-            port_u16(port, port_window_u32(port, &blend_globals, 0, SHADE_STEPS), shade * 2);
-    map = port_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS),
-                   (uint32_t)((int32_t)(int16_t)level * 4));
+    shade = blend_u8(port, entries, entry_index(blend_u32(port, target, 0)) * 4);
+    level = blend_u16(port, port_window_u32(port, &blend_globals, 0, SHADE_LEVELS),
+                      (colour_entry & 0xff) * 2) +
+            blend_u16(port, port_window_u32(port, &blend_globals, 0, SHADE_STEPS), shade * 2);
+    map = blend_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS),
+                    (uint32_t)((int32_t)(int16_t)level * 4));
     port_window_set32(port, &blend_globals, 0, MAP, map);
-    red = port_u8(port, map, colour_entry >> 24) << 16;
-    green = port_u8(port, map, (colour_entry >> 16) & 0xff) << 8;
-    port_set32(port, target, 0, red | green | port_u8(port, map, (colour_entry >> 8) & 0xff));
+    red = blend_u8(port, map, colour_entry >> 24) << 16;
+    green = blend_u8(port, map, (colour_entry >> 16) & 0xff) << 8;
+    blend_set32(port, target, 0, red | green | blend_u8(port, map, (colour_entry >> 8) & 0xff));
     return target;
 }
 
@@ -529,7 +595,7 @@ static uint32_t render_sampled_row32_at(PORT_SIGNATURE, uint32_t target_pixel, u
     count = port_window_u16(&port, &blend_globals, 0, ROW_COUNT);
     do
     {
-        eax = port_u32(&port, source, 0);
+        eax = blend_u32(&port, source, 0);
         port_window_set32(&port, &blend_globals, 0, SOURCE_PIXEL, source);
         eax >>= 24;
         port_window_set16(&port, &blend_globals, 0, ROW_COUNT, count);
@@ -539,8 +605,8 @@ static uint32_t render_sampled_row32_at(PORT_SIGNATURE, uint32_t target_pixel, u
                 pixel_call(&port, &operation, eax, edx, (entry->ebx & 0xffff0000u) | count, source);
         }
         eax = port_window_u32(&port, &blend_globals, 0, SAMPLE_STEPS);
-        source =
-            port_window_u32(&port, &blend_globals, 0, SOURCE_PIXEL) + (port_u8(&port, eax, 0) << 2);
+        source = port_window_u32(&port, &blend_globals, 0, SOURCE_PIXEL) +
+                 (blend_u8(&port, eax, 0) << 2);
         count = port_window_u16(&port, &blend_globals, 0, ROW_COUNT);
         edx = port_window_u32(&port, &blend_globals, 0, target_pixel) + step;
         eax++;
@@ -583,7 +649,7 @@ static uint32_t render_keyed_row32_at(PORT_SIGNATURE, uint32_t target_pixel, uin
     count = port_window_u16(&port, &blend_globals, 0, ROW_COUNT);
     while (count != 0)
     {
-        eax = port_u32(&port, source, 0);
+        eax = blend_u32(&port, source, 0);
         port_window_set16(&port, &blend_globals, 0, ROW_COUNT, count);
         eax >>= 24;
         port_window_set32(&port, &blend_globals, 0, SOURCE_PIXEL, source);
@@ -657,7 +723,7 @@ static uint32_t render_image_rows_at(PORT_SIGNATURE, uint32_t target_pixel, uint
         uint32_t target = port_window_u32(&port, &blend_globals, 0, row_global);
         uint32_t source;
         port_window_set32(&port, &blend_globals, 0, ROW_START, start);
-        width -= port_u16(&port, start, 0);
+        width -= blend_u16(&port, start, 0);
         port_window_set32(&port, &blend_globals, 0, target_pixel, target);
         port_window_set16(&port, &blend_globals, 0, ROW_COUNT, width);
         mask = port_window_u32(&port, &blend_globals, 0, MASK_ROW);
@@ -713,7 +779,7 @@ static uint32_t render_indexed_rows_at(PORT_SIGNATURE, uint32_t target_pixel, ui
     {
         uint32_t index = port_window_u32(&port, &blend_globals, 0, ROW_INDEX);
         edi = port_window_u32(&port, &blend_globals, 0, ROW_SCALE);
-        edx = port_u8(&port, index, 0) * edi;
+        edx = blend_u8(&port, index, 0) * edi;
         port_window_set32(&port, &blend_globals, 0, ROW_INDEX, index + 1);
         ebx += port_window_u32(&port, &blend_globals, 0, TARGET_STRIDE);
         eax = port_window_u32(&port, &blend_globals, 0, NEXT_SAMPLE_STEPS);
@@ -770,7 +836,7 @@ static void mask_skip_step(Port *port, MaskRegisters *r, uint32_t target_pixel)
     r->edx = port_window_u32(port, &blend_globals, 0, MASK_PIXEL) - r->eax;
     start = port_window_u32(port, &blend_globals, 0, ROW_START);
     port_window_set32(port, &blend_globals, 0, target_pixel, r->ecx);
-    port_set16(port, start, 0, port_u16(port, start, 0) - 1);
+    blend_set16(port, start, 0, blend_u16(port, start, 0) - 1);
     r->eax = start;
 }
 
@@ -795,7 +861,7 @@ static void mask_draw_step(Port *port, MaskRegisters *r, uint32_t target_pixel)
 /* The source pixel's alpha (top) byte. */
 static uint32_t source_alpha(Port *port)
 {
-    return port_u32(port, port_window_u32(port, &blend_globals, 0, SOURCE_PIXEL), 0) >> 24;
+    return blend_u32(port, port_window_u32(port, &blend_globals, 0, SOURCE_PIXEL), 0) >> 24;
 }
 
 static uint32_t mask_row(Port *port, const LiftEntry *entry, int alpha, uint32_t target_pixel)
@@ -806,11 +872,11 @@ static uint32_t mask_row(Port *port, const LiftEntry *entry, int alpha, uint32_t
     for (;;)
     {
         r.eax = port_window_u32(port, &blend_globals, 0, ROW_START);
-        if (port_u16(port, r.eax, 0) == 0)
+        if (blend_u16(port, r.eax, 0) == 0)
         {
             break;
         }
-        r.ebx = (r.ebx & 0xffffff00u) | port_u8(port, r.edx, 0);
+        r.ebx = (r.ebx & 0xffffff00u) | blend_u8(port, r.edx, 0);
         port_window_set32(port, &blend_globals, 0, MASK_PIXEL, r.edx);
         if ((r.ebx & 1) == 0)
         {
@@ -904,11 +970,11 @@ static uint32_t mask_row_back(PORT_SIGNATURE, uint32_t target_pixel)
         uint32_t target;
         uint32_t start;
         eax = port_window_u32(&port, &blend_globals, 0, ROW_START);
-        if (port_u16(&port, eax, 0) == 0)
+        if (blend_u16(&port, eax, 0) == 0)
         {
             break;
         }
-        edx = (edx & 0xffffff00u) | port_u8(&port, ecx, 0);
+        edx = (edx & 0xffffff00u) | blend_u8(&port, ecx, 0);
         port_window_set32(&port, &blend_globals, 0, MASK_PIXEL, ecx);
         if ((edx & 1) == 0)
         {
@@ -916,7 +982,7 @@ static uint32_t mask_row_back(PORT_SIGNATURE, uint32_t target_pixel)
             edx = vertrix_lift_edx;
         }
         steps = port_window_u32(&port, &blend_globals, 0, SAMPLE_STEPS);
-        edx = port_u8(&port, steps, 0) * port_window_u32(&port, &blend_globals, 0, ROW_SCALE);
+        edx = blend_u8(&port, steps, 0) * port_window_u32(&port, &blend_globals, 0, ROW_SCALE);
         target = port_window_u32(&port, &blend_globals, 0, target_pixel);
         port_window_set32(&port, &blend_globals, 0, SAMPLE_STEPS, steps - 1);
         target -= port_window_u32(&port, &blend_globals, 0, TARGET_STRIDE);
@@ -925,9 +991,9 @@ static uint32_t mask_row_back(PORT_SIGNATURE, uint32_t target_pixel)
         ecx = port_window_u32(&port, &blend_globals, 0, MASK_PIXEL) - high_word(&port, MASK_STRIDE);
         start = port_window_u32(&port, &blend_globals, 0, ROW_START);
         port_window_set32(&port, &blend_globals, 0, SOURCE_PIXEL, ebx);
-        ebx = ((ebx & 0xffff0000u) | port_u16(&port, start, 0)) - 1;
+        ebx = ((ebx & 0xffff0000u) | blend_u16(&port, start, 0)) - 1;
         port_window_set32(&port, &blend_globals, 0, target_pixel, target);
-        port_set16(&port, start, 0, ebx);
+        blend_set16(&port, start, 0, ebx);
     }
     while (port_window_u16(&port, &blend_globals, 0, ROW_COUNT) != 0)
     {
@@ -936,7 +1002,7 @@ static uint32_t mask_row_back(PORT_SIGNATURE, uint32_t target_pixel)
         port_window_set32(&port, &blend_globals, 0, MASK_PIXEL, ecx);
         eax = pixel_call(&port, &operation, eax, edx, ebx, ecx);
         steps = port_window_u32(&port, &blend_globals, 0, SAMPLE_STEPS);
-        edx = port_u8(&port, steps, 0) * port_window_u32(&port, &blend_globals, 0, ROW_SCALE);
+        edx = blend_u8(&port, steps, 0) * port_window_u32(&port, &blend_globals, 0, ROW_SCALE);
         ecx = port_window_u32(&port, &blend_globals, 0, MASK_PIXEL);
         port_window_set32(&port, &blend_globals, 0, SAMPLE_STEPS, steps - 1);
         eax = port_window_u32(&port, &blend_globals, 0, SOURCE_PIXEL) - (edx << 2);
@@ -979,7 +1045,7 @@ static uint32_t blend_average_body(Port *port)
     uint32_t source;
     source = port_window_u32(port, &blend_globals, 0, SOURCE_PIXEL);
     target = port_window_u32(port, &blend_globals, 0, TARGET_PIXEL);
-    port_set32(port, target, 0, average(port_u32(port, source, 0), port_u32(port, target, 0)));
+    blend_set32(port, target, 0, average(blend_u32(port, source, 0), blend_u32(port, target, 0)));
     return target;
 }
 
@@ -1014,7 +1080,7 @@ uint32_t vertrix_port_blit_copy(PORT_SIGNATURE)
         for (left = run; left != 0; left = (left - 1) & 0xffff)
         {
             target += PIXEL_SIZE;
-            port_set32(&port, target, -4u, port_u32(&port, source, 0));
+            blend_set32(&port, target, -4u, blend_u32(&port, source, 0));
             source += PIXEL_SIZE;
         }
         source += source_skip;
@@ -1065,7 +1131,7 @@ uint32_t vertrix_port_blit_keyed(PORT_SIGNATURE)
 /* levels_mix of a colour already in hand (the remapped one at 0x5bc018) over the target pixel. */
 static uint32_t levels_mix_colour(Port *port, uint32_t colour, uint32_t target)
 {
-    return levels_mix_values(port, colour, port_u32(port, target, 0));
+    return levels_mix_values(port, colour, blend_u32(port, target, 0));
 }
 
 static uint32_t blend_remap_levels_body(Port *port)
@@ -1075,8 +1141,9 @@ static uint32_t blend_remap_levels_body(Port *port)
     colour = remap(port, source_colour(port));
     target = port_window_u32(port, &blend_globals, 0, TARGET_PIXEL);
     port_window_set32(port, &blend_globals, 0, REMAPPED, colour);
-    port_set32(port, target, 0,
-               levels_mix_colour(port, port_window_u32(port, &blend_globals, 0, REMAPPED), target));
+    blend_set32(
+        port, target, 0,
+        levels_mix_colour(port, port_window_u32(port, &blend_globals, 0, REMAPPED), target));
     return target;
 }
 
@@ -1095,8 +1162,9 @@ static uint32_t blend_tint_levels_body(Port *port)
     colour = remap_tint(port, source_colour(port));
     target = port_window_u32(port, &blend_globals, 0, TARGET_PIXEL);
     port_window_set32(port, &blend_globals, 0, REMAPPED, colour);
-    port_set32(port, target, 0,
-               levels_mix_colour(port, port_window_u32(port, &blend_globals, 0, REMAPPED), target));
+    blend_set32(
+        port, target, 0,
+        levels_mix_colour(port, port_window_u32(port, &blend_globals, 0, REMAPPED), target));
     return target;
 }
 
@@ -1110,6 +1178,7 @@ uint32_t vertrix_port_blend_tint_levels(PORT_SIGNATURE)
 
 uint32_t vertrix_port_rectangle_half32(PORT_SIGNATURE)
 {
+    PortWindows flat;
     enum
     {
         COUNT = 0x5bc016,
@@ -1128,6 +1197,8 @@ uint32_t vertrix_port_rectangle_half32(PORT_SIGNATURE)
     uint32_t rows;
     port_open(&port, calls, services, globals, entry);
     blend_globals = port_window(&port, GLOBALS_LOW, GLOBALS_HIGH - GLOBALS_LOW);
+    port_windows_flat(&port, &flat);
+    blend_reach = &flat;
     count = port_window_u16(&port, &blend_globals, 0, COUNT);
     pixel = port_window_u32(&port, &blend_globals, 0, PIXEL);
     color = port_window_u32(&port, &blend_globals, 0, COLOR);
@@ -1139,7 +1210,7 @@ uint32_t vertrix_port_rectangle_half32(PORT_SIGNATURE)
         for (count = width; count != 0; count = (count - 1) & 0xffff)
         {
             eax = pixel;
-            port_set32(&port, pixel, 0, ((port_u32(&port, pixel, 0) >> 1) & 0x7f7f7f) + color);
+            blend_set32(&port, pixel, 0, ((blend_u32(&port, pixel, 0) >> 1) & 0x7f7f7f) + color);
             pixel += 4;
         }
         eax = port_window_u32(&port, &blend_globals, 0, PITCH_SKIP);
@@ -1150,11 +1221,13 @@ uint32_t vertrix_port_rectangle_half32(PORT_SIGNATURE)
     port_window_set32(&port, &blend_globals, 0, COLOR, color);
     port_window_set32(&port, &blend_globals, 0, PIXEL, pixel);
     port_window_set16(&port, &blend_globals, 0, COUNT, count);
+    blend_reach = NULL;
     return port_return(&port, eax, entry->edx);
 }
 
 uint32_t vertrix_port_surface_mask32(PORT_SIGNATURE)
 {
+    PortWindows flat;
     enum
     {
         BELOW = 0x1c,
@@ -1175,43 +1248,48 @@ uint32_t vertrix_port_surface_mask32(PORT_SIGNATURE)
     uint32_t count;
     port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
     blend_globals = port_window(&port, GLOBALS_LOW, GLOBALS_HIGH - GLOBALS_LOW);
-    port_set32(&port, ebp, -0xcu, (uint32_t)(int32_t)(int16_t)entry->eax);
+    blend_set32(&port, ebp, -0xcu, (uint32_t)(int32_t)(int16_t)entry->eax);
     source = port_window_u32(&port, &blend_globals, 0, SOURCE);
     /* The mask bytes at the position (0x478eb0 on the display's mask surface +0x274). */
-    mask = port_call(
-        &port, 0x478eb0, port_u32(&port, port_window_u32(&port, &blend_globals, 0, DISPLAY), 0x274),
-        (uint32_t)(int32_t)(int16_t)entry->eax, (uint32_t)(int32_t)(int16_t)entry->edx, source);
+    mask = port_call(&port, 0x478eb0,
+                     blend_u32(&port, port_window_u32(&port, &blend_globals, 0, DISPLAY), 0x274),
+                     (uint32_t)(int32_t)(int16_t)entry->eax, (uint32_t)(int32_t)(int16_t)entry->edx,
+                     source);
     pitch = port_window_u32(&port, &blend_globals, 0, SOURCE_PITCH);
-    port_set32(&port, ebp, -0x18u, pitch);
-    port_set32(&port, ebp, -0xcu, (uint32_t)(int32_t)(int16_t)width);
-    skip = port_u32(&port,
-                    port_u32(&port, port_window_u32(&port, &blend_globals, 0, DISPLAY), 0x274), 4) -
-           (uint32_t)(int32_t)(int16_t)width;
-    port_set32(&port, ebp, -0x10u, skip);
+    blend_set32(&port, ebp, -0x18u, pitch);
+    blend_set32(&port, ebp, -0xcu, (uint32_t)(int32_t)(int16_t)width);
+    skip =
+        blend_u32(&port,
+                  blend_u32(&port, port_window_u32(&port, &blend_globals, 0, DISPLAY), 0x274), 4) -
+        (uint32_t)(int32_t)(int16_t)width;
+    blend_set32(&port, ebp, -0x10u, skip);
     edx = skip;
     if ((rows & 0xffff) == 0)
     {
         return port_return(&port, mask, edx);
     }
-    port_set32(&port, ebp, -0x14u, pitch << 2);
+    blend_set32(&port, ebp, -0x14u, pitch << 2);
+    port_windows_flat(&port, &flat);
+    blend_reach = &flat;
     /* Each source pixel with alpha sets bit 0 of its mask byte. */
     for (rows &= 0xffff; rows != 0; rows = (rows - 1) & 0xffff)
     {
         for (count = width & 0xffff; count != 0; count = (count - 1) & 0xffff)
         {
-            uint32_t alpha = port_u32(&port, source, 0) >> 24;
-            port_set32(&port, ebp, -0xcu, alpha);
+            uint32_t alpha = blend_u32(&port, source, 0) >> 24;
+            blend_set32(&port, ebp, -0xcu, alpha);
             if (alpha != 0)
             {
-                port_set8(&port, mask, 0, port_u8(&port, mask, 0) | 1);
+                blend_set8(&port, mask, 0, blend_u8(&port, mask, 0) | 1);
             }
             source += 4;
             mask++;
         }
-        edx = port_u32(&port, ebp, -0x14u);
+        edx = blend_u32(&port, ebp, -0x14u);
         source += edx;
-        mask += port_u32(&port, ebp, -0x10u);
+        mask += blend_u32(&port, ebp, -0x10u);
     }
+    blend_reach = NULL;
     return port_return(&port, mask, edx);
 }
 
@@ -1265,20 +1343,20 @@ static uint32_t read_narrow(Port *port, uint32_t address, int format)
 {
     if (format == PIXEL_332)
     {
-        return port_u8(port, address, 0);
+        return blend_u8(port, address, 0);
     }
-    return port_u16(port, address, 0);
+    return blend_u16(port, address, 0);
 }
 
 static void write_narrow(Port *port, uint32_t address, int format, uint32_t pixel)
 {
     if (format == PIXEL_332)
     {
-        port_set8(port, address, 0, pixel);
+        blend_set8(port, address, 0, pixel);
     }
     else
     {
-        port_set16(port, address, 0, pixel);
+        blend_set16(port, address, 0, pixel);
     }
 }
 
@@ -1293,7 +1371,7 @@ static uint32_t blend_levels16(PORT_SIGNATURE, int format)
     blend_globals = port_window(&port, GLOBALS_LOW, GLOBALS_HIGH - GLOBALS_LOW);
     target = target_pointer(&port, format);
     mixed = levels_mix_values(
-        &port, port_u32(&port, port_window_u32(&port, &blend_globals, 0, SOURCE_PIXEL), 0),
+        &port, blend_u32(&port, port_window_u32(&port, &blend_globals, 0, SOURCE_PIXEL), 0),
         widen16(read_narrow(&port, target, format), format));
     port_window_set32(&port, &blend_globals, 0, WIDE_TARGET, mixed);
     write_narrow(&port, target, format, narrow16(mixed, format));
@@ -1767,19 +1845,19 @@ enum
  */
 static uint32_t fixed_entry_remap(Port *port, uint32_t colour)
 {
-    uint32_t select = port_u8(port, port_window_u32(port, &blend_globals, 0, COLOUR_ENTRIES),
-                              entry_index(colour) * 4);
+    uint32_t select = blend_u8(port, port_window_u32(port, &blend_globals, 0, COLOUR_ENTRIES),
+                               entry_index(colour) * 4);
     uint32_t map =
-        port_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS), select * 4);
+        blend_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS), select * 4);
     uint32_t fixed;
     port_window_set32(port, &blend_globals, 0, MAP, map);
-    fixed = port_u32(port, port_window_u32(port, &blend_globals, 0, FIXED_ENTRIES),
-                     port_window_u8(port, &blend_globals, 0, FIXED_ENTRY) * 4);
-    fixed = port_u32(port, fixed, 0);
+    fixed = blend_u32(port, port_window_u32(port, &blend_globals, 0, FIXED_ENTRIES),
+                      port_window_u8(port, &blend_globals, 0, FIXED_ENTRY) * 4);
+    fixed = blend_u32(port, fixed, 0);
     port_window_set32(port, &blend_globals, 0, ENTRY, fixed);
-    return (port_u8(port, map, fixed >> 24) << 16) |
-           (port_u8(port, map, (fixed >> 16) & 0xff) << 8) |
-           port_u8(port, map, (fixed >> 8) & 0xff);
+    return (blend_u8(port, map, fixed >> 24) << 16) |
+           (blend_u8(port, map, (fixed >> 16) & 0xff) << 8) |
+           blend_u8(port, map, (fixed >> 8) & 0xff);
 }
 
 static uint32_t pixel16_fixed_entry(PORT_SIGNATURE, int format)
@@ -1851,17 +1929,17 @@ static uint32_t paired_remap(Port *port, uint32_t colour)
     uint32_t map;
     uint32_t fixed;
     port_window_set32(port, &blend_globals, 0, ENTRY_INDEX, index);
-    map = port_u8(port, port_window_u32(port, &blend_globals, 0, COLOUR_ENTRIES), index * 4);
-    map = port_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS), map * 4);
+    map = blend_u8(port, port_window_u32(port, &blend_globals, 0, COLOUR_ENTRIES), index * 4);
+    map = blend_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS), map * 4);
     port_window_set32(port, &blend_globals, 0, MAP, map);
-    fixed = port_u8(port, port_window_u32(port, &blend_globals, 0, FIXED_SELECTS), index);
-    fixed = port_u32(
-        port, port_u32(port, port_window_u32(port, &blend_globals, 0, FIXED_ENTRIES), fixed * 4),
+    fixed = blend_u8(port, port_window_u32(port, &blend_globals, 0, FIXED_SELECTS), index);
+    fixed = blend_u32(
+        port, blend_u32(port, port_window_u32(port, &blend_globals, 0, FIXED_ENTRIES), fixed * 4),
         0);
     port_window_set32(port, &blend_globals, 0, ENTRY, fixed);
-    colour = port_u8(port, map, fixed >> 24) << 16;
-    colour |= port_u8(port, map, (fixed >> 16) & 0xff) << 8;
-    return colour | port_u8(port, map, (fixed >> 8) & 0xff);
+    colour = blend_u8(port, map, fixed >> 24) << 16;
+    colour |= blend_u8(port, map, (fixed >> 16) & 0xff) << 8;
+    return colour | blend_u8(port, map, (fixed >> 8) & 0xff);
 }
 
 static uint32_t pixel16_paired_entry(PORT_SIGNATURE, int format)
@@ -2059,15 +2137,15 @@ uint32_t vertrix_port_pixel16_invert_half_plus_remap_49ed90(PORT_SIGNATURE)
 static uint32_t cross_tint(Port *port, uint32_t map_colour, uint32_t entry_colour)
 {
     uint32_t entries = port_window_u32(port, &blend_globals, 0, COLOUR_ENTRIES);
-    uint32_t select = port_u8(port, entries, entry_index(map_colour) * 4);
+    uint32_t select = blend_u8(port, entries, entry_index(map_colour) * 4);
     uint32_t map =
-        port_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS), select * 4);
+        blend_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS), select * 4);
     port_window_set32(port, &blend_globals, 0, MAP, map);
     port_window_set32(port, &blend_globals, 0, ENTRY,
-                      port_u32(port, entries, entry_index(entry_colour) * 4));
-    return (port_u8(port, map, port_window_u16(port, &blend_globals, 0, TINT_RED)) << 16) |
-           (port_u8(port, map, port_window_u16(port, &blend_globals, 0, TINT_GREEN)) << 8) |
-           port_u8(port, map, port_window_u16(port, &blend_globals, 0, TINT_BLUE));
+                      blend_u32(port, entries, entry_index(entry_colour) * 4));
+    return (blend_u8(port, map, port_window_u16(port, &blend_globals, 0, TINT_RED)) << 16) |
+           (blend_u8(port, map, port_window_u16(port, &blend_globals, 0, TINT_GREEN)) << 8) |
+           blend_u8(port, map, port_window_u16(port, &blend_globals, 0, TINT_BLUE));
 }
 
 static uint32_t pixel16_tint_add(PORT_SIGNATURE, int format)
@@ -2170,16 +2248,16 @@ uint32_t vertrix_port_pixel16_target_tint_49e410(PORT_SIGNATURE)
 static uint32_t cross_remap(Port *port, uint32_t map_colour, uint32_t entry_colour)
 {
     uint32_t entries = port_window_u32(port, &blend_globals, 0, COLOUR_ENTRIES);
-    uint32_t select = port_u8(port, entries, entry_index(map_colour) * 4);
+    uint32_t select = blend_u8(port, entries, entry_index(map_colour) * 4);
     uint32_t map =
-        port_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS), select * 4);
+        blend_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS), select * 4);
     uint32_t value;
     port_window_set32(port, &blend_globals, 0, MAP, map);
-    value = port_u32(port, entries, entry_index(entry_colour) * 4);
+    value = blend_u32(port, entries, entry_index(entry_colour) * 4);
     port_window_set32(port, &blend_globals, 0, ENTRY, value);
-    return (port_u8(port, map, value >> 24) << 16) |
-           (port_u8(port, map, (value >> 16) & 0xff) << 8) |
-           port_u8(port, map, (value >> 8) & 0xff);
+    return (blend_u8(port, map, value >> 24) << 16) |
+           (blend_u8(port, map, (value >> 16) & 0xff) << 8) |
+           blend_u8(port, map, (value >> 8) & 0xff);
 }
 
 static uint32_t pixel16_cross_remap(PORT_SIGNATURE, int format)
@@ -2268,14 +2346,14 @@ static uint32_t pixel16_mean_map_tint(PORT_SIGNATURE, int format)
     port_open(&port, calls, services, globals, entry);
     blend_globals = port_window(&port, GLOBALS_LOW, GLOBALS_HIGH - GLOBALS_LOW);
     entries = port_window_u32(&port, &blend_globals, 0, COLOUR_ENTRIES);
-    select = port_u8(&port, entries, entry_index(source_colour(&port)) * 4);
-    select += port_u8(&port, entries, entry_index(target16(&port, format)) * 4);
-    map =
-        port_u32(&port, port_window_u32(&port, &blend_globals, 0, CHANNEL_MAPS), (select >> 1) * 4);
+    select = blend_u8(&port, entries, entry_index(source_colour(&port)) * 4);
+    select += blend_u8(&port, entries, entry_index(target16(&port, format)) * 4);
+    map = blend_u32(&port, port_window_u32(&port, &blend_globals, 0, CHANNEL_MAPS),
+                    (select >> 1) * 4);
     port_window_set32(&port, &blend_globals, 0, MAP, map);
-    colour = (port_u8(&port, map, port_window_u16(&port, &blend_globals, 0, TINT_RED)) << 16) |
-             (port_u8(&port, map, port_window_u16(&port, &blend_globals, 0, TINT_GREEN)) << 8) |
-             port_u8(&port, map, port_window_u16(&port, &blend_globals, 0, TINT_BLUE));
+    colour = (blend_u8(&port, map, port_window_u16(&port, &blend_globals, 0, TINT_RED)) << 16) |
+             (blend_u8(&port, map, port_window_u16(&port, &blend_globals, 0, TINT_GREEN)) << 8) |
+             blend_u8(&port, map, port_window_u16(&port, &blend_globals, 0, TINT_BLUE));
     return port_return(&port, keep16(&port, colour, format), entry->edx);
 }
 
@@ -2330,14 +2408,14 @@ static uint32_t levels_bias_values(Port *port, uint32_t source, uint32_t target)
 {
     uint32_t source_levels = port_window_u32(port, &blend_globals, 0, SOURCE_LEVELS);
     uint32_t target_levels = port_window_u32(port, &blend_globals, 0, TARGET_LEVELS);
-    uint32_t red = port_u8(port, source_levels, (source >> 16) & 0xff) +
-                   port_u8(port, target_levels, (target >> 16) & 0xff) +
+    uint32_t red = blend_u8(port, source_levels, (source >> 16) & 0xff) +
+                   blend_u8(port, target_levels, (target >> 16) & 0xff) +
                    port_window_u8(port, &blend_globals, 0, LEVEL_BIAS);
-    uint32_t green = port_u8(port, source_levels, (source >> 8) & 0xff) +
-                     port_u8(port, target_levels, (target >> 8) & 0xff) +
+    uint32_t green = blend_u8(port, source_levels, (source >> 8) & 0xff) +
+                     blend_u8(port, target_levels, (target >> 8) & 0xff) +
                      port_window_u8(port, &blend_globals, 0, LEVEL_BIAS + 1);
-    uint32_t blue = port_u8(port, source_levels, source & 0xff) +
-                    port_u8(port, target_levels, target & 0xff) +
+    uint32_t blue = blend_u8(port, source_levels, source & 0xff) +
+                    blend_u8(port, target_levels, target & 0xff) +
                     port_window_u8(port, &blend_globals, 0, LEVEL_BIAS + 2);
     return ((red >> 1) << 16) | ((green >> 1) << 8) | (blue >> 1);
 }
@@ -2527,16 +2605,16 @@ static uint32_t pixel16_shade_tint(PORT_SIGNATURE, int format)
     port_open(&port, calls, services, globals, entry);
     blend_globals = port_window(&port, GLOBALS_LOW, GLOBALS_HIGH - GLOBALS_LOW);
     entries = port_window_u32(&port, &blend_globals, 0, COLOUR_ENTRIES);
-    level = port_u8(&port, entries, entry_index(source_colour(&port)) * 4);
-    level = port_u16(&port, port_window_u32(&port, &blend_globals, 0, SHADE_LEVELS), level * 2);
-    level += port_u16(&port, port_window_u32(&port, &blend_globals, 0, SHADE_STEPS),
-                      port_u8(&port, entries, entry_index(target16(&port, format)) * 4) * 2);
-    map = port_u32(&port, port_window_u32(&port, &blend_globals, 0, CHANNEL_MAPS),
-                   (uint32_t)((int32_t)(int16_t)level * 4));
+    level = blend_u8(&port, entries, entry_index(source_colour(&port)) * 4);
+    level = blend_u16(&port, port_window_u32(&port, &blend_globals, 0, SHADE_LEVELS), level * 2);
+    level += blend_u16(&port, port_window_u32(&port, &blend_globals, 0, SHADE_STEPS),
+                       blend_u8(&port, entries, entry_index(target16(&port, format)) * 4) * 2);
+    map = blend_u32(&port, port_window_u32(&port, &blend_globals, 0, CHANNEL_MAPS),
+                    (uint32_t)((int32_t)(int16_t)level * 4));
     port_window_set32(&port, &blend_globals, 0, MAP, map);
-    colour = (port_u8(&port, map, port_window_u16(&port, &blend_globals, 0, TINT_RED)) << 16) |
-             (port_u8(&port, map, port_window_u16(&port, &blend_globals, 0, TINT_GREEN)) << 8) |
-             port_u8(&port, map, port_window_u16(&port, &blend_globals, 0, TINT_BLUE));
+    colour = (blend_u8(&port, map, port_window_u16(&port, &blend_globals, 0, TINT_RED)) << 16) |
+             (blend_u8(&port, map, port_window_u16(&port, &blend_globals, 0, TINT_GREEN)) << 8) |
+             blend_u8(&port, map, port_window_u16(&port, &blend_globals, 0, TINT_BLUE));
     return port_return(&port, keep16(&port, colour, format), entry->edx);
 }
 
@@ -2591,15 +2669,15 @@ static uint32_t pixel16_mean_map_remap(PORT_SIGNATURE, int format)
     port_open(&port, calls, services, globals, entry);
     blend_globals = port_window(&port, GLOBALS_LOW, GLOBALS_HIGH - GLOBALS_LOW);
     entries = port_window_u32(&port, &blend_globals, 0, COLOUR_ENTRIES);
-    value = port_u32(&port, entries, entry_index(source_colour(&port)) * 4);
+    value = blend_u32(&port, entries, entry_index(source_colour(&port)) * 4);
     port_window_set32(&port, &blend_globals, 0, ENTRY, value);
-    select = port_u8(&port, entries, entry_index(target16(&port, format)) * 4);
-    map = port_u32(&port, port_window_u32(&port, &blend_globals, 0, CHANNEL_MAPS),
-                   (((value & 0xff) + select) >> 1) * 4);
+    select = blend_u8(&port, entries, entry_index(target16(&port, format)) * 4);
+    map = blend_u32(&port, port_window_u32(&port, &blend_globals, 0, CHANNEL_MAPS),
+                    (((value & 0xff) + select) >> 1) * 4);
     port_window_set32(&port, &blend_globals, 0, MAP, map);
-    colour = (port_u8(&port, map, value >> 24) << 16) |
-             (port_u8(&port, map, (value >> 16) & 0xff) << 8) |
-             port_u8(&port, map, (value >> 8) & 0xff);
+    colour = (blend_u8(&port, map, value >> 24) << 16) |
+             (blend_u8(&port, map, (value >> 16) & 0xff) << 8) |
+             blend_u8(&port, map, (value >> 8) & 0xff);
     return port_return(&port, keep16(&port, colour, format), entry->edx);
 }
 
@@ -2764,20 +2842,20 @@ static uint32_t pixel16_paired_subtract_from(PORT_SIGNATURE, int format)
  * entry index of `fixed_colour`; the entry index is not stored. */
 static uint32_t paired_cross(Port *port, uint32_t map_colour, uint32_t fixed_colour)
 {
-    uint32_t map = port_u8(port, port_window_u32(port, &blend_globals, 0, COLOUR_ENTRIES),
-                           entry_index(map_colour) * 4);
+    uint32_t map = blend_u8(port, port_window_u32(port, &blend_globals, 0, COLOUR_ENTRIES),
+                            entry_index(map_colour) * 4);
     uint32_t fixed;
-    map = port_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS), map * 4);
+    map = blend_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS), map * 4);
     port_window_set32(port, &blend_globals, 0, MAP, map);
-    fixed = port_u8(port, port_window_u32(port, &blend_globals, 0, FIXED_SELECTS),
-                    entry_index(fixed_colour));
-    fixed = port_u32(
-        port, port_u32(port, port_window_u32(port, &blend_globals, 0, FIXED_ENTRIES), fixed * 4),
+    fixed = blend_u8(port, port_window_u32(port, &blend_globals, 0, FIXED_SELECTS),
+                     entry_index(fixed_colour));
+    fixed = blend_u32(
+        port, blend_u32(port, port_window_u32(port, &blend_globals, 0, FIXED_ENTRIES), fixed * 4),
         0);
     port_window_set32(port, &blend_globals, 0, ENTRY, fixed);
-    return (port_u8(port, map, fixed >> 24) << 16) |
-           (port_u8(port, map, (fixed >> 16) & 0xff) << 8) |
-           port_u8(port, map, (fixed >> 8) & 0xff);
+    return (blend_u8(port, map, fixed >> 24) << 16) |
+           (blend_u8(port, map, (fixed >> 16) & 0xff) << 8) |
+           blend_u8(port, map, (fixed >> 8) & 0xff);
 }
 
 static uint32_t pixel16_paired_cross(PORT_SIGNATURE, int format)
@@ -2835,24 +2913,24 @@ uint32_t vertrix_port_pixel16_target_paired_cross_4a17c0(PORT_SIGNATURE)
 static uint32_t cross_half_tint(Port *port, uint32_t map_colour, uint32_t entry_colour)
 {
     uint32_t entries = port_window_u32(port, &blend_globals, 0, COLOUR_ENTRIES);
-    uint32_t select = port_u8(port, entries, entry_index(map_colour) * 4);
+    uint32_t select = blend_u8(port, entries, entry_index(map_colour) * 4);
     uint32_t map =
-        port_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS), select * 4);
+        blend_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS), select * 4);
     uint32_t value;
     uint32_t red;
     uint32_t green;
     uint32_t blue;
     port_window_set32(port, &blend_globals, 0, MAP, map);
-    value = port_u32(port, entries, entry_index(entry_colour) * 4);
+    value = blend_u32(port, entries, entry_index(entry_colour) * 4);
     port_window_set32(port, &blend_globals, 0, ENTRY, value);
-    red = port_u8(port, map,
-                  ((value >> 24) + port_window_u16(port, &blend_globals, 0, TINT_RED)) >> 1);
-    green = port_u8(
+    red = blend_u8(port, map,
+                   ((value >> 24) + port_window_u16(port, &blend_globals, 0, TINT_RED)) >> 1);
+    green = blend_u8(
         port, map,
         (((value >> 16) & 0xff) + port_window_u16(port, &blend_globals, 0, TINT_GREEN)) >> 1);
-    blue =
-        port_u8(port, map,
-                (((value >> 8) & 0xff) + port_window_u16(port, &blend_globals, 0, TINT_BLUE)) >> 1);
+    blue = blend_u8(port, map,
+                    (((value >> 8) & 0xff) + port_window_u16(port, &blend_globals, 0, TINT_BLUE)) >>
+                        1);
     return (red << 16) | (green << 8) | blue;
 }
 
@@ -2919,24 +2997,24 @@ static uint32_t mean_map_paired(Port *port, uint32_t source, uint32_t target)
 {
     uint32_t entries = port_window_u32(port, &blend_globals, 0, COLOUR_ENTRIES);
     uint32_t index = entry_index(source);
-    uint32_t value = port_u32(port, entries, index * 4);
+    uint32_t value = blend_u32(port, entries, index * 4);
     uint32_t select;
     uint32_t map;
     uint32_t fixed;
     port_window_set32(port, &blend_globals, 0, ENTRY, value);
-    select = port_u8(port, entries, entry_index(target) * 4);
-    map = port_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS),
-                   ((select + (value & 0xff)) >> 1) * 4);
+    select = blend_u8(port, entries, entry_index(target) * 4);
+    map = blend_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS),
+                    ((select + (value & 0xff)) >> 1) * 4);
     port_window_set32(port, &blend_globals, 0, MAP, map);
-    fixed = port_u8(port, port_window_u32(port, &blend_globals, 0, FIXED_SELECTS), index);
-    fixed = port_u32(
-        port, port_u32(port, port_window_u32(port, &blend_globals, 0, FIXED_ENTRIES), fixed * 4),
+    fixed = blend_u8(port, port_window_u32(port, &blend_globals, 0, FIXED_SELECTS), index);
+    fixed = blend_u32(
+        port, blend_u32(port, port_window_u32(port, &blend_globals, 0, FIXED_ENTRIES), fixed * 4),
         0);
     port_window_set32(port, &blend_globals, 0, ENTRY, fixed);
     port_window_set32(port, &blend_globals, 0, ENTRY_INDEX, index);
-    return (port_u8(port, map, fixed >> 24) << 16) |
-           (port_u8(port, map, (fixed >> 16) & 0xff) << 8) |
-           port_u8(port, map, (fixed >> 8) & 0xff);
+    return (blend_u8(port, map, fixed >> 24) << 16) |
+           (blend_u8(port, map, (fixed >> 16) & 0xff) << 8) |
+           blend_u8(port, map, (fixed >> 8) & 0xff);
 }
 
 static uint32_t pixel16_mean_map_paired(PORT_SIGNATURE, int format)
@@ -3029,18 +3107,18 @@ static uint32_t pixel16_shade(PORT_SIGNATURE, int format)
     port_open(&port, calls, services, globals, entry);
     blend_globals = port_window(&port, GLOBALS_LOW, GLOBALS_HIGH - GLOBALS_LOW);
     entries = port_window_u32(&port, &blend_globals, 0, COLOUR_ENTRIES);
-    value = port_u32(&port, entries, entry_index(source_colour(&port)) * 4);
+    value = blend_u32(&port, entries, entry_index(source_colour(&port)) * 4);
     port_window_set32(&port, &blend_globals, 0, ENTRY, value);
-    level = port_u8(&port, entries, entry_index(target16(&port, format)) * 4);
-    level = port_u16(&port, port_window_u32(&port, &blend_globals, 0, SHADE_LEVELS),
-                     (value & 0xff) * 2) +
-            port_u16(&port, port_window_u32(&port, &blend_globals, 0, SHADE_STEPS), level * 2);
-    map = port_u32(&port, port_window_u32(&port, &blend_globals, 0, CHANNEL_MAPS),
-                   (uint32_t)((int32_t)(int16_t)level * 4));
+    level = blend_u8(&port, entries, entry_index(target16(&port, format)) * 4);
+    level = blend_u16(&port, port_window_u32(&port, &blend_globals, 0, SHADE_LEVELS),
+                      (value & 0xff) * 2) +
+            blend_u16(&port, port_window_u32(&port, &blend_globals, 0, SHADE_STEPS), level * 2);
+    map = blend_u32(&port, port_window_u32(&port, &blend_globals, 0, CHANNEL_MAPS),
+                    (uint32_t)((int32_t)(int16_t)level * 4));
     port_window_set32(&port, &blend_globals, 0, MAP, map);
-    colour = (port_u8(&port, map, value >> 24) << 16) |
-             (port_u8(&port, map, (value >> 16) & 0xff) << 8) |
-             port_u8(&port, map, (value >> 8) & 0xff);
+    colour = (blend_u8(&port, map, value >> 24) << 16) |
+             (blend_u8(&port, map, (value >> 16) & 0xff) << 8) |
+             blend_u8(&port, map, (value >> 8) & 0xff);
     return port_return(&port, keep16(&port, colour, format), entry->edx);
 }
 
@@ -3143,23 +3221,23 @@ static uint32_t shade_paired(Port *port, uint32_t source, uint32_t target)
     uint32_t colour;
     entries = port_window_u32(port, &blend_globals, 0, COLOUR_ENTRIES);
     index = entry_index(source);
-    value = port_u32(port, entries, index * 4);
+    value = blend_u32(port, entries, index * 4);
     port_window_set32(port, &blend_globals, 0, ENTRY, value);
-    level = port_u8(port, entries, entry_index(target) * 4);
-    level =
-        port_u16(port, port_window_u32(port, &blend_globals, 0, SHADE_LEVELS), (value & 0xff) * 2) +
-        port_u16(port, port_window_u32(port, &blend_globals, 0, SHADE_STEPS), level * 2);
-    map = port_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS),
-                   (uint32_t)((int32_t)(int16_t)level * 4));
+    level = blend_u8(port, entries, entry_index(target) * 4);
+    level = blend_u16(port, port_window_u32(port, &blend_globals, 0, SHADE_LEVELS),
+                      (value & 0xff) * 2) +
+            blend_u16(port, port_window_u32(port, &blend_globals, 0, SHADE_STEPS), level * 2);
+    map = blend_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS),
+                    (uint32_t)((int32_t)(int16_t)level * 4));
     port_window_set32(port, &blend_globals, 0, MAP, map);
-    fixed = port_u8(port, port_window_u32(port, &blend_globals, 0, FIXED_SELECTS), index);
-    fixed = port_u32(
-        port, port_u32(port, port_window_u32(port, &blend_globals, 0, FIXED_ENTRIES), fixed * 4),
+    fixed = blend_u8(port, port_window_u32(port, &blend_globals, 0, FIXED_SELECTS), index);
+    fixed = blend_u32(
+        port, blend_u32(port, port_window_u32(port, &blend_globals, 0, FIXED_ENTRIES), fixed * 4),
         0);
     port_window_set32(port, &blend_globals, 0, ENTRY, fixed);
-    colour = (port_u8(port, map, fixed >> 24) << 16) |
-             (port_u8(port, map, (fixed >> 16) & 0xff) << 8) |
-             port_u8(port, map, (fixed >> 8) & 0xff);
+    colour = (blend_u8(port, map, fixed >> 24) << 16) |
+             (blend_u8(port, map, (fixed >> 16) & 0xff) << 8) |
+             blend_u8(port, map, (fixed >> 8) & 0xff);
     port_window_set32(port, &blend_globals, 0, ENTRY_INDEX, index);
     return colour;
 }
@@ -3207,13 +3285,13 @@ enum
 static uint32_t entry_pair(Port *port, uint32_t target, uint32_t *other)
 {
     uint32_t entries = port_window_u32(port, &blend_globals, 0, COLOUR_ENTRIES);
-    uint32_t value = port_u32(port, entries, entry_index(source_colour(port)) * 4);
+    uint32_t value = blend_u32(port, entries, entry_index(source_colour(port)) * 4);
     uint32_t map;
     port_window_set32(port, &blend_globals, 0, ENTRY, value);
     map =
-        port_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS), (value & 0xff) * 4);
+        blend_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS), (value & 0xff) * 4);
     port_window_set32(port, &blend_globals, 0, MAP, map);
-    *other = port_u32(port, entries, entry_index(target) * 4);
+    *other = blend_u32(port, entries, entry_index(target) * 4);
     port_window_set32(port, &blend_globals, 0, TARGET_ENTRY, *other);
     return map;
 }
@@ -3229,9 +3307,9 @@ static uint32_t pixel16_entry_mean(PORT_SIGNATURE, int format)
     blend_globals = port_window(&port, GLOBALS_LOW, GLOBALS_HIGH - GLOBALS_LOW);
     map = entry_pair(&port, target16(&port, format), &other);
     value = port_window_u32(&port, &blend_globals, 0, ENTRY);
-    colour = port_u8(&port, map, ((value >> 24) + (other >> 24)) >> 1) << 16;
-    colour |= port_u8(&port, map, (((value >> 16) & 0xff) + ((other >> 16) & 0xff)) >> 1) << 8;
-    colour |= port_u8(&port, map, (((value >> 8) & 0xff) + ((other >> 8) & 0xff)) >> 1);
+    colour = blend_u8(&port, map, ((value >> 24) + (other >> 24)) >> 1) << 16;
+    colour |= blend_u8(&port, map, (((value >> 16) & 0xff) + ((other >> 16) & 0xff)) >> 1) << 8;
+    colour |= blend_u8(&port, map, (((value >> 8) & 0xff) + ((other >> 8) & 0xff)) >> 1);
     put16(&port, colour, format);
     port_window_set32(&port, &blend_globals, 0, WIDE_TARGET, colour);
     return port_return(&port, target_pointer(&port, format), entry->edx);
@@ -3245,15 +3323,15 @@ static uint32_t half_tint_fixed(Port *port, uint32_t colour)
     uint32_t fixed;
     colour = half_tint(port, colour);
     map = port_window_u32(port, &blend_globals, 0, MAP);
-    fixed =
-        port_u8(port, port_window_u32(port, &blend_globals, 0, FIXED_SELECTS), entry_index(colour));
-    fixed = port_u32(
-        port, port_u32(port, port_window_u32(port, &blend_globals, 0, FIXED_ENTRIES), fixed * 4),
+    fixed = blend_u8(port, port_window_u32(port, &blend_globals, 0, FIXED_SELECTS),
+                     entry_index(colour));
+    fixed = blend_u32(
+        port, blend_u32(port, port_window_u32(port, &blend_globals, 0, FIXED_ENTRIES), fixed * 4),
         0);
     port_window_set32(port, &blend_globals, 0, ENTRY, fixed);
-    return (port_u8(port, map, fixed >> 24) << 16) |
-           (port_u8(port, map, (fixed >> 16) & 0xff) << 8) |
-           port_u8(port, map, (fixed >> 8) & 0xff);
+    return (blend_u8(port, map, fixed >> 24) << 16) |
+           (blend_u8(port, map, (fixed >> 16) & 0xff) << 8) |
+           blend_u8(port, map, (fixed >> 8) & 0xff);
 }
 
 static uint32_t pixel16_half_tint_fixed(PORT_SIGNATURE, int format)
@@ -3294,12 +3372,12 @@ static uint32_t entry_mean_tint(Port *port, uint32_t map, uint32_t value, uint32
     uint32_t green = (((value >> 16) & 0xff) + ((other >> 16) & 0xff)) >> 1;
     uint32_t blue = (((value >> 8) & 0xff) + ((other >> 8) & 0xff)) >> 1;
     uint32_t colour =
-        port_u8(port, map, (red + port_window_u16(port, &blend_globals, 0, TINT_RED)) >> 1) << 16;
+        blend_u8(port, map, (red + port_window_u16(port, &blend_globals, 0, TINT_RED)) >> 1) << 16;
     colour |=
-        port_u8(port, map, (green + port_window_u16(port, &blend_globals, 0, TINT_GREEN)) >> 1)
+        blend_u8(port, map, (green + port_window_u16(port, &blend_globals, 0, TINT_GREEN)) >> 1)
         << 8;
     return colour |
-           port_u8(port, map, (blue + port_window_u16(port, &blend_globals, 0, TINT_BLUE)) >> 1);
+           blend_u8(port, map, (blue + port_window_u16(port, &blend_globals, 0, TINT_BLUE)) >> 1);
 }
 
 static uint32_t pixel16_entry_mean_tint(PORT_SIGNATURE, int format)
@@ -3375,25 +3453,25 @@ static uint32_t fixed_entry_mean(Port *port, uint32_t source, uint32_t target)
 {
     uint32_t entries = port_window_u32(port, &blend_globals, 0, COLOUR_ENTRIES);
     uint32_t index = entry_index(source);
-    uint32_t value = port_u32(port, entries, index * 4);
+    uint32_t value = blend_u32(port, entries, index * 4);
     uint32_t map;
     uint32_t fixed;
     uint32_t other;
     uint32_t colour;
     port_window_set32(port, &blend_globals, 0, ENTRY, value);
     map =
-        port_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS), (value & 0xff) * 4);
+        blend_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS), (value & 0xff) * 4);
     port_window_set32(port, &blend_globals, 0, MAP, map);
-    fixed = port_u8(port, port_window_u32(port, &blend_globals, 0, FIXED_SELECTS), index);
-    fixed = port_u32(
-        port, port_u32(port, port_window_u32(port, &blend_globals, 0, FIXED_ENTRIES), fixed * 4),
+    fixed = blend_u8(port, port_window_u32(port, &blend_globals, 0, FIXED_SELECTS), index);
+    fixed = blend_u32(
+        port, blend_u32(port, port_window_u32(port, &blend_globals, 0, FIXED_ENTRIES), fixed * 4),
         0);
     port_window_set32(port, &blend_globals, 0, ENTRY, fixed);
-    other = port_u32(port, entries, entry_index(target) * 4);
+    other = blend_u32(port, entries, entry_index(target) * 4);
     port_window_set32(port, &blend_globals, 0, TARGET_ENTRY, other);
-    colour = port_u8(port, map, ((fixed >> 24) + (other >> 24)) >> 1) << 16;
-    colour |= port_u8(port, map, (((fixed >> 16) & 0xff) + ((other >> 16) & 0xff)) >> 1) << 8;
-    colour |= port_u8(port, map, (((fixed >> 8) & 0xff) + ((other >> 8) & 0xff)) >> 1);
+    colour = blend_u8(port, map, ((fixed >> 24) + (other >> 24)) >> 1) << 16;
+    colour |= blend_u8(port, map, (((fixed >> 16) & 0xff) + ((other >> 16) & 0xff)) >> 1) << 8;
+    colour |= blend_u8(port, map, (((fixed >> 8) & 0xff) + ((other >> 8) & 0xff)) >> 1);
     port_window_set32(port, &blend_globals, 0, ENTRY_INDEX, index);
     return colour;
 }
@@ -3432,14 +3510,14 @@ uint32_t vertrix_port_pixel16_fixed_entry_mean_4a0cb0(PORT_SIGNATURE)
 static uint32_t cross_remap_unstored(Port *port, uint32_t map_colour, uint32_t entry_colour)
 {
     uint32_t entries = port_window_u32(port, &blend_globals, 0, COLOUR_ENTRIES);
-    uint32_t select = port_u8(port, entries, entry_index(map_colour) * 4);
+    uint32_t select = blend_u8(port, entries, entry_index(map_colour) * 4);
     uint32_t map =
-        port_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS), select * 4);
-    uint32_t value = port_u32(port, entries, entry_index(entry_colour) * 4);
+        blend_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS), select * 4);
+    uint32_t value = blend_u32(port, entries, entry_index(entry_colour) * 4);
     port_window_set32(port, &blend_globals, 0, ENTRY, value);
-    return (port_u8(port, map, value >> 24) << 16) |
-           (port_u8(port, map, (value >> 16) & 0xff) << 8) |
-           port_u8(port, map, (value >> 8) & 0xff);
+    return (blend_u8(port, map, value >> 24) << 16) |
+           (blend_u8(port, map, (value >> 16) & 0xff) << 8) |
+           blend_u8(port, map, (value >> 8) & 0xff);
 }
 
 static uint32_t cross_half_plus_remap(PORT_SIGNATURE, int target_map, int format)
@@ -3489,17 +3567,17 @@ static uint32_t pixel16_entry_levels(PORT_SIGNATURE, int format)
     value = port_window_u32(&port, &blend_globals, 0, ENTRY);
     source_levels = port_window_u32(&port, &blend_globals, 0, SOURCE_LEVELS);
     target_levels = port_window_u32(&port, &blend_globals, 0, TARGET_LEVELS);
-    colour = port_u8(&port, map,
-                     port_u8(&port, source_levels, value >> 24) +
-                         port_u8(&port, target_levels, other >> 24))
+    colour = blend_u8(&port, map,
+                      blend_u8(&port, source_levels, value >> 24) +
+                          blend_u8(&port, target_levels, other >> 24))
              << 16;
-    colour |= port_u8(&port, map,
-                      port_u8(&port, source_levels, (value >> 16) & 0xff) +
-                          port_u8(&port, target_levels, (other >> 16) & 0xff))
+    colour |= blend_u8(&port, map,
+                       blend_u8(&port, source_levels, (value >> 16) & 0xff) +
+                           blend_u8(&port, target_levels, (other >> 16) & 0xff))
               << 8;
-    colour |= port_u8(&port, map,
-                      port_u8(&port, source_levels, (value >> 8) & 0xff) +
-                          port_u8(&port, target_levels, (other >> 8) & 0xff));
+    colour |= blend_u8(&port, map,
+                       blend_u8(&port, source_levels, (value >> 8) & 0xff) +
+                           blend_u8(&port, target_levels, (other >> 8) & 0xff));
     put16(&port, colour, format);
     port_window_set32(&port, &blend_globals, 0, WIDE_TARGET, colour);
     return port_return(&port, target_pointer(&port, format), entry->edx);
@@ -3608,18 +3686,18 @@ static uint32_t entry_levels_tint(Port *port, uint32_t map, uint32_t value, uint
     uint32_t source_levels = port_window_u32(port, &blend_globals, 0, SOURCE_LEVELS);
     uint32_t target_levels = port_window_u32(port, &blend_globals, 0, TARGET_LEVELS);
     uint32_t red =
-        port_u8(port, source_levels, value >> 24) + port_u8(port, target_levels, other >> 24);
-    uint32_t green = port_u8(port, source_levels, (value >> 16) & 0xff) +
-                     port_u8(port, target_levels, (other >> 16) & 0xff);
-    uint32_t blue = port_u8(port, source_levels, (value >> 8) & 0xff) +
-                    port_u8(port, target_levels, (other >> 8) & 0xff);
+        blend_u8(port, source_levels, value >> 24) + blend_u8(port, target_levels, other >> 24);
+    uint32_t green = blend_u8(port, source_levels, (value >> 16) & 0xff) +
+                     blend_u8(port, target_levels, (other >> 16) & 0xff);
+    uint32_t blue = blend_u8(port, source_levels, (value >> 8) & 0xff) +
+                    blend_u8(port, target_levels, (other >> 8) & 0xff);
     uint32_t colour =
-        port_u8(port, map, (red + port_window_u16(port, &blend_globals, 0, TINT_RED)) >> 1) << 16;
+        blend_u8(port, map, (red + port_window_u16(port, &blend_globals, 0, TINT_RED)) >> 1) << 16;
     colour |=
-        port_u8(port, map, (green + port_window_u16(port, &blend_globals, 0, TINT_GREEN)) >> 1)
+        blend_u8(port, map, (green + port_window_u16(port, &blend_globals, 0, TINT_GREEN)) >> 1)
         << 8;
     return colour |
-           port_u8(port, map, (blue + port_window_u16(port, &blend_globals, 0, TINT_BLUE)) >> 1);
+           blend_u8(port, map, (blue + port_window_u16(port, &blend_globals, 0, TINT_BLUE)) >> 1);
 }
 
 static uint32_t pixel16_entry_levels_tint(PORT_SIGNATURE, int format)
@@ -3654,31 +3732,31 @@ static uint32_t fixed_entry_levels(Port *port, uint32_t source, uint32_t target)
     entries = port_window_u32(port, &blend_globals, 0, COLOUR_ENTRIES);
     index = entry_index(source);
     port_window_set32(port, &blend_globals, 0, ENTRY_INDEX, index);
-    value = port_u32(port, entries, index * 4);
+    value = blend_u32(port, entries, index * 4);
     port_window_set32(port, &blend_globals, 0, ENTRY, value);
     map =
-        port_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS), (value & 0xff) * 4);
+        blend_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS), (value & 0xff) * 4);
     port_window_set32(port, &blend_globals, 0, MAP, map);
-    fixed = port_u8(port, port_window_u32(port, &blend_globals, 0, FIXED_SELECTS), index);
-    fixed = port_u32(
-        port, port_u32(port, port_window_u32(port, &blend_globals, 0, FIXED_ENTRIES), fixed * 4),
+    fixed = blend_u8(port, port_window_u32(port, &blend_globals, 0, FIXED_SELECTS), index);
+    fixed = blend_u32(
+        port, blend_u32(port, port_window_u32(port, &blend_globals, 0, FIXED_ENTRIES), fixed * 4),
         0);
     port_window_set32(port, &blend_globals, 0, ENTRY, fixed);
-    other = port_u32(port, entries, entry_index(target) * 4);
+    other = blend_u32(port, entries, entry_index(target) * 4);
     port_window_set32(port, &blend_globals, 0, TARGET_ENTRY, other);
     source_levels = port_window_u32(port, &blend_globals, 0, SOURCE_LEVELS);
     target_levels = port_window_u32(port, &blend_globals, 0, TARGET_LEVELS);
-    colour = port_u8(port, map,
-                     port_u8(port, source_levels, fixed >> 24) +
-                         port_u8(port, target_levels, other >> 24))
+    colour = blend_u8(port, map,
+                      blend_u8(port, source_levels, fixed >> 24) +
+                          blend_u8(port, target_levels, other >> 24))
              << 16;
-    colour |= port_u8(port, map,
-                      port_u8(port, source_levels, (fixed >> 16) & 0xff) +
-                          port_u8(port, target_levels, (other >> 16) & 0xff))
+    colour |= blend_u8(port, map,
+                       blend_u8(port, source_levels, (fixed >> 16) & 0xff) +
+                           blend_u8(port, target_levels, (other >> 16) & 0xff))
               << 8;
-    colour |= port_u8(port, map,
-                      port_u8(port, source_levels, (fixed >> 8) & 0xff) +
-                          port_u8(port, target_levels, (other >> 8) & 0xff));
+    colour |= blend_u8(port, map,
+                       blend_u8(port, source_levels, (fixed >> 8) & 0xff) +
+                           blend_u8(port, target_levels, (other >> 8) & 0xff));
     return colour;
 }
 
@@ -3727,13 +3805,13 @@ uint32_t vertrix_port_pixel16_fixed_entry_levels_4a1c80(PORT_SIGNATURE)
 /* The 32-bit target pixel at [0x5bb768], and a store to it returning its address. */
 static uint32_t target32(Port *port)
 {
-    return port_u32(port, port_window_u32(port, &blend_globals, 0, TARGET_PIXEL), 0);
+    return blend_u32(port, port_window_u32(port, &blend_globals, 0, TARGET_PIXEL), 0);
 }
 
 static uint32_t put32(Port *port, uint32_t colour)
 {
     uint32_t target = port_window_u32(port, &blend_globals, 0, TARGET_PIXEL);
-    port_set32(port, target, 0, colour);
+    blend_set32(port, target, 0, colour);
     return target;
 }
 
@@ -3901,14 +3979,14 @@ uint32_t vertrix_port_blend_target_remap_invert(PORT_SIGNATURE)
 static uint32_t mean_map_tint(Port *port, uint32_t first, uint32_t second)
 {
     uint32_t entries = port_window_u32(port, &blend_globals, 0, COLOUR_ENTRIES);
-    uint32_t select = port_u8(port, entries, entry_index(first) * 4) +
-                      port_u8(port, entries, entry_index(second) * 4);
+    uint32_t select = blend_u8(port, entries, entry_index(first) * 4) +
+                      blend_u8(port, entries, entry_index(second) * 4);
     uint32_t map =
-        port_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS), (select >> 1) * 4);
+        blend_u32(port, port_window_u32(port, &blend_globals, 0, CHANNEL_MAPS), (select >> 1) * 4);
     port_window_set32(port, &blend_globals, 0, MAP, map);
-    return (port_u8(port, map, port_window_u16(port, &blend_globals, 0, TINT_RED)) << 16) |
-           (port_u8(port, map, port_window_u16(port, &blend_globals, 0, TINT_GREEN)) << 8) |
-           port_u8(port, map, port_window_u16(port, &blend_globals, 0, TINT_BLUE));
+    return (blend_u8(port, map, port_window_u16(port, &blend_globals, 0, TINT_RED)) << 16) |
+           (blend_u8(port, map, port_window_u16(port, &blend_globals, 0, TINT_GREEN)) << 8) |
+           blend_u8(port, map, port_window_u16(port, &blend_globals, 0, TINT_BLUE));
 }
 
 static uint32_t blend_mean_map_tint_body(Port *port)
@@ -4357,17 +4435,17 @@ static uint32_t blend_half_tint_fixed_body(Port *port)
     map = port_window_u32(port, &blend_globals, 0, MAP);
     target = put32(port, colour);
     /* The entry index is taken from the stored pixel but for its red bits. */
-    colour = (colour & 0xfc0000) | (port_u32(port, target, 0) & 0xfcfc);
-    fixed =
-        port_u8(port, port_window_u32(port, &blend_globals, 0, FIXED_SELECTS), entry_index(colour));
-    fixed = port_u32(
-        port, port_u32(port, port_window_u32(port, &blend_globals, 0, FIXED_ENTRIES), fixed * 4),
+    colour = (colour & 0xfc0000) | (blend_u32(port, target, 0) & 0xfcfc);
+    fixed = blend_u8(port, port_window_u32(port, &blend_globals, 0, FIXED_SELECTS),
+                     entry_index(colour));
+    fixed = blend_u32(
+        port, blend_u32(port, port_window_u32(port, &blend_globals, 0, FIXED_ENTRIES), fixed * 4),
         0);
     port_window_set32(port, &blend_globals, 0, ENTRY, fixed);
-    colour = (port_u8(port, map, fixed >> 24) << 16) |
-             (port_u8(port, map, (fixed >> 16) & 0xff) << 8) |
-             port_u8(port, map, (fixed >> 8) & 0xff);
-    port_set32(port, target, 0, colour);
+    colour = (blend_u8(port, map, fixed >> 24) << 16) |
+             (blend_u8(port, map, (fixed >> 16) & 0xff) << 8) |
+             blend_u8(port, map, (fixed >> 8) & 0xff);
+    blend_set32(port, target, 0, colour);
     return colour;
 }
 
@@ -4538,8 +4616,8 @@ static uint32_t blend_levels_paired_body(Port *port)
     colour = levels_mix_values(port, source_colour(port), target32(port));
     target = put32(port, colour);
     /* The entry index is taken from the stored pixel for its blue bits. */
-    colour = (colour & 0xfcfc00) | (port_u32(port, target, 0) & 0xfc);
-    port_set32(port, target, 0, paired_remap(port, colour));
+    colour = (colour & 0xfcfc00) | (blend_u32(port, target, 0) & 0xfc);
+    blend_set32(port, target, 0, paired_remap(port, colour));
     return target;
 }
 
@@ -4625,12 +4703,12 @@ static uint32_t render_sampled_rows_at(PORT_SIGNATURE, uint32_t target_pixel, ui
         uint32_t steps;
         uint32_t target;
         uint32_t mask;
-        count = port_window_u16(&port, &blend_globals, 0, WIDTH) - port_u16(&port, start, 0);
+        count = port_window_u16(&port, &blend_globals, 0, WIDTH) - blend_u16(&port, start, 0);
         port_window_set32(&port, &blend_globals, 0, ROW_START, start);
         port_window_set16(&port, &blend_globals, 0, ROW_COUNT, count);
         steps = port_window_u32(&port, &blend_globals, 0, NEXT_SAMPLE_STEPS);
         source = port_window_u32(&port, &blend_globals, 0, SOURCE_PIXEL) +
-                 (port_u8(&port, steps, 0) << 2);
+                 (blend_u8(&port, steps, 0) << 2);
         port_window_set32(&port, &blend_globals, 0, NEXT_SAMPLE_STEPS, steps + 1);
         port_window_set32(&port, &blend_globals, 0, SOURCE_ROW, source);
         port_window_set32(&port, &blend_globals, 0, SAMPLE_STEPS,
@@ -4692,11 +4770,11 @@ static uint32_t keyed_mask_row_back(PORT_SIGNATURE, uint32_t target_pixel)
         uint32_t target;
         uint32_t start;
         eax = port_window_u32(&port, &blend_globals, 0, ROW_START);
-        if (port_u16(&port, eax, 0) == 0)
+        if (blend_u16(&port, eax, 0) == 0)
         {
             break;
         }
-        edx = (edx & 0xffffff00u) | port_u8(&port, ecx, 0);
+        edx = (edx & 0xffffff00u) | blend_u8(&port, ecx, 0);
         port_window_set32(&port, &blend_globals, 0, MASK_PIXEL, ecx);
         if ((edx & 1) == 0)
         {
@@ -4708,7 +4786,7 @@ static uint32_t keyed_mask_row_back(PORT_SIGNATURE, uint32_t target_pixel)
             }
         }
         steps = port_window_u32(&port, &blend_globals, 0, SAMPLE_STEPS);
-        edx = port_u8(&port, steps, 0) * port_window_u32(&port, &blend_globals, 0, ROW_SCALE);
+        edx = blend_u8(&port, steps, 0) * port_window_u32(&port, &blend_globals, 0, ROW_SCALE);
         target = port_window_u32(&port, &blend_globals, 0, target_pixel);
         port_window_set32(&port, &blend_globals, 0, SAMPLE_STEPS, steps - 1);
         target -= port_window_u32(&port, &blend_globals, 0, TARGET_STRIDE);
@@ -4717,9 +4795,9 @@ static uint32_t keyed_mask_row_back(PORT_SIGNATURE, uint32_t target_pixel)
         ecx = port_window_u32(&port, &blend_globals, 0, MASK_PIXEL) - high_word(&port, MASK_STRIDE);
         start = port_window_u32(&port, &blend_globals, 0, ROW_START);
         port_window_set32(&port, &blend_globals, 0, SOURCE_PIXEL, ebx);
-        ebx = ((ebx & 0xffff0000u) | port_u16(&port, start, 0)) - 1;
+        ebx = ((ebx & 0xffff0000u) | blend_u16(&port, start, 0)) - 1;
         port_window_set32(&port, &blend_globals, 0, target_pixel, target);
-        port_set16(&port, start, 0, ebx);
+        blend_set16(&port, start, 0, ebx);
     }
     while (port_window_u16(&port, &blend_globals, 0, ROW_COUNT) != 0)
     {
@@ -4733,7 +4811,7 @@ static uint32_t keyed_mask_row_back(PORT_SIGNATURE, uint32_t target_pixel)
             edx = vertrix_lift_edx;
         }
         steps = port_window_u32(&port, &blend_globals, 0, SAMPLE_STEPS);
-        edx = port_u8(&port, steps, 0) * port_window_u32(&port, &blend_globals, 0, ROW_SCALE);
+        edx = blend_u8(&port, steps, 0) * port_window_u32(&port, &blend_globals, 0, ROW_SCALE);
         ecx = port_window_u32(&port, &blend_globals, 0, MASK_PIXEL);
         port_window_set32(&port, &blend_globals, 0, SAMPLE_STEPS, steps - 1);
         eax = port_window_u32(&port, &blend_globals, 0, SOURCE_PIXEL) - (edx << 2);
@@ -4827,6 +4905,7 @@ static uint32_t rectangle_colour(Port *port, int kind, uint32_t colour)
  * the narrow forms widen each pixel first and leave the last colour at 0x5bb774. */
 static uint32_t rectangle_fill(PORT_SIGNATURE, int kind, int narrow, int format, int left)
 {
+    PortWindows flat;
     Port port;
     uint32_t eax = entry->eax;
     uint32_t pointer_global = TARGET_PIXEL;
@@ -4841,11 +4920,14 @@ static uint32_t rectangle_fill(PORT_SIGNATURE, int kind, int narrow, int format,
     }
     port_open(&port, calls, services, globals, entry);
     blend_globals = port_window(&port, GLOBALS_LOW, GLOBALS_HIGH - GLOBALS_LOW);
+    port_windows_flat(&port, &flat);
+    blend_reach = &flat;
     pixel = port_window_u32(&port, &blend_globals, 0, pointer_global);
     map = port_window_u32(&port, &blend_globals, 0, MAP);
     rows = port_window_u16(&port, &blend_globals, 0, RECTANGLE_ROWS);
     if (rows == 0)
     {
+        blend_reach = NULL;
         return port_return(&port, eax, entry->edx);
     }
     colour = port_window_u32(&port, &blend_globals, 0, WIDE_TARGET);
@@ -4866,26 +4948,26 @@ static uint32_t rectangle_fill(PORT_SIGNATURE, int kind, int narrow, int format,
             {
                 /* The half plus is stored first and its green and blue index bits read back; the
                  * map stays in hand until the end. */
-                colour = half_plus(&port, port_u32(&port, pixel, 0));
-                port_set32(&port, pixel, 0, colour);
-                colour = (colour & 0xfc0000) | (port_u32(&port, pixel, 0) & 0xfcfc);
-                colour = port_u32(&port, port_window_u32(&port, &blend_globals, 0, COLOUR_ENTRIES),
-                                  entry_index(colour) * 4);
+                colour = half_plus(&port, blend_u32(&port, pixel, 0));
+                blend_set32(&port, pixel, 0, colour);
+                colour = (colour & 0xfc0000) | (blend_u32(&port, pixel, 0) & 0xfcfc);
+                colour = blend_u32(&port, port_window_u32(&port, &blend_globals, 0, COLOUR_ENTRIES),
+                                   entry_index(colour) * 4);
                 port_window_set32(&port, &blend_globals, 0, ENTRY, colour);
-                map = port_u32(&port, port_window_u32(&port, &blend_globals, 0, CHANNEL_MAPS),
-                               port_window_u8(&port, &blend_globals, 0, ENTRY) * 4);
+                map = blend_u32(&port, port_window_u32(&port, &blend_globals, 0, CHANNEL_MAPS),
+                                port_window_u8(&port, &blend_globals, 0, ENTRY) * 4);
                 colour = port_window_u32(&port, &blend_globals, 0, ENTRY);
-                colour = (port_u8(&port, map, colour >> 24) << 16) |
-                         (port_u8(&port, map, (colour >> 16) & 0xff) << 8) |
-                         port_u8(&port, map,
-                                 (port_window_u16(&port, &blend_globals, 0, ENTRY) >> 8) & 0xff);
-                port_set32(&port, pixel, 0, colour);
+                colour = (blend_u8(&port, map, colour >> 24) << 16) |
+                         (blend_u8(&port, map, (colour >> 16) & 0xff) << 8) |
+                         blend_u8(&port, map,
+                                  (port_window_u16(&port, &blend_globals, 0, ENTRY) >> 8) & 0xff);
+                blend_set32(&port, pixel, 0, colour);
                 pixel += 4;
             }
             else
             {
-                port_set32(&port, pixel, 0,
-                           rectangle_colour(&port, kind, port_u32(&port, pixel, 0)));
+                blend_set32(&port, pixel, 0,
+                            rectangle_colour(&port, kind, blend_u32(&port, pixel, 0)));
                 pixel += 4;
             }
         }
@@ -4918,6 +5000,7 @@ static uint32_t rectangle_fill(PORT_SIGNATURE, int kind, int narrow, int format,
     {
         port_window_set32(&port, &blend_globals, 0, WIDE_TARGET, colour);
     }
+    blend_reach = NULL;
     return port_return(&port, eax, entry->edx);
 }
 
@@ -5513,22 +5596,22 @@ static uint32_t alpha_over(Port *port, uint32_t source, uint32_t target)
     uint32_t red;
     uint32_t green;
     port_window_set32(port, &blend_globals, 0, TARGET_LEVELS, table);
-    red = (port_u8(port, table, (target >> 16) & 0xff) + ((source >> 16) & 0xff)) << 16;
-    green = (port_u8(port, table, (target >> 8) & 0xff) + ((source >> 8) & 0xff)) << 8;
-    return red | green | (port_u8(port, table, target & 0xff) + (source & 0xff));
+    red = (blend_u8(port, table, (target >> 16) & 0xff) + ((source >> 16) & 0xff)) << 16;
+    green = (blend_u8(port, table, (target >> 8) & 0xff) + ((source >> 8) & 0xff)) << 8;
+    return red | green | (blend_u8(port, table, target & 0xff) + (source & 0xff));
 }
 
 /* One source pixel over the target: copied when opaque, skipped when clear and blended by
  * alpha_over otherwise; a narrow target is widened through 0x5bb774, which keeps the blend. */
 static void alpha_pixel(Port *port, uint32_t source, uint32_t target, int format)
 {
-    uint32_t colour = port_u32(port, source, 0);
+    uint32_t colour = blend_u32(port, source, 0);
     uint32_t wide;
     if (colour >> 24 == 0xff)
     {
         if (format == PIXEL_32)
         {
-            port_set32(port, target, 0, colour);
+            blend_set32(port, target, 0, colour);
         }
         else
         {
@@ -5539,7 +5622,7 @@ static void alpha_pixel(Port *port, uint32_t source, uint32_t target, int format
     {
         if (format == PIXEL_32)
         {
-            port_set32(port, target, 0, alpha_over(port, colour, port_u32(port, target, 0)));
+            blend_set32(port, target, 0, alpha_over(port, colour, blend_u32(port, target, 0)));
         }
         else
         {
@@ -5559,6 +5642,7 @@ static void alpha_pixel(Port *port, uint32_t source, uint32_t target, int format
  * 0x5bc016. Pixels whose mask byte has its low bit set are skipped. */
 static uint32_t alpha_columns(PORT_SIGNATURE, int format)
 {
+    PortWindows flat;
     Port port;
     uint32_t eax;
     uint32_t target_global = TARGET_PIXEL;
@@ -5584,6 +5668,8 @@ static uint32_t alpha_columns(PORT_SIGNATURE, int format)
     }
     port_open(&port, calls, services, globals, entry);
     blend_globals = port_window(&port, GLOBALS_LOW, GLOBALS_HIGH - GLOBALS_LOW);
+    port_windows_flat(&port, &flat);
+    blend_reach = &flat;
     target = port_window_u32(&port, &blend_globals, 0, target_global);
     mask = port_window_u32(&port, &blend_globals, 0, MASK_PIXEL);
     source = port_window_u32(&port, &blend_globals, 0, SOURCE_PIXEL);
@@ -5607,28 +5693,28 @@ static uint32_t alpha_columns(PORT_SIGNATURE, int format)
         port_window_set32(&port, &blend_globals, 0, MASK_ROW, mask + 1);
         port_window_set16(&port, &blend_globals, 0, ROW_COUNT,
                           port_window_u16(&port, &blend_globals, 0, COLUMN_HEIGHT) -
-                              port_u16(&port, start, 0));
+                              blend_u16(&port, start, 0));
         source = port_window_u32(&port, &blend_globals, 0, SOURCE_ROW);
         target = port_window_u32(&port, &blend_globals, 0, row_global);
         port_window_set32(&port, &blend_globals, 0, SOURCE_ROW, source + 4);
         port_window_set32(&port, &blend_globals, 0, row_global, target + step);
         for (eax = port_window_u32(&port, &blend_globals, 0, ROW_START);
-             port_u16(&port, eax, 0) != 0;
+             blend_u16(&port, eax, 0) != 0;
              eax = port_window_u32(&port, &blend_globals, 0, ROW_START))
         {
-            if ((port_u8(&port, mask, 0) & 1) == 0)
+            if ((blend_u8(&port, mask, 0) & 1) == 0)
             {
                 alpha_pixel(&port, source, target, format);
             }
             source -= ((int32_t)port_window_u32(&port, &blend_globals, 0, SOURCE_STRIDE) >> 16) * 4;
             target -= port_window_u32(&port, &blend_globals, 0, TARGET_STRIDE);
             start = port_window_u32(&port, &blend_globals, 0, ROW_START);
-            port_set16(&port, start, 0, port_u16(&port, start, 0) - 1);
+            blend_set16(&port, start, 0, blend_u16(&port, start, 0) - 1);
             mask -= (int32_t)port_window_u32(&port, &blend_globals, 0, MASK_STRIDE) >> 16;
         }
         while (port_window_u16(&port, &blend_globals, 0, ROW_COUNT) != 0)
         {
-            if ((port_u8(&port, mask, 0) & 1) == 0)
+            if ((blend_u8(&port, mask, 0) & 1) == 0)
             {
                 alpha_pixel(&port, source, target, format);
             }
@@ -5647,6 +5733,7 @@ static uint32_t alpha_columns(PORT_SIGNATURE, int format)
     port_window_set32(&port, &blend_globals, 0, SOURCE_PIXEL, source);
     port_window_set32(&port, &blend_globals, 0, MASK_PIXEL, mask);
     port_window_set32(&port, &blend_globals, 0, target_global, target);
+    blend_reach = NULL;
     return port_return(&port, eax, entry->edx);
 }
 
@@ -5686,6 +5773,7 @@ enum
  * left in eax, but the target pointer by the 32-bit blit. */
 static uint32_t image_blit(PORT_SIGNATURE, int kind, int format)
 {
+    PortWindows flat;
     Port port;
     uint32_t target_global = TARGET_PIXEL;
     uint32_t step = 4;
@@ -5711,6 +5799,8 @@ static uint32_t image_blit(PORT_SIGNATURE, int kind, int format)
     }
     port_open(&port, calls, services, globals, entry);
     blend_globals = port_window(&port, GLOBALS_LOW, GLOBALS_HIGH - GLOBALS_LOW);
+    port_windows_flat(&port, &flat);
+    blend_reach = &flat;
     width = port_window_u16(&port, &blend_globals, 0, COLUMNS);
     rows = port_window_u16(&port, &blend_globals, 0, COLUMN_HEIGHT);
     target = port_window_u32(&port, &blend_globals, 0, target_global);
@@ -5721,13 +5811,13 @@ static uint32_t image_blit(PORT_SIGNATURE, int kind, int format)
     {
         for (across = width; across != 0; across--)
         {
-            colour = port_u32(&port, source, 0);
+            colour = blend_u32(&port, source, 0);
             alpha = colour >> 24;
             if (kind == IMAGE_COPY || alpha == 0xff || (kind == IMAGE_KEYED && alpha != 0))
             {
                 if (format == PIXEL_32)
                 {
-                    port_set32(&port, target, 0, colour);
+                    blend_set32(&port, target, 0, colour);
                 }
                 else
                 {
@@ -5736,7 +5826,8 @@ static uint32_t image_blit(PORT_SIGNATURE, int kind, int format)
             }
             else if (alpha != 0 && format == PIXEL_32)
             {
-                port_set32(&port, target, 0, alpha_over(&port, colour, port_u32(&port, target, 0)));
+                blend_set32(&port, target, 0,
+                            alpha_over(&port, colour, blend_u32(&port, target, 0)));
             }
             else if (alpha != 0)
             {
@@ -5750,6 +5841,7 @@ static uint32_t image_blit(PORT_SIGNATURE, int kind, int format)
         source += source_skip;
         target += target_skip;
     }
+    blend_reach = NULL;
     return port_return(&port, format == PIXEL_32 ? target : source, entry->edx);
 }
 

@@ -238,25 +238,75 @@ static inline uint8_t *port_windows_at(const PortWindows *windows, uint32_t addr
     return NULL;
 }
 
+/* The windows on every flat block the host maps, each whole (port_flat), for a loop that makes no
+ * call: a heap's top may move with an allocation or a release, so they are valid only until the
+ * port calls out. */
+static inline void port_windows_flat(Port *port, PortWindows *windows)
+{
+    unsigned i;
+    windows->count = 0;
+    for (i = 0; i < 3; i++)
+    {
+        const LiftFlatRegion *region = &vertrix_lift_flat[i];
+        /* a load in a block read a dword at a time must fit a whole one (lift_flat) */
+        uint32_t tail = region->whole > 1 ? region->whole - 1 : 0;
+        if (region->memory != NULL && *region->memory != NULL && *region->top > tail)
+        {
+            PortWindow window = port_window(port, region->base, *region->top - tail);
+            if (window.memory != NULL)
+            {
+                windows->window[windows->count++] = window;
+            }
+        }
+    }
+}
+
+static inline uint8_t *port_windows_reach(const PortWindows *windows, uint32_t address,
+                                          unsigned size)
+{
+    unsigned i;
+    for (i = 0; i < windows->count; i++)
+    {
+        uint8_t *at = port_window_at(&windows->window[i], address, size);
+        if (at != NULL)
+        {
+            return at;
+        }
+    }
+    return NULL;
+}
+
+static inline uint32_t port_windows_get(Port *port, const PortWindows *windows, uint32_t base,
+                                        uint32_t offset, unsigned size)
+{
+    const uint8_t *at = port_windows_reach(windows, base + offset, size);
+    return at != NULL ? lift_get(at, size) : lift_load(&port->env, base, offset, size);
+}
+
+static inline void port_windows_put(Port *port, const PortWindows *windows, uint32_t base,
+                                    uint32_t offset, unsigned size, uint32_t value)
+{
+    uint8_t *at = port_windows_reach(windows, base + offset, size);
+    if (at != NULL)
+    {
+        lift_put(at, size, value);
+    }
+    else
+    {
+        lift_store(&port->env, base, offset, size, value);
+    }
+}
+
 static inline uint32_t port_windows_u32(Port *port, const PortWindows *windows, uint32_t base,
                                         uint32_t offset)
 {
-    const uint8_t *at = port_windows_at(windows, base + offset);
-    return at != NULL ? lift_get(at, 4) : port_u32(port, base, offset);
+    return port_windows_get(port, windows, base, offset, 4);
 }
 
 static inline void port_windows_set32(Port *port, const PortWindows *windows, uint32_t base,
                                       uint32_t offset, uint32_t value)
 {
-    uint8_t *at = port_windows_at(windows, base + offset);
-    if (at != NULL)
-    {
-        lift_put(at, 4, value);
-    }
-    else
-    {
-        port_set32(port, base, offset, value);
-    }
+    port_windows_put(port, windows, base, offset, 4, value);
 }
 
 /* The memory of the `size` bytes at `address` when they lie in the window, else NULL. */
