@@ -50,7 +50,7 @@ static uint8_t *host_frame_bytes(uint32_t address, unsigned size)
         }
         if (env != NULL && lift_in_passed(env, address, size))
         {
-            return ((LiftEnv *)env)->passed + (address - env->passed_low);
+            return lift_passed((LiftEnv *)env) + (address - env->passed_low);
         }
     }
     return NULL;

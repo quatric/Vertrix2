@@ -62,6 +62,10 @@ typedef struct LiftEnv
     uint32_t passed_low;
     uint32_t passed_high;
     uint8_t passed[4 * LIFT_PASSED_LIMIT];
+    /* The dwords still to be put in `passed` (the entry's, which outlive the routine), on the
+     * first access there: most routines never read them. */
+    const uint32_t *passed_from;
+    unsigned passed_pending;
 } LiftEnv;
 
 /* The stack frames of the lifted routines now executing, outermost first, so the host side of
@@ -190,14 +194,13 @@ static inline void lift_begin(LiftEnv *env, const VertrixCalls *calls,
     }
     env->passed_low = env->high;
     env->passed_high = env->high;
+    env->passed_pending = 0;
     if (entry->passed > argument_count && entry->passed <= LIFT_PASSED_LIMIT)
     {
         /* The slot after the declared arguments is in the frame; the rest go above it. */
         lift_put(stack + below + 4 + 4 * argument_count, 4, entry->arguments[argument_count]);
-        for (i = argument_count + 1; i < entry->passed; i++)
-        {
-            lift_put(env->passed + 4 * (i - argument_count - 1), 4, entry->arguments[i]);
-        }
+        env->passed_from = entry->arguments + argument_count + 1;
+        env->passed_pending = entry->passed - argument_count - 1;
         env->passed_high = env->high + 4 * (entry->passed - argument_count - 1);
     }
 }
@@ -287,6 +290,18 @@ static inline int lift_in_passed(const LiftEnv *env, uint32_t address, unsigned 
     return lift_within(address, size, env->passed_low, env->passed_high);
 }
 
+/* The bytes of the supplied arguments above the frame, put there on the first access. */
+static inline uint8_t *lift_passed(LiftEnv *env)
+{
+    unsigned i;
+    for (i = 0; i < env->passed_pending; i++)
+    {
+        lift_put(env->passed + 4 * i, 4, env->passed_from[i]);
+    }
+    env->passed_pending = 0;
+    return env->passed;
+}
+
 static inline uint32_t lift_load(LiftEnv *env, uint32_t base, uint32_t offset, unsigned size)
 {
     uint32_t address = base + offset;
@@ -299,7 +314,7 @@ static inline uint32_t lift_load(LiftEnv *env, uint32_t base, uint32_t offset, u
     }
     if (lift_in_passed(env, address, size))
     {
-        return lift_get(env->passed + (address - env->passed_low), size);
+        return lift_get(lift_passed(env) + (address - env->passed_low), size);
     }
     {
         const uint8_t *flat = lift_flat(address, size, 1);
@@ -361,7 +376,7 @@ static inline void lift_store(LiftEnv *env, uint32_t base, uint32_t offset, unsi
     }
     else if (lift_in_passed(env, address, size))
     {
-        lift_put(env->passed + (address - env->passed_low), size, value);
+        lift_put(lift_passed(env) + (address - env->passed_low), size, value);
     }
     else if ((flat = lift_flat(address, size, 0)) != NULL)
     {

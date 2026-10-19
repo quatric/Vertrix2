@@ -215,7 +215,7 @@ int vertrix_lifted_dispatch(const VertrixCalls *calls, const VertrixFactoryServi
 {
     static const uint8_t zero[LIFTED_MAX_STACK];
     const LiftedRoutine *routine = find(site->target);
-    uint32_t arguments[LIFTED_MAX_ARGUMENTS] = {0};
+    uint32_t arguments[LIFTED_MAX_ARGUMENTS]; /* every one set below */
     LiftEntry entry;
     unsigned i;
     if (routine == NULL || depth >= LIFTED_MAX_DEPTH ||
@@ -230,7 +230,7 @@ int vertrix_lifted_dispatch(const VertrixCalls *calls, const VertrixFactoryServi
     {
         arguments[3 + i] = site->stack_rest[i];
     }
-    memset(&entry, 0, sizeof entry);
+    entry.chain = 0; /* every other field is set below */
     entry.eax = site->eax;
     entry.edx = site->edx;
     entry.ebx = site->ebx;
