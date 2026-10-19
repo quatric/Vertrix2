@@ -1210,6 +1210,34 @@ static uint32_t host_create_surface(LiftHost *host, uint32_t desc, uint32_t out)
 
 /* Copy a rectangle between emulated surfaces of the same pixel size; a zero rectangle pointer is
  * the whole surface. Clipped to both. */
+/* memcpy for runs that do not overlap. On the Wii a large one goes 32 bytes at a time through the
+ * floating-point registers: lfd and stfd move the 64 bits unchanged. */
+static void host_copy_apart(uint8_t *out, const uint8_t *in, uint32_t length)
+{
+#if defined(__PPC__) && !defined(__NO_FPRS__)
+    if ((((uintptr_t)out | (uintptr_t)in) & 7) == 0)
+    {
+        double *to = (double *)(void *)out;
+        const double *from = (const double *)(const void *)in;
+        uint32_t blocks = length / 32;
+        while (blocks-- != 0)
+        {
+            double a = from[0], b = from[1], c = from[2], d = from[3];
+            to[0] = a;
+            to[1] = b;
+            to[2] = c;
+            to[3] = d;
+            to += 4;
+            from += 4;
+        }
+        out = (uint8_t *)to;
+        in = (const uint8_t *)from;
+        length %= 32;
+    }
+#endif
+    memcpy(out, in, length);
+}
+
 static void host_surface_copy(LiftHost *host, uint32_t target, uint32_t tx, uint32_t ty,
                               uint32_t source, uint32_t rect)
 {
@@ -1227,6 +1255,22 @@ static void host_surface_copy(LiftHost *host, uint32_t target, uint32_t tx, uint
         top = (int32_t)lift_host_read(host, rect + 4, 4);
         right = (int32_t)lift_host_read(host, rect + 8, 4);
         bottom = (int32_t)lift_host_read(host, rect + 12, 4);
+    }
+    if (rect == 0 && tx == 0 && ty == 0 && sw == tw && sh == th && sp == sw * sb && tp == sp &&
+        sh != 0)
+    {
+        /* Whole surfaces of one size with no padding between rows (the BltFast to the back buffer
+         * and the Flip of every frame): the rows lie back to back in both, so one copy of them all
+         * leaves what the copies row by row leave when neither run overlaps the other. */
+        uint32_t length = sh * sp;
+        const uint8_t *in = bytes_at(host, spixels, length);
+        uint8_t *out = bytes_at(host, tpixels, length);
+        if (in != NULL && out != NULL &&
+            ((uintptr_t)out + length <= (uintptr_t)in || (uintptr_t)out >= (uintptr_t)in + length))
+        {
+            host_copy_apart(out, in, length);
+            return;
+        }
     }
     for (y = top; y < bottom; y++)
     {
