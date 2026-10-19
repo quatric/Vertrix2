@@ -90,6 +90,37 @@ __attribute__((weak)) void *vertrix_lift_store_context;
 
 static inline void lift_put(uint8_t *bytes, unsigned size, uint32_t value);
 
+/* A block of the host's memory at `base` (its heaps and the mapped image), registered by the host
+ * so loads and stores outside the routine's own frame reach it directly. Every slower path for an
+ * address in one of these blocks ends at the same bytes; the oracle harnesses register none.
+ * `whole` is the span a load must fit (4 for the image, read a dword at a time by the host; 0 for
+ * the load's own size). */
+typedef struct
+{
+    uint32_t base;
+    const uint32_t *top;
+    uint8_t *const *memory;
+    unsigned whole;
+} LiftFlatRegion;
+
+__attribute__((weak)) LiftFlatRegion vertrix_lift_flat[3];
+
+static inline uint8_t *lift_flat(uint32_t address, unsigned size, int load)
+{
+    unsigned i;
+    for (i = 0; i < 3; i++)
+    {
+        const LiftFlatRegion *region = &vertrix_lift_flat[i];
+        unsigned span = load && region->whole > size ? region->whole : size;
+        if (region->memory != NULL && *region->memory != NULL && address >= region->base &&
+            (uint64_t)address + span <= (uint64_t)region->base + *region->top)
+        {
+            return *region->memory + (address - region->base);
+        }
+    }
+    return NULL;
+}
+
 /* An x87 instruction: the port has no coprocessor, so the runtime's x87 paths must not run. */
 static inline void lift_x87(LiftEnv *env, uint32_t address)
 {
@@ -191,6 +222,13 @@ static inline uint32_t lift_load(LiftEnv *env, uint32_t base, uint32_t offset, u
     {
         return lift_get(env->passed + (address - env->passed_low), size);
     }
+    {
+        const uint8_t *flat = lift_flat(address, size, 1);
+        if (flat != NULL)
+        {
+            return lift_get(flat, size);
+        }
+    }
     if (base != 0 && env->services->resolve(base, &storage, &length, env->services->context) &&
         vertrix_actor_storage_read(storage, length, offset, size, &value))
     {
@@ -236,6 +274,10 @@ static inline void lift_store(LiftEnv *env, uint32_t base, uint32_t offset, unsi
     else if (lift_in_passed(env, address, size))
     {
         lift_put(env->passed + (address - env->passed_low), size, value);
+    }
+    else if (lift_flat(address, size, 0) != NULL)
+    {
+        lift_put(lift_flat(address, size, 0), size, value);
     }
     else if (base == 0)
     {
