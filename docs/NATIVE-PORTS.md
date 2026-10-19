@@ -131,8 +131,9 @@ object, which would run as code). `VERTRIX_EXTRA_SOURCES="name.c"` links a port 
 include scan leaves out, one whose header the port does not include (0x4ce780 runs 0x4dbf80's code
 in `runtime.c` directly, where the original jumps into it; it includes `runtime.h`, so the scan
 links it). A routine passing ds (0x4dee73,
-0x4e628c: the selector to 0x4e6220) cannot be compared: the original's ds is 0x10 and the lifted
-copy's 0.
+0x4e628c: the selector to 0x4e6220) reads it as the oracle's 0x10: `tools/lift.py` gives the
+segment registers the oracle's selectors (data 0x10, code 0x18, the thread block 8), where it had
+read them as 0, so neither the lifted copies nor a port could be compared.
 `VERTRIX_CHECK_MISSING_STORES=1` also fails a case when the original changed a byte of the image's
 data that the port never stored: the store comparison alone only checks the stores the port makes,
 so a dropped store passed it (0x480730 passed without the last word of each percent row). Use it
@@ -365,3 +366,7 @@ The gate (`frames 11`, `audio same`) runs the whole game on top, as for any port
 | 0x43e320 | `rtlactorprojections.c` | the actors' projection to the screen (position over depth, level from depth) |
 | 0x4c17da | `rtljpegmasters.c` | libjpeg's jinit_master_decompress (range limit table, master_selection) |
 | 0x4279b0 | `rtlaiboardjudges.c` | the AI's judgement whether to answer now (both boards compared, features taken, moves rated) |
+| 0x4e88bf | `rtllongdivides.c` | the runtime's unsigned 64-bit divide (the quotient; a divisor of 0 keeps the dividend) |
+| 0x4e08f0 | `rtlstackprobes.c` | the runtime's stack probe (a touch a page; `tools/verify_cases/4e08f0.sh` draws the sizes) |
+| 0x4dee73, 0x4e628c | `rtldebuggerreports.c` | the runtime's error report: the debugger notice with ds, then the error exit or the message |
+| 0x4e0c0c | `rtlfatalerrors.c` | the fatal error: the message stored, the thread's terminate handler, then 0x4dee73's report run in place |

@@ -40,6 +40,12 @@ REG16 = {X.X86_REG_AX: 'eax', X.X86_REG_CX: 'ecx', X.X86_REG_DX: 'edx', X.X86_RE
          X.X86_REG_SI: 'esi', X.X86_REG_DI: 'edi', X.X86_REG_BP: 'ebp'}
 REG8L = {X.X86_REG_AL: 'eax', X.X86_REG_CL: 'ecx', X.X86_REG_DL: 'edx', X.X86_REG_BL: 'ebx'}
 SEGMENTS = {X.X86_REG_DS, X.X86_REG_ES, X.X86_REG_SS, X.X86_REG_CS, X.X86_REG_GS, X.X86_REG_FS}
+# The selectors a segment register reads as: the oracle's (tools/oracle_screen.py, separate_fs), flat
+# data 0x10 and code 0x18, the thread block 8. The runtime hands ds to its debugger notification
+# (0x4e6220 from 0x4dee73 and 0x4e628c), which only pushes it; with 0 there no routine that passes
+# it on could be compared with the original.
+SELECTORS = {X.X86_REG_DS: 0x10, X.X86_REG_ES: 0x10, X.X86_REG_SS: 0x10, X.X86_REG_CS: 0x18,
+             X.X86_REG_GS: 0, X.X86_REG_FS: 8}
 REG8H = {X.X86_REG_AH: 'eax', X.X86_REG_CH: 'ecx', X.X86_REG_DH: 'edx', X.X86_REG_BH: 'ebx'}
 
 CONDITIONS = {
@@ -262,7 +268,7 @@ class Lifter:
     # ---- operand helpers -------------------------------------------------------------------
     def reg_read(self, reg):
         if reg in SEGMENTS:
-            return '0u'
+            return '0x%xu' % SELECTORS[reg]
         if reg in REG32:
             return REG32[reg]
         if reg in REG16:

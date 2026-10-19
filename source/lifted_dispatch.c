@@ -94,7 +94,6 @@
 #include "lifted_whole_13.h"
 #include "lifted_whole_21.h"
 #include "lifted_whole_40.h"
-#include "lifted_whole_6.h"
 #include "lifted_whole_7.h"
 #include "lifted_whole_8.h"
 #include "lifted_whole_9.h"
@@ -211,6 +210,7 @@
 #include "rtlcurtains.h"
 #include "rtlcurvetables.h"
 #include "rtlddrawerrors.h"
+#include "rtldebuggerreports.h"
 #include "rtldecimals.h"
 #include "rtldelayactors.h"
 #include "rtldepthdraws.h"
@@ -234,6 +234,7 @@
 #include "rtlextendedeffects.h"
 #include "rtlextendedroots.h"
 #include "rtlextras.h"
+#include "rtlfatalerrors.h"
 #include "rtlfaults.h"
 #include "rtlfightbanners.h"
 #include "rtlfigures.h"
@@ -332,6 +333,7 @@
 #include "rtllobbyscreens.h"
 #include "rtllockkeystates.h"
 #include "rtllocks.h"
+#include "rtllongdivides.h"
 #include "rtllookups.h"
 #include "rtlloops.h"
 #include "rtlmenupanels.h"
@@ -434,6 +436,7 @@
 #include "rtlspins.h"
 #include "rtlsplitbars.h"
 #include "rtlstackpairs.h"
+#include "rtlstackprobes.h"
 #include "rtlstagepicks.h"
 #include "rtlstartups.h"
 #include "rtlstatepairs.h"
@@ -4058,7 +4061,7 @@ static const LiftedRoutine routines[] = {
     {0x4dec70, vertrix_port_rtl_thread_leave_4dec70, 0, 0},
     {0x4decd0, vertrix_port_rtl_construct_event_table_4decd0, 0, 0},
     {0x4ded70, vertrix_port_handle_table_slot_4ded70, 0, 0},
-    {0x4dee73, lifted_rtl_segment_dispatch, 84, 0},
+    {0x4dee73, vertrix_port_rtl_error_report_4dee73, 0, 0},
     {0x4deea0, vertrix_port_lock_init_5c7b88, 0, 0},
     {0x4deec0, vertrix_port_error_object_construct, 0, 0},
     {0x4def50, vertrix_port_block_resize_4def50, 0, 0},
@@ -4099,7 +4102,7 @@ static const LiftedRoutine routines[] = {
     {0x4e0884, vertrix_port_import_4f1bbc_call_4e0884, 0, 0},
     {0x4e08a0, vertrix_port_rtl_stack_left_4e08a0, 0, 0},
     {0x4e08b0, vertrix_port_nothing_4e08b0, 0, 0},
-    {0x4e08f0, lifted_f4e08f0, 72, 1},
+    {0x4e08f0, vertrix_port_rtl_stack_probe_4e08f0, 0, 0},
     {0x4e0960, vertrix_port_open_mode_flags_4e0960, 0, 0},
     {0x4e0994, vertrix_port_rtl_open_access_4e0994, 0, 0},
     {0x4e09f0, vertrix_port_text_compare_nocase_4e09f0, 0, 0},
@@ -4110,7 +4113,7 @@ static const LiftedRoutine routines[] = {
     {0x4e0b9e, vertrix_port_rtl_record_step_4e0b9e, 0, 0},
     {0x4e0bed, vertrix_port_call_4e0ae5_4e0bed, 0, 0},
     {0x4e0bf8, vertrix_port_call_4e0c0c_4e0bf8, 0, 0},
-    {0x4e0c0c, lifted_f4e0c0c, 88, 0},
+    {0x4e0c0c, vertrix_port_rtl_fatal_terminate_4e0c0c, 0, 0},
     {0x4e0c56, vertrix_port_rtl_exception_allocate_4e0c56, 0, 0},
     {0x4e0e69, vertrix_port_rtl_block_release_4e0e69, 0, 0},
     {0x4e0eaf, vertrix_port_record_find_4e0eaf, 0, 0},
@@ -4203,7 +4206,7 @@ static const LiftedRoutine routines[] = {
     {0x4e5b0c, vertrix_port_rtl_locks_init_4e5b0c, 0, 0},
     {0x4e5bec, vertrix_port_rtl_object_flush_4e5bec, 0, 0},
     {0x4e5ef0, vertrix_port_rtl_code_page_reset_4e5ef0, 0, 0},
-    {0x4e628c, lifted_f4e628c, 80, 0},
+    {0x4e628c, vertrix_port_rtl_error_message_4e628c, 0, 0},
     {0x4e62b0, vertrix_port_heap_reserve, 0, 0},
     {0x4e62e0, vertrix_port_rtl_char_widen_4e62e0, 0, 0},
     {0x4e6320, vertrix_port_rtl_utoa_4e6320, 0, 0},
@@ -4270,7 +4273,7 @@ static const LiftedRoutine routines[] = {
     {0x4e8730, vertrix_port_rtl_char_compare_4e8730, 0, 0},
     {0x4e8790, vertrix_port_char_copy_4e8790, 0, 0},
     {0x4e87c1, vertrix_port_rtl_array_construct_4e87c1, 0, 0},
-    {0x4e88bf, lifted_f4e88bf, 76, 0},
+    {0x4e88bf, vertrix_port_rtl_long_divide_4e88bf, 0, 0},
     {0x4e8950, vertrix_port_record_kind_check_4e8950, 0, 0},
     {0x4e8978, vertrix_port_crt_console_open_4e8978, 0, 0},
     {0x4e89e8, vertrix_port_read_after_4e8978_4e89e8, 0, 0},
