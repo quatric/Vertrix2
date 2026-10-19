@@ -24,56 +24,79 @@ enum
     FILL_LEFT = 0x558b64
 };
 
+/* 0x478eb0 on a Port: the address of pixel (x, y), edx left x. */
+static uint32_t surface_offset_on(Port *port, uint32_t surface, uint32_t x, uint32_t y)
+{
+    uint32_t row = y * port_u32(port, surface, SURFACE_PITCH);
+    uint32_t pixels = port_u32(port, surface, SURFACE_PIXELS);
+    uint32_t size = port_u8(port, surface, SURFACE_BYTES_PER_PIXEL);
+    vertrix_lift_edx = x;
+    return size * x + pixels + row;
+}
+
 uint32_t vertrix_port_surface_offset(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t surface = entry->eax;
-    uint32_t x = entry->edx;
-    uint32_t y = entry->ebx;
-    uint32_t row;
-    uint32_t pixels;
-    uint32_t size;
+    uint32_t address;
     port_open(&port, calls, services, globals, entry);
-    row = y * port_u32(&port, surface, SURFACE_PITCH);
-    pixels = port_u32(&port, surface, SURFACE_PIXELS);
-    size = port_u8(&port, surface, SURFACE_BYTES_PER_PIXEL);
-    return port_return(&port, size * x + pixels + row, x);
+    address = surface_offset_on(&port, entry->eax, entry->edx, entry->ebx);
+    return port_return(&port, address, entry->edx);
+}
+
+/* 0x478eb0 called from `port` (ecx y), run as its C at `index` when that is not -1. */
+static uint32_t surface_offset_call(Port *port, int index, uint32_t surface, uint32_t x, uint32_t y)
+{
+    if (index < 0)
+    {
+        return port_call(port, SURFACE_OFFSET, surface, x, y, y);
+    }
+    vertrix_lift_frame_index = (unsigned)index;
+    return surface_offset_on(port, surface, x, y);
+}
+
+/* 0x479d70 on a Port, its two calls of 0x478eb0 at `offset_index` (port_dispatches) or called;
+ * edx left in vertrix_lift_edx. */
+static uint32_t surface_copy_pixel_on(Port *port, int offset_index, uint32_t target,
+                                      uint32_t source, uint32_t x, uint32_t y)
+{
+    uint32_t from;
+    uint32_t to;
+    uint32_t size;
+    if ((int32_t)x < 0 || x >= port_u32(port, target, SURFACE_WIDTH) || (int32_t)y < 0 ||
+        y >= port_u32(port, target, SURFACE_HEIGHT))
+    {
+        vertrix_lift_edx = source;
+        return source;
+    }
+    from = surface_offset_call(port, offset_index, source, x, y);
+    port_set32(port, 0, PIXEL_FROM, from);
+    to = surface_offset_call(port, offset_index, target, x, y);
+    size = port_u8(port, target, SURFACE_BYTES_PER_PIXEL);
+    port_set32(port, 0, PIXEL_TO, to);
+    port_set8(port, 0, PIXEL_SIZE, size);
+    if (size == 4)
+    {
+        port_set32(port, to, 0, port_u32(port, from, 0));
+    }
+    else if (size == 2)
+    {
+        port_set16(port, to, 0, port_u16(port, from, 0));
+    }
+    else if (size == 1)
+    {
+        port_set8(port, to, 0, port_u8(port, from, 0));
+    }
+    return to;
 }
 
 uint32_t vertrix_port_surface_copy_pixel(PORT_SIGNATURE)
 {
     Port port;
-    uint32_t target = entry->eax;
-    uint32_t source = entry->edx;
-    uint32_t x = entry->ebx;
-    uint32_t y = entry->ecx;
-    uint32_t from;
     uint32_t to;
-    uint32_t size;
     port_open(&port, calls, services, globals, entry);
-    if ((int32_t)x < 0 || x >= port_u32(&port, target, SURFACE_WIDTH) || (int32_t)y < 0 ||
-        y >= port_u32(&port, target, SURFACE_HEIGHT))
-    {
-        return port_return(&port, source, source);
-    }
-    from = port_call(&port, SURFACE_OFFSET, source, x, y, y);
-    port_set32(&port, 0, PIXEL_FROM, from);
-    to = port_call(&port, SURFACE_OFFSET, target, x, y, y);
-    size = port_u8(&port, target, SURFACE_BYTES_PER_PIXEL);
-    port_set32(&port, 0, PIXEL_TO, to);
-    port_set8(&port, 0, PIXEL_SIZE, size);
-    if (size == 4)
-    {
-        port_set32(&port, to, 0, port_u32(&port, from, 0));
-    }
-    else if (size == 2)
-    {
-        port_set16(&port, to, 0, port_u16(&port, from, 0));
-    }
-    else if (size == 1)
-    {
-        port_set8(&port, to, 0, port_u8(&port, from, 0));
-    }
+    to = surface_copy_pixel_on(
+        &port, port_dispatches(&port, SURFACE_OFFSET, vertrix_port_surface_offset, 0), entry->eax,
+        entry->edx, entry->ebx, entry->ecx);
     return port_return(&port, to, vertrix_lift_edx);
 }
 
@@ -82,12 +105,31 @@ uint32_t vertrix_port_neighbour_calls(PORT_SIGNATURE)
     static const int32_t STEPS[4][2] = {{0, 1}, {0, -1}, {-1, 1}, {1, -1}};
     Port port;
     uint32_t eax = entry->eax;
+    int copy_index;
+    int offset_index;
     unsigned i;
     port_open(&port, calls, services, globals, entry);
+    /* 0x479d70 and its calls of 0x478eb0, a level below it, run as their C when the dispatcher
+     * would run those ports. */
+    copy_index = port_dispatches(&port, SURFACE_COPY_PIXEL, vertrix_port_surface_copy_pixel, 0);
+    offset_index = port_dispatches(&port, SURFACE_OFFSET, vertrix_port_surface_offset, 1);
+    if (offset_index < 0)
+    {
+        copy_index = -1;
+    }
     for (i = 0; i < 4; i++)
     {
-        eax = port_call(&port, SURFACE_COPY_PIXEL, entry->eax, entry->edx,
-                        entry->ebx + (uint32_t)STEPS[i][0], entry->ecx + (uint32_t)STEPS[i][1]);
+        uint32_t x = entry->ebx + (uint32_t)STEPS[i][0];
+        uint32_t y = entry->ecx + (uint32_t)STEPS[i][1];
+        if (copy_index < 0)
+        {
+            eax = port_call(&port, SURFACE_COPY_PIXEL, entry->eax, entry->edx, x, y);
+        }
+        else
+        {
+            vertrix_lift_frame_index = (unsigned)copy_index;
+            eax = surface_copy_pixel_on(&port, offset_index, entry->eax, entry->edx, x, y);
+        }
     }
     return port_return(&port, eax, vertrix_lift_edx);
 }

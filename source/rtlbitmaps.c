@@ -1,5 +1,7 @@
 #include "rtlbitmaps.h"
 
+#include "stream.h"
+
 /* Bitmap files and filled rectangles. */
 
 /* Original 0x473cf0: a 24-bit uncompressed bitmap read from the stream eax (opened by 0x48a8a0):
@@ -25,6 +27,7 @@ uint32_t vertrix_port_bitmap_load_473cf0(PORT_SIGNATURE)
     uint32_t ecx;
     uint32_t height;
     uint32_t pad;
+    int read_index;
     port_open_stack(&port, stack, calls, services, globals, entry, BELOW);
     port_set32(&port, ebp, 0, entry->ebp);
     port_set32(&port, ebp, -4u, entry->ebx);
@@ -73,6 +76,12 @@ uint32_t vertrix_port_bitmap_load_473cf0(PORT_SIGNATURE)
     ecx = height;
     CALL(0x48aaf0, stream, port_u32(&port, ebp, -0x30u));
     edx = vertrix_lift_edx;
+    /* The pixel bytes' reads: 0x48a930 run as its C when the dispatcher would run that port. */
+    read_index = port_dispatches(&port, 0x48a930, vertrix_port_stream_read_exact, 0);
+#define READ(to)                                                                                   \
+    (read_index < 0 ? CALL(0x48a930, stream, to)                                                   \
+                    : (vertrix_lift_frame_index = (unsigned)read_index, vertrix_lift_edx = (to),   \
+                       vertrix_stream_read_exact_on(&port, stream, to, ebx, ecx)))
     if (height != 0)
     {
         do
@@ -86,10 +95,10 @@ uint32_t vertrix_port_bitmap_load_473cf0(PORT_SIGNATURE)
                 {
                     ecx = 1;
                     ebx = 1;
-                    CALL(0x48a930, stream, ebp - 0x1c);
-                    CALL(0x48a930, stream, ebp - 0x24);
+                    READ(ebp - 0x1c);
+                    READ(ebp - 0x24);
                     esi++;
-                    CALL(0x48a930, stream, ebp - 0x18);
+                    READ(ebp - 0x18);
                     port_set8(&port, esi, -1u, port_u8(&port, ebp, -0x1cu));
                     esi++;
                     port_set8(&port, esi, -1u, port_u8(&port, ebp, -0x24u));
@@ -109,6 +118,7 @@ uint32_t vertrix_port_bitmap_load_473cf0(PORT_SIGNATURE)
         } while (ebx < edx && !port.env.failed);
     }
     CALL(0x479b50, port_u32(&port, ebp, -0x3cu), edx);
+#undef READ
 #undef CALL
     return port_return(&port, port_u32(&port, ebp, -0x3cu), entry->edx);
 }

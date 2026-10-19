@@ -13,6 +13,10 @@
  * the answer, with edx the stream (unchanged when nothing was copied). */
 uint32_t vertrix_port_stream_read_exact(PORT_SIGNATURE);
 
+/* 0x48a930 on a Port (it makes no call): eax returned, the edx it leaves in vertrix_lift_edx. */
+uint32_t vertrix_stream_read_exact_on(Port *port, uint32_t stream, uint32_t to, uint32_t size,
+                                      uint32_t count);
+
 /* Original 0x48aa90 (eax = stream, edx = count): move the read position by the count, at most to
  * the end (unsigned), and store the step at 0x5bb24c. A negative count moves it by its negation
  * (forward). Returns the stream, with edx the count (the bytes left when clamped). */

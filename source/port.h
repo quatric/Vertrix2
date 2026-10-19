@@ -476,6 +476,25 @@ static inline uint32_t port_single(Port *port, const PortWindow *globals, uint32
     return port_call(port, target, eax, edx, ebx, ecx);
 }
 
+/* The frame index the dispatcher would give this port's call to `target`, when it would run
+ * `routine` for it (vertrix_lift_routine_hook), `deeper` levels further down; -1 otherwise, or when
+ * that level is past the dispatcher's depth. A port may then run a callee that makes no call as
+ * that routine's own C on its own Port: the callee reaches the same bytes from either frame. It
+ * sets vertrix_lift_frame_index to the index and vertrix_lift_edx to the callee's edx, as the
+ * dispatched call leaves them. */
+static inline int port_dispatches(const Port *port, uint32_t target, LiftRoutine routine,
+                                  unsigned deeper)
+{
+    unsigned index;
+    if (vertrix_lift_routine_hook == NULL ||
+        vertrix_lift_routine_hook(port->env.calls, target, &index) != routine ||
+        index + deeper >= LIFT_DISPATCH_DEPTH)
+    {
+        return -1;
+    }
+    return (int)(index + deeper);
+}
+
 /* A call handing the callee every register (some take arguments in esi, edi or ebp: 0x4e509c passes
  * the exponent to 0x4e5177 in edi) and `count` stack arguments, the nearest to the stack pointer
  * first. */
