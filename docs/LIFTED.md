@@ -919,8 +919,28 @@ Tried and left out:
 - Not copying the back buffer on Flip. The emulated Flip keeps the back buffer's contents, and the
   game locks the back buffer again before the primary is next read, so the copy cannot be put off.
 
-The rest of the boot (0x41a6c0, about 59 s) is the decoder's emulated float arithmetic: the
-synthesis filter alone is 46% of it. A title pass spends most in the actor gate (0x4ae3e0), the
+#### Fourth round: the boot
+
+| | `9958a66` | `26520f0` |
+|---|---|---|
+| Boot to the title menu | 93.1 s | 55.7 s |
+| MP3 decode (handler 0x41a6c0) | about 59 s | about 31 s |
+
+- `e574067` (93.1 s to 69.7 s): the software single multiply and add (0x4d8198, 0x4d80d5) are
+  inline functions on registers, which their state entries and full paths call too. 300 million
+  random cases, with overflows and the error trail, matched the old code. `port_single` runs
+  them in the synthesis filter, DCT and IMDCT instead of the call, when the host serves those
+  helpers by them (`vertrix_lift_single_software`).
+- `17005e1` (to 65.5 s): the filter's per-sample conversions and compares (0x4eb526, 0x4eb57c,
+  0x4d67a8 with its two nested calls, 0x4eb5b4) run their ports' register functions
+  (`vertrix_soft_*`). They leave the flags, edx and the frame index as the dispatched calls do.
+- `0927e97` (to 61.7 s): `port_dispatches` lets a port run a callee that makes no call as that
+  port's C on its own Port. The bitmap loader's one-byte reads (0x48a930) use it, and so do the
+  circle plot's pixel copies (0x479d70) and their offsets (0x478eb0).
+- `26520f0` (to 55.7 s): the same for the per-pixel repack (0x481e10) of every loaded image.
+
+The rest of the decode is the filter's and the transforms' own work. 0x41a780 (about 12 s) is
+mostly bitmap loading and the glow. A title pass spends most in the actor gate (0x4ae3e0), the
 projection (0x43e320, mostly its float calls) and the surface blits.
 
 ## Clean ports
