@@ -92,7 +92,6 @@
 #include "lifted_unverified.h"
 #include "lifted_whole_13.h"
 #include "lifted_whole_21.h"
-#include "lifted_whole_7.h"
 #include "lists.h"
 #include "loops.h"
 #include "mainstarts.h"
@@ -239,6 +238,7 @@
 #include "rtlfileopens.h"
 #include "rtlfiles.h"
 #include "rtlfixedtexts.h"
+#include "rtlfloatdigits.h"
 #include "rtlfloatformats.h"
 #include "rtlflushes.h"
 #include "rtlflyins.h"
@@ -559,7 +559,7 @@ enum
     LIFTED_ARENA_BOTTOM = 0x7b0000,
     LIFTED_ARENA_GAP = 0x100, /* above a frame: its return slot and the arguments passed on */
     LIFTED_MAX_DEPTH = LIFT_DISPATCH_DEPTH,
-    LIFTED_MAX_STACK = 288,
+    LIFTED_MAX_STACK = 248,
     LIFTED_MAX_ARGUMENTS = 17
 };
 
@@ -4378,7 +4378,7 @@ static const LiftedRoutine routines[] = {
     {0x4ecba9, vertrix_port_rtl_scale_power_ten_4ecba9, 0, 0},
     {0x4ecc03, vertrix_port_rtl_scale_ten_4ecc03, 0, 0},
     {0x4ecc60, vertrix_port_rtl_scale_ten_steps_4ecc60, 0, 0},
-    {0x4eccb9, lifted_f4eccb9, 288, 0},
+    {0x4eccb9, vertrix_port_rtl_float_digits_4eccb9, 0, 0},
     {0x4ecf33, vertrix_port_rtl_six_digits_4ecf33, 0, 0},
     {0x4ecf49, vertrix_port_rtl_four_digits_4ecf49, 0, 0},
     {0x4ecf60, vertrix_port_rtl_two_digits_4ecf60, 0, 0},

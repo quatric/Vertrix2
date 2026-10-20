@@ -18839,6 +18839,11 @@
   "lifted": "lifted_f4ecc60",
   "chunk": "whole_7"
  },
+ "0x4eccb9": {
+  "port": "vertrix_port_rtl_float_digits_4eccb9",
+  "lifted": "lifted_f4eccb9",
+  "chunk": "whole_7"
+ },
  "0x4ecf33": {
   "port": "vertrix_port_rtl_six_digits_4ecf33",
   "lifted": "lifted_f4ecf33",
