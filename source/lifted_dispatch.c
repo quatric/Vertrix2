@@ -319,6 +319,7 @@
 #include "rtljpegsofmarkers.h"
 #include "rtljpegupdateboxes.h"
 #include "rtljpegupsamplers.h"
+#include "rtljumpcaptures.h"
 #include "rtlkeynames.h"
 #include "rtlkeysmenus.h"
 #include "rtlkeytextactors.h"
@@ -3985,6 +3986,7 @@ static const LiftedRoutine routines[] = {
     {0x4d9930, vertrix_port_rtl_forward_pair_4d9930, 0, 0},
     {0x4d9a10, vertrix_port_rtl_error_raise_4d9a10, 0, 0},
     {0x4d9ae0, vertrix_port_rtl_dos_error_to_errno_4d9ae0, 0, 0},
+    {0x4d9f06, vertrix_port_rtl_jump_capture_4d9f06, 0, 0},
     {0x4da3ba, lifted_f4da3ba, 1400, 0},
     {0x4da66e, vertrix_port_rtl_zero_call3_4da66e, 0, 0},
     {0x4da6b6, vertrix_port_exception_chain_step_4da6b6, 0, 0},
@@ -4410,7 +4412,6 @@ static const LiftedRoutine routines[] = {
  * vertrix_lifted_allow_unverified(1). */
 static const LiftedRoutine unverified_routines[] = {
     {0, NULL, 0, 0},
-    {0x4d9f06, lifted_rtl_jump_capture, 72, 0},
     {0x4e6d16, lifted_f4e6d16, 216, 0},
 };
 

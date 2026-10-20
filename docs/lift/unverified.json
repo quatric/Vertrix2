@@ -1,16 +1,4 @@
 {
- "rtl_jump_capture": {
-  "callees": {},
-  "stack": 72,
-  "arguments": 0,
-  "pointer_callees": [],
-  "pointer_fields": [],
-  "pointer_globals": [],
-  "pointer_maybe": [],
-  "constants": [],
-  "virtual": [],
-  "address": 5086982
- },
  "f4e6d16": {
   "callees": {
    "0x4e6cf2": [
