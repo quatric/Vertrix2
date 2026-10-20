@@ -199,6 +199,7 @@ wii-sync: $(BUILD)/vertrix2.dol
 	mkdir -p "$(SYNC)/apps/vertrix2"
 	cp $(BUILD)/vertrix2.dol "$(SYNC)/apps/vertrix2"/boot.dol
 	cp wii-game/meta.xml "$(SYNC)/apps/vertrix2"/meta.xml
+	cp wii-game/icon.png "$(SYNC)/apps/vertrix2"/icon.png
 	cp hardware-check/Vertrix2.vf "$(SYNC)/apps/vertrix2"/Vertrix2.vf
 
 # The recompiled original running on the Wii host (startup, loader, banks, frame loop; SD archive
@@ -219,6 +220,7 @@ wii-sync-recomp: $(BUILD)/vertrix2-recomp.dol
 	mkdir -p "$(SYNC)/apps/vertrix2"
 	cp $(BUILD)/vertrix2-recomp.dol "$(SYNC)/apps/vertrix2"/boot.dol
 	cp wii-game/meta.xml "$(SYNC)/apps/vertrix2"/meta.xml
+	cp wii-game/icon.png "$(SYNC)/apps/vertrix2"/icon.png
 	cp hardware-check/Vertrix2.vf "$(SYNC)/apps/vertrix2"/Vertrix2.vf
 
 # The former names, from when the routines still ran as lifted code.

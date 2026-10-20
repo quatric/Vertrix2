@@ -40,7 +40,7 @@ $(BUILD)/v3_host: $(GEN_OBJECTS) $(BUILD)/host/runtime.a
 
 # --- the Wii ------------------------------------------------------------------------------------
 # make -C vertrix3 V3_EXE=/path/to/Vertrix3.exe wii      -> build/v3/vertrix3.dol
-# make -C vertrix3 V3_EXE=... wii-sync SYNC=/path/to/sd  -> apps/vertrix3/ (boot.dol, meta.xml)
+# make -C vertrix3 V3_EXE=... wii-sync SYNC=/path/to/sd  -> apps/vertrix3/ (boot.dol, meta.xml, icon.png)
 # Vertrix 2 v1.2: BUILD=../build/v12 GAME=vertrix2-v12 V3_EXE=/path/to/Vertrix2.exe
 #                                                        -> build/v12/vertrix2-v12.dol
 # GAME names the DOL, the SD folder (apps/GAME, as recomp.py's v3_wii_folder) and wii/GAME.xml.
@@ -108,3 +108,4 @@ wii-sync: wii
 	mkdir -p "$(SYNC)/apps/$(GAME)"
 	cp $(BUILD)/$(GAME).dol "$(SYNC)/apps/$(GAME)/boot.dol"
 	cp wii/$(GAME).xml "$(SYNC)/apps/$(GAME)/meta.xml"
+	cp ../wii-game/icon.png "$(SYNC)/apps/$(GAME)/icon.png"
