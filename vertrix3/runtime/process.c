@@ -219,9 +219,12 @@ int v3_exiting(void)
     return exiting;
 }
 
-int v3_run(const uint8_t *image, uint32_t image_size, const char *command_line,
+int v3_run(const uint8_t *image, uint32_t image_size, const char *options,
            const V3Platform *platform)
 {
+    static char command_line[512];
+    snprintf(command_line, sizeof command_line, "\"%s\\%s\"%s%s", v3_game_directory, v3_executable,
+             options ? " " : "", options ? options : "");
     v3_platform = platform;
     v3_memory_init();
     v3_map(V3_SYSTEM_BASE, V3_SYSTEM_SIZE);

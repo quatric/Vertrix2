@@ -442,7 +442,7 @@ static int game_code;
 static void *game(void *unused)
 {
     (void)unused;
-    game_code = v3_run(v3_image_bin, v3_image_bin_size, "\"C:\\Vertrix3\\Vertrix3.exe\"", &platform);
+    game_code = v3_run(v3_image_bin, v3_image_bin_size, NULL, &platform);
     v3_log("game exited with %d after %u frames", game_code, frames);
     game_done = 1;
     return NULL;

@@ -21,10 +21,12 @@ V3Code v3_import(const char *dll, const char *name)
     {
         const char *dll;
         const V3Export *table;
-    } modules[] = {{"KERNEL32.DLL", v3_kernel32}, {"USER32.DLL", v3_user32},
-                   {"WINMM.DLL", v3_winmm},       {"OLE32.DLL", v3_ole32},
-                   {"ADVAPI32.DLL", v3_advapi32}, {"D3D9.DLL", v3_d3d9},
-                   {"DINPUT8.DLL", v3_dinput8}};
+    } modules[] = {
+        {"KERNEL32.DLL", v3_kernel32}, {"USER32.DLL", v3_user32},     {"WINMM.DLL", v3_winmm},
+        {"OLE32.DLL", v3_ole32},       {"ADVAPI32.DLL", v3_advapi32}, {"D3D9.DLL", v3_d3d9},
+        {"DINPUT8.DLL", v3_dinput8},   {"DINPUT.DLL", v3_dinput},     {"GDI32.DLL", v3_gdi32},
+        {"SHELL32.DLL", v3_shell32},   {"COMCTL32.DLL", v3_comctl32}, {"COMDLG32.DLL", v3_comdlg32},
+        {"WINSPOOL.DRV", v3_winspool}, {"DDRAW.DLL", v3_ddraw}};
     for (unsigned i = 0; i < sizeof modules / sizeof modules[0]; ++i)
     {
         if (strcasecmp(modules[i].dll, dll) == 0)

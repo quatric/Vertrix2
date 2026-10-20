@@ -65,3 +65,36 @@ v2.0's playable build runs its recovered routines through the dispatcher, with a
 to v2.0's addresses (its float helpers, MPEG tables, palette and timer thread), and two thirds of
 v1.2's game code has no port. So v1.2 takes the route Vertrix 3 took (`vertrix3/README.md`): the
 whole executable recompiled to C, on a runtime that supplies the Windows interfaces it imports.
+
+```
+make -C vertrix3 BUILD=../build/v12 V3_EXE=/path/to/Vertrix2.exe PYTHON=python3 host
+build/v12/v3_host build/v12/gen/v3_image.bin GAME_DIR OUT_DIR [seconds] [frame_every]
+```
+
+`recomp.py` recognizes the executable by its sha256 and tells the runtime the directory and name
+it runs as (`C:\Vertrix2\Vertrix2.exe`). On the build machine v1.2 plays its credits, menus and
+player selection and saves `Vertrix2.cfg` on exit; it polls the mouse from its 14 ms multimedia
+timer once the intro ends (about ten seconds in).
+
+What v1.2 needed beyond Vertrix 3:
+
+- **Recompiler** (`vertrix3/recomp.py`):
+  - Watcom 2.18 writes `repne movsd` (f2 a5) in `memcpy`; Capstone drops that prefix, so the
+    repeat is read from the raw bytes (`mnemonic_of`).
+  - Switches that shift the index before the jump (`shl eax, 2; jmp [eax + table]`), bounded by
+    a `cmp` on the index's stack slot.
+  - Function starts after zero padding or Watcom's idle filler (`lea edx, [edx + 0]`,
+    `mov eax, eax`), and the function a fixed-address pointer holds at load (`call [0x4fce13]`).
+  - The start-up tables, 16-bit pops and `call [esp + n]` (see the commit that read v1.2 beside
+    v2.0).
+- **Runtime** (`vertrix3/win32`):
+  - `ddraw.c`: DirectDraw 7 with surfaces in guest memory, `Blt`/`BltFast` (stretching, colour
+    fills, source colour keys, mirroring), an attached back buffer and `Flip`, palettes and
+    clippers. The game sets 640x480 at 32 bits, so the flipped surface goes to the platform as
+    it is.
+  - `gdi32.c`: MFC's device contexts, fonts, brushes and text measurements, drawing nothing.
+  - `advapi32.c`: a registry held in memory for the run.
+  - `shell32.c`: the shell, common controls, common dialogs and the print spooler MFC links.
+  - `winmm.c`: `timeSetEvent`/`timeKillEvent`, each timer on its own thread.
+  - `dinput8.c`: `DirectInputCreateA` (DirectInput 1).
+  - `kernel32.c`, `user32.c`: the rest of MFC's calls (window hooks, properties, `wsprintfA`).

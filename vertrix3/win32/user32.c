@@ -1,6 +1,7 @@
 #include "process.h"
 #include "win32.h"
 
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -45,8 +46,11 @@ typedef struct
     uint32_t procedure;
     int dialog;
     int32_t x, y, width, height;
-    uint32_t style;
+    uint32_t style, ex_style, id, parent, user_data;
 } Window;
+
+/* MFC attaches its window objects through a WH_CBT hook during CreateWindowEx (Vertrix 2 v1.2). */
+static uint32_t cbt_hook;
 
 static Window windows[WINDOWS];
 static unsigned window_count;
@@ -125,19 +129,32 @@ static void UnregisterClassA(Cpu *c)
     STDCALL_RETURN(2, 1);
 }
 
-static void CreateWindowExA(Cpu *c)
+/* The class a name or atom (0xc001.., as RegisterClassA returns) names; -1 for none. */
+static int class_of(uint32_t name_or_atom, char *name, size_t size)
 {
-    char name[64], title[128];
-    v3_read_string(ARG(1), name, sizeof name);
-    v3_read_string(ARG(2), title, sizeof title);
-    uint32_t procedure = 0;
+    if (name_or_atom < 0x10000u)
+    {
+        snprintf(name, size, "#%u", name_or_atom);
+        const unsigned i = name_or_atom - 0xc001u;
+        return name_or_atom >= 0xc001u && i < class_count ? (int)i : -1;
+    }
+    v3_read_string(name_or_atom, name, size);
     for (unsigned i = 0; i < class_count; ++i)
     {
         if (strcasecmp(classes[i].name, name) == 0)
         {
-            procedure = classes[i].procedure;
+            return (int)i;
         }
     }
+    return -1;
+}
+
+static void CreateWindowExA(Cpu *c)
+{
+    char name[64], title[128];
+    const int cls = class_of(ARG(1), name, sizeof name);
+    v3_read_string(ARG(2), title, sizeof title);
+    const uint32_t procedure = cls >= 0 ? classes[cls].procedure : 0;
     if (window_count == WINDOWS)
     {
         STDCALL_RETURN(12, 0);
@@ -147,6 +164,9 @@ static void CreateWindowExA(Cpu *c)
     w->handle = 0x00010020u + 4u * window_count;
     w->procedure = procedure;
     w->style = ARG(3);
+    w->ex_style = ARG(0);
+    w->parent = ARG(8);
+    w->id = ARG(9);
     w->x = (int32_t)ARG(4);
     w->y = (int32_t)ARG(5);
     w->width = (int32_t)ARG(6);
@@ -172,6 +192,16 @@ static void CreateWindowExA(Cpu *c)
     v3_w32(cs + 40, ARG(1));
     v3_w32(cs + 44, ARG(0));
     const uint32_t hwnd = w->handle;
+    if (cbt_hook)
+    {
+        /* HCBT_CREATEWND with a CBT_CREATEWNDA: MFC subclasses the window here. */
+        const uint32_t cbt = v3_alloc(8);
+        v3_w32(cbt, cs);
+        v3_w32(cbt + 4, 0);
+        const uint32_t arguments[3] = {3, hwnd, cbt};
+        v3_call_guest(c, cbt_hook, 3, arguments, 0);
+        v3_free(cbt);
+    }
     send(c, hwnd, WM_NCCREATE, 0, cs);
     const uint32_t created = send(c, hwnd, WM_CREATE, 0, cs);
     v3_free(cs);
@@ -635,6 +665,596 @@ static void EndDialog(Cpu *c)
     STDCALL_RETURN(2, 1);
 }
 
+/* --- what Vertrix 2 v1.2's MFC framework calls ----------------------------------------------- */
+
+enum
+{
+    GWL_WNDPROC = -4,
+    GWL_HWNDPARENT = -8,
+    GWL_ID = -12,
+    GWL_STYLE = -16,
+    GWL_EXSTYLE = -20,
+    GWL_USERDATA = -21,
+    PROPS = 64
+};
+
+static uint32_t *window_long(Window *w, int32_t index)
+{
+    switch (index)
+    {
+    case GWL_WNDPROC:
+        return &w->procedure;
+    case GWL_HWNDPARENT:
+        return &w->parent;
+    case GWL_ID:
+        return &w->id;
+    case GWL_STYLE:
+        return &w->style;
+    case GWL_EXSTYLE:
+        return &w->ex_style;
+    case GWL_USERDATA:
+        return &w->user_data;
+    default:
+        return NULL;
+    }
+}
+
+static void GetWindowLongA(Cpu *c)
+{
+    Window *w = window(ARG(0));
+    const uint32_t *slot = w ? window_long(w, (int32_t)ARG(1)) : NULL;
+    STDCALL_RETURN(2, slot ? *slot : 0);
+}
+
+static void SetWindowLongA(Cpu *c)
+{
+    Window *w = window(ARG(0));
+    uint32_t *slot = w ? window_long(w, (int32_t)ARG(1)) : NULL;
+    if (!slot)
+    {
+        STDCALL_RETURN(3, 0);
+    }
+    const uint32_t old = *slot;
+    *slot = ARG(2);
+    STDCALL_RETURN(3, old);
+}
+
+/* (procedure, hwnd, message, wparam, lparam) */
+static void CallWindowProcA(Cpu *c)
+{
+    const uint32_t procedure = ARG(0);
+    if (!procedure)
+    {
+        STDCALL_RETURN(5, 0);
+    }
+    const uint32_t arguments[4] = {ARG(1), ARG(2), ARG(3), ARG(4)};
+    const uint32_t result = v3_call_guest(c, procedure, 4, arguments, 0);
+    STDCALL_RETURN(5, result);
+}
+
+/* Only WH_CBT (5) is honoured; the others are accepted and never called. */
+static void SetWindowsHookExA(Cpu *c)
+{
+    if (ARG(0) == 5)
+    {
+        cbt_hook = ARG(1);
+    }
+    STDCALL_RETURN(4, 0x00ab0000u + ARG(0));
+}
+
+static void UnhookWindowsHookEx(Cpu *c)
+{
+    if (ARG(0) == 0x00ab0005u)
+    {
+        cbt_hook = 0;
+    }
+    STDCALL_RETURN(1, 1);
+}
+
+static void CallNextHookEx(Cpu *c)
+{
+    STDCALL_RETURN(4, 0);
+}
+
+/* Window properties, by name or atom. */
+static struct
+{
+    uint32_t hwnd;
+    char name[48];
+    uint32_t value;
+} props[PROPS];
+
+static int prop_find(uint32_t hwnd, uint32_t key, char *name, size_t size)
+{
+    if (key < 0x10000u)
+    {
+        snprintf(name, size, "#%u", key);
+    }
+    else
+    {
+        v3_read_string(key, name, size);
+    }
+    for (int i = 0; i < PROPS; ++i)
+    {
+        if (props[i].hwnd == hwnd && strcmp(props[i].name, name) == 0)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
+static void SetPropA(Cpu *c)
+{
+    char name[48];
+    int i = prop_find(ARG(0), ARG(1), name, sizeof name);
+    for (int k = 0; i < 0 && k < PROPS; ++k)
+    {
+        if (!props[k].hwnd)
+        {
+            i = k;
+        }
+    }
+    if (i < 0)
+    {
+        STDCALL_RETURN(3, 0);
+    }
+    props[i].hwnd = ARG(0);
+    snprintf(props[i].name, sizeof props[i].name, "%s", name);
+    props[i].value = ARG(2);
+    STDCALL_RETURN(3, 1);
+}
+
+static void GetPropA(Cpu *c)
+{
+    char name[48];
+    const int i = prop_find(ARG(0), ARG(1), name, sizeof name);
+    STDCALL_RETURN(2, i >= 0 ? props[i].value : 0);
+}
+
+static void RemovePropA(Cpu *c)
+{
+    char name[48];
+    const int i = prop_find(ARG(0), ARG(1), name, sizeof name);
+    uint32_t value = 0;
+    if (i >= 0)
+    {
+        value = props[i].value;
+        props[i].hwnd = 0;
+    }
+    STDCALL_RETURN(2, value);
+}
+
+/* (instance, class, WNDCLASSA out) */
+static void GetClassInfoA(Cpu *c)
+{
+    char name[64];
+    const int cls = class_of(ARG(1), name, sizeof name);
+    if (cls < 0)
+    {
+        STDCALL_RETURN(3, 0);
+    }
+    const uint32_t wc = ARG(2);
+    memset(MEM(wc), 0, 40);
+    v3_w32(wc + 4, classes[cls].procedure);
+    v3_w32(wc + 16, ARG(0));
+    STDCALL_RETURN(3, 1);
+}
+
+static void GetClassNameA(Cpu *c)
+{
+    v3_write_string(ARG(1), "Vertrix", ARG(2));
+    STDCALL_RETURN(3, ARG(2) > 7 ? 7 : (ARG(2) ? ARG(2) - 1 : 0));
+}
+
+static void IsWindow(Cpu *c)
+{
+    STDCALL_RETURN(1, window(ARG(0)) != NULL);
+}
+
+static void GetParent(Cpu *c)
+{
+    Window *w = window(ARG(0));
+    STDCALL_RETURN(1, w ? w->parent : 0);
+}
+
+static void GetDlgCtrlID(Cpu *c)
+{
+    Window *w = window(ARG(0));
+    STDCALL_RETURN(1, w ? w->id : 0);
+}
+
+static void GetActiveWindow(Cpu *c)
+{
+    STDCALL_RETURN(0, main_window);
+}
+
+static void GetFocus(Cpu *c)
+{
+    STDCALL_RETURN(0, main_window);
+}
+
+static void GetClientRect(Cpu *c)
+{
+    Window *w = window(ARG(0));
+    const uint32_t r = ARG(1);
+    v3_w32(r, 0);
+    v3_w32(r + 4, 0);
+    v3_w32(r + 8, (uint32_t)(w && w->width > 0 ? w->width : 640));
+    v3_w32(r + 12, (uint32_t)(w && w->height > 0 ? w->height : 480));
+    STDCALL_RETURN(2, 1);
+}
+
+/* The window sits at the screen's origin. */
+static void ClientToScreen(Cpu *c)
+{
+    STDCALL_RETURN(2, 1);
+}
+
+static void ScreenToClient(Cpu *c)
+{
+    STDCALL_RETURN(2, 1);
+}
+
+static void GetCursorPos(Cpu *c)
+{
+    v3_w32(ARG(0), 320);
+    v3_w32(ARG(0) + 4, 240);
+    STDCALL_RETURN(1, 1);
+}
+
+static void GetMessageTime(Cpu *c)
+{
+    STDCALL_RETURN(0, (uint32_t)(v3_microseconds() / 1000u));
+}
+
+static void RegisterWindowMessageA(Cpu *c)
+{
+    static uint32_t next = 0xc100u;
+    STDCALL_RETURN(1, next++);
+}
+
+static void GetSysColor(Cpu *c)
+{
+    STDCALL_RETURN(1, 0x00c0c0c0u);
+}
+
+/* One device context for the window: GDI drawing goes nowhere (the game draws through DirectDraw). */
+static void GetDC(Cpu *c)
+{
+    STDCALL_RETURN(1, 0x00dc0001u);
+}
+
+static void GetWindowDC(Cpu *c)
+{
+    STDCALL_RETURN(1, 0x00dc0001u);
+}
+
+static void ReleaseDC(Cpu *c)
+{
+    STDCALL_RETURN(2, 1);
+}
+
+static void BeginPaint(Cpu *c)
+{
+    memset(MEM(ARG(1)), 0, 64);
+    v3_w32(ARG(1), 0x00dc0001u);
+    STDCALL_RETURN(2, 0x00dc0001u);
+}
+
+/* --- characters and rectangles --- */
+
+static void CharUpperA(Cpu *c)
+{
+    const uint32_t s = ARG(0);
+    if (s < 0x10000u)
+    {
+        STDCALL_RETURN(1, (uint32_t)toupper((int)(s & 0xff)));
+    }
+    for (uint32_t a = s; v3_r8(a); ++a)
+    {
+        v3_w8(a, (uint32_t)toupper((int)v3_r8(a)));
+    }
+    STDCALL_RETURN(1, s);
+}
+
+static void CharLowerA(Cpu *c)
+{
+    const uint32_t s = ARG(0);
+    if (s < 0x10000u)
+    {
+        STDCALL_RETURN(1, (uint32_t)tolower((int)(s & 0xff)));
+    }
+    for (uint32_t a = s; v3_r8(a); ++a)
+    {
+        v3_w8(a, (uint32_t)tolower((int)v3_r8(a)));
+    }
+    STDCALL_RETURN(1, s);
+}
+
+static void CharUpperBuffA(Cpu *c)
+{
+    for (uint32_t i = 0; i < ARG(1); ++i)
+    {
+        v3_w8(ARG(0) + i, (uint32_t)toupper((int)v3_r8(ARG(0) + i)));
+    }
+    STDCALL_RETURN(2, ARG(1));
+}
+
+static void CharNextA(Cpu *c)
+{
+    STDCALL_RETURN(1, v3_r8(ARG(0)) ? ARG(0) + 1 : ARG(0));
+}
+
+static void CharPrevA(Cpu *c)
+{
+    STDCALL_RETURN(2, ARG(1) > ARG(0) ? ARG(1) - 1 : ARG(0));
+}
+
+/* OEM and ANSI text are the same here. */
+static void CharToOemA(Cpu *c)
+{
+    if (ARG(0) != ARG(1))
+    {
+        memmove(MEM(ARG(1)), MEM(ARG(0)), v3_string_length(ARG(0)) + 1);
+    }
+    STDCALL_RETURN(2, 1);
+}
+
+static void OemToCharA(Cpu *c)
+{
+    if (ARG(0) != ARG(1))
+    {
+        memmove(MEM(ARG(1)), MEM(ARG(0)), v3_string_length(ARG(0)) + 1);
+    }
+    STDCALL_RETURN(2, 1);
+}
+
+static void CopyRect(Cpu *c)
+{
+    memmove(MEM(ARG(0)), MEM(ARG(1)), 16);
+    STDCALL_RETURN(2, 1);
+}
+
+static void EqualRect(Cpu *c)
+{
+    STDCALL_RETURN(2, memcmp(MEM(ARG(0)), MEM(ARG(1)), 16) == 0);
+}
+
+static void SetRectEmpty(Cpu *c)
+{
+    memset(MEM(ARG(0)), 0, 16);
+    STDCALL_RETURN(1, 1);
+}
+
+/* (rect, point.x, point.y) */
+static void PtInRect(Cpu *c)
+{
+    const int32_t x = (int32_t)ARG(1), y = (int32_t)ARG(2);
+    const uint32_t r = ARG(0);
+    STDCALL_RETURN(3, x >= (int32_t)v3_r32(r) && x < (int32_t)v3_r32(r + 8) &&
+                          y >= (int32_t)v3_r32(r + 4) && y < (int32_t)v3_r32(r + 12));
+}
+
+/* wsprintfA (cdecl): %[-0][width](d|i|u|x|X|c|s|%), with l and h ignored. */
+static void wsprintfA(Cpu *c)
+{
+    const uint32_t out = ARG(0);
+    char format[512], text[1025];
+    v3_read_string(ARG(1), format, sizeof format);
+    unsigned argument = 2;
+    size_t n = 0;
+    for (const char *f = format; *f && n < 1024; ++f)
+    {
+        if (*f != '%')
+        {
+            text[n++] = *f;
+            continue;
+        }
+        char spec[16] = "%";
+        size_t k = 1;
+        ++f;
+        while ((*f == '-' || *f == '0' || *f == '#' || (*f >= '1' && *f <= '9')) && k < 12)
+        {
+            spec[k++] = *f++;
+        }
+        while (*f >= '0' && *f <= '9' && k < 12)
+        {
+            spec[k++] = *f++;
+        }
+        while (*f == 'l' || *f == 'h')
+        {
+            ++f;
+        }
+        if (!*f)
+        {
+            break;
+        }
+        char piece[600];
+        spec[k] = *f;
+        spec[k + 1] = 0;
+        switch (*f)
+        {
+        case 'd':
+        case 'i':
+            snprintf(piece, sizeof piece, spec, (int)ARG(argument++));
+            break;
+        case 'u':
+        case 'x':
+        case 'X':
+            snprintf(piece, sizeof piece, spec, (unsigned)ARG(argument++));
+            break;
+        case 'c':
+            snprintf(piece, sizeof piece, spec, (int)(ARG(argument++) & 0xff));
+            break;
+        case 's':
+        {
+            char value[512];
+            v3_read_string(ARG(argument++), value, sizeof value);
+            snprintf(piece, sizeof piece, spec, value);
+            break;
+        }
+        default:
+            snprintf(piece, sizeof piece, "%c", *f);
+            break;
+        }
+        for (const char *q = piece; *q && n < 1024; ++q)
+        {
+            text[n++] = *q;
+        }
+    }
+    text[n] = 0;
+    v3_write_string(out, text, n + 1);
+    CDECL_RETURN(n);
+}
+
+/* --- the rest: neutral answers for a full-screen game with no menus, dialogs or scroll bars --- */
+
+static void quiet(const char *name)
+{
+    static const char *seen[160];
+    static unsigned count;
+    for (unsigned i = 0; i < count; ++i)
+    {
+        if (seen[i] == name)
+        {
+            return;
+        }
+    }
+    if (count < 160)
+    {
+        seen[count++] = name;
+    }
+    v3_log("%s: no effect here", name);
+}
+
+#define QUIET(name, args, value)                                                                   \
+    static void name(Cpu *c)                                                                       \
+    {                                                                                              \
+        quiet(#name);                                                                              \
+        STDCALL_RETURN(args, value);                                                               \
+    }
+QUIET(AdjustWindowRectEx, 4, 1)
+QUIET(BeginDeferWindowPos, 1, 0x00de0001u)
+QUIET(DeferWindowPos, 8, ARG(0))
+QUIET(EndDeferWindowPos, 1, 1)
+QUIET(BringWindowToTop, 1, 1)
+QUIET(CheckDlgButton, 3, 1)
+QUIET(CheckMenuItem, 3, 0)
+QUIET(CheckRadioButton, 4, 1)
+QUIET(CreateDialogIndirectParamA, 5, 0)
+QUIET(DeleteMenu, 3, 1)
+QUIET(DestroyMenu, 1, 1)
+QUIET(DrawTextA, 5, 16)
+QUIET(EnableMenuItem, 3, 0)
+QUIET(EnableWindow, 2, 0)
+QUIET(EndPaint, 2, 1)
+QUIET(GetCapture, 0, 0)
+QUIET(GetDialogBaseUnits, 0, 0x00100008u)
+QUIET(GetDlgItemInt, 4, 0)
+QUIET(GetKeyState, 1, 0)
+QUIET(GetLastActivePopup, 1, ARG(0))
+QUIET(GetMenu, 1, 0)
+QUIET(GetMenuCheckMarkDimensions, 0, 0x000d000du)
+QUIET(GetMenuItemCount, 1, 0)
+QUIET(GetMenuItemID, 2, 0xffffffffu)
+QUIET(GetMenuState, 3, 0xffffffffu)
+QUIET(GetMessagePos, 0, 0)
+QUIET(GetNextDlgTabItem, 3, 0)
+QUIET(GetScrollInfo, 3, 0)
+QUIET(GetScrollPos, 2, 0)
+QUIET(GetSubMenu, 2, 0)
+QUIET(GetTopWindow, 1, 0)
+QUIET(GetWindow, 2, 0)
+QUIET(GetWindowTextLengthA, 1, 0)
+QUIET(GrayStringA, 9, 1)
+QUIET(InsertMenuA, 5, 1)
+QUIET(InvalidateRect, 3, 1)
+QUIET(IsChild, 2, 0)
+QUIET(IsDialogMessageA, 2, 0)
+QUIET(IsDlgButtonChecked, 2, 0)
+QUIET(IsIconic, 1, 0)
+QUIET(IsWindowEnabled, 1, 1)
+QUIET(IsWindowVisible, 1, 1)
+QUIET(LoadAcceleratorsA, 2, 0x00ac0001u)
+QUIET(LoadBitmapA, 2, 0)
+QUIET(LoadMenuA, 2, 0)
+QUIET(ModifyMenuA, 5, 1)
+QUIET(ReleaseCapture, 0, 1)
+QUIET(ReuseDDElParam, 5, 0)
+QUIET(ScrollWindow, 5, 1)
+QUIET(ScrollWindowEx, 8, 1)
+QUIET(SendDlgItemMessageA, 5, 0)
+QUIET(SetActiveWindow, 1, main_window)
+QUIET(SetDlgItemInt, 4, 1)
+QUIET(SetDlgItemTextA, 3, 1)
+QUIET(SetMenu, 2, 1)
+QUIET(SetMenuItemBitmaps, 5, 1)
+QUIET(SetMessageQueue, 1, 1)
+QUIET(SetScrollInfo, 4, 0)
+QUIET(SetScrollPos, 4, 0)
+QUIET(SetScrollRange, 5, 1)
+QUIET(SetWindowPlacement, 2, 1)
+QUIET(SetWindowTextA, 2, 1)
+QUIET(ShowOwnedPopups, 2, 1)
+QUIET(ShowScrollBar, 3, 1)
+QUIET(SystemParametersInfoA, 4, 0)
+QUIET(TabbedTextOutA, 8, 0)
+QUIET(TrackPopupMenu, 7, 0)
+QUIET(TranslateAcceleratorA, 3, 0)
+QUIET(UnpackDDElParam, 4, 0)
+QUIET(UpdateWindow, 1, 1)
+QUIET(ValidateRect, 2, 1)
+QUIET(WinHelpA, 4, 0)
+QUIET(WindowFromPoint, 2, main_window)
+#undef QUIET
+
+static void GetScrollRange(Cpu *c)
+{
+    quiet("GetScrollRange");
+    v3_w32(ARG(2), 0);
+    v3_w32(ARG(3), 0);
+    STDCALL_RETURN(4, 1);
+}
+
+static void GetWindowTextA(Cpu *c)
+{
+    if (ARG(2))
+    {
+        v3_w8(ARG(1), 0);
+    }
+    STDCALL_RETURN(3, 0);
+}
+
+static void GetDlgItemTextA(Cpu *c)
+{
+    if (ARG(3))
+    {
+        v3_w8(ARG(2), 0);
+    }
+    STDCALL_RETURN(4, 0);
+}
+
+static void GetMenuStringA(Cpu *c)
+{
+    if (ARG(3))
+    {
+        v3_w8(ARG(2), 0);
+    }
+    STDCALL_RETURN(5, 0);
+}
+
+/* (instance, id, buffer, size): no string table is read; an empty string. */
+static void LoadStringA(Cpu *c)
+{
+    quiet("LoadStringA");
+    if (ARG(3))
+    {
+        v3_w8(ARG(2), 0);
+    }
+    STDCALL_RETURN(4, 0);
+}
+
 const V3Export v3_user32[] = {
 #define E(name) {#name, name}
     E(MessageBoxA), E(UnregisterClassA), E(DestroyWindow), E(PostQuitMessage), E(DefWindowProcA),
@@ -645,5 +1265,30 @@ const V3Export v3_user32[] = {
     E(EnumDisplaySettingsA), E(EnumDisplayDevicesA), E(SetForegroundWindow), E(RegisterClassA),
     E(SetCursor), E(SetRect), E(AdjustWindowRect), E(SetFocus), E(ShowWindow), E(PostMessageA),
     E(CreateWindowExA),
+    E(GetWindowLongA), E(SetWindowLongA), E(CallWindowProcA), E(SetWindowsHookExA),
+    E(UnhookWindowsHookEx), E(CallNextHookEx), E(SetPropA), E(GetPropA), E(RemovePropA),
+    E(GetClassInfoA), E(GetClassNameA), E(IsWindow), E(GetParent), E(GetDlgCtrlID),
+    E(GetActiveWindow), E(GetFocus), E(GetClientRect), E(ClientToScreen), E(ScreenToClient),
+    E(GetCursorPos), E(GetMessageTime), E(RegisterWindowMessageA), E(GetSysColor), E(GetDC),
+    E(GetWindowDC), E(ReleaseDC), E(BeginPaint), E(CharUpperA), E(CharLowerA), E(CharUpperBuffA),
+    E(CharNextA), E(CharPrevA), E(CharToOemA), E(OemToCharA), E(CopyRect), E(EqualRect),
+    E(SetRectEmpty), E(PtInRect), E(wsprintfA), E(AdjustWindowRectEx), E(BeginDeferWindowPos),
+    E(DeferWindowPos), E(EndDeferWindowPos), E(BringWindowToTop), E(CheckDlgButton),
+    E(CheckMenuItem), E(CheckRadioButton), E(CreateDialogIndirectParamA), E(DeleteMenu),
+    E(DestroyMenu), E(DrawTextA), E(EnableMenuItem), E(EnableWindow), E(EndPaint), E(GetCapture),
+    E(GetDialogBaseUnits), E(GetDlgItemInt), E(GetKeyState), E(GetLastActivePopup), E(GetMenu),
+    E(GetMenuCheckMarkDimensions), E(GetMenuItemCount), E(GetMenuItemID), E(GetMenuState),
+    E(GetMessagePos), E(GetNextDlgTabItem), E(GetScrollInfo), E(GetScrollPos), E(GetSubMenu),
+    E(GetTopWindow), E(GetWindow), E(GetWindowTextLengthA), E(GrayStringA), E(InsertMenuA),
+    E(InvalidateRect), E(IsChild), E(IsDialogMessageA), E(IsDlgButtonChecked), E(IsIconic),
+    E(IsWindowEnabled), E(IsWindowVisible), E(LoadAcceleratorsA), E(LoadBitmapA), E(LoadMenuA),
+    E(ModifyMenuA), E(ReleaseCapture), E(ReuseDDElParam), E(ScrollWindow), E(ScrollWindowEx),
+    E(SendDlgItemMessageA), E(SetActiveWindow), E(SetDlgItemInt), E(SetDlgItemTextA), E(SetMenu),
+    E(SetMenuItemBitmaps), E(SetMessageQueue), E(SetScrollInfo), E(SetScrollPos),
+    E(SetScrollRange), E(SetWindowPlacement), E(SetWindowTextA), E(ShowOwnedPopups),
+    E(ShowScrollBar), E(SystemParametersInfoA), E(TabbedTextOutA), E(TrackPopupMenu),
+    E(TranslateAcceleratorA), E(UnpackDDElParam), E(UpdateWindow), E(ValidateRect), E(WinHelpA),
+    E(WindowFromPoint), E(GetScrollRange), E(GetWindowTextA), E(GetDlgItemTextA),
+    E(GetMenuStringA), E(LoadStringA),
 #undef E
     {NULL, NULL}};

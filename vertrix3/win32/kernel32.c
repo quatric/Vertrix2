@@ -7,9 +7,9 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <time.h>
 
 /* The game's working directory as it sees it. */
-#define GAME_DIRECTORY "C:\\Vertrix3"
 
 static uint32_t command_line_a, command_line_w, environment_a, environment_w;
 static const uint32_t KERNEL32_MODULE = 0x7c800000u;
@@ -54,9 +54,10 @@ void v3_host_path(const char *game_path, char *out, size_t size)
     /* Drop a drive and the game directory, and ".\"; the rest is relative to the platform's
      * directory, with forward slashes. */
     const char *p = game_path;
-    if (strncasecmp(p, GAME_DIRECTORY "\\", strlen(GAME_DIRECTORY) + 1) == 0)
+    if (strncasecmp(p, v3_game_directory, strlen(v3_game_directory)) == 0 &&
+        p[strlen(v3_game_directory)] == '\\')
     {
-        p += strlen(GAME_DIRECTORY) + 1;
+        p += strlen(v3_game_directory) + 1;
     }
     else if (p[0] && p[1] == ':')
     {
@@ -219,7 +220,8 @@ static void FreeLibrary(Cpu *c)
 
 static void GetModuleFileNameA(Cpu *c)
 {
-    const char *path = GAME_DIRECTORY "\\Vertrix3.exe";
+    char path[260];
+    snprintf(path, sizeof path, "%s\\%s", v3_game_directory, v3_executable);
     const uint32_t size = ARG(2);
     v3_write_string(ARG(1), path, size);
     const uint32_t n = (uint32_t)strlen(path);
@@ -229,7 +231,7 @@ static void GetModuleFileNameA(Cpu *c)
 static void GetCurrentDirectoryA(Cpu *c)
 {
     const uint32_t size = ARG(0);
-    const char *dir = GAME_DIRECTORY;
+    const char *dir = v3_game_directory;
     const uint32_t n = (uint32_t)strlen(dir);
     if (size <= n)
     {
@@ -254,7 +256,7 @@ static void GetFullPathNameA(Cpu *c)
         {
             p += 2;
         }
-        snprintf(full, sizeof full, "%s\\%s", GAME_DIRECTORY, p);
+        snprintf(full, sizeof full, "%s\\%s", v3_game_directory, p);
     }
     const uint32_t n = (uint32_t)strlen(full);
     const uint32_t size = ARG(1);
@@ -1091,6 +1093,13 @@ static void CloseHandle(Cpu *c)
 
 /* --- time ------------------------------------------------------------------------------- */
 
+/* Windows 98 (4.10, build 2222): Vertrix 2 v1.2 (2001) then keeps its runtime on the ANSI calls
+ * (the high bit marks Windows 9x). */
+static void GetVersion(Cpu *c)
+{
+    STDCALL_RETURN(0, 0xc8ae0a04u);
+}
+
 static void GetTickCount(Cpu *c)
 {
     STDCALL_RETURN(0, (uint32_t)(v3_microseconds() / 1000u));
@@ -1360,6 +1369,253 @@ static void FindClose(Cpu *c)
     STDCALL_RETURN(1, 1);
 }
 
+/* --- Vertrix 2 v1.2's Watcom runtime -------------------------------------------------------- */
+
+static void GetCommandLineW(Cpu *c)
+{
+    STDCALL_RETURN(0, command_line_w);
+}
+
+static void GetModuleFileNameW(Cpu *c)
+{
+    char path[260];
+    snprintf(path, sizeof path, "%s\\%s", v3_game_directory, v3_executable);
+    const uint32_t out = ARG(1), size = ARG(2);
+    uint32_t n = (uint32_t)strlen(path);
+    if (n >= size)
+    {
+        n = size ? size - 1 : 0;
+    }
+    for (uint32_t i = 0; i < n; ++i)
+    {
+        v3_w16(out + 2 * i, (uint8_t)path[i]);
+    }
+    if (size)
+    {
+        v3_w16(out + 2 * n, 0);
+    }
+    STDCALL_RETURN(3, n);
+}
+
+/* A pseudo handle, as Windows returns. */
+static void GetCurrentThread(Cpu *c)
+{
+    STDCALL_RETURN(0, 0xfffffffeu);
+}
+
+static void GetProcessVersion(Cpu *c)
+{
+    STDCALL_RETURN(1, 0x00040000u);
+}
+
+/* The host's clock as local time, in a SYSTEMTIME. */
+static void put_system_time(uint32_t at, uint64_t filetime)
+{
+    const time_t seconds = (time_t)(filetime / 10000000u - 11644473600ull);
+    struct tm tm;
+#ifdef GEKKO
+    tm = *gmtime(&seconds);
+#else
+    gmtime_r(&seconds, &tm);
+#endif
+    v3_w16(at + 0, (uint16_t)(tm.tm_year + 1900));
+    v3_w16(at + 2, (uint16_t)(tm.tm_mon + 1));
+    v3_w16(at + 4, (uint16_t)tm.tm_wday);
+    v3_w16(at + 6, (uint16_t)tm.tm_mday);
+    v3_w16(at + 8, (uint16_t)tm.tm_hour);
+    v3_w16(at + 10, (uint16_t)tm.tm_min);
+    v3_w16(at + 12, (uint16_t)tm.tm_sec);
+    v3_w16(at + 14, (uint16_t)(filetime / 10000u % 1000u));
+}
+
+static uint64_t now_filetime(void)
+{
+    return 128882016000000000ull + v3_microseconds() * 10u;
+}
+
+static void GetLocalTime(Cpu *c)
+{
+    put_system_time(ARG(0), now_filetime());
+    STDCALL_RETURN(1, 0);
+}
+
+static void FileTimeToSystemTime(Cpu *c)
+{
+    put_system_time(ARG(1), v3_r64(ARG(0)));
+    STDCALL_RETURN(2, 1);
+}
+
+/* Local time is UTC (no zone). */
+static void FileTimeToLocalFileTime(Cpu *c)
+{
+    v3_w64(ARG(1), v3_r64(ARG(0)));
+    STDCALL_RETURN(2, 1);
+}
+
+static void LocalFileTimeToFileTime(Cpu *c)
+{
+    v3_w64(ARG(1), v3_r64(ARG(0)));
+    STDCALL_RETURN(2, 1);
+}
+
+static void GetTimeZoneInformation(Cpu *c)
+{
+    memset(MEM(ARG(0)), 0, 172);
+    STDCALL_RETURN(1, 0); /* TIME_ZONE_ID_UNKNOWN */
+}
+
+static void GetVolumeInformationA(Cpu *c)
+{
+    if (ARG(1))
+    {
+        v3_write_string(ARG(1), "VERTRIX", ARG(2));
+    }
+    if (ARG(3))
+    {
+        v3_w32(ARG(3), 0x12345678u);
+    }
+    if (ARG(4))
+    {
+        v3_w32(ARG(4), 255);
+    }
+    if (ARG(5))
+    {
+        v3_w32(ARG(5), 0x3);
+    }
+    if (ARG(6))
+    {
+        v3_write_string(ARG(6), "FAT32", ARG(7));
+    }
+    STDCALL_RETURN(8, 1);
+}
+
+/* Global and local memory: a handle is the block's address. */
+static void GlobalHandle(Cpu *c)
+{
+    STDCALL_RETURN(1, ARG(0));
+}
+
+static void GlobalReAlloc(Cpu *c)
+{
+    const uint32_t old = ARG(0), size = ARG(1);
+    const uint32_t old_size = v3_alloc_size(old);
+    const uint32_t p = v3_realloc(old, size);
+    if (p && size > old_size && (ARG(2) & 0x40)) /* GMEM_ZEROINIT */
+    {
+        memset(MEM(p + old_size), 0, size - old_size);
+    }
+    STDCALL_RETURN(3, p);
+}
+
+static void GlobalFlags(Cpu *c)
+{
+    STDCALL_RETURN(1, 0);
+}
+
+static void LocalAlloc(Cpu *c)
+{
+    const uint32_t p = v3_alloc(ARG(1));
+    if (p && (ARG(0) & 0x40)) /* LMEM_ZEROINIT */
+    {
+        memset(MEM(p), 0, ARG(1));
+    }
+    STDCALL_RETURN(2, p);
+}
+
+static void LocalReAlloc(Cpu *c)
+{
+    const uint32_t old = ARG(0), size = ARG(1);
+    const uint32_t old_size = v3_alloc_size(old);
+    const uint32_t p = v3_realloc(old, size);
+    if (p && size > old_size && (ARG(2) & 0x40))
+    {
+        memset(MEM(p + old_size), 0, size - old_size);
+    }
+    STDCALL_RETURN(3, p);
+}
+
+/* a * b / c, rounded half away from zero, as Windows does; -1 for c = 0. */
+static void MulDiv(Cpu *c)
+{
+    const int64_t product = (int64_t)(int32_t)ARG(0) * (int32_t)ARG(1);
+    const int64_t divisor = (int32_t)ARG(2);
+    if (divisor == 0)
+    {
+        STDCALL_RETURN(3, 0xffffffffu);
+    }
+    const int64_t a = product < 0 ? -product : product, b = divisor < 0 ? -divisor : divisor;
+    const int64_t q = (a + b / 2) / b;
+    STDCALL_RETURN(3, (uint32_t)(int32_t)((product < 0) != (divisor < 0) ? -q : q));
+}
+
+static void IsDBCSLeadByte(Cpu *c)
+{
+    STDCALL_RETURN(1, 0);
+}
+
+static void GetThreadLocale(Cpu *c)
+{
+    STDCALL_RETURN(0, 0x0409);
+}
+
+static void lstrlenA(Cpu *c)
+{
+    STDCALL_RETURN(1, ARG(0) ? v3_string_length(ARG(0)) : 0);
+}
+
+static void lstrcpyA(Cpu *c)
+{
+    const uint32_t n = v3_string_length(ARG(1));
+    memmove(MEM(ARG(0)), MEM(ARG(1)), n + 1);
+    STDCALL_RETURN(2, ARG(0));
+}
+
+static void lstrcpynA(Cpu *c)
+{
+    const uint32_t out = ARG(0), in = ARG(1), size = ARG(2);
+    uint32_t i = 0;
+    for (; i + 1 < size; ++i)
+    {
+        const uint8_t ch = v3_r8(in + i);
+        if (!ch)
+        {
+            break;
+        }
+        v3_w8(out + i, ch);
+    }
+    if (size)
+    {
+        v3_w8(out + i, 0);
+    }
+    STDCALL_RETURN(3, out);
+}
+
+static void lstrcatA(Cpu *c)
+{
+    const uint32_t at = ARG(0) + v3_string_length(ARG(0));
+    const uint32_t n = v3_string_length(ARG(1));
+    memmove(MEM(at), MEM(ARG(1)), n + 1);
+    STDCALL_RETURN(2, ARG(0));
+}
+
+static void lstrcmpA(Cpu *c)
+{
+    char a[1024], b[1024];
+    v3_read_string(ARG(0), a, sizeof a);
+    v3_read_string(ARG(1), b, sizeof b);
+    const int r = strcmp(a, b);
+    STDCALL_RETURN(2, (uint32_t)(r < 0 ? -1 : r > 0));
+}
+
+static void lstrcmpiA(Cpu *c)
+{
+    char a[1024], b[1024];
+    v3_read_string(ARG(0), a, sizeof a);
+    v3_read_string(ARG(1), b, sizeof b);
+    const int r = strcasecmp(a, b);
+    STDCALL_RETURN(2, (uint32_t)(r < 0 ? -1 : r > 0));
+}
+
 const V3Export v3_kernel32[] = {
 #define E(name) {#name, name}
     E(GetCurrentProcess), E(SetPriorityClass), E(Sleep), E(ResetEvent), E(WaitForMultipleObjects),
@@ -1385,7 +1641,13 @@ const V3Export v3_kernel32[] = {
     E(SetFilePointer), E(OutputDebugStringA), E(WriteConsoleA), E(CompareStringA), E(GlobalFree),
     E(GlobalUnlock), E(GlobalLock), E(GlobalAlloc), E(SetThreadPriority), E(CreateThread),
     E(SetErrorMode), E(FormatMessageA), E(LocalFree), E(CreateDirectoryA), E(GetFileSize),
-    E(FindFirstFileA), E(FindClose),
+    E(FindFirstFileA), E(FindClose), E(GetVersion),
+    E(GetCommandLineW), E(GetModuleFileNameW), E(GetCurrentThread), E(GetProcessVersion),
+    E(GetLocalTime), E(FileTimeToSystemTime), E(FileTimeToLocalFileTime),
+    E(LocalFileTimeToFileTime), E(GetTimeZoneInformation), E(GetVolumeInformationA),
+    E(GlobalHandle), E(GlobalReAlloc), E(GlobalFlags), E(LocalAlloc), E(LocalReAlloc), E(MulDiv),
+    E(IsDBCSLeadByte), E(GetThreadLocale), E(lstrlenA), E(lstrcpyA), E(lstrcpynA), E(lstrcatA),
+    E(lstrcmpA), E(lstrcmpiA),
     {"FreeEnvironmentStringsA", FreeEnvironmentStringsA},
     {"FreeEnvironmentStringsW", FreeEnvironmentStringsA},
 #undef E

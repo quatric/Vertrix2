@@ -1,4 +1,4 @@
-"""Recompile Vertrix3.exe into C, function by function.
+"""Recompile Vertrix3.exe (or Vertrix 2 v1.2's Vertrix2.exe) into C, function by function.
 
 Every x86 function becomes `void F_<address>(Cpu *c)`. The original's memory is one flat 32-bit
 address space (vertrix3/runtime/cpu.h: the image at its preferred base, the stacks, the heaps),
@@ -27,7 +27,16 @@ import pefile
 from capstone import CS_ARCH_X86, CS_MODE_32, Cs
 from capstone import x86_const as X
 
-SHA256 = 'db625cfe1acb3f5f70d30d041362831ca59ec72b5693e463331cf2f29738f7e9'
+# The executables this recompiles, by SHA-256: Vertrix 3 (Visual C++ 9) and Vertrix 2 v1.2
+# (Watcom; docs/VERTRIX2-V12.md).
+# Each with the directory the game is told it runs from.
+GAMES = {
+    'db625cfe1acb3f5f70d30d041362831ca59ec72b5693e463331cf2f29738f7e9':
+        ('Vertrix3.exe', 'Vertrix 3', 'C:\\Vertrix3'),
+    '8e27c76d75c28dba6b39f9e9e6162e04b04d712771cb4b03c4d9eb9ef4141999':
+        ('Vertrix2.exe', 'Vertrix 2 v1.2', 'C:\\Vertrix2'),
+}
+SEGMENTS = (X.X86_REG_SS, X.X86_REG_CS, X.X86_REG_DS, X.X86_REG_ES, X.X86_REG_FS, X.X86_REG_GS)
 PER_FILE = 150
 
 REG32 = {X.X86_REG_EAX: 'eax', X.X86_REG_ECX: 'ecx', X.X86_REG_EDX: 'edx', X.X86_REG_EBX: 'ebx',
@@ -71,11 +80,23 @@ class Unsupported(Exception):
 class Program:
     def __init__(self, path):
         data = Path(path).read_bytes()
-        if hashlib.sha256(data).hexdigest() != SHA256:
-            sys.exit('not the original Vertrix3.exe')
+        self.sha256 = hashlib.sha256(data).hexdigest()
+        if self.sha256 not in GAMES:
+            sys.exit('not an executable this recompiles: %s' % ', '.join(
+                '%s (%s)' % (g[0], g[1]) for g in GAMES.values()))
+        self.executable, self.game, self.directory = GAMES[self.sha256]
         self.pe = pefile.PE(data=data)
         self.base = self.pe.OPTIONAL_HEADER.ImageBase
-        self.image = self.pe.get_memory_mapped_image()
+        self.image = bytearray(self.pe.get_memory_mapped_image())
+        # A section with no file data (Watcom's .bss) is zero-filled by the loader; pefile maps
+        # the file's first bytes there instead.
+        for section in self.pe.sections:
+            if section.PointerToRawData == 0:
+                start = section.VirtualAddress
+                end = min(len(self.image),
+                          start + max(section.Misc_VirtualSize, section.SizeOfRawData))
+                self.image[start:end] = bytes(end - start)
+        self.image = bytes(self.image)
         self.entry = self.base + self.pe.OPTIONAL_HEADER.AddressOfEntryPoint
         self.sections = [(self.base + s.VirtualAddress,
                           self.base + s.VirtualAddress + max(s.Misc_VirtualSize, s.SizeOfRawData),
@@ -154,6 +175,14 @@ class Function:
                     if op.type == X.X86_OP_IMM and program.in_code(op.imm & 0xffffffff) and m not in (
                             'call', 'jmp') and not m.startswith('j') and not m.startswith('loop'):
                         self.immediates.add(op.imm & 0xffffffff)
+                if m in ('call', 'jmp') and ins.operands[0].type == X.X86_OP_MEM:
+                    # Through a pointer at a fixed address (`call [0x4fce13]` in Vertrix 2 v1.2's
+                    # runtime, unaligned): the function it holds at load is an entry.
+                    mem = ins.operands[0].mem
+                    if mem.base == 0 and mem.index == 0:
+                        v = program.u32(mem.disp & 0xffffffff)
+                        if v is not None and program.in_code(v):
+                            self.immediates.add(v)
                 if m == 'call':
                     op = ins.operands[0]
                     if op.type == X.X86_OP_IMM:
@@ -196,9 +225,59 @@ class Function:
             else:
                 continue
 
+    def previous(self, a):
+        """The instruction that ends at `a`, or None: one this function decoded on its way
+        there, else the shortest that decodes to end there."""
+        for size in range(1, 16):
+            known = self.insns.get(a - size)
+            if known is not None and known.address + known.size == a:
+                return known
+        for size in range(1, 16):
+            cand = self.p.insn(a - size)
+            if cand is not None and cand.address + cand.size == a:
+                return cand
+        return None
+
+    def shifted_switch(self, a, op):
+        """`shl reg, 2; jmp [reg + table]` (Vertrix 2 v1.2), the index shifted before the jump and
+        its bound checked earlier by `cmp <index>, n; ja`, often on the index's stack slot."""
+        table = op.mem.disp & 0xffffffff
+        if not self.p.in_image(table):
+            return []
+        base = REG32.get(op.mem.base)
+        shifted = False
+        bound = None
+        back = a
+        for _ in range(8):
+            prev = self.previous(back)
+            if prev is None:
+                break
+            back = prev.address
+            ops = prev.operands
+            if not shifted:
+                if prev.mnemonic == 'shl' and ops[0].type == X.X86_OP_REG and \
+                        REG32.get(ops[0].reg) == base and ops[1].type == X.X86_OP_IMM and ops[1].imm == 2:
+                    shifted = True
+                continue
+            if prev.mnemonic == 'cmp' and ops[1].type == X.X86_OP_IMM:
+                bound = (ops[1].imm & 0xffffffff) + 1
+                break
+        if not shifted:
+            return []
+        targets = []
+        for n in range(bound if bound is not None and bound <= 256 else 256):
+            v = self.p.u32(table + 4 * n)
+            if v is None or not self.p.in_code(v):
+                break
+            targets.append(v)
+        self.switches[a] = (table, targets)
+        return targets
+
     def switch(self, a, ins):
         """`jmp [table + reg*4]`: the table's entries, bounded by a preceding `cmp reg, n; ja`."""
         op = ins.operands[0]
+        if op.type == X.X86_OP_MEM and op.mem.base != 0 and op.mem.index == 0:
+            return self.shifted_switch(a, op)
         if op.type != X.X86_OP_MEM or op.mem.base != 0 or op.mem.index == 0 or op.mem.scale != 4:
             return []
         table = op.mem.disp & 0xffffffff
@@ -253,6 +332,34 @@ class Function:
         return targets
 
 
+def idle(ins):
+    """An instruction that changes nothing: nop, `mov r, r`, `xchg r, r` or `lea r, [r + 0]`."""
+    ops = ins.operands
+    if ins.mnemonic == 'nop':
+        return True
+    if ins.mnemonic in ('mov', 'xchg') and len(ops) == 2 and ops[0].type == ops[1].type == X.X86_OP_REG:
+        return ops[0].reg == ops[1].reg
+    if ins.mnemonic == 'lea' and ops[1].type == X.X86_OP_MEM:
+        m = ops[1].mem
+        return m.base == ops[0].reg and m.index == 0 and m.disp == 0 and m.segment == 0
+    return False
+
+
+def filler_before(p, v):
+    """Whether the bytes just before `v` are padding Watcom fills with idle instructions: some
+    run of them that ends exactly at `v`, up to 15 bytes long."""
+    for k in range(2, 16):
+        a = v - k
+        while a < v:
+            ins = p.insn(a)
+            if ins is None or not idle(ins):
+                break
+            a += ins.size
+        if a == v:
+            return True
+    return False
+
+
 def plausible_entry(p, slot, v):
     """A code address stored in data starts a function when it follows padding or a return,
     or when it sits in a table of code addresses (a virtual table)."""
@@ -261,6 +368,17 @@ def plausible_entry(p, slot, v):
         return True
     if p.image[v - p.base - 3] == 0xc2:  # ret n
         return True
+    # Watcom 2.18 as Vertrix 2 v1.2 was linked pads between functions with zeros: an aligned
+    # address after a return and up to 15 zero bytes.
+    if before == 0 and v % 16 == 0:
+        k = v - p.base - 1
+        while k > v - p.base - 16 and p.image[k] == 0:
+            k -= 1
+        if p.image[k] == 0xc3 or 0xc2 in (p.image[k - 1], p.image[k - 2]):
+            return True
+    # ... or with instructions that do nothing (`mov eax, eax`, `lea edx, [edx + 0]`, nop).
+    if v % 16 == 0 and filler_before(p, v):
+        return True
     for neighbour in (slot - 4, slot + 4):
         w = p.u32(neighbour)
         if w is not None and p.in_code(w):
@@ -268,9 +386,32 @@ def plausible_entry(p, slot, v):
     return False
 
 
+def initializer_routines(p):
+    """Watcom's start-up and exit tables (XI/YI): 6-byte records of a zero type byte, a priority
+    byte and a routine's address, at any alignment, which the runtime calls through. Taken from
+    runs of three or more records that all point into code."""
+    found = set()
+    for s, e, ch in p.sections:
+        if ch & 0x20000000:
+            continue
+        data = p.image[s - p.base:e - p.base]
+        for start in range(0, len(data) - 18):
+            run = []
+            at = start
+            while at + 6 <= len(data) and data[at] == 0:
+                v = struct.unpack_from('<I', data, at + 2)[0]
+                if not p.in_code(v):
+                    break
+                run.append(v)
+                at += 6
+            if len(run) >= 3:
+                found.update(run)
+    return found
+
+
 def discover(p):
-    entries = {p.entry}
-    seeds = [p.entry]
+    entries = {p.entry} | {v for v in initializer_routines(p) if p.insn(v) is not None}
+    seeds = sorted(entries)
     funcs = {}
     switch_tables = set()
     while True:
@@ -325,9 +466,26 @@ ARITH_ALL = {'add', 'sub', 'cmp', 'neg', 'adc', 'sbb', 'and', 'or', 'xor', 'test
              'stc', 'clc', 'cmc'}
 
 
+STRING_OPCODES = {0xa4, 0xa5, 0xa6, 0xa7, 0xaa, 0xab, 0xac, 0xad, 0xae, 0xaf}
+
+
+def mnemonic_of(ins):
+    """The mnemonic with a string instruction's repeat prefix, which Capstone drops from
+    `repne movsd` (f2 a5, as Watcom's memcpy writes it), even from its prefix list: f2 repeats
+    movs, stos and lods as f3 does, and cmps and scas while unequal. A string instruction's
+    opcode is its last byte, after its prefixes."""
+    m = ins.mnemonic
+    raw = bytes(ins.bytes)
+    if raw[-1] in STRING_OPCODES and ' ' not in m:
+        if 0xf3 in raw[:-1]:
+            return ('repe ' if m[:4] in ('cmps', 'scas') else 'rep ') + m
+        if 0xf2 in raw[:-1]:
+            return ('repne ' if m[:4] in ('cmps', 'scas') else 'rep ') + m
+    return m
+
 def flag_effect(ins):
     """(read, written) flag masks."""
-    m = ins.mnemonic
+    m = mnemonic_of(ins)
     for prefix in ('rep ', 'repe ', 'repne ', 'repz ', 'repnz '):
         if m.startswith(prefix):
             base = m[len(prefix):]
@@ -562,7 +720,7 @@ class Gen:
         return self.tail_to(target)
 
     def insn(self, ins):
-        m = ins.mnemonic
+        m = mnemonic_of(ins)
         ops = ins.operands
         a = ins.address
         live = self.live_after.get(a, ALL)
@@ -595,14 +753,20 @@ class Gen:
                 return ['/* nop */']
             return ['t0 = %s;' % self.read(ops[0]), 't1 = %s;' % self.read(ops[1]),
                     self.write(ops[0], 't1'), self.write(ops[1], 't0')]
+        if m == 'push' and ops[0].type == X.X86_OP_REG and ops[0].reg in SEGMENTS:
+            # A flat process's selectors (Watcom's runtime saves es around string moves).
+            v = {X.X86_REG_FS: '0x3bu', X.X86_REG_CS: '0x1bu'}.get(ops[0].reg, '0x23u')
+            return ['esp -= 4;', 'W32(esp, %s);' % v]
+        if m == 'pop' and ops[0].type == X.X86_OP_REG and ops[0].reg in SEGMENTS:
+            return ['esp += 4; /* segment load ignored */']
         if m == 'push':
             v = self.read(ops[0], 4) if ops[0].type != X.X86_OP_IMM else '0x%xu' % (ops[0].imm & 0xffffffff)
             if ops[0].size == 2:
                 return ['t0 = %s;' % v, 'esp -= 2;', 'W16(esp, t0);']
             return ['t0 = %s;' % v, 'esp -= 4;', 'W32(esp, t0);']
         if m == 'pop':
-            if ops[0].type == X.X86_OP_MEM and ops[0].mem.base == X.X86_REG_ESP:
-                return ['t0 = R32(esp);', 'esp += 4;', self.write(ops[0], 't0')]
+            if ops[0].size == 2:  # pop ax (Watcom's FPU set-up saves ax with a 16-bit push)
+                return ['t0 = R16(esp);', 'esp += 2;', self.write(ops[0], 't0')]
             return ['t0 = R32(esp);', 'esp += 4;', self.write(ops[0], 't0')]
         if m in ('pushal', 'pushad'):
             return ['t0 = esp;'] + ['esp -= 4; W32(esp, %s);' % r for r in
@@ -895,7 +1059,8 @@ class Gen:
             if a in self.f.switches and self.f.switches[a][1]:
                 L.append('switch (t0) {')
                 for t in sorted(set(self.f.switches[a][1])):
-                    L.append('case 0x%xu: goto L_%x;' % (t, t))
+                    # A target that starts another function continues there as a tail call.
+                    L.append('case 0x%xu: %s' % (t, self.goto(t)))
                 L.append('}')
             L.append('%s JUMP(c, t0); return;' % self.sync_out())
             return L
@@ -913,14 +1078,16 @@ class Gen:
             op = ops[0]
             ret = a + ins.size
             flags_needed = self.live_after.get(a, 0) & ALL
-            L.append('esp -= 4; W32(esp, 0x%xu);' % ret)
             if op.type == X.X86_OP_IMM:
+                L.append('esp -= 4; W32(esp, 0x%xu);' % ret)
                 t = op.imm & 0xffffffff
                 call = 'F_%x(c);' % t if t in self.entries else 'CALL(c, 0x%xu);' % t
                 L.append('%s %s %s' % (self.sync_out(flags=t in self.flag_readers), call,
                                        self.sync_in(flags_needed != 0)))
             else:
+                # The target is read before the return address is pushed (`call [esp + n]`).
                 L.append('t0 = %s;' % self.read(op, 4) if op.type != X.X86_OP_MEM else 't0 = R32(%s);' % self.addr(op))
+                L.append('esp -= 4; W32(esp, 0x%xu);' % ret)
                 L.append('%s CALL(c, t0); %s' % (self.sync_out(flags=False), self.sync_in(flags_needed != 0)))
             return L
         if m in ('ret', 'repz ret'):
@@ -1138,7 +1305,7 @@ def flag_returners(p, funcs, readers=frozenset()):
             return found
 
 
-HEADER = '''/* Generated by vertrix3/recomp.py from Vertrix3.exe (sha256 %s). Do not edit. */
+HEADER = '''/* Generated by vertrix3/recomp.py from %s (sha256 %s). Do not edit. */
 #include "v3_functions.h"
 '''
 
@@ -1161,7 +1328,7 @@ def main():
     files = []
     for k in range(0, len(names), PER_FILE):
         chunk = names[k:k + PER_FILE]
-        text = [HEADER % SHA256]
+        text = [HEADER % ('%s, %s' % (p.executable, p.game), p.sha256)]
         for e in chunk:
             g = Gen(p, funcs[e], entries, returners, readers)
             body = g.emit()
@@ -1190,7 +1357,9 @@ def main():
     for address, (dll, name) in sorted(p.iat.items()):
         imports.append('    {0x%xu, "%s", "%s"},' % (address, dll, name))
     imports += ['};', 'const unsigned v3_import_count = %d;' % len(p.iat),
-                'const uint32_t v3_entry_offset = 0x%xu;' % (p.entry - p.base), '']
+                'const uint32_t v3_entry_offset = 0x%xu;' % (p.entry - p.base),
+                'const char v3_game_directory[] = "%s";' % p.directory.replace('\\', '\\\\'),
+                'const char v3_executable[] = "%s";' % p.executable, '']
     (args.out / 'v3_table.c').write_text('\n'.join(table + imports))
     print('functions %d, files %d, flag-returning %d' % (len(names), len(files), len(returners)))
     print('unsupported:', dict(sorted(unsupported.items(), key=lambda x: -x[1])))

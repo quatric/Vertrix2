@@ -11,6 +11,10 @@
 #endif
 
 extern const uint32_t v3_entry_offset;
+/* The recompiled game (recomp.py): the directory it is told it runs from ("C:\\Vertrix3") and its
+ * executable's name there. */
+extern const char v3_game_directory[];
+extern const char v3_executable[];
 
 enum
 {
@@ -73,6 +77,13 @@ extern const V3Export v3_ole32[];
 extern const V3Export v3_advapi32[];
 extern const V3Export v3_d3d9[];
 extern const V3Export v3_dinput8[];
+extern const V3Export v3_dinput[];
+extern const V3Export v3_gdi32[];
+extern const V3Export v3_shell32[];
+extern const V3Export v3_comctl32[];
+extern const V3Export v3_comdlg32[];
+extern const V3Export v3_winspool[];
+extern const V3Export v3_ddraw[];
 
 /* Map a game path (".\VERTRIX3.VF", "C:\...\Settings\Vertrix3.cfg") to a host path. */
 void v3_host_path(const char *game_path, char *out, size_t size);

@@ -91,8 +91,9 @@ uint32_t v3_call_guest(Cpu *c, uint32_t address, unsigned count, const uint32_t 
 typedef struct V3Platform V3Platform;
 
 /* Load the image, bind imports and run the original's entry point on the calling thread; returns
- * the exit code when the game calls ExitProcess. */
-int v3_run(const uint8_t *image, uint32_t image_size, const char *command_line,
+ * the exit code when the game calls ExitProcess. `options` follow the executable's quoted path on
+ * the command line (NULL for none). */
+int v3_run(const uint8_t *image, uint32_t image_size, const char *options,
            const V3Platform *platform);
 /* Bind an import by DLL and name to its host implementation (vertrix3/win32). */
 V3Code v3_import(const char *dll, const char *name);

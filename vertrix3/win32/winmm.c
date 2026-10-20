@@ -245,10 +245,115 @@ static void waveOutClose(Cpu *c)
     STDCALL_RETURN(1, 0);
 }
 
+/* --- multimedia timers ----------------------------------------------------------------------
+ * Each timer runs on its own host thread with its own guest CPU, as a Windows timer callback runs
+ * on the system's timer thread: due times follow a fixed schedule from the start, so a late tick
+ * does not move the ones after it. */
+
+enum
+{
+    TIMERS = 8,
+    TIME_PERIODIC = 0x1,
+    TIME_CALLBACK_EVENT_SET = 0x10,
+    TIME_CALLBACK_EVENT_PULSE = 0x20
+};
+
+typedef struct
+{
+    volatile int active;
+    uint32_t id, delay, callback, user, flags;
+    V3Thread *thread;
+} Timer;
+
+static Timer timers[TIMERS];
+
+static void timer_run(void *p)
+{
+    Timer *t = p;
+    v3_thread_set_self(t->thread);
+    const uint32_t id = t->id;
+    uint64_t due = v3_microseconds();
+    while (t->active && t->id == id)
+    {
+        due += (uint64_t)(t->delay ? t->delay : 1u) * 1000u;
+        const uint64_t now = v3_microseconds();
+        if (due > now)
+        {
+            v3_sleep_ms((uint32_t)((due - now + 999u) / 1000u));
+        }
+        if (!t->active || t->id != id)
+        {
+            break;
+        }
+        if (t->flags & (TIME_CALLBACK_EVENT_SET | TIME_CALLBACK_EVENT_PULSE))
+        {
+            V3EventObject *e = v3_handle_get(t->callback, V3_HANDLE_EVENT);
+            if (e)
+            {
+                v3_event_set(e->event);
+            }
+        }
+        else
+        {
+            const uint32_t arguments[5] = {id, 0, t->user, 0, 0};
+            v3_call_guest(&t->thread->cpu, t->callback, 5, arguments, 0);
+        }
+        if (!(t->flags & TIME_PERIODIC))
+        {
+            t->active = 0;
+        }
+    }
+}
+
+/* timeSetEvent(delay, resolution, callback, user, flags) */
+static void timeSetEvent(Cpu *c)
+{
+    static uint32_t next_id;
+    for (unsigned i = 0; i < TIMERS; ++i)
+    {
+        Timer *t = &timers[i];
+        if (t->active)
+        {
+            continue;
+        }
+        t->id = ++next_id;
+        t->delay = ARG(0);
+        t->callback = ARG(2);
+        t->user = ARG(3);
+        t->flags = ARG(4);
+        t->active = 1;
+        t->thread = v3_thread_create(0, 0, 0x40000);
+        v3_log("timeSetEvent(%u ms, callback %08x, flags %x) -> %u", t->delay, t->callback,
+               t->flags, t->id);
+        if (!t->thread || !v3_thread_start(timer_run, t, 1))
+        {
+            t->active = 0;
+            STDCALL_RETURN(5, 0);
+        }
+        STDCALL_RETURN(5, t->id);
+    }
+    STDCALL_RETURN(5, 0);
+}
+
+static void timeKillEvent(Cpu *c)
+{
+    for (unsigned i = 0; i < TIMERS; ++i)
+    {
+        if (timers[i].active && timers[i].id == ARG(0))
+        {
+            timers[i].active = 0;
+            STDCALL_RETURN(1, 0);
+        }
+    }
+    STDCALL_RETURN(1, 97); /* MMSYSERR_INVALPARAM */
+}
+
 const V3Export v3_winmm[] = {{"timeGetTime", timeGetTime},
                              {"timeBeginPeriod", timeBeginPeriod},
                              {"timeEndPeriod", timeEndPeriod},
                              {"timeGetDevCaps", timeGetDevCaps},
+                             {"timeSetEvent", timeSetEvent},
+                             {"timeKillEvent", timeKillEvent},
                              {"waveOutGetNumDevs", waveOutGetNumDevs},
                              {"waveOutGetDevCapsA", waveOutGetDevCapsA},
                              {"waveOutOpen", waveOutOpen},

@@ -150,14 +150,14 @@ typedef struct
 {
     uint8_t *image;
     long size;
-    const char *command_line;
+    const char *options;
     V3Platform platform;
 } Run;
 
 static void *game(void *p)
 {
     Run *r = p;
-    const int code = v3_run(r->image, (uint32_t)r->size, r->command_line, &r->platform);
+    const int code = v3_run(r->image, (uint32_t)r->size, r->options, &r->platform);
     v3_log("game exited with %d after %u frames", code, frames);
     exit(code);
 }
@@ -218,8 +218,7 @@ int main(int argc, char **argv)
     {
         frame_every = (unsigned)atoi(argv[5]);
     }
-    run.command_line = argc > 6 ? "\"C:\\Vertrix3\\Vertrix3.exe\" -options"
-                                : "\"C:\\Vertrix3\\Vertrix3.exe\"";
+    run.options = argc > 6 ? "-options" : NULL;
     script = getenv("V3_SCRIPT");
     if (getenv("V3_TRACE"))
     {

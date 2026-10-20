@@ -1,4 +1,5 @@
-/* DirectInput 8: the system keyboard and mouse, read immediately (GetDeviceState) or buffered
+/* DirectInput 8 (and DirectInput 1, whose interfaces begin with the same methods): the system
+ * keyboard and mouse, read immediately (GetDeviceState) or buffered
  * (GetDeviceData). The platform feeds them through v3_input_*; game controllers are absent, so
  * the game's own key configuration applies (the Wii driver maps its controllers onto keys). */
 
@@ -347,7 +348,7 @@ static uint32_t make_vtable(const char *interface, unsigned slots, const Method 
     return table;
 }
 
-static void DirectInput8Create(Cpu *c)
+static uint32_t input_object_get(void)
 {
     static const Method input[] = {{0, "QueryInterface", QueryInterface},
                                    {1, "AddRef", AddRef},
@@ -381,9 +382,25 @@ static void DirectInput8Create(Cpu *c)
         input_object = v3_system_alloc(16);
         v3_w32(input_object, vtable_input);
     }
+    return input_object;
+}
+
+/* (instance, version, iid, out, outer) */
+static void DirectInput8Create(Cpu *c)
+{
     v3_log("DirectInput8Create(version %x)", ARG(1));
-    v3_w32(ARG(3), input_object);
+    v3_w32(ARG(3), input_object_get());
     STDCALL_RETURN(5, DI_OK);
 }
 
+/* DirectInput 1 (Vertrix 2 v1.2): (instance, version, out, outer). IDirectInputA and
+ * IDirectInputDeviceA are the first slots of their DirectInput 8 counterparts. */
+static void DirectInputCreateA(Cpu *c)
+{
+    v3_log("DirectInputCreateA(version %x)", ARG(1));
+    v3_w32(ARG(2), input_object_get());
+    STDCALL_RETURN(4, DI_OK);
+}
+
 const V3Export v3_dinput8[] = {{"DirectInput8Create", DirectInput8Create}, {NULL, NULL}};
+const V3Export v3_dinput[] = {{"DirectInputCreateA", DirectInputCreateA}, {NULL, NULL}};
