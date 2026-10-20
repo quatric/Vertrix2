@@ -1,5 +1,6 @@
 """Shared helpers for oracle verification scripts: callee stubs and an object pool."""
 import ctypes as c
+import os
 import struct
 import subprocess
 from pathlib import Path
@@ -130,16 +131,29 @@ class Pool:
             self.cpu.mem_write(handle, bytes(data))
             self.buffers[handle] = c.create_string_buffer(bytes(data), self.size)
 
+    # VERTRIX_UNCOMPARED_FIELDS="0x18:4;0x20:12": offsets of every object left out of the
+    # comparison, for values the oracle and the lifted runtime cannot share (setjmp's return
+    # address and segment selectors).
+    UNCOMPARED = [tuple(int(v, 0) for v in item.split(':')) for item in
+                  os.environ.get('VERTRIX_UNCOMPARED_FIELDS', '').split(';') if item]
+
+    def _compared(self, data):
+        data = bytearray(data)
+        for offset, size in self.UNCOMPARED:
+            data[offset:offset + size] = bytes(size)
+        return bytes(data)
+
     def same(self):
-        return all(self.buffers[h].raw == bytes(self.cpu.mem_read(h, self.size))
-                   for h in self.handles)
+        return all(self._compared(self.buffers[h].raw) ==
+                   self._compared(self.cpu.mem_read(h, self.size)) for h in self.handles)
 
     def diff(self):
         """The objects that differ, each with its first differing offset and the native and
         original bytes there."""
         result = []
         for h in self.handles:
-            native, original = self.buffers[h].raw, bytes(self.cpu.mem_read(h, self.size))
+            native = self._compared(self.buffers[h].raw)
+            original = self._compared(self.cpu.mem_read(h, self.size))
             if native != original:
                 at = next(i for i in range(self.size) if native[i] != original[i])
                 result.append((hex(h), hex(at), native[at], original[at]))

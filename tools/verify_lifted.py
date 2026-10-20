@@ -139,6 +139,11 @@ def run(name, spec=None, meta=None, source=None, hints=None):
         if os.environ.get('VERTRIX_FRAME_BYTES'):
             choices = [int(v, 0) for v in os.environ['VERTRIX_FRAME_BYTES'].split(',')]
             cpu.mem_write(FRAME - locals_size, bytes(rng.choice(choices) for _ in range(locals_size)))
+        # VERTRIX_SEED_REGISTERS=1: esi, edi and ebp enter with their own random values (otherwise
+        # whatever the emulator holds, often equal), for a routine that stores them.
+        if os.environ.get('VERTRIX_SEED_REGISTERS'):
+            for register in (UC_X86_REG_ESI, UC_X86_REG_EDI, UC_X86_REG_EBP):
+                cpu.reg_write(register, rng.getrandbits(32))
         garbage = bytes(cpu.mem_read(FRAME - locals_size, locals_size))
         chain = struct.unpack('<I', bytes(cpu.mem_read(TEB, 4)))[0]
         arguments = (U * max(count, 1))(*stack_args)

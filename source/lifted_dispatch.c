@@ -193,6 +193,7 @@
 #include "rtlcolours.h"
 #include "rtlcolumnfades.h"
 #include "rtlcomings.h"
+#include "rtlcommandlines.h"
 #include "rtlconsoles.h"
 #include "rtlcontrols.h"
 #include "rtlconverts.h"
@@ -4219,6 +4220,8 @@ static const LiftedRoutine routines[] = {
     {0x4e5b0c, vertrix_port_rtl_locks_init_4e5b0c, 0, 0},
     {0x4e5bec, vertrix_port_rtl_object_flush_4e5bec, 0, 0},
     {0x4e5ef0, vertrix_port_rtl_code_page_reset_4e5ef0, 0, 0},
+    {0x4e5f00, vertrix_port_rtl_set_arguments_4e5f00, 0, 0},
+    {0x4e5fe4, vertrix_port_rtl_split_arguments_4e5fe4, 0, 0},
     {0x4e6250, vertrix_port_rtl_fatal_write_4e6250, 0, 0},
     {0x4e628c, vertrix_port_rtl_error_message_4e628c, 0, 0},
     {0x4e62b0, vertrix_port_heap_reserve, 0, 0},
