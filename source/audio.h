@@ -14,6 +14,18 @@ typedef struct
  * Initialize output to zero. Invalid/unsupported files preserve output. */
 int vertrix_audio_pcm8(VertrixVf *archive, const char *name, VertrixPcm8 *output);
 void vertrix_pcm8_free(VertrixPcm8 *audio);
+
+typedef struct
+{
+    uint32_t sample_rate;
+    uint32_t sample_count;
+    int16_t *samples;
+} VertrixPcm16;
+
+/* Vertrix 3's newer WAV effects are PCM, mono, signed 16-bit little-endian samples; the samples
+ * are returned in host byte order. Same contract as vertrix_audio_pcm8 otherwise. */
+int vertrix_audio_pcm16(VertrixVf *archive, const char *name, VertrixPcm16 *output);
+void vertrix_pcm16_free(VertrixPcm16 *audio);
 typedef struct
 {
     uint16_t format;

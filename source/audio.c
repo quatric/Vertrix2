@@ -22,13 +22,11 @@ void vertrix_pcm8_free(VertrixPcm8 *audio)
     }
 }
 
-int vertrix_audio_pcm8(VertrixVf *archive, const char *name, VertrixPcm8 *output)
+/* A mono PCM WAV of the given sample width: its rate and its data chunk, read whole. */
+static int wav_read(VertrixVf *archive, const char *name, uint16_t bits, uint32_t *sample_rate,
+                    unsigned char **data, uint32_t *data_bytes)
 {
-    if (!archive || !name || !output || output->samples || output->sample_rate ||
-        output->sample_count)
-    {
-        return 0;
-    }
+    const uint32_t block = bits / 8u;
     uint32_t index, size;
     unsigned char header[16];
     if (!vertrix_vf_find(archive, name, &index) || !vertrix_vf_size(archive, index, &size) ||
@@ -59,13 +57,13 @@ int vertrix_audio_pcm8(VertrixVf *archive, const char *name, VertrixPcm8 *output
         if (!memcmp(header, "fmt ", 4))
         {
             if (rate || length < 16 || !vertrix_vf_read(archive, index, offset, header, 16) ||
-                le16(header) != 1 || le16(header + 2) != 1 || le16(header + 12) != 1 ||
-                le16(header + 14) != 8)
+                le16(header) != 1 || le16(header + 2) != 1 || le16(header + 12) != block ||
+                le16(header + 14) != bits)
             {
                 return 0;
             }
             rate = le32(header + 4);
-            if (!rate || le32(header + 8) != rate)
+            if (!rate || le32(header + 8) != rate * block)
             {
                 return 0;
             }
@@ -103,7 +101,59 @@ int vertrix_audio_pcm8(VertrixVf *archive, const char *name, VertrixPcm8 *output
         free(samples);
         return 0;
     }
-    *output = (VertrixPcm8){rate, data_size, samples};
+    *sample_rate = rate;
+    *data = samples;
+    *data_bytes = data_size;
+    return 1;
+}
+
+int vertrix_audio_pcm8(VertrixVf *archive, const char *name, VertrixPcm8 *output)
+{
+    if (!archive || !name || !output || output->samples || output->sample_rate ||
+        output->sample_count)
+    {
+        return 0;
+    }
+    uint32_t rate, size;
+    unsigned char *samples;
+    if (!wav_read(archive, name, 8, &rate, &samples, &size))
+    {
+        return 0;
+    }
+    *output = (VertrixPcm8){rate, size, samples};
+    return 1;
+}
+
+void vertrix_pcm16_free(VertrixPcm16 *audio)
+{
+    if (audio)
+    {
+        free(audio->samples);
+        memset(audio, 0, sizeof(*audio));
+    }
+}
+
+int vertrix_audio_pcm16(VertrixVf *archive, const char *name, VertrixPcm16 *output)
+{
+    if (!archive || !name || !output || output->samples || output->sample_rate ||
+        output->sample_count)
+    {
+        return 0;
+    }
+    uint32_t rate, size;
+    unsigned char *bytes;
+    if (!wav_read(archive, name, 16, &rate, &bytes, &size))
+    {
+        return 0;
+    }
+    /* A trailing odd byte is not a sample. Samples are converted from little-endian in place. */
+    const uint32_t count = size / 2;
+    int16_t *samples = (int16_t *)bytes;
+    for (uint32_t i = 0; i < count; ++i)
+    {
+        samples[i] = (int16_t)le16(bytes + 2 * i);
+    }
+    *output = (VertrixPcm16){rate, count, samples};
     return 1;
 }
 

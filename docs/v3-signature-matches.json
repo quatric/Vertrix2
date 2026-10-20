@@ -1,0 +1,1179 @@
+{
+ "vertrix3_sha256": "db625cfe1acb3f5f70d30d041362831ca59ec72b5693e463331cf2f29738f7e9",
+ "vertrix2_functions": 4300,
+ "vertrix3_functions": 3708,
+ "matched": 137,
+ "matched_known": 123,
+ "matched_ported": 122,
+ "by": {
+  "signature": 116,
+  "called": 10,
+  "neighbours": 11
+ },
+ "matches": [
+  {
+   "vertrix2": "0x401054",
+   "vertrix3": "0x494670",
+   "name": "vertrix_mixer_output",
+   "port": "vertrix_port_mix_clamp",
+   "by": "signature 0.76",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x407020",
+   "vertrix3": "0x4a1580",
+   "name": null,
+   "port": "vertrix_port_mpeg1_side_info_407020",
+   "by": "signature 0.65",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x407830",
+   "vertrix3": "0x4a24e0",
+   "name": null,
+   "port": "vertrix_port_mpeg_huffman_decode_407830",
+   "by": "signature 0.49",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x40a190",
+   "vertrix3": "0x4a4a20",
+   "name": null,
+   "port": "vertrix_port_mpeg_decode_granules",
+   "by": "neighbours 2",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x40ae80",
+   "vertrix3": "0x492630",
+   "name": "vertrix_module_reset_calls",
+   "port": "vertrix_port_audio_hooks_install",
+   "by": "called from 0x40af30",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x40af30",
+   "vertrix3": "0x4921f0",
+   "name": null,
+   "port": "vertrix_port_audio_thread_start",
+   "by": "signature 0.46",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x40b0a0",
+   "vertrix3": "0x495860",
+   "name": null,
+   "port": "vertrix_port_record_setup_40b0a0",
+   "by": "signature 1.00",
+   "strings": [
+    "DirectSound"
+   ]
+  },
+  {
+   "vertrix2": "0x40c6b0",
+   "vertrix3": "0x494de0",
+   "name": null,
+   "port": "vertrix_port_mixer_open",
+   "by": "signature 0.59",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x40c7d0",
+   "vertrix3": "0x494f00",
+   "name": null,
+   "port": "vertrix_port_mixer_volume_tables",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x40ce80",
+   "vertrix3": "0x492730",
+   "name": "vertrix_mixer_note_period",
+   "port": "vertrix_port_mixer_note_period",
+   "by": "called from 0x40e580",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x40da20",
+   "vertrix3": "0x4931f0",
+   "name": "vertrix_mixer_retrigger",
+   "port": null,
+   "by": "signature 0.86",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x40df20",
+   "vertrix3": "0x4935b0",
+   "name": "vertrix_mixer_trigger_reset",
+   "port": "vertrix_port_voice_note_reset",
+   "by": "signature 0.69",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x40e030",
+   "vertrix3": "0x493670",
+   "name": "vertrix_mixer_playback_tick",
+   "port": "vertrix_port_rtl_mixer_tick_40e030",
+   "by": "signature 0.94",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x40e580",
+   "vertrix3": "0x493ab0",
+   "name": "vertrix_mixer_select_sample",
+   "port": "vertrix_port_voice_sample_select",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x40ec40",
+   "vertrix3": "0x4940d0",
+   "name": "vertrix_sequence_start",
+   "port": "vertrix_port_module_start",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x40ed70",
+   "vertrix3": "0x494200",
+   "name": "vertrix_flagged_table_call",
+   "port": "vertrix_port_flagged_table_call_40ed70",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x40ef90",
+   "vertrix3": "0x4942d0",
+   "name": "vertrix_object_free_tree",
+   "port": "vertrix_port_module_free_40ef90",
+   "by": "neighbours 2",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x410f20",
+   "vertrix3": "0x4954a0",
+   "name": null,
+   "port": "vertrix_port_sound_device_caps",
+   "by": "signature 1.00",
+   "strings": [
+    "Windows Wave"
+   ]
+  },
+  {
+   "vertrix2": "0x410f80",
+   "vertrix3": "0x495520",
+   "name": null,
+   "port": "vertrix_port_import_check_4f1740",
+   "by": "signature 0.55",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4111c0",
+   "vertrix3": "0x495790",
+   "name": null,
+   "port": "vertrix_port_wave_pump",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x413bd0",
+   "vertrix3": "0x450f60",
+   "name": null,
+   "port": "vertrix_port_texts_load_413bd0",
+   "by": "signature 0.55",
+   "strings": [
+    ".\\TEXTE\\",
+    "BackGroundFileName.ini",
+    "BackGroundInfo.ini"
+   ]
+  },
+  {
+   "vertrix2": "0x414a90",
+   "vertrix3": "0x452480",
+   "name": "vertrix_anchor_offsets_update",
+   "port": "vertrix_port_level_offsets_534888",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x416990",
+   "vertrix3": "0x453170",
+   "name": null,
+   "port": "vertrix_port_high_score_name_416990",
+   "by": "signature 0.61",
+   "strings": [
+    "<HIM> %s",
+    "<YOU> %s"
+   ]
+  },
+  {
+   "vertrix2": "0x416a80",
+   "vertrix3": "0x4534b0",
+   "name": "vertrix_object_load_script",
+   "port": "vertrix_port_object_load_script_416a80",
+   "by": "signature 1.00",
+   "strings": [
+    "<SYS> %s"
+   ]
+  },
+  {
+   "vertrix2": "0x4182f0",
+   "vertrix3": "0x4ff270",
+   "name": "vertrix_resource_entry_call",
+   "port": "vertrix_port_stream_open_513e60_4182f0",
+   "by": "signature 0.65",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x41a010",
+   "vertrix3": "0x42ada0",
+   "name": null,
+   "port": "vertrix_port_window_close_41a010",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4290c0",
+   "vertrix3": "0x446d20",
+   "name": "vertrix_settings_defaults",
+   "port": "vertrix_port_settings_defaults_4290c0",
+   "by": "signature 0.98",
+   "strings": [
+    "000.000.000.000",
+    "PLAYER",
+    "TEST"
+   ]
+  },
+  {
+   "vertrix2": "0x42eee0",
+   "vertrix3": "0x494ed0",
+   "name": null,
+   "port": "vertrix_port_release_slots_324_42eee0",
+   "by": "signature 0.60",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x42fb60",
+   "vertrix3": "0x4583b0",
+   "name": null,
+   "port": "vertrix_port_board_frame_42fb60",
+   "by": "signature 0.66",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4300b0",
+   "vertrix3": "0x471660",
+   "name": "vertrix_board_place_extra",
+   "port": "vertrix_port_board_place_extra_4300b0",
+   "by": "signature 0.88",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x432160",
+   "vertrix3": "0x4ab290",
+   "name": "vertrix_player_piece_create",
+   "port": "vertrix_port_player_piece_create_432160",
+   "by": "signature 0.91",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x432980",
+   "vertrix3": "0x4c5ae0",
+   "name": null,
+   "port": "vertrix_port_board_settle_432980",
+   "by": "signature 0.54",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x448010",
+   "vertrix3": "0x41e740",
+   "name": null,
+   "port": "vertrix_port_actor_notice_wait_448010",
+   "by": "signature 0.85",
+   "strings": [
+    "CREATE SESSION...",
+    "JOIN SESSION..."
+   ]
+  },
+  {
+   "vertrix2": "0x44bf70",
+   "vertrix3": "0x407720",
+   "name": null,
+   "port": "vertrix_port_actor_homing_44bf70",
+   "by": "signature 0.60",
+   "strings": [
+    "%s IS WAITING FOR YOU."
+   ]
+  },
+  {
+   "vertrix2": "0x4571f0",
+   "vertrix3": "0x4a7870",
+   "name": null,
+   "port": "vertrix_port_animation_end_4571f0",
+   "by": "signature 0.71",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x458a70",
+   "vertrix3": "0x445610",
+   "name": null,
+   "port": "vertrix_port_piece_rise_458a70",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4597e0",
+   "vertrix3": "0x42a510",
+   "name": null,
+   "port": "vertrix_port_actor_screen_place_4597e0",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x45cdd0",
+   "vertrix3": "0x46f5f0",
+   "name": null,
+   "port": "vertrix_port_actor_respawn_wait",
+   "by": "signature 0.54",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x45d820",
+   "vertrix3": "0x40dcf0",
+   "name": "vertrix_object_step_toggle",
+   "port": "vertrix_port_object_step_toggle_45d820",
+   "by": "signature 0.59",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x45f540",
+   "vertrix3": "0x48c6e0",
+   "name": "vertrix_string_append",
+   "port": "vertrix_port_path_join",
+   "by": "called from 0x4848f0",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x461360",
+   "vertrix3": "0x418e90",
+   "name": null,
+   "port": "vertrix_port_choice_dialog_461360",
+   "by": "signature 0.61",
+   "strings": [
+    "1PLAYER",
+    "2PLAYERS",
+    "EXIT"
+   ]
+  },
+  {
+   "vertrix2": "0x4614c0",
+   "vertrix3": "0x419060",
+   "name": null,
+   "port": "vertrix_port_choice_dialog_4614c0",
+   "by": "signature 0.60",
+   "strings": [
+    "1PLAYER",
+    "PRACTICE",
+    "RETURN"
+   ]
+  },
+  {
+   "vertrix2": "0x461610",
+   "vertrix3": "0x419230",
+   "name": null,
+   "port": "vertrix_port_choice_dialog_461610",
+   "by": "signature 0.73",
+   "strings": [
+    "2PLAYERS",
+    "NETWORK",
+    "PRACTICE"
+   ]
+  },
+  {
+   "vertrix2": "0x461790",
+   "vertrix3": "0x419450",
+   "name": null,
+   "port": "vertrix_port_options_menu_461790",
+   "by": "signature 0.68",
+   "strings": [
+    "GAME",
+    "HIGHS",
+    "KEYS"
+   ]
+  },
+  {
+   "vertrix2": "0x476a00",
+   "vertrix3": "0x491550",
+   "name": "vertrix_sound_open_keys",
+   "port": "vertrix_port_key_layout_set",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x476aa0",
+   "vertrix3": "0x4915f0",
+   "name": null,
+   "port": "vertrix_port_joystick_setup_476aa0",
+   "by": "signature 0.71",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x476d70",
+   "vertrix3": "0x491880",
+   "name": null,
+   "port": "vertrix_port_joystick_poll",
+   "by": "called from 0x4b7b80",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x477390",
+   "vertrix3": "0x491270",
+   "name": null,
+   "port": "vertrix_port_keyboard_setup_477390",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4774e0",
+   "vertrix3": "0x4913a0",
+   "name": null,
+   "port": "vertrix_port_keyboard_poll",
+   "by": "signature 0.47",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x477b10",
+   "vertrix3": "0x490310",
+   "name": null,
+   "port": "vertrix_port_mouse_setup_477b10",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x477f10",
+   "vertrix3": "0x490780",
+   "name": null,
+   "port": "vertrix_port_mouse_poll",
+   "by": "signature 0.60",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x478860",
+   "vertrix3": "0x49ce70",
+   "name": null,
+   "port": "vertrix_port_sound_device_open",
+   "by": "signature 0.73",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x478910",
+   "vertrix3": "0x49d010",
+   "name": null,
+   "port": "vertrix_port_module_load_478910",
+   "by": "neighbours 2",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x47e4f0",
+   "vertrix3": "0x44ce60",
+   "name": null,
+   "port": "vertrix_port_screen_construct_47e4f0",
+   "by": "signature 0.55",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x47eba0",
+   "vertrix3": "0x44d480",
+   "name": null,
+   "port": null,
+   "by": "signature 0.55",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x47f430",
+   "vertrix3": "0x44dcd0",
+   "name": null,
+   "port": null,
+   "by": "signature 0.79",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x47f900",
+   "vertrix3": "0x44e250",
+   "name": null,
+   "port": null,
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x47fa40",
+   "vertrix3": "0x44e3b0",
+   "name": null,
+   "port": "vertrix_port_surface_lock_47fa40",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x47fa90",
+   "vertrix3": "0x44e400",
+   "name": null,
+   "port": "vertrix_port_surface_blit_47fa90",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x47faf0",
+   "vertrix3": "0x44e460",
+   "name": "vertrix_object_set_text",
+   "port": "vertrix_port_object_set_text_47faf0",
+   "by": "neighbours 3",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x47fd70",
+   "vertrix3": "0x44e580",
+   "name": null,
+   "port": null,
+   "by": "signature 0.93",
+   "strings": [
+    "Failed Enumerating Service Providers:  0x%x\n"
+   ]
+  },
+  {
+   "vertrix2": "0x47feb0",
+   "vertrix3": "0x44e640",
+   "name": null,
+   "port": null,
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x480ec0",
+   "vertrix3": "0x4a4ef0",
+   "name": null,
+   "port": "vertrix_port_image_read",
+   "by": "signature 0.59",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x482aa0",
+   "vertrix3": "0x49cdc0",
+   "name": null,
+   "port": "vertrix_port_image_file_load",
+   "by": "signature 0.91",
+   "strings": [
+    ".Mp3",
+    ".Wav"
+   ]
+  },
+  {
+   "vertrix2": "0x483790",
+   "vertrix3": "0x45cb80",
+   "name": null,
+   "port": "vertrix_port_image_alpha_edge_smooth_483790",
+   "by": "signature 0.48",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x484550",
+   "vertrix3": "0x491e10",
+   "name": "vertrix_rotation_tables_load",
+   "port": "vertrix_port_tables_load",
+   "by": "signature 0.95",
+   "strings": [
+    "Cos.tab",
+    "InvCos.tab",
+    "Sin.tab"
+   ]
+  },
+  {
+   "vertrix2": "0x4845d0",
+   "vertrix3": "0x491eb0",
+   "name": "vertrix_angle_from_ratio",
+   "port": "vertrix_port_angle_lookup",
+   "by": "signature 0.69",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4848f0",
+   "vertrix3": "0x491fb0",
+   "name": null,
+   "port": "vertrix_port_archive_file_read",
+   "by": "called from 0x484550",
+   "strings": [
+    ".\\TABLE\\"
+   ]
+  },
+  {
+   "vertrix2": "0x487df0",
+   "vertrix3": "0x447090",
+   "name": null,
+   "port": null,
+   "by": "neighbours 2",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x48a710",
+   "vertrix3": "0x48d700",
+   "name": null,
+   "port": "vertrix_port_resource_load_48a710",
+   "by": "called from 0x4848f0",
+   "strings": [
+    "UNKNOWN"
+   ]
+  },
+  {
+   "vertrix2": "0x48a8c0",
+   "vertrix3": "0x48d6b0",
+   "name": "vertrix_object_unknown_reset",
+   "port": "vertrix_port_name_record_reset",
+   "by": "called from 0x4848f0",
+   "strings": [
+    "UNKNOWN"
+   ]
+  },
+  {
+   "vertrix2": "0x48ac00",
+   "vertrix3": "0x46ab10",
+   "name": "vertrix_font_glyph_index_full",
+   "port": "vertrix_port_font_glyph_index",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x48b2f0",
+   "vertrix3": "0x49e150",
+   "name": null,
+   "port": "vertrix_port_mp3_decode_to_memory_48b2f0",
+   "by": "signature 0.54",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x48bdf0",
+   "vertrix3": "0x44efc0",
+   "name": null,
+   "port": null,
+   "by": "signature 0.70",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x48c0f0",
+   "vertrix3": "0x44f2d0",
+   "name": null,
+   "port": "vertrix_port_session_options_48c0f0",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x48c6c0",
+   "vertrix3": "0x44f870",
+   "name": null,
+   "port": "vertrix_port_session_names_48c6c0",
+   "by": "signature 0.74",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x48ca20",
+   "vertrix3": "0x44fde0",
+   "name": null,
+   "port": "vertrix_port_address_report_48ca20",
+   "by": "signature 0.86",
+   "strings": [
+    "CAN'T FIND IP ADDRESS !",
+    "DEFAULT IP PORT USED.",
+    "IP ADDRESS : %s"
+   ]
+  },
+  {
+   "vertrix2": "0x48cc30",
+   "vertrix3": "0x450040",
+   "name": null,
+   "port": "vertrix_port_network_session_start_48cc30",
+   "by": "signature 0.92",
+   "strings": [
+    "CAN'T CREATE GAME EVENTS !...",
+    "CAN'T CREATE THE PLAYER !...",
+    "CAN'T CREATE THE SESSION !..."
+   ]
+  },
+  {
+   "vertrix2": "0x4ac980",
+   "vertrix3": "0x484490",
+   "name": "vertrix_step_toward",
+   "port": "vertrix_port_step_toward_4ac980",
+   "by": "called from 0x45d820",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4b4700",
+   "vertrix3": "0x485030",
+   "name": "vertrix_object_text_nearest",
+   "port": "vertrix_port_object_text_nearest_4b4700",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4b7420",
+   "vertrix3": "0x450d40",
+   "name": "vertrix_list_text_format",
+   "port": "vertrix_port_list_text_format_4b7420",
+   "by": "signature 1.00",
+   "strings": [
+    "%lu/2"
+   ]
+  },
+  {
+   "vertrix2": "0x4b76d0",
+   "vertrix3": "0x447c70",
+   "name": "vertrix_list_resize_call",
+   "port": "vertrix_port_list_append_text",
+   "by": "neighbours 4",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4b7b80",
+   "vertrix3": "0x42b5b0",
+   "name": null,
+   "port": "vertrix_port_input_poll_devices",
+   "by": "neighbours 2",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4b7c00",
+   "vertrix3": "0x49f880",
+   "name": null,
+   "port": "vertrix_port_timer_resolution",
+   "by": "signature 0.53",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4b7e80",
+   "vertrix3": "0x49dc00",
+   "name": "vertrix_wave_load",
+   "port": "vertrix_port_wave_stream_load_4b7e80",
+   "by": "signature 0.75",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4b826f",
+   "vertrix3": "0x49e440",
+   "name": null,
+   "port": "vertrix_port_xm_module_load_4b826f",
+   "by": "signature 0.52",
+   "strings": [
+    "Extended Module: "
+   ]
+  },
+  {
+   "vertrix2": "0x4b9330",
+   "vertrix3": "0x4a60c0",
+   "name": null,
+   "port": "vertrix_port_jpeg_default_parms_4b9330",
+   "by": "signature 0.84",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4b9540",
+   "vertrix3": "0x4a6290",
+   "name": null,
+   "port": "vertrix_port_decoder_header_check_4b9540",
+   "by": "signature 0.49",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4b95e0",
+   "vertrix3": "0x4a6330",
+   "name": null,
+   "port": "vertrix_port_decoder_input_step_4b95e0",
+   "by": "neighbours 2",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4b9710",
+   "vertrix3": "0x4a63f0",
+   "name": null,
+   "port": "vertrix_port_decoder_start_4b9710",
+   "by": "signature 0.81",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4b97c0",
+   "vertrix3": "0x4a6660",
+   "name": null,
+   "port": "vertrix_port_decoder_consume_input_4b97c0",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4b98b0",
+   "vertrix3": "0x4a6760",
+   "name": null,
+   "port": "vertrix_port_decoder_output_start_4b98b0",
+   "by": "signature 0.85",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4b9c20",
+   "vertrix3": "0x4a64f0",
+   "name": null,
+   "port": "vertrix_port_decoder_fill_input_4b9c20",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4bb040",
+   "vertrix3": "0x4af800",
+   "name": null,
+   "port": "vertrix_port_jpeg_coef_controller_init_4bb040",
+   "by": "signature 0.51",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4bbc00",
+   "vertrix3": "0x4ae000",
+   "name": null,
+   "port": "vertrix_port_jpeg_make_huff_derived_table_4bbc00",
+   "by": "signature 0.58",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4bbf30",
+   "vertrix3": "0x4ae2d0",
+   "name": null,
+   "port": "vertrix_port_jpeg_fill_bit_buffer_4bbf30",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4bc050",
+   "vertrix3": "0x4ae3f0",
+   "name": null,
+   "port": "vertrix_port_huffman_decode_slow_4bc050",
+   "by": "signature 0.74",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4bcea0",
+   "vertrix3": "0x4a8f00",
+   "name": null,
+   "port": "vertrix_port_jpeg_input_consume_markers_4bcea0",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4bdde0",
+   "vertrix3": "0x4aff40",
+   "name": null,
+   "port": "vertrix_port_jpeg_init_main_controller_4bdde0",
+   "by": "signature 0.55",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4bef10",
+   "vertrix3": "0x4a8210",
+   "name": null,
+   "port": "vertrix_port_jpeg_examine_app0_4bef10",
+   "by": "signature 0.95",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4bf190",
+   "vertrix3": "0x4a8470",
+   "name": null,
+   "port": "vertrix_port_decoder_adobe_marker_4bf190",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4bf270",
+   "vertrix3": "0x4a8520",
+   "name": null,
+   "port": "vertrix_port_application_marker_4bf270",
+   "by": "signature 0.56",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4bf6a0",
+   "vertrix3": "0x4a86b0",
+   "name": null,
+   "port": "vertrix_port_jpeg_skip_variable_marker_4bf6a0",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4bf770",
+   "vertrix3": "0x4a8880",
+   "name": null,
+   "port": null,
+   "by": "signature 0.65",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4c07d0",
+   "vertrix3": "0x4a8ca0",
+   "name": null,
+   "port": "vertrix_port_decoder_read_restart_4c07d0",
+   "by": "signature 0.52",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4c0860",
+   "vertrix3": "0x4a8d40",
+   "name": null,
+   "port": "vertrix_port_jpeg_resync_restart_4c0860",
+   "by": "signature 0.75",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4c3be0",
+   "vertrix3": "0x4acb40",
+   "name": null,
+   "port": "vertrix_port_jpeg_init_upsampler_4c3be0",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4c3fa0",
+   "vertrix3": "0x4a6830",
+   "name": "vertrix_object_init_4c3fa0",
+   "port": "vertrix_port_object_init_4c3fa0",
+   "by": "signature 0.50",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4c4000",
+   "vertrix3": "0x4b07c0",
+   "name": null,
+   "port": "vertrix_port_jpeg_idct_8x8_4c4000",
+   "by": "signature 0.55",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4c4d20",
+   "vertrix3": "0x4a68d0",
+   "name": null,
+   "port": "vertrix_port_pool_allocate_small_4c4d20",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4c4ea0",
+   "vertrix3": "0x4a6a20",
+   "name": null,
+   "port": "vertrix_port_pool_small_alloc_4c4ea0",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4c5200",
+   "vertrix3": "0x4a6d20",
+   "name": null,
+   "port": "vertrix_port_virtual_arrays_realize_4c5200",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4c5a40",
+   "vertrix3": "0x4a73a0",
+   "name": null,
+   "port": "vertrix_port_memory_manager_make_4c5a40",
+   "by": "signature 0.92",
+   "strings": [
+    "%ld%c",
+    "JPEGMEM"
+   ]
+  },
+  {
+   "vertrix2": "0x4c6020",
+   "vertrix3": "0x4a9df0",
+   "name": null,
+   "port": "vertrix_port_jpeg_create_colorindex_4c6020",
+   "by": "signature 0.70",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4c9030",
+   "vertrix3": "0x4ab750",
+   "name": null,
+   "port": "vertrix_port_decoder_range_table_4c9030",
+   "by": "signature 0.56",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4c9550",
+   "vertrix3": "0x4ab820",
+   "name": null,
+   "port": "vertrix_port_jpeg_quant2_start_pass_4c9550",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4c9ff0",
+   "vertrix3": "0x4bfcd7",
+   "name": null,
+   "port": "vertrix_port_get_memory",
+   "by": "called from 0x47f900",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4ca000",
+   "vertrix3": "0x4bf965",
+   "name": null,
+   "port": "vertrix_port_get_memory",
+   "by": "neighbours 2",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4ca040",
+   "vertrix3": "0x4bfce2",
+   "name": null,
+   "port": null,
+   "by": "called from 0x47f900",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4ca070",
+   "vertrix3": "0x4bf8b3",
+   "name": null,
+   "port": "vertrix_port_string_init",
+   "by": "neighbours 5",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4cdfb0",
+   "vertrix3": "0x40a5a0",
+   "name": null,
+   "port": "vertrix_port_rtl_print_4cdfb0",
+   "by": "neighbours 6",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4cf480",
+   "vertrix3": "0x488350",
+   "name": null,
+   "port": null,
+   "by": "signature 0.93",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4d4270",
+   "vertrix3": "0x490470",
+   "name": null,
+   "port": "vertrix_port_window_help_4d4270",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4d70e0",
+   "vertrix3": "0x47caa0",
+   "name": null,
+   "port": "vertrix_port_rtl_window_import_4d70e0",
+   "by": "signature 0.55",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4d9060",
+   "vertrix3": "0x48c9c0",
+   "name": null,
+   "port": "vertrix_port_find_file",
+   "by": "signature 0.58",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4db1fd",
+   "vertrix3": "0x4ef0fc",
+   "name": "vertrix_rtl_split_exponent",
+   "port": "vertrix_port_double_exponent_split",
+   "by": "signature 0.50",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4db8c0",
+   "vertrix3": "0x49d3f0",
+   "name": "vertrix_rtl_read_into",
+   "port": "vertrix_port_rtl_read_into_4db8c0",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4e0328",
+   "vertrix3": "0x4c63db",
+   "name": null,
+   "port": "vertrix_port_rtl_handle_slot_set_4e0328",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4e1c50",
+   "vertrix3": "0x4f24e0",
+   "name": null,
+   "port": null,
+   "by": "signature 0.88",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4e2288",
+   "vertrix3": "0x4f2aa9",
+   "name": null,
+   "port": null,
+   "by": "signature 0.98",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4e53b4",
+   "vertrix3": "0x4f373f",
+   "name": null,
+   "port": "vertrix_port_double_to_extended",
+   "by": "signature 0.64",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4e596c",
+   "vertrix3": "0x4c4472",
+   "name": null,
+   "port": "vertrix_port_rtl_thread_detach_4e596c",
+   "by": "signature 0.69",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4e59d0",
+   "vertrix3": "0x4c44a6",
+   "name": null,
+   "port": "vertrix_port_handle_close_4e59d0",
+   "by": "signature 1.00",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4ea540",
+   "vertrix3": "0x44bcd0",
+   "name": null,
+   "port": "vertrix_port_rtl_string_to_long_4ea540",
+   "by": "signature 0.62",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4ea710",
+   "vertrix3": "0x4ce0b4",
+   "name": null,
+   "port": null,
+   "by": "signature 0.53",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4ec380",
+   "vertrix3": "0x48cf50",
+   "name": null,
+   "port": "vertrix_port_rtl_handle_tell_4ec380",
+   "by": "signature 0.56",
+   "strings": []
+  },
+  {
+   "vertrix2": "0x4eeb40",
+   "vertrix3": "0x4eb1e0",
+   "name": null,
+   "port": null,
+   "by": "signature 0.83",
+   "strings": []
+  }
+ ]
+}

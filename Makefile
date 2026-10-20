@@ -41,7 +41,7 @@ wii-archive: $(BUILD)/libvertrix-wii-archive.a
 $(BUILD)/wii_archive.o: source/wii_archive.c $(wildcard source/*.h) | $(BUILD)
 	$(PPC_CC) $(CFLAGS) -DGEKKO -DHW_RVL -D__wii__ -I$(LIBOGC)/include -c $< -o $@
 
-$(BUILD)/libvertrix-wii-archive.a: $(BUILD)/wii_archive.o $(BUILD)/vf.o
+$(BUILD)/libvertrix-wii-archive.a: $(BUILD)/wii_archive.o $(BUILD)/vf.o $(BUILD)/games.o
 	$(PPC_AR) rcs $@ $^
 
 .PHONY: wii-assets
