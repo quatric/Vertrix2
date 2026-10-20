@@ -262,7 +262,7 @@ int vertrix_lifted_dispatch(const VertrixCalls *calls, const VertrixFactoryServi
     {
         arguments[3 + i] = site->stack_rest[i];
     }
-    entry.chain = 0; /* every other field is set below */
+    entry.chain = vertrix_lift_chain; /* every other field is set below */
     entry.eax = site->eax;
     entry.edx = site->edx;
     entry.ebx = site->ebx;

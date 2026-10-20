@@ -82,6 +82,11 @@ __attribute__((weak)) unsigned vertrix_lift_frame_index;
 /* EDX returned by lifted routines and native arithmetic helpers. lift_call seeds this slot
  * with incoming EDX; native arithmetic exposes its output through out_value. */
 __attribute__((weak)) uint32_t vertrix_lift_edx;
+/* The exception chain (fs:[0]), one per thread as on Windows: the dispatcher hands it to each
+ * routine's entry, a call passes the caller's on and takes back what the callee leaves (a frame it
+ * left registered, or one an unwind removed), and port_return gives back the routine's own. -1
+ * ends the chain. */
+__attribute__((weak)) uint32_t vertrix_lift_chain = 0xffffffffu;
 /* The flags a lifted routine leaves for its caller (RTL compare helpers answer in the flags). */
 __attribute__((weak)) LiftFlags vertrix_lift_fl;
 /* esi, edi and ebp at a call, for a lifted callee: on x86 the callee starts with the caller's
@@ -436,7 +441,9 @@ static inline uint32_t lift_call_arguments(LiftEnv *env, uint32_t target, uint32
         vertrix_lift_edx = out;
         return result;
     }
+    vertrix_lift_chain = env->chain;
     result = vertrix_calln(env->calls, target, eax, edx, ebx, ecx, stack, count, &out);
+    env->chain = vertrix_lift_chain;
     /* A lifted callee has already stored through eax and leaves out 0; only the native ones
      * report the string in out. (Storing out when a lifted assignment kept its buffer wrote 0
      * over the string: 0x4b65d0 called from 0x4b3210 lost the menu labels.) */

@@ -552,10 +552,12 @@ static inline uint32_t port_forward_stack(Port *port, const LiftEntry *entry, ui
                                count);
 }
 
-/* The routine's return: eax, and the edx the original leaves for its caller. */
+/* The routine's return: eax, the edx the original leaves for its caller, and its exception chain
+ * (vertrix_lift_chain). */
 static inline uint32_t port_return(Port *port, uint32_t eax, uint32_t edx)
 {
     vertrix_lift_edx = edx;
+    vertrix_lift_chain = port->env.chain;
     return port->env.failed ? 0u : eax;
 }
 

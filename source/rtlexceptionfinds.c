@@ -16,8 +16,8 @@ enum
     QUERY_PARAMETERS = 2,
 
     CHAIN_END = 0xffffffff,
-    /* The lift does not carry fs:[0] into a call: a routine starts with a chain of 0, which on
-     * Windows never ends a chain but here must (its next would be read from address 0). */
+    /* A chain of 0 never comes from Windows; the walk ends there rather than read a frame at
+     * address 0 (the chain once started at 0 in every routine). */
     NO_CHAIN = 0,
     /* A runtime handler has "WATCOM" 5 bytes in (a jump, then the signature). */
     SIGNATURE = 5,
