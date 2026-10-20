@@ -14,8 +14,12 @@
  *   the game never selects, read as the plain argument and as zero.
  * - Blending: GX's factors; a reverse subtraction (dst - src * srcalpha) premultiplies the
  *   source in a last stage, as GX's subtract ignores factors.
- * - Not modelled (the game never enables them on its menus or boards): stencil, fog, the color
- *   write mask, specular. */
+ * - Stencil: GX has none, but the game never enables depth, so the depth buffer holds the
+ *   stencil. A value v is the constant depth -stencil_depth(v) (the projection's z row with
+ *   b = 0, so it interpolates exactly); the stencil clear writes it, REPLACE on pass is a depth
+ *   write, and the stencil function is the depth function, both comparing ref against the
+ *   buffer. Other operations, or stencil with depth on, are logged once and drawn unmasked.
+ * - Not modelled (the game never enables them): fog, the color write mask, specular. */
 
 #include "render_vertex.h"
 #include "runtime.h"
@@ -499,6 +503,39 @@ static void setup_blend(const V3RenderState *st, unsigned *stages)
     GX_SetBlendMode(GX_BM_BLEND, blend_factor(src, 1), blend_factor(dst, 0), GX_LO_CLEAR);
 }
 
+/* --- stencil in the depth buffer ------------------------------------------------------------- */
+
+/* The z row constant for stencil value v: z_ndc = -a, and the window depth rises with z_ndc, so a
+ * falls as v rises (the depth functions then order codes as the values), all inside the clip
+ * range. */
+static float stencil_depth(uint32_t v)
+{
+    return 0.5f - (float)((v & 255) + 1) / 1024.0f;
+}
+
+/* Whether this draw's stencil state runs in the depth buffer; logs once when it cannot. */
+static int stencil_emulated(const uint32_t *rs)
+{
+    if (!rs[52])
+    {
+        return 0;
+    }
+    const int keep_fails = rs[53] == 1 && rs[54] == 1;
+    const int pass_ok = rs[55] == 1 || rs[55] == 3;
+    if (!rs[7] && keep_fails && pass_ok)
+    {
+        return 1;
+    }
+    static int warned;
+    if (!warned)
+    {
+        warned = 1;
+        v3_log("render_gx: stencil ops %u/%u/%u with depth %u are not modelled; drawn unmasked",
+               rs[53], rs[54], rs[55], rs[7]);
+    }
+    return 0;
+}
+
 static void setup_raster(Gx *g, const V3RenderState *st)
 {
     const uint32_t *rs = st->render;
@@ -519,8 +556,10 @@ static void setup_raster(Gx *g, const V3RenderState *st)
         y1 = y0 + 1;
     }
     GX_SetScissor((u32)x0, (u32)y0, (u32)(x1 - x0), (u32)(y1 - y0));
+    const int stencil = stencil_emulated(rs);
     GX_SetViewport((f32)st->viewport.x + 0.5f, (f32)st->viewport.y + 0.5f, (f32)st->viewport.width,
-                   (f32)st->viewport.height, st->viewport.min_z, st->viewport.max_z);
+                   (f32)st->viewport.height, stencil ? 0.0f : st->viewport.min_z,
+                   stencil ? 1.0f : st->viewport.max_z);
     if (rs[15])
     {
         GX_SetAlphaCompare(compare(rs[25]), (u8)(rs[24] & 255), GX_AOP_AND, GX_ALWAYS, 0);
@@ -529,7 +568,15 @@ static void setup_raster(Gx *g, const V3RenderState *st)
     {
         GX_SetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
     }
-    GX_SetZMode(rs[7] ? GX_TRUE : GX_FALSE, compare(rs[23]), rs[7] && rs[14] ? GX_TRUE : GX_FALSE);
+    if (stencil)
+    {
+        GX_SetZMode(GX_TRUE, compare(rs[56]), rs[55] == 3 ? GX_TRUE : GX_FALSE);
+    }
+    else
+    {
+        GX_SetZMode(rs[7] ? GX_TRUE : GX_FALSE, compare(rs[23]),
+                    rs[7] && rs[14] ? GX_TRUE : GX_FALSE);
+    }
 }
 
 /* --- drawing ------------------------------------------------------------------------------ */
@@ -581,7 +628,11 @@ static void put_vertex(const Out *o)
 static void load_projection(const V3RenderState *st, const Out *const *tris, uint32_t count)
 {
     float a = 0.5f, b = 0.0f;
-    if (st->render[7])
+    if (stencil_emulated(st->render))
+    {
+        a = stencil_depth(st->render[57]);
+    }
+    else if (st->render[7])
     {
         const Out *p = tris[0];
         const Out *q = NULL;
@@ -683,9 +734,16 @@ static void gx_draw(V3Renderer *r, const V3RenderState *st, const V3Draw *d)
 }
 
 /* Clear: a quad over the viewport in the clear color at the clear depth. */
-static void gx_clear(V3Renderer *r, const V3RenderState *st, uint32_t flags, uint32_t color, float z)
+static void clear_stencil(Gx *g, const V3RenderState *st, uint32_t stencil);
+
+static void gx_clear(V3Renderer *r, const V3RenderState *st, uint32_t flags, uint32_t color,
+                     float z, uint32_t stencil)
 {
     Gx *g = (Gx *)r;
+    if (flags & 4)
+    {
+        clear_stencil(g, st, stencil);
+    }
     if (!(flags & 3))
     {
         return;
@@ -723,6 +781,36 @@ static void gx_clear(V3Renderer *r, const V3RenderState *st, uint32_t flags, uin
     GX_Color1u32(rgba);
     GX_TexCoord2f32(0, 0);
     GX_TexCoord2f32(0, 0);
+    GX_End();
+    GX_SetColorUpdate(GX_TRUE);
+}
+
+/* The stencil clear: the viewport's depth set to the value's code, through the same projection
+ * the draws use, so the codes match exactly. Leaves the color alone. */
+static void clear_stencil(Gx *g, const V3RenderState *st, uint32_t stencil)
+{
+    (void)g;
+    Mtx44 m = {{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, stencil_depth(stencil), 0}, {0, 0, -1, 0}};
+    GX_LoadProjectionMtx(m, GX_PERSPECTIVE);
+    GX_SetViewport((f32)st->viewport.x + 0.5f, (f32)st->viewport.y + 0.5f, (f32)st->viewport.width,
+                   (f32)st->viewport.height, 0.0f, 1.0f);
+    GX_SetScissor(st->viewport.x, st->viewport.y, st->viewport.width, st->viewport.height);
+    GX_SetNumTevStages(1);
+    GX_SetTevOrder(GX_TEVSTAGE0, GX_TEXCOORDNULL, GX_TEXMAP_NULL, GX_COLOR0A0);
+    GX_SetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
+    GX_SetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_CLEAR);
+    GX_SetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+    GX_SetColorUpdate(GX_FALSE);
+    GX_SetZMode(GX_TRUE, GX_ALWAYS, GX_TRUE);
+    static const float corner[4][2] = {{-1, -1}, {1, -1}, {1, 1}, {-1, 1}};
+    GX_Begin(GX_QUADS, GX_VTXFMT0, 4);
+    for (unsigned i = 0; i < 4; ++i)
+    {
+        GX_Position3f32(corner[i][0], corner[i][1], -1.0f);
+        GX_Color1u32(0);
+        GX_TexCoord2f32(0, 0);
+        GX_TexCoord2f32(0, 0);
+    }
     GX_End();
     GX_SetColorUpdate(GX_TRUE);
 }

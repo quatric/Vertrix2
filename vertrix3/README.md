@@ -55,7 +55,8 @@ build/v3/v3_host build/v3/gen/v3_image.bin GAME_DIR OUT_DIR [seconds] [frame_eve
 - `V3_TRACE=1` (every host call), `V3_TRACE_FRAME=N` (every host call of frame N, with each
   draw's vertices, matrices and texture), `V3_TRACE_D3D=1`, `V3_STATS=1` (each distinct render
   state combination once), `V3_WATCH=hex` (log each entry of a function), `V3_PEEK=addr,*ptr+off`
-  (guest words every 300 frames), `V3_DUMP=FRAME:PATH` (the heap at a frame).
+  (guest words every 300 frames), `V3_DUMP=FRAME:PATH` (the heap at a frame),
+  `V3_NO_STENCIL=1` (draw without the stencil test, to compare).
 
 A fault prints the guest address and the last function entries. When the run's time is up the
 driver closes the game's window, as Alt+F4 would: the game leaves through its own exit and
@@ -110,5 +111,12 @@ pixel centres become a half-pixel viewport shift. The texture stages the game us
 the reverse-subtract blend premultiplies its source in a last TEV stage. Textures are converted
 to RGBA8 tiles when the game unlocks them.
 
-Not modelled: stencil (two masks in the board screens; the reference renderer ignores it too),
-fog, specular, points and lines (the game uses none of the last three).
+The stencil is used once: each well of the board screen is drawn into it, and the falling
+pieces are drawn only where it is set, so a new piece slides in from under the well's top edge.
+GX has no stencil, but the game never enables depth, so the depth buffer holds it. A stencil
+value becomes a constant depth (the projection's z row, so it interpolates exactly), the stencil
+clear writes that depth, REPLACE becomes a depth write, and the stencil function becomes the
+depth function. Other stencil operations, and stencil with depth on, are logged once and drawn
+unmasked.
+
+Not modelled: fog, specular, points and lines (a whole run to a match enables none of them).

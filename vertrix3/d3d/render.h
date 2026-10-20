@@ -100,7 +100,7 @@ typedef struct V3Renderer
 {
     void (*begin_frame)(struct V3Renderer *r, uint32_t width, uint32_t height);
     void (*clear)(struct V3Renderer *r, const V3RenderState *s, uint32_t flags, uint32_t color,
-                  float z);
+                  float z, uint32_t stencil);
     void (*draw)(struct V3Renderer *r, const V3RenderState *s, const V3Draw *draw);
     void (*texture_changed)(struct V3Renderer *r, V3Texture *texture);
     void (*texture_destroyed)(struct V3Renderer *r, V3Texture *texture);

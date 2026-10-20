@@ -1,7 +1,7 @@
 /* The Direct3D 9 fixed-function pipeline on the CPU: transform and lighting, near-plane clipping,
  * culling, perspective-correct triangle rasterization with Direct3D's integer pixel centers and
- * top-left rule, texture stages, alpha test, depth test and blending. The reference the Wii
- * renderer is compared against. */
+ * top-left rule, texture stages, alpha test, stencil, depth test and blending. The reference the
+ * Wii renderer is compared against. */
 
 #include "render_vertex.h"
 #include "runtime.h"
@@ -14,6 +14,7 @@ typedef struct
     uint32_t width, height;
     uint32_t *color;
     float *depth;
+    uint8_t *stencil;
     Out *out;
     uint32_t out_capacity;
 } Soft;
@@ -25,14 +26,17 @@ static void soft_begin(V3Renderer *r, uint32_t width, uint32_t height)
     {
         free(s->color);
         free(s->depth);
+        free(s->stencil);
         s->width = width;
         s->height = height;
         s->color = calloc((size_t)width * height, 4);
         s->depth = calloc((size_t)width * height, sizeof(float));
+        s->stencil = calloc((size_t)width * height, 1);
     }
 }
 
-static void soft_clear(V3Renderer *r, const V3RenderState *st, uint32_t flags, uint32_t color, float z)
+static void soft_clear(V3Renderer *r, const V3RenderState *st, uint32_t flags, uint32_t color,
+                       float z, uint32_t stencil)
 {
     Soft *s = (Soft *)r;
     const uint32_t x0 = st->viewport.x, y0 = st->viewport.y;
@@ -49,6 +53,8 @@ static void soft_clear(V3Renderer *r, const V3RenderState *st, uint32_t flags, u
                 s->color[y * s->width + x] = color;
             if (flags & 2)
                 s->depth[y * s->width + x] = z;
+            if (flags & 4)
+                s->stencil[y * s->width + x] = (uint8_t)stencil;
         }
     }
 }
@@ -282,12 +288,50 @@ static void blend_factor(uint32_t f, const float *src, const float *dst, float *
     }
 }
 
+/* The stencil operation `operation` (D3DSTENCILOP) applied to the value `value`. */
+static uint32_t stencil_op(uint32_t operation, uint32_t value, uint32_t ref)
+{
+    switch (operation)
+    {
+    case 2: /* ZERO */
+        return 0;
+    case 3: /* REPLACE */
+        return ref;
+    case 4: /* INCRSAT */
+        return value < 255 ? value + 1 : 255;
+    case 5: /* DECRSAT */
+        return value ? value - 1 : 0;
+    case 6: /* INVERT */
+        return ~value;
+    case 7: /* INCR */
+        return value + 1;
+    case 8: /* DECR */
+        return value - 1;
+    default: /* KEEP */
+        return value;
+    }
+}
+
+/* Whether the draw tests the stencil (V3_NO_STENCIL=1 ignores it, to compare). */
+static int stencil_on(const uint32_t *rs)
+{
+    static int disabled = -1;
+    if (disabled < 0)
+    {
+        const char *e = getenv("V3_NO_STENCIL");
+        disabled = e && *e == '1';
+    }
+    return rs[52] && !disabled;
+}
+
 static void shade(Soft *s, const V3RenderState *st, unsigned texture_sets, uint32_t x, uint32_t y,
                   float z, const float *color, const float *spec, const float *u, const float *v)
 {
     const uint32_t *rs = st->render;
     const size_t at = (size_t)y * s->width + x;
-    if (rs[7] && !compare(rs[23], z, s->depth[at]))
+    const int depth_pass = !rs[7] || compare(rs[23], z, s->depth[at]);
+    const int stencil = stencil_on(rs);
+    if (!depth_pass && !stencil)
     {
         return;
     }
@@ -352,6 +396,20 @@ static void shade(Soft *s, const V3RenderState *st, unsigned texture_sets, uint3
     {
         const float a = (float)(uint32_t)(clampf(current[3]) * 255.0f + 0.5f);
         if (!compare(rs[25], a, (float)(rs[24] & 255)))
+        {
+            return;
+        }
+    }
+    /* Direct3D's order: alpha test, stencil test, depth test; the stencil operation is the one
+     * for the first test that failed, written through the write mask. */
+    if (stencil)
+    {
+        const uint32_t ref = rs[57] & 255, mask = rs[58], value = s->stencil[at];
+        const int stencil_pass = compare(rs[56], (float)(ref & mask), (float)(value & mask));
+        const uint32_t operation = !stencil_pass ? rs[53] : !depth_pass ? rs[54] : rs[55];
+        const uint32_t write = rs[59] & 255;
+        s->stencil[at] = (uint8_t)((value & ~write) | (stencil_op(operation, value, ref) & write));
+        if (!stencil_pass || !depth_pass)
         {
             return;
         }

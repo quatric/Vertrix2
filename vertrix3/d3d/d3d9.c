@@ -220,6 +220,14 @@ static void default_state(DeviceState *d)
     rs[28] = 0;           /* FOGENABLE */
     rs[29] = 0;           /* SPECULARENABLE */
     rs[34] = 0;           /* FOGCOLOR */
+    rs[52] = 0;           /* STENCILENABLE */
+    rs[53] = 1;           /* STENCILFAIL keep */
+    rs[54] = 1;           /* STENCILZFAIL keep */
+    rs[55] = 1;           /* STENCILPASS keep */
+    rs[56] = 8;           /* STENCILFUNC always */
+    rs[57] = 0;           /* STENCILREF */
+    rs[58] = 0xffffffffu; /* STENCILMASK */
+    rs[59] = 0xffffffffu; /* STENCILWRITEMASK */
     rs[60] = 0xffffffffu; /* TEXTUREFACTOR */
     rs[137] = 1;          /* LIGHTING */
     rs[139] = 0;          /* AMBIENT */
@@ -1190,7 +1198,16 @@ static void Dev_Clear(Cpu *c)
     const uint32_t flags = ARG(3);
     const uint32_t color = ARG(4);
     const float z = f32(ARG(5));
-    renderer->clear(renderer, &device.s.r, flags, color, z);
+    if (getenv("V3_STATS") && (flags & 4))
+    {
+        static uint32_t logged;
+        if (logged < 4)
+        {
+            ++logged;
+            v3_log("clear flags %x stencil %u rects %u", flags, ARG(6), ARG(1));
+        }
+    }
+    renderer->clear(renderer, &device.s.r, flags, color, z, ARG(6));
     STDCALL_RETURN(7, D3D_OK);
 }
 
@@ -1961,9 +1978,10 @@ static void submit(uint32_t primitive, const Layout *l, uint32_t vertex_count,
         char line[512];
         int n = snprintf(line, sizeof line,
                          "pre %d lit %u z %u/%u/%u cull %u blend %u %u/%u op %u atest %u/%u/%u "
-                         "fog %u stencil %u/%u mask %x spec %u tf %08x",
+                         "fog %u stencil %u/%u ops %u/%u/%u ref %u/%x/%x mask %x spec %u tf %08x",
                          l->position == 4, rs[137], rs[7], rs[14], rs[23], rs[22], rs[27], rs[19],
-                         rs[20], rs[171], rs[15], rs[25], rs[24], rs[28], rs[52], rs[56], rs[168],
+                         rs[20], rs[171], rs[15], rs[25], rs[24], rs[28], rs[52], rs[56], rs[53],
+                         rs[54], rs[55], rs[57], rs[58], rs[59], rs[168],
                          rs[29], rs[60] == 0xffffffffu ? 1u : 0u);
         for (unsigned k = 0; k < V3_MAX_STAGES && r->stage[k][1] != 1; ++k)
         {

@@ -145,7 +145,7 @@ runtime and the debug switches.
 ## Not done yet
 
 - A run on real Wii hardware.
-- Stencil (two masks in the board screens), fog and specular are not modelled in either renderer.
+- Fog and specular are not modelled in either renderer; a run to a match never enables them.
 - The generated code does not reuse the Vertrix 2 ports. Where `docs/v3-signature-matches.json`
   pairs a function with a ported Vertrix 2 routine, that port could replace the generated C, but
   only once it passes the Unicorn oracle against the Vertrix 3 function. Argument passing and
