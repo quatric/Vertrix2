@@ -1,7 +1,17 @@
 # Vertrix (1997) Wii port: handoff
 
-State 2026-10-20, repository HEAD `d462ccf` on `main`. Nothing of this port is written yet; this
-page records what the original is and how to start.
+State 2026-10-20, repository HEAD `d462ccf` on `main`, when this page was written. It records
+what the original is and how to start.
+
+**Done since (2026-10-20):**
+
+- Steps 1–6 below are complete. `vertrix1/` holds the LE loader and recompiler, the DOS machine,
+  and the build-machine and Wii drivers.
+- The game runs from the setup screen to a 1P vs CPU match on the build machine and on the Wii
+  in Dolphin, with its music.
+- `vertrix1/README.md` covers building and running. `docs/VERTRIX1.md` records the findings and
+  every hardware access (`docs/v1-hardware-accesses.txt`, from `tools/v1_hardware.py`).
+- Not done: a run on real Wii hardware, and the optional signature matching against Vertrix 2.
 
 ## The original
 

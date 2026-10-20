@@ -306,6 +306,27 @@ static void show_frame(void)
 
 static void audio(const uint8_t *samples, uint32_t count, uint32_t rate)
 {
+#ifdef V1_WII_SHOTS
+    /* Debug builds: how much sound reached the voice, and its loudest sample, every 5 s. */
+    static uint32_t total, loudest;
+    static uint64_t next;
+    if (!next)
+    {
+        next = v1_clock() + 5000000;
+    }
+    for (uint32_t i = 0; i < count; ++i)
+    {
+        const uint32_t level = samples[i] >= 0x80 ? samples[i] - 0x80u : 0x80u - samples[i];
+        loudest = level > loudest ? level : loudest;
+    }
+    total += count;
+    if (v1_clock() >= next)
+    {
+        v3_log("sound: %u samples at %u Hz, loudest %u of 128", total, rate, loudest);
+        next += 5000000;
+        total = loudest = 0;
+    }
+#endif
     vertrix_wii_stream_write(0, samples, count, rate, 1, 8);
 }
 
