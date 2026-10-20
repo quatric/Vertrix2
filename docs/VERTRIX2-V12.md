@@ -72,9 +72,44 @@ build/v12/v3_host build/v12/gen/v3_image.bin GAME_DIR OUT_DIR [seconds] [frame_e
 ```
 
 `recomp.py` recognizes the executable by its sha256 and tells the runtime the directory and name
-it runs as (`C:\Vertrix2\Vertrix2.exe`). On the build machine v1.2 plays its credits, menus and
-player selection and saves `Vertrix2.cfg` on exit; it polls the mouse from its 14 ms multimedia
-timer once the intro ends (about ten seconds in).
+it runs as (`C:\Vertrix2\Vertrix2.exe`). v1.2 plays its credits and menus, a tournament's story
+screens, the player select, a 1P vs CPU match and its result screen, and saves `Vertrix2.cfg`
+on exit. It polls the mouse from its 14 ms multimedia timer once the intro ends (about five
+seconds in on the build machine, about 42 seconds in Dolphin).
+
+### Reaching a match
+
+The game is driven by the mouse:
+
+1. On the main menu, click 1PLAYER, then TOURNAMENT.
+2. The tournament introduces each character on a spiral, as a story ending in PREPARE TO FIGHT.
+   A click skips to the next story; the last one leads to the player select.
+3. On the player select, click GO (the middle picture, at about (310, 135)). The versus screen
+   follows.
+4. Click YES under READY TO FIGHT to start the match.
+
+The game puts the cursor back at the centre of the screen (320, 240) on each new screen, and a
+mouse unit moves it two pixels. With no input the computer wins, and the game shows LOSER &
+WINNER with CONTINUE? YES NO.
+
+The story screens take real time, so a script clicks at intervals instead of at fixed moments.
+This one reached the result screen on the build machine:
+
+```
+S="20 move 0 25; 22 button 0 1; 22.1 button 0 0; 25 move 0 27; 26 button 0 1; 26.1 button 0 0"
+for t in $(seq 40 4 116); do S="$S; $t button 0 1; $t.1 button 0 0"; done
+S="$S; 124 move -2 -52; 126 button 0 1; 126.1 button 0 0; 134 move 56 102; 136 button 0 1; 136.1 button 0 0"
+V3_SCRIPT="$S" build/v12/v3_host build/v12/gen/v3_image.bin GAME_DIR OUT_DIR 175 10000
+```
+
+The Wii build reached it in Dolphin with the same steps about 38 seconds later, as
+`V3_WII_SCRIPT` with a final `quit` step:
+
+- 58 and 64 for the two menu clicks;
+- clicks every 4 seconds from 80 to 160;
+- GO at 172 and YES at 184.
+
+The Wii build shows 30 frames a second.
 
 What v1.2 needed beyond Vertrix 3:
 

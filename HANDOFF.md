@@ -13,7 +13,7 @@ The repository now ports four games of the series. Each has its own page:
 | Game | Approach | Where | Status | Page |
 | --- | --- | --- | --- | --- |
 | Vertrix 2 v2.0 (2003, Windows, Watcom) | recovered routines as native C, each checked against the original under Unicorn; the dispatcher serves 3,833 routines as ports | `source/`, `tools/`, top `Makefile` | `make wii-recomp` builds `build/vertrix2-recomp.dol`; `make wii-game` builds the older single-board app | `docs/WII-GAME.md`, `docs/LIFTED.md`, `docs/RECOVERY.md` |
-| Vertrix 2 v1.2 (2001) | whole-program recompiler (`vertrix3/recomp.py`) | `vertrix3/`, `GAME=vertrix2-v12` | credits, menus and player select; Wii build with a 40 MB guest heap | `docs/VERTRIX2-V12.md` |
+| Vertrix 2 v1.2 (2001) | whole-program recompiler (`vertrix3/recomp.py`) | `vertrix3/`, `GAME=vertrix2-v12` | menus, tournament stories, player select and a 1P vs CPU match to its result screen, on the build machine and on the Wii in Dolphin (40 MB guest heap) | `docs/VERTRIX2-V12.md` |
 | Vertrix 3 (2009, Windows, Visual C++, Direct3D 9) | whole-program recompiler and runtime | `vertrix3/` | plays to a match on the build machine and on the Wii in Dolphin | `vertrix3/README.md`, `docs/VERTRIX3.md` |
 | Vertrix (1997, DOS, PMODE/W, Watcom) | LE recompiler and an emulated DOS PC (DPMI, VGA mode X, PIT, PIC, keyboard, Sound Blaster) | `vertrix1/` | setup screen to a 1P vs CPU match with music, on the build machine and on the Wii in Dolphin | `vertrix1/README.md`, `docs/VERTRIX1.md` |
 
@@ -78,7 +78,8 @@ pgrep -fl "^/Applications/Dolphin.app"
    result. Start with `hardware-check/boot.dol`.
 2. **Vertrix 2 v2.0:** the routines still open are in `docs/GAMEFLOW-NOT-PORTED.md` and
    `docs/REMAINING.md`.
-3. **Vertrix 2 v1.2:** take it from player select through a match, as Vertrix 3 was.
+3. **Vertrix 2 v1.2:** the intro is about eight times slower on the Wii (Dolphin) than on the
+   build machine; profile it. The two-player, options and practice modes are untested.
 4. **Vertrix 3:** see "Not done yet" in `docs/VERTRIX3.md`:
    - fog and specular;
    - reusing the Vertrix 2 ports only where the oracle agrees.
