@@ -433,7 +433,6 @@ static void *game_main(void *unused)
     ASND_Init();
     ASND_Pause(0);
     host.wave_output = wave_output;
-    vertrix_lifted_allow_unverified(1);
     form = lift_host_allocate(&host, 0x1000);
     display = lift_host_allocate(&host, 0x800);
     host_store(&host, 0x544070, display);

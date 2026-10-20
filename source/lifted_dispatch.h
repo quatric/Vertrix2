@@ -16,9 +16,6 @@ void vertrix_lifted_set_trace(int enabled);
 /* Called after every lifted routine returns, with its address and entry EAX (debugging). */
 extern void (*vertrix_lifted_after_hook)(uint32_t target, uint32_t eax);
 
-/* Also run the lifted routines that did not pass verification (off by default). */
-void vertrix_lifted_allow_unverified(int allowed);
-
 /* The lifted routine for an original address, or 0 when the routine stays a call boundary. */
 int vertrix_lifted_has(uint32_t target);
 

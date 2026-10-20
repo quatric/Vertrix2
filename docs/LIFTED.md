@@ -1218,3 +1218,13 @@ They read later slots and vtables after preceding callbacks and preserve the ori
 behavior (one slot). Evidence is in `docs/object-slots-verification.json`. Shared unchanged-return
 names for eight entrypoints describe only their verified register behavior, not their game roles;
 see `docs/register-return-verification.json`.
+
+## The end of the lifted tiers
+
+Every routine the dispatcher runs is now a native port (`docs/NATIVE-PORTS.md`): the verified
+chunks (`source/lifted_whole_*`) and the unverified tier (`source/lifted_unverified.[ch]`,
+`docs/lift/`, `tools/grow_unverified.py`, `tools/drop_unverified.py`) are gone, and so is
+`vertrix_lifted_allow_unverified`. The Wii build of the whole original is `make wii-recomp`
+(`build/vertrix2-recomp.dol`, `tools/wii_recomp_game.c`; `make wii-sync-recomp` fills the SD
+folder); `wii-lifted-game` and `wii-sync-lifted` remain as other names for them. The dispatcher
+keeps its `vertrix_lifted_*` names. The sections above describe the lifting as it was done.

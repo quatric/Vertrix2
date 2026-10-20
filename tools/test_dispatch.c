@@ -51,8 +51,6 @@ int main(void)
      * left the list when it was ported. */
     static const uint32_t unlifted[] = {0x415c60, 0x475090, 0x479450};
     static const uint32_t screens[] = {0x465af0, 0x466d60, 0x46b810, 0x46c9d0};
-    /* A routine only in the unverified tier (0x423960, here before, is a native port now). */
-    static const uint32_t optional[] = {0x4e6250};
     static const uint32_t leaves[] = {0x4b9ce0, 0x4bb260, 0x4c5c20, 0x4c6a80, 0x4c93c0};
     Boundary boundary = {0};
     VertrixCalls inner = {boundary_call, &boundary};
@@ -81,45 +79,23 @@ int main(void)
     {
         assert(vertrix_lifted_has(screens[i]));
     }
-    for (i = 0; i < sizeof optional / sizeof optional[0]; ++i)
     {
+        /* A boundary the platform implements (the host JPEG decode): never dispatched, the call
+         * reaches the boundary. */
+        Boundary native_boundary = {0};
+        VertrixCalls native_inner = {boundary_call, &native_boundary};
+        VertrixLiftedCalls native_adapter;
         uint32_t result = 0xabcdef01;
-        site.target = optional[i];
+        assert(!vertrix_lifted_has(0x401000));
+        site.target = 0x48ae00;
+        site.eax = 0x12345678;
         assert(!vertrix_lifted_has(site.target));
         assert(!vertrix_lifted_dispatch(&adapter.calls, &services, &globals, &site, &result));
         assert(result == 0xabcdef01);
-        assert(boundary.calls == 0);
-    }
-    {
-        unsigned verified_count = vertrix_lifted_count();
-        vertrix_lifted_allow_unverified(1);
-        for (i = 0; i < sizeof optional / sizeof optional[0]; ++i)
-        {
-            assert(vertrix_lifted_has(optional[i]));
-        }
-        assert(vertrix_lifted_count() == verified_count);
-        assert(!vertrix_lifted_has(0x401000));
-        {
-            Boundary native_boundary = {0};
-            VertrixCalls native_inner = {boundary_call, &native_boundary};
-            VertrixLiftedCalls native_adapter;
-            uint32_t result = 0xabcdef01;
-            site.target = 0x48ae00;
-            site.eax = 0x12345678;
-            assert(!vertrix_lifted_has(site.target));
-            assert(!vertrix_lifted_dispatch(&adapter.calls, &services, &globals, &site, &result));
-            assert(result == 0xabcdef01);
-            vertrix_lifted_calls_init(&native_adapter, &native_inner, &services, &globals);
-            assert(native_adapter.calls.call(&site, native_adapter.calls.context) == 7);
-            assert(native_boundary.calls == 1);
-            assert(memcmp(&native_boundary.last, &site, sizeof site) == 0);
-        }
-        vertrix_lifted_allow_unverified(0);
-        for (i = 0; i < sizeof optional / sizeof optional[0]; ++i)
-        {
-            assert(!vertrix_lifted_has(optional[i]));
-        }
-        assert(vertrix_lifted_count() == verified_count);
+        vertrix_lifted_calls_init(&native_adapter, &native_inner, &services, &globals);
+        assert(native_adapter.calls.call(&site, native_adapter.calls.context) == 7);
+        assert(native_boundary.calls == 1);
+        assert(memcmp(&native_boundary.last, &site, sizeof site) == 0);
     }
     for (i = 0; i < sizeof leaves / sizeof leaves[0]; ++i)
     {

@@ -201,26 +201,32 @@ wii-sync: $(BUILD)/vertrix2.dol
 	cp wii-game/meta.xml "$(SYNC)/apps/vertrix2"/meta.xml
 	cp hardware-check/Vertrix2.vf "$(SYNC)/apps/vertrix2"/Vertrix2.vf
 
-# The lifted original running on the Wii host (startup, loader, banks, frame loop; SD archive data).
-.PHONY: wii-lifted-game wii-sync-lifted
-wii-lifted-game: $(BUILD)/vertrix2-lifted.dol
+# The recompiled original running on the Wii host (startup, loader, banks, frame loop; SD archive
+# data): every routine of the original runs as a native port through the dispatcher.
+.PHONY: wii-recomp wii-sync-recomp
+wii-recomp: $(BUILD)/vertrix2-recomp.dol
 
-$(BUILD)/wii_lifted_game.o: tools/wii_lifted_game.c tools/jpeg_decode.h wii-game/meta.xml $(wildcard source/*.h) | $(BUILD)
+$(BUILD)/wii_recomp_game.o: tools/wii_recomp_game.c tools/jpeg_decode.h wii-game/meta.xml $(wildcard source/*.h) | $(BUILD)
 	$(PPC_CC) $(CFLAGS) -DGEKKO -DHW_RVL -D__wii__ -DAPP_VERSION=\"$(APP_VERSION)\" -I$(LIBOGC)/include -I/opt/devkitpro/portlibs/ppc/include $(WII_INCLUDES) -Isource -Itools -c $< -o $@
 
-$(BUILD)/vertrix2-lifted.elf: $(BUILD)/wii_lifted_game.o $(BUILD)/image_bin.o $(BUILD)/libvertrix-wii-audio.a $(BUILD)/libvertrix-wii-video.a $(BUILD)/libvertrix-wii-archive.a $(BUILD)/libvertrix-recovered.a $(BUILD)/libwiiinput.a libwiiupdate/lib/libwiiupdate.a
+$(BUILD)/vertrix2-recomp.elf: $(BUILD)/wii_recomp_game.o $(BUILD)/image_bin.o $(BUILD)/libvertrix-wii-audio.a $(BUILD)/libvertrix-wii-video.a $(BUILD)/libvertrix-wii-archive.a $(BUILD)/libvertrix-recovered.a $(BUILD)/libwiiinput.a libwiiupdate/lib/libwiiupdate.a
 	$(PPC_CC) -mrvl $(CFLAGS) $^ -L$(LIBOGC)/lib/wii -L/opt/devkitpro/portlibs/ppc/lib -ljpeg -lasnd -lfat -lwiikeyboard -lwiiuse -lbte -logc -lm -o $@
 
-$(BUILD)/vertrix2-lifted.dol: $(BUILD)/vertrix2-lifted.elf
+$(BUILD)/vertrix2-recomp.dol: $(BUILD)/vertrix2-recomp.elf
 	/opt/devkitpro/tools/bin/elf2dol $< $@
 
-wii-sync-lifted: $(BUILD)/vertrix2-lifted.dol
+wii-sync-recomp: $(BUILD)/vertrix2-recomp.dol
 	mkdir -p "$(SYNC)/apps/vertrix2"
-	cp $(BUILD)/vertrix2-lifted.dol "$(SYNC)/apps/vertrix2"/boot.dol
+	cp $(BUILD)/vertrix2-recomp.dol "$(SYNC)/apps/vertrix2"/boot.dol
 	cp wii-game/meta.xml "$(SYNC)/apps/vertrix2"/meta.xml
 	cp hardware-check/Vertrix2.vf "$(SYNC)/apps/vertrix2"/Vertrix2.vf
 
-# The Wii lifted game's startup and frame loop on the build machine, writing frames as PPM:
+# The former names, from when the routines still ran as lifted code.
+.PHONY: wii-lifted-game wii-sync-lifted
+wii-lifted-game: wii-recomp
+wii-sync-lifted: wii-sync-recomp
+
+# The Wii recomp's startup and frame loop on the build machine, writing frames as PPM:
 # build/host_game build/image.bin hardware-check/Vertrix2.vf OUT_DIR [ticks] [step_ms] [shot_every]
 HOST_CC ?= cc
 HOST_JPEG ?= /opt/homebrew

@@ -9,19 +9,13 @@ from dispatch_boundaries import NATIVE_PORTS, NATIVE_UNVERIFIED_BOUNDARIES, PORT
 
 ROOT = Path(__file__).resolve().parents[1]
 entries = {}
-unverified_entries = {}
 for path in sorted(glob.glob(str(ROOT / 'docs' / 'lift' / '*.json'))):
     name = Path(path).stem
-    if name == 'unverified':
-        for func, meta in json.loads(Path(path).read_text()).items():
-            unverified_entries[meta['address']] = (func, meta)
-        continue
     for func, meta in json.loads(Path(path).read_text()).items():
         entries[meta['address']] = (func, meta)
 NATIVE_PORTS = {**NATIVE_PORTS, **{a: (f, PORT_FRAMES.get(a, 0), 0) for a, f in PORTS.items()}}
 for address in NATIVE_PORTS:
     entries.pop(address, None)
-    unverified_entries.pop(address, None)
 # The platform implements these boundaries itself (the host JPEG decode, the palette builder): a
 # lifted copy, verified or not, must not shadow it.
 for address in NATIVE_UNVERIFIED_BOUNDARIES:
@@ -36,13 +30,9 @@ row_text = {a: '    {0x%x, lifted_%s, %d, %d},' % (a, entries[a][0], entries[a][
                                                 entries[a][1]['arguments']) for a in entries}
 row_text.update({a: '    {0x%x, %s, %d, %d},' % ((a,) + port) for a, port in NATIVE_PORTS.items()})
 rows = [row_text[a] for a in sorted(row_text)]
-unverified_rows = ['    {0x%x, lifted_%s, %d, %d},' % (a, unverified_entries[a][0], unverified_entries[a][1]['stack'],
-                                                 unverified_entries[a][1]['arguments'])
-                   for a in sorted(unverified_entries)
-                   if a not in entries and a not in NATIVE_UNVERIFIED_BOUNDARIES]
 # The largest frame a routine is handed garbage for: lifted copies' and ports' own (none left lifted
 # is fine).
-maximum = max([e[1]['stack'] for e in list(entries.values()) + list(unverified_entries.values())] +
+maximum = max([e[1]['stack'] for e in entries.values()] +
               [port[1] for port in NATIVE_PORTS.values()] + [4])
 (ROOT / 'source' / 'lifted_dispatch.h').write_text('''#ifndef VERTRIX_LIFTED_DISPATCH_H
 #define VERTRIX_LIFTED_DISPATCH_H
@@ -61,9 +51,6 @@ void vertrix_lifted_set_trace(int enabled);
 
 /* Called after every lifted routine returns, with its address and entry EAX (debugging). */
 extern void (*vertrix_lifted_after_hook)(uint32_t target, uint32_t eax);
-
-/* Also run the lifted routines that did not pass verification (off by default). */
-void vertrix_lifted_allow_unverified(int allowed);
 
 /* The lifted routine for an original address, or 0 when the routine stays a call boundary. */
 int vertrix_lifted_has(uint32_t target);
@@ -140,16 +127,8 @@ static const LiftedRoutine routines[] = {
 %s
 };
 
-/* Lifted routines that did not pass the differential oracle. Used only after
- * vertrix_lifted_allow_unverified(1). */
-static const LiftedRoutine unverified_routines[] = {
-    {0, NULL, 0, 0},
-%s
-};
-
 static unsigned depth;
 static uint32_t arena[LIFTED_MAX_DEPTH + 1] = {LIFTED_ARENA_TOP};
-static int unverified_allowed;
 static int trace_enabled;
 
 unsigned vertrix_lifted_depth(void)
@@ -169,7 +148,7 @@ uint32_t vertrix_lifted_skip[8];
 
 /* The lookups repeat for the same targets (the float helpers run for every sample the MP3
  * decoder produces): a direct-mapped cache of each target's routine (or of its absence) keeps
- * them off bsearch. vertrix_lifted_allow_unverified clears it. */
+ * them off bsearch. */
 static struct
 {
     uint32_t target;
@@ -193,21 +172,9 @@ static const LiftedRoutine *find(uint32_t target)
     }
     found = bsearch(&target, routines, sizeof routines / sizeof routines[0], sizeof routines[0],
                     find_compare);
-    if (found == NULL && unverified_allowed)
-    {
-        found = bsearch(&target, unverified_routines + 1,
-                        sizeof unverified_routines / sizeof unverified_routines[0] - 1,
-                        sizeof unverified_routines[0], find_compare);
-    }
     find_cache[slot].target = target;
     find_cache[slot].routine = found;
     return found;
-}
-
-void vertrix_lifted_allow_unverified(int allowed)
-{
-    unverified_allowed = allowed;
-    memset(find_cache, 0, sizeof find_cache);
 }
 
 void vertrix_lifted_set_trace(int enabled)
@@ -326,7 +293,7 @@ void vertrix_lifted_calls_init(VertrixLiftedCalls *adapter, const VertrixCalls *
     adapter->services = services;
     adapter->globals = globals;
 }
-''' % ('\n'.join('#include "%s"' % h for h in headers + ['native_dispatch.h']), maximum, '\n'.join(rows), '\n'.join(unverified_rows)))
+''' % ('\n'.join('#include "%s"' % h for h in headers + ['native_dispatch.h']), maximum, '\n'.join(rows)))
 subprocess.run(['clang-format', '-i', str(ROOT / 'source' / 'lifted_dispatch.c'),
                 str(ROOT / 'source' / 'lifted_dispatch.h')], check=True)
 print(len(rows), 'routines, max stack', maximum)

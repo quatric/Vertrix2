@@ -1,4 +1,4 @@
-/* The Wii lifted game (tools/wii_lifted_game.c) on the host: the same startup, idle handler chain,
+/* The Wii recomp (tools/wii_recomp_game.c) on the host: the same startup, idle handler chain,
  * device poll and scripted menu walk, with a simulated clock, writing presented frames as PPM.
  * usage: host_game IMAGE.bin VF OUT_DIR [ticks] [step_ms] [shot_every]
  * Every handler change and the frames at each `shot_every` presented frame are written to OUT_DIR;
@@ -249,7 +249,6 @@ int main(int argc, char **argv)
         fprintf(stderr, "could not open %s\n", argv[2]);
         return 2;
     }
-    vertrix_lifted_allow_unverified(getenv("VERIFIED_ONLY") == NULL);
     vertrix_lifted_set_trace(getenv("TRACE_LIFTED") != NULL);
     if (getenv("PROFILE") != NULL)
     {

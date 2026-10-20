@@ -89,7 +89,6 @@
 #include "letters.h"
 #include "library.h"
 #include "lift_runtime.h"
-#include "lifted_unverified.h"
 #include "lists.h"
 #include "loops.h"
 #include "mainstarts.h"
@@ -4412,16 +4411,8 @@ static const LiftedRoutine routines[] = {
     {0x4ee980, vertrix_port_rtl_destroy_4ee980, 0, 0},
 };
 
-/* Lifted routines that did not pass the differential oracle. Used only after
- * vertrix_lifted_allow_unverified(1). */
-static const LiftedRoutine unverified_routines[] = {
-    {0, NULL, 0, 0},
-
-};
-
 static unsigned depth;
 static uint32_t arena[LIFTED_MAX_DEPTH + 1] = {LIFTED_ARENA_TOP};
-static int unverified_allowed;
 static int trace_enabled;
 
 unsigned vertrix_lifted_depth(void)
@@ -4441,7 +4432,7 @@ uint32_t vertrix_lifted_skip[8];
 
 /* The lookups repeat for the same targets (the float helpers run for every sample the MP3
  * decoder produces): a direct-mapped cache of each target's routine (or of its absence) keeps
- * them off bsearch. vertrix_lifted_allow_unverified clears it. */
+ * them off bsearch. */
 static struct
 {
     uint32_t target;
@@ -4465,21 +4456,9 @@ static const LiftedRoutine *find(uint32_t target)
     }
     found = bsearch(&target, routines, sizeof routines / sizeof routines[0], sizeof routines[0],
                     find_compare);
-    if (found == NULL && unverified_allowed)
-    {
-        found = bsearch(&target, unverified_routines + 1,
-                        sizeof unverified_routines / sizeof unverified_routines[0] - 1,
-                        sizeof unverified_routines[0], find_compare);
-    }
     find_cache[slot].target = target;
     find_cache[slot].routine = found;
     return found;
-}
-
-void vertrix_lifted_allow_unverified(int allowed)
-{
-    unverified_allowed = allowed;
-    memset(find_cache, 0, sizeof find_cache);
 }
 
 void vertrix_lifted_set_trace(int enabled)

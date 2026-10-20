@@ -188,7 +188,6 @@ int main(int argc, char **argv)
         fprintf(stderr, "no archive\n");
         return 2;
     }
-    vertrix_lifted_allow_unverified(1);
     if (getenv("TRACE_LIFTED"))
     {
         vertrix_lifted_set_trace(1);
