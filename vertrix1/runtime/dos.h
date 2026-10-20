@@ -65,6 +65,9 @@ void v1_key(unsigned scan_code, int down);
 
 /* The picture the VGA shows, as 0xAARRGGBB; returns 0 in a text mode. `pixels` holds 640x480. */
 int v1_vga_render(uint32_t *pixels, uint32_t *width, uint32_t *height);
+/* The same as colour indices and the DAC's 256 colours (8 bits a component). */
+int v1_vga_render_indexed(uint8_t *indices, uint8_t palette[256][3], uint32_t *width,
+                          uint32_t *height);
 
 /* Guest time in microseconds since the start. */
 uint64_t v1_clock(void);

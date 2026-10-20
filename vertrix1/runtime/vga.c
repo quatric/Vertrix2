@@ -460,22 +460,14 @@ void v1_vga_update(uint64_t now)
     }
 }
 
-int v1_vga_render(uint32_t *pixels, uint32_t *width, uint32_t *height)
+/* The scan-out: the size of the picture and each pixel's colour index. */
+static int scan_out(uint8_t *indices, uint32_t *width, uint32_t *height)
 {
     if (!(gc[6] & 1))
     {
         *width = 0;
         *height = 0;
         return 0;
-    }
-    uint32_t palette[256];
-    for (unsigned i = 0; i < 256; ++i)
-    {
-        const unsigned k = i & dac_mask;
-        const uint32_t r = (uint32_t)dac[k][0] << 2 | dac[k][0] >> 4;
-        const uint32_t g = (uint32_t)dac[k][1] << 2 | dac[k][1] >> 4;
-        const uint32_t b = (uint32_t)dac[k][2] << 2 | dac[k][2] >> 4;
-        palette[i] = 0xff000000u | r << 16 | g << 8 | b;
     }
     const uint32_t columns = (crtc[0x01] + 1u) * 4u; /* 256 colours: 4 pixels a character */
     const uint32_t lines =
@@ -486,17 +478,18 @@ int v1_vga_render(uint32_t *pixels, uint32_t *width, uint32_t *height)
         per_row *= 2;
     }
     uint32_t rows = lines / per_row;
-    uint32_t w = columns > 640 ? 640 : columns;
+    const uint32_t w = columns > 640 ? 640 : columns;
     if (rows > 480)
     {
         rows = 480;
     }
     const uint32_t pitch = crtc[0x13] * 2u;
     const int dword = (crtc[0x14] & 0x40) != 0;
+    const uint32_t start = shown_start;
     for (uint32_t y = 0; y < rows; ++y)
     {
-        const uint32_t row = shown_start + y * pitch;
-        uint32_t *out = pixels + y * w;
+        const uint32_t row = start + y * pitch;
+        uint8_t *out = indices + y * w;
         for (uint32_t x = 0; x < w; ++x)
         {
             uint32_t a = row + x / 4;
@@ -504,10 +497,40 @@ int v1_vga_render(uint32_t *pixels, uint32_t *width, uint32_t *height)
             {
                 a <<= 2;
             }
-            out[x] = palette[planes[x & 3][a & 0xffffu]];
+            out[x] = planes[x & 3][a & 0xffffu];
         }
     }
     *width = w;
     *height = rows;
+    return 1;
+}
+
+int v1_vga_render_indexed(uint8_t *indices, uint8_t palette[256][3], uint32_t *width,
+                          uint32_t *height)
+{
+    for (unsigned i = 0; i < 256; ++i)
+    {
+        const unsigned k = i & dac_mask;
+        for (unsigned j = 0; j < 3; ++j)
+        {
+            palette[i][j] = (uint8_t)(dac[k][j] << 2 | dac[k][j] >> 4);
+        }
+    }
+    return scan_out(indices, width, height);
+}
+
+int v1_vga_render(uint32_t *pixels, uint32_t *width, uint32_t *height)
+{
+    static uint8_t indices[640 * 480];
+    uint8_t palette[256][3];
+    if (!v1_vga_render_indexed(indices, palette, width, height))
+    {
+        return 0;
+    }
+    for (uint32_t i = 0; i < *width * *height; ++i)
+    {
+        const uint8_t *c = palette[indices[i]];
+        pixels[i] = 0xff000000u | (uint32_t)c[0] << 16 | (uint32_t)c[1] << 8 | c[2];
+    }
     return 1;
 }
