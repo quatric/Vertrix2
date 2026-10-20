@@ -1,5 +1,7 @@
 #include "rtlforwards.h"
 
+#include "rtlextendeds.h"
+
 /* The runtime library's argument forwarding routines. */
 
 static uint32_t call_frame(Port *port, uint32_t target, uint32_t eax, uint32_t edx, uint32_t ebx,
@@ -28,24 +30,23 @@ uint32_t vertrix_port_rtl_window_close_4cc7a0(PORT_SIGNATURE)
     return port_return(&port, eax, entry->edx);
 }
 
-/* Original 0x4edb48: 0x4edc0e of the extended reals eax and edx (unpacked: eax/edx/si and
- * ebx/ecx/esi's high word) stored at ebx (esi's low word as the exponent). */
+/* Original 0x4edb48: the product (0x4edc0e) of the extended reals eax and edx (unpacked:
+ * eax/edx/si and ebx/ecx/esi's high word) stored at ebx with the product's sign and exponent word
+ * (0x4edc0e's si). */
 uint32_t vertrix_port_rtl_extended_op_4edb48(PORT_SIGNATURE)
 {
     Port port;
     uint32_t left = entry->eax;
     uint32_t right = entry->edx;
-    uint32_t esi;
-    uint32_t eax;
     port_open(&port, calls, services, globals, entry);
-    esi = ((uint32_t)port_u16(&port, right, 8) << 16) | port_u16(&port, left, 8);
-    eax = port_call_with(&port, 0x4edc0e, port_u32(&port, left, 0), port_u32(&port, left, 4),
-                         port_u32(&port, right, 0), port_u32(&port, right, 4), esi, entry->edi,
-                         entry->ebp);
-    port_set32(&port, entry->ebx, 0, eax);
-    port_set32(&port, entry->ebx, 4, vertrix_lift_edx);
-    port_set16(&port, entry->ebx, 8, esi);
-    return port_return(&port, eax, vertrix_lift_edx);
+    const uint32_t esi = ((uint32_t)port_u16(&port, right, 8) << 16) | port_u16(&port, left, 8);
+    const VertrixExtended value =
+        vertrix_extended_multiply(port_u32(&port, left, 0), port_u32(&port, left, 4),
+                                  port_u32(&port, right, 0), port_u32(&port, right, 4), esi);
+    port_set32(&port, entry->ebx, 0, value.eax);
+    port_set32(&port, entry->ebx, 4, value.edx);
+    port_set16(&port, entry->ebx, 8, value.esi);
+    return port_return(&port, value.eax, value.edx);
 }
 
 /* Original 0x4da71b: 0x4da3ba of eax (ebx 0, ecx eax) under the guard record 0x51a930 linked into

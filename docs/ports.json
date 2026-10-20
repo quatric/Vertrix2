@@ -18894,10 +18894,20 @@
   "lifted": "lifted_f4edb48",
   "chunk": "whole_7"
  },
+ "0x4edc0e": {
+  "port": "vertrix_port_rtl_extended_multiply_4edc0e",
+  "lifted": "lifted_f4edc0e",
+  "chunk": "whole_8"
+ },
  "0x4edd24": {
   "port": "vertrix_port_rtl_extended_op_4edd24",
   "lifted": "lifted_f4edd24",
   "chunk": "whole_7"
+ },
+ "0x4eddc4": {
+  "port": "vertrix_port_rtl_extended_divide_4eddc4",
+  "lifted": "lifted_f4eddc4",
+  "chunk": "whole_8"
  },
  "0x4edf7f": {
   "port": "vertrix_port_crt_long_double_class_4edf7f",
@@ -18917,6 +18927,11 @@
  "0x4ee0dc": {
   "port": "vertrix_port_rtl_extended_op_4ee0dc",
   "lifted": "lifted_f4ee0dc",
+  "chunk": "whole_7"
+ },
+ "0x4ee160": {
+  "port": "vertrix_port_rtl_extended_subtract_4ee160",
+  "lifted": "lifted_f4ee160",
   "chunk": "whole_7"
  },
  "0x4ee370": {

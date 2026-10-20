@@ -93,7 +93,6 @@
 #include "lifted_whole_13.h"
 #include "lifted_whole_21.h"
 #include "lifted_whole_7.h"
-#include "lifted_whole_8.h"
 #include "lists.h"
 #include "loops.h"
 #include "mainstarts.h"
@@ -230,6 +229,7 @@
 #include "rtlexponentformats.h"
 #include "rtlextendedeffects.h"
 #include "rtlextendedroots.h"
+#include "rtlextendeds.h"
 #include "rtlextras.h"
 #include "rtlfatalerrors.h"
 #include "rtlfatalwrites.h"
@@ -4390,14 +4390,14 @@ static const LiftedRoutine routines[] = {
     {0x4ed984, vertrix_port_rtl_pending_error_4ed984, 0, 0},
     {0x4eda00, vertrix_port_console_put_4eda00, 0, 0},
     {0x4edb48, vertrix_port_rtl_extended_op_4edb48, 0, 0},
-    {0x4edc0e, lifted_f4edc0e, 88, 0},
+    {0x4edc0e, vertrix_port_rtl_extended_multiply_4edc0e, 0, 0},
     {0x4edd24, vertrix_port_rtl_extended_op_4edd24, 0, 0},
-    {0x4eddc4, lifted_f4eddc4, 104, 0},
+    {0x4eddc4, vertrix_port_rtl_extended_divide_4eddc4, 0, 0},
     {0x4edf7f, vertrix_port_crt_long_double_class_4edf7f, 0, 0},
     {0x4ee025, vertrix_port_rtl_float_trunc_4ee025, 0, 0},
     {0x4ee094, vertrix_port_rtl_int_to_extended_4ee094, 0, 0},
     {0x4ee0dc, vertrix_port_rtl_extended_op_4ee0dc, 0, 0},
-    {0x4ee160, lifted_f4ee160, 80, 0},
+    {0x4ee160, vertrix_port_rtl_extended_subtract_4ee160, 0, 0},
     {0x4ee370, vertrix_port_rtl_decimal_pack_4ee370, 0, 0},
     {0x4ee3d2, vertrix_port_rtl_normalise_4ee3d2, 0, 0},
     {0x4ee420, vertrix_port_static_init_50c08c, 0, 0},

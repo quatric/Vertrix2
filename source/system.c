@@ -1,5 +1,7 @@
 #include "system.h"
 
+#include "rtlextendeds.h"
+
 /* Runtime helpers: object release, focus restore, event tables, handle slots and closing, stream
  * buffers, text comparison and conversion, and extended float wrappers. */
 
@@ -407,22 +409,27 @@ uint32_t vertrix_port_crt_text_to_wide_4e6510(PORT_SIGNATURE)
 
 /* The extended float wrappers 0x4edd24 and 0x4ee0dc: the ten byte values eax and edx loaded into
  * registers (their exponents in esi) for `operation`, the result stored at ebx. */
+/* The extended reals at eax and edx (unpacked: eax/edx/si and ebx/ecx/esi's high word) through
+ * `operation` (0x4eddc4 the quotient, else 0x4ee160 the difference), stored at ebx with the
+ * result's sign and exponent word (the operation's si). */
 static uint32_t extended_operation(PORT_SIGNATURE, uint32_t operation)
 {
     Port port;
     uint32_t left = entry->eax;
     uint32_t right = entry->edx;
-    uint32_t esi;
-    uint32_t result;
     port_open(&port, calls, services, globals, entry);
-    esi = (port_u16(&port, right, 8) << 16) | port_u16(&port, left, 8);
-    result = port_forward_esi(&port, entry, operation, port_u32(&port, left, 0),
-                              port_u32(&port, left, 4), port_u32(&port, right, 0),
-                              port_u32(&port, right, 4), esi);
-    port_set32(&port, entry->ebx, 0, result);
-    port_set32(&port, entry->ebx, 4, vertrix_lift_edx);
-    port_set16(&port, entry->ebx, 8, esi);
-    return port_return(&port, result, vertrix_lift_edx);
+    const uint32_t esi = (port_u16(&port, right, 8) << 16) | port_u16(&port, left, 8);
+    const uint32_t eax = port_u32(&port, left, 0);
+    const uint32_t edx = port_u32(&port, left, 4);
+    const uint32_t ebx = port_u32(&port, right, 0);
+    const uint32_t ecx = port_u32(&port, right, 4);
+    const VertrixExtended value = operation == 0x4eddc4
+                                      ? vertrix_extended_divide(&port, eax, edx, ebx, ecx, esi)
+                                      : vertrix_extended_add(eax, edx, ebx, ecx, esi, 0x80000000u);
+    port_set32(&port, entry->ebx, 0, value.eax);
+    port_set32(&port, entry->ebx, 4, value.edx);
+    port_set16(&port, entry->ebx, 8, value.esi);
+    return port_return(&port, value.eax, value.edx);
 }
 
 /* Original 0x4edd24: 0x4eddc4. */
