@@ -290,10 +290,68 @@ def flag_effect(ins):
         return 0, 0
     if m == 'iretd':
         return 0, 0
+    # vertrix3's table has these write every flag; they write the carry only (the MOD player
+    # tests a comparison's zero flag after `stc`).
+    if m in ('stc', 'clc'):
+        return 0, r3.CF
+    if m == 'cmc':
+        return r3.CF, r3.CF
     return _flag_effect(ins)
 
 
 r3.flag_effect = flag_effect
+
+
+def flag_returners(p, funcs, readers=frozenset()):
+    """vertrix3's flag_returners without its six-instruction window: the MOD player's
+    _MODDetectCard stores three results and pops every register (pushal/popal) before it reads
+    the carry its callee returned (`sbb eax, eax`), eight instructions after the call."""
+    found = set()
+    while True:
+        before = len(found)
+        for f in funcs.values():
+            for a, ins in f.insns.items():
+                if ins is None or ins.mnemonic != 'call' or ins.operands[0].type != X.X86_OP_IMM:
+                    continue
+                callee = ins.operands[0].imm & 0xffffffff
+                cur = a + ins.size
+                while True:
+                    i2 = f.insns.get(cur)
+                    if i2 is None:
+                        break
+                    r, w = flag_effect(i2)
+                    if r:
+                        found.add(callee)
+                        break
+                    if i2.mnemonic == 'call':
+                        t = i2.operands[0].imm & 0xffffffff if i2.operands[0].type == X.X86_OP_IMM else None
+                        if t in readers:
+                            found.add(callee)
+                        break
+                    if i2.mnemonic in ('ret', 'repz ret'):
+                        if f.entry in found:
+                            found.add(callee)
+                        break
+                    if w == r3.ALL or i2.mnemonic == 'jmp' or r3.JCC.get(i2.mnemonic) or \
+                            f.succ.get(cur, []) != [cur + i2.size]:
+                        break
+                    cur += i2.size
+        if len(found) == before:
+            return found
+
+
+PREFIXES = {0x26, 0x2e, 0x36, 0x3e, 0x64, 0x65, 0x66, 0x67, 0xf0, 0xf2, 0xf3}
+
+
+def far_indirect(ins):
+    """Whether an instruction is a far call or jump through memory (opcode FF, ModRM reg 3 or
+    5): Capstone gives `call m16:32` a 4-byte operand, so the encoding decides."""
+    raw = bytes(ins.bytes)
+    i = 0
+    while i < len(raw) and raw[i] in PREFIXES:
+        i += 1
+    return i + 1 < len(raw) and raw[i] == 0xff and (raw[i + 1] >> 3) & 7 in (3, 5) and \
+        raw[i + 1] >> 6 != 3
 
 
 class DosGen(r3.Gen):
@@ -462,7 +520,7 @@ class DosGen(r3.Gen):
         if m == 'retf':
             n = ops[0].imm if ops else 0
             return ['c->ret = R32(esp); esp += %d;' % (8 + n), '%s return;' % self.sync_out(True)]
-        if m in ('call', 'jmp') and ops and ops[0].type == X.X86_OP_MEM and ops[0].size == 6:
+        if m in ('call', 'jmp') and ops and ops[0].type == X.X86_OP_MEM and far_indirect(ins):
             # Far, through a 48-bit pointer: the old interrupt handlers the game chains to.
             ad = self.addr(ops[0])
             if m == 'jmp':
@@ -555,7 +613,7 @@ def main():
     p = LEProgram(args.exe)
     funcs, entries = discover(p)
     readers = r3.flag_readers(p, funcs, entries)
-    returners = r3.flag_returners(p, funcs, readers)
+    returners = flag_returners(p, funcs, readers)
     print('%d functions read their caller\'s flags, %d return flags' % (len(readers), len(returners)))
     args.out.mkdir(parents=True, exist_ok=True)
     for old in args.out.glob('v1_code_*.c'):

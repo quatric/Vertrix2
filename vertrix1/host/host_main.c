@@ -6,7 +6,8 @@
  *
  * V1_SCRIPT="2 key 1c 1; 2.1 key 1c 0" presses and releases keys at guest seconds (set 1 scan
  * codes in hex; 0x1xx for the E0 prefix). V1_TRACE=1 logs every host function call;
- * V1_WATCH=hex logs each entry of a function. */
+ * V1_WATCH=hex logs each entry of a function; V1_PEEK="76970:2,796d7:1" logs guest memory
+ * (address:bytes, hex) every second. */
 
 #include "dos.h"
 
@@ -106,9 +107,41 @@ static void retrace(void)
     }
 }
 
+static const char *peek;
+static double peek_next = 1.0;
+
+static void log_peek(void)
+{
+    char text[512] = "";
+    size_t n = 0;
+    for (const char *p = peek; p && *p && n < sizeof text - 32;)
+    {
+        char *end;
+        const uint32_t address = (uint32_t)strtoul(p, &end, 16);
+        unsigned bytes = 4;
+        if (*end == ':')
+        {
+            bytes = (unsigned)strtoul(end + 1, &end, 10);
+        }
+        uint32_t value = 0;
+        for (unsigned i = 0; i < bytes && i < 4; ++i)
+        {
+            value |= v3_r8(address + i) << (8 * i);
+        }
+        n += (size_t)snprintf(text + n, sizeof text - n, " %x=%x", address, value);
+        p = *end == ',' ? end + 1 : NULL;
+    }
+    v3_log("peek%s", text);
+}
+
 static int poll_host(void)
 {
     const double now = v1_clock() / 1e6;
+    if (peek && now >= peek_next)
+    {
+        peek_next += 1.0;
+        log_peek();
+    }
     while (script_next < script_count && script[script_next].at <= now)
     {
         v1_key(script[script_next].scan, script[script_next].down);
@@ -226,6 +259,7 @@ int main(int argc, char **argv)
     snprintf(log_path, sizeof log_path, "%s/vertrix.log", out_dir);
     log_file = fopen(log_path, "w");
     read_script(getenv("V1_SCRIPT"));
+    peek = getenv("V1_PEEK");
     if (getenv("V1_TRACE"))
     {
         v3_trace_calls = 1;
