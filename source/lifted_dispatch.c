@@ -90,8 +90,6 @@
 #include "library.h"
 #include "lift_runtime.h"
 #include "lifted_unverified.h"
-#include "lifted_whole_13.h"
-#include "lifted_whole_21.h"
 #include "lists.h"
 #include "loops.h"
 #include "mainstarts.h"
@@ -249,6 +247,7 @@
 #include "rtlformats.h"
 #include "rtlformatscans.h"
 #include "rtlformatspecs.h"
+#include "rtlformatvalues.h"
 #include "rtlformatwidths.h"
 #include "rtlforms.h"
 #include "rtlforwards.h"
@@ -386,6 +385,7 @@
 #include "rtlplayscreensetups.h"
 #include "rtlpools.h"
 #include "rtlpreviewframes.h"
+#include "rtlprintfs.h"
 #include "rtlprints.h"
 #include "rtlpumps.h"
 #include "rtlquantize.h"
@@ -559,7 +559,7 @@ enum
     LIFTED_ARENA_BOTTOM = 0x7b0000,
     LIFTED_ARENA_GAP = 0x100, /* above a frame: its return slot and the arguments passed on */
     LIFTED_MAX_DEPTH = LIFT_DISPATCH_DEPTH,
-    LIFTED_MAX_STACK = 248,
+    LIFTED_MAX_STACK = 216,
     LIFTED_MAX_ARGUMENTS = 17
 };
 
@@ -4088,7 +4088,7 @@ static const LiftedRoutine routines[] = {
     {0x4df1c0, vertrix_port_map_remove_4df1c0, 0, 0},
     {0x4df220, vertrix_port_map_iterate_4df220, 0, 0},
     {0x4df307, vertrix_port_handle_table_allocate, 0, 0},
-    {0x4df320, lifted_f4df320, 248, 0},
+    {0x4df320, vertrix_port_rtl_printf_4df320, 0, 0},
     {0x4df6c8, vertrix_port_format_spec, 0, 0},
     {0x4df81c, vertrix_port_format_flags, 0, 0},
     {0x4df884, vertrix_port_text_length_limit, 0, 0},
@@ -4096,7 +4096,7 @@ static const LiftedRoutine routines[] = {
     {0x4dfa74, vertrix_port_call_global_509794_4dfa74, 0, 0},
     {0x4dfa7c, vertrix_port_format_zero_pad, 0, 0},
     {0x4dfac0, vertrix_port_rtl_wide_text_4dfac0, 0, 0},
-    {0x4dfb24, lifted_f4dfb24, 168, 0},
+    {0x4dfb24, vertrix_port_rtl_format_value_4dfb24, 0, 0},
     {0x4e012c, vertrix_port_text_map_bytes_4e012c, 0, 0},
     {0x4e0150, vertrix_port_crt_file_seek_4e0150, 0, 0},
     {0x4e01d0, vertrix_port_rtl_handle_entry_4e01d0, 0, 0},

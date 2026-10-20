@@ -234,6 +234,9 @@ def code_registers(routine):
 
 
 CODE_REGISTERS = code_registers(_routine)
+# VERTRIX_CODE_TARGET=0x4cd090: the routines a register names are that callee (stubbed, through
+# VERTRIX_EXTRA_CALLEES) instead of the leaf, so its calls compare only in what it reads.
+CODE_TARGET = int(__import__('os').environ.get('VERTRIX_CODE_TARGET', '0'), 0) or LEAF
 # Calls through a static table of routines (0x40dc50 calls [edx*4+0x4f7444]): the original reaches
 # the routines the table names, so each entry is stubbed like the call that reads it.
 for _match in re.finditer(r'lift_call\(&env, lift_load\(&env, 0u, \(\w+ \* 4u\) \+ 0x([0-9a-f]+)u, '
@@ -252,7 +255,7 @@ spec = dict(internal=internal, flag_targets=flag_targets, effects=com, fixed_ret
             fixed_globals={0x5054a0: b'\0\0'},
             setup_case=lambda rng, pool, cpu, kwargs: (vtable_setup(cpu),
                                                        kwargs.update({r: 0x10 for r in SELECTORS}),
-                                                       kwargs.update({r: LEAF for r in CODE_REGISTERS})),
+                                                       kwargs.update({r: CODE_TARGET for r in CODE_REGISTERS})),
             setup=vtable_setup if virtual or slots or pointer_globals or imports else None)
 import os  # noqa: E402
 

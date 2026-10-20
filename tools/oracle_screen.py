@@ -237,6 +237,8 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
             flag_draws.append(flags)
         if target in effects:
             outs.append(effects[target](cpu, rng, eax, edx, ebx, ecx, stack))
+        if target in returned_edx:
+            cpu.reg_write(UC_X86_REG_EDX, returned_edx[target])
         if target in fixed_returns:
             returns.append(fixed_returns[target])
         elif choices and target in choices:
@@ -264,6 +266,10 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
         setup(cpu)
     effects = effects or {}
     fixed_returns = fixed_returns or {}
+    # VERTRIX_RETURN_EDX="0x4dfb24:0x10": the edx those stubbed callees leave (a selector the
+    # routine loads into a segment register), in the original and in the native call alike.
+    returned_edx = {int(t, 0): int(v, 0) for t, v in (
+        item.split(':') for item in os.environ.get('VERTRIX_RETURN_EDX', '').split(',') if item)}
     outs = []
     callees = dict(callees)
     cdecl_targets = {t for t, n in callees.items() if isinstance(n, tuple)}
@@ -284,6 +290,8 @@ def run_screen(name, address, sources, function, argtypes, restype, callees, gen
             for i in range(s.stack):
                 native_shadow[s.eax + i] = (s.edx >> (8 * i)) & 0xff
             return 0
+        if s.target in returned_edx:
+            c.c_uint32.in_dll(native, 'vertrix_lift_edx').value = returned_edx[s.target]
         if s.target in flag_targets:
             lift_fl.zf, lift_fl.sf, lift_fl.cf, lift_fl.of, lift_fl.pf = flag_replay.pop(0)
         native_log.append(site_log(s, callees[s.target]) + tuple(
