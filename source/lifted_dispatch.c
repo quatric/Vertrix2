@@ -477,6 +477,7 @@
 #include "rtlthreaddataseconds.h"
 #include "rtlthreadslotgets.h"
 #include "rtlthreadslots.h"
+#include "rtlthrows.h"
 #include "rtltileblits.h"
 #include "rtltiles.h"
 #include "rtltitleletters.h"
@@ -496,6 +497,7 @@
 #include "rtlwidestringconverts.h"
 #include "rtlwidetexts.h"
 #include "rtlwindowbroadcasts.h"
+#include "rtlwindowcenters.h"
 #include "rtlwindowpoints.h"
 #include "rtlwindows.h"
 #include "rtlwrappers.h"
@@ -557,7 +559,7 @@ enum
     LIFTED_ARENA_BOTTOM = 0x7b0000,
     LIFTED_ARENA_GAP = 0x100, /* above a frame: its return slot and the arguments passed on */
     LIFTED_MAX_DEPTH = LIFT_DISPATCH_DEPTH,
-    LIFTED_MAX_STACK = 1400,
+    LIFTED_MAX_STACK = 288,
     LIFTED_MAX_ARGUMENTS = 17
 };
 
@@ -3797,7 +3799,7 @@ static const LiftedRoutine routines[] = {
     {0x4d24a0, vertrix_port_rtl_lookup_or_default_4d24a0, 0, 0},
     {0x4d2540, vertrix_port_rtl_control_brush_4d2540, 0, 0},
     {0x4d25e0, vertrix_port_return_constant_ffff_4d25e0, 0, 0},
-    {0x4d2710, lifted_f4d2710, 300, 0},
+    {0x4d2710, vertrix_port_rtl_window_center_4d2710, 0, 0},
     {0x4d2d70, vertrix_port_object_status_active_4d2d70, 0, 0},
     {0x4d2ea0, vertrix_port_constant_4d2ea0, 0, 0},
     {0x4d2eb0, vertrix_port_constant_4d2eb0, 0, 0},
@@ -3987,7 +3989,7 @@ static const LiftedRoutine routines[] = {
     {0x4d9a10, vertrix_port_rtl_error_raise_4d9a10, 0, 0},
     {0x4d9ae0, vertrix_port_rtl_dos_error_to_errno_4d9ae0, 0, 0},
     {0x4d9f06, vertrix_port_rtl_jump_capture_4d9f06, 0, 0},
-    {0x4da3ba, lifted_f4da3ba, 1400, 0},
+    {0x4da3ba, vertrix_port_rtl_throw_4da3ba, 0, 0},
     {0x4da66e, vertrix_port_rtl_zero_call3_4da66e, 0, 0},
     {0x4da6b6, vertrix_port_exception_chain_step_4da6b6, 0, 0},
     {0x4da71b, vertrix_port_rtl_guarded_call_4da71b, 0, 0},
