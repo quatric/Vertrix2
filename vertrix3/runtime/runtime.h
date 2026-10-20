@@ -131,7 +131,13 @@ void v3_log(const char *format, ...);
 _Noreturn void v3_fatal(const char *format, ...);
 extern int v3_trace_calls;
 /* The host function the calling thread entered last (for messages). */
-extern _Thread_local const char *v3_host_current;
+#ifdef GEKKO
+/* libogc threads have no thread-local storage; the name is only for messages. */
+#define V3_THREAD_LOCAL
+#else
+#define V3_THREAD_LOCAL _Thread_local
+#endif
+extern V3_THREAD_LOCAL const char *v3_host_current;
 extern int v3_trace_imports;
 
 /* Input the driver feeds (DirectInput scan codes; mouse in pixels and buttons). */

@@ -6,7 +6,9 @@
 #ifdef V3_PAGED
 uint8_t *v3_pages[65536];
 #else
+#ifndef V3_PAGED
 #include <sys/mman.h>
+#endif
 uint8_t *v3_memory;
 #endif
 
@@ -474,7 +476,7 @@ void v3_call(Cpu *c, uint32_t address)
 }
 
 int v3_trace_calls;
-_Thread_local const char *v3_host_current;
+V3_THREAD_LOCAL const char *v3_host_current;
 
 enum
 {

@@ -113,6 +113,8 @@ static void run_script(double now)
         {
             ++script;
         }
+        /* One step per poll: the game adds up a poll's mouse motion before clamping. */
+        return;
     }
 }
 

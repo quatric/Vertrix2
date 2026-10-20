@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<app version="1">
+    <name>Vertrix3</name>
+    <coder>quatric</coder>
+    <version>0.1</version>
+    <short_description>Vertrix 3 for the Wii</short_description>
+    <long_description>Vertrix 3, recompiled from the original Windows game. Needs the original VERTRIX3.VF in sd:/apps/vertrix3/. D-pad or stick moves, B or Up permutes, Down drops; the Wii Remote pointer and A work the menus. A USB keyboard and mouse also work. HOME exits.</long_description>
+</app>

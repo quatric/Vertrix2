@@ -120,17 +120,33 @@ The same check on `Vertrix2.vf` still passes: 529 PCX and 13 WAV.
   - PCX, 8-bit WAV and the rotation tables.
 - Added for Vertrix 3: PNG textures and 16-bit WAV.
 
+## Running the game: `vertrix3/`
+
+Vertrix 3 does not go through `tools/lift.py` and the routine-by-routine oracle. Those assume
+Watcom's register convention and Vertrix 2's addresses. Instead, `vertrix3/recomp.py` turns every
+function of `Vertrix3.exe` into C at once, and a small runtime supplies memory, threads, Win32,
+Direct3D 9, DirectInput 8 and waveOut. The same generated code runs on the build machine
+(software renderer) and on the Wii (GX renderer). `vertrix3/README.md` describes the build, the
+runtime and the debug switches.
+
+- Build machine: the game plays from the intro through the menus into a match (`a8d6ee3`).
+  `x87_check.py` compares every x87 instruction form the game uses against a real x86 under
+  Unicorn.
+- Wii, in Dolphin at the Wii's own CPU speed: a scripted debug build went from the intro
+  through the menu into a 1P vs computer match and on to the result screen, with GX drawing
+  every frame. The release build boots into the menu. The guest heap is 32 MB of MEM2 (a match
+  peaks near 25 MB), and GX's texture copies are evicted least-recently-drawn first when memory
+  runs out.
+- The display-mode confirmation (0x40f2c0) appears while the four saved display-mode globals are
+  zero. 0x42af58 checks [0x5c7b65], and the globals are loaded at 0x452bd6. Quitting from the
+  platform therefore closes the game's window, as Alt+F4 would, so the game saves
+  `Settings/Vertrix3.cfg` and later launches skip the screen.
+
 ## Not done yet
 
-The playable Vertrix 2 build runs Vertrix2.exe's own code, recompiled routine by routine and
-verified against the original in Unicorn (docs/LIFTED.md). Vertrix 3 needs the same pipeline
-pointed at Vertrix3.exe. `tools/lift.py` and the oracle assume Watcom's register convention and
-Vertrix 2's addresses. They need:
-
-- a Visual C++ calling-convention mode (cdecl/thiscall, `ebp` frames, SEH through `fs:[0]`);
-- a Direct3D 9 / D3DX / DirectInput 8 import layer in place of DirectDraw.
-
-Where `docs/v3-signature-matches.json` pairs a Vertrix 3 function with a ported Vertrix 2 routine,
-that native port is the candidate to reuse. Before it replaces the Vertrix 3 function, it has to
-pass the same Unicorn oracle against the Vertrix 3 function, since argument passing and structure
-layouts differ between the two compilers.
+- A run on real Wii hardware.
+- Stencil (two masks in the board screens), fog and specular are not modelled in either renderer.
+- The generated code does not reuse the Vertrix 2 ports. Where `docs/v3-signature-matches.json`
+  pairs a function with a ported Vertrix 2 routine, that port could replace the generated C, but
+  only once it passes the Unicorn oracle against the Vertrix 3 function. Argument passing and
+  structure layouts differ between the two compilers.

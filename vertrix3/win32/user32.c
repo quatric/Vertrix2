@@ -413,12 +413,26 @@ static int take(uint32_t msg, int remove)
     return 1;
 }
 
+/* A quit from the platform closes the window, as Alt+F4 would, so the game leaves through its
+ * own exit (which saves its settings); if it is still running five seconds later, it ends. */
 static void pump_platform(void)
 {
+    static uint64_t asked;
     if (v3_platform->poll && v3_platform->poll())
     {
-        v3_log("the platform asked to quit");
-        v3_process_exit(0);
+        if (!asked)
+        {
+            asked = v3_microseconds();
+            v3_log("the platform asked to quit");
+            if (main_window)
+            {
+                v3_post_message(main_window, WM_CLOSE, 0, 0);
+            }
+        }
+        if (!main_window || v3_microseconds() - asked > 5000000u)
+        {
+            v3_process_exit(0);
+        }
     }
 }
 

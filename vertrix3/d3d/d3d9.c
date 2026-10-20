@@ -830,6 +830,21 @@ static void present_frame(void)
 {
     renderer->present(renderer);
     ++device.frames;
+    /* V3_DUMP=FRAME:PATH writes the first 32 MB of the heap at that frame. */
+    static const char *dump = (const char *)1;
+    if (dump == (const char *)1)
+    {
+        dump = getenv("V3_DUMP");
+    }
+    if (dump && (unsigned)atoi(dump) == device.frames && strchr(dump, ':'))
+    {
+        FILE *f = fopen(strchr(dump, ':') + 1, "wb");
+        if (f)
+        {
+            fwrite(MEM(0x01000000u), 1, 0x02000000, f);
+            fclose(f);
+        }
+    }
     static int trace_frame = -1;
     if (trace_frame < 0)
     {
@@ -1931,6 +1946,45 @@ static void submit(uint32_t primitive, const Layout *l, uint32_t vertex_count,
             v3_log("  texture %ux%u format %u texels %08x %08x %08x", t->width, t->height,
                    t->format, v3_r32(t->pixels), v3_r32(t->pixels + t->pitch * (t->height / 2) + 2 * t->width),
                    v3_r32(t->pixels + 4 * 7));
+        }
+    }
+    static int stats = -1;
+    if (stats < 0)
+    {
+        stats = getenv("V3_STATS") != NULL;
+    }
+    if (stats)
+    {
+        /* Each distinct combination of the states a renderer has to honour, once. */
+        const V3RenderState *r = &device.s.r;
+        const uint32_t *rs = r->render;
+        char line[512];
+        int n = snprintf(line, sizeof line,
+                         "pre %d lit %u z %u/%u/%u cull %u blend %u %u/%u op %u atest %u/%u/%u "
+                         "fog %u stencil %u/%u mask %x spec %u tf %08x",
+                         l->position == 4, rs[137], rs[7], rs[14], rs[23], rs[22], rs[27], rs[19],
+                         rs[20], rs[171], rs[15], rs[25], rs[24], rs[28], rs[52], rs[56], rs[168],
+                         rs[29], rs[60] == 0xffffffffu ? 1u : 0u);
+        for (unsigned k = 0; k < V3_MAX_STAGES && r->stage[k][1] != 1; ++k)
+        {
+            const uint32_t *ts = r->stage[k];
+            n += snprintf(line + n, sizeof line - (size_t)n,
+                          " | c%u(%x,%x) a%u(%x,%x) r%u ti%x tex%u fmt%u adr%u/%u f%u", ts[1],
+                          ts[2], ts[3], ts[4], ts[5], ts[6], ts[28], ts[11],
+                          r->texture[k] != NULL, r->texture[k] ? r->texture[k]->format : 0,
+                          r->sampler[k][1], r->sampler[k][2], r->sampler[k][5]);
+        }
+        static char *seen[512];
+        static unsigned seen_count;
+        unsigned i = 0;
+        while (i < seen_count && strcmp(seen[i], line) != 0)
+        {
+            ++i;
+        }
+        if (i == seen_count && seen_count < 512)
+        {
+            seen[seen_count++] = strdup(line);
+            v3_log("state %s", line);
         }
     }
     renderer->draw(renderer, &device.s.r, &draw);
