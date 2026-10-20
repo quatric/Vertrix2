@@ -1,6 +1,7 @@
 #include "runtime.h"
 #include "threads.h"
 
+#include <stdlib.h>
 #include <string.h>
 
 /* --- regions ------------------------------------------------------------------------------ */
@@ -408,4 +409,14 @@ uint32_t v3_realloc(uint32_t address, uint32_t size)
     memmove(MEM(fresh), MEM(address), old < size ? old : size);
     v3_free(address);
     return fresh;
+}
+
+void *v3_grow(void *block, size_t size, const char *what)
+{
+    void *grown = realloc(block, size);
+    if (!grown)
+    {
+        v3_fatal("out of host memory growing %s to %u bytes", what, (unsigned)size);
+    }
+    return grown;
 }

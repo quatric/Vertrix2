@@ -1144,7 +1144,22 @@ static void read_back_into(Object *dst)
     {
         return;
     }
-    uint32_t *tmp = malloc((size_t)dst->u.surface.width * dst->u.surface.height * 4);
+    /* One buffer for every read-back, kept: allocating 1.2 MB each time the game copies the
+     * screen fragmented the Wii's little free memory until it failed. */
+    static uint32_t *tmp;
+    static size_t tmp_size;
+    const size_t size = (size_t)dst->u.surface.width * dst->u.surface.height * 4;
+    if (size > tmp_size)
+    {
+        free(tmp);
+        tmp = malloc(size);
+        tmp_size = tmp ? size : 0;
+        if (!tmp)
+        {
+            v3_log("d3d9: no memory to read the frame back (%u bytes)", (unsigned)size);
+            return;
+        }
+    }
     renderer->read_back(renderer, tmp, dst->u.surface.width, dst->u.surface.height);
     for (uint32_t y = 0; y < dst->u.surface.height; ++y)
     {
@@ -1154,7 +1169,6 @@ static void read_back_into(Object *dst)
                    tmp[y * dst->u.surface.width + x] | 0xff000000u);
         }
     }
-    free(tmp);
 }
 
 static void Dev_GetRenderTargetData(Cpu *c)
@@ -1917,7 +1931,8 @@ static V3Vertex *vertex_room(uint32_t n)
     if (n > device.vertex_capacity)
     {
         device.vertex_capacity = n + 1024;
-        device.vertices = realloc(device.vertices, device.vertex_capacity * sizeof(V3Vertex));
+        device.vertices = v3_grow(device.vertices, device.vertex_capacity * sizeof(V3Vertex),
+                                  "the vertex buffer");
     }
     return device.vertices;
 }
@@ -1927,7 +1942,8 @@ static uint32_t *index_room(uint32_t n)
     if (n > device.index_capacity)
     {
         device.index_capacity = n + 1024;
-        device.indices = realloc(device.indices, device.index_capacity * sizeof(uint32_t));
+        device.indices = v3_grow(device.indices, device.index_capacity * sizeof(uint32_t),
+                                 "the index buffer");
     }
     return device.indices;
 }

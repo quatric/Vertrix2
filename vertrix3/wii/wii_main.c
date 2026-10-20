@@ -72,6 +72,9 @@ void v3_log(const char *format, ...)
         fputs(line, log_file);
         fputc('\n', log_file);
         fflush(log_file);
+        /* libfat writes to the card only on a sync or a close: without it a crash leaves the log
+         * from before the crash unwritten. */
+        fsync(fileno(log_file));
     }
     printf("%s\n", line); /* Dolphin's log shows OSReport/stdout */
     if (log_lock != LWP_MUTEX_NULL)
@@ -494,9 +497,15 @@ int main(int argc, char **argv)
     {
         usleep(100 * 1000);
     }
+    /* Stop the DSP voices and the controller threads before returning to the loader. */
+    ASND_Pause(1);
+    ASND_End();
+    INPUT_Shutdown();
     if (log_file)
     {
-        fclose(log_file);
+        FILE *f = log_file;
+        log_file = NULL;
+        fclose(f);
     }
     return game_code;
 }

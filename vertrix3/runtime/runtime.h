@@ -129,6 +129,8 @@ uint64_t v3_microseconds(void);
 void v3_sleep_ms(uint32_t ms);
 void v3_log(const char *format, ...);
 _Noreturn void v3_fatal(const char *format, ...);
+/* realloc for the host's own buffers; out of memory is logged and fatal, not a crash later. */
+void *v3_grow(void *block, size_t size, const char *what);
 extern int v3_trace_calls;
 /* The host function the calling thread entered last (for messages). */
 #ifdef GEKKO

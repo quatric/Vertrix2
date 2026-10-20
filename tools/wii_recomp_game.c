@@ -2,6 +2,9 @@
  * through the dispatcher on the platform host (lift_host.c), the data comes from the original
  * archive on the SD card, and the DirectDraw back buffer is presented as the display frame.
  * The original's mapped image is linked in (build/image.bin, from tools/dump_image.py). */
+/* fileno and fsync, which strict C11 hides. */
+#define _DEFAULT_SOURCE
+
 #include <asndlib.h>
 #include <gccore.h>
 #include <ogc/lwp_watchdog.h>
@@ -9,6 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/iosupport.h>
+#include <unistd.h>
 #include <wiiuse/wpad.h>
 
 #include "input_wii.h"
@@ -46,7 +50,8 @@ static void host_store(LiftHost *host, uint32_t address, uint32_t value)
 }
 
 /* Console output is also written to sd:/apps/vertrix2/log.txt, so the last lines before an exit
- * to the menu can be read afterwards. */
+ * to the menu, or a crash, can be read afterwards. libfat keeps written data in its cache until a
+ * sync or a close, so every write is synced: a crash otherwise left an empty file. */
 static FILE *log_file;
 static const devoptab_t *console_out;
 static devoptab_t tee_out;
@@ -63,6 +68,7 @@ static ssize_t tee_write(struct _reent *r, void *fd, const char *data, size_t le
     {
         fwrite(data, 1, length, log_file);
         fflush(log_file);
+        fsync(fileno(log_file));
     }
     for (done = 0; done < length;)
     {
@@ -97,6 +103,24 @@ static void log_to_sd(void)
     log_file = fopen("sd:/apps/vertrix2/log.txt", "w");
 }
 
+/* Before returning to the loader: stop what still runs in the background (the update check's
+ * network thread, the DSP voices, the controller and keyboard threads) and close the log. Leaving
+ * them running across the exit crashed the return to the menu. */
+static void shut_down(void)
+{
+    WIIUPDATE_Cancel();
+    WIIUPDATE_Wait(3000);
+    ASND_Pause(1);
+    ASND_End();
+    INPUT_Shutdown();
+    if (log_file != NULL)
+    {
+        FILE *f = log_file;
+        log_file = NULL;
+        fclose(f);
+    }
+}
+
 static void fail(const char *message)
 {
     CON_InitEx(&video.mode, 20, 20, video.mode.fbWidth - 40, video.mode.xfbHeight - 40);
@@ -106,6 +130,7 @@ static void fail(const char *message)
         INPUT_Update();
         if (INPUT_PadsDown() & WPAD_BUTTON_HOME)
         {
+            shut_down();
             exit(1);
         }
         VIDEO_WaitVSync();
@@ -674,6 +699,7 @@ static void *game_main(void *unused)
                         }
                         fclose(shot);
                         printf("screenshot written\n");
+                        shut_down();
                         exit(0);
                     }
                     else
@@ -693,6 +719,8 @@ static void *game_main(void *unused)
             }
         }
     }
+    printf("returning to the loader\n");
+    shut_down();
     vertrix_wii_texture_free(&texture);
     vertrix_wii_archive_close(&archive);
     return NULL;

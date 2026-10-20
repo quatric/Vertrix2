@@ -673,7 +673,7 @@ static void gx_draw(V3Renderer *r, const V3RenderState *st, const V3Draw *d)
     if (d->vertex_count > g->out_capacity)
     {
         g->out_capacity = d->vertex_count + 256;
-        g->out = realloc(g->out, g->out_capacity * sizeof(Out));
+        g->out = v3_grow(g->out, g->out_capacity * sizeof(Out), "the transformed vertices");
     }
     process(g->out, st, d);
     const uint32_t n = d->indices ? d->index_count : d->vertex_count;
@@ -681,8 +681,8 @@ static void gx_draw(V3Renderer *r, const V3RenderState *st, const V3Draw *d)
     if (2 * triangles * 3 > g->tri_capacity)
     {
         g->tri_capacity = 2 * triangles * 3 + 64;
-        g->tris = realloc(g->tris, g->tri_capacity * sizeof(*g->tris));
-        g->clipped = realloc(g->clipped, g->tri_capacity * sizeof(Out));
+        g->tris = v3_grow(g->tris, g->tri_capacity * sizeof(*g->tris), "the triangle list");
+        g->clipped = v3_grow(g->clipped, g->tri_capacity * sizeof(Out), "the clipped vertices");
     }
     uint32_t count = 0, used = 0;
 #define V(i) (&g->out[d->indices ? d->indices[(i)] : (i)])
