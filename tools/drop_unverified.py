@@ -39,6 +39,8 @@ def main():
         header = re.sub(r'/\* Original 0x[0-9a-f]+\. \*/\nuint32_t lifted_%s\([^;]*\);\n\n?' % name,
                         '', header)
     header = re.sub(r',\n};', '\n};', header)
+    # With no routine left the stack sizes' enum is empty, which C does not allow.
+    header = re.sub(r'\nenum\n\{\n\};\n', '\n', header)
     source_path.write_text(source)
     header_path.write_text(header)
     print('dropped', len(names), 'of', len(addresses))

@@ -11,11 +11,12 @@ meta = json.loads((scratch / (name + '.json')).read_text())
 # remainder 0x4e88bf leaves in ecx:ebx).
 for _target in filter(None, __import__('os').environ.get('VERTRIX_RUN_CALLEES', '').split(',')):
     meta['callees'].pop('0x%x' % int(_target, 0), None)
-# VERTRIX_EXTRA_CALLEES="0x4e2371:0,...": more callees stubbed (address:stack argument count), the
-# ones a callee run for real (VERTRIX_RUN_CALLEES) calls in turn and the port calls itself.
+# VERTRIX_EXTRA_CALLEES="0x4e2371:0,...": more callees stubbed (address:stack argument count, and
+# :c for one whose caller pops them), the ones a callee run for real (VERTRIX_RUN_CALLEES) calls in
+# turn and the port calls itself.
 for _item in filter(None, __import__('os').environ.get('VERTRIX_EXTRA_CALLEES', '').split(',')):
-    _target, _count = _item.split(':')
-    meta['callees']['0x%x' % int(_target, 0)] = [int(_count, 0), False]
+    _target, _count, *_kind = _item.split(':')
+    meta['callees']['0x%x' % int(_target, 0)] = [int(_count, 0), _kind == ['c']]
 sys.argv = ['verify_one', str(Path(__file__).resolve().parents[1] / 'Vertrix2.exe'), '--build-dir',
             str(Path(__file__).resolve().parents[1] / 'build' / 'batch'), '--cases', cases]
 import verify_lifted  # noqa: E402

@@ -222,6 +222,7 @@
 #include "rtlenvirons.h"
 #include "rtlexceptionallocs.h"
 #include "rtlexceptioncatches.h"
+#include "rtlexceptionfinds.h"
 #include "rtlexceptionsteps.h"
 #include "rtlexponentformats.h"
 #include "rtlextendedeffects.h"
@@ -559,7 +560,7 @@ enum
     LIFTED_ARENA_BOTTOM = 0x7b0000,
     LIFTED_ARENA_GAP = 0x100, /* above a frame: its return slot and the arguments passed on */
     LIFTED_MAX_DEPTH = LIFT_DISPATCH_DEPTH,
-    LIFTED_MAX_STACK = 216,
+    LIFTED_MAX_STACK = 26524,
     LIFTED_MAX_ARGUMENTS = 17
 };
 
@@ -4246,6 +4247,7 @@ static const LiftedRoutine routines[] = {
     {0x4e6c98, vertrix_port_rtl_type_size_4e6c98, 0, 0},
     {0x4e6cd4, vertrix_port_thunk_target_4e6cd4, 0, 0},
     {0x4e6cf2, vertrix_port_stream_record_reset_4e6cf2, 0, 0},
+    {0x4e6d16, vertrix_port_rtl_find_exception_4e6d16, 0, 0},
     {0x4e6f30, vertrix_port_char_length, 0, 0},
     {0x4e6f60, vertrix_port_rtl_set_code_page_4e6f60, 0, 0},
     {0x4e70d0, vertrix_port_rtl_char_is_digit_4e70d0, 0, 0},
@@ -4414,7 +4416,7 @@ static const LiftedRoutine routines[] = {
  * vertrix_lifted_allow_unverified(1). */
 static const LiftedRoutine unverified_routines[] = {
     {0, NULL, 0, 0},
-    {0x4e6d16, lifted_f4e6d16, 216, 0},
+
 };
 
 static unsigned depth;

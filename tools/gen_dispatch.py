@@ -40,7 +40,10 @@ unverified_rows = ['    {0x%x, lifted_%s, %d, %d},' % (a, unverified_entries[a][
                                                  unverified_entries[a][1]['arguments'])
                    for a in sorted(unverified_entries)
                    if a not in entries and a not in NATIVE_UNVERIFIED_BOUNDARIES]
-maximum = max(e[1]['stack'] for e in list(entries.values()) + list(unverified_entries.values()))
+# The largest frame a routine is handed garbage for: lifted copies' and ports' own (none left lifted
+# is fine).
+maximum = max([e[1]['stack'] for e in list(entries.values()) + list(unverified_entries.values())] +
+              [port[1] for port in NATIVE_PORTS.values()] + [4])
 (ROOT / 'source' / 'lifted_dispatch.h').write_text('''#ifndef VERTRIX_LIFTED_DISPATCH_H
 #define VERTRIX_LIFTED_DISPATCH_H
 #include <stdint.h>
