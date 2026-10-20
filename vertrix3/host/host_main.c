@@ -80,9 +80,47 @@ static void present(const V3Frame *frame)
     fclose(f);
 }
 
+/* V3_SCRIPT: timed input, `;`-separated steps of `SECONDS key SCAN DOWN`, `SECONDS move DX DY`
+ * or `SECONDS button N DOWN`, e.g. "3 move 260 172; 3.5 button 0 1; 3.6 button 0 0". */
+static const char *script;
+
+static void run_script(double now)
+{
+    while (script && *script)
+    {
+        double at;
+        char kind[16];
+        int a = 0, b = 0, used = 0;
+        if (sscanf(script, " %lf %15s %d %d%n", &at, kind, &a, &b, &used) < 4 || at > now)
+        {
+            return;
+        }
+        if (!strcmp(kind, "key"))
+        {
+            v3_input_key((unsigned)a, b);
+        }
+        else if (!strcmp(kind, "move"))
+        {
+            v3_input_mouse_move(a, b);
+        }
+        else if (!strcmp(kind, "button"))
+        {
+            v3_input_mouse_button((unsigned)a, b);
+        }
+        v3_log("script: %s %d %d", kind, a, b);
+        script += used;
+        while (*script == ' ' || *script == ';')
+        {
+            ++script;
+        }
+    }
+}
+
 static int poll_input(void)
 {
-    return (double)(v3_microseconds() - 1000000u) / 1e6 > seconds;
+    const double now = (double)(v3_microseconds() - 1000000u) / 1e6;
+    run_script(now);
+    return now > seconds;
 }
 
 static uint64_t wave_bytes, wave_rate_bytes;
@@ -180,6 +218,7 @@ int main(int argc, char **argv)
     }
     run.command_line = argc > 6 ? "\"C:\\Vertrix3\\Vertrix3.exe\" -options"
                                 : "\"C:\\Vertrix3\\Vertrix3.exe\"";
+    script = getenv("V3_SCRIPT");
     if (getenv("V3_TRACE"))
     {
         v3_trace_calls = 1;

@@ -818,6 +818,7 @@ static void Dev_Reset(Cpu *c)
 }
 
 static void present_frame(void);
+static void read_back_into(Object *dst);
 
 static void Dev_Present(Cpu *c)
 {
@@ -844,6 +845,20 @@ static void present_frame(void)
     {
         v3_log("frame %u, %u draws, heap %u KB", device.frames, device.draws,
                v3_heap_used() >> 10);
+        /* V3_PEEK: guest dwords to show alongside, `ADDR` or `*ADDR+OFFSET` (hex). */
+        const char *peek = getenv("V3_PEEK");
+        while (peek && *peek)
+        {
+            char *end;
+            const int deref = *peek == '*';
+            uint32_t a = (uint32_t)strtoul(peek + deref, &end, 16);
+            if (deref)
+            {
+                a = v3_r32(a) + (*end == '+' ? (uint32_t)strtoul(end + 1, &end, 16) : 0);
+            }
+            v3_log("  peek %08x = %08x", a, a >= 0x10000u ? v3_r32(a) : 0);
+            peek = *end ? end + 1 : end;
+        }
     }
 }
 
@@ -877,6 +892,7 @@ static void Swap_Present(Cpu *c)
 
 static void Swap_GetFrontBufferData(Cpu *c)
 {
+    read_back_into(object_of(ARG(1)));
     STDCALL_RETURN(2, D3D_OK);
 }
 
@@ -1097,24 +1113,36 @@ static void Dev_SetDepthStencilSurface(Cpu *c)
     STDCALL_RETURN(2, D3D_OK);
 }
 
+/* Copy what the renderer last drew into a system-memory 32-bit surface. */
+static void read_back_into(Object *dst)
+{
+    if (!dst || !dst->u.surface.pixels || !renderer->read_back ||
+        (dst->u.surface.format != V3_FMT_X8R8G8B8 && dst->u.surface.format != V3_FMT_A8R8G8B8))
+    {
+        return;
+    }
+    uint32_t *tmp = malloc((size_t)dst->u.surface.width * dst->u.surface.height * 4);
+    renderer->read_back(renderer, tmp, dst->u.surface.width, dst->u.surface.height);
+    for (uint32_t y = 0; y < dst->u.surface.height; ++y)
+    {
+        for (uint32_t x = 0; x < dst->u.surface.width; ++x)
+        {
+            v3_w32(dst->u.surface.pixels + y * dst->u.surface.pitch + 4 * x,
+                   tmp[y * dst->u.surface.width + x] | 0xff000000u);
+        }
+    }
+    free(tmp);
+}
+
 static void Dev_GetRenderTargetData(Cpu *c)
 {
-    Object *dst = object_of(ARG(2));
-    if (dst && dst->u.surface.pixels && dst->u.surface.format == V3_FMT_X8R8G8B8 &&
-        renderer->read_back)
-    {
-        uint32_t *tmp = malloc((size_t)dst->u.surface.width * dst->u.surface.height * 4);
-        renderer->read_back(renderer, tmp, dst->u.surface.width, dst->u.surface.height);
-        for (uint32_t y = 0; y < dst->u.surface.height; ++y)
-        {
-            for (uint32_t x = 0; x < dst->u.surface.width; ++x)
-            {
-                v3_w32(dst->u.surface.pixels + y * dst->u.surface.pitch + 4 * x,
-                       tmp[y * dst->u.surface.width + x]);
-            }
-        }
-        free(tmp);
-    }
+    read_back_into(object_of(ARG(2)));
+    STDCALL_RETURN(3, D3D_OK);
+}
+
+static void Dev_GetFrontBufferData(Cpu *c)
+{
+    read_back_into(object_of(ARG(2)));
     STDCALL_RETURN(3, D3D_OK);
 }
 
@@ -1184,9 +1212,17 @@ static void Dev_SetTransform(Cpu *c)
     float *m = transform_slot(d, ARG(1), mask);
     if (m)
     {
+        int bad = 0;
         for (unsigned i = 0; i < 16; ++i)
         {
             m[i] = f32(v3_r32(ARG(2) + 4 * i));
+            bad |= m[i] != m[i];
+        }
+        static int reported;
+        if (bad && !reported++)
+        {
+            v3_log("SetTransform(%u) with NaN, called from %08x", ARG(1), v3_r32(c->esp));
+            v3_history_dump(400);
         }
     }
     STDCALL_RETURN(3, D3D_OK);
@@ -2186,6 +2222,7 @@ static const Method DEVICE_METHODS[] = {
     {29, "CreateDepthStencilSurface", Dev_CreateDepthStencilSurface},
     {31, "UpdateTexture", Dev_UpdateTexture},
     {32, "GetRenderTargetData", Dev_GetRenderTargetData},
+    {33, "GetFrontBufferData", Dev_GetFrontBufferData},
     {34, "StretchRect", Dev_StretchRect},
     {35, "ColorFill", Dev_ColorFill},
     {36, "CreateOffscreenPlainSurface", Dev_CreateOffscreenPlainSurface},

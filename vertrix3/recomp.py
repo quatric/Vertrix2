@@ -365,12 +365,13 @@ def flag_effect(ins):
 # Code generation.
 
 class Gen:
-    def __init__(self, p, f, entries, flag_returners):
+    def __init__(self, p, f, entries, flag_returners, flag_readers=frozenset()):
         self.p = p
         self.f = f
         self.entries = entries
         self.out = []
         self.flag_returners = flag_returners
+        self.flag_readers = flag_readers  # functions that read flags their caller set
         self.live_after = {}
 
     # -- liveness ------------------------------------------------------------------------------
@@ -407,12 +408,9 @@ class Gen:
                     out |= ALL
                 if ins.mnemonic == 'call':
                     target = ins.operands[0].imm & 0xffffffff if ins.operands[0].type == X.X86_OP_IMM else None
-                    if target in self.flag_returners:
-                        out_call = out & ~ALL
-                    else:
-                        out_call = out & ~ALL
+                    # The call sets every flag; a callee that reads its caller's flags reads them all.
                     self.live_after[a] = out
-                    new = out_call
+                    new = ALL if target in self.flag_readers else 0
                 else:
                     r, w = effect[a]
                     self.live_after[a] = out
@@ -919,7 +917,8 @@ class Gen:
             if op.type == X.X86_OP_IMM:
                 t = op.imm & 0xffffffff
                 call = 'F_%x(c);' % t if t in self.entries else 'CALL(c, 0x%xu);' % t
-                L.append('%s %s %s' % (self.sync_out(flags=False), call, self.sync_in(flags_needed != 0)))
+                L.append('%s %s %s' % (self.sync_out(flags=t in self.flag_readers), call,
+                                       self.sync_in(flags_needed != 0)))
             else:
                 L.append('t0 = %s;' % self.read(op, 4) if op.type != X.X86_OP_MEM else 't0 = R32(%s);' % self.addr(op))
                 L.append('%s CALL(c, t0); %s' % (self.sync_out(flags=False), self.sync_in(flags_needed != 0)))
@@ -1082,28 +1081,61 @@ class Gen:
         self.unsupported(m)
 
 
-def flag_returners(p, funcs):
-    """Functions whose caller reads a flag the callee set (hand-written runtime helpers)."""
-    found = set()
-    for f in funcs.values():
-        for a, ins in f.insns.items():
-            if ins is None or ins.mnemonic != 'call' or ins.operands[0].type != X.X86_OP_IMM:
+def flag_readers(p, funcs, entries):
+    """Functions that read, before writing, flags their caller set (the CRT's sqrt reads the
+    zero flag its caller's previous call left). Grows to a fixed point: calling such a function
+    makes its flags live in the caller too."""
+    readers = set()
+    while True:
+        found = set()
+        for e, f in funcs.items():
+            if f.entry not in f.insns or f.insns[f.entry] is None:
                 continue
-            nxt = a + ins.size
-            # Scan forward in straight line for a flag reader before a writer.
-            cur = nxt
-            for _ in range(6):
-                i2 = f.insns.get(cur)
-                if i2 is None:
-                    break
-                r, w = flag_effect(i2)
-                if r:
-                    found.add(ins.operands[0].imm & 0xffffffff)
-                    break
-                if w == ALL or i2.mnemonic in ('call', 'ret', 'jmp'):
-                    break
-                cur += i2.size
-    return found
+            g = Gen(p, f, entries, set(), readers)
+            g.liveness()
+            if g.live_in.get(f.entry, 0):
+                found.add(e)
+        if found <= readers:
+            return readers
+        readers |= found
+
+
+def flag_returners(p, funcs, readers=frozenset()):
+    """Functions whose caller reads a flag the callee set (hand-written runtime helpers): the
+    caller tests it after the call, hands it to a function that reads it, or returns it to its
+    own caller."""
+    found = set()
+    while True:
+        before = len(found)
+        for f in funcs.values():
+            for a, ins in f.insns.items():
+                if ins is None or ins.mnemonic != 'call' or ins.operands[0].type != X.X86_OP_IMM:
+                    continue
+                callee = ins.operands[0].imm & 0xffffffff
+                # Scan forward in straight line for a flag reader before a writer.
+                cur = a + ins.size
+                for _ in range(6):
+                    i2 = f.insns.get(cur)
+                    if i2 is None:
+                        break
+                    r, w = flag_effect(i2)
+                    if r:
+                        found.add(callee)
+                        break
+                    if i2.mnemonic == 'call':
+                        t = i2.operands[0].imm & 0xffffffff if i2.operands[0].type == X.X86_OP_IMM else None
+                        if t in readers:
+                            found.add(callee)
+                        break
+                    if i2.mnemonic in ('ret', 'repz ret'):
+                        if f.entry in found:
+                            found.add(callee)
+                        break
+                    if w == ALL or i2.mnemonic == 'jmp':
+                        break
+                    cur += i2.size
+        if len(found) == before:
+            return found
 
 
 HEADER = '''/* Generated by vertrix3/recomp.py from Vertrix3.exe (sha256 %s). Do not edit. */
@@ -1118,7 +1150,9 @@ def main():
     args = parser.parse_args()
     p = Program(args.exe)
     funcs, entries = discover(p)
-    returners = flag_returners(p, funcs)
+    readers = flag_readers(p, funcs, entries)
+    returners = flag_returners(p, funcs, readers)
+    print('%d functions read their caller\'s flags, %d return flags' % (len(readers), len(returners)))
     args.out.mkdir(parents=True, exist_ok=True)
     for old in args.out.glob('v3_code_*.c'):
         old.unlink()
@@ -1129,7 +1163,7 @@ def main():
         chunk = names[k:k + PER_FILE]
         text = [HEADER % SHA256]
         for e in chunk:
-            g = Gen(p, funcs[e], entries, returners)
+            g = Gen(p, funcs[e], entries, returners, readers)
             body = g.emit()
             for line in body.split('\n'):
                 if 'UNSUPPORTED(' in line:
