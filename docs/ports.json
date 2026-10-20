@@ -15109,6 +15109,11 @@
   "lifted": "lifted_float_power",
   "chunk": "whole_10"
  },
+ "0x4c9b10": {
+  "port": "vertrix_port_rtl_square_root_4c9b10",
+  "lifted": "lifted_rtl_square_root",
+  "chunk": "whole_40"
+ },
  "0x4c9b6a": {
   "port": "vertrix_port_trig",
   "lifted": "lifted_f4c9b6a",

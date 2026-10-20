@@ -92,7 +92,6 @@
 #include "lifted_unverified.h"
 #include "lifted_whole_13.h"
 #include "lifted_whole_21.h"
-#include "lifted_whole_40.h"
 #include "lifted_whole_7.h"
 #include "lifted_whole_8.h"
 #include "lists.h"
@@ -439,6 +438,7 @@
 #include "rtlsoundoutputopens.h"
 #include "rtlspins.h"
 #include "rtlsplitbars.h"
+#include "rtlsquareroots.h"
 #include "rtlstackpairs.h"
 #include "rtlstackprobes.h"
 #include "rtlstagepicks.h"
@@ -3625,7 +3625,7 @@ static const LiftedRoutine routines[] = {
     {0x4c98d0, vertrix_port_rtl_copy_blocks_4c98d0, 0, 0},
     {0x4c98f0, vertrix_port_rtl_zero_call_4c98f0, 0, 0},
     {0x4c9921, vertrix_port_power, 0, 0},
-    {0x4c9b10, lifted_rtl_square_root, 96, 0},
+    {0x4c9b10, vertrix_port_rtl_square_root_4c9b10, 0, 0},
     {0x4c9b6a, vertrix_port_trig, 0, 0},
     {0x4c9daf, vertrix_port_memory_free_dispatch, 0, 0},
     {0x4c9dd6, vertrix_port_sine, 0, 0},
