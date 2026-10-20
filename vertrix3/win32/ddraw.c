@@ -292,6 +292,15 @@ static void show(Surface *s)
     {
         const uint8_t *in = row_of(s, y);
         uint32_t *out = frame + y * s->width;
+        if (s->bits == 32)
+        {
+            /* Little-endian x86 pixels: blue, green, red, unused. */
+            for (uint32_t x = 0; x < s->width; ++x, in += 4)
+            {
+                out[x] = 0xff000000u | (uint32_t)in[2] << 16 | (uint32_t)in[1] << 8 | in[0];
+            }
+            continue;
+        }
         for (uint32_t x = 0; x < s->width; ++x, in += bytes)
         {
             const uint32_t v = get_pixel(in, bytes);

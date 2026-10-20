@@ -70,6 +70,8 @@ so run them without a `Settings/` folder.
 
 ```
 make -C vertrix3 V3_EXE=/path/to/Vertrix3.exe PYTHON=python3 wii        # build/v3/vertrix3.dol
+make -C vertrix3 BUILD=../build/v12 GAME=vertrix2-v12 V3_EXE=/path/to/Vertrix2.exe PYTHON=python3 wii
+                                                                  # build/v12/vertrix2-v12.dol
 make -C vertrix3 V3_EXE=... PYTHON=... wii-sync SYNC=/path/to/sd-root    # apps/vertrix3/
 ```
 

@@ -30,11 +30,13 @@ from capstone import x86_const as X
 # The executables this recompiles, by SHA-256: Vertrix 3 (Visual C++ 9) and Vertrix 2 v1.2
 # (Watcom; docs/VERTRIX2-V12.md).
 # Each with the directory the game is told it runs from.
+# Each executable: its name, the game's title, the directory it believes it runs from, its
+# archive, and the Wii's application folder (sd:/apps/<folder>, as source/games.c names it).
 GAMES = {
     'db625cfe1acb3f5f70d30d041362831ca59ec72b5693e463331cf2f29738f7e9':
-        ('Vertrix3.exe', 'Vertrix 3', 'C:\\Vertrix3'),
+        ('Vertrix3.exe', 'Vertrix 3', 'C:\\Vertrix3', 'VERTRIX3.VF', 'vertrix3'),
     '8e27c76d75c28dba6b39f9e9e6162e04b04d712771cb4b03c4d9eb9ef4141999':
-        ('Vertrix2.exe', 'Vertrix 2 v1.2', 'C:\\Vertrix2'),
+        ('Vertrix2.exe', 'Vertrix 2 v1.2', 'C:\\Vertrix2', 'Vertrix2.vf', 'vertrix2-v12'),
 }
 SEGMENTS = (X.X86_REG_SS, X.X86_REG_CS, X.X86_REG_DS, X.X86_REG_ES, X.X86_REG_FS, X.X86_REG_GS)
 PER_FILE = 150
@@ -84,7 +86,8 @@ class Program:
         if self.sha256 not in GAMES:
             sys.exit('not an executable this recompiles: %s' % ', '.join(
                 '%s (%s)' % (g[0], g[1]) for g in GAMES.values()))
-        self.executable, self.game, self.directory = GAMES[self.sha256]
+        self.executable, self.game, self.directory, self.archive, self.wii_folder = \
+            GAMES[self.sha256]
         self.pe = pefile.PE(data=data)
         self.base = self.pe.OPTIONAL_HEADER.ImageBase
         self.image = bytearray(self.pe.get_memory_mapped_image())
@@ -1359,7 +1362,10 @@ def main():
     imports += ['};', 'const unsigned v3_import_count = %d;' % len(p.iat),
                 'const uint32_t v3_entry_offset = 0x%xu;' % (p.entry - p.base),
                 'const char v3_game_directory[] = "%s";' % p.directory.replace('\\', '\\\\'),
-                'const char v3_executable[] = "%s";' % p.executable, '']
+                'const char v3_executable[] = "%s";' % p.executable,
+                'const char v3_game_title[] = "%s";' % p.game,
+                'const char v3_archive[] = "%s";' % p.archive,
+                'const char v3_wii_folder[] = "%s";' % p.wii_folder, '']
     (args.out / 'v3_table.c').write_text('\n'.join(table + imports))
     print('functions %d, files %d, flag-returning %d' % (len(names), len(files), len(returners)))
     print('unsupported:', dict(sorted(unsupported.items(), key=lambda x: -x[1])))

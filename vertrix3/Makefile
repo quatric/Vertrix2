@@ -41,13 +41,23 @@ $(BUILD)/v3_host: $(GEN_OBJECTS) $(BUILD)/host/runtime.a
 # --- the Wii ------------------------------------------------------------------------------------
 # make -C vertrix3 V3_EXE=/path/to/Vertrix3.exe wii      -> build/v3/vertrix3.dol
 # make -C vertrix3 V3_EXE=... wii-sync SYNC=/path/to/sd  -> apps/vertrix3/ (boot.dol, meta.xml)
+# Vertrix 2 v1.2: BUILD=../build/v12 GAME=vertrix2-v12 V3_EXE=/path/to/Vertrix2.exe
+#                                                        -> build/v12/vertrix2-v12.dol
+# GAME names the DOL, the SD folder (apps/GAME, as recomp.py's v3_wii_folder) and wii/GAME.xml.
 DEVKITPRO ?= /opt/devkitpro
 PPC_CC := $(DEVKITPRO)/devkitPPC/bin/powerpc-eabi-gcc
 PPC_AR := $(DEVKITPRO)/devkitPPC/bin/powerpc-eabi-ar
 LIBOGC ?= $(DEVKITPRO)/libogc
 WII_ARCH := -mrvl -mcpu=750 -meabi -mhard-float -DGEKKO -DHW_RVL -D__wii__
-# The guest heap the Wii can hold; the game's peak is about 25 MB.
-WII_DEFINES := -DV3_PAGED -DV3_HEAP_SIZE=0x02000000u $(WII_DEBUG)
+GAME ?= vertrix3
+# The guest heap the Wii can hold: Vertrix 3 peaks at about 25 MB; Vertrix 2 v1.2 keeps its
+# images in memory and reaches 32 MB at its menus (31.7 MB at the end of a match).
+ifeq ($(GAME),vertrix2-v12)
+WII_HEAP ?= 0x02800000u
+else
+WII_HEAP ?= 0x02000000u
+endif
+WII_DEFINES := -DV3_PAGED -DV3_HEAP_SIZE=$(WII_HEAP) $(WII_DEBUG)
 # Debug builds for Dolphin: WII_DEBUG='-DV3_WII_SHOTS=300 -DV3_WII_SCRIPT="\"2 move 128 86; ...\""'
 WII_CFLAGS := $(WII_ARCH) $(WII_DEFINES) -std=gnu11 -O2 -fno-strict-aliasing \
 	-Wno-parentheses-equality -Wno-unused-label -Wno-unused-variable -Wno-unused-but-set-variable \
@@ -65,7 +75,7 @@ SYNC ?= ../../dolphin-user/Load/WiiSDSync
 wii: $(GEN)/stamp
 	$(MAKE) wii-link
 
-wii-link: $(BUILD)/vertrix3.dol
+wii-link: $(BUILD)/$(GAME).dol
 
 $(BUILD)/wii/%.o: $(GEN)/%.c $(GEN)/stamp runtime/cpu.h
 	@mkdir -p $(BUILD)/wii
@@ -87,14 +97,14 @@ $(BUILD)/wii/input/%.o: %.c
 	@mkdir -p $(BUILD)/wii/input
 	$(PPC_CC) $(WII_ARCH) -O2 -I$(LIBOGC)/include -I../libwiiinput/include -c $< -o $@
 
-$(BUILD)/vertrix3.elf: $(WII_GEN_OBJECTS) $(WII_RT_OBJECTS) $(WII_INPUT_OBJECTS) $(BUILD)/wii/v3_image_bin.o
+$(BUILD)/$(GAME).elf: $(WII_GEN_OBJECTS) $(WII_RT_OBJECTS) $(WII_INPUT_OBJECTS) $(BUILD)/wii/v3_image_bin.o
 	$(PPC_CC) $(WII_ARCH) $^ -L$(LIBOGC)/lib/wii -lasnd -lfat -lwiikeyboard -lwiiuse -lbte -logc -lm \
-		-Wl,-Map,$(BUILD)/vertrix3.map -o $@
+		-Wl,-Map,$(BUILD)/$(GAME).map -o $@
 
-$(BUILD)/vertrix3.dol: $(BUILD)/vertrix3.elf
+$(BUILD)/$(GAME).dol: $(BUILD)/$(GAME).elf
 	$(DEVKITPRO)/tools/bin/elf2dol $< $@
 
 wii-sync: wii
-	mkdir -p "$(SYNC)/apps/vertrix3"
-	cp $(BUILD)/vertrix3.dol "$(SYNC)/apps/vertrix3/boot.dol"
-	cp wii/meta.xml "$(SYNC)/apps/vertrix3/meta.xml"
+	mkdir -p "$(SYNC)/apps/$(GAME)"
+	cp $(BUILD)/$(GAME).dol "$(SYNC)/apps/$(GAME)/boot.dol"
+	cp wii/$(GAME).xml "$(SYNC)/apps/$(GAME)/meta.xml"

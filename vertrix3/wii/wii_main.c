@@ -1,6 +1,7 @@
-/* Vertrix 3 recompiled, on the Wii: the game reads VERTRIX3.VF and keeps Settings/ in
- * sd:/apps/vertrix3/, draws through GX (render_gx.c), plays the wave-out stream on an ASND
- * voice, and gets its keyboard and mouse from the controllers:
+/* A recompiled game on the Wii (Vertrix 3, Vertrix 2 v1.2): the game reads its archive and keeps
+ * its settings in sd:/apps/FOLDER/ (v3_wii_folder: vertrix3, vertrix2-v12), draws through GX
+ * (render_gx.c) or hands over the frames it drew itself (DirectDraw), plays the wave-out stream on
+ * an ASND voice, and gets its keyboard and mouse from the controllers:
  *
  *   D-pad, Nunchuk/Classic stick   arrow keys (player 1: left, right, Up permutes, down)
  *   B                              Up (permute)
@@ -9,7 +10,7 @@
  *   Plus, Minus                    Escape
  *   Home                           back to the loader
  *
- * A USB keyboard and mouse work as themselves. The log goes to sd:/apps/vertrix3/vertrix3.log. */
+ * A USB keyboard and mouse work as themselves. The log goes to sd:/apps/FOLDER/FOLDER.log. */
 #include <asndlib.h>
 #include <fat.h>
 #include <gccore.h>
@@ -24,15 +25,18 @@
 #include <wiiuse/wpad.h>
 
 #include "input_wii.h"
+#include "process.h"
 #include "render.h"
 #include "runtime.h"
 #include "wii_audio.h"
 
 #include "v3_image_bin.h"
 
-#define DIRECTORY "sd:/apps/vertrix3"
 #define WIDTH 640
 #define HEIGHT 480
+
+/* sd:/apps/FOLDER, where the game's files are. */
+static char directory[64];
 
 /* --- log ---------------------------------------------------------------------------------- */
 
@@ -142,18 +146,26 @@ static void video_init(void)
 }
 
 #ifdef V3_WII_SHOTS
-/* Debug builds: every V3_WII_SHOTS-th frame as DIRECTORY/shots/frameNNNNN.ppm. */
-static void shot(void)
+/* Debug builds: every V3_WII_SHOTS-th frame as sd:/apps/FOLDER/shots/frameNNNNN.ppm. */
+static void shot(const V3Frame *frame)
 {
     static uint32_t *pixels;
+    char path[128];
     if (!pixels)
     {
         pixels = malloc(WIDTH * HEIGHT * 4);
-        mkdir(DIRECTORY "/shots", 0777);
+        snprintf(path, sizeof path, "%s/shots", directory);
+        mkdir(path, 0777);
     }
-    v3_renderer()->read_back(v3_renderer(), pixels, WIDTH, HEIGHT);
-    char path[128];
-    snprintf(path, sizeof path, DIRECTORY "/shots/frame%05u.ppm", frames);
+    if (frame->pixels && frame->width == WIDTH && frame->height == HEIGHT)
+    {
+        memcpy(pixels, frame->pixels, WIDTH * HEIGHT * 4);
+    }
+    else
+    {
+        v3_renderer()->read_back(v3_renderer(), pixels, WIDTH, HEIGHT);
+    }
+    snprintf(path, sizeof path, "%s/shots/frame%05u.ppm", directory, frames);
     FILE *f = fopen(path, "wb");
     if (!f)
     {
@@ -176,13 +188,106 @@ static void shot(void)
 }
 #endif
 
+/* A frame the game drew itself (DirectDraw): its 0xAARRGGBB rows as an RGBA8 texture in 4x4
+ * tiles (each tile's alpha and red pairs, then its green and blue pairs), drawn over the EFB. */
+static void draw_frame(const V3Frame *frame)
+{
+    static uint8_t *tiles;
+    static uint32_t tiles_size;
+    static GXTexObj texture;
+    const uint32_t w = frame->width & ~3u, h = frame->height & ~3u;
+    if (w == 0 || h == 0)
+    {
+        return;
+    }
+    if (w * h * 4 > tiles_size)
+    {
+        free(tiles);
+        tiles_size = w * h * 4;
+        tiles = memalign(32, tiles_size);
+        if (!tiles)
+        {
+            tiles_size = 0;
+            v3_log("no memory for the frame texture");
+            return;
+        }
+    }
+    GX_DrawDone(); /* the last frame's draw has read the texture */
+    uint8_t *out = tiles;
+    for (uint32_t ty = 0; ty < h; ty += 4)
+    {
+        for (uint32_t tx = 0; tx < w; tx += 4)
+        {
+            for (uint32_t y = 0; y < 4; ++y)
+            {
+                const uint32_t *in = frame->pixels + (ty + y) * frame->width + tx;
+                for (uint32_t x = 0; x < 4; ++x)
+                {
+                    const uint32_t c = in[x];
+                    out[8 * y + 2 * x] = (uint8_t)(c >> 24);
+                    out[8 * y + 2 * x + 1] = (uint8_t)(c >> 16);
+                    out[32 + 8 * y + 2 * x] = (uint8_t)(c >> 8);
+                    out[32 + 8 * y + 2 * x + 1] = (uint8_t)c;
+                }
+            }
+            out += 64;
+        }
+    }
+    DCFlushRange(tiles, w * h * 4);
+    GX_InvalidateTexAll();
+    GX_InitTexObj(&texture, tiles, (u16)w, (u16)h, GX_TF_RGBA8, GX_CLAMP, GX_CLAMP, GX_FALSE);
+    GX_InitTexObjFilterMode(&texture, GX_NEAR, GX_NEAR);
+    GX_LoadTexObj(&texture, GX_TEXMAP0);
+
+    Mtx44 projection;
+    guOrtho(projection, 0, HEIGHT, 0, WIDTH, 0, 1);
+    GX_LoadProjectionMtx(projection, GX_ORTHOGRAPHIC);
+    Mtx identity;
+    guMtxIdentity(identity);
+    GX_LoadPosMtxImm(identity, GX_PNMTX0);
+    GX_SetCurrentMtx(GX_PNMTX0);
+    GX_SetViewport(0, 0, WIDTH, HEIGHT, 0, 1);
+    GX_SetScissor(0, 0, WIDTH, HEIGHT);
+    GX_ClearVtxDesc();
+    GX_SetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GX_SetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    GX_SetVtxAttrFmt(GX_VTXFMT1, GX_VA_POS, GX_POS_XY, GX_F32, 0);
+    GX_SetVtxAttrFmt(GX_VTXFMT1, GX_VA_TEX0, GX_TEX_ST, GX_F32, 0);
+    GX_SetNumChans(0);
+    GX_SetNumTexGens(1);
+    GX_SetTexCoordGen(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY);
+    GX_SetNumIndStages(0);
+    GX_SetNumTevStages(1);
+    GX_SetTevDirect(GX_TEVSTAGE0);
+    GX_SetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLORNULL);
+    GX_SetTevOp(GX_TEVSTAGE0, GX_REPLACE);
+    GX_SetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
+    GX_SetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_CLEAR);
+    GX_SetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+    GX_SetCullMode(GX_CULL_NONE);
+    GX_SetColorUpdate(GX_TRUE);
+    GX_Begin(GX_QUADS, GX_VTXFMT1, 4);
+    GX_Position2f32(0, 0);
+    GX_TexCoord2f32(0, 0);
+    GX_Position2f32((f32)w, 0);
+    GX_TexCoord2f32(1, 0);
+    GX_Position2f32((f32)w, (f32)h);
+    GX_TexCoord2f32(1, 1);
+    GX_Position2f32(0, (f32)h);
+    GX_TexCoord2f32(0, 1);
+    GX_End();
+}
+
 static void present(const V3Frame *frame)
 {
-    (void)frame;
+    if (frame->pixels)
+    {
+        draw_frame(frame);
+    }
 #ifdef V3_WII_SHOTS
     if (frames % V3_WII_SHOTS == 0)
     {
-        shot();
+        shot(frame);
     }
 #endif
     GX_DrawDone();
@@ -346,8 +451,9 @@ static uint32_t stick_directions(void)
 
 #ifdef V3_WII_SCRIPT
 /* Debug builds: timed input as the build machine's V3_SCRIPT ("SECONDS key SCAN DOWN",
- * "SECONDS move DX DY", "SECONDS button N DOWN", separated by semicolons). */
-static void run_script(void)
+ * "SECONDS move DX DY", "SECONDS button N DOWN", "SECONDS quit 0 0", separated by semicolons).
+ * Nonzero once the script quits. */
+static int run_script(void)
 {
     static const char *script = V3_WII_SCRIPT;
     static double late; /* a step the game was too busy to take delays the ones after it */
@@ -359,7 +465,7 @@ static void run_script(void)
         int a = 0, b = 0, used = 0;
         if (sscanf(script, " %lf %15s %d %d%n", &at, kind, &a, &b, &used) < 4 || at + late > now)
         {
-            return;
+            return 0;
         }
         if (now - (at + late) > 0.05)
         {
@@ -371,20 +477,26 @@ static void run_script(void)
             v3_input_mouse_move(a, b);
         else if (!strcmp(kind, "button"))
             v3_input_mouse_button((unsigned)a, b);
+        else if (!strcmp(kind, "quit"))
+            return 1;
         v3_log("script: %s %d %d", kind, a, b);
         script += used;
         while (*script == ' ' || *script == ';')
             ++script;
         /* One step per poll: the game adds up a poll's mouse motion before clamping. */
-        return;
+        return 0;
     }
+    return 0;
 }
 #endif
 
 static int poll(void)
 {
 #ifdef V3_WII_SCRIPT
-    run_script();
+    if (run_script())
+    {
+        return 1;
+    }
 #endif
     INPUT_Update();
     static uint32_t before;
@@ -429,7 +541,7 @@ static int poll(void)
 
 /* --- the game ----------------------------------------------------------------------------- */
 
-static const V3Platform platform = {DIRECTORY, present, poll, wave_open, wave_write, wave_played};
+static V3Platform platform = {NULL, present, poll, wave_open, wave_write, wave_played};
 
 enum
 {
@@ -470,21 +582,27 @@ int main(int argc, char **argv)
 #endif
     video_init();
     LWP_MutexInit(&log_lock, false);
+    snprintf(directory, sizeof directory, "sd:/apps/%s", v3_wii_folder);
+    platform.directory = directory;
     if (fatInitDefault())
     {
-        log_file = fopen(DIRECTORY "/vertrix3.log", "w");
+        char path[96];
+        snprintf(path, sizeof path, "%s/%s.log", directory, v3_wii_folder);
+        log_file = fopen(path, "w");
     }
     INPUT_Init();
     INPUT_SetScreenSize(WIDTH, HEIGHT);
     INPUT_KeyboardMapClear();
     ASND_Init();
     ASND_Pause(0);
-    v3_log("Vertrix 3 for the Wii: %u-line TV mode, %u KB of image", mode->xfbHeight,
+    v3_log("%s for the Wii: %u-line TV mode, %u KB of image", v3_game_title, mode->xfbHeight,
            (unsigned)(v3_image_bin_size >> 10));
-    FILE *archive = fopen(DIRECTORY "/VERTRIX3.VF", "rb");
+    char path[96];
+    snprintf(path, sizeof path, "%s/%s", directory, v3_archive);
+    FILE *archive = fopen(path, "rb");
     if (!archive)
     {
-        v3_log("no " DIRECTORY "/VERTRIX3.VF: copy the game's VERTRIX3.VF there");
+        v3_log("no %s: copy the game's %s there", path, v3_archive);
     }
     else
     {

@@ -15,6 +15,10 @@ extern const uint32_t v3_entry_offset;
  * executable's name there. */
 extern const char v3_game_directory[];
 extern const char v3_executable[];
+/* Its title, its archive (VERTRIX3.VF) and its folder on the Wii's SD card (sd:/apps/...). */
+extern const char v3_game_title[];
+extern const char v3_archive[];
+extern const char v3_wii_folder[];
 
 enum
 {
