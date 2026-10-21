@@ -13,6 +13,7 @@ The repository now ports four games of the series. Each has its own page:
 | Game | Approach | Where | Status | Page |
 | --- | --- | --- | --- | --- |
 | Vertrix 2 v2.0 (2003, Windows, Watcom) | recovered routines as native C, each checked against the original under Unicorn; the dispatcher serves 3,833 routines as ports | `source/`, `tools/`, top `Makefile` | `make wii-recomp` builds `build/vertrix2-recomp.dol`; `make wii-game` builds the older single-board app | `docs/WII-GAME.md`, `docs/LIFTED.md`, `docs/RECOVERY.md` |
+| Vertrix 2 v2.0, recompiled whole | whole-program recompiler (`vertrix3/recomp.py`), function discovery checked against rea's Rizin list (`tools/rea_coverage.py`) | `vertrix3/`, `GAME=vertrix2`, `BUILD=../build/v20` | a Practice match to its result screen on the build machine and on the Wii in Dolphin (40 MB guest heap). Two early Dolphin runs stalled in the menus, cause unknown (see its page). The Wii app packs this build as `games/vertrix2.dol` | `docs/VERTRIX2-RECOMP.md` |
 | Vertrix 2 v1.2 (2001) | whole-program recompiler (`vertrix3/recomp.py`) | `vertrix3/`, `GAME=vertrix2-v12` | menus, tournament stories, player select and a 1P vs CPU match to its result screen, on the build machine and on the Wii in Dolphin (40 MB guest heap) | `docs/VERTRIX2-V12.md` |
 | Vertrix 3 (2009, Windows, Visual C++, Direct3D 9) | whole-program recompiler and runtime | `vertrix3/` | plays to a match on the build machine and on the Wii in Dolphin | `vertrix3/README.md`, `docs/VERTRIX3.md` |
 | Vertrix (1997, DOS, PMODE/W, Watcom) | LE recompiler and an emulated DOS PC (DPMI, VGA mode X, PIT, PIC, keyboard, Sound Blaster) | `vertrix1/` | setup screen to a 1P vs CPU match with music, on the build machine and on the Wii in Dolphin | `vertrix1/README.md`, `docs/VERTRIX1.md` |
@@ -45,6 +46,7 @@ make check-format                                   # passes at this commit
 make wii-recomp && make wii-sync-recomp SYNC=…      # Vertrix 2 v2.0
 make -C vertrix3 V3_EXE=…/Vertrix3.exe wii-sync SYNC=…
 make -C vertrix3 BUILD=../build/v12 GAME=vertrix2-v12 V3_EXE=…/Vertrix2.exe wii-sync SYNC=…
+make -C vertrix3 BUILD=../build/v20 GAME=vertrix2 V3_EXE=../Vertrix2.exe wii-sync SYNC=…   # v2.0, whole
 make -C vertrix1 V1_EXE=…/VERTRIX.EXE PYTHON=… wii-sync SYNC=…
 ```
 

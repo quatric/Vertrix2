@@ -244,6 +244,7 @@ $(BUILD)/host_game: tools/host_game.c tools/jpeg_decode.h $(filter-out source/wi
 # packed with FIX94's dolxz (the tools/dolxz submodule). See launcher/README.md.
 #
 #   make wii-app V1_EXE=.../VERTRIX.EXE V12_EXE=.../Vertrix2.exe V3_EXE=.../Vertrix3.exe
+#                [V20_EXE=Vertrix2.exe]  # v2.0, recompiled whole like v1.2 and Vertrix 3
 #   make wii-app-sync SYNC=/path/to/sd     # copies build/app/apps/vertrix/ there
 #   make wii-app-zip                       # build/vertrix-wii.zip, for the releases page
 #
@@ -254,6 +255,7 @@ PYTHON ?= python3
 V1_EXE ?= VERTRIX.EXE
 V3_EXE ?= Vertrix3.exe
 V12_EXE ?= Vertrix2-v12.exe
+V20_EXE ?= Vertrix2.exe
 LAUNCHER_VERSION := $(shell sed -n 's:.*<version>\(.*\)</version>.*:\1:p' launcher/meta.xml)
 LAUNCHER_SOURCES := launcher/main.c launcher/gfx.c launcher/music.c launcher/app.c
 LAUNCHER_OBJECTS := $(patsubst launcher/%.c,$(BUILD)/launcher/%.o,$(LAUNCHER_SOURCES))
@@ -285,8 +287,9 @@ $(DOLXZ): tools/build_dolxz.sh $(wildcard tools/dolxz/*.c tools/dolxz/loader/*.c
 wii-launcher: $(BUILD)/launcher.dol
 
 # The games through their own makefiles (each regenerates only when its recompiler changed).
-wii-app-games: $(BUILD)/vertrix2-recomp.dol
+wii-app-games:
 	$(MAKE) -C vertrix1 V1_EXE=$(abspath $(V1_EXE)) PYTHON=$(PYTHON) wii
+	$(MAKE) -C vertrix3 BUILD=../build/v20 GAME=vertrix2 V3_EXE=$(abspath $(V20_EXE)) PYTHON=$(PYTHON) wii
 	$(MAKE) -C vertrix3 BUILD=../build/v12 GAME=vertrix2-v12 V3_EXE=$(abspath $(V12_EXE)) PYTHON=$(PYTHON) wii
 	$(MAKE) -C vertrix3 V3_EXE=$(abspath $(V3_EXE)) PYTHON=$(PYTHON) wii
 
@@ -295,7 +298,7 @@ wii-app: $(BUILD)/launcher.dol $(DOLXZ) wii-app-games
 	$(DOLXZ) $(BUILD)/launcher.dol $(APP_DIR)/boot.dol -wii >/dev/null
 	$(DOLXZ) $(BUILD)/v1/vertrix.dol $(APP_DIR)/games/vertrix1.dol -wii >/dev/null
 	$(DOLXZ) $(BUILD)/v12/vertrix2-v12.dol $(APP_DIR)/games/vertrix2-v12.dol -wii >/dev/null
-	$(DOLXZ) $(BUILD)/vertrix2-recomp.dol $(APP_DIR)/games/vertrix2.dol -wii >/dev/null
+	$(DOLXZ) $(BUILD)/v20/vertrix2.dol $(APP_DIR)/games/vertrix2.dol -wii >/dev/null
 	$(DOLXZ) $(BUILD)/v3/vertrix3.dol $(APP_DIR)/games/vertrix3.dol -wii >/dev/null
 	$(PYTHON) tools/dol_align.py $(APP_DIR)/boot.dol $(APP_DIR)/games/*.dol
 	cp launcher/meta.xml $(APP_DIR)/meta.xml

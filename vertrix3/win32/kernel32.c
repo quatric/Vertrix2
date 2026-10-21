@@ -135,14 +135,17 @@ static void GetModuleHandleW(Cpu *c)
 }
 
 /* DLLs the host provides: LoadLibraryA hands out a module handle and GetProcAddress finds
- * their exports among the imports it implements. */
+ * their exports among the imports it implements. Vertrix 2 v2.0 loads and frees dpnhpast.dll
+ * (DirectPlay's NAT helper, new in DirectX 8.1) only to check that DirectX 8.1 is installed
+ * (0x484b30); it exports nothing the game asks for. */
 static const struct
 {
     const char *name;
     const char *dll;
     uint32_t handle;
 } LIBRARIES[] = {{"d3d9", "D3D9.DLL", 0x4fdf0000u}, {"dinput8", "DINPUT8.DLL", 0x4f800000u},
-                 {"kernel32", "KERNEL32.DLL", 0x7c800000u}, {"user32", "USER32.DLL", 0x7e410000u}};
+                 {"kernel32", "KERNEL32.DLL", 0x7c800000u}, {"user32", "USER32.DLL", 0x7e410000u},
+                 {"dpnhpast", "DPNHPAST.DLL", 0x4e800000u}};
 
 static void LoadLibraryA(Cpu *c);
 

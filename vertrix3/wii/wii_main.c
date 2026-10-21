@@ -1,8 +1,8 @@
-/* A recompiled game on the Wii (Vertrix 3, Vertrix 2 v1.2): the game reads its archive and keeps
- * its settings in sd:/apps/FOLDER/ (v3_wii_folder: vertrix3, vertrix2-v12) or in the folder the
- * launcher passes (launcher/app.h), draws through GX (render_gx.c) or hands over the frames it
- * drew itself (DirectDraw), plays the wave-out stream on an ASND voice, and gets its keyboard and
- * mouse from the controllers:
+/* A recompiled game on the Wii (Vertrix 3, Vertrix 2 v1.2 and v2.0): the game reads its archive
+ * and keeps its settings in sd:/apps/FOLDER/ (v3_wii_folder: vertrix3, vertrix2, vertrix2-v12) or
+ * in the folder the launcher passes (launcher/app.h), draws through GX (render_gx.c) or hands over
+ * the frames it drew itself (DirectDraw), plays the wave-out stream on an ASND voice, and gets its
+ * keyboard and mouse from the controllers:
  *
  *   D-pad, Nunchuk/Classic stick   arrow keys (player 1: left, right, Up permutes, down)
  *   B                              Up (permute)
@@ -619,6 +619,25 @@ int main(int argc, char **argv)
     while (!game_done)
     {
         usleep(100 * 1000);
+#ifdef V3_WATCHDOG
+        /* Debug builds: when no frame has come for 10 seconds, the host calls since the last
+         * report and the latest ones. */
+        static unsigned last_frames, still, calls_then;
+        still = frames == last_frames ? still + 1 : 0;
+        last_frames = frames;
+        if (still && still % 100 == 0)
+        {
+            const unsigned calls = v3_watch_count;
+            v3_log("watchdog: no frame for %u s (frame %u), %u host calls since", still / 10,
+                   frames, calls - calls_then);
+            calls_then = calls;
+            for (unsigned k = 1; k <= 8 && k <= calls; ++k)
+            {
+                const V3WatchCall *w = &v3_watch_ring[(calls - k) % V3_WATCH_RING];
+                v3_log("watchdog:   %s from %08x", w->name, w->caller);
+            }
+        }
+#endif
     }
     /* Stop the DSP voices and the controller threads before returning to the loader. */
     ASND_Pause(1);

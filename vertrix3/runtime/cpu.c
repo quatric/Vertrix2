@@ -453,6 +453,13 @@ void v3_call(Cpu *c, uint32_t address)
                    v3_r32(c->esp + 16), v3_r32(c->esp + 20), v3_r32(c->esp + 24));
         }
         v3_host_current = host_functions[index].name;
+#ifdef V3_WATCHDOG
+        {
+            const unsigned k = v3_watch_count++ % V3_WATCH_RING;
+            v3_watch_ring[k].name = host_functions[index].name;
+            v3_watch_ring[k].caller = v3_r32(c->esp);
+        }
+#endif
         host_functions[index].code(c);
         return;
     }
@@ -477,6 +484,10 @@ void v3_call(Cpu *c, uint32_t address)
 
 int v3_trace_calls;
 V3_THREAD_LOCAL const char *v3_host_current;
+#ifdef V3_WATCHDOG
+volatile unsigned v3_watch_count;
+V3WatchCall v3_watch_ring[V3_WATCH_RING];
+#endif
 
 enum
 {

@@ -43,6 +43,8 @@ $(BUILD)/v3_host: $(GEN_OBJECTS) $(BUILD)/host/runtime.a
 # make -C vertrix3 V3_EXE=... wii-sync SYNC=/path/to/sd  -> apps/vertrix3/ (boot.dol, meta.xml, icon.png)
 # Vertrix 2 v1.2: BUILD=../build/v12 GAME=vertrix2-v12 V3_EXE=/path/to/Vertrix2.exe
 #                                                        -> build/v12/vertrix2-v12.dol
+# Vertrix 2 v2.0: BUILD=../build/v20 GAME=vertrix2 V3_EXE=/path/to/Vertrix2.exe
+#                                                        -> build/v20/vertrix2.dol
 # GAME names the DOL, the SD folder (apps/GAME, as recomp.py's v3_wii_folder) and wii/GAME.xml.
 DEVKITPRO ?= /opt/devkitpro
 PPC_CC := $(DEVKITPRO)/devkitPPC/bin/powerpc-eabi-gcc
@@ -51,8 +53,9 @@ LIBOGC ?= $(DEVKITPRO)/libogc
 WII_ARCH := -mrvl -mcpu=750 -meabi -mhard-float -DGEKKO -DHW_RVL -D__wii__
 GAME ?= vertrix3
 # The guest heap the Wii can hold: Vertrix 3 peaks at about 25 MB; Vertrix 2 v1.2 keeps its
-# images in memory and reaches 32 MB at its menus (31.7 MB at the end of a match).
-ifeq ($(GAME),vertrix2-v12)
+# images in memory and reaches 32 MB at its menus (31.7 MB at the end of a match); v2.0 peaks at
+# 32.0 MB in a Practice match.
+ifneq ($(filter vertrix2 vertrix2-v12,$(GAME)),)
 WII_HEAP ?= 0x02800000u
 else
 WII_HEAP ?= 0x02000000u
@@ -82,11 +85,15 @@ $(BUILD)/wii/%.o: $(GEN)/%.c $(GEN)/stamp runtime/cpu.h
 	@mkdir -p $(BUILD)/wii
 	$(PPC_CC) $(WII_CFLAGS) $(INCLUDES) -c $< -o $@
 
-$(BUILD)/wii/v3_image_bin.h $(BUILD)/wii/v3_image_bin.o: $(GEN)/stamp
+# One rule writes the header and the assembly; the object waits for it (with -j, a rule naming
+# both targets ran twice at once and the assembler read a half-written file).
+$(BUILD)/wii/v3_image_bin.h: $(GEN)/stamp
 	@mkdir -p $(BUILD)/wii
 	cp $(GEN)/v3_image.bin $(BUILD)/wii/v3_image.bin
 	cd $(BUILD)/wii && $(DEVKITPRO)/tools/bin/bin2s -H v3_image_bin.h v3_image.bin > v3_image_bin.s
-	$(PPC_CC) $(WII_ARCH) -c $(BUILD)/wii/v3_image_bin.s -o $(BUILD)/wii/v3_image_bin.o
+
+$(BUILD)/wii/v3_image_bin.o: $(BUILD)/wii/v3_image_bin.h
+	$(PPC_CC) $(WII_ARCH) -c $(BUILD)/wii/v3_image_bin.s -o $@
 
 vpath %.c runtime win32 d3d wii ../source ../libwiiinput/source ../launcher
 

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<app version="1">
+    <name>Vertrix 2</name>
+    <coder>quatric</coder>
+    <version>0.1</version>
+    <short_description>Vertrix 2 (2003) for the Wii</short_description>
+    <long_description>Vertrix 2, recompiled from the original 2003 Windows game (v2.0). Needs the original Vertrix2.vf of v2.0 in sd:/apps/vertrix2/. The Wii Remote pointer and A work the menus; the D-pad or stick plays. A USB keyboard and mouse also work. HOME exits.</long_description>
+</app>

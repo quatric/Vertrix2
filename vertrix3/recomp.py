@@ -27,8 +27,8 @@ import pefile
 from capstone import CS_ARCH_X86, CS_MODE_32, Cs
 from capstone import x86_const as X
 
-# The executables this recompiles, by SHA-256: Vertrix 3 (Visual C++ 9) and Vertrix 2 v1.2
-# (Watcom; docs/VERTRIX2-V12.md).
+# The executables this recompiles, by SHA-256: Vertrix 3 (Visual C++ 9), Vertrix 2 v1.2 and
+# Vertrix 2 v2.0 (both Watcom; docs/VERTRIX2-V12.md, docs/VERTRIX2-RECOMP.md).
 # Each with the directory the game is told it runs from.
 # Each executable: its name, the game's title, the directory it believes it runs from, its
 # archive, and the Wii's application folder (sd:/apps/<folder>, as source/games.c names it).
@@ -37,6 +37,8 @@ GAMES = {
         ('Vertrix3.exe', 'Vertrix 3', 'C:\\Vertrix3', 'VERTRIX3.VF', 'vertrix3'),
     '8e27c76d75c28dba6b39f9e9e6162e04b04d712771cb4b03c4d9eb9ef4141999':
         ('Vertrix2.exe', 'Vertrix 2 v1.2', 'C:\\Vertrix2', 'Vertrix2.vf', 'vertrix2-v12'),
+    '4db546b7957136179bedf22a37b7e5db401ea25bc668b715643adf84ce525e28':
+        ('Vertrix2.exe', 'Vertrix 2', 'C:\\Vertrix2', 'Vertrix2.vf', 'vertrix2'),
 }
 SEGMENTS = (X.X86_REG_SS, X.X86_REG_CS, X.X86_REG_DS, X.X86_REG_ES, X.X86_REG_FS, X.X86_REG_GS)
 PER_FILE = 150

@@ -141,6 +141,21 @@ extern int v3_trace_calls;
 #define V3_THREAD_LOCAL _Thread_local
 #endif
 extern V3_THREAD_LOCAL const char *v3_host_current;
+#ifdef V3_WATCHDOG
+/* Debug builds: the last host calls of any thread (name and guest return address), for a
+ * watchdog that reports what the game does when its frames stop. */
+enum
+{
+    V3_WATCH_RING = 16
+};
+typedef struct
+{
+    const char *name;
+    uint32_t caller;
+} V3WatchCall;
+extern volatile unsigned v3_watch_count;
+extern V3WatchCall v3_watch_ring[V3_WATCH_RING];
+#endif
 extern int v3_trace_imports;
 
 /* Input the driver feeds (DirectInput scan codes; mouse in pixels and buttons). */
