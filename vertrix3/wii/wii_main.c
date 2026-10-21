@@ -1,16 +1,17 @@
 /* A recompiled game on the Wii (Vertrix 3, Vertrix 2 v1.2): the game reads its archive and keeps
- * its settings in sd:/apps/FOLDER/ (v3_wii_folder: vertrix3, vertrix2-v12), draws through GX
- * (render_gx.c) or hands over the frames it drew itself (DirectDraw), plays the wave-out stream on
- * an ASND voice, and gets its keyboard and mouse from the controllers:
+ * its settings in sd:/apps/FOLDER/ (v3_wii_folder: vertrix3, vertrix2-v12) or in the folder the
+ * launcher passes (launcher/app.h), draws through GX (render_gx.c) or hands over the frames it
+ * drew itself (DirectDraw), plays the wave-out stream on an ASND voice, and gets its keyboard and
+ * mouse from the controllers:
  *
  *   D-pad, Nunchuk/Classic stick   arrow keys (player 1: left, right, Up permutes, down)
  *   B                              Up (permute)
  *   A                              mouse click where the remote points (menus)
  *   1, 2                           Enter, Space
  *   Plus, Minus                    Escape
- *   Home                           back to the loader
+ *   Home                           back to the launcher or the loader
  *
- * A USB keyboard and mouse work as themselves. The log goes to sd:/apps/FOLDER/FOLDER.log. */
+ * A USB keyboard and mouse work as themselves. The log goes to FOLDER.log in that folder. */
 #include <asndlib.h>
 #include <fat.h>
 #include <gccore.h>
@@ -24,6 +25,7 @@
 #include <unistd.h>
 #include <wiiuse/wpad.h>
 
+#include "app.h"
 #include "input_wii.h"
 #include "process.h"
 #include "render.h"
@@ -36,7 +38,7 @@
 #define HEIGHT 480
 
 /* sd:/apps/FOLDER, where the game's files are. */
-static char directory[64];
+static char directory[160];
 
 /* --- log ---------------------------------------------------------------------------------- */
 
@@ -562,8 +564,7 @@ static void *game(void *unused)
 
 int main(int argc, char **argv)
 {
-    (void)argc;
-    (void)argv;
+    vertrix_app_init(argc, argv);
     SYS_STDIO_Report(true); /* stdout into Dolphin's OSReport log */
 #ifdef V3_WII_ENV
     /* Debug builds: the build machine's diagnostic variables, as "NAME=VALUE;NAME=VALUE". */
@@ -582,7 +583,11 @@ int main(int argc, char **argv)
 #endif
     video_init();
     LWP_MutexInit(&log_lock, false);
-    snprintf(directory, sizeof directory, "sd:/apps/%s", v3_wii_folder);
+    snprintf(directory, sizeof directory, "%s", vertrix_app_directory(""));
+    if (directory[0] == 0)
+    {
+        snprintf(directory, sizeof directory, "sd:/apps/%s", v3_wii_folder);
+    }
     platform.directory = directory;
     if (fatInitDefault())
     {
@@ -625,5 +630,6 @@ int main(int argc, char **argv)
         log_file = NULL;
         fclose(f);
     }
+    vertrix_app_return();
     return game_code;
 }

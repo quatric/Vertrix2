@@ -15,6 +15,7 @@
 #include <unistd.h>
 #include <wiiuse/wpad.h>
 
+#include "app.h"
 #include "input_wii.h"
 #include "wiiupdate.h"
 
@@ -43,13 +44,19 @@ static VertrixWiiVideo video;
 static VertrixWiiArchive archive;
 static VertrixWiiTexture texture;
 static uint8_t pixels[WIDTH * HEIGHT * 4];
+/* sd:/apps/vertrix2, or the folder the launcher passes (launcher/app.h). */
+static const char *directory = "sd:/apps/vertrix2";
+/* The original's heap in MEM2, free again once the game has ended: the launcher's DOL is read
+ * into it on the way back. */
+static uint8_t *original_heap;
+static uint32_t original_heap_size;
 
 static void host_store(LiftHost *host, uint32_t address, uint32_t value)
 {
     lift_host_write32(host, address, value);
 }
 
-/* Console output is also written to sd:/apps/vertrix2/log.txt, so the last lines before an exit
+/* Console output is also written to DIRECTORY/log.txt, so the last lines before an exit
  * to the menu, or a crash, can be read afterwards. libfat keeps written data in its cache until a
  * sync or a close, so every write is synced: a crash otherwise left an empty file. */
 static FILE *log_file;
@@ -100,7 +107,9 @@ static void wave_output(void *context, const uint8_t *samples, uint32_t bytes, u
 
 static void log_to_sd(void)
 {
-    log_file = fopen("sd:/apps/vertrix2/log.txt", "w");
+    char path[192];
+    snprintf(path, sizeof path, "%s/log.txt", directory);
+    log_file = fopen(path, "w");
 }
 
 /* Before returning to the loader: stop what still runs in the background (the update check's
@@ -119,6 +128,10 @@ static void shut_down(void)
         log_file = NULL;
         fclose(f);
     }
+    if (original_heap != NULL)
+    {
+        vertrix_app_set_scratch(original_heap, original_heap_size);
+    }
 }
 
 static void fail(const char *message)
@@ -131,6 +144,7 @@ static void fail(const char *message)
         if (INPUT_PadsDown() & WPAD_BUTTON_HOME)
         {
             shut_down();
+            vertrix_app_return();
             exit(1);
         }
         VIDEO_WaitVSync();
@@ -421,9 +435,13 @@ static void *game_main(void *unused)
      * also act as a controller. */
     INPUT_KeyboardMapClear();
     report_stdio();
-    if (vertrix_wii_archive_open(&archive) != VERTRIX_WII_ARCHIVE_OK)
+    VertrixGame game = *vertrix_game(VERTRIX_GAME_2);
+    game.directory = directory;
+    if (vertrix_wii_archive_open_game(&archive, &game) != VERTRIX_WII_ARCHIVE_OK)
     {
-        fail("Could not read sd:/apps/vertrix2/Vertrix2.vf.");
+        static char message[224];
+        snprintf(message, sizeof message, "Could not read %s/Vertrix2.vf.", directory);
+        fail(message);
     }
     log_to_sd();
     heap = (uint8_t *)SYS_GetArena2Lo();
@@ -435,6 +453,8 @@ static void *game_main(void *unused)
     heap_size -= HEAP_RESERVE;
     printf("original heap: %u bytes\n", (unsigned)heap_size);
     SYS_SetArena2Lo(heap + heap_size);
+    original_heap = heap;
+    original_heap_size = heap_size;
     printf("starting\n");
     lift_host_init(&host, image, image_bin, heap, heap_size);
     {
@@ -451,7 +471,10 @@ static void *game_main(void *unused)
     /* The update check's thread runs at priority 40 and the game at 64, which never waits while it
      * is behind on frames, so the check would never finish: the game steps below it while it
      * loads (no frames to drop) and goes back up once the check is done (game_priority). */
-    WIIUPDATE_Start("quatric", "Vertrix2", APP_VERSION);
+    if (!vertrix_app_from_launcher())
+    {
+        WIIUPDATE_Start("quatric", "Vertrix2", APP_VERSION); /* the launcher checks for itself */
+    }
     LWP_SetThreadPriority(LWP_GetSelf(), 30);
     host.archive = archive.archive;
     host.decode_jpeg = jpeg_decode;
@@ -686,7 +709,9 @@ static void *game_main(void *unused)
                 if (gameplay_frames == 600)
                 {
                     printf("600 gameplay frames in %u ms\n", (unsigned)(tick - play_ms));
-                    FILE *shot = fopen("sd:/apps/vertrix2/shot.ppm", "wb");
+                    char shot_path[192];
+                    snprintf(shot_path, sizeof shot_path, "%s/shot.ppm", directory);
+                    FILE *shot = fopen(shot_path, "wb");
                     if (shot != NULL)
                     {
                         unsigned i;
@@ -733,11 +758,14 @@ int main(int argc, char **argv)
     uint8_t *stack = (uint8_t *)(((uint32_t)SYS_GetArena2Lo() + 31u) & ~31u);
     lwp_t thread;
     SYS_SetArena2Lo(stack + GAME_STACK);
+    vertrix_app_init(argc, argv);
+    directory = vertrix_app_directory(directory);
     WIIUPDATE_SetAppPath(argc > 0 ? argv[0] : NULL);
     if (LWP_CreateThread(&thread, game_main, NULL, stack, GAME_STACK, 64) != 0)
     {
         return 1;
     }
     LWP_JoinThread(thread, NULL);
+    vertrix_app_return();
     return 0;
 }

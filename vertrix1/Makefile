@@ -46,8 +46,9 @@ $(BUILD)/v1_host: $(GEN_OBJECTS) $(HOST_RT_OBJECTS)
 
 # --- the Wii ------------------------------------------------------------------------------------
 # make -C vertrix1 V1_EXE=/path/to/VERTRIX.EXE wii      -> build/v1/vertrix.dol
-# make -C vertrix1 V1_EXE=... wii-sync SYNC=/path/to/sd  -> apps/vertrix/ (boot.dol, meta.xml, icon.png)
-# The game's own files are not part of the build: copy the release into apps/vertrix/.
+# make -C vertrix1 V1_EXE=... wii-sync SYNC=/path/to/sd  -> apps/vertrix1/ (boot.dol, meta.xml, icon.png)
+# The game's own files are not part of the build: copy the release into apps/vertrix1/. In the
+# one-app build (make wii-app at the top) the launcher passes apps/vertrix/vertrix1/ instead.
 DEVKITPRO ?= /opt/devkitpro
 PPC_CC := $(DEVKITPRO)/devkitPPC/bin/powerpc-eabi-gcc
 LIBOGC ?= $(DEVKITPRO)/libogc
@@ -59,9 +60,9 @@ WII_DEFINES := -DV3_PAGED -DV1_HEAP_SIZE=$(WII_HEAP) $(WII_DEBUG)
 WII_CFLAGS := $(WII_ARCH) $(WII_DEFINES) -std=gnu11 -O2 -fno-strict-aliasing \
 	-Wno-parentheses-equality -Wno-unused-label -Wno-unused-variable -Wno-unused-but-set-variable \
 	-Wno-unused-function -I$(LIBOGC)/include
-WII_SHARED := ../source/wii_audio.c ../source/audio.c ../source/vf.c
+WII_SHARED := ../source/wii_audio.c ../source/audio.c ../source/vf.c ../launcher/app.c
 WII_INPUT := $(wildcard ../libwiiinput/source/*.c)
-WII_INCLUDES := -Iruntime -I$(GEN) -I$(BUILD)/wii -I../source -I../libwiiinput/include
+WII_INCLUDES := -Iruntime -I$(GEN) -I$(BUILD)/wii -I../source -I../libwiiinput/include -I../launcher
 WII_GEN_OBJECTS = $(patsubst $(GEN)/%.c,$(BUILD)/wii/%.o,$(GEN_SOURCES))
 WII_RT_OBJECTS := $(patsubst %.c,$(BUILD)/wii/rt/%.o,$(notdir $(RUNTIME) wii/wii_main.c $(WII_SHARED)))
 WII_INPUT_OBJECTS := $(patsubst %.c,$(BUILD)/wii/input/%.o,$(notdir $(WII_INPUT)))
@@ -83,7 +84,7 @@ $(BUILD)/wii/v1_image_bin.h $(BUILD)/wii/v1_image_bin.o: $(GEN)/stamp
 	cd $(BUILD)/wii && $(DEVKITPRO)/tools/bin/bin2s -H v1_image_bin.h v1_image.bin > v1_image_bin.s
 	$(PPC_CC) $(WII_ARCH) -c $(BUILD)/wii/v1_image_bin.s -o $(BUILD)/wii/v1_image_bin.o
 
-vpath %.c runtime wii ../source ../libwiiinput/source
+vpath %.c runtime wii ../source ../libwiiinput/source ../launcher
 
 $(BUILD)/wii/rt/%.o: %.c $(HEADERS) $(BUILD)/wii/v1_image_bin.h
 	@mkdir -p $(BUILD)/wii/rt
@@ -93,7 +94,11 @@ $(BUILD)/wii/input/%.o: %.c
 	@mkdir -p $(BUILD)/wii/input
 	$(PPC_CC) $(WII_ARCH) -O2 -I$(LIBOGC)/include -I../libwiiinput/include -c $< -o $@
 
-$(BUILD)/vertrix.elf: $(WII_GEN_OBJECTS) $(WII_RT_OBJECTS) $(WII_INPUT_OBJECTS) $(BUILD)/wii/v1_image_bin.o
+$(BUILD)/wii/rt/boot_stub.o: ../launcher/boot_stub.S
+	@mkdir -p $(BUILD)/wii/rt
+	$(PPC_CC) $(WII_ARCH) -c $< -o $@
+
+$(BUILD)/vertrix.elf: $(WII_GEN_OBJECTS) $(WII_RT_OBJECTS) $(WII_INPUT_OBJECTS) $(BUILD)/wii/v1_image_bin.o $(BUILD)/wii/rt/boot_stub.o
 	$(PPC_CC) $(WII_ARCH) $^ -L$(LIBOGC)/lib/wii -lasnd -lfat -lwiikeyboard -lwiiuse -lbte -logc -lm \
 		-Wl,-Map,$(BUILD)/vertrix.map -o $@
 
@@ -101,7 +106,7 @@ $(BUILD)/vertrix.dol: $(BUILD)/vertrix.elf
 	$(DEVKITPRO)/tools/bin/elf2dol $< $@
 
 wii-sync: wii
-	mkdir -p "$(SYNC)/apps/vertrix"
-	cp $(BUILD)/vertrix.dol "$(SYNC)/apps/vertrix/boot.dol"
-	cp wii/vertrix.xml "$(SYNC)/apps/vertrix/meta.xml"
-	cp ../wii-game/icon.png "$(SYNC)/apps/vertrix/icon.png"
+	mkdir -p "$(SYNC)/apps/vertrix1"
+	cp $(BUILD)/vertrix.dol "$(SYNC)/apps/vertrix1/boot.dol"
+	cp wii/vertrix.xml "$(SYNC)/apps/vertrix1/meta.xml"
+	cp ../wii-game/icon.png "$(SYNC)/apps/vertrix1/icon.png"

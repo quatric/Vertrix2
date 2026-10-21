@@ -1,5 +1,6 @@
 /* Vertrix (1997) on the Wii: the recompiled VERTRIX.EXE on the DOS machine (vertrix1/runtime).
- * The game's directory is sd:/apps/vertrix/, which holds the original release (BIN1.BIN,
+ * The game's directory is sd:/apps/vertrix1/ (or the one the launcher passes, launcher/app.h),
+ * which holds the original release (BIN1.BIN,
  * BIN2.BIN and the other files; the game checks them all); it writes SETUP.CFG and its scores
  * there. The VGA's picture is shown at the Wii's own frame rate, the Sound Blaster's samples
  * play on an ASND voice, and the controllers are keys:
@@ -12,10 +13,10 @@
  *     Plus                           P (pause)
  *   Wii Remote 2: player 1 of two, on the game's default keys W, X, C and F (scan codes 2Ch,
  *     2Dh, 2Eh and 21h): D-pad left, right, down; B or Up permutes.
- *   Home                             back to the loader (the game saves its setup only when
- *                                    left through its own EXIT)
+ *   Home                             back to the launcher or the loader (the game saves its
+ *                                    setup only when left through its own EXIT)
  *
- * A USB keyboard works as itself. The log is sd:/apps/vertrix/vertrix.log. */
+ * A USB keyboard works as itself. The log is vertrix.log in the game's directory. */
 #include <asndlib.h>
 #include <fat.h>
 #include <gccore.h>
@@ -30,6 +31,7 @@
 #include <unistd.h>
 #include <wiiuse/wpad.h>
 
+#include "app.h"
 #include "dos.h"
 #include "input_wii.h"
 #include "wii_audio.h"
@@ -39,7 +41,7 @@
 #define EFB_WIDTH 640
 #define EFB_HEIGHT 400
 
-static const char directory[] = "sd:/apps/vertrix";
+static const char *directory = "sd:/apps/vertrix1";
 
 /* --- log ---------------------------------------------------------------------------------- */
 
@@ -242,7 +244,7 @@ static void draw_vga(void)
 }
 
 #ifdef V1_WII_SHOTS
-/* Debug builds: every V1_WII_SHOTS-th shown frame as sd:/apps/vertrix/shots/frameNNNNN.ppm. */
+/* Debug builds: every V1_WII_SHOTS-th shown frame as DIRECTORY/shots/frameNNNNN.ppm. */
 static void shot(void)
 {
     static uint32_t pixels[640 * 480];
@@ -533,7 +535,7 @@ static void console(const char *text, size_t length)
     v3_log("console: %.*s", (int)length, text);
 }
 
-static const V1Platform platform = {directory, NULL, NULL, poll, audio, console};
+static V1Platform platform = {NULL, NULL, NULL, poll, audio, console};
 
 enum
 {
@@ -555,8 +557,9 @@ static void *game(void *unused)
 
 int main(int argc, char **argv)
 {
-    (void)argc;
-    (void)argv;
+    vertrix_app_init(argc, argv);
+    directory = vertrix_app_directory(directory);
+    platform.directory = directory;
     SYS_STDIO_Report(true); /* stdout into Dolphin's OSReport log */
     video_init();
     LWP_MutexInit(&log_lock, false);
@@ -605,5 +608,6 @@ int main(int argc, char **argv)
         log_file = NULL;
         fclose(f);
     }
+    vertrix_app_return();
     return game_code;
 }

@@ -4,5 +4,5 @@
     <coder>quatric</coder>
     <version>0.1</version>
     <short_description>Vertrix (1997) for the Wii</short_description>
-    <long_description>The original DOS Vertrix, recompiled from VERTRIX.EXE. Needs the whole original release (VERTRIX.EXE, BIN1.BIN, BIN2.BIN and the rest) in sd:/apps/vertrix/. D-pad or stick moves, B or Up permutes, A or 2 is Enter, 1 or Minus is Escape, Plus pauses; a second Wii Remote is player 1 in a two-player game. A USB keyboard also works. HOME exits.</long_description>
+    <long_description>The original DOS Vertrix, recompiled from VERTRIX.EXE. Needs the whole original release (VERTRIX.EXE, BIN1.BIN, BIN2.BIN and the rest) in sd:/apps/vertrix1/. D-pad or stick moves, B or Up permutes, A or 2 is Enter, 1 or Minus is Escape, Plus pauses; a second Wii Remote is player 1 in a two-player game. A USB keyboard also works. HOME exits.</long_description>
 </app>

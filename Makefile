@@ -208,9 +208,9 @@ wii-sync: $(BUILD)/vertrix2.dol
 wii-recomp: $(BUILD)/vertrix2-recomp.dol
 
 $(BUILD)/wii_recomp_game.o: tools/wii_recomp_game.c tools/jpeg_decode.h wii-game/meta.xml $(wildcard source/*.h) | $(BUILD)
-	$(PPC_CC) $(CFLAGS) -DGEKKO -DHW_RVL -D__wii__ -DAPP_VERSION=\"$(APP_VERSION)\" -I$(LIBOGC)/include -I/opt/devkitpro/portlibs/ppc/include $(WII_INCLUDES) -Isource -Itools -c $< -o $@
+	$(PPC_CC) $(CFLAGS) -DGEKKO -DHW_RVL -D__wii__ -DAPP_VERSION=\"$(APP_VERSION)\" -I$(LIBOGC)/include -I/opt/devkitpro/portlibs/ppc/include $(WII_INCLUDES) -Ilauncher -Isource -Itools -c $< -o $@
 
-$(BUILD)/vertrix2-recomp.elf: $(BUILD)/wii_recomp_game.o $(BUILD)/image_bin.o $(BUILD)/libvertrix-wii-audio.a $(BUILD)/libvertrix-wii-video.a $(BUILD)/libvertrix-wii-archive.a $(BUILD)/libvertrix-recovered.a $(BUILD)/libwiiinput.a libwiiupdate/lib/libwiiupdate.a
+$(BUILD)/vertrix2-recomp.elf: $(BUILD)/wii_recomp_game.o $(BUILD)/launcher/app.o $(BUILD)/launcher/boot_stub.o $(BUILD)/image_bin.o $(BUILD)/libvertrix-wii-audio.a $(BUILD)/libvertrix-wii-video.a $(BUILD)/libvertrix-wii-archive.a $(BUILD)/libvertrix-recovered.a $(BUILD)/libwiiinput.a libwiiupdate/lib/libwiiupdate.a
 	$(PPC_CC) -mrvl $(CFLAGS) $^ -L$(LIBOGC)/lib/wii -L/opt/devkitpro/portlibs/ppc/lib -ljpeg -lasnd -lfat -lwiikeyboard -lwiiuse -lbte -logc -lm -o $@
 
 $(BUILD)/vertrix2-recomp.dol: $(BUILD)/vertrix2-recomp.elf
@@ -237,3 +237,78 @@ host-game: $(BUILD)/host_game
 
 $(BUILD)/host_game: tools/host_game.c tools/jpeg_decode.h $(filter-out source/wii_%.c,$(wildcard source/*.c)) $(wildcard source/*.h) | $(BUILD)
 	$(HOST_CC) -std=gnu11 -O2 -w -Isource -Itools -I$(HOST_JPEG)/include tools/host_game.c $(filter-out source/wii_%.c,$(wildcard source/*.c)) -L$(HOST_JPEG)/lib -ljpeg -lm -o $@
+
+# --- One app for every game --------------------------------------------------------------------
+# The launcher (launcher/) is sd:/apps/vertrix/boot.dol: it starts the four games from
+# sd:/apps/vertrix/games/ and plays the MP3 albums in sd:/apps/vertrix/music/. Every DOL is
+# packed with FIX94's dolxz (the tools/dolxz submodule). See launcher/README.md.
+#
+#   make wii-app V1_EXE=.../VERTRIX.EXE V12_EXE=.../Vertrix2.exe V3_EXE=.../Vertrix3.exe
+#   make wii-app-sync SYNC=/path/to/sd     # copies build/app/apps/vertrix/ there
+#   make wii-app-zip                       # build/vertrix-wii.zip, for the releases page
+#
+# The games' original files and the music are not part of the build; copy them to the card.
+# Debug launchers for Dolphin: LAUNCHER_DEBUG='-DLAUNCHER_SCRIPT="\"1 shot; 2 down; 3 a\""'
+# (and -DLAUNCHER_BACK_SCRIPT for the start after a game); rebuild with make -B.
+PYTHON ?= python3
+V1_EXE ?= VERTRIX.EXE
+V3_EXE ?= Vertrix3.exe
+V12_EXE ?= Vertrix2-v12.exe
+LAUNCHER_VERSION := $(shell sed -n 's:.*<version>\(.*\)</version>.*:\1:p' launcher/meta.xml)
+LAUNCHER_SOURCES := launcher/main.c launcher/gfx.c launcher/music.c launcher/app.c
+LAUNCHER_OBJECTS := $(patsubst launcher/%.c,$(BUILD)/launcher/%.o,$(LAUNCHER_SOURCES))
+APP_DIR := $(BUILD)/app/apps/vertrix
+DOLXZ := $(BUILD)/dolxz/dolxz
+
+$(BUILD)/launcher/logo.h: wii-game/icon.png launcher/png2c.py
+	@mkdir -p $(dir $@)
+	$(PYTHON) launcher/png2c.py $< logo $@
+
+$(BUILD)/launcher/%.o: launcher/%.c $(wildcard launcher/*.h) $(BUILD)/launcher/logo.h
+	@mkdir -p $(dir $@)
+	$(PPC_CC) $(CFLAGS) -Wno-format-truncation -mrvl -DGEKKO -DHW_RVL -D__wii__ -DAPP_VERSION=\"$(LAUNCHER_VERSION)\" $(LAUNCHER_DEBUG) -I$(LIBOGC)/include -I/opt/devkitpro/portlibs/ppc/include $(WII_INCLUDES) -I$(BUILD)/launcher -c $< -o $@
+
+$(BUILD)/launcher/boot_stub.o: launcher/boot_stub.S
+	@mkdir -p $(dir $@)
+	$(PPC_CC) -mrvl -mcpu=750 -meabi -mhard-float -c $< -o $@
+
+$(BUILD)/launcher.elf: $(LAUNCHER_OBJECTS) $(BUILD)/launcher/boot_stub.o $(BUILD)/libwiiinput.a libwiiupdate/lib/libwiiupdate.a
+	$(PPC_CC) -mrvl $(CFLAGS) $^ -L$(LIBOGC)/lib/wii -L/opt/devkitpro/portlibs/ppc/lib -lmad -lasnd -lfat -lwiikeyboard -lwiiuse -lbte -logc -lm -Wl,-Map,$(BUILD)/launcher.map -o $@
+
+$(BUILD)/launcher.dol: $(BUILD)/launcher.elf
+	/opt/devkitpro/tools/bin/elf2dol $< $@
+
+$(DOLXZ): tools/build_dolxz.sh $(wildcard tools/dolxz/*.c tools/dolxz/loader/*.c tools/dolxz/loader/wii/*)
+	sh tools/build_dolxz.sh $(BUILD)/dolxz /opt/devkitpro
+
+.PHONY: wii-launcher wii-app wii-app-games wii-app-sync wii-app-zip
+wii-launcher: $(BUILD)/launcher.dol
+
+# The games through their own makefiles (each regenerates only when its recompiler changed).
+wii-app-games: $(BUILD)/vertrix2-recomp.dol
+	$(MAKE) -C vertrix1 V1_EXE=$(abspath $(V1_EXE)) PYTHON=$(PYTHON) wii
+	$(MAKE) -C vertrix3 BUILD=../build/v12 GAME=vertrix2-v12 V3_EXE=$(abspath $(V12_EXE)) PYTHON=$(PYTHON) wii
+	$(MAKE) -C vertrix3 V3_EXE=$(abspath $(V3_EXE)) PYTHON=$(PYTHON) wii
+
+wii-app: $(BUILD)/launcher.dol $(DOLXZ) wii-app-games
+	mkdir -p $(APP_DIR)/games
+	$(DOLXZ) $(BUILD)/launcher.dol $(APP_DIR)/boot.dol -wii >/dev/null
+	$(DOLXZ) $(BUILD)/v1/vertrix.dol $(APP_DIR)/games/vertrix1.dol -wii >/dev/null
+	$(DOLXZ) $(BUILD)/v12/vertrix2-v12.dol $(APP_DIR)/games/vertrix2-v12.dol -wii >/dev/null
+	$(DOLXZ) $(BUILD)/vertrix2-recomp.dol $(APP_DIR)/games/vertrix2.dol -wii >/dev/null
+	$(DOLXZ) $(BUILD)/v3/vertrix3.dol $(APP_DIR)/games/vertrix3.dol -wii >/dev/null
+	$(PYTHON) tools/dol_align.py $(APP_DIR)/boot.dol $(APP_DIR)/games/*.dol
+	cp launcher/meta.xml $(APP_DIR)/meta.xml
+	cp wii-game/icon.png $(APP_DIR)/icon.png
+	cp launcher/README.md $(APP_DIR)/README.md
+	@ls -l $(APP_DIR) $(APP_DIR)/games
+
+wii-app-sync: wii-app
+	mkdir -p "$(SYNC)/apps/vertrix/games"
+	cp $(APP_DIR)/boot.dol $(APP_DIR)/meta.xml $(APP_DIR)/icon.png $(APP_DIR)/README.md "$(SYNC)/apps/vertrix/"
+	cp $(APP_DIR)/games/*.dol "$(SYNC)/apps/vertrix/games/"
+
+wii-app-zip: wii-app
+	rm -f $(BUILD)/vertrix-wii.zip
+	cd $(BUILD)/app && zip -qr ../vertrix-wii.zip apps/vertrix
+	@ls -l $(BUILD)/vertrix-wii.zip

@@ -63,9 +63,10 @@ WII_CFLAGS := $(WII_ARCH) $(WII_DEFINES) -std=gnu11 -O2 -fno-strict-aliasing \
 	-Wno-parentheses-equality -Wno-unused-label -Wno-unused-variable -Wno-unused-but-set-variable \
 	-Wno-unused-function -I$(LIBOGC)/include
 WII_RUNTIME := $(filter-out runtime/threads_posix.c,$(RUNTIME)) d3d/render_gx.c wii/wii_main.c
-WII_SHARED := ../source/wii_audio.c ../source/audio.c ../source/vf.c
+WII_SHARED := ../source/wii_audio.c ../source/audio.c ../source/vf.c ../launcher/app.c
 WII_INPUT := $(wildcard ../libwiiinput/source/*.c)
-WII_INCLUDES := -Iruntime -Iwin32 -Id3d -I$(GEN) -I$(BUILD)/wii -I../source -I../libwiiinput/include
+WII_INCLUDES := -Iruntime -Iwin32 -Id3d -I$(GEN) -I$(BUILD)/wii -I../source -I../libwiiinput/include \
+	-I../launcher
 WII_GEN_OBJECTS = $(patsubst $(GEN)/%.c,$(BUILD)/wii/%.o,$(GEN_SOURCES))
 WII_RT_OBJECTS := $(patsubst %.c,$(BUILD)/wii/rt/%.o,$(notdir $(WII_RUNTIME) $(WII_SHARED)))
 WII_INPUT_OBJECTS := $(patsubst %.c,$(BUILD)/wii/input/%.o,$(notdir $(WII_INPUT)))
@@ -87,7 +88,7 @@ $(BUILD)/wii/v3_image_bin.h $(BUILD)/wii/v3_image_bin.o: $(GEN)/stamp
 	cd $(BUILD)/wii && $(DEVKITPRO)/tools/bin/bin2s -H v3_image_bin.h v3_image.bin > v3_image_bin.s
 	$(PPC_CC) $(WII_ARCH) -c $(BUILD)/wii/v3_image_bin.s -o $(BUILD)/wii/v3_image_bin.o
 
-vpath %.c runtime win32 d3d wii ../source ../libwiiinput/source
+vpath %.c runtime win32 d3d wii ../source ../libwiiinput/source ../launcher
 
 $(BUILD)/wii/rt/%.o: %.c $(wildcard runtime/*.h win32/*.h d3d/*.h) $(BUILD)/wii/v3_image_bin.h
 	@mkdir -p $(BUILD)/wii/rt
@@ -97,7 +98,12 @@ $(BUILD)/wii/input/%.o: %.c
 	@mkdir -p $(BUILD)/wii/input
 	$(PPC_CC) $(WII_ARCH) -O2 -I$(LIBOGC)/include -I../libwiiinput/include -c $< -o $@
 
-$(BUILD)/$(GAME).elf: $(WII_GEN_OBJECTS) $(WII_RT_OBJECTS) $(WII_INPUT_OBJECTS) $(BUILD)/wii/v3_image_bin.o
+$(BUILD)/wii/rt/boot_stub.o: ../launcher/boot_stub.S
+	@mkdir -p $(BUILD)/wii/rt
+	$(PPC_CC) $(WII_ARCH) -c $< -o $@
+
+$(BUILD)/$(GAME).elf: $(WII_GEN_OBJECTS) $(WII_RT_OBJECTS) $(WII_INPUT_OBJECTS) $(BUILD)/wii/v3_image_bin.o \
+		$(BUILD)/wii/rt/boot_stub.o
 	$(PPC_CC) $(WII_ARCH) $^ -L$(LIBOGC)/lib/wii -lasnd -lfat -lwiikeyboard -lwiiuse -lbte -logc -lm \
 		-Wl,-Map,$(BUILD)/$(GAME).map -o $@
 

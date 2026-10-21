@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<app version="1">
+    <name>Vertrix</name>
+    <coder>quatric</coder>
+    <version>0.3</version>
+    <short_description>Every Vertrix game, and the soundtrack</short_description>
+    <long_description>Vertrix (1997), Vertrix 2 v1.2 (2001), Vertrix 2 v2.0 (2003) and Vertrix 3 (2009), recompiled from the original games, in one menu, with a music player for the soundtrack. Each game needs its original files in its folder: sd:/apps/vertrix/vertrix1/ (the whole DOS release), vertrix2-v12/ and vertrix2/ (Vertrix2.vf), vertrix3/ (VERTRIX3.VF). MP3 albums go in sd:/apps/vertrix/music/, one folder each. HOME in a game comes back to the menu. Checks github.com/quatric/Vertrix2 for new releases.</long_description>
+</app>

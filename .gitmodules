@@ -4,3 +4,6 @@
 [submodule "libwiiupdate"]
 	path = libwiiupdate
 	url = https://github.com/quatric/libwiiupdate.git
+[submodule "tools/dolxz"]
+	path = tools/dolxz
+	url = https://github.com/FIX94/dolxz
