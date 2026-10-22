@@ -122,3 +122,67 @@ wii-sync: wii
 	cp $(BUILD)/$(GAME).dol "$(SYNC)/apps/$(GAME)/boot.dol"
 	cp wii/$(GAME).xml "$(SYNC)/apps/$(GAME)/meta.xml"
 	cp ../wii-game/icon.png "$(SYNC)/apps/$(GAME)/icon.png"
+
+# --- the Mac ------------------------------------------------------------------------------------
+# make -C vertrix3 BUILD=../build/v20 GAME=vertrix2 V3_EXE=../Vertrix2.exe mac
+#                                                        -> build/v20/mac/vertrix2.app
+# The app is one of the games of Vertrix.app (make mac-app at the top, mac/README.md); on its own
+# it reads the game's files from ~/Library/Application Support/Vertrix/GAME/. MAC_ARCHS picks the
+# architectures (a universal app by default); the generated code is the same C as the Wii's.
+MAC_ARCHS ?= arm64 x86_64
+MAC_MIN ?= 11.0
+MAC_VERSION ?= $(shell sed -n 's:.*<version>\(.*\)</version>.*:\1:p' ../launcher/meta.xml)
+MAC_TITLE_vertrix2 := Vertrix 2
+MAC_TITLE_vertrix2-v12 := Vertrix 2 v1.2
+MAC_TITLE_vertrix3 := Vertrix 3
+MAC_ARCH_FLAGS := $(addprefix -arch ,$(MAC_ARCHS)) -mmacosx-version-min=$(MAC_MIN)
+MAC_CC ?= clang
+MAC_CFLAGS := $(MAC_ARCH_FLAGS) -std=gnu11 -O2 -fno-strict-aliasing -Wno-parentheses-equality \
+	-Wno-unused-label -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-function
+MAC_RUNTIME := $(filter-out runtime/threads_wii.c,$(RUNTIME)) d3d/render_soft.c mac/mac_main.c \
+	../mac/vertrix_games.c
+MAC_OBJC := ../mac/shell.m ../mac/data.m
+MAC_INCLUDES := -Iruntime -Iwin32 -Id3d -I$(GEN) -I../mac
+MAC_GEN_OBJECTS = $(patsubst $(GEN)/%.c,$(BUILD)/mac/%.o,$(GEN_SOURCES))
+MAC_RT_OBJECTS := $(patsubst %.c,$(BUILD)/mac/rt/%.o,$(notdir $(MAC_RUNTIME))) \
+	$(patsubst %.m,$(BUILD)/mac/rt/%.o,$(notdir $(MAC_OBJC)))
+MAC_APP := $(BUILD)/mac/$(GAME).app
+MAC_FRAMEWORKS := -framework Cocoa -framework QuartzCore -framework GameController \
+	-framework AudioToolbox
+
+.PHONY: mac mac-link
+mac: $(GEN)/stamp
+	$(MAKE) mac-link
+
+mac-link: $(MAC_APP)/Contents/MacOS/$(GAME)
+
+$(BUILD)/mac/%.o: $(GEN)/%.c $(GEN)/stamp runtime/cpu.h
+	@mkdir -p $(BUILD)/mac
+	$(MAC_CC) $(MAC_CFLAGS) $(INCLUDES) -c $< -o $@
+
+vpath %.c mac ../mac
+vpath %.m ../mac
+
+$(BUILD)/mac/rt/%.o: %.c $(wildcard runtime/*.h win32/*.h d3d/*.h ../mac/*.h) $(GEN)/stamp
+	@mkdir -p $(BUILD)/mac/rt
+	$(MAC_CC) $(MAC_CFLAGS) -Wall $(MAC_INCLUDES) -c $< -o $@
+
+$(BUILD)/mac/rt/%.o: %.m $(wildcard ../mac/*.h)
+	@mkdir -p $(BUILD)/mac/rt
+	$(MAC_CC) $(MAC_ARCH_FLAGS) -O2 -fobjc-arc -Wall $(MAC_INCLUDES) -c $< -o $@
+
+$(BUILD)/mac/$(GAME): $(MAC_GEN_OBJECTS) $(MAC_RT_OBJECTS)
+	$(MAC_CC) $(MAC_ARCH_FLAGS) $^ $(MAC_FRAMEWORKS) -o $@
+
+$(BUILD)/mac/AppIcon.icns: ../mac/icon.py $(V3_EXE)
+	$(PYTHON) -I ../mac/icon.py $(V3_EXE) $@
+
+# The bundle: the program, the image it loads, the icon from the game's own executable.
+$(MAC_APP)/Contents/MacOS/$(GAME): $(BUILD)/mac/$(GAME) $(BUILD)/mac/AppIcon.icns ../mac/Info.plist.in
+	@mkdir -p $(MAC_APP)/Contents/MacOS $(MAC_APP)/Contents/Resources
+	sed -e 's|@NAME@|$(MAC_TITLE_$(GAME))|g' -e 's|@EXECUTABLE@|$(GAME)|g' \
+		-e 's|@IDENTIFIER@|com.quatric.vertrix.$(GAME)|g' -e 's|@VERSION@|$(MAC_VERSION)|g' \
+		-e 's|@MIN@|$(MAC_MIN)|g' ../mac/Info.plist.in > $(MAC_APP)/Contents/Info.plist
+	cp $(GEN)/v3_image.bin $(BUILD)/mac/AppIcon.icns $(MAC_APP)/Contents/Resources/
+	cp $(BUILD)/mac/$(GAME) $@
+	codesign --force --sign - $(MAC_APP)

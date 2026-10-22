@@ -25,6 +25,7 @@ executable, the recompilation and every hardware access, with the evidence for e
 | `host/host_main.c` | the build-machine driver |
 | `wii/wii_main.c` | the Wii driver: video, SD, controllers, ASND |
 | `wii/vertrix.xml` | the Homebrew Channel's meta file |
+| `mac/mac_main.c` | the Mac driver, on `mac/shell.h` |
 | `assets.py`, `assets.html` | unpacks `BIN1.BIN` (pictures, palettes, sounds, instruments, music as modules) and the page that shows it |
 
 ## Build and run on the build machine

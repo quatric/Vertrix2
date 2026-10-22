@@ -118,3 +118,64 @@ wii-sync: wii
 	cp $(BUILD)/vertrix.dol "$(SYNC)/apps/vertrix1/boot.dol"
 	cp wii/vertrix.xml "$(SYNC)/apps/vertrix1/meta.xml"
 	cp ../wii-game/icon.png "$(SYNC)/apps/vertrix1/icon.png"
+
+# --- the Mac ------------------------------------------------------------------------------------
+# make -C vertrix1 V1_EXE=/path/to/VERTRIX.EXE PYTHON=... mac  -> build/v1/mac/vertrix1.app
+# The app is one of the games of Vertrix.app (make mac-app at the top, mac/README.md); on its own
+# it reads the release from ~/Library/Application Support/Vertrix/vertrix1/. MAC_ARCHS picks the
+# architectures (a universal app by default); the generated code is the same C as the Wii's.
+MAC_ARCHS ?= arm64 x86_64
+MAC_MIN ?= 11.0
+MAC_VERSION ?= $(shell sed -n 's:.*<version>\(.*\)</version>.*:\1:p' ../launcher/meta.xml)
+MAC_ARCH_FLAGS := $(addprefix -arch ,$(MAC_ARCHS)) -mmacosx-version-min=$(MAC_MIN)
+MAC_CC ?= clang
+MAC_CFLAGS := $(MAC_ARCH_FLAGS) -std=gnu11 -O2 -fno-strict-aliasing -Wno-parentheses-equality \
+	-Wno-unused-label -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-function
+MAC_RUNTIME := $(RUNTIME) mac/mac_main.c ../mac/vertrix_games.c
+MAC_OBJC := ../mac/shell.m ../mac/data.m
+MAC_INCLUDES := -Iruntime -I$(GEN) -I../mac
+MAC_GEN_OBJECTS = $(patsubst $(GEN)/%.c,$(BUILD)/mac/%.o,$(GEN_SOURCES))
+MAC_RT_OBJECTS := $(patsubst %.c,$(BUILD)/mac/rt/%.o,$(notdir $(MAC_RUNTIME))) \
+	$(patsubst %.m,$(BUILD)/mac/rt/%.o,$(notdir $(MAC_OBJC)))
+MAC_APP := $(BUILD)/mac/vertrix1.app
+MAC_FRAMEWORKS := -framework Cocoa -framework QuartzCore -framework GameController \
+	-framework AudioToolbox
+
+.PHONY: mac mac-link
+mac: $(GEN)/stamp
+	$(MAKE) mac-link
+
+mac-link: $(MAC_APP)/Contents/MacOS/vertrix1
+
+$(BUILD)/mac/%.o: $(GEN)/%.c $(GEN)/stamp runtime/cpu.h runtime/dos.h
+	@mkdir -p $(BUILD)/mac
+	$(MAC_CC) $(MAC_CFLAGS) $(INCLUDES) -c $< -o $@
+
+vpath %.c mac ../mac
+vpath %.m ../mac
+
+$(BUILD)/mac/rt/%.o: %.c $(HEADERS) $(wildcard ../mac/*.h)
+	@mkdir -p $(BUILD)/mac/rt
+	$(MAC_CC) $(MAC_CFLAGS) -Wall $(MAC_INCLUDES) -c $< -o $@
+
+$(BUILD)/mac/rt/%.o: %.m $(wildcard ../mac/*.h)
+	@mkdir -p $(BUILD)/mac/rt
+	$(MAC_CC) $(MAC_ARCH_FLAGS) -O2 -fobjc-arc -Wall $(MAC_INCLUDES) -c $< -o $@
+
+$(BUILD)/mac/vertrix1: $(MAC_GEN_OBJECTS) $(MAC_RT_OBJECTS)
+	$(MAC_CC) $(MAC_ARCH_FLAGS) $^ $(MAC_FRAMEWORKS) -o $@
+
+# The DOS executable has no icon: the Vertrix logo the Wii apps show.
+$(BUILD)/mac/AppIcon.icns: ../mac/icon.py ../wii-game/icon.png
+	@mkdir -p $(BUILD)/mac
+	$(PYTHON) -I ../mac/icon.py ../wii-game/icon.png $@
+
+# The bundle: the program, the image it loads and the icon.
+$(MAC_APP)/Contents/MacOS/vertrix1: $(BUILD)/mac/vertrix1 $(BUILD)/mac/AppIcon.icns ../mac/Info.plist.in
+	@mkdir -p $(MAC_APP)/Contents/MacOS $(MAC_APP)/Contents/Resources
+	sed -e 's|@NAME@|Vertrix|g' -e 's|@EXECUTABLE@|vertrix1|g' \
+		-e 's|@IDENTIFIER@|com.quatric.vertrix.vertrix1|g' -e 's|@VERSION@|$(MAC_VERSION)|g' \
+		-e 's|@MIN@|$(MAC_MIN)|g' ../mac/Info.plist.in > $(MAC_APP)/Contents/Info.plist
+	cp $(GEN)/v1_image.bin $(BUILD)/mac/AppIcon.icns $(MAC_APP)/Contents/Resources/
+	cp $(BUILD)/mac/vertrix1 $@
+	codesign --force --sign - $(MAC_APP)

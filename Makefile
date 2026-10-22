@@ -315,3 +315,57 @@ wii-app-zip: wii-app
 	rm -f $(BUILD)/vertrix-wii.zip
 	cd $(BUILD)/app && zip -qr ../vertrix-wii.zip apps/vertrix
 	@ls -l $(BUILD)/vertrix-wii.zip
+
+# --- the Mac: one app for the four games ----------------------------------------------------------
+#   make mac-app V1_EXE=.../VERTRIX.EXE V12_EXE=.../Vertrix2.exe V3_EXE=.../Vertrix3.exe \
+#                [V20_EXE=Vertrix2.exe] [MAC_MUSIC=folder of albums]     # build/mac/Vertrix.app
+#   make mac-app-zip                                                       # build/vertrix-mac.zip
+# Vertrix.app (mac/launcher.m) lists the games and plays the soundtrack; each game is its own app
+# in Contents/Helpers (vertrix1/Makefile, vertrix3/Makefile: mac). None of the games' files are in
+# it: each game asks for them the first time and keeps them in ~/Library/Application Support/
+# Vertrix (mac/README.md). MAC_MUSIC copies albums (folders of MP3 files) into the app.
+MAC_ARCHS ?= arm64 x86_64
+MAC_MIN ?= 11.0
+MAC_APP := $(BUILD)/mac/Vertrix.app
+MAC_VERSION := $(shell sed -n 's:.*<version>\(.*\)</version>.*:\1:p' launcher/meta.xml)
+MAC_ARCH_FLAGS := $(addprefix -arch ,$(MAC_ARCHS)) -mmacosx-version-min=$(MAC_MIN)
+MAC_HELPERS := $(BUILD)/v1/mac/vertrix1.app $(BUILD)/v12/mac/vertrix2-v12.app \
+	$(BUILD)/v20/mac/vertrix2.app $(BUILD)/v3/mac/vertrix3.app
+
+.PHONY: mac-app mac-app-games mac-app-zip
+mac-app-games:
+	$(MAKE) -C vertrix1 V1_EXE=$(abspath $(V1_EXE)) PYTHON=$(PYTHON) MAC_ARCHS="$(MAC_ARCHS)" mac
+	$(MAKE) -C vertrix3 BUILD=../build/v20 GAME=vertrix2 V3_EXE=$(abspath $(V20_EXE)) PYTHON=$(PYTHON) MAC_ARCHS="$(MAC_ARCHS)" mac
+	$(MAKE) -C vertrix3 BUILD=../build/v12 GAME=vertrix2-v12 V3_EXE=$(abspath $(V12_EXE)) PYTHON=$(PYTHON) MAC_ARCHS="$(MAC_ARCHS)" mac
+	$(MAKE) -C vertrix3 V3_EXE=$(abspath $(V3_EXE)) PYTHON=$(PYTHON) MAC_ARCHS="$(MAC_ARCHS)" mac
+
+$(BUILD)/mac/launcher/Vertrix: mac/launcher.m mac/data.m mac/vertrix_games.c $(wildcard mac/*.h)
+	@mkdir -p $(dir $@)
+	clang $(MAC_ARCH_FLAGS) -O2 -fobjc-arc -Wall -Imac mac/launcher.m mac/data.m \
+		mac/vertrix_games.c -framework Cocoa -framework AVFoundation -o $@
+
+# The app's icon is Vertrix 3's, from its executable.
+$(BUILD)/mac/launcher/AppIcon.icns: mac/icon.py $(V3_EXE)
+	@mkdir -p $(dir $@)
+	$(PYTHON) -I mac/icon.py $(V3_EXE) $@
+
+mac-app: mac-app-games $(BUILD)/mac/launcher/Vertrix $(BUILD)/mac/launcher/AppIcon.icns
+	rm -rf $(MAC_APP)
+	mkdir -p $(MAC_APP)/Contents/MacOS $(MAC_APP)/Contents/Resources $(MAC_APP)/Contents/Helpers
+	sed -e 's|@NAME@|Vertrix|g' -e 's|@EXECUTABLE@|Vertrix|g' \
+		-e 's|@IDENTIFIER@|com.quatric.vertrix|g' -e 's|@VERSION@|$(MAC_VERSION)|g' \
+		-e 's|@MIN@|$(MAC_MIN)|g' mac/Info.plist.in > $(MAC_APP)/Contents/Info.plist
+	cp $(BUILD)/mac/launcher/Vertrix $(MAC_APP)/Contents/MacOS/
+	cp $(BUILD)/mac/launcher/AppIcon.icns $(MAC_APP)/Contents/Resources/
+	cp wii-game/icon.png $(MAC_APP)/Contents/Resources/Logo.png
+	cp mac/README.md $(MAC_APP)/Contents/Resources/README.md
+	cp -R $(MAC_HELPERS) $(MAC_APP)/Contents/Helpers/
+	$(if $(MAC_MUSIC),cp -R "$(MAC_MUSIC)" $(MAC_APP)/Contents/Resources/Music)
+	for a in $(MAC_APP)/Contents/Helpers/*.app; do codesign --force --sign - "$$a"; done
+	codesign --force --sign - $(MAC_APP)
+	@du -sh $(MAC_APP) $(MAC_APP)/Contents/Helpers/*.app
+
+mac-app-zip: mac-app
+	rm -f $(BUILD)/vertrix-mac.zip
+	cd $(BUILD)/mac && ditto -c -k --keepParent Vertrix.app ../vertrix-mac.zip
+	@ls -l $(BUILD)/vertrix-mac.zip

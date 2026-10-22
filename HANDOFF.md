@@ -16,9 +16,29 @@ The repository now ports four games of the series. Each has its own page:
 | Vertrix 2 v2.0, recompiled whole | whole-program recompiler (`vertrix3/recomp.py`), function discovery checked against rea's Rizin list (`tools/rea_coverage.py`) | `vertrix3/`, `GAME=vertrix2`, `BUILD=../build/v20` | a Practice match to its result screen on the build machine and on the Wii in Dolphin (40 MB guest heap). Two early Dolphin runs stalled in the menus, cause unknown (see its page). The Wii app packs this build as `games/vertrix2.dol` | `docs/VERTRIX2-RECOMP.md` |
 | Vertrix 2 v1.2 (2001) | whole-program recompiler (`vertrix3/recomp.py`) | `vertrix3/`, `GAME=vertrix2-v12` | menus, tournament stories, player select and a 1P vs CPU match to its result screen, on the build machine and on the Wii in Dolphin (40 MB guest heap) | `docs/VERTRIX2-V12.md` |
 | Vertrix 3 (2009, Windows, Visual C++, Direct3D 9) | whole-program recompiler and runtime | `vertrix3/` | plays to a match on the build machine and on the Wii in Dolphin | `vertrix3/README.md`, `docs/VERTRIX3.md` |
-| Vertrix (1997, DOS, PMODE/W, Watcom) | LE recompiler and an emulated DOS PC (DPMI, VGA mode X, PIT, PIC, keyboard, Sound Blaster) | `vertrix1/` | setup screen to a 1P vs CPU match with music, on the build machine and on the Wii in Dolphin | `vertrix1/README.md`, `docs/VERTRIX1.md` |
+| Vertrix (1997, DOS, PMODE/W, Watcom) | LE recompiler and an emulated DOS PC (DPMI, VGA mode X, PIT, PIC, keyboard, Sound Blaster) | `vertrix1/` | setup screen to a 1P vs CPU match with music, on the build machine, on the Mac and on the Wii in Dolphin. `vertrix1/assets.py` unpacks its data | `vertrix1/README.md`, `docs/VERTRIX1.md` |
 
 None of the Wii builds has been run on real hardware. Every Wii result above comes from Dolphin.
+
+## The Mac
+
+`make mac-app` builds `build/mac/Vertrix.app`: a launcher (`mac/launcher.m`) with the four games
+as their own apps in `Contents/Helpers`, and the soundtrack player. Every game is the same
+generated C as its Wii build, universal (arm64 and x86_64), on the shell in `mac/`. The page is
+`mac/README.md`.
+
+- **Checked on this Mac (Apple silicon):**
+  - Vertrix 2 v2.0: its intro and menus at 60 fps; quitting writes `Vertrix2.cfg`.
+  - Vertrix 2 v1.2 and Vertrix 3: to their menus.
+  - Vertrix (1997): setup, AUTODETECT, the title, player select and a 1P vs CPU match with
+    music.
+  - The launcher: it starts each game, hides, and comes back when the game ends. It plays the
+    soundtrack.
+- **Not checked:** an Intel Mac; game controllers (the mapping is in each driver).
+- **The games' files:** each game asks for them at its first start and keeps them in
+  `~/Library/Application Support/Vertrix/<folder>/` (`VERTRIX_HOME` overrides).
+- **The soundtrack:** albums go in `MAC_MUSIC=`, which is not in the repository. See
+  `mac/README.md` for where to get them.
 
 ## Game files
 
@@ -38,8 +58,8 @@ the tree is the owner's call.
 
 ## Building
 
-devkitPro must be at `/opt/devkitpro`. On this machine it is at
-`/Volumes/SSD/larsen/devkitpro`, linked there.
+devkitPro must be at `/opt/devkitpro`. On the build machine it lives on the external disk and
+is linked there.
 
 ```
 make check-format                                   # passes at this commit
