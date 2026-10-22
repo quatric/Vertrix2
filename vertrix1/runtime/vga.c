@@ -310,6 +310,39 @@ static uint32_t input_status(void)
     return status;
 }
 
+/* The game waits for the retrace by reading 3DAh in a loop (docs/VERTRIX1.md, "Video"), which
+ * would keep a host core busy for most of each frame. A wait that has read the status back to
+ * back for over a millisecond, with the retrace still more than 1.5 ms away, sleeps a
+ * millisecond between reads instead. The status comes from the clock, so the game reads the same
+ * values, only fewer times; a wait for display enable (bit 0) changes every line and never
+ * runs that long. */
+#define POLL_RUN_US 1000u
+#define POLL_GAP_US 50u
+#define POLL_MARGIN_NS 1500000u
+
+static void status_wait(void)
+{
+    static uint64_t run_start, last;
+    const uint64_t now = v1_clock();
+    if (now - last > POLL_GAP_US)
+    {
+        run_start = now;
+    }
+    last = now;
+    if (now - run_start < POLL_RUN_US)
+    {
+        return;
+    }
+    const uint64_t t = now_ns() % FRAME_NS;
+    const uint64_t retrace = (uint64_t)RETRACE_LINE * LINE_NS;
+    const uint64_t until = (retrace + FRAME_NS - t) % FRAME_NS;
+    if (until > POLL_MARGIN_NS)
+    {
+        v3_sleep_ms(1);
+        last = v1_clock();
+    }
+}
+
 uint32_t v1_vga_port_read(uint32_t port)
 {
     /* Colour addressing (misc output bit 0): the CRT controller at 3D4h; 3B4h when mono. */
@@ -356,6 +389,7 @@ uint32_t v1_vga_port_read(uint32_t port)
         case 0x3da:
         case 0x3ba:
             attr_flip = 0;
+            status_wait();
             v1_vga_update(v1_clock());
             return input_status();
     }

@@ -201,6 +201,21 @@ game depends on are below.
 - **Check:** the PPM frames of the setup, title, player and background select, versus screen
   and match match the game's screens (`vertrix1/README.md`). The retrace timing (70 Hz,
   retrace on lines 412–413 of 449) keeps the fades at their original length.
+- **Host time while waiting:** the game polls in tight loops, which kept a host core busy for
+  most of each frame. The runtime now sleeps through two kinds of wait. In both, the guest reads
+  the same values it would have read, only fewer times, because they come from the clock or from
+  the keyboard:
+  - **Retrace waits:** a 3DAh wait that has run back to back for over 1 ms, with the retrace
+    more than 1.5 ms away, sleeps 1 ms per read (`status_wait`, `runtime/vga.c`). A wait for
+    display enable changes every line, so it never runs that long.
+  - **Key checks:** after 1 ms of back-to-back "no key" answers from `int 16h` 01h/11h or
+    `int 21h` 0Bh, each further check sleeps 1 ms (`key_check_wait`, `runtime/dos.c`), as the
+    blocking `int 16h` 00h already did.
+  - **Check:** on the Mac the setup screen went from a whole core to 14%, the title to 7% and a
+    match to 8%. The fades and the music play as before.
+  - **Not covered:** the in-match menu (`choisir_quitter_`, 0x33d34) waits on flags set by its
+    own keyboard handler, with no port or service call to notice, and still uses about half a
+    core.
 
 ### Sound (Sound Blaster 220h, DMA 1, IRQ 7)
 

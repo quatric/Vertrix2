@@ -566,6 +566,29 @@ static int console_key(Cpu *c, uint32_t next, int wait)
     }
 }
 
+/* The setup screen and the menus ask whether a key waits (int 16h 01h, int 21h 0Bh) in a tight
+ * loop, which would keep a host core busy. Once the answer has been "no" back to back for over a
+ * millisecond, each further check sleeps a millisecond first: a key still arrives within one, as
+ * the waits of int 16h 00h do (v1_idle). */
+#define KEY_POLL_RUN_US 1000u
+#define KEY_POLL_GAP_US 200u
+
+static void key_check_wait(int found)
+{
+    static uint64_t run_start, last;
+    const uint64_t now = v1_clock();
+    if (found || now - last > KEY_POLL_GAP_US)
+    {
+        run_start = now;
+    }
+    last = now;
+    if (!found && now - run_start >= KEY_POLL_RUN_US)
+    {
+        v3_sleep_ms(1);
+        last = v1_clock();
+    }
+}
+
 static void int21(Cpu *c, uint32_t next)
 {
     const unsigned ah = AH;
@@ -602,8 +625,12 @@ static void int21(Cpu *c, uint32_t next)
             }
             return;
         case 0x0b:
+        {
             v1_service(c, next);
-            SET_AL(pending_scan >= 0 || v1_bios_key_peek() >= 0 ? 0xff : 0);
+            const int found = pending_scan >= 0 || v1_bios_key_peek() >= 0;
+            key_check_wait(found);
+            SET_AL(found ? 0xff : 0);
+        }
             return;
         case 0x0c:
             while (v1_bios_key_read() >= 0)
@@ -1239,6 +1266,7 @@ static void int16(Cpu *c, uint32_t next)
         {
             v1_service(c, next);
             const int key = v1_bios_key_peek();
+            key_check_wait(key >= 0);
             c->zf = key < 0;
             if (key >= 0)
             {
