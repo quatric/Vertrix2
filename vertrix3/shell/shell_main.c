@@ -1,7 +1,8 @@
-/* A recompiled game on the Mac (Vertrix 3, Vertrix 2 v1.2 and v2.0), through mac/shell.h: the
- * software renderer's frames (or the frames the game drew itself, DirectDraw) in a window at
- * 60 Hz, as a Flip waits for the vertical blank; the wave-out stream on Core Audio; the keyboard
- * and mouse as DirectInput's; and a game controller as the Wii's buttons are:
+/* A recompiled game (Vertrix 3, Vertrix 2 v1.2 and v2.0) on the Mac or a console, through
+ * shell/shell.h: the software renderer's frames (or the frames the game drew itself,
+ * DirectDraw) on the screen at 60 Hz, as a Flip waits for the vertical blank; the wave-out
+ * stream; the keyboard and mouse (or touch screen) as DirectInput's; and a game controller as the
+ * Wii's buttons are:
  *
  *   D-pad, left stick   arrow keys (player 1: left, right, down; Up permutes)
  *   A                   Up (permute)
@@ -9,7 +10,8 @@
  *   X                   Space
  *   Menu, Options       Escape
  *
- * The game's files and settings are in its folder (mac/data.h); the log is FOLDER.log there. */
+ * The game's files and settings are in its folder (mac/data.h on the Mac, the launcher's on a
+ * console); the log is FOLDER.log there. */
 #include "process.h"
 #include "runtime.h"
 #include "shell.h"
@@ -222,9 +224,10 @@ static void game(void)
 {
     const int code = v3_run(image, (uint32_t)image_size, NULL, &platform);
     v3_log("game exited with %d after %u frames", code, frames);
-    exit(code);
+    shell_exit(code);
 }
 
+#ifdef __APPLE__
 /* A fault inside the guest space: say where, and what the game was doing. */
 static void on_fault(int signal, siginfo_t *info, void *context)
 {
@@ -242,6 +245,7 @@ static void on_fault(int signal, siginfo_t *info, void *context)
     v3_history_dump(64);
     _exit(128 + signal);
 }
+#endif
 
 int main(int argc, char **argv)
 {
@@ -258,12 +262,14 @@ int main(int argc, char **argv)
     {
         shell_fatal("The app is missing its v3_image.bin.");
     }
-    v3_log("%s for the Mac: %u KB of image, files in %s", v3_game_title,
+    v3_log("%s for %s: %u KB of image, files in %s", v3_game_title, shell_platform,
            (unsigned)(image_size >> 10), directory);
+#ifdef __APPLE__
     struct sigaction action = {0};
     action.sa_sigaction = on_fault;
     action.sa_flags = SA_SIGINFO | SA_ONSTACK;
     sigaction(SIGSEGV, &action, NULL);
     sigaction(SIGBUS, &action, NULL);
+#endif
     shell_run(game);
 }

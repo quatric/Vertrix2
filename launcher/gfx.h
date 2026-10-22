@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 /* The launcher draws into a 640x480 canvas of 0xRRGGBB pixels, which is converted to the TV's
- * YUV frame buffer once a frame. */
+ * YUV frame buffer once a frame (gfx_wii.c), or handed to the console shell (consoles/). */
 enum
 {
     GFX_WIDTH = 640,
@@ -17,6 +17,8 @@ void gfx_present(void);
 /* Blank the screen (before another program starts). */
 void gfx_black(void);
 int gfx_widescreen(void);
+/* The canvas, 0xAARRGGBB rows of GFX_WIDTH pixels (alpha unused). */
+const uint32_t *gfx_canvas(void);
 /* Debug builds: the canvas as a PPM file. */
 int gfx_save_ppm(const char *path);
 /* Keep the canvas as the background, and put it back at the start of each frame. */

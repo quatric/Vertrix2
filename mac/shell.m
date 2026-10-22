@@ -16,6 +16,8 @@
 #include "data.h"
 #include "shell.h"
 
+const char shell_platform[] = "the Mac";
+
 static ShellOptions options;
 static char folder[1024];
 
@@ -74,6 +76,11 @@ _Noreturn void shell_fatal(const char *message)
         });
     }
     exit(2);
+}
+
+_Noreturn void shell_exit(int code)
+{
+    exit(code);
 }
 
 /* --- frames -------------------------------------------------------------------------------- */

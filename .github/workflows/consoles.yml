@@ -1,0 +1,88 @@
+name: Consoles
+
+# Builds the app for the Switch, the Wii U and the 3DS (consoles/README.md): the Wii's menu and
+# the four games recompiled from the originals, on the console shell. The games' executables are
+# downloaded from vertrixgame.com at build time (tools/fetch_mac_inputs.sh) and checked there;
+# none of them are in the repository, and the apps carry none of the games' files.
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+    paths:
+      - 'consoles/**'
+      - 'shell/**'
+      - 'launcher/**'
+      - 'vertrix1/**'
+      - 'vertrix3/**'
+      - 'Makefile'
+      - 'wii-game/icon.png'
+      - 'tools/console_art.py'
+      - 'tools/fetch_mac_inputs.sh'
+      - 'tools/unace_sfx.py'
+      - '.github/workflows/consoles.yml'
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - console: switch
+            image: devkitpro/devkita64:latest
+            packages: switch-dev switch-sdl2 switch-libmad
+            program: games/*.nro
+          - console: wiiu
+            image: devkitpro/devkitppc:latest
+            packages: wiiu-dev wiiu-sdl2 ppc-libmad
+            program: games/*.rpx
+          - console: 3ds
+            image: devkitpro/devkitarm:latest
+            packages: 3ds-dev 3ds-libmad
+            program: games/*.3dsx
+    container: ${{ matrix.image }}
+    steps:
+      - name: Tools
+        run: |
+          apt-get update -qq
+          apt-get install -y -qq build-essential git curl unzip zip innoextract liblzma-dev \
+            python3 python3-dev python3-venv >/dev/null
+          dkp-pacman -Syu --noconfirm --needed ${{ matrix.packages }}
+          python3 -m venv /opt/venv
+          /opt/venv/bin/pip install --quiet 'capstone>=5,<6' pefile 'acefile==0.6.14' pillow
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Cache the downloads
+        uses: actions/cache@v4
+        with:
+          path: inputs
+          key: vertrix-wii-inputs-${{ hashFiles('tools/fetch_mac_inputs.sh', 'tools/unace_sfx.py') }}
+      - name: Download the games
+        run: FETCH_MUSIC=0 PYTHON=/opt/venv/bin/python tools/fetch_mac_inputs.sh inputs
+      - name: Build
+        run: |
+          make -j"$(nproc)" ${{ matrix.console }}-app-zip PYTHON=/opt/venv/bin/python \
+            V1_EXE=inputs/vertrix1/VERTRIX.EXE \
+            V12_EXE=inputs/vertrix2-v12/app/Vertrix2.exe \
+            V3_EXE=inputs/vertrix3/app/Vertrix3.exe \
+            V20_EXE=inputs/vertrix2/app/Vertrix2.exe
+      - name: Check
+        run: |
+          app=$(dirname "$(find build/${{ matrix.console }}/sd -type d -name games)")
+          ls -l "$app" "$app"/games
+          test "$(ls "$app"/${{ matrix.program }} | wc -l)" -eq 4
+          unzip -l build/vertrix-${{ matrix.console }}.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vertrix-${{ matrix.console }}
+          path: build/vertrix-${{ matrix.console }}.zip
+      - uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          files: build/vertrix-${{ matrix.console }}.zip

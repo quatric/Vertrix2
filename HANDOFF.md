@@ -40,7 +40,29 @@ generated C as its Wii build, universal (arm64 and x86_64), on the shell in `mac
 - **The soundtrack:** albums go in `MAC_MUSIC=`, which is not in the repository. See
   `mac/README.md` for where to get them.
 
-## Game files
+## The Switch, the Wii U and the 3DS
+
+`make switch-app`, `wiiu-app` and `3ds-app` build the Wii app for each console: the unchanged
+menu (`launcher/main.c`) and the four games, on the console shell in `consoles/`. Each game is
+the same generated C as its Wii build, with the Wii's paged guest memory and heap. The page is
+`consoles/README.md`. The shell API the games use moved from `mac/` to `shell/` (`shell.h`,
+`vertrix_games.c`), and each game's driver moved from `<game>/mac/mac_main.c` to
+`<game>/shell/shell_main.c`, shared by the Mac and the consoles.
+
+- **Checked in emulators on this Mac:**
+  - Wii U (Cemu 2.6): the menu (Wii look, finds the music), and all four games start and run at
+    60 fps to their own screens. Vertrix (1997) takes the controller on its setup screen.
+  - 3DS (Azahar 2125.1.3): the menu, on both screens, and all four games to their own screens:
+    Vertrix 2 and Vertrix 3 at full speed, v1.2 at about 72%, and Vertrix (1997) at about 54%
+    (its setup screen).
+  - Switch: all four games and the menu build (`.nro`); none has run.
+- **Not checked:** real hardware; the Switch (no emulator here); starting a game from the menu
+  and coming back (Cemu and Azahar load one program, and Azahar has no Luma3DS loader).
+- **Wii U specifics** (`vertrix3/runtime/threads_posix.c`): an RPX cannot hold thread-local
+  storage, so the current thread is kept in coreinit's thread-specific slot 0; and wut's timed
+  condition wait leaves an alarm that crashed Cemu, so timed event waits poll every millisecond.
+  `V3_HOST_THREAD_STACK` sets the host threads' stack (512 KB on the consoles).
+
 
 The builds read the originals from outside the repository. Do not add any more of them, and do
 not commit the files the unpacked archives contain.
@@ -105,7 +127,10 @@ pgrep -fl "^/Applications/Dolphin.app"
 4. **Vertrix 3:** see "Not done yet" in `docs/VERTRIX3.md`:
    - fog and specular;
    - reusing the Vertrix 2 ports only where the oracle agrees.
-5. **Vertrix (1997):**
+5. **The consoles:** run the apps on a Switch, a Wii U and a 3DS, including starting a game
+   from the menu and coming back. On the 3DS, check that the Windows games fit in an Old 3DS's
+   memory, and the speed of v1.2 and Vertrix (1997), which are slow in Azahar.
+6. **Vertrix (1997):**
    - save the setup when HOME is pressed. This needs a decision: today the game saves only
      through its own EXIT, which is the original's behaviour.
    - the optional signature matching against Vertrix 2 (`tools/v3_signatures.py`).

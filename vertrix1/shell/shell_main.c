@@ -1,9 +1,9 @@
-/* Vertrix (1997) on the Mac: the recompiled VERTRIX.EXE on the DOS machine (vertrix1/runtime),
- * through mac/shell.h. The game's directory is its folder in the Vertrix folder (mac/data.h),
- * which holds the original release (the game checks every file BIN2.BIN lists); it writes
- * SETUP.CFG and its scores there. The VGA's picture is read at each refresh of the window and
- * filled to a 4:3 screen, the Sound Blaster's samples play on Core Audio, the Mac keyboard is
- * the PC's, and game controllers are keys as the Wii Remotes are:
+/* Vertrix (1997) on the Mac or a console: the recompiled VERTRIX.EXE on the DOS machine
+ * (vertrix1/runtime), through shell/shell.h. The game's directory is its folder (mac/data.h on
+ * the Mac, the launcher's on a console), which holds the original release (the game checks every
+ * file BIN2.BIN lists); it writes SETUP.CFG and its scores there. The VGA's picture is read at
+ * each refresh of the screen and filled to 4:3, the Sound Blaster's samples play on the system's
+ * sound, a keyboard is the PC's, and game controllers are keys as the Wii Remotes are:
  *
  *   Controller 1:  D-pad, left stick   the arrow keys (one player; player 2 of two)
  *                  A                   Up (permute)
@@ -13,8 +13,8 @@
  *   Controller 2:  player 1 of two, on the game's default keys W, X, C and F: D-pad left,
  *                  right, down; Up or A permutes; B is Enter.
  *
- * Closing the window stops the game where it is (it saves its setup only when left through its
- * own EXIT). The log is vertrix.log in the game's directory. */
+ * Closing the window (or the app) stops the game where it is (it saves its setup only when left
+ * through its own EXIT). The log is vertrix.log in the game's directory. */
 #include "dos.h"
 #include "shell.h"
 
@@ -190,7 +190,7 @@ static void game(void)
     game_started = 1;
     const int code = v1_run(image, &platform);
     v3_log("the game ended with %d", code);
-    exit(code < 0 ? 0 : code);
+    shell_exit(code < 0 ? 0 : code);
 }
 
 int main(int argc, char **argv)
@@ -206,7 +206,7 @@ int main(int argc, char **argv)
     }
     memcpy(image, bytes, size);
     free(bytes);
-    v3_log("Vertrix for the Mac: %u KB of image, files in %s", (unsigned)(size >> 10),
+    v3_log("Vertrix for %s: %u KB of image, files in %s", shell_platform, (unsigned)(size >> 10),
            platform.directory);
     shell_set_refresh(refresh);
     shell_run(game);

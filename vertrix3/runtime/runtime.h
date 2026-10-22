@@ -134,8 +134,9 @@ _Noreturn void v3_fatal(const char *format, ...);
 void *v3_grow(void *block, size_t size, const char *what);
 extern int v3_trace_calls;
 /* The host function the calling thread entered last (for messages). */
-#ifdef GEKKO
-/* libogc threads have no thread-local storage; the name is only for messages. */
+#if defined(GEKKO) || defined(__WIIU__)
+/* libogc's and the Wii U's threads have no thread-local storage; the name is only for
+ * messages. */
 #define V3_THREAD_LOCAL
 #else
 #define V3_THREAD_LOCAL _Thread_local

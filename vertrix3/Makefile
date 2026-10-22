@@ -139,10 +139,10 @@ MAC_ARCH_FLAGS := $(addprefix -arch ,$(MAC_ARCHS)) -mmacosx-version-min=$(MAC_MI
 MAC_CC ?= clang
 MAC_CFLAGS := $(MAC_ARCH_FLAGS) -std=gnu11 -O2 -fno-strict-aliasing -Wno-parentheses-equality \
 	-Wno-unused-label -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-function
-MAC_RUNTIME := $(filter-out runtime/threads_wii.c,$(RUNTIME)) d3d/render_soft.c mac/mac_main.c \
-	../mac/vertrix_games.c
+MAC_RUNTIME := $(filter-out runtime/threads_wii.c,$(RUNTIME)) d3d/render_soft.c shell/shell_main.c \
+	../shell/vertrix_games.c
 MAC_OBJC := ../mac/shell.m ../mac/data.m
-MAC_INCLUDES := -Iruntime -Iwin32 -Id3d -I$(GEN) -I../mac
+MAC_INCLUDES := -Iruntime -Iwin32 -Id3d -I$(GEN) -I../shell -I../mac
 MAC_GEN_OBJECTS = $(patsubst $(GEN)/%.c,$(BUILD)/mac/%.o,$(GEN_SOURCES))
 MAC_RT_OBJECTS := $(patsubst %.c,$(BUILD)/mac/rt/%.o,$(notdir $(MAC_RUNTIME))) \
 	$(patsubst %.m,$(BUILD)/mac/rt/%.o,$(notdir $(MAC_OBJC)))
@@ -160,14 +160,14 @@ $(BUILD)/mac/%.o: $(GEN)/%.c $(GEN)/stamp runtime/cpu.h
 	@mkdir -p $(BUILD)/mac
 	$(MAC_CC) $(MAC_CFLAGS) $(INCLUDES) -c $< -o $@
 
-vpath %.c mac ../mac
+vpath %.c shell ../shell
 vpath %.m ../mac
 
-$(BUILD)/mac/rt/%.o: %.c $(wildcard runtime/*.h win32/*.h d3d/*.h ../mac/*.h) $(GEN)/stamp
+$(BUILD)/mac/rt/%.o: %.c $(wildcard runtime/*.h win32/*.h d3d/*.h ../shell/*.h ../mac/*.h) $(GEN)/stamp
 	@mkdir -p $(BUILD)/mac/rt
 	$(MAC_CC) $(MAC_CFLAGS) -Wall $(MAC_INCLUDES) -c $< -o $@
 
-$(BUILD)/mac/rt/%.o: %.m $(wildcard ../mac/*.h)
+$(BUILD)/mac/rt/%.o: %.m $(wildcard ../shell/*.h ../mac/*.h)
 	@mkdir -p $(BUILD)/mac/rt
 	$(MAC_CC) $(MAC_ARCH_FLAGS) -O2 -fobjc-arc -Wall $(MAC_INCLUDES) -c $< -o $@
 
@@ -186,3 +186,29 @@ $(MAC_APP)/Contents/MacOS/$(GAME): $(BUILD)/mac/$(GAME) $(BUILD)/mac/AppIcon.icn
 	cp $(GEN)/v3_image.bin $(BUILD)/mac/AppIcon.icns $(MAC_APP)/Contents/Resources/
 	cp $(BUILD)/mac/$(GAME) $@
 	codesign --force --sign - $(MAC_APP)
+
+# --- the consoles -------------------------------------------------------------------------------
+# make -C vertrix3 BUILD=../build/v20 GAME=vertrix2 V3_EXE=../Vertrix2.exe switch
+#                                                        -> build/v20/switch/vertrix2.nro
+# (wiiu: .rpx, 3ds: .3dsx). The program is one of the games of the console's launcher (make
+# switch-app at the top, consoles/README.md); the generated code is the same C as the Wii's, with
+# the Wii's heap, on the console shell (consoles/).
+CONSOLES := switch wiiu 3ds
+
+.PHONY: $(CONSOLES)
+$(CONSOLES): $(GEN)/stamp
+	$(MAKE) CONSOLE=$@ console-program
+
+ifneq ($(CONSOLE),)
+CONSOLE_PROGRAM := $(BUILD)/$(CONSOLE)/$(GAME)
+CONSOLE_OBJ := $(BUILD)/$(CONSOLE)/obj
+CONSOLE_GEN_SOURCES := $(GEN_SOURCES)
+CONSOLE_SOURCES := $(filter-out runtime/threads_wii.c,$(RUNTIME)) d3d/render_soft.c \
+	shell/shell_main.c ../shell/vertrix_games.c
+CONSOLE_CFLAGS := -DV3_PAGED -DV3_HEAP_SIZE=$(WII_HEAP) -DV3_HOST_THREAD_STACK=0x80000u \
+	-Iruntime -Iwin32 -Id3d -I$(GEN)
+CONSOLE_DEPS := $(GEN)/stamp $(wildcard runtime/*.h win32/*.h d3d/*.h ../shell/*.h ../consoles/*.h)
+CONSOLE_IMAGE := $(GEN)/v3_image.bin
+CONSOLE_TITLE := $(MAC_TITLE_$(GAME))
+include ../consoles/rules.mk
+endif

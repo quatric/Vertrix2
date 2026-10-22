@@ -7,7 +7,9 @@
  *   sd:/apps/vertrix/music/<album>/   MP3 files
  *
  * A game starts with its data folder and this DOL's path as arguments (launcher/app.h) and
- * comes back here when it ends. */
+ * comes back here when it ends. The Switch, Wii U and 3DS builds compile this file unchanged
+ * against consoles/compat/, with their own folder, programs and button names
+ * (consoles/README.md). */
 #include <asndlib.h>
 #include <fat.h>
 #include <gccore.h>
@@ -30,25 +32,36 @@
 #define APP_VERSION "0"
 #endif
 
+/* What a console's build sets otherwise (consoles/compat/launcher_compat.h). */
+#ifndef LAUNCHER_HOME
+#define LAUNCHER_HOME "sd:/apps/vertrix"
+#define LAUNCHER_PROGRAM_EXTENSION ".dol"
+#define LAUNCHER_HINT_EXIT "HOME: Exit"
+#define LAUNCHER_HINT_MUSIC "A: Play  2: Pause  -/+: Prev/Next  1: Shuffle  B: Back"
+#define LAUNCHER_NOT_A_PROGRAM "%s could not be read, or is not a Wii program."
+#else
+#define LAUNCHER_NOT_A_PROGRAM "%s could not be started: start Vertrix from the homebrew menu."
+#endif
+
 typedef struct
 {
     const char *title;
     const char *year;
     const char *about;
     const char *folder; /* its files, in the app folder */
-    const char *dol;    /* in games/ */
+    const char *dol;    /* in games/, with LAUNCHER_PROGRAM_EXTENSION */
     const char *needs;  /* a file that must be in the folder */
     const char *needs_text;
 } Game;
 
 static const Game games[] = {
-    {"Vertrix", "1997", "The original, for DOS", "vertrix1", "vertrix1.dol", "BIN1.BIN",
+    {"Vertrix", "1997", "The original, for DOS", "vertrix1", "vertrix1", "BIN1.BIN",
      "the whole original release (VERTRIX.EXE, BIN1.BIN, BIN2.BIN and the rest)"},
-    {"Vertrix 2 v1.2", "2001", "The first Windows release", "vertrix2-v12", "vertrix2-v12.dol",
+    {"Vertrix 2 v1.2", "2001", "The first Windows release", "vertrix2-v12", "vertrix2-v12",
      "Vertrix2.vf", "Vertrix2.vf from Vertrix 2 v1.2"},
-    {"Vertrix 2", "2003", "Version 2.0", "vertrix2", "vertrix2.dol", "Vertrix2.vf",
+    {"Vertrix 2", "2003", "Version 2.0", "vertrix2", "vertrix2", "Vertrix2.vf",
      "Vertrix2.vf from Vertrix 2 v2.0"},
-    {"Vertrix 3", "2009", "In 3D", "vertrix3", "vertrix3.dol", "VERTRIX3.VF",
+    {"Vertrix 3", "2009", "In 3D", "vertrix3", "vertrix3", "VERTRIX3.VF",
      "VERTRIX3.VF from Vertrix 3"},
 };
 enum
@@ -71,8 +84,8 @@ enum
     PANEL_HOT = 0xe0283a5au
 };
 
-static char app_folder[128] = "sd:/apps/vertrix";
-static char launcher_path[160] = "sd:/apps/vertrix/boot.dol";
+static char app_folder[128];
+static char launcher_path[160];
 static int have_dol[GAME_COUNT], have_data[GAME_COUNT];
 static int total_tracks;
 static int returning; /* started again by a game: no second update check */
@@ -104,7 +117,8 @@ static void check_games(void)
     char path[256];
     for (int i = 0; i < GAME_COUNT; ++i)
     {
-        snprintf(path, sizeof path, "%s/games/%s", app_folder, games[i].dol);
+        snprintf(path, sizeof path, "%s/games/%s%s", app_folder, games[i].dol,
+                 LAUNCHER_PROGRAM_EXTENSION);
         have_dol[i] = exists(path);
         snprintf(path, sizeof path, "%s/%s/%s", app_folder, games[i].folder, games[i].needs);
         have_data[i] = exists(path);
@@ -373,7 +387,11 @@ static void draw_main(void)
             snprintf(line, sizeof line, "%d track%s by C\xe9"
                                         "dric Castel and The Clusters",
                      total_tracks, total_tracks == 1 ? "" : "s");
-            about = total_tracks ? line : "No music in sd:/apps/vertrix/music/ yet";
+            if (!total_tracks)
+            {
+                snprintf(line, sizeof line, "No music in %s/music/ yet", app_folder);
+            }
+            about = line;
             status = music_playing() ? (music_paused() ? "PAUSED" : "PLAYING") : "";
             status_colour = TEAL;
         }
@@ -382,7 +400,7 @@ static void draw_main(void)
         gfx_text(ITEM_X + ITEM_W - 20 - gfx_text_width(status, 1), y + 14, status, 1,
                  status_colour);
     }
-    draw_hints("A: Choose   HOME: Exit");
+    draw_hints("A: Choose   " LAUNCHER_HINT_EXIT);
     draw_mini_player();
 }
 
@@ -393,8 +411,8 @@ static void show_missing(int i)
     {
         snprintf(message.title, sizeof message.title, "Not installed");
         snprintf(message.text, sizeof message.text,
-                 "%s's program is missing: copy games/%s from the release into %s/games/.",
-                 games[i].title, games[i].dol, app_folder);
+                 "%s's program is missing: copy games/%s%s from the release into %s/games/.",
+                 games[i].title, games[i].dol, LAUNCHER_PROGRAM_EXTENSION, app_folder);
         return;
     }
     snprintf(message.title, sizeof message.title, "Files needed");
@@ -406,7 +424,8 @@ static void show_missing(int i)
 static void launch(int i)
 {
     char dol[256], data[256];
-    snprintf(dol, sizeof dol, "%s/games/%s", app_folder, games[i].dol);
+    snprintf(dol, sizeof dol, "%s/games/%s%s", app_folder, games[i].dol,
+             LAUNCHER_PROGRAM_EXTENSION);
     snprintf(data, sizeof data, "%s/%s", app_folder, games[i].folder);
     save_settings();
     music_stop();
@@ -427,8 +446,7 @@ static void launch(int i)
     VIDEO_SetBlack(FALSE);
     message.open = 1;
     snprintf(message.title, sizeof message.title, "Could not start");
-    snprintf(message.text, sizeof message.text, "%s could not be read, or is not a Wii program.",
-             dol);
+    snprintf(message.text, sizeof message.text, LAUNCHER_NOT_A_PROGRAM, dol);
 }
 
 static void choose(int item)
@@ -526,7 +544,9 @@ static void draw_music(void)
     if (album == NULL)
     {
         gfx_text(170, 52, "No albums: put MP3 folders in", 1, TEXT_DIM);
-        gfx_text(LIST_X, LIST_Y, "sd:/apps/vertrix/music/<album>/", 1, TEXT);
+        char folder[192];
+        snprintf(folder, sizeof folder, "%s/music/<album>/", app_folder);
+        gfx_text(LIST_X, LIST_Y, folder, 1, TEXT);
         draw_hints("B: Back");
         return;
     }
@@ -603,7 +623,7 @@ static void draw_music(void)
                  TEXT_DIM);
     }
     draw_visualiser(GFX_WIDTH - 32 - 192, py + 10, 192, GFX_HEIGHT - 50 - py - 20);
-    draw_hints("A: Play  2: Pause  -/+: Prev/Next  1: Shuffle  B: Back");
+    draw_hints(LAUNCHER_HINT_MUSIC);
 }
 
 static void keep_visible(const MusicAlbum *album)
@@ -795,8 +815,11 @@ static uint32_t run_script(void)
 
 /* --- start-up ----------------------------------------------------------------------------- */
 
+/* The folder this DOL was started from (the Homebrew Channel passes it), else the default. */
 static void find_app_folder(int argc, char **argv)
 {
+    snprintf(app_folder, sizeof app_folder, "%s", LAUNCHER_HOME);
+    snprintf(launcher_path, sizeof launcher_path, "%s/boot.dol", app_folder);
     if (argc > 0 && argv[0] != NULL && strchr(argv[0], '/') != NULL &&
         (strncmp(argv[0], "sd:/", 4) == 0 || strncmp(argv[0], "usb:/", 5) == 0))
     {

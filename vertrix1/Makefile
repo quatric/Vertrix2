@@ -131,9 +131,9 @@ MAC_ARCH_FLAGS := $(addprefix -arch ,$(MAC_ARCHS)) -mmacosx-version-min=$(MAC_MI
 MAC_CC ?= clang
 MAC_CFLAGS := $(MAC_ARCH_FLAGS) -std=gnu11 -O2 -fno-strict-aliasing -Wno-parentheses-equality \
 	-Wno-unused-label -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-function
-MAC_RUNTIME := $(RUNTIME) mac/mac_main.c ../mac/vertrix_games.c
+MAC_RUNTIME := $(RUNTIME) shell/shell_main.c ../shell/vertrix_games.c
 MAC_OBJC := ../mac/shell.m ../mac/data.m
-MAC_INCLUDES := -Iruntime -I$(GEN) -I../mac
+MAC_INCLUDES := -Iruntime -I$(GEN) -I../shell -I../mac
 MAC_GEN_OBJECTS = $(patsubst $(GEN)/%.c,$(BUILD)/mac/%.o,$(GEN_SOURCES))
 MAC_RT_OBJECTS := $(patsubst %.c,$(BUILD)/mac/rt/%.o,$(notdir $(MAC_RUNTIME))) \
 	$(patsubst %.m,$(BUILD)/mac/rt/%.o,$(notdir $(MAC_OBJC)))
@@ -151,14 +151,14 @@ $(BUILD)/mac/%.o: $(GEN)/%.c $(GEN)/stamp runtime/cpu.h runtime/dos.h
 	@mkdir -p $(BUILD)/mac
 	$(MAC_CC) $(MAC_CFLAGS) $(INCLUDES) -c $< -o $@
 
-vpath %.c mac ../mac
+vpath %.c shell ../shell
 vpath %.m ../mac
 
-$(BUILD)/mac/rt/%.o: %.c $(HEADERS) $(wildcard ../mac/*.h)
+$(BUILD)/mac/rt/%.o: %.c $(HEADERS) $(wildcard ../shell/*.h ../mac/*.h)
 	@mkdir -p $(BUILD)/mac/rt
 	$(MAC_CC) $(MAC_CFLAGS) -Wall $(MAC_INCLUDES) -c $< -o $@
 
-$(BUILD)/mac/rt/%.o: %.m $(wildcard ../mac/*.h)
+$(BUILD)/mac/rt/%.o: %.m $(wildcard ../shell/*.h ../mac/*.h)
 	@mkdir -p $(BUILD)/mac/rt
 	$(MAC_CC) $(MAC_ARCH_FLAGS) -O2 -fobjc-arc -Wall $(MAC_INCLUDES) -c $< -o $@
 
@@ -179,3 +179,26 @@ $(MAC_APP)/Contents/MacOS/vertrix1: $(BUILD)/mac/vertrix1 $(BUILD)/mac/AppIcon.i
 	cp $(GEN)/v1_image.bin $(BUILD)/mac/AppIcon.icns $(MAC_APP)/Contents/Resources/
 	cp $(BUILD)/mac/vertrix1 $@
 	codesign --force --sign - $(MAC_APP)
+
+# --- the consoles -------------------------------------------------------------------------------
+# make -C vertrix1 V1_EXE=/path/to/VERTRIX.EXE PYTHON=... switch  -> build/v1/switch/vertrix1.nro
+# (wiiu: .rpx, 3ds: .3dsx). The program is one of the games of the console's launcher (make
+# switch-app at the top, consoles/README.md); the generated code is the same C as the Wii's, with
+# the Wii's heap, on the console shell (consoles/).
+CONSOLES := switch wiiu 3ds
+
+.PHONY: $(CONSOLES)
+$(CONSOLES): $(GEN)/stamp
+	$(MAKE) CONSOLE=$@ console-program
+
+ifneq ($(CONSOLE),)
+CONSOLE_PROGRAM := $(BUILD)/$(CONSOLE)/vertrix1
+CONSOLE_OBJ := $(BUILD)/$(CONSOLE)/obj
+CONSOLE_GEN_SOURCES := $(GEN_SOURCES)
+CONSOLE_SOURCES := $(RUNTIME) shell/shell_main.c ../shell/vertrix_games.c
+CONSOLE_CFLAGS := -DV3_PAGED -DV1_HEAP_SIZE=$(WII_HEAP) -Iruntime -I$(GEN)
+CONSOLE_DEPS := $(GEN)/stamp $(HEADERS) $(wildcard ../shell/*.h ../consoles/*.h)
+CONSOLE_IMAGE := $(GEN)/v1_image.bin
+CONSOLE_TITLE := Vertrix
+include ../consoles/rules.mk
+endif

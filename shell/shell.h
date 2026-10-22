@@ -1,10 +1,12 @@
-#ifndef VERTRIX_MAC_SHELL_H
-#define VERTRIX_MAC_SHELL_H
+#ifndef VERTRIX_SHELL_H
+#define VERTRIX_SHELL_H
 
-/* What a recompiled game needs of macOS (mac/README.md): a window that shows its frames, the
- * keyboard, the mouse and game controllers, a sound stream on Core Audio, and the folder that
- * holds the game's own files. The drivers (vertrix3/mac/mac_main.c, vertrix1/mac/mac_main.c)
- * turn these into the machine each game expects. */
+/* What a recompiled game needs of the system it runs on: a screen that shows its frames, the
+ * keyboard, the mouse and game controllers, a sound stream, and the folder that holds the game's
+ * own files. The drivers (vertrix3/shell/shell_main.c, vertrix1/shell/shell_main.c) turn these
+ * into the machine each game expects. mac/shell.m is the Mac's (mac/README.md);
+ * consoles/shell_sdl.c (Switch, Wii U) and consoles/shell_3ds.c are the consoles'
+ * (consoles/README.md). */
 
 #include <stddef.h>
 #include <stdint.h>
@@ -22,12 +24,17 @@ typedef struct
     int hide_cursor;
 } ShellOptions;
 
-/* On the main thread, first: the app, its menus and window, and the game's folder, which gets
- * the game's files when it lacks them (from the app or from the player, mac/data.h). Returns the
- * folder. Arguments: --data DIR names the folder. */
+/* The system's name, for the log ("the Mac", "the Switch"). */
+extern const char shell_platform[];
+
+/* On the main thread, first: the app, its window, and the game's folder. On the Mac the folder
+ * gets the game's files when it lacks them (from the app or from the player, mac/data.h), and
+ * --data DIR names it; on a console it is the one the launcher passes, else the game's folder in
+ * the app's. Returns the folder. */
 const char *shell_start(int argc, char **argv, const ShellOptions *options);
 
-/* A file of the app's Resources read whole (malloc'd), or NULL. */
+/* A file of the app's Resources (on a console, one built into the program) read whole
+ * (malloc'd), or NULL. */
 uint8_t *shell_resource(const char *name, size_t *size);
 
 /* Runs `game` on its own thread (a large stack) and the app on this one. */
@@ -40,13 +47,17 @@ void shell_log(const char *line);
 /* An error the game cannot go on from: shown, then the app ends. */
 _Noreturn void shell_fatal(const char *message);
 
+/* The game has ended (any thread): the app ends with `code`, and on a console the launcher
+ * starts again. */
+_Noreturn void shell_exit(int code);
+
 uint64_t shell_microseconds(void);
 
 /* --- video --------------------------------------------------------------------------------- */
 
 /* A finished picture, 0xAARRGGBB rows, from any thread (copied). */
 void shell_present(const uint32_t *pixels, unsigned width, unsigned height);
-/* Called on the main thread before each refresh of the window (a driver that reads the picture
+/* Called on the main thread before each refresh of the screen (a driver that reads the picture
  * from its machine presents it there). */
 void shell_set_refresh(void (*refresh)(void));
 /* Waits for the next 60 Hz frame, as a Flip waits for the vertical blank. */
@@ -70,8 +81,8 @@ typedef struct
 
 /* The next input since the last call (any thread); 0 when there is none. */
 int shell_input(ShellInput *input);
-/* Where the pointer is, in the last frame's pixels, clamped to it; 0 when it is outside the
- * window. */
+/* Where the pointer (on a console, the touch screen) is, in the last frame's pixels, clamped to
+ * it; 0 when it is outside the picture or nothing touches the screen. */
 int shell_pointer(int *x, int *y);
 
 /* Game controllers, the first two connected. */
@@ -92,7 +103,8 @@ enum
 };
 uint32_t shell_pad(unsigned player);
 
-/* The player closed the window or quit the app: the driver asks the game to end. */
+/* The player closed the window or quit the app (on a console, the system asked the app to close,
+ * or Minus and Plus were pressed together): the driver asks the game to end. */
 int shell_quit_requested(void);
 
 /* --- sound --------------------------------------------------------------------------------- */

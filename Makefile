@@ -257,7 +257,7 @@ V3_EXE ?= Vertrix3.exe
 V12_EXE ?= Vertrix2-v12.exe
 V20_EXE ?= Vertrix2.exe
 LAUNCHER_VERSION := $(shell sed -n 's:.*<version>\(.*\)</version>.*:\1:p' launcher/meta.xml)
-LAUNCHER_SOURCES := launcher/main.c launcher/gfx.c launcher/music.c launcher/app.c
+LAUNCHER_SOURCES := launcher/main.c launcher/gfx.c launcher/gfx_wii.c launcher/music.c launcher/app.c
 LAUNCHER_OBJECTS := $(patsubst launcher/%.c,$(BUILD)/launcher/%.o,$(LAUNCHER_SOURCES))
 APP_DIR := $(BUILD)/app/apps/vertrix
 DOLXZ := $(BUILD)/dolxz/dolxz
@@ -339,10 +339,10 @@ mac-app-games:
 	$(MAKE) -C vertrix3 BUILD=../build/v12 GAME=vertrix2-v12 V3_EXE=$(abspath $(V12_EXE)) PYTHON=$(PYTHON) MAC_ARCHS="$(MAC_ARCHS)" mac
 	$(MAKE) -C vertrix3 V3_EXE=$(abspath $(V3_EXE)) PYTHON=$(PYTHON) MAC_ARCHS="$(MAC_ARCHS)" mac
 
-$(BUILD)/mac/launcher/Vertrix: mac/launcher.m mac/data.m mac/vertrix_games.c $(wildcard mac/*.h)
+$(BUILD)/mac/launcher/Vertrix: mac/launcher.m mac/data.m shell/vertrix_games.c $(wildcard mac/*.h shell/*.h)
 	@mkdir -p $(dir $@)
-	clang $(MAC_ARCH_FLAGS) -O2 -fobjc-arc -Wall -Imac mac/launcher.m mac/data.m \
-		mac/vertrix_games.c -framework Cocoa -framework AVFoundation -o $@
+	clang $(MAC_ARCH_FLAGS) -O2 -fobjc-arc -Wall -Imac -Ishell mac/launcher.m mac/data.m \
+		shell/vertrix_games.c -framework Cocoa -framework AVFoundation -o $@
 
 # The app's icon is Vertrix 3's, from its executable.
 $(BUILD)/mac/launcher/AppIcon.icns: mac/icon.py $(V3_EXE)
@@ -369,3 +369,49 @@ mac-app-zip: mac-app
 	rm -f $(BUILD)/vertrix-mac.zip
 	cd $(BUILD)/mac && ditto -c -k --keepParent Vertrix.app ../vertrix-mac.zip
 	@ls -l $(BUILD)/vertrix-mac.zip
+
+# --- the consoles: the launcher and the four games for the Switch, the Wii U and the 3DS ---------
+#   make switch-app V1_EXE=.../VERTRIX.EXE V12_EXE=.../Vertrix2.exe V3_EXE=.../Vertrix3.exe \
+#                   [V20_EXE=Vertrix2.exe]          # build/switch/sd/switch/vertrix/
+#   make switch-app-zip                             # build/vertrix-switch.zip
+# and wiiu-app (build/wiiu/sd/wiiu/apps/vertrix/), 3ds-app (build/3ds/sd/3ds/vertrix/) likewise.
+# The launcher is the Wii's (consoles/launcher.mk); each game is built by its own Makefile on the
+# console shell (consoles/rules.mk). None of the games' files are in the zip (consoles/README.md).
+CONSOLE_SD_switch := switch/vertrix
+CONSOLE_SD_wiiu := wiiu/apps/vertrix
+CONSOLE_SD_3ds := 3ds/vertrix
+CONSOLE_GAME_switch := .nro
+CONSOLE_GAME_wiiu := .rpx
+CONSOLE_GAME_3ds := .3dsx
+CONSOLE_LAUNCHER_switch := .nro
+CONSOLE_LAUNCHER_wiiu := .wuhb
+CONSOLE_LAUNCHER_3ds := .3dsx
+
+define console_app
+.PHONY: $(1)-app $(1)-app-games $(1)-launcher $(1)-app-zip
+$(1)-app-games:
+	$$(MAKE) -C vertrix1 V1_EXE=$$(abspath $$(V1_EXE)) PYTHON=$$(PYTHON) $(1)
+	$$(MAKE) -C vertrix3 BUILD=../build/v20 GAME=vertrix2 V3_EXE=$$(abspath $$(V20_EXE)) PYTHON=$$(PYTHON) $(1)
+	$$(MAKE) -C vertrix3 BUILD=../build/v12 GAME=vertrix2-v12 V3_EXE=$$(abspath $$(V12_EXE)) PYTHON=$$(PYTHON) $(1)
+	$$(MAKE) -C vertrix3 V3_EXE=$$(abspath $$(V3_EXE)) PYTHON=$$(PYTHON) $(1)
+
+$(1)-launcher: $$(BUILD)/launcher/logo.h
+	$$(MAKE) -f consoles/launcher.mk CONSOLE=$(1) BUILD=$$(BUILD) PYTHON=$$(PYTHON) console-program
+
+$(1)-app: $(1)-app-games $(1)-launcher
+	rm -rf $$(BUILD)/$(1)/sd
+	mkdir -p $$(BUILD)/$(1)/sd/$$(CONSOLE_SD_$(1))/games
+	cp $$(BUILD)/$(1)/launcher/vertrix$$(CONSOLE_LAUNCHER_$(1)) $$(BUILD)/$(1)/sd/$$(CONSOLE_SD_$(1))/
+	cp $$(BUILD)/v1/$(1)/vertrix1$$(CONSOLE_GAME_$(1)) $$(BUILD)/v12/$(1)/vertrix2-v12$$(CONSOLE_GAME_$(1)) \
+		$$(BUILD)/v20/$(1)/vertrix2$$(CONSOLE_GAME_$(1)) $$(BUILD)/v3/$(1)/vertrix3$$(CONSOLE_GAME_$(1)) \
+		$$(BUILD)/$(1)/sd/$$(CONSOLE_SD_$(1))/games/
+	cp consoles/README.md $$(BUILD)/$(1)/sd/$$(CONSOLE_SD_$(1))/README.md
+	@ls -l $$(BUILD)/$(1)/sd/$$(CONSOLE_SD_$(1)) $$(BUILD)/$(1)/sd/$$(CONSOLE_SD_$(1))/games
+
+$(1)-app-zip: $(1)-app
+	rm -f $$(BUILD)/vertrix-$(1).zip
+	cd $$(BUILD)/$(1)/sd && zip -qr ../../vertrix-$(1).zip .
+	@ls -l $$(BUILD)/vertrix-$(1).zip
+endef
+
+$(foreach console,switch wiiu 3ds,$(eval $(call console_app,$(console))))
