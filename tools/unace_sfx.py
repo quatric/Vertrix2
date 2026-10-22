@@ -1,4 +1,5 @@
-"""Unpack Vertrix 2 v1.2's installer, a self-extracting ACE 1.0 archive, without running it.
+"""Unpack a Vertrix 2 installer (v1.2 or v2.0), a self-extracting ACE 1.0 archive, without running
+it.
 
 The archive follows the extractor stub, at the first `**ACE**` signature (7 bytes into the
 archive's main header). acefile (https://www.roe.ch/acefile, `pip install acefile==0.6.14`) does

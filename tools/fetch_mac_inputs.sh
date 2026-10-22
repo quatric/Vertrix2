@@ -3,12 +3,15 @@
 #
 #   OUT/vertrix1/VERTRIX.EXE            Vertrix (1997), vertrix.zip
 #   OUT/vertrix2-v12/app/Vertrix2.exe   Vertrix 2 v1.2, from its installer
+#   OUT/vertrix2/app/Vertrix2.exe       Vertrix 2 v2.0, from its installer (the same file as the
+#                                       repository's Vertrix2.exe)
 #   OUT/vertrix3/app/Vertrix3.exe       Vertrix 3, from its installer
 #   OUT/music/1 Vertrix 2/              the Vertrix 2 soundtrack (checked against its MD5 list)
 #   OUT/music/2 Cedric Castel/          Cédric Castel's other tracks
 #
 # The recompilers check each executable's SHA-256 themselves. Needs curl, unzip, innoextract
-# (Vertrix 3's installer) and Python with acefile (v1.2's, tools/unace_sfx.py); PYTHON names it.
+# (Vertrix 3's installer) and Python with acefile (Vertrix 2's, tools/unace_sfx.py); PYTHON
+# names it.
 # Files already there are kept, so a cache of OUT skips the downloads.
 #
 # usage: tools/fetch_mac_inputs.sh OUT
@@ -28,12 +31,15 @@ fetch() # URL FILE
 
 fetch "$SITE/vertrix.zip" "$OUT/dl/vertrix.zip"
 fetch "$SITE/Vertrix2-v1.2-Install.exe" "$OUT/dl/Vertrix2-v1.2-Install.exe"
+fetch "$SITE/Vertrix2-v2.0-Install.exe" "$OUT/dl/Vertrix2-v2.0-Install.exe"
 fetch "$SITE/Vertrix3-v0.1-Install.exe" "$OUT/dl/Vertrix3-v0.1-Install.exe"
 fetch "$SITE/The%20Clusters%20-%202003%20-%20Vertrix%202%20Soundtrack.zip" "$OUT/dl/soundtrack.zip"
 
 [ -f "$OUT/vertrix1/VERTRIX.EXE" ] || unzip -oq "$OUT/dl/vertrix.zip" -d "$OUT/vertrix1"
 [ -f "$OUT/vertrix2-v12/app/Vertrix2.exe" ] ||
     "$PYTHON" -I "$TOOLS/unace_sfx.py" "$OUT/dl/Vertrix2-v1.2-Install.exe" "$OUT/vertrix2-v12/app"
+[ -f "$OUT/vertrix2/app/Vertrix2.exe" ] ||
+    "$PYTHON" -I "$TOOLS/unace_sfx.py" "$OUT/dl/Vertrix2-v2.0-Install.exe" "$OUT/vertrix2/app"
 [ -f "$OUT/vertrix3/app/Vertrix3.exe" ] ||
     innoextract -s -d "$OUT/vertrix3" "$OUT/dl/Vertrix3-v0.1-Install.exe"
 
@@ -65,5 +71,6 @@ for track in "Blue Glow" "Breath" "Breathy Time" "Chinese Wood" "Eruption" "Ethe
 done
 echo "Other tracks by Cédric Castel" > "$CEDRIC/album.txt"
 
-ls -l "$OUT/vertrix1/VERTRIX.EXE" "$OUT/vertrix2-v12/app/Vertrix2.exe" "$OUT/vertrix3/app/Vertrix3.exe"
+ls -l "$OUT/vertrix1/VERTRIX.EXE" "$OUT/vertrix2-v12/app/Vertrix2.exe" "$OUT/vertrix2/app/Vertrix2.exe" \
+    "$OUT/vertrix3/app/Vertrix3.exe"
 echo "music: $(ls "$OUT"/music/*/*.mp3 | wc -l) tracks"

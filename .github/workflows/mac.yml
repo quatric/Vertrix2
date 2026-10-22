@@ -13,7 +13,6 @@ on:
       - 'vertrix1/**'
       - 'vertrix3/**'
       - 'Makefile'
-      - 'Vertrix2.exe'
       - 'wii-game/icon.png'
       - 'launcher/meta.xml'
       - 'tools/fetch_mac_inputs.sh'
@@ -50,7 +49,7 @@ jobs:
             V1_EXE=inputs/vertrix1/VERTRIX.EXE \
             V12_EXE=inputs/vertrix2-v12/app/Vertrix2.exe \
             V3_EXE=inputs/vertrix3/app/Vertrix3.exe \
-            V20_EXE=Vertrix2.exe \
+            V20_EXE=inputs/vertrix2/app/Vertrix2.exe \
             MAC_MUSIC="$PWD/inputs/music"
       - name: Check
         run: |
