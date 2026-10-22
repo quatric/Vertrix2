@@ -80,6 +80,12 @@ make mac-app-zip                               # build/vertrix-mac.zip
   build carries both, one folder each, with an `album.txt` naming it.
 - **Signing:** the app is signed ad hoc. A copy from elsewhere needs right-click > Open the first
   time, or `xattr -dr com.apple.quarantine Vertrix.app`.
+- **Inputs:** `tools/fetch_mac_inputs.sh DIR` downloads the three executables that are not in the
+  repository, and the soundtrack, from vertrixgame.com. It unpacks the installers without running
+  them (innoextract for Vertrix 3; `tools/unace_sfx.py`, with acefile, for v1.2's ACE
+  self-extractor) and checks the soundtrack against its MD5 list.
+- **CI:** `.github/workflows/mac.yml` does all of this on a macOS runner. It runs for changes that
+  touch the Mac build, uploads `vertrix-mac.zip`, and attaches it to the release for a `v*` tag.
 - **One game:** `make -C vertrix1 V1_EXE=... mac` and `make -C vertrix3 ... mac` (with `BUILD`
   and `GAME` as for the Wii) build that game's app alone.
 

@@ -1,0 +1,71 @@
+name: Mac
+
+# Builds Vertrix.app (mac/README.md): the four games recompiled from the originals, with the
+# soundtrack. The games' executables and the music are downloaded from vertrixgame.com at build
+# time (tools/fetch_mac_inputs.sh) and checked there; none of them are in the repository. The
+# app carries the music but no game data: each game asks for its files at its first start.
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+    paths:
+      - 'mac/**'
+      - 'vertrix1/**'
+      - 'vertrix3/**'
+      - 'Makefile'
+      - 'Vertrix2.exe'
+      - 'wii-game/icon.png'
+      - 'launcher/meta.xml'
+      - 'tools/fetch_mac_inputs.sh'
+      - 'tools/unace_sfx.py'
+      - '.github/workflows/mac.yml'
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Tools
+        run: |
+          brew install innoextract
+          python -m pip install --quiet 'capstone>=5,<6' pefile 'acefile==0.6.14'
+      - name: Cache the downloads
+        uses: actions/cache@v4
+        with:
+          path: inputs
+          key: vertrix-inputs-${{ hashFiles('tools/fetch_mac_inputs.sh', 'tools/unace_sfx.py') }}
+      - name: Download the games and the soundtrack
+        run: PYTHON=python tools/fetch_mac_inputs.sh inputs
+      - name: Build
+        run: |
+          make -j"$(sysctl -n hw.ncpu)" mac-app-zip PYTHON=python \
+            V1_EXE=inputs/vertrix1/VERTRIX.EXE \
+            V12_EXE=inputs/vertrix2-v12/app/Vertrix2.exe \
+            V3_EXE=inputs/vertrix3/app/Vertrix3.exe \
+            V20_EXE=Vertrix2.exe \
+            MAC_MUSIC="$PWD/inputs/music"
+      - name: Check
+        run: |
+          app=build/mac/Vertrix.app
+          codesign --verify --deep --strict "$app"
+          for f in "$app/Contents/MacOS/Vertrix" "$app"/Contents/Helpers/*.app/Contents/MacOS/*; do
+            lipo "$f" -verify_arch arm64 x86_64
+          done
+          test "$(ls "$app"/Contents/Helpers | wc -l)" -eq 4
+          test "$(ls "$app"/Contents/Resources/Music/*/*.mp3 | wc -l)" -eq 50
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vertrix-mac
+          path: build/vertrix-mac.zip
+      - uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          files: build/vertrix-mac.zip
