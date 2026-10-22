@@ -25,6 +25,7 @@ executable, the recompilation and every hardware access, with the evidence for e
 | `host/host_main.c` | the build-machine driver |
 | `wii/wii_main.c` | the Wii driver: video, SD, controllers, ASND |
 | `wii/vertrix.xml` | the Homebrew Channel's meta file |
+| `assets.py`, `assets.html` | unpacks `BIN1.BIN` (pictures, palettes, sounds, instruments, music as modules) and the page that shows it |
 
 ## Build and run on the build machine
 
@@ -53,6 +54,25 @@ The first run shows the setup screen. Choose SFX&MUSIC, then AUTODETECT, which f
 IRQ 7, DMA 1; then EXIT twice. The game saves `setup.cfg` and starts. The build machine reaches
 the Clusters logo, the title with its music, the player and background select, the versus
 screen and a 1P vs CPU match.
+
+## The game's data
+
+```
+make -C vertrix1 V1_EXE=/path/to/VERTRIX.EXE PYTHON=/path/to/python assets   # build/v1-assets/
+python3 -m http.server --directory build/v1-assets
+```
+
+`assets.py` reads `BIN1.BIN` from the folder that holds `VERTRIX.EXE` (or `V1_BIN1=`). It writes:
+
+- every entry, unpacked, into `raw/`;
+- the pictures as PNG, with the palette the game shows them with;
+- the sound effects and the 171 instruments as WAV;
+- each tune as a module with its instruments, and an MP3 of it when `openmpt123` and `lame` are
+  on the PATH;
+- `index.html`, the page that shows all of it. The page reads `data.js`, so open it through a
+  web server.
+
+`docs/VERTRIX1.md` ("The data formats") describes each format and where the game reads it.
 
 ## The Wii
 

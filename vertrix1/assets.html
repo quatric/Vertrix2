@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vertrix Assets</title>
+<!-- Written next to data.js by vertrix1/assets.py: the data of BIN1.BIN, unpacked. -->
+<style>
+:root {
+  --bg: #f6f6f4; --panel: #ffffff; --ink: #1d1d1f; --muted: #6b6b70; --line: #deded9;
+  --accent: #1f6feb; --chip: #eef2f8; --code: #f0f0ec;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #141416; --panel: #1d1d20; --ink: #ececef; --muted: #9a9aa2; --line: #2e2e33;
+    --accent: #6ea8ff; --chip: #26303f; --code: #24242a;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink);
+  font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+header { position: sticky; top: 0; z-index: 2; background: var(--panel);
+  border-bottom: 1px solid var(--line); padding: 12px 16px 0; }
+h1 { margin: 0 0 2px; font-size: 18px; }
+header p { margin: 0 0 10px; color: var(--muted); font-size: 13px; }
+nav { display: flex; gap: 4px; overflow-x: auto; }
+nav button { border: 0; background: none; color: var(--muted); font: inherit; padding: 8px 12px;
+  border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap; }
+nav button.on { color: var(--ink); border-bottom-color: var(--accent); font-weight: 600; }
+main { padding: 16px; max-width: 1400px; margin: 0 auto; }
+section { display: none; }
+section.on { display: block; }
+.bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 14px;
+  color: var(--muted); }
+select, input { font: inherit; background: var(--panel); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
+.grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+  padding: 10px; min-width: 0; }
+.card h3 { margin: 0 0 6px; font-size: 14px; display: flex; justify-content: space-between;
+  gap: 8px; align-items: baseline; }
+.card h3 small { color: var(--muted); font-weight: 400; }
+/* The VGA shows 320x200 and 320x400 alike on a 4:3 screen. */
+canvas.pic { width: 100%; aspect-ratio: 4 / 3; image-rendering: pixelated; display: block; background: #000;
+  border-radius: 4px; cursor: crosshair; }
+.info { font: 12px ui-monospace, Menlo, monospace; color: var(--muted); min-height: 18px;
+  margin-top: 6px; display: flex; gap: 6px; align-items: center; }
+.swatch { display: inline-block; width: 12px; height: 12px; border-radius: 2px;
+  border: 1px solid var(--line); }
+.pal { display: grid; grid-template-columns: repeat(16, 1fr); gap: 1px; }
+.pal div { aspect-ratio: 1; }
+table { width: 100%; border-collapse: collapse; background: var(--panel);
+  border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line);
+  vertical-align: middle; }
+th { font-size: 12px; color: var(--muted); font-weight: 600; background: var(--code); }
+td.num { font-variant-numeric: tabular-nums; }
+audio { height: 30px; width: 260px; max-width: 100%; }
+.chips { display: flex; flex-wrap: wrap; gap: 3px; }
+.chip { background: var(--chip); border-radius: 4px; padding: 0 5px; font-size: 12px;
+  font-variant-numeric: tabular-nums; cursor: pointer; }
+a { color: var(--accent); }
+.wrap { overflow-x: auto; }
+#zoom { position: fixed; inset: 0; background: rgba(0,0,0,.85); display: none; z-index: 5;
+  align-items: center; justify-content: center; padding: 16px; }
+#zoom.on { display: flex; }
+#zoom canvas { max-width: 100%; max-height: 100%; aspect-ratio: 4 / 3;
+  image-rendering: pixelated; }
+.font canvas { image-rendering: pixelated; width: 100%; background: #000; border-radius: 4px; }
+tr.hit td { background: var(--chip); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Vertrix (1997): the data in BIN1.BIN</h1>
+  <p id="summary"></p>
+  <nav id="tabs"></nav>
+</header>
+<main>
+  <section id="pictures">
+    <div class="bar">
+      <label>Palette for every picture
+        <select id="allpal"><option value="">each picture's own</option></select></label>
+      <span>Shown at 4:3, as the VGA showed them. Hover a picture for the pixel's index and colour.
+        Click to enlarge.</span>
+    </div>
+    <div class="grid" id="picgrid"></div>
+  </section>
+  <section id="palettes"><div class="grid" id="palgrid"></div></section>
+  <section id="font">
+    <div class="bar"><label>Palette <select id="fontpal"></select></label>
+      <span>INSTVGA.CAR: the setup screen's font, 8x8 glyphs from character 32.</span></div>
+    <div class="card font"><canvas id="fontcanvas"></canvas></div>
+  </section>
+  <section id="sounds"><div class="wrap"><table id="soundtable"></table></div></section>
+  <section id="instruments">
+    <div class="bar"><span>BANK1.GSP: written at 8,363 Hz, the rate of C-2. Click a tune
+      number to see its instruments.</span></div>
+    <div class="wrap"><table id="insttable"></table></div>
+  </section>
+  <section id="music">
+    <div class="bar"><span>Each MUS*.VXL rebuilt as a module with its instruments from the
+      bank (open the .mod in any tracker). The MP3s are openmpt123 renders, mono, once through the song
+      (four minutes at most). Click an instrument number to find it.</span></div>
+    <div class="wrap"><table id="musictable"></table></div>
+  </section>
+  <section id="raw">
+    <div class="bar"><span>Every entry of BIN1.BIN, unpacked (VXL and MXB) into raw/.</span></div>
+    <div class="wrap"><table id="rawtable"></table></div>
+  </section>
+</main>
+<div id="zoom"><canvas></canvas></div>
+<script src="data.js"></script>
+<script>
+const V = VERTRIX;
+const $ = (id) => document.getElementById(id);
+const el = (tag, attrs = {}, ...kids) => {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'class') e.className = v; else if (k === 'text') e.textContent = v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v); else e.setAttribute(k, v);
+  }
+  for (const k of kids) e.append(k);
+  return e;
+};
+const hex = (n, w = 2) => n.toString(16).toUpperCase().padStart(w, '0');
+const kb = (n) => n >= 1024 ? (n / 1024).toFixed(1) + ' KB' : n + ' B';
+
+// --- tabs
+const TABS = [['pictures', 'Pictures', V.pictures.length], ['palettes', 'Palettes',
+  Object.keys(V.palettes).length], ['font', 'Font', V.font.glyphs.length],
+  ['sounds', 'Sound effects', V.sounds.length], ['instruments', 'Instruments',
+  V.instruments.length], ['music', 'Music', V.tunes.length], ['raw', 'Archive',
+  V.entries.length]];
+function show(id, keep) {
+  if (!keep) scrollTo(0, 0);
+  for (const [t] of TABS) {
+    $(t).classList.toggle('on', t === id);
+    $('tab-' + t).classList.toggle('on', t === id);
+  }
+  try { localStorage.setItem('vertrix-tab', id); } catch (e) {}
+}
+for (const [id, label, n] of TABS) {
+  $('tabs').append(el('button', {id: 'tab-' + id, text: `${label} (${n})`,
+    onclick: () => show(id)}));
+}
+$('summary').textContent = `${V.entries.length} entries: ${V.pictures.length} pictures, ` +
+  `${Object.keys(V.palettes).length} palettes, ${V.sounds.length} sound effects, ` +
+  `${V.instruments.length} instruments, ${V.tunes.length} tunes.`;
+
+// --- pictures
+async function inflate(b64) {
+  const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+  const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate'));
+  return new Uint8Array(await new Response(stream).arrayBuffer());
+}
+function paint(canvas, indices, w, h, pal) {
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  const img = ctx.createImageData(w, h);
+  for (let i = 0; i < w * h; i++) {
+    const c = indices[i] * 3;
+    img.data[i * 4] = pal[c]; img.data[i * 4 + 1] = pal[c + 1];
+    img.data[i * 4 + 2] = pal[c + 2]; img.data[i * 4 + 3] = 255;
+  }
+  ctx.putImageData(img, 0, 0);
+}
+const palNames = Object.keys(V.palettes);
+for (const n of palNames) $('allpal').append(el('option', {value: n, text: n}));
+const pictures = [];
+for (const p of V.pictures) {
+  const canvas = el('canvas', {class: 'pic'});
+  const select = el('select');
+  for (const n of palNames) select.append(el('option', {value: n, text: n}));
+  select.value = p.palette;
+  const info = el('div', {class: 'info', text: `${p.width}x${p.height}, shown with ${p.palette}`});
+  const card = el('div', {class: 'card'}, el('h3', {}, el('span', {text: p.name}),
+    el('small', {text: `${p.width}x${p.height}`})), canvas, el('div', {class: 'info'},
+    el('span', {text: 'Palette'}), select), info);
+  $('picgrid').append(card);
+  const item = {p, canvas, select, info, indices: null};
+  pictures.push(item);
+  select.addEventListener('change', () => draw(item));
+  canvas.addEventListener('mousemove', (e) => {
+    if (!item.indices) return;
+    const r = canvas.getBoundingClientRect();
+    const x = Math.floor((e.clientX - r.left) / r.width * p.width);
+    const y = Math.floor((e.clientY - r.top) / r.height * p.height);
+    const i = item.indices[y * p.width + x], pal = V.palettes[select.value];
+    const rgb = [pal[i * 3], pal[i * 3 + 1], pal[i * 3 + 2]];
+    info.replaceChildren(el('span', {class: 'swatch',
+      style: `background: rgb(${rgb})`}), el('span',
+      {text: `x ${x} y ${y}  index ${i} (${hex(i)}h)  rgb ${rgb.join(', ')}`}));
+  });
+  canvas.addEventListener('click', () => {
+    const z = $('zoom').querySelector('canvas');
+    paint(z, item.indices, p.width, p.height, V.palettes[select.value]);
+    z.style.width = Math.min(innerWidth - 32, (innerHeight - 32) * 4 / 3, 960) + 'px';
+    $('zoom').classList.add('on');
+  });
+}
+$('zoom').addEventListener('click', () => $('zoom').classList.remove('on'));
+function draw(item) {
+  if (item.indices) paint(item.canvas, item.indices, item.p.width, item.p.height,
+    V.palettes[item.select.value]);
+}
+$('allpal').addEventListener('change', (e) => {
+  for (const item of pictures) {
+    item.select.value = e.target.value || item.p.palette;
+    draw(item);
+  }
+});
+(async () => {
+  for (const item of pictures) {
+    item.indices = await inflate(item.p.indices);
+    draw(item);
+  }
+})();
+
+// --- palettes
+for (const [name, pal] of Object.entries(V.palettes)) {
+  const grid = el('div', {class: 'pal'});
+  const info = el('div', {class: 'info', text: '256 colours, 8 bits a component'});
+  for (let i = 0; i < 256; i++) {
+    const rgb = [pal[i * 3], pal[i * 3 + 1], pal[i * 3 + 2]];
+    grid.append(el('div', {style: `background: rgb(${rgb})`, title: `${i} (${hex(i)}h)`,
+      onmouseenter: () => info.textContent = `index ${i} (${hex(i)}h)  rgb ${rgb.join(', ')}`}));
+  }
+  $('palgrid').append(el('div', {class: 'card'}, el('h3', {text: name}), grid, info));
+}
+
+// --- font
+const GREY = Array.from({length: 768}, (_, i) => Math.min(255, Math.floor(i / 3) * 32));
+$('fontpal').append(el('option', {value: '', text: 'grey ramp (index x 32)'}));
+for (const n of palNames) $('fontpal').append(el('option', {value: n, text: n}));
+function drawFont() {
+  const pal = $('fontpal').value ? V.palettes[$('fontpal').value] : GREY;
+  const per = 32, w = V.font.width, h = V.font.height, gap = 2;
+  const rows = Math.ceil(V.font.glyphs.length / per);
+  const c = $('fontcanvas');
+  c.width = per * (w + gap); c.height = rows * (h + gap);
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#222'; ctx.fillRect(0, 0, c.width, c.height);
+  V.font.glyphs.forEach((g, k) => {
+    const px = Uint8Array.from(atob(g), (ch) => ch.charCodeAt(0));
+    const img = ctx.createImageData(w, h);
+    for (let i = 0; i < w * h; i++) {
+      const v = px[i] * 3;
+      img.data.set([pal[v], pal[v + 1], pal[v + 2], 255], i * 4);
+    }
+    ctx.putImageData(img, (k % per) * (w + gap), Math.floor(k / per) * (h + gap));
+  });
+}
+$('fontpal').addEventListener('change', drawFont);
+drawFont();
+
+// --- sound effects
+$('soundtable').append(el('tr', {}, ...['Entry', 'Rate', 'Bits', 'Length', 'Listen', 'File']
+  .map((t) => el('th', {text: t}))));
+for (const s of V.sounds) {
+  $('soundtable').append(el('tr', {}, el('td', {text: s.name}),
+    el('td', {class: 'num', text: s.rate + ' Hz'}), el('td', {class: 'num', text: s.bits}),
+    el('td', {class: 'num', text: s.seconds + ' s'}),
+    el('td', {}, el('audio', {controls: '', preload: 'none', src: s.file})),
+    el('td', {}, el('a', {href: s.file, text: s.file.split('/')[1]}))));
+}
+
+// --- instruments
+const usedBy = {};
+for (const t of V.tunes) for (const n of t.instruments) (usedBy[n] ||= new Set()).add(t.name);
+$('insttable').append(el('tr', {}, ...['#', 'Name', 'Bytes', 'Volume', 'Loop', 'Listen',
+  'Used by'].map((t) => el('th', {text: t}))));
+for (const s of V.instruments) {
+  const tunes = [...(usedBy[s.number] || [])].sort((a, b) => parseInt(a.slice(3)) -
+    parseInt(b.slice(3)));
+  $('insttable').append(el('tr', {id: 'inst-' + s.number}, el('td', {class: 'num',
+    text: s.number}), el('td', {text: s.name || '(none)'}),
+    el('td', {class: 'num', text: s.bytes}), el('td', {class: 'num', text: s.volume}),
+    el('td', {class: 'num', text: s.loop_length ? `${s.loop_start} + ${s.loop_length}` : '-'}),
+    el('td', {}, s.file ? el('audio', {controls: '', preload: 'none', src: s.file}) : ''),
+    el('td', {}, el('div', {class: 'chips'}, ...tunes.map((t) => el('span', {class: 'chip',
+      text: t.replace('.VXL', ''), onclick: () => jump('tune-' + t)}))))));
+}
+function jump(id) {
+  const row = $(id);
+  show(id.startsWith('tune') ? 'music' : 'instruments', true);
+  document.querySelectorAll('tr.hit').forEach((r) => r.classList.remove('hit'));
+  row.classList.add('hit');
+  row.scrollIntoView({block: 'center'});
+}
+
+// --- music
+$('musictable').append(el('tr', {}, ...['Tune', 'Channels', 'Song length', 'Patterns',
+  'Listen', 'Module', 'Instruments (bank numbers)'].map((t) => el('th', {text: t}))));
+for (const t of V.tunes) {
+  $('musictable').append(el('tr', {id: 'tune-' + t.name}, el('td', {text: t.name}),
+    el('td', {class: 'num', text: t.channels}), el('td', {class: 'num', text: t.length}),
+    el('td', {class: 'num', text: t.patterns}),
+    el('td', {}, t.mp3 ? el('audio', {controls: '', preload: 'none', src: t.mp3}) : ''),
+    el('td', {}, el('a', {href: t.mod, text: t.mod.split('/')[1]})),
+    el('td', {}, el('div', {class: 'chips'}, ...t.instruments.map((n) => el('span',
+      {class: 'chip', text: n, title: (V.instruments[n - 1] || {}).name || '',
+       onclick: () => jump('inst-' + n)}))))));
+}
+
+// --- archive
+$('rawtable').append(el('tr', {}, ...['Entry', 'Offset', 'Size in BIN1.BIN', 'Unpacked',
+  'File'].map((t) => el('th', {text: t}))));
+for (const e of V.entries) {
+  $('rawtable').append(el('tr', {}, el('td', {text: e.name}),
+    el('td', {class: 'num', text: hex(e.offset, 6) + 'h'}),
+    el('td', {class: 'num', text: kb(e.size)}), el('td', {class: 'num', text: kb(e.unpacked)}),
+    el('td', {}, el('a', {href: 'raw/' + e.name, text: 'raw/' + e.name}))));
+}
+
+let start = 'pictures';
+try { start = localStorage.getItem('vertrix-tab') || start; } catch (e) {}
+show(TABS.some(([t]) => t === start) ? start : 'pictures');
+</script>
+</body>
+</html>

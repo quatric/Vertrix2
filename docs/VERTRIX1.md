@@ -52,6 +52,40 @@ size and refuses to run when one differs or is missing. The build machine's log 
 `bin2.bin`, then `BIN1.BIN`, `VERTRIX.EXE`, `VXSCORES.EXE`, the text files and the batch files.
 The SD folder must therefore hold the whole release, unchanged.
 
+### The data formats
+
+`vertrix1/assets.py` unpacks every entry of `BIN1.BIN` and writes a page that shows them
+(`make -C vertrix1 assets`, then open `build/v1-assets/index.html` through a local web server).
+The formats, as `VERTRIX.EXE` reads them:
+
+| Entries | Format | Evidence |
+| --- | --- | --- |
+| 38 `.MXB`, the pictures | GIF image data without the GIF header: LZW minimum code size 8, sub-blocks, the 3Bh trailer. They unpack to 320x200 (64,000 bytes) or 320x400 (128,000) colour indices, row by row, shown on a 4:3 screen. | every entry ends at the trailer and unpacks to exactly one of the two sizes |
+| 17 `.PAL` | 256 RGB triples, 8 bits a component | 768 bytes each |
+| `.VXL` | `VXL_Decompresser_To_Memory_` (0x11c60): u32 unpacked size, u8 method (0 stored, 1 packed), then PCX run-length data: a byte of C0h or more repeats the next byte its low six bits times; any other byte is itself | every entry unpacks to exactly its size |
+| 28 `FX*.VXL` | WAV files, 8-bit mono, 11,111 Hz | their RIFF headers |
+| 49 `MUS*.VXL` | MODPLAY modules without samples (`charger_fichier_pattern_`, 0x3fccc): u16 channels (6 in every tune), u16 song length, 128 orders, then patterns of 64 rows x channels x 4 bytes. A cell is note, instrument, parameter, effect (`_MODPlayModule`'s row step, 0x4bc51). The note indexes the period table at 0x664bc: 1 is 3424, and each step is a semitone. | the loader sizes a pattern as channels x 256 bytes |
+| `BANK1.GSP`, the instruments | `charger_groupe_samples_` (0x3fb38): 171 (0xAB) samples, each a ProTracker sample header (22-byte name, big-endian word length, finetune, volume, loop start, loop length) followed by its signed 8-bit data. Samples are numbered from 1; a loop of two bytes or less is no loop. | the 171 samples end exactly at the file's end |
+| `INSTVGA.CAR` | the setup screen's font: 224 glyphs of u16 width, u16 height (8x8) and the pixels | 224 x 68 = 15,232 bytes |
+| `GAME.HUE` | read by `charger_hue_` (0x11f5c); not decoded | |
+
+The music:
+
+- **Instruments:** tune n (`MUSn.VXL`) takes instrument slot s (1–31) from bank sample
+  `table[n * 31 + s]`, where the table is at 0x65b48 (`gsptomod_fonc_`, 0x3fe68). 0 is none.
+  `MUS15.VXL` has no instruments and one empty pattern.
+- **Playback:** MODPLAY starts each tune at speed 6, tempo 125 (0x4b9ff) and loops it. Its
+  periods come from the Amiga clock (3,579,364 Hz, 0x4b984).
+- **Effects:**
+  - Row effects: 0, 3, 4, 7, 9, B, C, D and F (the table at 0x4bcfc).
+  - Tick effects: 0–7 and A (the table at 0x4bd3c).
+  - It ignores 8 and E.
+  - D always breaks to row 0 of the next order (0x4c001).
+  - F sets the speed below 20h and the tempo from 20h up (0x4c009).
+- **Conversion:** `assets.py` writes each tune as a ProTracker-style module (`6CHN`) with its
+  instruments from the bank. It drops the effects MODPLAY ignores and clears D's parameter, so
+  the module plays the way the game does.
+
 ## Recompilation
 
 `vertrix1/recomp.py` reuses `vertrix3/recomp.py`'s decoder, flag liveness, x87 model and C

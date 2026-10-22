@@ -44,6 +44,14 @@ $(BUILD)/host/rt/host_main.o: host/host_main.c $(HEADERS)
 $(BUILD)/v1_host: $(GEN_OBJECTS) $(HOST_RT_OBJECTS)
 	$(HOST_CC) $(GEN_OBJECTS) $(HOST_RT_OBJECTS) -lm -o $@
 
+# --- the game's data ---------------------------------------------------------------------------
+# make -C vertrix1 V1_EXE=/path/to/VERTRIX.EXE PYTHON=... assets  -> build/v1-assets/index.html
+V1_BIN1 ?= $(dir $(V1_EXE))BIN1.BIN
+
+.PHONY: assets
+assets:
+	$(PYTHON) -I assets.py $(V1_EXE) $(V1_BIN1) $(BUILD)-assets
+
 # --- the Wii ------------------------------------------------------------------------------------
 # make -C vertrix1 V1_EXE=/path/to/VERTRIX.EXE wii      -> build/v1/vertrix.dol
 # make -C vertrix1 V1_EXE=... wii-sync SYNC=/path/to/sd  -> apps/vertrix1/ (boot.dol, meta.xml, icon.png)
