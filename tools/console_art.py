@@ -5,8 +5,10 @@ the launcher's background (launcher/main.c: a blue to purple gradient):
     console_art.py LOGO KIND OUT
 
 KIND is switch-icon (256x256 JPEG), wiiu-icon (128x128), wiiu-tv (1280x720), wiiu-drc (854x480)
-or 3ds-icon (48x48). The logo is scaled by whole pixels where it is enlarged. Needs Pillow."""
+3ds-icon (48x48) or 3ds-banner (256x128, the CIA's HOME Menu banner; a .wav OUT is a short
+silence for its jingle). The logo is scaled by whole pixels where it is enlarged. Needs Pillow."""
 import sys
+import wave
 
 from PIL import Image
 
@@ -16,13 +18,25 @@ SIZES = {
     'wiiu-tv': ((1280, 720), 6),
     'wiiu-drc': ((854, 480), 4),
     '3ds-icon': ((48, 48), None),
+    '3ds-banner': ((256, 128), 1),
 }
 TOP, BOTTOM = (0x0b, 0x18, 0x30), (0x1c, 0x10, 0x30)
+
+
+def silence(path):
+    with wave.open(path, 'wb') as out:
+        out.setnchannels(1)
+        out.setsampwidth(2)
+        out.setframerate(32728)
+        out.writeframes(bytes(2 * 32728))
 
 
 def main():
     if len(sys.argv) != 4 or sys.argv[2] not in SIZES:
         sys.exit(__doc__)
+    if sys.argv[3].endswith('.wav'):
+        silence(sys.argv[3])
+        return
     logo = Image.open(sys.argv[1]).convert('RGB')
     (width, height), scale = SIZES[sys.argv[2]]
     art = Image.new('RGB', (width, height))

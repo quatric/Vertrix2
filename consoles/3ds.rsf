@@ -1,0 +1,78 @@
+# makerom's description of a Vertrix program as a 3DS title (tools/make_cia.sh sets the $(...)
+# names on makerom's command line). hb:ldr is Luma3DS's loader, which the menu starts a game
+# through (consoles/system_3ds.c); the games need the larger SystemMode for their guest memory.
+BasicInfo:
+  Title                   : $(APP_TITLE)
+  CompanyCode             : "00"
+  ProductCode             : $(APP_PRODUCT_CODE)
+  ContentType             : Application
+  Logo                    : Nintendo
+
+TitleInfo:
+  UniqueId                : $(APP_UNIQUE_ID)
+  Category                : Application
+
+Option:
+  UseOnSD                 : true
+  FreeProductCode         : true
+  EnableCrypt             : false
+  EnableCompress          : true
+
+AccessControlInfo:
+  CoreVersion             : 2
+  DescVersion             : 2
+  ReleaseKernelMajor      : "02"
+  ReleaseKernelMinor      : "33"
+  UseExtSaveData          : false
+  FileSystemAccess:
+    - DirectSdmcWrite
+  IdealProcessor          : 0
+  AffinityMask            : 1
+  Priority                : 16
+  MaxCpu                  : 0x9E
+  MemoryType              : Application
+  SystemMode              : $(APP_SYSTEM_MODE)
+  CpuSpeed                : 804MHz
+  EnableL2Cache           : true
+  HandleTableSize         : 0x200
+  DisableDebug            : true
+  EnableForceDebug        : false
+  CanWriteSharedPage      : true
+  CanUsePrivilegedPriority: false
+  CanAccessCore2          : true
+  ResourceLimitCategory   : Application
+  ServiceAccessControl:
+    - APT:U
+    - ac:u
+    - am:net
+    - boss:U
+    - cam:u
+    - cecd:u
+    - cfg:u
+    - dlp:FKCL
+    - dlp:SRVR
+    - dsp::DSP
+    - frd:u
+    - fs:USER
+    - gsp::Gpu
+    - hid:USER
+    - http:C
+    - mic:u
+    - ndm:u
+    - news:u
+    - nwm::EXT
+    - nwm::UDS
+    - ptm:u
+    - soc:U
+    - ssl:C
+    - y2r:u
+    - ir:rst
+    - ir:u
+    - ir:USER
+    - ldr:ro
+    - hb:ldr
+
+SystemControlInfo:
+  SaveDataSize: 0KB
+  RemasterVersion: 0
+  StackSize: 0x40000

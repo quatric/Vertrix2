@@ -3,7 +3,9 @@ name: Consoles
 # Builds the app for the Switch, the Wii U and the 3DS (consoles/README.md): the Wii's menu and
 # the four games recompiled from the originals, on the console shell. The games' executables are
 # downloaded from vertrixgame.com at build time (tools/fetch_mac_inputs.sh) and checked there;
-# none of them are in the repository, and the apps carry none of the games' files.
+# none of them are in the repository, and the apps carry none of the games' files. The Wii U's
+# menu is also published as a bare .wuhb, and the 3DS's five programs as .cia titles (packed on
+# the runner: makerom and bannertool need a newer glibc than the devkitARM image has).
 on:
   push:
     branches: [main]
@@ -19,6 +21,7 @@ on:
       - 'tools/console_art.py'
       - 'tools/fetch_mac_inputs.sh'
       - 'tools/unace_sfx.py'
+      - 'tools/make_cia.sh'
       - '.github/workflows/consoles.yml'
   pull_request:
   workflow_dispatch:
@@ -86,3 +89,59 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/v')
         with:
           files: build/vertrix-${{ matrix.console }}.zip
+      - name: Keep the Wii U menu's .wuhb and the 3DS programs' .elf files
+        run: |
+          mkdir -p extra
+          case "${{ matrix.console }}" in
+            wiiu) cp build/wiiu/launcher/vertrix.wuhb extra/ ;;
+            3ds)
+              cp build/3ds/launcher/vertrix.elf extra/vertrix.elf
+              cp build/v1/3ds/vertrix1.elf build/v12/3ds/vertrix2-v12.elf \
+                build/v20/3ds/vertrix2.elf build/v3/3ds/vertrix3.elf extra/ ;;
+          esac
+      - uses: actions/upload-artifact@v4
+        if: matrix.console != 'switch'
+        with:
+          name: vertrix-${{ matrix.console }}-extra
+          path: extra/
+      - uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/v') && matrix.console == 'wiiu'
+        with:
+          files: extra/vertrix.wuhb
+
+  cia:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: vertrix-3ds-extra
+          path: elfs
+      - name: Tools
+        run: |
+          pip install --quiet pillow
+          mkdir -p "$HOME/bin" /tmp/mr /tmp/bt
+          curl -sSLf -o /tmp/makerom.zip https://github.com/3DSGuy/Project_CTR/releases/download/makerom-v0.19.0/makerom-v0.19.0-ubuntu_x86_64.zip
+          curl -sSLf -o /tmp/bannertool.tar.gz https://github.com/carstene1ns/3ds-bannertool/releases/download/1.2.3/bannertool-1.2.3-linux.tar.gz
+          unzip -oq /tmp/makerom.zip -d /tmp/mr && install -m755 "$(find /tmp/mr -type f -name makerom | head -1)" "$HOME/bin/makerom"
+          tar -xzf /tmp/bannertool.tar.gz -C /tmp/bt && install -m755 "$(find /tmp/bt -type f -name bannertool | head -1)" "$HOME/bin/bannertool"
+          echo "$HOME/bin" >> "$GITHUB_PATH"
+      - name: Build the CIAs
+        run: |
+          mkdir -p build/3ds/launcher build/v1/3ds build/v12/3ds build/v20/3ds build/v3/3ds
+          cp elfs/vertrix.elf build/3ds/launcher/
+          cp elfs/vertrix1.elf build/v1/3ds/
+          cp elfs/vertrix2-v12.elf build/v12/3ds/
+          cp elfs/vertrix2.elf build/v20/3ds/
+          cp elfs/vertrix3.elf build/v3/3ds/
+          make 3ds-cia-zip
+          test "$(ls build/3ds/cia/*.cia | wc -l)" -eq 5
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vertrix-3ds-cia
+          path: build/3ds/cia/*.cia
+      - uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          files: build/vertrix-3ds-cia.zip

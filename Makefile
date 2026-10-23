@@ -415,3 +415,35 @@ $(1)-app-zip: $(1)-app
 endef
 
 $(foreach console,switch wiiu 3ds,$(eval $(call console_app,$(console))))
+
+# --- the 3DS as installable titles (.cia) -------------------------------------------------------
+#   make 3ds-app-zip ... ; make 3ds-cia             # build/3ds/cia/*.cia, build/vertrix-3ds-cia.zip
+# One title per program, packed from the .elf that 3ds-app built (tools/make_cia.sh; needs makerom
+# and bannertool on the PATH). A game started from the menu is still the .3dsx beside it.
+CIA_DIR := $(BUILD)/3ds/cia
+CIA_VERSION := $(shell sed -n 's:.*<version>\(.*\)</version>.*:\1:p' launcher/meta.xml)
+
+# cia(name, title, unique id, product code, system mode, elf)
+define cia
+CIA_ALL += $(CIA_DIR)/$(1).cia
+$(CIA_DIR)/$(1).cia:
+	@mkdir -p $(CIA_DIR)
+	PYTHON=$(PYTHON) tools/make_cia.sh $(6) $$@ "$(2)" $(3) $(4) $(5) $(CIA_VERSION)
+endef
+
+$(eval $(call cia,vertrix,Vertrix,0xf7a10,CTR-P-VRTX,64MB,$(BUILD)/3ds/launcher/vertrix.elf))
+$(eval $(call cia,vertrix1,Vertrix (1997),0xf7a11,CTR-P-VRT1,80MB,$(BUILD)/v1/3ds/vertrix1.elf))
+$(eval $(call cia,vertrix2-v12,Vertrix 2 v1.2,0xf7a12,CTR-P-VRT2,80MB,$(BUILD)/v12/3ds/vertrix2-v12.elf))
+$(eval $(call cia,vertrix2,Vertrix 2,0xf7a13,CTR-P-VRT3,80MB,$(BUILD)/v20/3ds/vertrix2.elf))
+$(eval $(call cia,vertrix3,Vertrix 3,0xf7a14,CTR-P-VRT4,80MB,$(BUILD)/v3/3ds/vertrix3.elf))
+
+.PHONY: 3ds-cia 3ds-cia-zip
+3ds-cia:
+	rm -f $(CIA_ALL)
+	$(MAKE) $(CIA_ALL) PYTHON=$(PYTHON)
+	@ls -l $(CIA_DIR)
+
+3ds-cia-zip: 3ds-cia
+	rm -f $(BUILD)/vertrix-3ds-cia.zip
+	cd $(CIA_DIR) && zip -qj ../../vertrix-3ds-cia.zip *.cia
+	@ls -l $(BUILD)/vertrix-3ds-cia.zip
