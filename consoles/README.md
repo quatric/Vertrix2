@@ -77,7 +77,13 @@ make switch-app V1_EXE=.../VERTRIX.EXE V12_EXE=.../Vertrix2.exe V3_EXE=.../Vertr
 make switch-app-zip                         # build/vertrix-switch.zip
 ```
 
-and `wiiu-app` / `wiiu-app-zip` and `3ds-app` / `3ds-app-zip` likewise. A single game:
+and `wiiu-app` / `wiiu-app-zip` and `3ds-app` / `3ds-app-zip` likewise. The Wii U menu is also a `.wuhb` on its own (`build/wiiu/launcher/vertrix.wuhb`), and the 3DS
+programs can be installed as titles with FBI: `make 3ds-cia-zip` packs `vertrix.cia` and one per game
+(`vertrix1.cia`, `vertrix2-v12.cia`, `vertrix2.cia`, `vertrix3.cia`) from the `.elf` files that
+`3ds-app` built, with `makerom` and `bannertool` on the PATH (`tools/make_cia.sh`, `3ds.rsf`).
+The games' files still go in `sdmc:/3ds/vertrix/`, and the menu still starts the `.3dsx` games.
+
+A single game:
 `make -C vertrix3 BUILD=../build/v20 GAME=vertrix2 V3_EXE=... wiiu`.
 
 For scripted runs in an emulator, `CONSOLE_DEBUG="-DSHELL_SCRIPT='\"4 b; 6 down\"'"` presses
