@@ -83,6 +83,10 @@ programs can be installed as titles with FBI: `make 3ds-cia-zip` packs `vertrix.
 `3ds-app` built, with `makerom` and `bannertool` on the PATH (`tools/make_cia.sh`, `3ds.rsf`).
 The games' files still go in `sdmc:/3ds/vertrix/`, and the menu still starts the `.3dsx` games.
 
+`make apps-zip` (same variables) builds every app one after another: the Wii, the Mac (on a Mac),
+the Switch, the Wii U and the 3DS, each as `build/vertrix-<app>.zip`; `APPS="wii 3ds"` picks some.
+CI builds them all in `.github/workflows/build.yml`.
+
 A single game:
 `make -C vertrix3 BUILD=../build/v20 GAME=vertrix2 V3_EXE=... wiiu`.
 

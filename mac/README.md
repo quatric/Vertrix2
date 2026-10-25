@@ -85,8 +85,9 @@ make mac-app-zip                               # build/vertrix-mac.zip
   `tools/unace_sfx.py`, with acefile, for the ACE self-extractors of Vertrix 2 v1.2 and v2.0)
   and checks the soundtrack against its MD5 list. v2.0's `Vertrix2.exe` is the same file as the
   repository's.
-- **CI:** `.github/workflows/mac.yml` does all of this on a macOS runner. It runs for changes that
-  touch the Mac build, uploads `vertrix-mac.zip`, and attaches it to the release for a `v*` tag.
+- **CI:** the `mac` job of `.github/workflows/build.yml` does all of this on a macOS runner,
+  beside the Wii and console builds. It uploads `vertrix-mac.zip`, and attaches it to the release
+  for a `v*` tag.
 - **One game:** `make -C vertrix1 V1_EXE=... mac` and `make -C vertrix3 ... mac` (with `BUILD`
   and `GAME` as for the Wii) build that game's app alone.
 

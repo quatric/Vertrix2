@@ -1,28 +1,36 @@
-name: Consoles
+name: Build
 
-# Builds the app for the Switch, the Wii U and the 3DS (consoles/README.md): the Wii's menu and
-# the four games recompiled from the originals, on the console shell. The games' executables are
-# downloaded from vertrixgame.com at build time (tools/fetch_mac_inputs.sh) and checked there;
-# none of them are in the repository, and the apps carry none of the games' files. The Wii U's
-# menu is also published as a bare .wuhb, and the 3DS's five programs as .cia titles (packed on
-# the runner: makerom and bannertool need a newer glibc than the devkitARM image has).
+# Builds every app: the Wii's Homebrew Channel app (launcher/README.md), Vertrix.app for the Mac
+# (mac/README.md), and the app for the Switch, the Wii U and the 3DS (consoles/README.md). Each is
+# the menu and the four games recompiled from the originals. The games' executables, and the Mac's
+# soundtrack, are downloaded from vertrixgame.com at build time (tools/fetch_mac_inputs.sh) and
+# checked there; none of them are in the repository, and the apps carry none of the games' files.
+# The Wii U's menu is also published as a bare .wuhb, and the 3DS's five programs as .cia titles
+# (packed on the runner: makerom and bannertool need a newer glibc than the devkitARM image has).
 on:
   push:
     branches: [main]
     tags: ['v*']
     paths:
       - 'consoles/**'
+      - 'mac/**'
       - 'shell/**'
       - 'launcher/**'
+      - 'source/**'
       - 'vertrix1/**'
       - 'vertrix3/**'
+      - 'libwiiinput'
+      - 'libwiiupdate'
+      - 'tools/dolxz'
       - 'Makefile'
       - 'wii-game/icon.png'
       - 'tools/console_art.py'
       - 'tools/fetch_mac_inputs.sh'
       - 'tools/unace_sfx.py'
       - 'tools/make_cia.sh'
-      - '.github/workflows/consoles.yml'
+      - 'tools/build_dolxz.sh'
+      - 'tools/dol_align.py'
+      - '.github/workflows/build.yml'
   pull_request:
   workflow_dispatch:
 
@@ -36,17 +44,25 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - console: wii
+            image: devkitpro/devkitppc:latest
+            packages: ppc-libmad
+            app: build/app/apps/vertrix
+            program: games/*.dol
           - console: switch
             image: devkitpro/devkita64:latest
             packages: switch-dev switch-sdl2 switch-libmad
+            app: build/switch/sd/switch/vertrix
             program: games/*.nro
           - console: wiiu
             image: devkitpro/devkitppc:latest
             packages: wiiu-dev wiiu-sdl2 ppc-libmad
+            app: build/wiiu/sd/wiiu/apps/vertrix
             program: games/*.rpx
           - console: 3ds
             image: devkitpro/devkitarm:latest
             packages: 3ds-dev 3ds-libmad
+            app: build/3ds/sd/3ds/vertrix
             program: games/*.3dsx
     container: ${{ matrix.image }}
     steps:
@@ -77,7 +93,7 @@ jobs:
             V20_EXE=inputs/vertrix2/app/Vertrix2.exe
       - name: Check
         run: |
-          app=$(dirname "$(find build/${{ matrix.console }}/sd -type d -name games)")
+          app=${{ matrix.app }}
           ls -l "$app" "$app"/games
           test "$(ls "$app"/${{ matrix.program }} | wc -l)" -eq 4
           unzip -l build/vertrix-${{ matrix.console }}.zip
@@ -90,6 +106,7 @@ jobs:
         with:
           files: build/vertrix-${{ matrix.console }}.zip
       - name: Keep the Wii U menu's .wuhb and the 3DS programs' .elf files
+        if: matrix.console == 'wiiu' || matrix.console == '3ds'
         run: |
           mkdir -p extra
           case "${{ matrix.console }}" in
@@ -100,7 +117,7 @@ jobs:
                 build/v20/3ds/vertrix2.elf build/v3/3ds/vertrix3.elf extra/ ;;
           esac
       - uses: actions/upload-artifact@v4
-        if: matrix.console != 'switch'
+        if: matrix.console == 'wiiu' || matrix.console == '3ds'
         with:
           name: vertrix-${{ matrix.console }}-extra
           path: extra/
@@ -108,6 +125,50 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/v') && matrix.console == 'wiiu'
         with:
           files: extra/vertrix.wuhb
+
+  mac:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Tools
+        run: |
+          brew install innoextract
+          python -m pip install --quiet 'capstone>=5,<6' pefile 'acefile==0.6.14'
+      - name: Cache the downloads
+        uses: actions/cache@v4
+        with:
+          path: inputs
+          key: vertrix-inputs-${{ hashFiles('tools/fetch_mac_inputs.sh', 'tools/unace_sfx.py') }}
+      - name: Download the games and the soundtrack
+        run: PYTHON=python tools/fetch_mac_inputs.sh inputs
+      - name: Build
+        run: |
+          make -j"$(sysctl -n hw.ncpu)" mac-app-zip PYTHON=python \
+            V1_EXE=inputs/vertrix1/VERTRIX.EXE \
+            V12_EXE=inputs/vertrix2-v12/app/Vertrix2.exe \
+            V3_EXE=inputs/vertrix3/app/Vertrix3.exe \
+            V20_EXE=inputs/vertrix2/app/Vertrix2.exe \
+            MAC_MUSIC="$PWD/inputs/music"
+      - name: Check
+        run: |
+          app=build/mac/Vertrix.app
+          codesign --verify --deep --strict "$app"
+          for f in "$app/Contents/MacOS/Vertrix" "$app"/Contents/Helpers/*.app/Contents/MacOS/*; do
+            lipo "$f" -verify_arch arm64 x86_64
+          done
+          test "$(ls "$app"/Contents/Helpers | wc -l)" -eq 4
+          test "$(ls "$app"/Contents/Resources/Music/*/*.mp3 | wc -l)" -eq 50
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vertrix-mac
+          path: build/vertrix-mac.zip
+      - uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          files: build/vertrix-mac.zip
 
   cia:
     needs: build

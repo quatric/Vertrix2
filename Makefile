@@ -447,3 +447,16 @@ $(eval $(call cia,vertrix3,Vertrix 3,0xf7a14,CTR-P-VRT4,80MB,$(BUILD)/v3/3ds/ver
 	rm -f $(BUILD)/vertrix-3ds-cia.zip
 	cd $(CIA_DIR) && zip -qj ../../vertrix-3ds-cia.zip *.cia
 	@ls -l $(BUILD)/vertrix-3ds-cia.zip
+
+# --- every app: the Wii, the Mac and the consoles ------------------------------------------------
+#   make apps-zip V1_EXE=.../VERTRIX.EXE V12_EXE=.../Vertrix2.exe V3_EXE=.../Vertrix3.exe \
+#                 [V20_EXE=Vertrix2.exe]                          # build/vertrix-<app>.zip each
+# The Mac only on a Mac. APPS="wii mac" picks some. One after another: they share the games' build.
+APPS ?= wii $(if $(filter Darwin,$(shell uname -s)),mac) switch wiiu 3ds
+
+.PHONY: apps apps-zip
+apps:
+	for a in $(APPS); do $(MAKE) $$a-app || exit 1; done
+
+apps-zip:
+	for a in $(APPS); do $(MAKE) $$a-app-zip || exit 1; done
