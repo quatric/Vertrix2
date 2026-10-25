@@ -100,9 +100,8 @@ on tags `v*`, on pull requests and by hand (`gh workflow run build.yml`).
   in turn (they share the games' generated C under `build/v*/`, so not in parallel). `APPS="wii
   mac"` picks some; the Mac is built only on a Mac. `make 3ds-cia-zip` needs makerom and
   bannertool on the `PATH`.
-- **Last results:** Build run 40151043826 on 967fd13 passed every job. 0daa553 has the same
-  tree (it reverts the DSi port, below); its run 40153078096 passed the Wii, the Wii U, the 3DS and
-  the Mac after a rerun, and the Switch failed only in Tools (so `cia` was skipped).
+- **Last results:** Build run 40154615166 on 64df9b3 passed every job (Wii, Switch, Wii U, 3DS,
+  Mac, CIA). The Switch needed one rerun: the package server refused it all five tries.
 - **Dropped:** a DSi port of Vertrix (1997) (ba79b08, reverted in 0daa553). The game needs
   about 7 MB with its code, more than a DS has; DSi mode was never tested. A Windows and Linux
   build on the SDL shell was started and abandoned; none of it is in the repository.
