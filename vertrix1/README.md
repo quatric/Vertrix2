@@ -4,7 +4,8 @@ The original DOS Vertrix runs here from its own executable. `recomp.py` turns ev
 `VERTRIX.EXE` (an LE program under PMODE/W, built with Watcom C) into C. A small runtime then
 supplies the PC the game ran on: DOS and the DPMI extender, the VGA, the timer, the keyboard and
 a Sound Blaster. The same generated code runs on the build machine (frames written as PPM, sound
-as WAV) and on the Wii (GX, ASND, Wii Remotes, SD card).
+as WAV), on the Wii (GX, ASND, Wii Remotes, SD card) and on the DSi (both screens, the ARM7's
+sound channels, the buttons, SD card; `nds/README.md`).
 
 Nothing of the game is in this repository. The build reads `VERTRIX.EXE`
 (sha256 `4785d692…1866f04`). The game reads its data from the original release, which must be
@@ -25,6 +26,8 @@ executable, the recompilation and every hardware access, with the evidence for e
 | `host/host_main.c` | the build-machine driver |
 | `wii/wii_main.c` | the Wii driver: video, SD, controllers, ASND |
 | `wii/vertrix.xml` | the Homebrew Channel's meta file |
+| `nds/nds_main.c` | the DSi driver: both screens, SD, buttons, the ARM7's sound channels |
+| `nds/README.md` | the DSi build: why DSi mode only, install, controls, status |
 | `mac/mac_main.c` | the Mac driver, on `mac/shell.h` |
 | `assets.py`, `assets.html` | unpacks `BIN1.BIN` (pictures, palettes, sounds, instruments, music as modules) and the page that shows it |
 
@@ -106,6 +109,16 @@ How the driver works:
 | HOME | back to the loader |
 
 The game saves its setup only when left through its own EXIT. HOME leaves it where it is.
+
+## The DSi
+
+```
+make -C vertrix1 V1_EXE=/path/to/VERTRIX.EXE PYTHON=/path/to/python nds   # build/v1/nds/vertrix1.nds
+```
+
+The game needs about 7 MB with its code, so the program runs in DSi mode only (on a DSi, or on a
+3DS in DSi mode). On a DS it says so. Copy the release into `vertrix1/` beside the `.nds`.
+`nds/README.md` has the controls, how the driver works and what has been tested so far.
 
 ### Debug builds
 
