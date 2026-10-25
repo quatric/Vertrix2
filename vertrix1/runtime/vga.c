@@ -494,13 +494,13 @@ void v1_vga_update(uint64_t now)
     }
 }
 
-/* The scan-out: the size of the picture and each pixel's colour index. */
-static int scan_out(uint8_t *indices, uint32_t *width, uint32_t *height)
+/* The scan-out's layout: what the CRT controller reads from the planes. */
+int v1_vga_scan(V1Scan *scan)
 {
     if (!(gc[6] & 1))
     {
-        *width = 0;
-        *height = 0;
+        scan->width = 0;
+        scan->height = 0;
         return 0;
     }
     const uint32_t columns = (crtc[0x01] + 1u) * 4u; /* 256 colours: 4 pixels a character */
@@ -512,35 +512,52 @@ static int scan_out(uint8_t *indices, uint32_t *width, uint32_t *height)
         per_row *= 2;
     }
     uint32_t rows = lines / per_row;
-    const uint32_t w = columns > 640 ? 640 : columns;
     if (rows > 480)
     {
         rows = 480;
     }
-    const uint32_t pitch = crtc[0x13] * 2u;
-    const int dword = (crtc[0x14] & 0x40) != 0;
-    const uint32_t start = shown_start;
-    for (uint32_t y = 0; y < rows; ++y)
+    for (unsigned p = 0; p < 4; ++p)
     {
-        const uint32_t row = start + y * pitch;
+        scan->planes[p] = planes[p];
+    }
+    scan->start = shown_start;
+    scan->pitch = crtc[0x13] * 2u;
+    scan->width = columns > 640 ? 640 : columns;
+    scan->height = rows;
+    scan->dword = (crtc[0x14] & 0x40) != 0;
+    return 1;
+}
+
+/* The scan-out: the size of the picture and each pixel's colour index. */
+static int scan_out(uint8_t *indices, uint32_t *width, uint32_t *height)
+{
+    V1Scan scan;
+    const int shown = v1_vga_scan(&scan);
+    *width = scan.width;
+    *height = scan.height;
+    if (!shown)
+    {
+        return 0;
+    }
+    const uint32_t w = scan.width;
+    for (uint32_t y = 0; y < scan.height; ++y)
+    {
+        const uint32_t row = scan.start + y * scan.pitch;
         uint8_t *out = indices + y * w;
         for (uint32_t x = 0; x < w; ++x)
         {
             uint32_t a = row + x / 4;
-            if (dword)
+            if (scan.dword)
             {
                 a <<= 2;
             }
             out[x] = planes[x & 3][a & 0xffffu];
         }
     }
-    *width = w;
-    *height = rows;
     return 1;
 }
 
-int v1_vga_render_indexed(uint8_t *indices, uint8_t palette[256][3], uint32_t *width,
-                          uint32_t *height)
+void v1_vga_palette(uint8_t palette[256][3])
 {
     for (unsigned i = 0; i < 256; ++i)
     {
@@ -550,6 +567,12 @@ int v1_vga_render_indexed(uint8_t *indices, uint8_t palette[256][3], uint32_t *w
             palette[i][j] = (uint8_t)(dac[k][j] << 2 | dac[k][j] >> 4);
         }
     }
+}
+
+int v1_vga_render_indexed(uint8_t *indices, uint8_t palette[256][3], uint32_t *width,
+                          uint32_t *height)
+{
+    v1_vga_palette(palette);
     return scan_out(indices, width, height);
 }
 
