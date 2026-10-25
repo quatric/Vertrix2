@@ -69,19 +69,6 @@ int v1_vga_render(uint32_t *pixels, uint32_t *width, uint32_t *height);
 int v1_vga_render_indexed(uint8_t *indices, uint8_t palette[256][3], uint32_t *width,
                           uint32_t *height);
 
-/* The scan-out's layout, for a driver that copies the planes itself (the DS): pixel x of row y
- * is planes[x & 3][a & 0xffff] with a = start + y * pitch + x / 4, shifted left by 2 when
- * dword is set. Returns 0 in a text mode. */
-typedef struct
-{
-    const uint8_t *planes[4];
-    uint32_t start, pitch, width, height;
-    int dword;
-} V1Scan;
-int v1_vga_scan(V1Scan *scan);
-/* The DAC's 256 colours as the picture shows them, through the mask (8 bits a component). */
-void v1_vga_palette(uint8_t palette[256][3]);
-
 /* Guest time in microseconds since the start. */
 uint64_t v1_clock(void);
 

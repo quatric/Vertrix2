@@ -119,61 +119,6 @@ wii-sync: wii
 	cp wii/vertrix.xml "$(SYNC)/apps/vertrix1/meta.xml"
 	cp ../wii-game/icon.png "$(SYNC)/apps/vertrix1/icon.png"
 
-# --- the DSi ------------------------------------------------------------------------------------
-# make -C vertrix1 V1_EXE=/path/to/VERTRIX.EXE PYTHON=... nds  -> build/v1/nds/vertrix1.nds
-# DSi mode only (nds/nds_main.c): the generated code and the image are built as *.twl.o, which
-# calico's linker script loads into the DSi's own area, so a DS loads just the driver and says
-# why it cannot run the game. Copy the release into vertrix1/ beside the .nds or sd:/vertrix1/.
-ARM_CC := $(DEVKITPRO)/devkitARM/bin/arm-none-eabi-gcc
-CALICO ?= $(DEVKITPRO)/calico
-LIBNDS ?= $(DEVKITPRO)/libnds
-NDS_ARCH := -march=armv5te -mtune=arm946e-s -mthumb
-# The DPMI memory the game can have: it asks for about 4 MB, and uses some 3 MB in a match.
-NDS_HEAP ?= 0x00600000u
-NDS_DEFINES := -D__NDS__ -DARM9 -DV3_PAGED -DV1_HEAP_SIZE=$(NDS_HEAP)
-NDS_CFLAGS := $(NDS_ARCH) $(NDS_DEFINES) -std=gnu11 -fno-strict-aliasing -ffunction-sections \
-	-fdata-sections -Wno-parentheses-equality -Wno-unused-label -Wno-unused-variable \
-	-Wno-unused-but-set-variable -Wno-unused-function -I$(CALICO)/include -I$(LIBNDS)/include
-NDS_INCLUDES := -Iruntime -I$(GEN) -I$(BUILD)/nds
-# The generated code at -Os: 1.5 MB instead of 2.2 MB at -O2, kinder to the ARM9's small caches.
-NDS_GEN_OBJECTS = $(patsubst $(GEN)/%.c,$(BUILD)/nds/%.twl.o,$(GEN_SOURCES))
-NDS_RT_OBJECTS := $(patsubst %.c,$(BUILD)/nds/rt/%.o,$(notdir $(RUNTIME) nds/nds_main.c))
-NDS_TITLE := Vertrix;Vertrix (1997), DSi;quatric/Vertrix2
-
-.PHONY: nds nds-link
-nds: $(GEN)/stamp
-	$(MAKE) nds-link
-
-nds-link: $(BUILD)/nds/vertrix1.nds
-
-$(BUILD)/nds/%.twl.o: $(GEN)/%.c $(GEN)/stamp runtime/cpu.h runtime/dos.h
-	@mkdir -p $(BUILD)/nds
-	$(ARM_CC) $(NDS_CFLAGS) -Os $(NDS_INCLUDES) -c $< -o $@
-
-$(BUILD)/nds/v1_image_bin.h $(BUILD)/nds/v1_image_bin.twl.o: $(GEN)/stamp
-	@mkdir -p $(BUILD)/nds
-	cp $(GEN)/v1_image.bin $(BUILD)/nds/v1_image.bin
-	cd $(BUILD)/nds && $(DEVKITPRO)/tools/bin/bin2s -H v1_image_bin.h v1_image.bin > v1_image_bin.s
-	$(ARM_CC) $(NDS_ARCH) -c $(BUILD)/nds/v1_image_bin.s -o $(BUILD)/nds/v1_image_bin.twl.o
-
-vpath %.c nds
-
-$(BUILD)/nds/rt/%.o: %.c $(HEADERS) $(BUILD)/nds/v1_image_bin.h
-	@mkdir -p $(BUILD)/nds/rt
-	$(ARM_CC) $(NDS_CFLAGS) -O2 -Wall $(NDS_INCLUDES) -c $< -o $@
-
-$(BUILD)/nds/vertrix1.elf: $(NDS_GEN_OBJECTS) $(NDS_RT_OBJECTS) $(BUILD)/nds/v1_image_bin.twl.o
-	$(ARM_CC) -specs=$(CALICO)/share/ds9.specs $(NDS_ARCH) $^ -L$(LIBNDS)/lib -L$(CALICO)/lib \
-		-lfat -lnds9 -lcalico_ds9 -lm -Wl,-Map,$(BUILD)/nds/vertrix1.map -o $@
-
-$(BUILD)/nds/icon.bmp: ../tools/console_art.py ../wii-game/icon.png
-	@mkdir -p $(BUILD)/nds
-	$(PYTHON) -I ../tools/console_art.py ../wii-game/icon.png nds-icon $@
-
-$(BUILD)/nds/vertrix1.nds: $(BUILD)/nds/vertrix1.elf $(BUILD)/nds/icon.bmp
-	$(DEVKITPRO)/tools/bin/ndstool -c $@ -9 $< -7 $(CALICO)/bin/ds7_maine.elf \
-		-b $(BUILD)/nds/icon.bmp "$(NDS_TITLE)"
-
 # --- the Mac ------------------------------------------------------------------------------------
 # make -C vertrix1 V1_EXE=/path/to/VERTRIX.EXE PYTHON=... mac  -> build/v1/mac/vertrix1.app
 # The app is one of the games of Vertrix.app (make mac-app at the top, mac/README.md); on its own
