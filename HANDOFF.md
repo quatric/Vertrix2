@@ -1,6 +1,6 @@
 # Vertrix on the Wii: handoff
 
-State 2026-10-20, branch `main`, remote `git@github.com:quatric/Vertrix2.git`. Commits are by
+State 2026-10-24 (the build setup; the rest is as of 2026-10-20), branch `main`, remote `git@github.com:quatric/Vertrix2.git`. Commits are by
 `quatric`. The rules are in `AGENTS.md`:
 
 - Preserve the original behaviour: no guessed rules, timings or AI.
@@ -62,6 +62,50 @@ the same generated C as its Wii build, with the Wii's paged guest memory and hea
   storage, so the current thread is kept in coreinit's thread-specific slot 0; and wut's timed
   condition wait leaves an alarm that crashed Cemu, so timed event waits poll every millisecond.
   `V3_HOST_THREAD_STACK` sets the host threads' stack (512 KB on the consoles).
+
+## The build setup: one workflow for every app
+
+`.github/workflows/build.yml` (the Build workflow) builds every app. It replaced `consoles.yml`,
+`wii.yml` and `mac.yml` in 967fd13. It runs on pushes to `main` that touch the paths it lists,
+on tags `v*`, on pull requests and by hand (`gh workflow run build.yml`).
+
+| Job | Runs on | Make target | Artifact |
+| --- | --- | --- | --- |
+| `build (wii)` | `devkitpro/devkitppc` | `wii-app-zip` | `vertrix-wii` (`build/app/apps/vertrix`, `games/*.dol`) |
+| `build (switch)` | `devkitpro/devkita64` | `switch-app-zip` | `vertrix-switch` (`games/*.nro`) |
+| `build (wiiu)` | `devkitpro/devkitppc` | `wiiu-app-zip` | `vertrix-wiiu`, and `vertrix-wiiu-extra` with the menu as a bare `vertrix.wuhb` |
+| `build (3ds)` | `devkitpro/devkitarm` | `3ds-app-zip` | `vertrix-3ds` (`games/*.3dsx`), and `vertrix-3ds-extra` with the five ELFs |
+| `mac` | `macos-14` | `mac-app-zip` | `vertrix-mac` (universal `Vertrix.app`, ad-hoc signed, with the soundtrack) |
+| `cia` | `ubuntu-latest`, after `build` | `3ds-cia-zip` | `vertrix-3ds-cia`: `vertrix.cia` (the menu), `vertrix1.cia`, `vertrix2-v12.cia`, `vertrix2.cia`, `vertrix3.cia` |
+
+- **Inputs:** every job downloads the games' executables (and, for the Mac, the soundtrack)
+  from vertrixgame.com with `tools/fetch_mac_inputs.sh`, cached by that script's hash. None of
+  them are in the repository or in the apps.
+- **Checks:** each console job checks the app has its four game programs. The Mac job checks
+  the signature, that every binary is arm64 and x86_64, the four helper apps and the 50 MP3s.
+  The `cia` job checks there are five CIAs.
+- **Releases:** a tag `v*` attaches every zip, `vertrix.wuhb` and `vertrix-3ds-cia.zip` to the
+  release.
+- **CIAs:** packed on the runner, not in the devkitARM image, because the prebuilt makerom
+  (0.19.0) and bannertool (1.2.3) need a newer glibc. `tools/make_cia.sh` and
+  `consoles/3ds.rsf` do the packing; the title IDs and memory modes (80 MB, 64 MB for the menu)
+  are in the `Makefile`. The games still run from `sdmc:/3ds/vertrix/` as `.3dsx`.
+  **Unchecked:** the CIAs have not been installed on a 3DS or in an emulator, and the `hb:ldr`
+  permission the installed menu needs to start a game through Luma3DS is a guess. If starting a
+  game from the installed menu fails, look there first.
+- **devkitPro's package server** sometimes answers 403, which fails the Tools step before the
+  build. The step tries the package sync five times, a little longer apart each time. A run that
+  fails only in Tools is that server; rerun it with `gh run rerun <id> --failed`.
+- **Locally:** `make apps-zip V1_EXE=… V12_EXE=… V3_EXE=… [V20_EXE=…]` builds every app's zip
+  in turn (they share the games' generated C under `build/v*/`, so not in parallel). `APPS="wii
+  mac"` picks some; the Mac is built only on a Mac. `make 3ds-cia-zip` needs makerom and
+  bannertool on the `PATH`.
+- **Last results:** Build run 40151043826 on 967fd13 passed every job. 0daa553 has the same
+  tree (it reverts the DSi port, below); its run 40153078096 passed the Wii, the Wii U, the 3DS and
+  the Mac after a rerun, and the Switch failed only in Tools (so `cia` was skipped).
+- **Dropped:** a DSi port of Vertrix (1997) (ba79b08, reverted in 0daa553). The game needs
+  about 7 MB with its code, more than a DS has; DSi mode was never tested. A Windows and Linux
+  build on the SDL shell was started and abandoned; none of it is in the repository.
 
 
 The builds read the originals from outside the repository. Do not add any more of them, and do
@@ -129,7 +173,8 @@ pgrep -fl "^/Applications/Dolphin.app"
    - reusing the Vertrix 2 ports only where the oracle agrees.
 5. **The consoles:** run the apps on a Switch, a Wii U and a 3DS, including starting a game
    from the menu and coming back. On the 3DS, check that the Windows games fit in an Old 3DS's
-   memory, and the speed of v1.2 and Vertrix (1997), which are slow in Azahar.
+   memory, and the speed of v1.2 and Vertrix (1997), which are slow in Azahar. Install the CIAs
+   and start a game from the installed menu (the `hb:ldr` permission above).
 6. **Vertrix (1997):**
    - save the setup when HOME is pressed. This needs a decision: today the game saves only
      through its own EXIT, which is the original's behaviour.
