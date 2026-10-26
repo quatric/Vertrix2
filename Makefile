@@ -248,7 +248,7 @@ $(BUILD)/host_game: tools/host_game.c tools/jpeg_decode.h $(filter-out source/wi
 #   make wii-app-sync SYNC=/path/to/sd     # copies build/app/apps/vertrix/ there
 #   make wii-app-zip                       # build/vertrix-wii.zip, for the releases page
 #
-# The games' original files and the music are not part of the build; copy them to the card.
+# The zip carries the games' data files; the music is not part of the build.
 # Debug launchers for Dolphin: LAUNCHER_DEBUG='-DLAUNCHER_SCRIPT="\"1 shot; 2 down; 3 a\""'
 # (and -DLAUNCHER_BACK_SCRIPT for the start after a game); rebuild with make -B.
 PYTHON ?= python3
@@ -311,9 +311,18 @@ wii-app-sync: wii-app
 	cp $(APP_DIR)/boot.dol $(APP_DIR)/meta.xml $(APP_DIR)/icon.png $(APP_DIR)/README.md "$(SYNC)/apps/vertrix/"
 	cp $(APP_DIR)/games/*.dol "$(SYNC)/apps/vertrix/games/"
 
-wii-app-zip: wii-app
+# The games' own files (Vertrix2.vf and the rest), staged from beside the executables.
+GAME_DATA := $(BUILD)/game-data
+.PHONY: game-data
+game-data:
+	tools/stage_game_data.sh $(GAME_DATA) $(V1_EXE) $(V12_EXE) $(V20_EXE) $(V3_EXE)
+
+wii-app-zip: wii-app game-data
 	rm -f $(BUILD)/vertrix-wii.zip
-	cd $(BUILD)/app && zip -qr ../vertrix-wii.zip apps/vertrix
+	rm -rf $(BUILD)/app-zip && mkdir -p $(BUILD)/app-zip/apps
+	cp -R $(APP_DIR) $(BUILD)/app-zip/apps/vertrix
+	cp -R $(GAME_DATA)/. $(BUILD)/app-zip/apps/vertrix/
+	cd $(BUILD)/app-zip && zip -qr ../vertrix-wii.zip apps/vertrix
 	@ls -l $(BUILD)/vertrix-wii.zip
 
 # --- the Mac: one app for the four games ----------------------------------------------------------
@@ -321,9 +330,9 @@ wii-app-zip: wii-app
 #                [V20_EXE=Vertrix2.exe] [MAC_MUSIC=folder of albums]     # build/mac/Vertrix.app
 #   make mac-app-zip                                                       # build/vertrix-mac.zip
 # Vertrix.app (mac/launcher.m) lists the games and plays the soundtrack; each game is its own app
-# in Contents/Helpers (vertrix1/Makefile, vertrix3/Makefile: mac). None of the games' files are in
-# it: each game asks for them the first time and keeps them in ~/Library/Application Support/
-# Vertrix (mac/README.md). MAC_MUSIC copies albums (folders of MP3 files) into the app.
+# in Contents/Helpers (vertrix1/Makefile, vertrix3/Makefile: mac). The games' files are in
+# Contents/Resources/Data; each game copies its own into ~/Library/Application Support/Vertrix
+# the first time (mac/README.md). MAC_MUSIC copies albums (folders of MP3 files) into the app.
 MAC_ARCHS ?= arm64 x86_64
 MAC_MIN ?= 11.0
 MAC_APP := $(BUILD)/mac/Vertrix.app
@@ -349,7 +358,7 @@ $(BUILD)/mac/launcher/AppIcon.icns: mac/icon.py $(V3_EXE)
 	@mkdir -p $(dir $@)
 	$(PYTHON) -I mac/icon.py $(V3_EXE) $@
 
-mac-app: mac-app-games $(BUILD)/mac/launcher/Vertrix $(BUILD)/mac/launcher/AppIcon.icns
+mac-app: mac-app-games game-data $(BUILD)/mac/launcher/Vertrix $(BUILD)/mac/launcher/AppIcon.icns
 	rm -rf $(MAC_APP)
 	mkdir -p $(MAC_APP)/Contents/MacOS $(MAC_APP)/Contents/Resources $(MAC_APP)/Contents/Helpers
 	sed -e 's|@NAME@|Vertrix|g' -e 's|@EXECUTABLE@|Vertrix|g' \
@@ -360,6 +369,8 @@ mac-app: mac-app-games $(BUILD)/mac/launcher/Vertrix $(BUILD)/mac/launcher/AppIc
 	cp wii-game/icon.png $(MAC_APP)/Contents/Resources/Logo.png
 	cp mac/README.md $(MAC_APP)/Contents/Resources/README.md
 	cp -R $(MAC_HELPERS) $(MAC_APP)/Contents/Helpers/
+	mkdir -p $(MAC_APP)/Contents/Resources/Data
+	cp -R $(GAME_DATA)/. $(MAC_APP)/Contents/Resources/Data/
 	$(if $(MAC_MUSIC),cp -R "$(MAC_MUSIC)" $(MAC_APP)/Contents/Resources/Music)
 	for a in $(MAC_APP)/Contents/Helpers/*.app; do codesign --force --sign - "$$a"; done
 	codesign --force --sign - $(MAC_APP)
@@ -376,7 +387,7 @@ mac-app-zip: mac-app
 #   make switch-app-zip                             # build/vertrix-switch.zip
 # and wiiu-app (build/wiiu/sd/wiiu/apps/vertrix/), 3ds-app (build/3ds/sd/3ds/vertrix/) likewise.
 # The launcher is the Wii's (consoles/launcher.mk); each game is built by its own Makefile on the
-# console shell (consoles/rules.mk). None of the games' files are in the zip (consoles/README.md).
+# console shell (consoles/rules.mk). The games' data files are in the zip.
 CONSOLE_SD_switch := switch/vertrix
 CONSOLE_SD_wiiu := wiiu/apps/vertrix
 CONSOLE_SD_3ds := 3ds/vertrix
@@ -398,13 +409,14 @@ $(1)-app-games:
 $(1)-launcher: $$(BUILD)/launcher/logo.h
 	$$(MAKE) -f consoles/launcher.mk CONSOLE=$(1) BUILD=$$(BUILD) PYTHON=$$(PYTHON) console-program
 
-$(1)-app: $(1)-app-games $(1)-launcher
+$(1)-app: $(1)-app-games $(1)-launcher game-data
 	rm -rf $$(BUILD)/$(1)/sd
 	mkdir -p $$(BUILD)/$(1)/sd/$$(CONSOLE_SD_$(1))/games
 	cp $$(BUILD)/$(1)/launcher/vertrix$$(CONSOLE_LAUNCHER_$(1)) $$(BUILD)/$(1)/sd/$$(CONSOLE_SD_$(1))/
 	cp $$(BUILD)/v1/$(1)/vertrix1$$(CONSOLE_GAME_$(1)) $$(BUILD)/v12/$(1)/vertrix2-v12$$(CONSOLE_GAME_$(1)) \
 		$$(BUILD)/v20/$(1)/vertrix2$$(CONSOLE_GAME_$(1)) $$(BUILD)/v3/$(1)/vertrix3$$(CONSOLE_GAME_$(1)) \
 		$$(BUILD)/$(1)/sd/$$(CONSOLE_SD_$(1))/games/
+	cp -R $$(GAME_DATA)/. $$(BUILD)/$(1)/sd/$$(CONSOLE_SD_$(1))/
 	cp consoles/README.md $$(BUILD)/$(1)/sd/$$(CONSOLE_SD_$(1))/README.md
 	@ls -l $$(BUILD)/$(1)/sd/$$(CONSOLE_SD_$(1)) $$(BUILD)/$(1)/sd/$$(CONSOLE_SD_$(1))/games
 
@@ -418,7 +430,8 @@ $(foreach console,switch wiiu 3ds,$(eval $(call console_app,$(console))))
 
 # --- the 3DS as installable titles (.cia) -------------------------------------------------------
 #   make 3ds-app-zip ... ; make 3ds-cia             # build/3ds/cia/*.cia, build/vertrix-3ds-cia.zip
-# One title per program, packed from the .elf that 3ds-app built (tools/make_cia.sh; needs makerom
+# Each game's title carries its data files in its RomFS (the game copies them to the card the first
+# time it starts). One title per program, packed from the .elf that 3ds-app built (tools/make_cia.sh; needs makerom
 # and bannertool on the PATH). A game started from the menu is still the .3dsx beside it.
 CIA_DIR := $(BUILD)/3ds/cia
 CIA_VERSION := $(shell sed -n 's:.*<version>\(.*\)</version>.*:\1:p' launcher/meta.xml)
@@ -426,16 +439,16 @@ CIA_VERSION := $(shell sed -n 's:.*<version>\(.*\)</version>.*:\1:p' launcher/me
 # cia(name, title, unique id, product code, system mode, elf)
 define cia
 CIA_ALL += $(CIA_DIR)/$(1).cia
-$(CIA_DIR)/$(1).cia:
+$(CIA_DIR)/$(1).cia: $(if $(7),game-data)
 	@mkdir -p $(CIA_DIR)
-	PYTHON=$(PYTHON) tools/make_cia.sh $(6) $$@ "$(2)" $(3) $(4) $(5) $(CIA_VERSION)
+	PYTHON=$(PYTHON) tools/make_cia.sh $(6) $$@ "$(2)" $(3) $(4) $(5) $(CIA_VERSION) $(7)
 endef
 
 $(eval $(call cia,vertrix,Vertrix,0xf7a10,CTR-P-VRTX,64MB,$(BUILD)/3ds/launcher/vertrix.elf))
-$(eval $(call cia,vertrix1,Vertrix (1997),0xf7a11,CTR-P-VRT1,80MB,$(BUILD)/v1/3ds/vertrix1.elf))
-$(eval $(call cia,vertrix2-v12,Vertrix 2 v1.2,0xf7a12,CTR-P-VRT2,80MB,$(BUILD)/v12/3ds/vertrix2-v12.elf))
-$(eval $(call cia,vertrix2,Vertrix 2,0xf7a13,CTR-P-VRT3,80MB,$(BUILD)/v20/3ds/vertrix2.elf))
-$(eval $(call cia,vertrix3,Vertrix 3,0xf7a14,CTR-P-VRT4,80MB,$(BUILD)/v3/3ds/vertrix3.elf))
+$(eval $(call cia,vertrix1,Vertrix (1997),0xf7a11,CTR-P-VRT1,80MB,$(BUILD)/v1/3ds/vertrix1.elf,$(GAME_DATA)/vertrix1))
+$(eval $(call cia,vertrix2-v12,Vertrix 2 v1.2,0xf7a12,CTR-P-VRT2,80MB,$(BUILD)/v12/3ds/vertrix2-v12.elf,$(GAME_DATA)/vertrix2-v12))
+$(eval $(call cia,vertrix2,Vertrix 2,0xf7a13,CTR-P-VRT3,80MB,$(BUILD)/v20/3ds/vertrix2.elf,$(GAME_DATA)/vertrix2))
+$(eval $(call cia,vertrix3,Vertrix 3,0xf7a14,CTR-P-VRT4,80MB,$(BUILD)/v3/3ds/vertrix3.elf,$(GAME_DATA)/vertrix3))
 
 .PHONY: 3ds-cia 3ds-cia-zip
 3ds-cia:

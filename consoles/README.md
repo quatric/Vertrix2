@@ -12,7 +12,7 @@ the Homebrew Launcher or Aroma's menu (Wii U), or the Homebrew Launcher (3DS).
 | Vertrix 2 | 2003 (v2.0) | `vertrix2/`: `Vertrix2.vf` from v2.0 |
 | Vertrix 3 | 2009 | `vertrix3/`: `VERTRIX3.VF` |
 
-None of the games' files come with this app. Copy them from your own copies of the games.
+The release zip carries these files beside the programs, and the 3DS `.cia` titles carry theirs in their RomFS (copied to the card the first time a game starts).
 
 ## The SD card
 

@@ -29,6 +29,10 @@ const char *console_app_folder(void);
 /* The launcher's program. */
 const char *console_launcher_path(void);
 
+/* Copies the files the program carries (the 3DS title's RomFS) into `folder`, which the game
+ * writes its settings to. Nonzero when it copied any; 0 where a program carries none. */
+int console_import_bundled(const char *folder);
+
 uint64_t console_microseconds(void);
 
 /* The controllers: the first two players' SHELL_PAD_* buttons (the stick counts as the D-pad;

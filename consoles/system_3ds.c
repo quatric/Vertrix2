@@ -3,6 +3,7 @@
  * takes the program and its arguments, and the app relaunches itself into it, as the Homebrew
  * Launcher starts a program. */
 #include <3ds.h>
+#include <dirent.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -29,6 +30,50 @@ const char *console_app_folder(void)
 const char *console_launcher_path(void)
 {
     return "sdmc:/3ds/vertrix/vertrix.3dsx";
+}
+
+/* A title's RomFS holds its game's files at the root (tools/make_cia.sh). */
+int console_import_bundled(const char *folder)
+{
+    if (R_FAILED(romfsInit()))
+    {
+        return 0;
+    }
+    int copied = 0;
+    DIR *dir = opendir("romfs:/");
+    struct dirent *entry;
+    while (dir && (entry = readdir(dir)) != NULL)
+    {
+        char from[300];
+        char to[300];
+        snprintf(from, sizeof from, "romfs:/%s", entry->d_name);
+        snprintf(to, sizeof to, "%s/%s", folder, entry->d_name);
+        FILE *in = fopen(from, "rb");
+        FILE *out = in ? fopen(to, "wb") : NULL;
+        if (out)
+        {
+            static char buffer[64 * 1024];
+            size_t n;
+            while ((n = fread(buffer, 1, sizeof buffer, in)) > 0 && fwrite(buffer, 1, n, out) == n)
+            {
+            }
+            copied = 1;
+        }
+        if (out)
+        {
+            fclose(out);
+        }
+        if (in)
+        {
+            fclose(in);
+        }
+    }
+    if (dir)
+    {
+        closedir(dir);
+    }
+    romfsExit();
+    return copied;
 }
 
 uint64_t console_microseconds(void)

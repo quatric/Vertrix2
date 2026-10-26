@@ -44,6 +44,12 @@ static int has_file(const char *directory, const char *name)
     return found;
 }
 
+int __attribute__((weak)) console_import_bundled(const char *folder)
+{
+    (void)folder;
+    return 0;
+}
+
 const char *common_start(int argc, char **argv, const ShellOptions *options)
 {
     common_options = *options;
@@ -64,6 +70,10 @@ const char *common_start(int argc, char **argv, const ShellOptions *options)
         snprintf(folder, sizeof folder, "%s/%s", app, options->game->folder);
     }
     mkdir(folder, 0777);
+    if (!has_file(folder, options->game->needs))
+    {
+        console_import_bundled(folder);
+    }
     if (!has_file(folder, options->game->needs))
     {
         char text[512];

@@ -35,7 +35,7 @@ generated C as its Wii build, universal (arm64 and x86_64), on the shell in `mac
   - The launcher: it starts each game, hides, and comes back when the game ends. It plays the
     soundtrack.
 - **Not checked:** an Intel Mac; game controllers (the mapping is in each driver).
-- **The games' files:** each game asks for them at its first start and keeps them in
+- **The games' files:** the app carries them in `Contents/Resources/Data`; each game copies its own at its first start and keeps them in
   `~/Library/Application Support/Vertrix/<folder>/` (`VERTRIX_HOME` overrides).
 - **The soundtrack:** albums go in `MAC_MUSIC=`, which is not in the repository. See
   `mac/README.md` for where to get them.
@@ -108,7 +108,9 @@ on tags `v*`, on pull requests and by hand (`gh workflow run build.yml`).
 
 
 The builds read the originals from outside the repository. Do not add any more of them, and do
-not commit the files the unpacked archives contain.
+not commit the files the unpacked archives contain. The release zips (and, on the 3DS, the CIAs'
+RomFS) carry each game's data files, staged by `tools/stage_game_data.sh` from beside the
+executables.
 
 | Game | Executable (build input) | Data on the SD card |
 | --- | --- | --- |
