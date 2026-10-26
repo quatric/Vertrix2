@@ -81,7 +81,7 @@ and `wiiu-app` / `wiiu-app-zip` and `3ds-app` / `3ds-app-zip` likewise. The Wii 
 programs can be installed as titles with FBI: `make 3ds-cia-zip` packs `vertrix.cia` and one per game
 (`vertrix1.cia`, `vertrix2-v12.cia`, `vertrix2.cia`, `vertrix3.cia`) from the `.elf` files that
 `3ds-app` built, with `makerom` and `bannertool` on the PATH (`tools/make_cia.sh`, `3ds.rsf`).
-The games' files still go in `sdmc:/3ds/vertrix/`, and the menu still starts the `.3dsx` games.
+On the 3DS the release is these titles only (no `.3dsx`): install them with FBI. The menu starts the installed game titles, which carry their files and copy them to `sdmc:/3ds/vertrix/` on their first start. Where no titles are installed (an emulator, the Homebrew Launcher), the menu starts the `.3dsx` files beside it.
 
 `make apps-zip` (same variables) builds every app one after another: the Wii, the Mac (on a Mac),
 the Switch, the Wii U and the 3DS, each as `build/vertrix-<app>.zip`; `APPS="wii 3ds"` picks some.

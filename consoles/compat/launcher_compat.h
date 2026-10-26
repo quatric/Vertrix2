@@ -39,6 +39,7 @@ typedef uint8_t u8;
 
 #define LAUNCHER_HOME console_app_folder()
 #define LAUNCHER_PROGRAM_EXTENSION console_program_extension
+#define LAUNCHER_PROGRAM_STATE(path) console_program_state(path)
 #if defined(__3DS__)
 #define LAUNCHER_HINT_EXIT "START: Exit"
 #else

@@ -44,6 +44,12 @@ static int has_file(const char *directory, const char *name)
     return found;
 }
 
+int __attribute__((weak)) console_program_state(const char *path)
+{
+    struct stat info;
+    return stat(path, &info) == 0;
+}
+
 int __attribute__((weak)) console_import_bundled(const char *folder)
 {
     (void)folder;

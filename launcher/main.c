@@ -112,6 +112,11 @@ static int exists(const char *path)
     return stat(path, &info) == 0;
 }
 
+/* 0 not there, 1 there, 2 there with its game's files (3DS titles); the consoles replace it. */
+#ifndef LAUNCHER_PROGRAM_STATE
+#define LAUNCHER_PROGRAM_STATE(path) exists(path)
+#endif
+
 static void check_games(void)
 {
     char path[256];
@@ -119,9 +124,10 @@ static void check_games(void)
     {
         snprintf(path, sizeof path, "%s/games/%s%s", app_folder, games[i].dol,
                  LAUNCHER_PROGRAM_EXTENSION);
-        have_dol[i] = exists(path);
+        const int program = LAUNCHER_PROGRAM_STATE(path);
+        have_dol[i] = program != 0;
         snprintf(path, sizeof path, "%s/%s/%s", app_folder, games[i].folder, games[i].needs);
-        have_data[i] = exists(path);
+        have_data[i] = program == 2 || exists(path);
     }
 }
 

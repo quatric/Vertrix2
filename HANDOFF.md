@@ -74,7 +74,7 @@ on tags `v*`, on pull requests and by hand (`gh workflow run build.yml`).
 | `build (wii)` | `devkitpro/devkitppc` | `wii-app-zip` | `vertrix-wii` (`build/app/apps/vertrix`, `games/*.dol`) |
 | `build (switch)` | `devkitpro/devkita64` | `switch-app-zip` | `vertrix-switch` (`games/*.nro`) |
 | `build (wiiu)` | `devkitpro/devkitppc` | `wiiu-app-zip` | `vertrix-wiiu`, and `vertrix-wiiu-extra` with the menu as a bare `vertrix.wuhb` |
-| `build (3ds)` | `devkitpro/devkitarm` | `3ds-app-zip` | `vertrix-3ds` (`games/*.3dsx`), and `vertrix-3ds-extra` with the five ELFs |
+| `build (3ds)` | `devkitpro/devkitarm` | `3ds-app-zip` | `vertrix-3ds-extra` with the five ELFs, the staged game files and the music (the `.3dsx` zip is no longer published) |
 | `mac` | `macos-14` | `mac-app-zip` | `vertrix-mac` (universal `Vertrix.app`, ad-hoc signed, with the soundtrack) |
 | `cia` | `ubuntu-latest`, after `build` | `3ds-cia-zip` | `vertrix-3ds-cia`: `vertrix.cia` (the menu), `vertrix1.cia`, `vertrix2-v12.cia`, `vertrix2.cia`, `vertrix3.cia` |
 
@@ -89,7 +89,7 @@ on tags `v*`, on pull requests and by hand (`gh workflow run build.yml`).
 - **CIAs:** packed on the runner, not in the devkitARM image, because the prebuilt makerom
   (0.19.0) and bannertool (1.2.3) need a newer glibc. `tools/make_cia.sh` and
   `consoles/3ds.rsf` do the packing; the title IDs and memory modes (80 MB, 64 MB for the menu)
-  are in the `Makefile`. The games still run from `sdmc:/3ds/vertrix/` as `.3dsx`.
+  are in the `Makefile`. The 3DS ships only as these CIAs: the menu starts an installed game title by its ID (f7a10 to f7a14) with `aptSetChainloader`, and a game returns the same way. Run from the Homebrew Launcher or an emulator (no titles installed), the menu falls back to the `.3dsx` files beside it. Untested on a 3DS.
   **Unchecked:** the CIAs have not been installed on a 3DS or in an emulator, and the `hb:ldr`
   permission the installed menu needs to start a game through Luma3DS is a guess. If starting a
   game from the installed menu fails, look there first.

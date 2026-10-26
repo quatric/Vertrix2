@@ -134,12 +134,68 @@ void console_read_input(uint32_t pads[2], int *touched, int *touch_x, int *touch
     *touch_y = touch.py;
 }
 
+/* The programs are installed titles (the .cia files): unique IDs f7a10 to f7a14, as the Makefile
+ * packs them. Run from the Homebrew Launcher or an emulator, there are none and the .3dsx files
+ * beside the menu are started instead. */
+static const struct
+{
+    const char *name;
+    u64 id;
+} titles[] = {{"vertrix", 0x000400000f7a1000ull},
+              {"vertrix1", 0x000400000f7a1100ull},
+              {"vertrix2-v12", 0x000400000f7a1200ull},
+              {"vertrix2", 0x000400000f7a1300ull},
+              {"vertrix3", 0x000400000f7a1400ull}};
+
+static u64 installed_title(const char *path)
+{
+    static int am = -1;
+    if (am < 0)
+    {
+        am = R_SUCCEEDED(amInit());
+    }
+    const char *name = strrchr(path, '/');
+    name = name ? name + 1 : path;
+    for (unsigned i = 0; am && i < sizeof titles / sizeof titles[0]; ++i)
+    {
+        const size_t length = strlen(titles[i].name);
+        u64 id = titles[i].id;
+        AM_TitleEntry entry;
+        if (strncmp(name, titles[i].name, length) == 0 && strcmp(name + length, ".3dsx") == 0 &&
+            R_SUCCEEDED(AM_GetTitleInfo(MEDIATYPE_SD, 1, &id, &entry)))
+        {
+            return id;
+        }
+    }
+    return 0;
+}
+
+int console_program_state(const char *path)
+{
+    if (installed_title(path))
+    {
+        return 2;
+    }
+    FILE *file = fopen(path, "rb");
+    if (file)
+    {
+        fclose(file);
+    }
+    return file != NULL;
+}
+
+static u64 next_title;
 static char next_program[256];
 /* hbmenu's argument block: the count, then the arguments one after another. */
 static u32 next_arguments[0x400 / 4];
 
 int console_chain(const char *path, const char *argument)
 {
+    next_title = installed_title(path);
+    if (next_title)
+    {
+        return 1;
+    }
     if (strncmp(path, "sdmc:/", 6) != 0)
     {
         return 0;
@@ -175,7 +231,16 @@ static Result hbldr_request(Handle service, u32 command, const void *data, u32 s
 
 void console_finish(int closing)
 {
-    if (closing || !next_program[0])
+    if (closing)
+    {
+        return;
+    }
+    if (next_title)
+    {
+        aptSetChainloader(next_title, MEDIATYPE_SD);
+        return;
+    }
+    if (!next_program[0])
     {
         return;
     }

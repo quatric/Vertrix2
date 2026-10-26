@@ -29,6 +29,10 @@ const char *console_app_folder(void);
 /* The launcher's program. */
 const char *console_launcher_path(void);
 
+/* Whether `path`, a program the launcher lists, can be started: 0 no, 1 yes, 2 yes and it carries
+ * its game's files (an installed 3DS title). */
+int console_program_state(const char *path);
+
 /* Copies the files the program carries (the 3DS title's RomFS) into `folder`, which the game
  * writes its settings to. Nonzero when it copied any; 0 where a program carries none. */
 int console_import_bundled(const char *folder);
