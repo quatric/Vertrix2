@@ -313,6 +313,10 @@ wii-app-sync: wii-app
 
 # The games' own files (Vertrix2.vf and the rest), staged from beside the executables.
 GAME_DATA := $(BUILD)/game-data
+# MUSIC= a folder of albums (folders of MP3 files), copied into the Wii and console zips' music/
+# and the Mac app (tools/fetch_mac_inputs.sh downloads them to inputs/music).
+MUSIC ?=
+MAC_MUSIC ?= $(MUSIC)
 .PHONY: game-data
 game-data:
 	tools/stage_game_data.sh $(GAME_DATA) $(V1_EXE) $(V12_EXE) $(V20_EXE) $(V3_EXE)
@@ -322,6 +326,7 @@ wii-app-zip: wii-app game-data
 	rm -rf $(BUILD)/app-zip && mkdir -p $(BUILD)/app-zip/apps
 	cp -R $(APP_DIR) $(BUILD)/app-zip/apps/vertrix
 	cp -R $(GAME_DATA)/. $(BUILD)/app-zip/apps/vertrix/
+	$(if $(MUSIC),mkdir -p $(BUILD)/app-zip/apps/vertrix/music && cp -R "$(MUSIC)"/. $(BUILD)/app-zip/apps/vertrix/music/)
 	cd $(BUILD)/app-zip && zip -qr ../vertrix-wii.zip apps/vertrix
 	@ls -l $(BUILD)/vertrix-wii.zip
 
@@ -417,6 +422,7 @@ $(1)-app: $(1)-app-games $(1)-launcher game-data
 		$$(BUILD)/v20/$(1)/vertrix2$$(CONSOLE_GAME_$(1)) $$(BUILD)/v3/$(1)/vertrix3$$(CONSOLE_GAME_$(1)) \
 		$$(BUILD)/$(1)/sd/$$(CONSOLE_SD_$(1))/games/
 	cp -R $$(GAME_DATA)/. $$(BUILD)/$(1)/sd/$$(CONSOLE_SD_$(1))/
+	$$(if $$(MUSIC),mkdir -p $$(BUILD)/$(1)/sd/$$(CONSOLE_SD_$(1))/music && cp -R "$$(MUSIC)"/. $$(BUILD)/$(1)/sd/$$(CONSOLE_SD_$(1))/music/)
 	cp consoles/README.md $$(BUILD)/$(1)/sd/$$(CONSOLE_SD_$(1))/README.md
 	@ls -l $$(BUILD)/$(1)/sd/$$(CONSOLE_SD_$(1)) $$(BUILD)/$(1)/sd/$$(CONSOLE_SD_$(1))/games
 

@@ -110,7 +110,7 @@ on tags `v*`, on pull requests and by hand (`gh workflow run build.yml`).
 The builds read the originals from outside the repository. Do not add any more of them, and do
 not commit the files the unpacked archives contain. The release zips (and, on the 3DS, the CIAs'
 RomFS) carry each game's data files, staged by `tools/stage_game_data.sh` from beside the
-executables.
+executables, and the zips of the Wii and the consoles carry the 50 MP3s in `music/` (`MUSIC=`; the 3DS CIAs carry none).
 
 | Game | Executable (build input) | Data on the SD card |
 | --- | --- | --- |

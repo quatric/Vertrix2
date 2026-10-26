@@ -88,14 +88,15 @@ jobs:
           path: inputs
           key: vertrix-wii-inputs-${{ hashFiles('tools/fetch_mac_inputs.sh', 'tools/unace_sfx.py') }}
       - name: Download the games
-        run: FETCH_MUSIC=0 PYTHON=/opt/venv/bin/python tools/fetch_mac_inputs.sh inputs
+        run: PYTHON=/opt/venv/bin/python tools/fetch_mac_inputs.sh inputs
       - name: Build
         run: |
           make -j"$(nproc)" ${{ matrix.console }}-app-zip PYTHON=/opt/venv/bin/python \
             V1_EXE=inputs/vertrix1/VERTRIX.EXE \
             V12_EXE=inputs/vertrix2-v12/app/Vertrix2.exe \
             V3_EXE=inputs/vertrix3/app/Vertrix3.exe \
-            V20_EXE=inputs/vertrix2/app/Vertrix2.exe
+            V20_EXE=inputs/vertrix2/app/Vertrix2.exe \
+            MUSIC="$PWD/inputs/music"
       - name: Check
         run: |
           app=${{ matrix.app }}
