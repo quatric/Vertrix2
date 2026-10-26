@@ -358,7 +358,7 @@ enum
 
 static void draw_main(void)
 {
-    gfx_image(logo_pixels, logo_width, logo_height, (GFX_WIDTH - 256) / 2, 14, 256, 96);
+    gfx_image(logo_pixels, logo_width, logo_height, (GFX_WIDTH - 256) / 2, 28, 256, 67);
     for (int i = 0; i < ITEM_COUNT; ++i)
     {
         const int y = ITEM_Y + i * ITEM_STEP;
@@ -538,7 +538,7 @@ static void draw_visualiser(int x, int y, int w, int h)
 
 static void draw_music(void)
 {
-    gfx_image(logo_pixels, logo_width, logo_height, 20, 10, 128, 48);
+    gfx_image(logo_pixels, logo_width, logo_height, 20, 17, 128, 34);
     gfx_text_shadow(170, 18, "Music", 2, PINK);
     const MusicAlbum *album = music_album(album_shown);
     if (album == NULL)
@@ -846,7 +846,7 @@ int main(int argc, char **argv)
 
     draw_background();
     gfx_restore_background();
-    gfx_image(logo_pixels, logo_width, logo_height, (GFX_WIDTH - 256) / 2, 14, 256, 96);
+    gfx_image(logo_pixels, logo_width, logo_height, (GFX_WIDTH - 256) / 2, 28, 256, 67);
     gfx_text(ITEM_X, ITEM_Y, "Reading the SD card...", 1, TEXT_DIM);
     gfx_present();
 

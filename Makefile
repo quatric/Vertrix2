@@ -262,7 +262,7 @@ LAUNCHER_OBJECTS := $(patsubst launcher/%.c,$(BUILD)/launcher/%.o,$(LAUNCHER_SOU
 APP_DIR := $(BUILD)/app/apps/vertrix
 DOLXZ := $(BUILD)/dolxz/dolxz
 
-$(BUILD)/launcher/logo.h: wii-game/icon.png launcher/png2c.py
+$(BUILD)/launcher/logo.h: launcher/logo.png launcher/png2c.py
 	@mkdir -p $(dir $@)
 	$(PYTHON) launcher/png2c.py $< logo $@
 
