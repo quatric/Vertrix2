@@ -58,6 +58,13 @@ const char *common_start(int argc, char **argv, const ShellOptions *options)
     if (!options->game)
     {
         snprintf(folder, sizeof folder, "%s", app);
+        char music[300];
+        snprintf(music, sizeof music, "%s/music", app);
+        struct stat info;
+        if (stat(music, &info) != 0)
+        {
+            console_import_bundled(app);
+        }
         return folder;
     }
     /* The launcher passes the folder; started alone, the game uses its own in the app's. */

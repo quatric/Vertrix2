@@ -442,15 +442,18 @@ $(foreach console,switch wiiu 3ds,$(eval $(call console_app,$(console))))
 CIA_DIR := $(BUILD)/3ds/cia
 CIA_VERSION := $(shell sed -n 's:.*<version>\(.*\)</version>.*:\1:p' launcher/meta.xml)
 
+# The menu's title carries the soundtrack (MUSIC=) as music/ in its RomFS.
+CIA_MUSIC := $(if $(MUSIC),$(BUILD)/cia-music)
 # cia(name, title, unique id, product code, system mode, elf)
 define cia
 CIA_ALL += $(CIA_DIR)/$(1).cia
-$(CIA_DIR)/$(1).cia: $(if $(7),game-data)
+$(CIA_DIR)/$(1).cia: $(if $(7),$(if $(wildcard $(GAME_DATA)),,game-data))
 	@mkdir -p $(CIA_DIR)
+	$(if $(filter $(BUILD)/cia-music,$(7)),rm -rf $(7) && mkdir -p $(7)/music && cp -R "$(MUSIC)"/. $(7)/music/)
 	PYTHON=$(PYTHON) tools/make_cia.sh $(6) $$@ "$(2)" $(3) $(4) $(5) $(CIA_VERSION) $(7)
 endef
 
-$(eval $(call cia,vertrix,Vertrix,0xf7a10,CTR-P-VRTX,64MB,$(BUILD)/3ds/launcher/vertrix.elf))
+$(eval $(call cia,vertrix,Vertrix,0xf7a10,CTR-P-VRTX,64MB,$(BUILD)/3ds/launcher/vertrix.elf,$(CIA_MUSIC)))
 $(eval $(call cia,vertrix1,Vertrix (1997),0xf7a11,CTR-P-VRT1,80MB,$(BUILD)/v1/3ds/vertrix1.elf,$(GAME_DATA)/vertrix1))
 $(eval $(call cia,vertrix2-v12,Vertrix 2 v1.2,0xf7a12,CTR-P-VRT2,80MB,$(BUILD)/v12/3ds/vertrix2-v12.elf,$(GAME_DATA)/vertrix2-v12))
 $(eval $(call cia,vertrix2,Vertrix 2,0xf7a13,CTR-P-VRT3,80MB,$(BUILD)/v20/3ds/vertrix2.elf,$(GAME_DATA)/vertrix2))

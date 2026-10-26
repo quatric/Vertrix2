@@ -121,7 +121,9 @@ jobs:
             3ds)
               cp build/3ds/launcher/vertrix.elf extra/vertrix.elf
               cp build/v1/3ds/vertrix1.elf build/v12/3ds/vertrix2-v12.elf \
-                build/v20/3ds/vertrix2.elf build/v3/3ds/vertrix3.elf extra/ ;;
+                build/v20/3ds/vertrix2.elf build/v3/3ds/vertrix3.elf extra/
+              cp -R build/game-data extra/game-data
+              cp -R inputs/music extra/music ;;
           esac
       - uses: actions/upload-artifact@v4
         if: matrix.console == 'wiiu' || matrix.console == '3ds'
@@ -205,7 +207,8 @@ jobs:
           cp elfs/vertrix2-v12.elf build/v12/3ds/
           cp elfs/vertrix2.elf build/v20/3ds/
           cp elfs/vertrix3.elf build/v3/3ds/
-          make 3ds-cia-zip
+          cp -R elfs/game-data build/game-data
+          make 3ds-cia-zip MUSIC="$PWD/elfs/music"
           test "$(ls build/3ds/cia/*.cia | wc -l)" -eq 5
       - uses: actions/upload-artifact@v4
         with:

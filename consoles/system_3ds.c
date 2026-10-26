@@ -6,6 +6,7 @@
 #include <dirent.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/stat.h>
 
 #include "console.h"
 #include "shell.h"
@@ -32,24 +33,26 @@ const char *console_launcher_path(void)
     return "sdmc:/3ds/vertrix/vertrix.3dsx";
 }
 
-/* A title's RomFS holds its game's files at the root (tools/make_cia.sh). */
-int console_import_bundled(const char *folder)
+/* Copies the RomFS folder `from` into `to`, with its folders. */
+static int copy_tree(const char *from, const char *to)
 {
-    if (R_FAILED(romfsInit()))
-    {
-        return 0;
-    }
     int copied = 0;
-    DIR *dir = opendir("romfs:/");
+    mkdir(to, 0777);
+    DIR *dir = opendir(from);
     struct dirent *entry;
     while (dir && (entry = readdir(dir)) != NULL)
     {
-        char from[300];
-        char to[300];
-        snprintf(from, sizeof from, "romfs:/%s", entry->d_name);
-        snprintf(to, sizeof to, "%s/%s", folder, entry->d_name);
-        FILE *in = fopen(from, "rb");
-        FILE *out = in ? fopen(to, "wb") : NULL;
+        char source[300];
+        char target[300];
+        snprintf(source, sizeof source, "%s/%s", from, entry->d_name);
+        snprintf(target, sizeof target, "%s/%s", to, entry->d_name);
+        if (entry->d_type == DT_DIR)
+        {
+            copied |= copy_tree(source, target);
+            continue;
+        }
+        FILE *in = fopen(source, "rb");
+        FILE *out = in ? fopen(target, "wb") : NULL;
         if (out)
         {
             static char buffer[64 * 1024];
@@ -72,6 +75,18 @@ int console_import_bundled(const char *folder)
     {
         closedir(dir);
     }
+    return copied;
+}
+
+/* A title's RomFS holds its game's files at the root, and the menu's holds music/
+ * (tools/make_cia.sh). */
+int console_import_bundled(const char *folder)
+{
+    if (R_FAILED(romfsInit()))
+    {
+        return 0;
+    }
+    const int copied = copy_tree("romfs:", folder);
     romfsExit();
     return copied;
 }
