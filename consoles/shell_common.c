@@ -106,21 +106,32 @@ const char *common_start(int argc, char **argv, const ShellOptions *options)
 
 /* The image the recompiler wrote, built into the program by bin2s (the Makefiles); a game has
  * one of them. */
+#ifdef _WIN32
+/* MinGW's linker leaves a weak undefined symbol unresolved, so here the images a game lacks are
+ * weak definitions of size 0, which the game's own image replaces. */
+const uint8_t v3_image_bin[1] __attribute__((weak)) = {0};
+const uint32_t v3_image_bin_size __attribute__((weak)) = 0;
+const uint8_t v1_image_bin[1] __attribute__((weak)) = {0};
+const uint32_t v1_image_bin_size __attribute__((weak)) = 0;
+#define IMAGE_PRESENT(name) (name##_size != 0)
+#else
 extern const uint8_t v3_image_bin[] __attribute__((weak));
 extern const uint32_t v3_image_bin_size __attribute__((weak));
 extern const uint8_t v1_image_bin[] __attribute__((weak));
 extern const uint32_t v1_image_bin_size __attribute__((weak));
+#define IMAGE_PRESENT(name) (name != NULL)
+#endif
 
 uint8_t *shell_resource(const char *name, size_t *size)
 {
     const uint8_t *data = NULL;
     uint32_t length = 0;
-    if (strcmp(name, "v3_image.bin") == 0 && v3_image_bin)
+    if (strcmp(name, "v3_image.bin") == 0 && IMAGE_PRESENT(v3_image_bin))
     {
         data = v3_image_bin;
         length = v3_image_bin_size;
     }
-    else if (strcmp(name, "v1_image.bin") == 0 && v1_image_bin)
+    else if (strcmp(name, "v1_image.bin") == 0 && IMAGE_PRESENT(v1_image_bin))
     {
         data = v1_image_bin;
         length = v1_image_bin_size;
