@@ -383,8 +383,8 @@ static void draw_main(void)
             snprintf(line, sizeof line, "%s - %s", games[i].year, games[i].about);
             about = line;
             const int ready = have_dol[i] && have_data[i];
-            status = ready ? "READY" : (have_dol[i] ? "NEEDS FILES" : "NOT INSTALLED");
-            status_colour = ready ? GREEN : AMBER;
+            status = ready ? "" : (have_dol[i] ? "NEEDS FILES" : "NOT INSTALLED");
+            status_colour = AMBER;
         }
         else
         {
@@ -865,6 +865,9 @@ int main(int argc, char **argv)
         total_tracks += music_album(i)->count;
     }
     load_settings();
+    /* The soundtrack plays on the menu, shuffled, until the player stops it or starts a game. */
+    music_set_shuffle(1);
+    music_play_random();
     printf("launcher %s: %s, card %s, %d albums, %d tracks, games %d%d%d%d, data %d%d%d%d%s\n",
            APP_VERSION, launcher_path, mounted ? "mounted" : "not mounted", music_album_count(),
            total_tracks, have_dol[0], have_dol[1], have_dol[2], have_dol[3], have_data[0],

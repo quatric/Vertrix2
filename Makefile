@@ -257,7 +257,7 @@ V3_EXE ?= Vertrix3.exe
 V12_EXE ?= Vertrix2-v12.exe
 V20_EXE ?= Vertrix2.exe
 LAUNCHER_VERSION := $(shell sed -n 's:.*<version>\(.*\)</version>.*:\1:p' launcher/meta.xml)
-LAUNCHER_SOURCES := launcher/main.c launcher/gfx.c launcher/gfx_wii.c launcher/music.c launcher/app.c
+LAUNCHER_SOURCES := launcher/main.c launcher/gfx.c launcher/font.c launcher/gfx_wii.c launcher/music.c launcher/app.c
 LAUNCHER_OBJECTS := $(patsubst launcher/%.c,$(BUILD)/launcher/%.o,$(LAUNCHER_SOURCES))
 APP_DIR := $(BUILD)/app/apps/vertrix
 DOLXZ := $(BUILD)/dolxz/dolxz
@@ -372,6 +372,7 @@ mac-app: mac-app-games game-data $(BUILD)/mac/launcher/Vertrix $(BUILD)/mac/laun
 	cp $(BUILD)/mac/launcher/Vertrix $(MAC_APP)/Contents/MacOS/
 	cp $(BUILD)/mac/launcher/AppIcon.icns $(MAC_APP)/Contents/Resources/
 	cp wii-game/icon.png $(MAC_APP)/Contents/Resources/Logo.png
+	cp mac/FOT-RodinNTLGPro-B.otf $(MAC_APP)/Contents/Resources/
 	cp mac/README.md $(MAC_APP)/Contents/Resources/README.md
 	cp -R $(MAC_HELPERS) $(MAC_APP)/Contents/Helpers/
 	mkdir -p $(MAC_APP)/Contents/Resources/Data

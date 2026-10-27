@@ -2,12 +2,11 @@
  * shell (consoles/) elsewhere. */
 #include "gfx.h"
 
+#include "font.h"
+
 #include <stdio.h>
 #include <string.h>
 
-/* The 8x16 font of libogc's console (code page 437); consoles/font_8x16.c is a copy for the
- * other systems. */
-extern const uint8_t console_font_8x16[];
 
 static uint32_t canvas[GFX_WIDTH * GFX_HEIGHT];
 static uint32_t background[GFX_WIDTH * GFX_HEIGHT];
@@ -220,46 +219,59 @@ void gfx_image(const uint32_t *pixels, int pw, int ph, int x, int y, int w, int 
     }
 }
 
-/* Latin-1 0xa0..0xff to code page 437 (0 where it has no glyph: drawn as '?'). */
-static const uint8_t latin1_to_437[96] = {
-    0xff, 0xad, 0x9b, 0x9c, 0,    0x9d, 0x7c, 0x15, 0x22, 0,    0xa6, 0xae, 0xaa, 0x2d, 0,    0,
-    0xf8, 0xf1, 0xfd, 0,    0x27, 0xe6, 0x14, 0xfa, 0x2c, 0,    0xa7, 0xaf, 0xac, 0xab, 0,    0xa8,
-    0x41, 0x41, 0x41, 0x41, 0x8e, 0x8f, 0x92, 0x80, 0x45, 0x90, 0x45, 0x45, 0x49, 0x49, 0x49, 0x49,
-    0x44, 0xa5, 0x4f, 0x4f, 0x4f, 0x4f, 0x99, 0x78, 0x4f, 0x55, 0x55, 0x55, 0x9a, 0x59, 0,    0xe1,
-    0x85, 0xa0, 0x83, 0x61, 0x84, 0x86, 0x91, 0x87, 0x8a, 0x82, 0x88, 0x89, 0x8d, 0xa1, 0x8c, 0x8b,
-    0,    0xa4, 0x95, 0xa2, 0x93, 0x6f, 0x94, 0xf6, 0x6f, 0x97, 0xa3, 0x96, 0x81, 0x79, 0,    0x98,
-};
-
-static uint8_t glyph_of(uint8_t c)
+static const FontGlyph *glyph_of(const FontSet *set, uint8_t c)
 {
-    if (c < 0x80)
+    int low = 0, high = set->count - 1;
+    const FontGlyph *question = NULL;
+    for (int pass = 0; pass < 2; ++pass)
     {
-        return c;
+        const uint8_t want = pass == 0 ? c : '?';
+        low = 0;
+        high = set->count - 1;
+        while (low <= high)
+        {
+            const int middle = (low + high) / 2;
+            const FontGlyph *glyph = &set->glyphs[middle];
+            if (glyph->code == want)
+            {
+                if (pass == 0)
+                {
+                    return glyph;
+                }
+                question = glyph;
+                break;
+            }
+            if (glyph->code < want)
+            {
+                low = middle + 1;
+            }
+            else
+            {
+                high = middle - 1;
+            }
+        }
     }
-    if (c >= 0xa0 && latin1_to_437[c - 0xa0] != 0)
-    {
-        return latin1_to_437[c - 0xa0];
-    }
-    return '?';
+    return question;
 }
 
-static void draw_glyph(int x, int y, uint8_t c, int scale, uint32_t argb)
+static const FontSet *set_of(int scale)
 {
-    const uint8_t *rows = console_font_8x16 + 16 * glyph_of(c);
-    for (int row = 0; row < 16; ++row)
+    return &font_sets[scale > 1 ? 1 : 0];
+}
+
+static void draw_glyph(int x, int y, const FontSet *set, const FontGlyph *glyph, uint32_t argb)
+{
+    const uint8_t *rows = set->pixels + glyph->offset;
+    const uint32_t alpha = argb >> 24;
+    for (int row = 0; row < glyph->height; ++row)
     {
-        for (int col = 0; col < 8; ++col)
+        for (int col = 0; col < glyph->width; ++col)
         {
-            if (rows[row] & (0x80 >> col))
+            const uint32_t coverage = rows[row * glyph->width + col];
+            if (coverage != 0)
             {
-                if (scale == 1)
-                {
-                    plot(x + col, y + row, argb);
-                }
-                else
-                {
-                    gfx_fill(x + col * scale, y + row * scale, scale, scale, argb);
-                }
+                plot(x + glyph->x + col, y + glyph->y + row,
+                     (argb & 0xffffff) | (alpha * coverage / 255) << 24);
             }
         }
     }
@@ -267,17 +279,26 @@ static void draw_glyph(int x, int y, uint8_t c, int scale, uint32_t argb)
 
 int gfx_text_width(const char *text, int scale)
 {
-    return (int)strlen(text) * 8 * scale;
+    const FontSet *set = set_of(scale);
+    int width = 0;
+    for (; *text != '\0'; ++text)
+    {
+        width += glyph_of(set, (uint8_t)*text)->advance;
+    }
+    return width;
 }
 
 int gfx_text(int x, int y, const char *text, int scale, uint32_t argb)
 {
-    int n = 0;
-    for (; text[n] != '\0'; ++n)
+    const FontSet *set = set_of(scale);
+    int width = 0;
+    for (; *text != '\0'; ++text)
     {
-        draw_glyph(x + n * 8 * scale, y, (uint8_t)text[n], scale, argb);
+        const FontGlyph *glyph = glyph_of(set, (uint8_t)*text);
+        draw_glyph(x + width, y, set, glyph, argb);
+        width += glyph->advance;
     }
-    return n * 8 * scale;
+    return width;
 }
 
 int gfx_text_shadow(int x, int y, const char *text, int scale, uint32_t argb)
@@ -288,16 +309,24 @@ int gfx_text_shadow(int x, int y, const char *text, int scale, uint32_t argb)
 
 void gfx_text_fit(int x, int y, const char *text, int scale, int max_width, uint32_t argb)
 {
-    const int room = max_width / (8 * scale);
-    const int n = (int)strlen(text);
-    if (n <= room)
+    if (gfx_text_width(text, scale) <= max_width)
     {
         gfx_text(x, y, text, scale, argb);
         return;
     }
+    const FontSet *set = set_of(scale);
+    const int dots = 3 * glyph_of(set, '.')->advance;
     char cut[256];
-    int keep = room > 3 ? room - 3 : 0;
-    keep = keep > (int)sizeof cut - 4 ? (int)sizeof cut - 4 : keep;
+    int keep = 0, width = dots;
+    while (text[keep] != '\0' && keep < (int)sizeof cut - 4)
+    {
+        width += glyph_of(set, (uint8_t)text[keep])->advance;
+        if (width > max_width)
+        {
+            break;
+        }
+        ++keep;
+    }
     memcpy(cut, text, (size_t)keep);
     strcpy(cut + keep, "...");
     gfx_text(x, y, cut, scale, argb);

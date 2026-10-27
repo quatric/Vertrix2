@@ -35,6 +35,8 @@ const MusicAlbum *music_album(int index);
 
 /* Starts a track; the player then goes on to the next one in the album (and round again). */
 void music_play(int album, int track);
+/* Starts a random track of any album. */
+void music_play_random(void);
 void music_stop(void);
 void music_toggle_pause(void);
 void music_next(void);

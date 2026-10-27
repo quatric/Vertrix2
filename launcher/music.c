@@ -439,6 +439,29 @@ static int random_below(int n)
     return n > 0 ? (int)((gettime() >> 3) % (u64)n) : 0;
 }
 
+void music_play_random(void)
+{
+    int total = 0;
+    for (int i = 0; i < music_album_count(); ++i)
+    {
+        total += music_album(i)->count;
+    }
+    if (total == 0)
+    {
+        return;
+    }
+    int pick = random_below(total);
+    for (int i = 0; i < music_album_count(); ++i)
+    {
+        if (pick < music_album(i)->count)
+        {
+            music_play(i, pick);
+            return;
+        }
+        pick -= music_album(i)->count;
+    }
+}
+
 void music_next(void)
 {
     const MusicAlbum *a = music_album(current_album);

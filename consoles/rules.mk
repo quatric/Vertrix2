@@ -76,7 +76,7 @@ endif
 # Every console's program has the shell, its error screen (the launcher's canvas and font) and
 # the system's part.
 CONSOLE_SOURCES += $(CONSOLE_ROOT)/consoles/shell_common.c $(CONSOLE_ROOT)/launcher/gfx.c \
-	$(CONSOLE_ROOT)/consoles/font_8x16.c $(addprefix $(CONSOLE_ROOT)/consoles/,$(CONSOLE_SHELL))
+	$(CONSOLE_ROOT)/launcher/font.c $(addprefix $(CONSOLE_ROOT)/consoles/,$(CONSOLE_SHELL))
 CONSOLE_COMMON := $(CONSOLE_ARCH) $(CONSOLE_SYSTEM) $(CONSOLE_DEBUG) -std=gnu11 -O2 -fno-strict-aliasing \
 	-I$(CONSOLE_ROOT)/shell -I$(CONSOLE_ROOT)/consoles -I$(CONSOLE_ROOT)/launcher
 CONSOLE_QUIET := -Wno-parentheses-equality -Wno-unused-label -Wno-unused-variable \

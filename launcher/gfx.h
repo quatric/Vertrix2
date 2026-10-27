@@ -33,8 +33,8 @@ void gfx_frame(int x, int y, int w, int h, int radius, uint32_t argb);
 /* pixels are 0xAARRGGBB, drawn scaled to w x h with bilinear filtering. */
 void gfx_image(const uint32_t *pixels, int pw, int ph, int x, int y, int w, int h);
 
-/* Text in libogc's 8x16 console font (code page 437), scale 1 or 2. Latin-1 bytes are mapped to
- * the code page. Returns the width drawn. */
+/* Text in the launcher's font (font.h), 16 pixels at scale 1 and 32 at scale 2; bytes are Latin-1.
+ * Returns the width drawn. */
 int gfx_text(int x, int y, const char *text, int scale, uint32_t argb);
 /* The same with a dark shadow below and to the right. */
 int gfx_text_shadow(int x, int y, const char *text, int scale, uint32_t argb);

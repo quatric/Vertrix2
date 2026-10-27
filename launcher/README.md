@@ -43,6 +43,9 @@ On the music screen:
 In a game, **HOME** comes back to this menu. Each game's own controls are on its page in the
 repository (`vertrix1/README.md`, `vertrix3/README.md`).
 
+The soundtrack starts by itself, shuffled, when the menu opens. Text is set in FOT-Rodin NTLG Pro
+Bold (`launcher/font.c`, made by `tools/make_font.py`).
+
 Albums are the folders in `music/`. An optional `album.txt` names one (its first line); otherwise
 the tracks' ID3 album tag is used.
 

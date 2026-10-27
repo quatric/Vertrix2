@@ -12,6 +12,7 @@
  * one (its first line), as on the Wii. */
 #import <AVFoundation/AVFoundation.h>
 #import <Cocoa/Cocoa.h>
+#import <CoreText/CoreText.h>
 
 #include "data.h"
 
@@ -128,10 +129,27 @@ static NSArray<Album *> *find_albums(void)
 @property(strong) dispatch_source_t exitWatch;
 @end
 
+/* FOT-Rodin NTLG Pro Bold, from the app's Resources (the system font if it is missing). */
+static NSFont *app_font(CGFloat size)
+{
+    static BOOL registered;
+    if (!registered)
+    {
+        registered = YES;
+        NSURL *url = [NSBundle.mainBundle URLForResource:@"FOT-RodinNTLGPro-B" withExtension:@"otf"];
+        if (url)
+        {
+            CTFontManagerRegisterFontsForURL((__bridge CFURLRef)url, kCTFontManagerScopeProcess,
+                                             NULL);
+        }
+    }
+    return [NSFont fontWithName:@"FOT-RodinNTLGPro-B" size:size] ?: [NSFont boldSystemFontOfSize:size];
+}
+
 static NSTextField *label(NSString *text, CGFloat size, BOOL bold)
 {
     NSTextField *field = [NSTextField labelWithString:text];
-    field.font = bold ? [NSFont boldSystemFontOfSize:size] : [NSFont systemFontOfSize:size];
+    field.font = app_font(size);
     field.translatesAutoresizingMaskIntoConstraints = NO;
     return field;
 }
@@ -139,6 +157,7 @@ static NSTextField *label(NSString *text, CGFloat size, BOOL bold)
 static NSButton *button(NSString *title, id target, SEL action)
 {
     NSButton *b = [NSButton buttonWithTitle:title target:target action:action];
+    b.font = app_font(13);
     b.translatesAutoresizingMaskIntoConstraints = NO;
     return b;
 }
@@ -174,7 +193,7 @@ static NSScrollView *scrolled(NSTableView *table)
     if ([NSFileManager.defaultManager fileExistsAtPath:folder] &&
         vertrix_game_ready(game, folder.fileSystemRepresentation))
     {
-        return @"Ready";
+        return @"";
     }
     return [NSString stringWithFormat:@"Needs %s", game->needs];
 }
@@ -240,6 +259,7 @@ static NSScrollView *scrolled(NSTableView *table)
     self.shuffle.state = [NSUserDefaults.standardUserDefaults boolForKey:@"Shuffle"]
                              ? NSControlStateValueOn
                              : NSControlStateValueOff;
+    self.shuffle.font = app_font(13);
     self.shuffle.translatesAutoresizingMaskIntoConstraints = NO;
     NSButton *music = button(@"Show Music Folder", self, @selector(showMusicFolder:));
     self.nowPlaying = label(@"", 12, NO);
@@ -590,6 +610,7 @@ static NSScrollView *scrolled(NSTableView *table)
         cell.identifier = column.identifier;
         NSTextField *text = [NSTextField labelWithString:@""];
         text.lineBreakMode = NSLineBreakByTruncatingTail;
+        text.font = app_font(13);
         text.translatesAutoresizingMaskIntoConstraints = NO;
         [cell addSubview:text];
         cell.textField = text;
@@ -604,7 +625,6 @@ static NSScrollView *scrolled(NSTableView *table)
         if ([column.identifier isEqualToString:@"Game"])
         {
             value = @(game->title);
-            cell.textField.font = [NSFont boldSystemFontOfSize:13];
         }
         else if ([column.identifier isEqualToString:@"Year"])
         {
