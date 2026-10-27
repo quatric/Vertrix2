@@ -202,13 +202,13 @@ jobs:
       - uses: msys2/setup-msys2@v2
         if: matrix.os == 'windows'
         with:
-          msystem: MINGW64
+          msystem: UCRT64
           update: true
           install: >-
             make zip curl unzip
-            mingw-w64-x86_64-gcc mingw-w64-x86_64-SDL2 mingw-w64-x86_64-libmad
-            mingw-w64-x86_64-python mingw-w64-x86_64-python-pip mingw-w64-x86_64-python-capstone
-            mingw-w64-x86_64-python-pefile mingw-w64-x86_64-innoextract
+            mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-SDL2 mingw-w64-ucrt-x86_64-libmad
+            mingw-w64-ucrt-x86_64-python mingw-w64-ucrt-x86_64-python-pip mingw-w64-ucrt-x86_64-python-capstone
+            mingw-w64-ucrt-x86_64-python-pefile mingw-w64-ucrt-x86_64-innoextract
       - name: Tools
         if: matrix.os == 'linux'
         run: |
@@ -241,7 +241,7 @@ jobs:
         run: |
           app=build/desktop/sd/vertrix
           for f in "$app"/vertrix.exe "$app"/games/*.exe; do
-            ldd "$f" | awk '/mingw64/ {print $3}'
+            ldd "$f" | awk '/ucrt64/ {print $3}'
           done | sort -u | xargs -I{} cp {} "$app"/games/
           cp "$app"/games/*.dll "$app"/
           rm -f build/vertrix-desktop.zip
