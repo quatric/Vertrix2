@@ -9,7 +9,7 @@
 #include <string.h>
 
 #ifdef _WIN32
-#include <process.h>
+#include <windows.h>
 #else
 #include <spawn.h>
 extern char **environ;
@@ -218,11 +218,24 @@ void console_finish(int closing)
     }
     has_next = 0;
 #ifdef _WIN32
-    char quoted_path[620], quoted_argument[620];
-    snprintf(quoted_path, sizeof quoted_path, "\"%s\"", next_path);
-    snprintf(quoted_argument, sizeof quoted_argument, "\"%s\"", next_argument);
-    const char *args[3] = {quoted_path, next_argument[0] ? quoted_argument : NULL, NULL};
-    _spawnv(_P_NOWAIT, next_path, args);
+    char command[1300];
+    if (next_argument[0])
+    {
+        snprintf(command, sizeof command, "\"%s\" \"%s\"", next_path, next_argument);
+    }
+    else
+    {
+        snprintf(command, sizeof command, "\"%s\"", next_path);
+    }
+    STARTUPINFOA startup;
+    PROCESS_INFORMATION process;
+    memset(&startup, 0, sizeof startup);
+    startup.cb = sizeof startup;
+    if (CreateProcessA(next_path, command, NULL, NULL, FALSE, 0, NULL, NULL, &startup, &process))
+    {
+        CloseHandle(process.hThread);
+        CloseHandle(process.hProcess);
+    }
 #else
     char *args[3] = {next_path, next_argument[0] ? next_argument : NULL, NULL};
     pid_t child;
