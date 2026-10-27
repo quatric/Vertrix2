@@ -8,9 +8,9 @@ header flags carry bit 12, so the copy here sets it and recomputes the header's 
 
 usage: unace_sfx.py INSTALLER.exe OUT_DIR
 """
+import io
 import struct
 import sys
-import tempfile
 from pathlib import Path
 
 import acefile
@@ -28,16 +28,13 @@ def main():
     struct.pack_into('<H', archive, 5, flags | 1 << 12)
     struct.pack_into('<H', archive, 0, acefile.ace_crc16(bytes(archive[4:4 + size])))
     out.mkdir(parents=True, exist_ok=True)
-    with tempfile.NamedTemporaryFile(suffix='.ace') as copy:
-        copy.write(archive)
-        copy.flush()
-        with acefile.open(copy.name) as ace:
-            ace.extractall(path=str(out))
-            bad = ace.testall()
-            if bad:
-                sys.exit('%s: CRC errors in %s' % (installer, bad))
-            for member in ace.getmembers():
-                print(member.filename, member.size)
+    with acefile.open(io.BytesIO(archive)) as ace:
+        ace.extractall(path=str(out))
+        bad = ace.testall()
+        if bad:
+            sys.exit('%s: CRC errors in %s' % (installer, bad))
+        for member in ace.getmembers():
+            print(member.filename, member.size)
 
 
 if __name__ == '__main__':
