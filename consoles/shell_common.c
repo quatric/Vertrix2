@@ -12,6 +12,10 @@
 #include <strings.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#ifdef _WIN32
+#include <direct.h>
+#define mkdir(path, mode) _mkdir(path)
+#endif
 
 #include "console.h"
 #include "gfx.h"
@@ -486,6 +490,30 @@ void common_input(const uint32_t pads_in[2], int touched, int inside, int x, int
     {
         pointer_inside = 0;
     }
+}
+
+void common_mouse(int inside, int x, int y, unsigned buttons)
+{
+    static unsigned before;
+    if (inside)
+    {
+        pointer_x = x;
+        pointer_y = y;
+    }
+    pointer_inside = inside;
+    if (!inside)
+    {
+        buttons &= before; /* a press outside the picture is not the game's */
+    }
+    for (unsigned b = 0; b < 3; ++b)
+    {
+        const unsigned now = (buttons >> b) & 1u, was = (before >> b) & 1u;
+        if (now != was)
+        {
+            push_input(SHELL_BUTTON, b, (int)now);
+        }
+    }
+    before = buttons;
 }
 
 int shell_pointer(int *x, int *y)

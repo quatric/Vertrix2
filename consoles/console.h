@@ -3,7 +3,7 @@
 
 /* What differs between the consoles under the shell (consoles/README.md): where the app lives,
  * the clock, the controllers, and how one program starts another. system_switch.c,
- * system_wiiu.c and system_3ds.c implement it.
+ * system_wiiu.c and system_3ds.c implement it, and system_desktop.c for Linux and Windows.
  *
  *   Switch   sdmc:/switch/vertrix/vertrix.nro              the launcher
  *            sdmc:/switch/vertrix/games/<folder>.nro       the games
@@ -11,6 +11,8 @@
  *            sd:/wiiu/apps/vertrix/games/<folder>.rpx      the games
  *   3DS      sdmc:/3ds/vertrix/vertrix.3dsx                the launcher
  *            sdmc:/3ds/vertrix/games/<folder>.3dsx         the games
+ *   PC       <app folder>/vertrix[.exe]                    the launcher
+ *            <app folder>/games/<folder>[.exe]             the games
  *
  * and each game's files in <app folder>/<folder>/, the music in <app folder>/music/<album>/. */
 

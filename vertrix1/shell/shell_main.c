@@ -17,6 +17,9 @@
  * through its own EXIT). The log is vertrix.log in the game's directory. */
 #include "dos.h"
 #include "shell.h"
+#ifdef VERTRIX_DESKTOP
+#include <SDL.h> /* on Windows, main becomes SDL_main */
+#endif
 
 #include <stdarg.h>
 #include <stdio.h>

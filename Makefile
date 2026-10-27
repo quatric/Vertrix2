@@ -391,6 +391,9 @@ mac-app-zip: mac-app
 #                   [V20_EXE=Vertrix2.exe]          # build/switch/sd/switch/vertrix/
 #   make switch-app-zip                             # build/vertrix-switch.zip
 # and wiiu-app (build/wiiu/sd/wiiu/apps/vertrix/), 3ds-app (build/3ds/sd/3ds/vertrix/) likewise.
+# desktop-app is the same app for Linux and Windows (build/desktop/sd/vertrix/): it needs SDL 2
+# and libmad, and builds with the host's compiler (CC=x86_64-w64-mingw32-gcc SDL_CONFIG=... for
+# Windows); see consoles/README.md.
 # The launcher is the Wii's (consoles/launcher.mk); each game is built by its own Makefile on the
 # console shell (consoles/rules.mk). The games' data files are in the zip.
 CONSOLE_SD_switch := switch/vertrix
@@ -402,6 +405,10 @@ CONSOLE_GAME_3ds := .3dsx
 CONSOLE_LAUNCHER_switch := .nro
 CONSOLE_LAUNCHER_wiiu := .wuhb
 CONSOLE_LAUNCHER_3ds := .3dsx
+CONSOLE_SD_desktop := vertrix
+DESKTOP_EXE := $(if $(findstring mingw,$(shell $(CC) -dumpmachine)),.exe)
+CONSOLE_GAME_desktop := $(DESKTOP_EXE)
+CONSOLE_LAUNCHER_desktop := $(DESKTOP_EXE)
 
 define console_app
 .PHONY: $(1)-app $(1)-app-games $(1)-launcher $(1)-app-zip
@@ -432,7 +439,7 @@ $(1)-app-zip: $(1)-app
 	@ls -l $$(BUILD)/vertrix-$(1).zip
 endef
 
-$(foreach console,switch wiiu 3ds,$(eval $(call console_app,$(console))))
+$(foreach console,switch wiiu 3ds desktop,$(eval $(call console_app,$(console))))
 
 # --- the 3DS as installable titles (.cia) -------------------------------------------------------
 #   make 3ds-app-zip ... ; make 3ds-cia             # build/3ds/cia/*.cia, build/vertrix-3ds-cia.zip

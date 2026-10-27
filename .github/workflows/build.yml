@@ -7,6 +7,8 @@ name: Build
 # checked there; none of them are in the repository, and the apps carry none of the games' files.
 # The Wii U's menu is also published as a bare .wuhb, and the 3DS's five programs as .cia titles
 # (packed on the runner: makerom and bannertool need a newer glibc than the devkitARM image has).
+# The Linux and Windows apps (desktop job) are the console app on SDL 2 (consoles/README.md): the
+# menu and the games are programs in one folder, as on a console's SD card. Windows builds in MSYS2.
 on:
   push:
     branches: [main]
@@ -28,6 +30,7 @@ on:
       - 'tools/fetch_mac_inputs.sh'
       - 'tools/unace_sfx.py'
       - 'tools/make_cia.sh'
+      - 'tools/incbin.py'
       - 'tools/build_dolxz.sh'
       - 'tools/dol_align.py'
       - '.github/workflows/build.yml'
@@ -181,6 +184,83 @@ jobs:
         with:
           draft: true
           files: build/vertrix-mac.zip
+
+  desktop:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: linux
+            runner: ubuntu-latest
+          - os: windows
+            runner: windows-latest
+    runs-on: ${{ matrix.runner }}
+    defaults:
+      run:
+        shell: ${{ matrix.os == 'windows' && 'msys2 {0}' || 'bash' }}
+    steps:
+      - uses: msys2/setup-msys2@v2
+        if: matrix.os == 'windows'
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            make zip curl unzip
+            mingw-w64-x86_64-gcc mingw-w64-x86_64-SDL2 mingw-w64-x86_64-libmad
+            mingw-w64-x86_64-python mingw-w64-x86_64-python-pip mingw-w64-x86_64-python-capstone
+            mingw-w64-x86_64-python-pefile mingw-w64-x86_64-innoextract
+      - name: Tools
+        if: matrix.os == 'linux'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq build-essential libsdl2-dev libmad0-dev innoextract \
+            liblzma-dev zip python3-venv
+          python3 -m venv /opt/venv
+          /opt/venv/bin/pip install --quiet 'capstone>=5,<6' pefile 'acefile==0.6.14'
+      - name: Python for the Windows build
+        if: matrix.os == 'windows'
+        run: python -m pip install --quiet --break-system-packages 'acefile==0.6.14'
+      - uses: actions/checkout@v4
+      - name: Cache the downloads
+        uses: actions/cache@v4
+        with:
+          path: inputs
+          key: vertrix-desktop-inputs-${{ hashFiles('tools/fetch_mac_inputs.sh', 'tools/unace_sfx.py') }}
+      - name: Download the games and the soundtrack
+        run: PYTHON=${{ matrix.os == 'windows' && 'python' || '/opt/venv/bin/python' }} tools/fetch_mac_inputs.sh inputs
+      - name: Build
+        run: |
+          make -j"$(nproc)" desktop-app-zip PYTHON=${{ matrix.os == 'windows' && 'python' || '/opt/venv/bin/python' }} \
+            V1_EXE=inputs/vertrix1/VERTRIX.EXE \
+            V12_EXE=inputs/vertrix2-v12/app/Vertrix2.exe \
+            V3_EXE=inputs/vertrix3/app/Vertrix3.exe \
+            V20_EXE=inputs/vertrix2/app/Vertrix2.exe \
+            MUSIC="$PWD/inputs/music"
+      - name: Bundle the Windows DLLs
+        if: matrix.os == 'windows'
+        run: |
+          app=build/desktop/sd/vertrix
+          for f in "$app"/vertrix.exe "$app"/games/*.exe; do
+            ldd "$f" | awk '/mingw64/ {print $3}'
+          done | sort -u | xargs -I{} cp {} "$app"/games/
+          cp "$app"/games/*.dll "$app"/
+          rm -f build/vertrix-desktop.zip
+          cd build/desktop/sd && zip -qr ../../vertrix-desktop.zip .
+      - name: Check
+        run: |
+          app=build/desktop/sd/vertrix
+          ls -l "$app" "$app"/games
+          test "$(ls "$app"/games | grep -v '\.dll$' | wc -l)" -eq 4
+          cp build/vertrix-desktop.zip build/vertrix-${{ matrix.os }}.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vertrix-${{ matrix.os }}
+          path: build/vertrix-${{ matrix.os }}.zip
+      - uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          draft: true
+          files: build/vertrix-${{ matrix.os }}.zip
 
   cia:
     needs: build

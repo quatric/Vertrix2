@@ -185,7 +185,7 @@ $(MAC_APP)/Contents/MacOS/vertrix1: $(BUILD)/mac/vertrix1 $(BUILD)/mac/AppIcon.i
 # (wiiu: .rpx, 3ds: .3dsx). The program is one of the games of the console's launcher (make
 # switch-app at the top, consoles/README.md); the generated code is the same C as the Wii's, with
 # the Wii's heap, on the console shell (consoles/).
-CONSOLES := switch wiiu 3ds
+CONSOLES := switch wiiu 3ds desktop
 
 .PHONY: $(CONSOLES)
 $(CONSOLES): $(GEN)/stamp

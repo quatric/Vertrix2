@@ -2,7 +2,8 @@
 # system's homebrew loader. vertrix1/Makefile and vertrix3/Makefile include it for the games, the
 # top Makefile for the launcher. Before including it, set
 #
-#   CONSOLE            switch, wiiu or 3ds
+#   CONSOLE            switch, wiiu, 3ds or desktop (Linux and Windows: the host's compiler, or
+#                      CC=x86_64-w64-mingw32-gcc; SDL_CONFIG names its sdl2-config)
 #   CONSOLE_PROGRAM    the program's path without its extension
 #   CONSOLE_OBJ        the folder for its objects
 #   CONSOLE_SOURCES    its C files (any folder); CONSOLE_GEN_SOURCES the recompiler's
@@ -53,8 +54,23 @@ CONSOLE_LDFLAGS := -specs=3dsx.specs -L$(PORTLIBS)/3ds/lib -L$(DEVKITPRO)/libctr
 CONSOLE_LIBS := -lmad -lctru -lm
 CONSOLE_SHELL := shell_3ds.c system_3ds.c
 CONSOLE_EXT := .3dsx
+else ifeq ($(CONSOLE),desktop)
+SDL_CONFIG ?= sdl2-config
+CONSOLE_CC := $(CC)
+CONSOLE_TARGET := $(shell $(CONSOLE_CC) -dumpmachine)
+ifneq (,$(findstring mingw,$(CONSOLE_TARGET)))
+DESKTOP_EXE := .exe
+endif
+CONSOLE_ARCH := -pthread
+CONSOLE_SYSTEM := -DVERTRIX_DESKTOP -DVERTRIX_EXE_EXT='"$(DESKTOP_EXE)"' $(shell $(SDL_CONFIG) --cflags)
+# On the Mac (to try it out) the images a game lacks are weak symbols the linker must be told of.
+CONSOLE_LDFLAGS := $(if $(findstring darwin,$(CONSOLE_TARGET)),$(foreach s,v1_image_bin v1_image_bin_size \
+	v3_image_bin v3_image_bin_size,-Wl,-U,_$(s)))
+CONSOLE_LIBS := $(shell $(SDL_CONFIG) --libs) $(CONSOLE_EXTRA_LIBS) -lm
+CONSOLE_SHELL := shell_sdl.c system_desktop.c
+CONSOLE_EXT := $(DESKTOP_EXE)
 else
-$(error CONSOLE is switch, wiiu or 3ds)
+$(error CONSOLE is switch, wiiu, 3ds or desktop)
 endif
 
 # Every console's program has the shell, its error screen (the launcher's canvas and font) and
@@ -83,6 +99,15 @@ CONSOLE_OBJECTS := $(foreach s,$(CONSOLE_GEN_SOURCES) $(CONSOLE_SOURCES),$(call 
 # The image, as v3_image_bin[] and v3_image_bin_size (shell_common.c's shell_resource). bin2s's
 # .note.GNU-stack section is dropped: elf2rpl (the Wii U) cannot place it.
 ifneq ($(CONSOLE_IMAGE),)
+ifeq ($(CONSOLE),desktop)
+# The image built in with .incbin (tools/incbin.py writes the C file, for the host's object format).
+CONSOLE_IMAGE_OBJECT := $(CONSOLE_OBJ)/$(basename $(notdir $(CONSOLE_IMAGE)))_bin.o
+$(CONSOLE_IMAGE_OBJECT): $(CONSOLE_IMAGE) $(CONSOLE_ROOT)/tools/incbin.py
+	@mkdir -p $(CONSOLE_OBJ)
+	$(PYTHON) $(CONSOLE_ROOT)/tools/incbin.py $(CONSOLE_TARGET) $< \
+		$(basename $(notdir $<))_bin > $(CONSOLE_OBJ)/$(basename $(notdir $<))_bin.c
+	$(CONSOLE_CC) $(CONSOLE_ARCH) -c $(CONSOLE_OBJ)/$(basename $(notdir $<))_bin.c -o $@
+else
 CONSOLE_IMAGE_OBJECT := $(CONSOLE_OBJ)/$(basename $(notdir $(CONSOLE_IMAGE)))_bin.o
 $(CONSOLE_IMAGE_OBJECT): $(CONSOLE_IMAGE)
 	@mkdir -p $(CONSOLE_OBJ)
@@ -90,12 +115,19 @@ $(CONSOLE_IMAGE_OBJECT): $(CONSOLE_IMAGE)
 	cd $(CONSOLE_OBJ) && $(TOOLS)/bin2s $(notdir $<) | grep -v '\.note\.GNU-stack' \
 		> $(basename $(notdir $<))_bin.s
 	$(CONSOLE_CC) $(CONSOLE_ARCH) -c $(CONSOLE_OBJ)/$(basename $(notdir $<))_bin.s -o $@
+endif
 CONSOLE_OBJECTS += $(CONSOLE_IMAGE_OBJECT)
 endif
 
+ifeq ($(CONSOLE),desktop)
+# the program is the linked file itself
+$(CONSOLE_PROGRAM)$(DESKTOP_EXE): $(CONSOLE_OBJECTS)
+	$(CONSOLE_CC) $(CONSOLE_ARCH) $(CONSOLE_LDFLAGS) $^ $(CONSOLE_LIBS) -o $@
+else
 $(CONSOLE_PROGRAM).elf: $(CONSOLE_OBJECTS)
 	$(CONSOLE_CC) $(CONSOLE_ARCH) $(CONSOLE_LDFLAGS) $^ $(CONSOLE_LIBS) \
 		-Wl,-Map,$(CONSOLE_PROGRAM).map -o $@
+endif
 
 $(CONSOLE_OBJ)/art/%: $(CONSOLE_LOGO) $(CONSOLE_ROOT)/tools/console_art.py
 	@mkdir -p $(dir $@)

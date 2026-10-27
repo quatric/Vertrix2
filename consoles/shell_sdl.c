@@ -37,8 +37,16 @@ const char *shell_start(int argc, char **argv, const ShellOptions *options)
         printf("SDL: %s\n", SDL_GetError());
     }
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
+#ifdef VERTRIX_DESKTOP
+    /* A window of the game's own shape, which the player can resize or take full screen. */
+    screen_width = 960;
+    screen_height = 720;
+    window = SDL_CreateWindow("Vertrix", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+                              screen_width, screen_height, SDL_WINDOW_RESIZABLE);
+#else
     window = SDL_CreateWindow("Vertrix", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                               screen_width, screen_height, 0);
+#endif
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (renderer)
     {
@@ -51,7 +59,18 @@ const char *shell_start(int argc, char **argv, const ShellOptions *options)
     want.samples = 1024;
     want.callback = audio_callback;
     audio_device = SDL_OpenAudioDevice(NULL, 0, &want, &have, 0);
-    return common_start(argc, argv, options);
+    const char *folder = common_start(argc, argv, options);
+#ifdef VERTRIX_DESKTOP
+    if (window && options->game)
+    {
+        SDL_SetWindowTitle(window, options->game->title);
+    }
+    if (options->hide_cursor)
+    {
+        SDL_ShowCursor(SDL_DISABLE); /* the game draws its own */
+    }
+#endif
+    return folder;
 }
 
 /* --- the screen ---------------------------------------------------------------------------- */
@@ -61,6 +80,12 @@ const char *shell_start(int argc, char **argv, const ShellOptions *options)
  * texture has none. */
 static void show(const uint32_t *pixels, unsigned width, unsigned height, int fresh)
 {
+#ifdef VERTRIX_DESKTOP
+    if (renderer)
+    {
+        SDL_GetRendererOutputSize(renderer, &screen_width, &screen_height);
+    }
+#endif
     if (!texture || width != texture_width || height != texture_height)
     {
         if (texture)
@@ -178,6 +203,15 @@ static uint32_t input(void)
         {
             common_request_quit();
         }
+#ifdef VERTRIX_DESKTOP
+        else if (event.type == SDL_KEYDOWN && !event.key.repeat &&
+                 event.key.keysym.scancode == SDL_SCANCODE_F11)
+        {
+            SDL_SetWindowFullscreen(window, (SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN_DESKTOP)
+                                                ? 0
+                                                : SDL_WINDOW_FULLSCREEN_DESKTOP);
+        }
+#endif
         else if ((event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) && !event.key.repeat)
         {
             const unsigned code = set1(event.key.keysym.scancode);
@@ -199,6 +233,24 @@ static uint32_t input(void)
         y = (int)((int64_t)(ty - picture.y) * (int64_t)texture_height / picture.h);
     }
     common_input(pads, touched, inside, x, y);
+#ifdef VERTRIX_DESKTOP
+    {
+        /* The mouse: over the picture (hovering counts) and its buttons. */
+        int mx, my;
+        const Uint32 buttons = SDL_GetMouseState(&mx, &my);
+        int over = 0, px = 0, py = 0;
+        if (picture.w > 0 && picture.h > 0 && (SDL_GetWindowFlags(window) & SDL_WINDOW_MOUSE_FOCUS))
+        {
+            over = mx >= picture.x && mx < picture.x + picture.w && my >= picture.y &&
+                   my < picture.y + picture.h;
+            px = (int)((int64_t)(mx - picture.x) * (int64_t)texture_width / picture.w);
+            py = (int)((int64_t)(my - picture.y) * (int64_t)texture_height / picture.h);
+        }
+        common_mouse(over, px, py,
+                     ((buttons & SDL_BUTTON_LMASK) ? 1u : 0u) | ((buttons & SDL_BUTTON_RMASK) ? 2u : 0u) |
+                         ((buttons & SDL_BUTTON_MMASK) ? 4u : 0u));
+    }
+#endif
     return pads[0];
 }
 

@@ -8,6 +8,10 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <time.h>
+#ifdef _WIN32
+#include <direct.h>
+#define mkdir(path, mode) _mkdir(path)
+#endif
 
 /* The game's working directory as it sees it. */
 
@@ -1416,7 +1420,7 @@ static void put_system_time(uint32_t at, uint64_t filetime)
 {
     const time_t seconds = (time_t)(filetime / 10000000u - 11644473600ull);
     struct tm tm;
-#ifdef GEKKO
+#if defined(GEKKO) || defined(_WIN32)
     tm = *gmtime(&seconds);
 #else
     gmtime_r(&seconds, &tm);

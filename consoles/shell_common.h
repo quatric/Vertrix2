@@ -25,6 +25,10 @@ void common_show(void (*show)(const uint32_t *pixels, unsigned width, unsigned h
  * held together ask the game to end. */
 void common_input(const uint32_t pads[2], int touched, int inside, int x, int y);
 
+/* A mouse (the desktop): whether it is over the picture and where (the picture's pixels), and its
+ * buttons held (bit 0 left, 1 right, 2 middle). Call after common_input. */
+void common_mouse(int inside, int x, int y, unsigned buttons);
+
 /* A key of a keyboard: its set 1 scan code (0x100: the E0 prefix). */
 void common_key(unsigned scan_code, int down);
 

@@ -1,4 +1,4 @@
-# Vertrix on the Switch, the Wii U and the 3DS
+# Vertrix on the Switch, the Wii U, the 3DS, Linux and Windows
 
 The Wii app (`launcher/README.md`) for three more consoles: the same menu and soundtrack player
 (`launcher/main.c`, unchanged), and the four games recompiled from the originals, each the same
@@ -32,6 +32,25 @@ written to its folder. The menu writes `launcher.log` only when something goes w
 On the 3DS the games need the DSP firmware dump (`sdmc:/3ds/dspfirm.cdc`) for sound, and the
 menu starts a game through Luma3DS's homebrew loader. Started on its own (an emulator), a game
 returns to the HOME Menu when it ends instead of to the menu.
+
+## Linux and Windows
+
+The same app for the PC: one folder with the menu (`vertrix`, `vertrix.exe` on Windows), the games
+in `games/`, each game's folder (`vertrix1/`, `vertrix2-v12/`, `vertrix2/`, `vertrix3/`) and the
+music, as on a console's SD card. Start `vertrix` in it; the games also start on their own, and
+take the folder of their files as an argument. The folder is the one next to the program
+(`VERTRIX_HOME` names another), and each game's settings and log are written to its folder.
+
+- **Keyboard and mouse:** as the PC's; the mouse is the games' mouse. **F11** switches full screen
+  and the window can be resized.
+- **Controllers:** the first two SDL game controllers, as on the consoles (the bottom face button
+  goes back, the right one chooses; Start and Back together end the game).
+- **Building:** `make desktop-app` (and `desktop-app-zip`) with SDL 2, libmad and Python as for the
+  other apps: `build-essential libsdl2-dev libmad0-dev` on Debian and Ubuntu, and in the MINGW64
+  shell of MSYS2 `make mingw-w64-x86_64-gcc mingw-w64-x86_64-SDL2 mingw-w64-x86_64-libmad`. The
+  Windows zip also needs the DLLs next to the programs (the CI job copies them). Cross-compiling:
+  `CC=x86_64-w64-mingw32-gcc SDL_CONFIG=<MinGW SDL2>/bin/sdl2-config`. The Mac builds it too,
+  which is how it is tried out here, but the Mac has its own app (`mac/README.md`).
 
 ## Controls
 

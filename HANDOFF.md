@@ -63,6 +63,23 @@ the same generated C as its Wii build, with the Wii's paged guest memory and hea
   condition wait leaves an alarm that crashed Cemu, so timed event waits poll every millisecond.
   `V3_HOST_THREAD_STACK` sets the host threads' stack (512 KB on the consoles).
 
+## Linux and Windows
+
+`make desktop-app` builds the console app for the PC: `consoles/system_desktop.c` is its system
+layer (SDL controllers, the mouse, the folder next to the program, and starting the next program
+by running it) under the same `shell_sdl.c` and `shell_common.c`. It uses the consoles' paged guest
+memory and heap, so the games are the same generated C. The Makefiles' `desktop` target builds one
+game; `consoles/rules.mk` links it with the host's compiler (`CC=x86_64-w64-mingw32-gcc` and
+`SDL_CONFIG=` for Windows), and `tools/incbin.py` builds the image in. The `desktop` job of
+`.github/workflows/build.yml` builds the Linux and Windows (MSYS2) zips. The page is
+`consoles/README.md`.
+
+- **Checked on this Mac (as a host):** the four games build and start with the desktop shell
+  (Vertrix 2 v2.0 to its menus and 600 frames, Vertrix 3 and Vertrix (1997) running until closed).
+  All the sources pass a syntax check with MinGW's gcc.
+- **Not checked:** Linux and Windows themselves, the menu (it needs libmad, which is not on this
+  Mac), starting a game from the menu and coming back, the CI job.
+
 ## The build setup: one workflow for every app
 
 `.github/workflows/build.yml` (the Build workflow) builds every app. It replaced `consoles.yml`,

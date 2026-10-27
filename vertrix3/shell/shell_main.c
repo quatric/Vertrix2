@@ -15,6 +15,9 @@
 #include "process.h"
 #include "runtime.h"
 #include "shell.h"
+#ifdef VERTRIX_DESKTOP
+#include <SDL.h> /* on Windows, main becomes SDL_main */
+#endif
 
 #include <signal.h>
 #include <stdarg.h>
@@ -227,7 +230,7 @@ static void game(void)
     shell_exit(code);
 }
 
-#ifdef __APPLE__
+#if defined(__APPLE__) && !defined(V3_PAGED)
 /* A fault inside the guest space: say where, and what the game was doing. */
 static void on_fault(int signal, siginfo_t *info, void *context)
 {
@@ -264,7 +267,7 @@ int main(int argc, char **argv)
     }
     v3_log("%s for %s: %u KB of image, files in %s", v3_game_title, shell_platform,
            (unsigned)(image_size >> 10), directory);
-#ifdef __APPLE__
+#if defined(__APPLE__) && !defined(V3_PAGED)
     struct sigaction action = {0};
     action.sa_sigaction = on_fault;
     action.sa_flags = SA_SIGINFO | SA_ONSTACK;

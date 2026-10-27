@@ -14,6 +14,9 @@
 #include "gfx.h"
 #include "shell.h"
 #include "shell_common.h"
+#ifdef VERTRIX_DESKTOP
+#include <SDL.h> /* on Windows, main becomes SDL_main */
+#endif
 
 int launcher_main(int argc, char **argv);
 

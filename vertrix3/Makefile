@@ -190,10 +190,10 @@ $(MAC_APP)/Contents/MacOS/$(GAME): $(BUILD)/mac/$(GAME) $(BUILD)/mac/AppIcon.icn
 # --- the consoles -------------------------------------------------------------------------------
 # make -C vertrix3 BUILD=../build/v20 GAME=vertrix2 V3_EXE=../Vertrix2.exe switch
 #                                                        -> build/v20/switch/vertrix2.nro
-# (wiiu: .rpx, 3ds: .3dsx). The program is one of the games of the console's launcher (make
+# (wiiu: .rpx, 3ds: .3dsx, desktop: the host program, for Linux and Windows). The program is one of the games of the console's launcher (make
 # switch-app at the top, consoles/README.md); the generated code is the same C as the Wii's, with
 # the Wii's heap, on the console shell (consoles/).
-CONSOLES := switch wiiu 3ds
+CONSOLES := switch wiiu 3ds desktop
 
 .PHONY: $(CONSOLES)
 $(CONSOLES): $(GEN)/stamp
