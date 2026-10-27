@@ -20,7 +20,7 @@ def main():
         section, symbol = '.section __DATA,__const', "_" + name
     elif "mingw" in target or "windows" in target:
         # 32-bit Windows prefixes C symbols with an underscore, 64-bit does not
-        section, symbol = '.section .rdata,"dr"', ("_" + name) if target.startswith("i") else name
+        section, symbol = '.section .rdata,\\"dr\\"', ("_" + name) if target.startswith("i") else name
     else:
         section, symbol = ".section .rodata", name
     print(f'''/* made by tools/incbin.py */
